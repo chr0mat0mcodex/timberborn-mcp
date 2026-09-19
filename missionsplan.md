@@ -744,7 +744,8 @@ Trotz des Namens setzt der Handler einen gewünschten Zustand über Pause/Resume
 Er prüft GUID und Existenz, bietet aber keine atomare Prüfung des erwarteten Ausgangszustands.
 Der Router erzwingt keine Trennung der Änderungen durch POST. Die Route wird deshalb ausdrücklich
 als Schreiboperation behandelt, auch wenn der Adapter sie per GET aufruft.
-Exakter Erfolgsstatus und leerer Antwortkörper werden vor Implementierung am Hersteller-Response-Helper geprüft.
+Der [HTTP-Response-Helper](https://github.com/datvm/TimberbornMods/blob/1c057bda82ec955d1712937da916cddf0f382f24/MoreHttpApi/Helpers/HttpHelper.cs)
+bestätigt HTTP 204 mit leerem Inhalt für den erfolgreichen Schreibhandler.
 Ein Versionsgleichstand ist kein Nachweis für das Verhalten der installierten Binärdatei; das bestätigt erst der freigegebene Live-Pilot.
 
 ### 6.2 Werkzeugvertrag
@@ -812,3 +813,22 @@ Das Zurücksetzen des Pausenflags macht zwischenzeitlich entgangene Produktion o
 
 Nächste Entscheidung: E/F implementieren. G und das Aktivieren der Schreibfähigkeit im lokalen Codex-Client
 folgen nach bestandenen Tests und konkreter Auswahl des Testgebäudes. Ein zusätzlicher Mod ist für diesen Plan nicht vorgesehen.
+
+### 6.6 Implementierung E/F und Live-Vorbereitung
+
+Der Nutzer hat E/F ausdrücklich freigegeben und die einzige Holzfällerflagge als Testgebäude ausgewählt;
+eine Namensvergabe ist im Spiel nicht möglich. Auswahl daher über exakt `LumberjackFlag.Folktails`,
+genau einen Treffer und anschließend dessen GUID; keine Auswahl anhand des ersten beliebigen Treffers.
+Lesende Vorprüfung bestätigt einen Treffer, pausierbar und nicht pausiert.
+Das anschließende Go erlaubt den Live-Versuch einschließlich Rückweg.
+
+E/F implementiert: getrenntes Schreibinterface, Action-Service mit prozessweiter Serialisierung,
+typisierte einzelne HTTP-Schreibroute, geschütztes MCP-Werkzeug und zustandsbehafteter Fake.
+Bestehende Leseroutenliste unverändert. HTTP 401/403 beim Schreiben sind explizite Ablehnungen;
+andere unerwartete Schreibantworten einschließlich 404 konservativ unconfirmed. Fehler beim Nachlesen
+sind nach quittiertem Schreiben immer unconfirmed. Keine automatischen Wiederholungen.
+MCP-Annotationen sind konservativ: nicht lesend, potentiell destruktiv und keine Retry-Zusage.
+
+Locked Restore, Release-Build mit 0 Warnungen/Fehlern und 74 reguläre Tests bestanden
+(67 Anwendung/Adapter, 7 Integration); beide Live-Tests im normalen Lauf übersprungen.
+Die Schreibfähigkeit wird für den Pilotprozess explizit aktiviert, nicht dauerhaft im Codex-Client.

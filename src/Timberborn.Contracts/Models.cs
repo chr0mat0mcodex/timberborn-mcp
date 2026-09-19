@@ -27,6 +27,8 @@ public sealed record PopulationCounts(int Adults, int Children, int Beavers, int
 public sealed record CharacterSummary(Guid Id, string Kind, string? Name, double? AgeDays,
     double? Wellbeing, Guid? HomeId, Guid? WorkplaceId, Guid? DistrictId);
 public sealed record BuildingSummary(Guid Id, string Name, string Template, bool? Pausable, bool? Paused);
+public sealed record PauseActionResult(Guid Id, bool RequestedPaused, bool? BeforePaused,
+    bool? ObservedPaused, string Outcome);
 public sealed record BuildingAggregate(int Total, int Paused, int Active, int NotPausable, int PauseStateUnknown);
 public sealed record ColonySnapshot(GameTimeSnapshot? Time, WeatherSnapshot? Weather,
     PopulationCounts? Population, BuildingAggregate? Buildings, double? GameSpeed, string ResourceAvailability);

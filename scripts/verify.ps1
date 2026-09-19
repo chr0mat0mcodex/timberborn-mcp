@@ -10,9 +10,17 @@ try {
     & dotnet build TimberbornMcp.slnx -c Release --no-restore
     if ($LASTEXITCODE -ne 0) { throw 'Build fehlgeschlagen.' }
     $oldLive = $env:TIMBERBORN_LIVE_TEST
+    $oldWriteTest = $env:TIMBERBORN_LIVE_WRITE_TEST
+    $oldWrites = $env:TIMBERBORN_ENABLE_WRITES
     try {
         $env:TIMBERBORN_LIVE_TEST = if ($Live) { '1' } else { '0' }
+        $env:TIMBERBORN_LIVE_WRITE_TEST = '0'
+        $env:TIMBERBORN_ENABLE_WRITES = '0'
         & dotnet test TimberbornMcp.slnx -c Release --no-build --no-restore
         if ($LASTEXITCODE -ne 0) { throw 'Tests fehlgeschlagen.' }
-    } finally { $env:TIMBERBORN_LIVE_TEST = $oldLive }
+    } finally {
+        $env:TIMBERBORN_LIVE_TEST = $oldLive
+        $env:TIMBERBORN_LIVE_WRITE_TEST = $oldWriteTest
+        $env:TIMBERBORN_ENABLE_WRITES = $oldWrites
+    }
 } finally { Pop-Location }

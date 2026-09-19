@@ -12,20 +12,23 @@ using Timberborn.McpServer;
 
 var backendName = Environment.GetEnvironmentVariable("TIMBERBORN_BACKEND") ?? "more-http-api";
 var scenario = Environment.GetEnvironmentVariable("TIMBERBORN_FAKE_SCENARIO") ?? "healthy";
+var writesEnabled = Environment.GetEnvironmentVariable("TIMBERBORN_ENABLE_WRITES") == "1";
 if (scenario is not ("healthy" or "offline" or "partial"))
     throw new InvalidOperationException("Unbekanntes Fake-Szenario.");
 ITimberbornReadBackend backend = backendName switch
 {
-    "fake" => new FakeTimberbornBackend(scenario),
+    "fake" => new FakeTimberbornBackend(scenario, writesEnabled),
     "more-http-api" => new MoreHttpApiBackend(new()
     {
+        EnableWrites = writesEnabled,
         BaseUrl = Environment.GetEnvironmentVariable("TIMBERBORN_BASE_URL") ?? "http://localhost:8080/",
         Authorization = Environment.GetEnvironmentVariable("TIMBERBORN_AUTHORIZATION")
     }),
     _ => throw new InvalidOperationException("Unbekanntes Backend.")
 };
 var service = new ObservationService(backend);
-var tools = ToolCatalog.Create();
+var actions = new BuildingActionService(backend, (ITimberbornWriteBackend)backend);
+var tools = ToolCatalog.Create(writesEnabled);
 var builder = Host.CreateApplicationBuilder(new HostApplicationBuilderSettings { Args = [], DisableDefaults = true });
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole(o => o.LogToStandardErrorThreshold = LogLevel.Trace);
@@ -35,10 +38,12 @@ builder.Services.AddMcpServer().WithStdioServerTransport()
     .WithCallToolHandler(async (context, ct) =>
     {
         var request = context.Params ?? throw new McpProtocolException("Missing parameters", McpErrorCode.InvalidParams);
-        if (!ObservationService.ResultTypes.ContainsKey(request.Name))
+        if (!tools.Any(t => t.Name == request.Name))
             throw new McpProtocolException("Unknown tool", McpErrorCode.InvalidParams);
         var arguments = JsonSerializer.SerializeToElement(request.Arguments ?? new Dictionary<string, JsonElement>());
-        var result = await service.InvokeAsync(request.Name, arguments, ct);
+        var result = request.Name == "set_building_paused"
+            ? await actions.InvokeAsync(arguments, ct)
+            : await service.InvokeAsync(request.Name, arguments, ct);
         return new CallToolResult
         {
             StructuredContent = JsonSerializer.SerializeToElement(result),

@@ -5,11 +5,13 @@ using Timberborn.Contracts;
 namespace Timberborn.Backend.MoreHttpApi;
 
 public sealed class MoreHttpApiBackend(MoreHttpApiOptions options, HttpMessageHandler? testHandler = null)
-    : ITimberbornReadBackend, IDisposable
+    : ITimberbornReadBackend, ITimberbornWriteBackend, IDisposable
 {
     private readonly LoopbackHttpTransport transport = new(options, testHandler);
     public string Id => "more-http-api";
     public bool Simulated => false;
+    public bool WritesEnabled => options.EnableWrites;
+    public Task SetBuildingPausedAsync(Guid id, bool paused, CancellationToken ct) => transport.SetBuildingPausedAsync(id, paused, ct);
     public async Task PingAsync(CancellationToken ct) => await transport.GetAsync("ping", ct);
     private async Task<JsonElement> Fetch(string route, CancellationToken ct) =>
         await transport.GetAsync(route, ct) ?? throw Faults.Exception("backend_incompatible");

@@ -24,6 +24,11 @@ public static class Faults
     public static Fault Create(string code) => code switch
     {
         "invalid_argument" => new(code, "Ungültige Werkzeugparameter.", false, "Parameter und Wertebereich prüfen."),
+        "writes_disabled" => new(code, "Schreibzugriff ist deaktiviert.", false, "Explizite Schreibfreigabe erforderlich."),
+        "not_pausable" => new(code, "Pausierbarkeit oder Pausenstatus nicht bestätigt.", false, "Gebäude erneut prüfen."),
+        "state_conflict" => new(code, "Pausenstatus entspricht nicht dem erwarteten Ausgangszustand.", false, "Neu lesen und Auftrag prüfen."),
+        "action_unconfirmed" => new(code, "Änderung möglicherweise ausgeführt; Ergebnis nicht bestätigt.", false, "Nur lesend klären; nicht automatisch wiederholen oder zurücksetzen."),
+        "cancelled" => new(code, "Auftrag vor dem Schreibversuch abgebrochen.", false, "Auftrag bei Bedarf neu prüfen."),
         "backend_unavailable" => new(code, "Spiel-API nicht erreichbar.", true, "Spiel, API-Start und localhost-Port prüfen."),
         "authentication_failed" => new(code, "Spiel-API verweigert den Zugriff.", false, "Lokale Zugangskonfiguration prüfen."),
         "timeout" => new(code, "Zeitlimit der Abfrage erreicht.", true, "Später erneut abfragen."),

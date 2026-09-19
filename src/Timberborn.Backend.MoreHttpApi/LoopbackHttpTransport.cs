@@ -7,6 +7,7 @@ namespace Timberborn.Backend.MoreHttpApi;
 
 public sealed record MoreHttpApiOptions
 {
+    public bool EnableWrites { get; init; }
     public string BaseUrl { get; init; } = "http://localhost:8080/";
     public string? Authorization { get; init; }
     public TimeSpan RequestTimeout { get; init; } = TimeSpan.FromSeconds(5);
@@ -101,6 +102,29 @@ public sealed class LoopbackHttpTransport : IDisposable
             catch (IOException) { throw Faults.Exception("backend_unavailable"); }
             catch (JsonException) { throw Faults.Exception("backend_incompatible"); }
         }
+        finally { gate.Release(); }
+    }
+    public async Task SetBuildingPausedAsync(Guid id, bool paused, CancellationToken ct)
+    {
+        if (!options.EnableWrites) throw Faults.Exception("writes_disabled");
+        if (id == Guid.Empty) throw Faults.Exception("invalid_argument");
+        await gate.WaitAsync(ct);
+        try
+        {
+            using var timeout = CancellationTokenSource.CreateLinkedTokenSource(ct);
+            timeout.CancelAfter(options.RequestTimeout);
+            using var request = new HttpRequestMessage(HttpMethod.Get,
+                $"MoreHttpApi/buildings/{id:D}/toggle-pause?paused={(paused ? "true" : "false")}");
+            if (!string.IsNullOrEmpty(options.Authorization)) request.Headers.TryAddWithoutValidation("Authorization", options.Authorization);
+            // Never retry this request. Even a connection error can hide a completed action.
+            using var response = await client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, timeout.Token);
+            if (response.StatusCode is HttpStatusCode.Unauthorized or HttpStatusCode.Forbidden)
+                throw Faults.Exception("authentication_failed");
+            if (response.StatusCode != HttpStatusCode.NoContent) throw Faults.Exception("action_unconfirmed");
+        }
+        catch (BackendException) { throw; }
+        catch (Exception ex) when (ex is HttpRequestException or IOException or OperationCanceledException)
+        { throw Faults.Exception("action_unconfirmed"); }
         finally { gate.Release(); }
     }
     public void Dispose() { client.Dispose(); gate.Dispose(); }

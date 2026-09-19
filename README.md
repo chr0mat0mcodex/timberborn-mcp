@@ -1,6 +1,6 @@
 # Timberborn MCP
 
-Lokaler C#-MCP-Server für lesenden Zugriff auf Timberborn. Umsetzung nach `missionsplan.md`.
+Lokaler C#-MCP-Server für Timberborn, standardmäßig ausschließlich lesend. Umsetzung nach `missionsplan.md`.
 MCP läuft über stdio; der Spielzugriff wird hinter einem eigenen Backend gekapselt.
 
 Repository: [chr0mat0mcodex/timberborn-mcp](https://github.com/chr0mat0mcodex/timberborn-mcp).
@@ -61,10 +61,28 @@ Diagnose geht nach stderr, stdout enthält ausschließlich Protokollnachrichten.
 | TIMBERBORN_BASE_URL | http://localhost:8080/; nur HTTP-Loopback, kein Pfad/Query/Login |
 | TIMBERBORN_AUTHORIZATION | Optionaler Authorization-Wert; nicht als Argument oder Git-Datei speichern |
 | TIMBERBORN_FAKE_SCENARIO | healthy; alternativ partial oder offline; nur für Simulation relevant |
+| TIMBERBORN_ENABLE_WRITES | Nur `1` aktiviert zusätzlich set_building_paused; standardmäßig aus |
 
 Alle fünf Tools bleiben offline auflistbar: `timberborn_status`, `inspect_colony`,
 `inspect_population`, `find_buildings`, `inspect_building`. Parameter und Ergebnisfelder
 stehen in missionsplan.md Abschnitt 3. Simulierte Daten sind immer markiert.
+
+## Optionaler Schreib-POC
+
+`set_building_paused(id, paused, expectedPaused)` verändert genau ein Gebäude. Es prüft frische
+Gebäudezugehörigkeit, Pausierbarkeit und Ausgangszustand und liest den Zustand nach dem Request erneut.
+Ohne `TIMBERBORN_ENABLE_WRITES=1` wird das Werkzeug weder angeboten noch ausgeführt.
+Die bestehende lokale Codex-Konfiguration bleibt standardmäßig lesend.
+
+Ergebnisse: `unchanged` (kein Request nötig), `applied` (Zielzustand nachgelesen),
+`rejected` (abgewiesen) oder `unconfirmed` (Änderung möglicherweise ausgeführt).
+Bei `unconfirmed` nur lesend klären; kein automatisches Retry oder Zurücksetzen.
+Die Vorbedingung ist keine atomare Sperre gegenüber dem Spiel oder anderen Clients.
+Das Rücksetzen des Pausenstatus stellt entgangene Produktion nicht wieder her.
+
+Der separate Live-Schreibtest benötigt `TIMBERBORN_LIVE_WRITE_TEST=1` und die ausdrückliche Freigabe
+für Hin-/Rückweg an genau einer `LumberjackFlag.Folktails`. Er bricht bei null oder mehreren Treffern ab.
+`scripts/verify.ps1` deaktiviert diesen Test ausdrücklich, auch mit `-Live`; `-Live` bleibt rein lesend.
 
 ## Tests und Grenzen
 
