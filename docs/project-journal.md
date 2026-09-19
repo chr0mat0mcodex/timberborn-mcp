@@ -164,3 +164,13 @@ nativer Lesetest separat bestanden. verify.ps1 deaktiviert dessen Opt-in im norm
 Keine Mutation ausgeführt. Fremdmods waren im Spiel weiterhin aktiv; Isolation ohne diese noch nicht
 live getestet. Koordinaten-/Geländesemantik und Session-Wechsel nach Menü/Reload noch offen.
 Die dauerhafte Client-Konfiguration wurde nicht umgestellt; Livetest nutzt eigenen nativen Prozess.
+
+## 2026-09-20 — Wiederverbindung nach Menü und Neuladen bestätigt
+
+Nutzer hat Hauptmenü und erneutes Laden der Testkolonie durchgeführt. Spiel-Log bestätigt
+Menü-/Spiel-Ladevorgang und erneuten Listener-Start. Snapshot erreichbar, anschließend alle
+drei nativen MCP-Werkzeuge im separaten Lesetest erneut erfolgreich (ein Test bestanden).
+Kein Spielneustart und keine Mutation erforderlich. Vorherige Session-ID wurde nicht erhalten;
+ein tatsächlicher ID-Wechsel ist deshalb nicht direkt verglichen. Aktuelle ID nur lokal unter
+.local als Vergleichsbasis gespeichert, keine IDs oder Rohlogs im Repository.
+Wiederverbindung abgenommen; räumlicher UI-Abgleich und Bauvalidierung bleiben offen.

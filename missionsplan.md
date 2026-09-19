@@ -902,3 +902,10 @@ Beispielbestände und Wohnraum durch Nutzer-UI-Abgleich bestätigt. Einzelne Kar
 an einer beobachteten Objektposition technisch lesbar, räumliche Bedeutung noch nicht abgenommen.
 Offen: Session-Wechsel beim Neuladen, räumlicher UI-Abgleich und danach begrenzter
 Wohnbau-Validierungspilot. Kein Bauauftrag ausgeführt und keine dauerhafte Client-Umstellung.
+
+### 7.5 Wiederverbindung nach Neuladen
+
+Hauptmenü/Neuladen vom Nutzer durchgeführt. Listener startet erneut; alle drei nativen
+MCP-Werkzeuge wieder erfolgreich geprüft. Der vorherige Session-ID-Wert liegt nicht vor,
+daher nur Wiederverbindung, nicht der ID-Wechsel selbst, direkt nachgewiesen.
+Nächster Schritt: räumlichen Bezug im UI bestätigen und Wohnbau-Validierungspilot vorbereiten.
