@@ -1,0 +1,31 @@
+# Agentenanweisungen
+
+## Einstieg
+
+- Standardmäßig auf Deutsch, knapp und technisch nachvollziehbar arbeiten.
+- Vor Änderungen Git-Status, README.md, DEVELOPMENT_WORKFLOW.md und die relevanten Abschnitte von missionsplan.md lesen.
+- Aktuelle Ergebnisse stehen in docs/project-journal.md, Architekturentscheidungen in docs/architecture/decisions.md, getestete Versionen in docs/compatibility/timberborn.md.
+- Historische Planungsabschnitte sind keine aktuelle Zustandsbeschreibung. Aussagen gegen Dateien und Git prüfen.
+
+## Grenzen
+
+- Der freigegebene POC liest ausschließlich Spielzustand. Keine Schreibwerkzeuge, Save-Manipulation oder generischen HTTP-Werkzeuge ohne neue ausdrückliche Freigabe.
+- Mods installiert und aktiviert der Nutzer. Keine System-, Spiel- oder MCP-Client-Konfiguration selbstständig ändern.
+- Größere Architekturänderungen und neue Funktionen zunächst konkret vorschlagen und auf Freigabe warten.
+- Änderungen an dauerhaften Agentenregeln zuerst beschreiben und freigeben lassen; bereits ausdrücklich beauftragte Regeländerungen nicht erneut bestätigen lassen.
+- Bestehende fremde Änderungen erhalten. Keine destruktiven Git-Befehle oder Force-Pushes.
+
+## Qualität und Datenschutz
+
+- Dokumentierte Schnittstellen und bestehende Schichten verwenden. Fake-Daten immer als Simulation kennzeichnen; unbekannte Werte nicht erfinden.
+- stdout bleibt ausschließlich MCP-Protokoll; Diagnose nach stderr.
+- Codeänderungen gemäß DEVELOPMENT_WORKFLOW.md prüfen. Live-Tests nur mit ausdrücklich vorbereiteter Testkolonie und Opt-in.
+- Keine Zugangsdaten, Auth-Dateien, Rohlogs, Chats, persönlichen Erinnerungen, Screenshots, Anhänge, SQLite-Zustände, Spielstände, Spiel-/Mod-Binärdateien oder Laufzeitcaches committen.
+- Synthetische Testdaten verwenden. Keine persönlichen Namen, lokalen Benutzerpfade oder Spiel-IDs in Fixtures aufnehmen.
+- Relevante Ergebnisse und Fallstricke knapp im Projektjournal bzw. passenden Fachdokument festhalten, ohne Rohdaten abzulegen.
+
+## GitHub-Sicherung
+
+- Der Nutzer hat Veröffentlichung und regelmäßige Pushes dieses Projekts nach chr0mat0mcodex/timberborn-mcp ausdrücklich beauftragt.
+- Nach sinnvoll abgeschlossenen, geprüften Arbeitsständen gezielt committen und zum eingerichteten origin pushen; Ablauf und Grenzen stehen in DEVELOPMENT_WORKFLOW.md.
+- Diese Regel gilt während der Projektarbeit. Sie richtet keinen Hintergrunddienst oder Zeitplan ein.

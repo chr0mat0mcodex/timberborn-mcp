@@ -12,3 +12,14 @@ _GAME!/
 _WORKSHOP!/
 _MODS!/
 _LOGS!/
+.env
+.env.*
+*.sqlite
+*.sqlite3
+*.db
+*.pem
+*.key
+credentials*.json
+auth.json
+screenshots/
+attachments/

@@ -3,6 +3,10 @@
 Lokaler C#-MCP-Server für lesenden Zugriff auf Timberborn. Umsetzung nach `missionsplan.md`.
 MCP läuft über stdio; der Spielzugriff wird hinter einem eigenen Backend gekapselt.
 
+Repository: [chr0mat0mcodex/timberborn-mcp](https://github.com/chr0mat0mcodex/timberborn-mcp).
+Für die Mitarbeit gelten [Agentenanweisungen](AGENTS.md) und [Entwicklungsablauf](DEVELOPMENT_WORKFLOW.md).
+Aktuelle Ergebnisse dokumentiert das [Projektjournal](docs/project-journal.md).
+
 ## Entwicklungsstand
 
 Read-only-POC mit More HTTP API und explizitem Fake-Backend implementiert und live getestet.
