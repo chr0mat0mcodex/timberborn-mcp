@@ -1,0 +1,14 @@
+.local/
+**/bin/
+**/obj/
+TestResults/
+*.local.json
+*.log
+*.timber
+*.dll
+*.pdb
+.vs/
+_GAME!/
+_WORKSHOP!/
+_MODS!/
+_LOGS!/

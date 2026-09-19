@@ -1,0 +1,10 @@
+<Solution>
+<Project Path="src/Timberborn.Backend.Abstractions/Timberborn.Backend.Abstractions.csproj" />
+<Project Path="src/Timberborn.Backend.Fake/Timberborn.Backend.Fake.csproj" />
+<Project Path="src/Timberborn.Application/Timberborn.Application.csproj" />
+<Project Path="src/Timberborn.Contracts/Timberborn.Contracts.csproj" />
+<Project Path="src/Timberborn.Backend.MoreHttpApi/Timberborn.Backend.MoreHttpApi.csproj" />
+<Project Path="src/Timberborn.McpServer/Timberborn.McpServer.csproj" />
+<Project Path="tests/Timberborn.Tests/Timberborn.Tests.csproj" />
+<Project Path="tests/Timberborn.IntegrationTests/Timberborn.IntegrationTests.csproj" />
+</Solution>

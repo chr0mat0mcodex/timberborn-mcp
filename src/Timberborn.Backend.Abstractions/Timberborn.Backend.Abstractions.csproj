@@ -1,0 +1,4 @@
+<Project Sdk="Microsoft.NET.Sdk">
+<ItemGroup>
+<ProjectReference Include="../Timberborn.Contracts/Timberborn.Contracts.csproj" />
+</ItemGroup></Project>

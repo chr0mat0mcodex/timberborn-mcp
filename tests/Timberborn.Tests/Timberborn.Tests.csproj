@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+<PropertyGroup><OutputType>Exe</OutputType><IsTestProject>true</IsTestProject></PropertyGroup>
+<ItemGroup><PackageReference Include="Microsoft.NET.Test.Sdk" /><PackageReference Include="xunit.v3" /><PackageReference Include="xunit.runner.visualstudio" PrivateAssets="all" /><PackageReference Include="ModelContextProtocol" /></ItemGroup>
+<ItemGroup>
+<ProjectReference Include="../../src/Timberborn.Backend.Abstractions/Timberborn.Backend.Abstractions.csproj" />
+<ProjectReference Include="../../src/Timberborn.Backend.Fake/Timberborn.Backend.Fake.csproj" />
+<ProjectReference Include="../../src/Timberborn.Application/Timberborn.Application.csproj" />
+<ProjectReference Include="../../src/Timberborn.Contracts/Timberborn.Contracts.csproj" />
+<ProjectReference Include="../../src/Timberborn.Backend.MoreHttpApi/Timberborn.Backend.MoreHttpApi.csproj" />
+<ProjectReference Include="../../src/Timberborn.McpServer/Timberborn.McpServer.csproj" />
+</ItemGroup></Project>
