@@ -198,3 +198,28 @@ SHA256 geprüft; vorhandener privater Schlüssel unverändert. Aktuelle Session-
 als Vergleichsbasis gesichert. Neue DLLs noch nicht im laufenden Spiel geladen.
 Nächste notwendige Nutzerhilfe: vollständiger Spielneustart und MCP laden; anschließend
 begrenzter strukturierter Live-Pilot gemäß docs/spatial-precheck.md ohne weitere Umfangsrückfrage.
+
+## 2026-09-20 — Räumlicher 0.3.0-Pilot live bestätigt
+
+Version 0.3.0 aktiv, Sitzungswechsel gegenüber lokaler Vergleichs-ID direkt bestätigt.
+Ein lesender HTTP-Verbindungscheck und zehn fachliche MCP-Abfragen ausgeführt, innerhalb
+des Zwölf-Abfragen-Budgets. Alle sechs Werkzeuge genutzt; 21 Gebäude/Wege, 64 Kartenzellen,
+aktive Fraktion und zwei freigeschaltete Vorlagen gelesen. Lodge benötigt 12 Holz bei 0 Bestand.
+Vier Bauplatzvorprüfungen ergeben erklärbare Objekt-/Terrain-/Kartenrandhindernisse; keine
+freie vollständige Grundfläche nachgewiesen. Registrierte Objektzahl und Bestandsbeobachtung
+vor/nach identisch. Keine Bauaufträge, Screenshots oder Eingabesimulation ausgeführt.
+
+## 2026-09-20 — Validator-Prototyp vorbereitet, Mission auf Analyse fokussiert
+
+Öffentliche PreviewFactory-/Validator-/Placer-/EntitySetup-Signaturen gezielt geprüft.
+0.4.0 mit eigener temporärer Vorschau und Spielvalidator gebaut; gesondertes Mod-/MCP-Opt-in,
+POST-only, Session-Prüfung, maximal acht Versuche und Sperre bei Fehler/Zustandsabweichung.
+Keine Platzierungsroute. 109 reguläre Tests bestanden, drei Live-Tests übersprungen.
+Neues lokales Paket erstellt; ausdrücklich noch nicht installiert oder im Spiel getestet.
+
+Nutzer stellt klar: Vorrang hat die Analyse dessen, was der Agent zum Spielen benötigt;
+reales Spielen ist sekundär. Auf ausdrücklichen Auftrag in AGENTS.md und missionsplan.md
+gespeichert und die Einstiege in README/Phase-2-Plan angepasst. Die bevorstehende Installation
+von 0.4.0 unterbleibt. Spiel nutzt weiterhin 0.3.0, privater Schlüssel und Client-Konfiguration
+unverändert. Nächster Schwerpunkt: Fähigkeiten, benötigte Daten/Aktionen und Evidenzlücken
+systematisch priorisieren; praktische Tests nur mit konkretem Erkenntniszweck.

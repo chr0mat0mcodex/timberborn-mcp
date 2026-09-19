@@ -1,9 +1,10 @@
-# Eigene Timberborn Agent Bridge — 0.3.0
+# Eigene Timberborn Agent Bridge — 0.4.0
 
 Das Endziel ist ein Agent, der Timberborn über MCP spielt: Wasser, Nahrung, Holz,
 Wege und Wohnraum aufbauen und die Versorgung anhand frischer Beobachtungen steuern.
-Dieser erste unabhängige Mod-Baustein ist ausschließlich lesend. Bau- und
-Steuerungsaktionen folgen nach strukturiertem Abgleich der Spielkoordinaten und Zustände.
+Standardmäßig sind sechs Leserouten aktiv. 0.4.0 ergänzt eine separat geschützte
+temporäre Vorschauvalidierung; sie platziert keine Gebäude. Bau- und Steuerungsaktionen
+folgen nach strukturiertem Abgleich der Spielkoordinaten und Zustände.
 Keine Screenshot-Auswertung und keine simulierten Maus-/Tastatureingriffe zur Spielsteuerung.
 
 ## Lokales Paket bauen
@@ -30,7 +31,7 @@ und ist deshalb allein noch keine einsatzfertige Installation.
 1. Timberborn beenden. Den gesamten erzeugten Ordner `TimberbornAgentBridge` nach
    `Dokumente/Timberborn/Mods/TimberbornAgentBridge` kopieren. Die Dateien müssen
    direkt darin liegen, ohne zusätzlichen gleichnamigen Unterordner.
-2. Spiel starten, die Mod **Timberborn MCP Agent Bridge (Read-only Prototype)**
+2. Spiel starten, die Mod **Timberborn MCP Agent Bridge (Prototype)**
    aktivieren und gegebenenfalls neu starten. Spielstand **MCP** laden.
 3. Die Mod benötigt keine anderen Mods. Bestehende Mods müssen für den ersten
    Test nicht entfernt werden. Port 8081 trennt sie vom früheren HTTP-POC auf 8080.
@@ -58,6 +59,14 @@ Die letzten drei benötigen Mod 0.3.0. Auch mit gesetztem Schreib-Opt-in
 bietet dieses Backend keine Schreibwerkzeuge an. Ein Browseraufruf ohne Schlüssel
 bekommt absichtlich HTTP 401; es gibt keinen öffentlichen Ping.
 
+Optional ab Mod 0.4.0: `validate_build_site(template,x,y,z,rotation,session)`.
+Benötigt zusätzlich `enableValidation: true` in der privaten Mod-Konfiguration
+und `TIMBERBORN_ENABLE_VALIDATION=1` im MCP-Prozess. In neuen Paketen standardmäßig aus.
+Verwendet ausschließlich die festgelegte POST-Route, frische Sitzungs-ID und maximal
+acht Versuche je Spielsitzung. Erzeugt eigene verborgene Vorschauen; keine Platzierung.
+Nicht als rein lesend oder automatisch wiederholbar behandeln. Details und Live-Grenzen:
+[Geschützte Spielvalidierung](native-validation.md).
+
 Live-Abnahme nach Installation: Verbindung, drei Beispielgüter (Water/Berries/Log),
 Bevölkerung, belegte/freie Betten und Obdachlose strukturiert abfragen. Die Basiswerte
 wurden für 0.2.0 bereits durch den Nutzer bestätigt. Danach Objektbelegung,
@@ -76,7 +85,8 @@ keine Distriktanbindung oder Reichweite. Ressourcen-/Betten-
 Zähler können vom Spiel verzögert aktualisiert werden. Die Abfrage läuft auf dem
 Spielhauptthread, bildet aber keinen atomar eingefrorenen Simulationszustand ab.
 
-Transport: ausschließlich Loopback, eigener Bearer-Schlüssel, feste GET-Routen,
+Transport: ausschließlich Loopback, eigener Bearer-Schlüssel, feste GET-Leserouten,
 keine Browser-Origin-Aufrufe, keine Weiterleitungen, begrenzte Antwortgröße und
 Zeitlimits. Spielzugriffe werden auf dem Hauptthread abgearbeitet; beim Entladen
-werden wartende Anfragen verworfen. Keine Save-Erweiterung und keine Schreibroute.
+werden wartende Anfragen verworfen. Keine Save-Erweiterung und keine Platzierungsroute.
+Die optionale POST-Validierung ist separat freizuschalten.

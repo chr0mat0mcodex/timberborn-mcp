@@ -97,11 +97,22 @@ public sealed class NativeClient : IDisposable
     }
     private static bool ValidCosts(NativeCost[]? costs) => costs is not null && costs.Length <= 32 &&
         costs.All(c => c is not null && !string.IsNullOrEmpty(c.Id) && c.Required >= 0 && c.AvailableGlobally >= 0);
-    private async Task<BridgeEnvelope<T>> Get<T>(string route, CancellationToken ct)
+    public async Task<BridgeEnvelope<NativeValidation>> Validate(BridgeRequest r, CancellationToken ct)
+    {
+        if (r.Route != "site-validation") throw new ArgumentException();
+        var result = await Get<NativeValidation>($"site-validation?template={Uri.EscapeDataString(r.Template)}&x={r.X}&y={r.Y}&z={r.Z}&rotation={r.Rotation}&session={r.Session}", ct, HttpMethod.Post);
+        var d = result.Data;
+        if (result.SessionId != r.Session || d.Template != r.Template || d.Origin != new Position(r.X, r.Y, r.Z) ||
+            d.Rotation != r.Rotation || !d.GameValidated || d.AttemptsRemaining is < 0 or > 7 || d.Limitations is null ||
+            (d.NoPersistentChangeObserved ? d.Valid is null || d.SessionLocked : d.Valid is not null || !d.SessionLocked))
+            throw new InvalidDataException("Invalid validation result");
+        return result;
+    }
+    private async Task<BridgeEnvelope<T>> Get<T>(string route, CancellationToken ct, HttpMethod? method = null)
     {
         using var budget = CancellationTokenSource.CreateLinkedTokenSource(ct);
         budget.CancelAfter(TimeSpan.FromSeconds(7));
-        using var request = new HttpRequestMessage(HttpMethod.Get, route);
+        using var request = new HttpRequestMessage(method ?? HttpMethod.Get, route);
         request.Headers.Authorization = new("Bearer", token);
         using var response = await client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, budget.Token);
         if (response.StatusCode is HttpStatusCode.Unauthorized or HttpStatusCode.Forbidden)
@@ -115,7 +126,7 @@ public sealed class NativeClient : IDisposable
             await buffer.WriteAsync(bytes.AsMemory(0, count), budget.Token);
         }
         var result = JsonSerializer.Deserialize<BridgeEnvelope<T>>(buffer.ToArray(), NativeJson.Options);
-        if (result is null || result.SchemaVersion != 1 || result.BridgeVersion is not ("0.2.0" or "0.3.0") ||
+        if (result is null || result.SchemaVersion != 1 || result.BridgeVersion is not ("0.2.0" or "0.3.0" or "0.4.0") ||
             !Guid.TryParseExact(result.SessionId, "D", out var session) || session == Guid.Empty ||
             result.ObservedAtUtc == default || result.Data is null) throw new InvalidDataException("Invalid bridge envelope");
         return result;

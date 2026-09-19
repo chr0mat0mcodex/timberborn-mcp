@@ -16,10 +16,11 @@ public sealed class BridgeRequest
     public int Limit { get; }
     public string Template { get; }
     public int Rotation { get; }
+    public string Session { get; }
     private BridgeRequest(string route, int x = 0, int y = 0, int z = 0, int width = 0, int height = 0, int depth = 0,
-        int offset = 0, int limit = 0, string template = "", int rotation = 0)
+        int offset = 0, int limit = 0, string template = "", int rotation = 0, string session = "")
     { Route = route; X = x; Y = y; Z = z; Width = width; Height = height; Depth = depth;
-        Offset = offset; Limit = limit; Template = template; Rotation = rotation; }
+        Offset = offset; Limit = limit; Template = template; Rotation = rotation; Session = session; }
 
     public static BridgeRequest Parse(string path, NameValueCollection query)
     {
@@ -35,13 +36,22 @@ public sealed class BridgeRequest
         }
         if (path == "/agent-api/v1/objects" && query.Count == 2)
             return new("objects", offset: Read("offset", 0, 65535), limit: Read("limit", 1, 32));
-        if (path == "/agent-api/v1/site-precheck" && query.Count == 5)
+        bool validation = path == "/agent-api/v1/site-validation";
+        if ((path == "/agent-api/v1/site-precheck" && query.Count == 5) || (validation && query.Count == 6))
         {
             var values = query.GetValues("template");
             if (values is null || values.Length != 1 || values[0] is not ("Lodge.Folktails" or "Path"))
                 throw new ArgumentException("invalid_request");
-            return new("site-precheck", Read("x", 0, 4095), Read("y", 0, 4095), Read("z", 0, 4095),
-                template: values[0], rotation: Read("rotation", 0, 3));
+            var session = "";
+            if (validation)
+            {
+                var sessions = query.GetValues("session");
+                if (sessions is null || sessions.Length != 1 || !Guid.TryParseExact(sessions[0], "D", out var id) || id == Guid.Empty)
+                    throw new ArgumentException("invalid_session");
+                session = id.ToString("D");
+            }
+            return new(validation ? "site-validation" : "site-precheck", Read("x", 0, 4095), Read("y", 0, 4095), Read("z", 0, 4095),
+                template: values[0], rotation: Read("rotation", 0, 3), session: session);
         }
         if (path != "/agent-api/v1/map" || query.Count != 6) throw new ArgumentException("invalid_request");
         return new("map", Read("x", 0, 4095), Read("y", 0, 4095), Read("z", 0, 4095),

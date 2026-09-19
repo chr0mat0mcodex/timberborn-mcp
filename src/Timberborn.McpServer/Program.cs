@@ -14,6 +14,7 @@ using Timberborn.McpServer;
 var backendName = Environment.GetEnvironmentVariable("TIMBERBORN_BACKEND") ?? "more-http-api";
 var scenario = Environment.GetEnvironmentVariable("TIMBERBORN_FAKE_SCENARIO") ?? "healthy";
 var writesEnabled = Environment.GetEnvironmentVariable("TIMBERBORN_ENABLE_WRITES") == "1";
+var validationEnabled = Environment.GetEnvironmentVariable("TIMBERBORN_ENABLE_VALIDATION") == "1";
 if (scenario is not ("healthy" or "offline" or "partial"))
     throw new InvalidOperationException("Unbekanntes Fake-Szenario.");
 ITimberbornReadBackend? backend = backendName switch
@@ -29,10 +30,10 @@ ITimberbornReadBackend? backend = backendName switch
     _ => throw new InvalidOperationException("Unbekanntes Backend.")
 };
 using var native = backendName == "native" ? new NativeTools(new NativeClient(NativeConfiguration.Load(
-    Environment.GetEnvironmentVariable("TIMBERBORN_NATIVE_CONFIG") ?? throw new InvalidOperationException("TIMBERBORN_NATIVE_CONFIG fehlt.")))) : null;
+    Environment.GetEnvironmentVariable("TIMBERBORN_NATIVE_CONFIG") ?? throw new InvalidOperationException("TIMBERBORN_NATIVE_CONFIG fehlt."))), validationEnabled) : null;
 var service = backend is null ? null : new ObservationService(backend);
 var actions = backend is null ? null : new BuildingActionService(backend, (ITimberbornWriteBackend)backend);
-var tools = native is null ? ToolCatalog.Create(writesEnabled) : NativeTools.Catalog();
+var tools = native is null ? ToolCatalog.Create(writesEnabled) : NativeTools.Catalog(validationEnabled);
 var builder = Host.CreateApplicationBuilder(new HostApplicationBuilderSettings { Args = [], DisableDefaults = true });
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole(o => o.LogToStandardErrorThreshold = LogLevel.Trace);

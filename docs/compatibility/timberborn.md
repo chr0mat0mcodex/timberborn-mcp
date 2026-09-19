@@ -26,3 +26,9 @@ HTTP-Port 8081 erreichbar, alle drei nativen MCP-Werkzeuge über stdio live erfo
 Bevölkerung/Bestände/Wohnraum durch Nutzer bestätigt. Eine Kartenzelle technisch gelesen;
 Semantik und Session-Wechsel noch offen. Bisherige Fremdmods weiterhin aktiv, aber vom
 nativen Backend nicht angesprochen; isolierter Spielstart ohne Fremdmods noch nicht geprüft.
+
+0.3.0 zusätzlich live geprüft: sechs native MCP-Werkzeuge, 21 Gebäude-/Wegeobjekte,
+Fraktion/Freischaltung/Kosten von Lodge und Path, 64 Gelände-/Wasserzellen und vier
+erklärbar abgewiesene Bauplatzvorprüfungen. Objektzahl und beobachtete Bestände unverändert.
+Sitzungswechsel gegenüber vorher lokal gespeicherter ID direkt bestätigt.
+0.4.0 kompiliert und synthetisch geprüft; Vorschau-Liveprüfung steht aus.

@@ -1,6 +1,31 @@
 # Missionsplan: Timberborn MCP
 
-Stand: 2026-09-19. Status: Read-only-POC implementiert und technisch live geprüft; UI-Werte vom Nutzer bestätigt.
+Aktueller Schwerpunkt, 2026-09-20: **analysieren, was ein Agent zum Spielen von Timberborn
+über MCP braucht**. Tatsächliches Spielen ist derzeit sekundär. Der technische Basiszugriff
+und der räumliche Vorprüfungspilot sind live nachgewiesen; ein Bauauftrag ist noch nicht implementiert.
+
+## Aktuelle Priorität und Ergebnis der Mission
+
+Die Mission liefert vorrangig eine belastbare Fähigkeitsanalyse:
+
+1. Welche Zustandsdaten braucht der Agent, um Versorgung, Wohnraum, Arbeit, Karte,
+   Erreichbarkeit, Zeit und Gefahren zu verstehen?
+2. Welche programmierten Eingriffe braucht er zum regulären Bauen, Betreiben und Steuern?
+3. Welche öffentlichen APIs tragen diese Fähigkeiten, welche Vorbedingungen und
+   Sicherheits-/Ergebnisprüfungen sind nötig, und wo bleiben Lücken?
+
+Jede Fähigkeit nach Belegstufe kennzeichnen: Konzept, öffentliche Signatur, gebaut/getestet
+oder live bestätigt. Erfolgreicher Build ist kein Laufzeitnachweis; freie Geometrie ist keine
+Baufreigabe; ein Bauauftrag ist kein fertiges Gebäude und keine funktionierende Versorgung.
+Prototypen und begrenzte Live-Tests dienen der Klärung konkreter Fragen, nicht dem Spielbetrieb
+als Selbstzweck. Keine Screenshots: Zustände aus dem Spiel lesen, Interaktionen kontrolliert
+programmieren. Wasser, Nahrung, Holz, Wege und Wohnraum bleiben Referenzszenario und späteres
+Spielziel; derzeit ist ihre technische Ermöglichung vorrangig.
+
+Aktueller Stand: 0.3.0 im Spiel aktiv und räumlich geprüft. 0.4.0 mit geschützter
+Vorschauvalidierung ist gebaut/getestet und lokal gepackt, **nicht installiert oder live geprüft**.
+Nach der Schwerpunktklärung keine weitere Installation oder Spielaktion ausgeführt.
+Die folgenden älteren Abschnitte dokumentieren die bisherigen Aufträge und Nachweise.
 
 ## Auftrag und Freigabegrenzen
 
@@ -923,3 +948,26 @@ Eingang/Kosten. Sie erzeugt keine Entities/Vorschauen und meldet niemals vollst�
 99 reguläre Tests bestanden; neuer Mod-Build erfolgreich. Geplanter Live-Pilot begrenzt auf
 zwölf Abfragen, dokumentiert in docs/spatial-precheck.md. Neustart für neue DLLs erforderlich.
 Endziel unverändert: über MCP regulär bauen und Grundversorgung einschließlich Wohnraum betreiben.
+
+### 7.7 Raum-Pilot bestanden, geschützte Validatorstufe vorbereitet
+
+0.3.0 aktiv, Session-Wechsel direkt bestätigt. Zehn fachliche MCP-Aufrufe: sechs Werkzeuge
+genutzt, Gebäude/Wege, Fraktion, zwei Bauvorlagen und 64 Kartenfelder gelesen, vier Standorte
+mit nachvollziehbaren Hindernissen abgewiesen. Keine Objektzahl-/Bestandsänderung beobachtet.
+Lodge freigeschaltet, 12 Holz erforderlich, 0 verfügbar. Kein freier Standort bewiesen;
+die zwei Kandidaten hatten nur eine freie Ankerzelle, nicht zwingend eine freie Grundfläche.
+
+0.4.0 bereitet echte BlockObject-Validierung mit eigener temporärer Vorschau vor, hinter
+Mod-/MCP-Opt-in, POST-only, frischer Session-ID und Zustandswachen. Maximal acht Versuche je
+Sitzung, Sperre bei Fehler/Abweichung, kein automatisches Retry und keine Platzierung.
+109 reguläre Tests bestanden; Mod-Build erfolgreich. Live-Prüfung nach nötigem Neustart:
+maximal zwei Validierungen gemäß docs/native-validation.md. Bauauftrag folgt erst nach Nachweis.
+
+### 7.8 Schwerpunktklärung durch Nutzer
+
+Analyse der zum Spielen benötigten Fähigkeiten hat Vorrang; reales Spielen ist sekundär.
+Diese Priorität steht am Anfang des Missionsplans und in AGENTS.md. Keine automatische
+Fortsetzung zum Kolonieaufbau. Vorbereitete 0.4.0 bleibt ein nicht installierter Prüfprototyp.
+Nächste analytische Arbeit: die vorhandene Funktionsmatrix mit den Nachweisen aus 0.3.0
+abgleichen und offene Daten-/Aktionsvoraussetzungen priorisieren, statt weitere Bauversuche
+oder Spielneustarts ohne konkreten Erkenntnisbedarf anzustoßen.

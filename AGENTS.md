@@ -7,7 +7,15 @@
 - Aktuelle Ergebnisse stehen in docs/project-journal.md, Architekturentscheidungen in docs/architecture/decisions.md, getestete Versionen in docs/compatibility/timberborn.md.
 - Historische Planungsabschnitte sind keine aktuelle Zustandsbeschreibung. Aussagen gegen Dateien und Git prüfen.
 
-## Grenzen
+## Aktueller Missionsschwerpunkt
+
+- Vorrang hat die Analyse, was ein Agent benötigt, um Timberborn über MCP spielen zu können: Zustandsdaten, Entscheidungsgrundlagen, kontrollierte Eingriffe und deren Voraussetzungen.
+- Tatsächliches Spielen ist derzeit nachrangig. Prototypen und Live-Tests dienen gezielt dem Nachweis einer konkreten Fähigkeit oder der Klärung einer Lücke; keinen autonomen Kolonieaufbau als Standard-Fortsetzung betreiben.
+- Für jede benötigte Fähigkeit festhalten: Zweck, erforderliche Daten/Aktionen, API-Zugang, Belegstufe (Idee, öffentliche Signatur, gebaut/getestet, live bestätigt), Grenzen und nächster sinnvoller Nachweis. Vorprüfung, Spielvalidierung, Auftrag und Wirkung getrennt bewerten.
+- Zustände strukturiert aus dem Spiel abfragen und Interaktionen kontrolliert programmieren. Keine Screenshot-Auswertung oder simulierten Maus-/Tastatureingriffe als Spielsteuerung.
+- Im freigegebenen Umfang selbstständig weiterarbeiten, bis tatsächliche Nutzerhilfe nötig ist. Abhängigkeiten möglichst vermeiden; sinnvolle Abhängigkeiten mit Nutzen/Aufwand/Risiko gegenüber Eigenbau abwägen und vor Aufnahme fragen.
+
+## Eingriffsgrenzen
 
 - Der freigegebene POC liest ausschließlich Spielzustand. Keine Schreibwerkzeuge, Save-Manipulation oder generischen HTTP-Werkzeuge ohne neue ausdrückliche Freigabe.
 - Mods installiert und aktiviert der Nutzer. Keine System-, Spiel- oder MCP-Client-Konfiguration selbstständig ändern.

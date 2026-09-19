@@ -10,8 +10,10 @@ namespace Timberborn.IntegrationTests;
 
 public sealed class NativeBridgeTests
 {
-    [Fact]
-    public async Task AuthenticatedBridgeThroughRealStdioReturnsSnapshotAndMapWithoutWriteTools()
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task AuthenticatedBridgeThroughRealStdioReturnsSnapshotAndMapWithoutWriteTools(bool enableValidation)
     {
         using var timeout = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);
         timeout.CancelAfter(TimeSpan.FromSeconds(30));
@@ -20,7 +22,7 @@ public sealed class NativeBridgeTests
         reservation.Start(); int port = ((IPEndPoint)reservation.LocalEndpoint).Port; reservation.Stop();
         var token = Convert.ToHexString(System.Security.Cryptography.RandomNumberGenerator.GetBytes(32));
         using var queue = new MainThreadQueue();
-        using var bridge = new BridgeHttpServer(port, token, queue);
+        using var bridge = new BridgeHttpServer(port, token, queue, enableValidation);
         bridge.Start();
         int observations = 0;
         var session = Guid.NewGuid().ToString("D");
@@ -46,9 +48,11 @@ public sealed class NativeBridgeTests
                             "site-precheck" => new NativeSite(r.Template, new(r.X, r.Y, r.Z), r.Rotation,
                                 "requires_game_validation", false, [], [new(new(r.X, r.Y, r.Z), true, false, true, false, "Ground")],
                                 null, null, [], ["not_full_game_validator"]),
+                            "site-validation" => new NativeValidation(r.Template, new(r.X, r.Y, r.Z), r.Rotation,
+                                true, true, true, false, 7, ["synthetic_test"]),
                             _ => throw new ArgumentException()
                         };
-                        return JsonSerializer.Serialize(new BridgeEnvelope<object>(1, session, DateTimeOffset.UtcNow, "0.3.0", data), NativeJson.Options);
+                        return JsonSerializer.Serialize(new BridgeEnvelope<object>(1, session, DateTimeOffset.UtcNow, "0.4.0", data), NativeJson.Options);
                     });
                     await Task.Delay(5, pumpStop.Token);
                 }
@@ -69,6 +73,13 @@ public sealed class NativeBridgeTests
             originRequest.Headers.Add("Origin", "https://example.invalid");
             using var origin = await http.SendAsync(originRequest, ct);
             Assert.Equal(HttpStatusCode.Forbidden, origin.StatusCode);
+            using var forbiddenGet = await http.GetAsync($"http://localhost:{port}/agent-api/v1/site-validation", ct);
+            Assert.Equal(HttpStatusCode.MethodNotAllowed, forbiddenGet.StatusCode);
+            if (!enableValidation)
+            {
+                using var denied = await http.SendAsync(new HttpRequestMessage(HttpMethod.Post, $"http://localhost:{port}/agent-api/v1/site-validation"), ct);
+                Assert.Equal(HttpStatusCode.MethodNotAllowed, denied.StatusCode);
+            }
             Assert.Equal(0, Volatile.Read(ref observations));
 
             await File.WriteAllTextAsync(configPath, JsonSerializer.Serialize(new NativeConfiguration(port, token), NativeJson.Options), ct);
@@ -79,12 +90,15 @@ public sealed class NativeBridgeTests
                 EnvironmentVariables = new Dictionary<string, string?>
                 {
                     ["TIMBERBORN_BACKEND"] = "native", ["TIMBERBORN_NATIVE_CONFIG"] = configPath,
-                    ["TIMBERBORN_ENABLE_WRITES"] = "1"
+                    ["TIMBERBORN_ENABLE_WRITES"] = "1",
+                    ["TIMBERBORN_ENABLE_VALIDATION"] = enableValidation ? "1" : "0"
                 }
             }), cancellationToken: ct);
             var tools = await client.ListToolsAsync(cancellationToken: ct);
-            Assert.Equal(new[] { "find_buildings", "inspect_build_catalog", "inspect_colony", "inspect_map_region", "precheck_build_site", "timberborn_status" }, tools.Select(t => t.Name).Order());
-            Assert.All(tools, t => { Assert.True(t.ProtocolTool.Annotations!.ReadOnlyHint); Assert.NotNull(t.ProtocolTool.OutputSchema); });
+            var expected = new List<string> { "find_buildings", "inspect_build_catalog", "inspect_colony", "inspect_map_region", "precheck_build_site", "timberborn_status" };
+            if (enableValidation) expected.Add("validate_build_site");
+            Assert.Equal(expected, tools.Select(t => t.Name).Order());
+            Assert.All(tools, t => { Assert.Equal(t.Name != "validate_build_site", t.ProtocolTool.Annotations!.ReadOnlyHint); Assert.NotNull(t.ProtocolTool.OutputSchema); });
             var colony = await client.CallToolAsync("inspect_colony", cancellationToken: ct);
             Assert.False(colony.IsError);
             var json = colony.StructuredContent!.Value;
@@ -109,6 +123,14 @@ public sealed class NativeBridgeTests
             Assert.False(site.StructuredContent!.Value.GetProperty("data").GetProperty("gameValidated").GetBoolean());
             Assert.Equal("requires_game_validation", site.StructuredContent!.Value.GetProperty("data").GetProperty("assessment").GetString());
             Assert.Equal(6, Volatile.Read(ref observations));
+            if (enableValidation)
+            {
+                var validation = await client.CallToolAsync("validate_build_site", new Dictionary<string, object?>
+                    { ["template"] = "Path", ["x"] = 1, ["y"] = 2, ["z"] = 3, ["rotation"] = 0, ["session"] = session }, cancellationToken: ct);
+                Assert.False(validation.IsError);
+                Assert.True(validation.StructuredContent!.Value.GetProperty("data").GetProperty("noPersistentChangeObserved").GetBoolean());
+                Assert.Equal(7, Volatile.Read(ref observations));
+            }
         }
         finally
         {

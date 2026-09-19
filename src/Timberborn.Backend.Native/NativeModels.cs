@@ -49,6 +49,8 @@ public sealed record NativeCatalog(string Faction, CatalogEntry[] Items, string[
 public sealed record SiteCell(Position Position, bool InsideMap, bool Underground, bool OnGround, bool IntersectsObject, string SupportRule);
 public sealed record NativeSite(string Template, Position Origin, int Rotation, string Assessment, bool GameValidated,
     string[] Reasons, SiteCell[] Cells, Position? Entrance, bool? PathAtEntrance, NativeCost[] Costs, string[] Limitations);
+public sealed record NativeValidation(string Template, Position Origin, int Rotation, bool GameValidated, bool? Valid,
+    bool NoPersistentChangeObserved, bool SessionLocked, int AttemptsRemaining, string[] Limitations);
 public sealed record NativeMeta(string Backend, bool Simulated, string? SessionId, DateTimeOffset? ObservedAtUtc);
 public sealed record NativeFault(string Code, string Message, bool Retryable);
 public sealed record NativeResult<T>(int SchemaVersion, string Status, T? Data, NativeMeta Meta, NativeFault? Error);

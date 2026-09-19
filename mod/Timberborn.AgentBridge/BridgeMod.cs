@@ -21,13 +21,14 @@ public sealed class BridgeConfigurator : Configurator
     protected override void Configure()
     {
         Bind<SpatialObservations>().AsSingleton();
+        Bind<SiteValidation>().AsSingleton();
         Bind<BridgeMod>().AsSingleton();
     }
 }
 
 public sealed class BridgeMod(ResourceCountingService resources, PopulationService population,
     EntityRegistry entities, ITerrainService terrain, IThreadSafeWaterMap water, IGoodService goods,
-    ModRepository mods, SpatialObservations spatial)
+    ModRepository mods, SpatialObservations spatial, SiteValidation validation)
     : ILoadableSingleton, IUnloadableSingleton, IUpdatableSingleton
 {
     private readonly MainThreadQueue queue = new();
@@ -46,10 +47,11 @@ public sealed class BridgeMod(ResourceCountingService resources, PopulationServi
             if (new FileInfo(path).Length > 4096) throw new InvalidOperationException();
             var config = JObject.Parse(File.ReadAllText(path));
             stage = "create_listener";
-            server = new BridgeHttpServer((int?)config["port"] ?? 8081, (string?)config["token"] ?? "", queue);
+            server = new BridgeHttpServer((int?)config["port"] ?? 8081, (string?)config["token"] ?? "", queue,
+                (bool?)config["enableValidation"] == true);
             stage = "start_listener";
             server.Start();
-            Debug.Log("[Timberborn Agent Bridge] Read-only endpoint ready on loopback.");
+            Debug.Log("[Timberborn Agent Bridge] Endpoint ready on loopback; placement unavailable.");
         }
         catch (Exception ex)
         {
@@ -61,14 +63,16 @@ public sealed class BridgeMod(ResourceCountingService resources, PopulationServi
     public void Unload() { server?.Dispose(); queue.Dispose(); }
     private string Observe(BridgeRequest request)
     {
+        if (request.Route == "site-validation" && request.Session != sessionId) throw new ArgumentException("stale_session");
         object data = request.Route switch
         {
             "snapshot" => Snapshot(), "map" => Map(request), "objects" => spatial.Objects(request),
             "catalog" => spatial.Catalog(), "site-precheck" => spatial.Precheck(request),
+            "site-validation" => validation.Validate(request),
             _ => throw new ArgumentException("invalid_request")
         };
         return JsonConvert.SerializeObject(new { schemaVersion = 1, sessionId, observedAtUtc = DateTimeOffset.UtcNow,
-            bridgeVersion = "0.3.0", data });
+            bridgeVersion = "0.4.0", data });
     }
     private object Snapshot()
     {

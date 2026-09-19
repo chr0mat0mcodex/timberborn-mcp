@@ -56,3 +56,8 @@ Live-Tests im Standardlauf übersprungen. Native-Livetest nur gezielt mit
 TIMBERBORN_NATIVE_LIVE_TEST=1 und TIMBERBORN_NATIVE_CONFIG, Filter LiveNativeTests.
 verify.ps1 deaktiviert dieses separate Opt-in grundsätzlich. Räumliche Prüfung erfolgt
 strukturiert über Spielservices, ohne Screenshots. Vollständige Bauvalidierung noch offen.
+
+Aktueller Analyseprototyp 0.4.0: zusätzliche geschützte Vorschauvalidierung gebaut,
+109 reguläre Tests bestanden, nicht installiert oder live ausgeführt. Installierter/live
+geprüfter Stand bleibt 0.3.0. Nutzerpriorität: Fähigkeitsanalyse vor praktischem Spielen;
+siehe aktueller Missionsschwerpunkt in AGENTS.md und missionsplan.md.

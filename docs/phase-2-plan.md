@@ -1,5 +1,11 @@
 # Phase 2: Grundversorgung aufbauen und betreiben
 
+**Aktuelle Priorität (Nutzerklärung 2026-09-20):** analysieren, welche Beobachtungen,
+Entscheidungsgrundlagen und kontrollierten Eingriffe das Spielen ermöglichen. Der praktische
+Kolonieaufbau ist derzeit sekundär und dient als Referenzszenario, nicht als nächster Automatismus.
+Die folgenden Abnahmeziele beschreiben das spätere Spielziel; aktuelle Arbeit bewertet
+Fähigkeiten, Belegstufen, Lücken und gezielte nächste Nachweise.
+
 Stand: 2026-09-19. Status: Paket 2A freigegeben und als begrenzter Pilot abgeschlossen;
 [Ergebnisse und Architekturblocker](phase-2a-results.md).
 Aktualisierung 2026-09-20: eigene native Mod nach Nutzer-Go umgesetzt und Basiszugriff live geprüft.

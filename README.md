@@ -1,6 +1,8 @@
 # Timberborn MCP
 
 Lokaler C#-MCP-Server für Timberborn, standardmäßig ausschließlich lesend. Umsetzung nach `missionsplan.md`.
+Aktueller Vorrang: analysieren und nachweisen, welche Daten und kontrollierten Aktionen
+ein spielender Agent braucht. Tatsächlicher Spielbetrieb ist derzeit sekundär.
 MCP läuft über stdio; der Spielzugriff wird hinter einem eigenen Backend gekapselt.
 
 Repository: [chr0mat0mcodex/timberborn-mcp](https://github.com/chr0mat0mcodex/timberborn-mcp).
@@ -14,10 +16,12 @@ Endziel: Der Agent spielt Timberborn über MCP und baut Wasser-, Nahrungs-, Holz
 Wege und Wohnraum auf. Agent Bridge 0.2.0 ist über drei MCP-Werkzeuge live geprüft;
 Bevölkerung, Beispielbestände und Wohnraum wurden vom Nutzer bestätigt, Wiederverbindung
 nach Neuladen erfolgreich. Die Erweiterung 0.3.0 ergänzt Gebäude-/Wegegeometrie,
-Pilotkatalog und [rein lesende Bauplatzvorprüfung](docs/spatial-precheck.md); Live-Abnahme noch offen.
+Pilotkatalog und [rein lesende Bauplatzvorprüfung](docs/spatial-precheck.md); räumlicher MCP-Pilot bestanden.
+0.4.0 ergänzt einen [geschützten Spielvalidator-Prototyp](docs/native-validation.md),
+lokal gebaut und gepackt, nicht installiert oder live abgenommen.
 [Installation und Abnahme](docs/native-bridge-install.md),
 [offizielle Quellen und good references](docs/references/README.md).
-99 reguläre Tests bestanden; drei separate Live-Tests im Standardlauf übersprungen.
+109 reguläre Tests bestanden; drei separate Live-Tests im Standardlauf übersprungen.
 Nativer lesender MCP-Livetest zusätzlich erfolgreich.
 
 Read-only-POC mit More HTTP API und explizitem Fake-Backend implementiert und live getestet.
@@ -72,6 +76,7 @@ Diagnose geht nach stderr, stdout enthält ausschließlich Protokollnachrichten.
 |---|---|
 | TIMBERBORN_BACKEND | more-http-api; alternativ ausdrücklich native oder fake |
 | TIMBERBORN_NATIVE_CONFIG | Bei native: absoluter Pfad zur privaten bridge.local.json, kein Token im Client-Befehl |
+| TIMBERBORN_ENABLE_VALIDATION | Nur `1` bietet im nativen Backend zusätzlich validate_build_site an; Mod-Opt-in ebenfalls erforderlich |
 | TIMBERBORN_BASE_URL | http://localhost:8080/; nur HTTP-Loopback, kein Pfad/Query/Login |
 | TIMBERBORN_AUTHORIZATION | Optionaler Authorization-Wert; nicht als Argument oder Git-Datei speichern |
 | TIMBERBORN_FAKE_SCENARIO | healthy; alternativ partial oder offline; nur für Simulation relevant |
