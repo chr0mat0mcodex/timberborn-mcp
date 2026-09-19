@@ -478,6 +478,15 @@
           "Timberborn.Contracts": "[1.0.0, )"
         }
       },
+      "timberborn.backend.native": {
+        "type": "Project",
+        "dependencies": {
+          "Timberborn.Bridge.Core": "[1.0.0, )"
+        }
+      },
+      "timberborn.bridge.core": {
+        "type": "Project"
+      },
       "timberborn.contracts": {
         "type": "Project"
       },
@@ -490,6 +499,7 @@
           "Timberborn.Backend.Abstractions": "[1.0.0, )",
           "Timberborn.Backend.Fake": "[1.0.0, )",
           "Timberborn.Backend.MoreHttpApi": "[1.0.0, )",
+          "Timberborn.Backend.Native": "[1.0.0, )",
           "Timberborn.Contracts": "[1.0.0, )"
         }
       },

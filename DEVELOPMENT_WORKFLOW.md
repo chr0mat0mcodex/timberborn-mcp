@@ -42,3 +42,11 @@ an genau einer Holzfällerflagge erfolgreich einschließlich Rückweg und Schlus
 UI-Abgleich vom Nutzer bestätigt: nach dem erfolgreichen Hin-/Rücktest auf gesonderten Auftrag erneut
 pausiert und sichtbar bestätigt. Letzter bestätigter Zustand absichtlich pausiert; nicht automatisch reaktivieren.
 Standardkonfiguration weiterhin lesend. Details: missionsplan.md Abschnitt 6.
+
+Aktualisierung 2026-09-20: eigene native Agent Bridge 0.2.0 nach Freigabe implementiert;
+89 reguläre Tests bestanden, eigener Mod-Build erfolgreich. Mod-Projekt separat über
+`scripts/build-native-bridge.ps1 -TimberbornManagedDir '<Spiel>/Timberborn_Data/Managed'`
+bauen: Spielbibliotheken sind absichtlich nicht Teil des Standard-Solution-Builds.
+Lokales Paket und private Auth-Konfiguration liegen ausschließlich unter .local.
+Installation/Live-Abnahme offen; Codex-Client bleibt bis zur Einrichtung beim alten Backend.
+Community-Quellen sind good references; Katalog und reproduzierbarer Abruf unter docs/references.

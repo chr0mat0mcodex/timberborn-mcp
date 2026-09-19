@@ -347,6 +347,15 @@
           "Timberborn.Contracts": "[1.0.0, )"
         }
       },
+      "timberborn.backend.native": {
+        "type": "Project",
+        "dependencies": {
+          "Timberborn.Bridge.Core": "[1.0.0, )"
+        }
+      },
+      "timberborn.bridge.core": {
+        "type": "Project"
+      },
       "timberborn.contracts": {
         "type": "Project"
       }

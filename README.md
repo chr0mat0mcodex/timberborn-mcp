@@ -10,6 +10,13 @@ Nächste geplante Ausbaustufe: [Phase 2 — Wasser, Nahrung, Holz, Wege und Wohn
 
 ## Entwicklungsstand
 
+Endziel: Der Agent spielt Timberborn über MCP und baut Wasser-, Nahrungs-, Holzversorgung,
+Wege und Wohnraum auf. Aktuell ist die eigene unabhängige, lesende Agent Bridge 0.2.0
+implementiert und gegen die installierten Spiel-DLLs gebaut; ihr Live-Abgleich steht noch aus.
+[Installation und Abnahme](docs/native-bridge-install.md),
+[offizielle Quellen und good references](docs/references/README.md).
+89 reguläre Tests bestanden; zwei separate Live-Tests im Standardlauf übersprungen.
+
 Read-only-POC mit More HTTP API und explizitem Fake-Backend implementiert und live getestet.
 Optionaler einzelner Schreib-POC ebenfalls implementiert und live geprüft: Holzfällerflagge pausieren
 und ursprünglichen Pausenstatus wiederherstellen. 74 reguläre Tests bestanden; Live-Tests separat opt-in.
@@ -34,7 +41,7 @@ unter `.local/`, Builddateien unter `bin/obj`.
 Alternativ `pwsh -NoProfile -File ./scripts/verify.ps1`. Der erste Restore benötigt Netzwerkzugriff,
 die späteren Builds und Tests verwenden die gepinnten Pakete. Kein globales Tool wird installiert.
 
-## Spiel vorbereiten
+## Spiel vorbereiten — bisheriger More-HTTP-API-POC
 
 Der Nutzer installiert und aktiviert More HTTP API, Moddable Timberborn, Mod Settings, Harmony
 und TimberUi. In More HTTP API Auto-start aktivieren, Port einstellen und Testkolonie laden.
@@ -60,15 +67,20 @@ Diagnose geht nach stderr, stdout enthält ausschließlich Protokollnachrichten.
 
 | Prozessvariable | Default / Bedeutung |
 |---|---|
-| TIMBERBORN_BACKEND | more-http-api; alternativ ausdrücklich fake |
+| TIMBERBORN_BACKEND | more-http-api; alternativ ausdrücklich native oder fake |
+| TIMBERBORN_NATIVE_CONFIG | Bei native: absoluter Pfad zur privaten bridge.local.json, kein Token im Client-Befehl |
 | TIMBERBORN_BASE_URL | http://localhost:8080/; nur HTTP-Loopback, kein Pfad/Query/Login |
 | TIMBERBORN_AUTHORIZATION | Optionaler Authorization-Wert; nicht als Argument oder Git-Datei speichern |
 | TIMBERBORN_FAKE_SCENARIO | healthy; alternativ partial oder offline; nur für Simulation relevant |
 | TIMBERBORN_ENABLE_WRITES | Nur `1` aktiviert zusätzlich set_building_paused; standardmäßig aus |
 
-Alle fünf Tools bleiben offline auflistbar: `timberborn_status`, `inspect_colony`,
+Beim bisherigen Backend bleiben fünf Tools offline auflistbar: `timberborn_status`, `inspect_colony`,
 `inspect_population`, `find_buildings`, `inspect_building`. Parameter und Ergebnisfelder
 stehen in missionsplan.md Abschnitt 3. Simulierte Daten sind immer markiert.
+
+Das native Backend bietet drei eigene lesende Werkzeuge: `timberborn_status`,
+`inspect_colony` und `inspect_map_region`. Kein automatischer Backendwechsel;
+`TIMBERBORN_ENABLE_WRITES` aktiviert dort keine Schreibfunktionen.
 
 ## Optionaler Schreib-POC
 
@@ -100,7 +112,9 @@ Standardtests verwenden synthetische Daten und lokale HTTP-Stubs. Der Live-Test 
 Ein leeres Suchergebnis ist Erfolg; unbekannte Werte sind null; Teilfehler bleiben erkennbar.
 Seiten sind neue Beobachtungen und kein eingefrorener Spielzustand.
 Die API kann im Menü, beim Laden oder nach Mod-Updates ausfallen; es gibt keine automatische
-Spielsteuerung oder Reparatur. Ressourcenbestände, Save/Load, Bauen und Automationsgraphen sind nicht enthalten.
+Spielsteuerung oder Reparatur. Die native Mod ergänzt drei Beispielbestände, Betten/Personal,
+Objektpositionen und einen begrenzten Gelände-/Wasserausschnitt. Save/Load, Bauen und
+Automationsgraphen sind weiterhin nicht implementiert.
 
 Kein Client darf aus `readOnlyHint` alleine Sicherheit ableiten: Der Adapter selbst begrenzt die Routen.
 Fremdmod-Routen können auch bei GET Änderungen ausführen; deshalb gibt es kein generisches HTTP-Tool.

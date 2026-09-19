@@ -8,6 +8,7 @@ using Timberborn.Application;
 using Timberborn.Backend.Abstractions;
 using Timberborn.Backend.Fake;
 using Timberborn.Backend.MoreHttpApi;
+using Timberborn.Backend.Native;
 using Timberborn.McpServer;
 
 var backendName = Environment.GetEnvironmentVariable("TIMBERBORN_BACKEND") ?? "more-http-api";
@@ -15,8 +16,9 @@ var scenario = Environment.GetEnvironmentVariable("TIMBERBORN_FAKE_SCENARIO") ??
 var writesEnabled = Environment.GetEnvironmentVariable("TIMBERBORN_ENABLE_WRITES") == "1";
 if (scenario is not ("healthy" or "offline" or "partial"))
     throw new InvalidOperationException("Unbekanntes Fake-Szenario.");
-ITimberbornReadBackend backend = backendName switch
+ITimberbornReadBackend? backend = backendName switch
 {
+    "native" => null,
     "fake" => new FakeTimberbornBackend(scenario, writesEnabled),
     "more-http-api" => new MoreHttpApiBackend(new()
     {
@@ -26,9 +28,11 @@ ITimberbornReadBackend backend = backendName switch
     }),
     _ => throw new InvalidOperationException("Unbekanntes Backend.")
 };
-var service = new ObservationService(backend);
-var actions = new BuildingActionService(backend, (ITimberbornWriteBackend)backend);
-var tools = ToolCatalog.Create(writesEnabled);
+using var native = backendName == "native" ? new NativeTools(new NativeClient(NativeConfiguration.Load(
+    Environment.GetEnvironmentVariable("TIMBERBORN_NATIVE_CONFIG") ?? throw new InvalidOperationException("TIMBERBORN_NATIVE_CONFIG fehlt.")))) : null;
+var service = backend is null ? null : new ObservationService(backend);
+var actions = backend is null ? null : new BuildingActionService(backend, (ITimberbornWriteBackend)backend);
+var tools = native is null ? ToolCatalog.Create(writesEnabled) : NativeTools.Catalog();
 var builder = Host.CreateApplicationBuilder(new HostApplicationBuilderSettings { Args = [], DisableDefaults = true });
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole(o => o.LogToStandardErrorThreshold = LogLevel.Trace);
@@ -41,9 +45,10 @@ builder.Services.AddMcpServer().WithStdioServerTransport()
         if (!tools.Any(t => t.Name == request.Name))
             throw new McpProtocolException("Unknown tool", McpErrorCode.InvalidParams);
         var arguments = JsonSerializer.SerializeToElement(request.Arguments ?? new Dictionary<string, JsonElement>());
-        var result = request.Name == "set_building_paused"
-            ? await actions.InvokeAsync(arguments, ct)
-            : await service.InvokeAsync(request.Name, arguments, ct);
+        var result = native is not null ? await native.Invoke(request.Name, arguments, ct)
+            : request.Name == "set_building_paused"
+                ? await actions!.InvokeAsync(arguments, ct)
+                : await service!.InvokeAsync(request.Name, arguments, ct);
         return new CallToolResult
         {
             StructuredContent = JsonSerializer.SerializeToElement(result),

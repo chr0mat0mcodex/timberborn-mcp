@@ -875,3 +875,21 @@ Signaturen für Güter, Betten, Arbeitskräfte, Objektposition, Terrain/Wasser u
 [Machbarkeitsbericht](docs/architecture/native-game-api.md) trennt Metadatennachweis von Laufzeittests.
 Keine Mod implementiert/installiert, keine Spielmethoden ausgeführt. Nächster Vorschlag: minimaler
 Mod-Build und lesender Diagnoseprototyp; Bauvalidierung danach getrennt prüfen.
+
+### 7.3 Eigene Agent Bridge und Referenzsammlung
+
+Nach Nutzer-Go umgesetzt: unabhängige Spielmod 0.2.0, Hauptthread-Queue, authentifizierter
+Loopback-Transport und explizites natives MCP-Backend. Beobachtet drei Beispielgüter,
+Betten/Personal, begrenzte Objektpositionen und höchstens 8×8×4 Gelände-/Wasserzellen.
+Mod-Build gegen Timberborn 1.1.2.4 erfolgreich; 89 reguläre Tests bestanden.
+Noch nicht im Spiel installiert oder live abgenommen; Installation bleibt beim Nutzer.
+
+Endziel ausdrücklich bestätigt: Der Agent spielt per MCP und baut Wasser, Nahrung, Holz,
+Wege und Wohnraum auf. Nächste Schritte: lesenden Live-Abgleich durchführen, dann
+Wohnbau-Vorschau/Validierung nachweisen und den ersten regulären Haus-/Wegebau ermöglichen.
+Kein neuer Schreibauftrag ausgeführt; Holzfällerflagge nicht automatisch reaktiviert.
+
+Auf Nutzerauftrag Fremdmods als good references eingeordnet, 17 benötigte offizielle und
+Community-Referenzdateien lokal gesichert, Quellenstände und extrahierte API-Erkenntnisse
+in [docs/references](docs/references/README.md) dokumentiert. Native Mod braucht keine
+Fremdmods. Spielbibliotheken und das externe MCP-SDK bleiben technische Grundlagen.

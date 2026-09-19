@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework><LangVersion>latest</LangVersion>
+    <AssemblyVersion>0.2.0.0</AssemblyVersion><Version>0.2.0</Version>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../src/Timberborn.Bridge.Core/Timberborn.Bridge.Core.csproj" />
+    <Reference Include="$(TimberbornManagedDir)/Timberborn.*.dll"><Private>false</Private></Reference>
+    <Reference Include="$(TimberbornManagedDir)/Bindito.Core.dll"><Private>false</Private></Reference>
+    <Reference Include="$(TimberbornManagedDir)/UnityEngine.CoreModule.dll"><Private>false</Private></Reference>
+    <Reference Include="$(TimberbornManagedDir)/System.Collections.Immutable.dll"><Private>false</Private></Reference>
+    <Reference Include="$(TimberbornManagedDir)/Newtonsoft.Json.dll"><Private>false</Private></Reference>
+  </ItemGroup>
+  <Target Name="RequireGameReferences" BeforeTargets="ResolveReferences">
+    <Error Condition="!Exists('$(TimberbornManagedDir)/Timberborn.BlockSystem.dll')" Text="TimberbornManagedDir muss auf die lokalen unveränderten Spiel-DLLs zeigen." />
+  </Target>
+</Project>

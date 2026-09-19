@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "sources": [
+    {
+      "id": "mechanistry-official",
+      "role": "official_reference",
+      "repository": "mechanistry/timberborn-modding",
+      "revision": "976487702864412bbcd2dbd6abaf1058465e1ea4",
+      "license": "MIT",
+      "files": [
+        "LICENSE",
+        "README.md",
+        "Assets/Mods/HelloWorld/manifest.json",
+        "Assets/Mods/HelloWorld/Scripts/HelloWorldConfigurator.cs",
+        "Assets/Mods/HelloWorld/Scripts/HelloWorldInitializer.cs",
+        "Assets/Mods/HelloWorld/Scripts/Timberborn.ModExamples.HelloWorld.asmdef",
+        "Assets/Tools/Editor/Scripts/ModBuilding/DllFilesCopier.cs",
+        "Assets/Tools/Editor/Scripts/ModBuilding/ModBuilder.cs"
+      ]
+    },
+    {
+      "id": "datvm-good-reference",
+      "role": "good_reference_not_dependency",
+      "repository": "datvm/TimberbornMods",
+      "revision": "1c057bda82ec955d1712937da916cddf0f382f24",
+      "license": "MIT",
+      "files": [
+        "LICENSE",
+        "ModdableTimberborn/GameStats/Implementations/GoodStatsProvider.cs",
+        "ModdableTimberborn/GameStats/Implementations/GlobalPopulationStatsProvider.cs",
+        "ModdableTimberborn/GameStats/Implementations/MapStatsProvider.cs",
+        "ModdableTimberborn/BuildingSettings/BuiltInSettings/WorkplaceSettings.cs",
+        "ModdableTimberborn/Docs/Areas.MD",
+        "MoreHttpApi/Handlers/BlueprintHandler.cs",
+        "MoreHttpApi/Handlers/BuildingHandler.cs",
+        "MoreHttpApi/Helpers/HttpHelper.cs"
+      ]
+    }
+  ]
+}

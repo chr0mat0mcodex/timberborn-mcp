@@ -6,6 +6,12 @@ Externer MCP-Server, Verträge, Prüfungen und allgemeine Bibliotheken bleiben e
 More HTTP API bleibt zunächst Vergleichsadapter; Community-Mods dienen als Referenz.
 Keine Fremdmods jetzt entfernen. Kein automatischer Backendwechsel innerhalb einer Aktion.
 
+Aktualisierung 2026-09-20: Punkte 1/2 nach Nutzer-Go implementiert, eigener Mod-Build erfolgreich,
+89 reguläre Tests bestanden. Installation und Live-Abnahme noch offen. Keine Fremdmod-Pflichtbasis
+im nativen Backend. [Installationsanleitung](../native-bridge-install.md),
+[gesicherte good references und extrahierte Erkenntnisse](../references/README.md).
+Die folgenden Recherchebefunde beschreiben den Ausgangspunkt vor dieser Implementierung.
+
 ## Belegstufen und Grenzen
 
 Offizielle Dokumentation und Beispiele belegen Registrierung und Lebenszyklus. Lokale DLL-Metadaten

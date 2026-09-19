@@ -1,4 +1,6 @@
 <Solution>
+<Project Path="src/Timberborn.Bridge.Core/Timberborn.Bridge.Core.csproj" />
+<Project Path="src/Timberborn.Backend.Native/Timberborn.Backend.Native.csproj" />
 <Project Path="src/Timberborn.Backend.Abstractions/Timberborn.Backend.Abstractions.csproj" />
 <Project Path="src/Timberborn.Backend.Fake/Timberborn.Backend.Fake.csproj" />
 <Project Path="src/Timberborn.Application/Timberborn.Application.csproj" />

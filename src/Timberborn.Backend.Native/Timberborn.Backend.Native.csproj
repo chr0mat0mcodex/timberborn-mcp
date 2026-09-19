@@ -1,0 +1,3 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup><ProjectReference Include="../Timberborn.Bridge.Core/Timberborn.Bridge.Core.csproj" /></ItemGroup>
+</Project>

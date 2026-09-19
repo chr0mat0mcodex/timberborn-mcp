@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 <PropertyGroup><OutputType>Exe</OutputType></PropertyGroup><ItemGroup><PackageReference Include="ModelContextProtocol" /><PackageReference Include="Microsoft.Extensions.Hosting" /></ItemGroup>
 <ItemGroup>
+<ProjectReference Include="../Timberborn.Backend.Native/Timberborn.Backend.Native.csproj" />
 <ProjectReference Include="../Timberborn.Contracts/Timberborn.Contracts.csproj" />
 <ProjectReference Include="../Timberborn.Application/Timberborn.Application.csproj" />
 <ProjectReference Include="../Timberborn.Backend.Abstractions/Timberborn.Backend.Abstractions.csproj" />
