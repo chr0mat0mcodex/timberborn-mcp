@@ -14,6 +14,7 @@ Wetter, Bevölkerung und Gebäuden einer geladenen Timberborn-Kolonie.
 - Schritt 5 wurde mit „5 go“ freigegeben: Umsetzung einschließlich projektlokalem Restore, Build, Tests und Checkpoints.
 - Mods installiert und aktiviert der Nutzer selbst im Spiel.
 - Keine System-, Spiel- oder MCP-Client-Konfiguration ändern; nichts installieren.
+- Ausnahme auf ausdrücklichen Folgeauftrag am 2026-09-19: lokalen Timberborn-MCP-Eintrag im Codex-Client einrichten. Registrierung und separater stdio-Livetest erfolgreich; keine Spielkonfiguration geändert.
 - Implementierung im Projektordner erlaubt; keine Spielaktionen oder Save-Manipulation.
 - Nachträglich am 2026-09-19 freigegeben: Veröffentlichung auf GitHub unter chr0mat0mcodex einschließlich projektspezifischer Agentenanweisungen und regelmäßiger Pushes geprüfter Checkpoints. Ablauf: DEVELOPMENT_WORKFLOW.md.
 - Die nachfolgenden Planungsabschnitte dokumentieren den damaligen Stand; aktuelle Ergebnisse stehen in Abschnitt 5.

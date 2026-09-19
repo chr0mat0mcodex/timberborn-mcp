@@ -49,7 +49,10 @@ dotnet ./src/Timberborn.McpServer/bin/Release/net10.0/Timberborn.McpServer.dll
 
 Der Server wartet auf MCP-Nachrichten an stdin; er ist keine interaktive Shell.
 Für einen MCP-Client ist der Befehl `dotnet` und das Argument der **absolute Pfad** zur DLL.
-Die Client-Konfiguration muss separat vom Nutzer eingerichtet werden; dieses Projekt verändert sie nicht.
+Die Client-Konfiguration erfolgt separat auf ausdrücklichen Auftrag. Am 2026-09-19 wurde der lokale
+Codex-Client unter dem Servernamen `timberborn` eingerichtet (stdio, absoluter dotnet-/DLL-Pfad,
+Backend `more-http-api`, Basisadresse `http://localhost:8080/`). Die maschinenlokale Konfiguration
+gehört nicht ins Repository. Prüfen mit `codex mcp get timberborn --json`.
 Diagnose geht nach stderr, stdout enthält ausschließlich Protokollnachrichten.
 
 | Prozessvariable | Default / Bedeutung |

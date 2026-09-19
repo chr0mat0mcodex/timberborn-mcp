@@ -31,4 +31,7 @@ Der Nutzer hat diese fortlaufende Sicherung während der Projektarbeit autorisie
 
 Read-only-POC mit fünf MCP-Werkzeugen implementiert. Zuletzt geprüft: 47 gewöhnliche Tests erfolgreich,
 zusätzlicher expliziter Live-Test erfolgreich, UI-Werte vom Nutzer bestätigt. Meilenstein: `poc-readonly-v0.1`.
-Die separate MCP-Client-Einrichtung ist noch offen. Weitere Funktionen benötigen eine neue Umfangsfreigabe.
+Der lokale Codex-Client wurde am 2026-09-19 auf ausdrücklichen Nutzerauftrag als `timberborn` eingerichtet.
+Registrierung geprüft; separater stdio-Livetest aller fünf Werkzeuge erneut erfolgreich.
+Die Werkzeugverfügbarkeit im bereits laufenden Chat ist damit noch nicht bestätigt.
+Weitere Funktionen benötigen eine neue Umfangsfreigabe.
