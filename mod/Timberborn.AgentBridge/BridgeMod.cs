@@ -5,6 +5,7 @@ using Timberborn.BlockSystem;
 using Timberborn.Bridge.Core;
 using Timberborn.EntitySystem;
 using Timberborn.Goods;
+using Timberborn.Modding;
 using Timberborn.Population;
 using Timberborn.ResourceCountingSystem;
 using Timberborn.SingletonSystem;
@@ -21,7 +22,8 @@ public sealed class BridgeConfigurator : Configurator
 }
 
 public sealed class BridgeMod(ResourceCountingService resources, PopulationService population,
-    EntityRegistry entities, ITerrainService terrain, IThreadSafeWaterMap water, IGoodService goods)
+    EntityRegistry entities, ITerrainService terrain, IThreadSafeWaterMap water, IGoodService goods,
+    ModRepository mods)
     : ILoadableSingleton, IUnloadableSingleton, IUpdatableSingleton
 {
     private readonly MainThreadQueue queue = new();
@@ -32,7 +34,10 @@ public sealed class BridgeMod(ResourceCountingService resources, PopulationServi
         string stage = "locate_configuration";
         try
         {
-            var path = Path.Combine(Path.GetDirectoryName(typeof(BridgeMod).Assembly.Location)!, "bridge.local.json");
+            // The game can load assemblies from bytes, leaving Assembly.Location empty.
+            // Resolve the installed mod by manifest identity, not by the loaded DLL location.
+            var ownMod = mods.EnabledMods.Single(m => m.Manifest.Id == "chr0mat0mcodex.TimberbornAgentBridge");
+            var path = Path.Combine(ownMod.ModDirectory.Path, "bridge.local.json");
             stage = "read_configuration";
             if (new FileInfo(path).Length > 4096) throw new InvalidOperationException();
             var config = JObject.Parse(File.ReadAllText(path));

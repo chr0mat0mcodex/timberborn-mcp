@@ -141,3 +141,14 @@ Spiel lädt die Agent Bridge, aber ihr Listener startet nicht; Port 8081 verweig
 die Verbindung. Startdiagnose um feste Phasenkennung und Exception-Typ ergänzt,
 ohne Fehlermeldungsinhalt, Pfade oder Schlüssel auszugeben. Mod-Build erfolgreich.
 Live-Abnahme weiterhin offen; erneuter Spielstart für die Diagnose erforderlich.
+
+## 2026-09-20 — Konfigurationspfad beim Spielstart korrigiert
+
+Diagnose meldet ArgumentException in locate_configuration, vor Listener-Erstellung.
+Assembly.Location ist für vom Spiel geladene Mod-Assemblies kein zuverlässiger Dateipfad.
+Konfiguration jetzt über öffentlichen ModRepository, eindeutige aktivierte Manifest-ID und
+ModDirectory.Path auflösen. Öffentliche Signaturen lokal geprüft; keine zusätzliche Mod nötig.
+Mod-Build ohne Warnungen/Fehler, 89 reguläre Tests bestanden. Korrigierte DLL mit Sicherung
+der vorherigen Version installiert und per SHA256 geprüft; privater Schlüssel unverändert.
+Ursprüngliches Paket bleibt historischer Snapshot und enthält diesen Fix nicht; neue Pakete
+aus aktuellem Code bauen. Nächster Spielneustart muss den Fix zur Laufzeit bestätigen.
