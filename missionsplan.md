@@ -832,3 +832,12 @@ MCP-Annotationen sind konservativ: nicht lesend, potentiell destruktiv und keine
 Locked Restore, Release-Build mit 0 Warnungen/Fehlern und 74 reguläre Tests bestanden
 (67 Anwendung/Adapter, 7 Integration); beide Live-Tests im normalen Lauf übersprungen.
 Die Schreibfähigkeit wird für den Pilotprozess explizit aktiviert, nicht dauerhaft im Codex-Client.
+
+### 6.7 Technischer Live-Pilot G
+
+Nach erneutem Nutzer-Go separat über echtes MCP-stdio ausgeführt: genau eine Holzfällerflagge
+gefunden, aktiven Ausgangszustand gelesen, pausiert und den Pausenstatus bestätigt, anschließend
+wieder aktiviert und den aktiven Status bestätigt. Zusätzliche Abschlussabfrage bestätigt den
+ursprünglichen Zustand. LivePauseTests: 1 bestanden, 0 Fehler, keine Wiederholung erforderlich.
+Keine Spiel-IDs oder Rohantworten gespeichert. Der abschließende UI-Abgleich wurde beim Nutzer angefragt.
+Schreibfähigkeit weiterhin nur im Pilotprozess aktiviert; die dauerhafte Codex-Konfiguration bleibt lesend.

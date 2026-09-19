@@ -35,3 +35,8 @@ Der lokale Codex-Client wurde am 2026-09-19 auf ausdrücklichen Nutzerauftrag al
 Registrierung geprüft; separater stdio-Livetest aller fünf Werkzeuge erneut erfolgreich.
 Die Werkzeugverfügbarkeit im bereits laufenden Chat ist damit noch nicht bestätigt.
 Weitere Funktionen benötigen eine neue Umfangsfreigabe.
+
+Freigegebene Erweiterung vom 2026-09-19: set_building_paused als einzelnes Schreibwerkzeug hinter
+TIMBERBORN_ENABLE_WRITES=1 implementiert. Aktuell 74 reguläre Tests bestanden; gesonderter Live-Schreibpilot
+an genau einer Holzfällerflagge erfolgreich einschließlich Rückweg und Schlussabfrage.
+UI-Abgleich noch ausstehend. Standardkonfiguration weiterhin lesend. Details: missionsplan.md Abschnitt 6.

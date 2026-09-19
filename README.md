@@ -10,6 +10,8 @@ Aktuelle Ergebnisse dokumentiert das [Projektjournal](docs/project-journal.md).
 ## Entwicklungsstand
 
 Read-only-POC mit More HTTP API und explizitem Fake-Backend implementiert und live getestet.
+Optionaler einzelner Schreib-POC ebenfalls implementiert und live geprüft: Holzfällerflagge pausieren
+und ursprünglichen Pausenstatus wiederherstellen. 74 reguläre Tests bestanden; Live-Tests separat opt-in.
 SDK: .NET 10.0.303. Abhängigkeiten sind zentral gepinnt; Lockfiles gehören ins Repository.
 Keine Unity-/Mod-Binärdateien, Saves oder Laufzeitcaches einchecken.
 
