@@ -39,4 +39,6 @@ Weitere Funktionen benötigen eine neue Umfangsfreigabe.
 Freigegebene Erweiterung vom 2026-09-19: set_building_paused als einzelnes Schreibwerkzeug hinter
 TIMBERBORN_ENABLE_WRITES=1 implementiert. Aktuell 74 reguläre Tests bestanden; gesonderter Live-Schreibpilot
 an genau einer Holzfällerflagge erfolgreich einschließlich Rückweg und Schlussabfrage.
-UI-Abgleich noch ausstehend. Standardkonfiguration weiterhin lesend. Details: missionsplan.md Abschnitt 6.
+UI-Abgleich vom Nutzer bestätigt: nach dem erfolgreichen Hin-/Rücktest auf gesonderten Auftrag erneut
+pausiert und sichtbar bestätigt. Letzter bestätigter Zustand absichtlich pausiert; nicht automatisch reaktivieren.
+Standardkonfiguration weiterhin lesend. Details: missionsplan.md Abschnitt 6.

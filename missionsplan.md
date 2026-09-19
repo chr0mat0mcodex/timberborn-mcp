@@ -841,3 +841,12 @@ wieder aktiviert und den aktiven Status bestätigt. Zusätzliche Abschlussabfrag
 ursprünglichen Zustand. LivePauseTests: 1 bestanden, 0 Fehler, keine Wiederholung erforderlich.
 Keine Spiel-IDs oder Rohantworten gespeichert. Der abschließende UI-Abgleich wurde beim Nutzer angefragt.
 Schreibfähigkeit weiterhin nur im Pilotprozess aktiviert; die dauerhafte Codex-Konfiguration bleibt lesend.
+
+### 6.8 Nutzerabnahme des sichtbaren Tests
+
+Der Nutzer bestätigte zunächst den wieder aktiven Zustand und beauftragte danach ausdrücklich
+erneutes Pausieren ohne sofortigen Rückweg. Die einzige Holzfällerflagge wurde über MCP eindeutig
+ausgewählt, pausiert (applied) und separat mit Paused=true nachgelesen.
+Anschließend bestätigte der Nutzer sichtbar im Spiel: Test erfolgreich.
+Damit ist der begrenzte Schreib-POC technisch und durch UI-Abgleich abgenommen.
+Letzter bestätigter Zustand: Holzfällerflagge absichtlich pausiert; kein automatisches Wiederaktivieren.
