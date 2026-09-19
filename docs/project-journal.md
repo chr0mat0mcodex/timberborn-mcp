@@ -127,3 +127,11 @@ an feste Commits gebunden lokal abgerufen (40.818 Bytes), Lizenzen mitgesichert,
 Extrahierte API-Erkenntnisse und good-reference-Katalog bleiben im Projekt; fremde Quellen und
 Binärdateien werden nicht mitgebaut oder veröffentlicht. Spielplattform und externes MCP-SDK bleiben.
 Nächster Nachweis: Live-Lagebild, danach Vorschauvalidierung und regulärer Wohnbau/Wege.
+
+## 2026-09-20 — Lokale Installation auf ausdrücklichen Auftrag
+
+Nutzer hat das Kopieren diesmal ausdrücklich delegiert. Agent Bridge 0.2.0 in den
+Standard-Modordner installiert, sechs Dateien einschließlich privater Konfiguration
+per SHA256 mit dem gebauten Paket abgeglichen. Kein vorhandener Modordner überschrieben.
+Spielstart und Aktivierung übernimmt der Nutzer; Live-Abnahme weiterhin offen.
+
