@@ -77,6 +77,10 @@ More HTTP API 11.0.0, Moddable Timberborn 11.1.2. Quellcodegleichstand ist kein 
 
 ## Architekturblocker und begrenzter nächster Vorschlag
 
+**Überarbeitet nach Nutzer-Go:** Die [direkte Herstellerprüfung](architecture/native-game-api.md)
+weist öffentliche Spielservices nach. Der folgende ursprüngliche Vorschlag einer Pflichtbasis auf
+ModdableTimberborn ist damit überholt. Die Live-Befunde dieses Berichts bleiben gültig.
+
 Der Pilot wird an diesem Punkt nicht zur Suche durch immer mehr Mods oder dekompilierte Spielassemblies ausgeweitet.
 Der Nutzen weiterer externer HTTP-Adapterarbeit allein ist für das Bauziel gering: die fehlenden Daten
 und Spieloperationen müssen zuerst auf der Spielseite erschlossen werden.

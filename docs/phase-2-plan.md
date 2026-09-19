@@ -131,6 +131,10 @@ Dokumentationsseite war nicht erfolgreich; deshalb keine erfundenen Endpunkte od
 
 ## 6. Architekturentscheidung vorbereiten
 
+Aktueller Beschluss nach Nutzer-Go: [eigene Spielschnittstelle](architecture/native-game-api.md)
+als Zielarchitektur auf direkt geprüften öffentlichen Spielservices. Fremdmods zunächst Referenz und
+vorhandener Vergleichsadapter, keine Pflichtbasis. Die folgenden Optionen beschreiben den früheren Stand.
+
 Mit dem Skill „Göttliche Inspiration“ kritisch geprüft: Mehr einzelne Schalter ergeben noch keinen spielenden Agenten.
 Der Engpass liegt bei verlässlicher Versorgungslage, Raumverständnis und regulären Bauaufträgen.
 

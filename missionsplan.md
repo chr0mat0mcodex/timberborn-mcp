@@ -867,3 +867,11 @@ Nach Nutzer-Go sechs dokumentierte Leseroutenabfragen durchgeführt und Herstell
 Mod-interne Zugänge; Karte und Bauprüfung bleiben unbelegt. Keine neue Mod oder Spielaktion.
 Nächste Entscheidung: eng begrenztes lesendes Statistikmodul plus gesonderter Raum-/Bauprüfungsnachweis,
 bevor Phase 2B/2C vollständig umgesetzt werden kann.
+
+### 7.2 Direkte Hersteller-Schnittstellen geprüft
+
+Auf Nutzer-Go auf eigene Spielmod als Ziel umgeplant. Offizielle Registrierung und lokale öffentliche
+Signaturen für Güter, Betten, Arbeitskräfte, Objektposition, Terrain/Wasser und Bauvalidierung nachgewiesen.
+[Machbarkeitsbericht](docs/architecture/native-game-api.md) trennt Metadatennachweis von Laufzeittests.
+Keine Mod implementiert/installiert, keine Spielmethoden ausgeführt. Nächster Vorschlag: minimaler
+Mod-Build und lesender Diagnoseprototyp; Bauvalidierung danach getrennt prüfen.
