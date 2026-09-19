@@ -720,3 +720,95 @@ statt automatischem Dateikonfigurationsanbieter, feste öffentliche Limits und k
 Abnahmeprotokoll: `docs/testing/live-poc.md`. Versionsnachweise: `docs/compatibility/timberborn.md`.
 
 Weitere Schritte wie Client-Einrichtung, zusätzliche Datenfelder oder Spielaktionen werden separat abgestimmt.
+
+## 6. Geplanter POC für einen Spieleingriff
+
+Stand 2026-09-19: Nutzer hat die Quellenprüfung und Planung freigegeben. Dieser Abschnitt ist
+der konkrete Vorschlag für die nächste Implementierungsfreigabe; noch kein Schreibcode und kein Spieleingriff.
+Client-Einrichtung und GitHub-Sicherung wurden inzwischen separat erledigt (siehe Projektjournal).
+
+### 6.1 Ziel und Quellenbefund
+
+Genau ein Gebäude kontrolliert pausieren und anschließend auf seinen vorherigen Pausenstatus zurücksetzen.
+Kein Bauen, Abreißen, Ressourcenändern, Save/Load, globales Spieltempo oder Automationsgraph.
+
+Herstellerquellen am 2026-09-19 direkt über GitHub geprüft:
+
+- [BuildingHandler](https://github.com/datvm/TimberbornMods/blob/1c057bda82ec955d1712937da916cddf0f382f24/MoreHttpApi/Handlers/BuildingHandler.cs)
+- [Manifest](https://github.com/datvm/TimberbornMods/blob/1c057bda82ec955d1712937da916cddf0f382f24/MoreHttpApi/manifest.json)
+- [Router](https://github.com/datvm/TimberbornMods/blob/master/MoreHttpApi/Services/MoreHttpApiEndpoint.cs)
+
+Der aktuelle Upstream nennt More HTTP API 11.0.0, passend zur zuletzt live geprüften Mod-Version.
+Route: `/MoreHttpApi/buildings/{id}/toggle-pause?paused=true|false`.
+Trotz des Namens setzt der Handler einen gewünschten Zustand über Pause/Resume; er invertiert ihn nicht.
+Er prüft GUID und Existenz, bietet aber keine atomare Prüfung des erwarteten Ausgangszustands.
+Der Router erzwingt keine Trennung der Änderungen durch POST. Die Route wird deshalb ausdrücklich
+als Schreiboperation behandelt, auch wenn der Adapter sie per GET aufruft.
+Exakter Erfolgsstatus und leerer Antwortkörper werden vor Implementierung am Hersteller-Response-Helper geprüft.
+Ein Versionsgleichstand ist kein Nachweis für das Verhalten der installierten Binärdatei; das bestätigt erst der freigegebene Live-Pilot.
+
+### 6.2 Werkzeugvertrag
+
+Vorschlag: `set_building_paused(id, paused, expectedPaused)`.
+
+| Parameter | Vertrag |
+|---|---|
+| id | Genau eine Gebäude-GUID aus einer frischen Gebäudesuche |
+| paused | Gewünschter boolescher Zielzustand |
+| expectedPaused | Erwarteter boolescher Ausgangszustand als Schutz vor veralteter Beobachtung |
+
+Keine Standardwerte, keine Mehrfachauswahl, keine freien URLs und keine impliziten Wiederholungen.
+Vor dem Schreiben Gebäudezugehörigkeit, Pausierbarkeit und aktuellen Zustand frisch lesen.
+Unbekannte Werte, fehlendes Gebäude oder Abweichung von expectedPaused verhindern den Schreibrequest.
+Wenn Ausgangs- und Zielzustand bereits gleich sind: bestätigter No-op ohne Schreibrequest.
+
+Nach genau einem Schreibrequest den Zustand erneut lesen. Ergebnis enthält Gebäude-ID,
+Ausgangszustand, Zielzustand, beobachteten Folgezustand (ggf. unbekannt), Zeitpunkte und Simulation-Kennzeichen.
+Ergebnisausgänge: `unchanged`, `applied`, `rejected`, `unconfirmed`.
+`applied` bedeutet beobachteter Zielzustand nach dem Request; keine Zusicherung über dauerhaft unveränderten Zustand.
+HTTP-Erfolg allein ist kein Erfolg des Werkzeugs. Unklare Transportfehler, Timeout oder fehlgeschlagene
+Nachprüfung nach möglichem Versand liefern `unconfirmed`, nicht die Behauptung, nichts sei geändert worden.
+Bei diesem Ausgang keine automatische erneute Änderung oder Rücksetzung, sondern lesende Klärung.
+
+### 6.3 Technische Grenzen
+
+- Neues enges Schreib-Backend-Interface neben ITimberbornReadBackend und eigener Action-Service.
+- Transport erhält eine typisierte Operation für genau diese Route; die bestehende Leseroutenliste bleibt unverändert.
+- Prozessschalter `TIMBERBORN_ENABLE_WRITES=1`, standardmäßig aus. Ohne Freigabeschalter bleibt es bei fünf Lesewerkzeugen;
+  der Backend-Schreibpfad verweigert Zugriffe zusätzlich. Kein Fake-Fallback bei Live-Fehlern.
+- Schreibfähiges MCP-Werkzeug explizit als nicht lesend kennzeichnen; Annotationen ersetzen keine Laufzeitprüfung.
+- Gesamte Vorprüfung/Schreibrequest/Nachprüfung innerhalb dieses Serverprozesses serialisieren.
+  Andere Clients und Spielbedienung sind dadurch nicht gesperrt. expectedPaused ist keine atomare Compare-and-set-Garantie.
+- Bestehende Loopback-, Timeout-, Größen-, Auth- und Redirect-Grenzen gelten weiter.
+- Kein automatisches Wiederherstellen beim Prozessstart, kein Hintergrundauftrag und keine persistierten Spiel-IDs.
+
+Konservative Alternative: vorerst ausschließlich lesen und den Pausenknopf manuell bedienen.
+Der begrenzte Schreib-POC ist vertretbar, wenn ein geeignetes Testgebäude verfügbar ist.
+Das Zurücksetzen des Pausenflags macht zwischenzeitlich entgangene Produktion oder andere Simulationseffekte nicht rückgängig.
+
+### 6.4 Prüfungen und Abnahme
+
+1. Fake-/Stub-Tests: deaktivierte Schreibfähigkeit, ungültige Parameter, unbekanntes/nicht pausierbares Gebäude,
+   geänderter Ausgangszustand und No-op erzeugen keinen Schreibrequest.
+2. Positivfälle für beide Zielzustände: genau eine erlaubte Mutation, danach belegte Zustandskontrolle.
+3. Fehlerfälle: Auth/404/Serverfehler, Timeout vor/nach möglicher Verarbeitung, Abbruch und fehlgeschlagene Nachprüfung.
+   Unklarer Ausgang führt weder zu Retry noch zu einer zweiten Mutation. Parallele Aufträge werden serialisiert.
+4. MCP-stdio-Test: fünf Tools im Default; sechstes Tool nur mit Opt-in; gültiges Schema und eindeutige Änderungskennzeichnung.
+5. Bestehende Tests bleiben erfolgreich. Gewöhnliche Testläufe mutieren niemals das echte Spiel.
+6. Erst anschließend Live-Pilot auf der Testkolonie MCP: Nutzer wählt/bestätigt genau ein unkritisches,
+   pausierbares Gebäude und erlaubt den Hin-/Rückweg. Frisch lesen, Gegenstatus setzen, kontrollieren,
+   ursprünglichen Pausenstatus mit neuer Vorbedingung wieder setzen und kontrollieren; UI-Abgleich durch Nutzer.
+   Kein geeignetes Gebäude vorhanden: stoppen; Nutzer bereitet eines selbst vor.
+7. Bei erstem unbestätigtem Ergebnis stoppen und Zustand klären. Nicht mehrere Gebäude ausprobieren.
+   Erfolg: beide Übergänge belegt, ursprüngliches Flag wiederhergestellt, keine weitere Schreibroute benutzt.
+
+### 6.5 Umsetzungspakete und Freigabe
+
+| Paket | Umfang | Ergebnis |
+|---|---|---|
+| E | Vertragsmodelle, Action-Service, Fake und deterministische Tests | Schreiblogik ohne Spielzugriff geprüft |
+| F | Begrenzter HTTP-Schreibpfad, MCP-Registrierung hinter Opt-in, stdio-/Fehlertests | Implementierung bereit, normale Konfiguration weiter lesend |
+| G | Explizit freigegebener einzelner Live-Pilot einschließlich Rückweg | Abnahme und dokumentierter Checkpoint |
+
+Nächste Entscheidung: E/F implementieren. G und das Aktivieren der Schreibfähigkeit im lokalen Codex-Client
+folgen nach bestandenen Tests und konkreter Auswahl des Testgebäudes. Ein zusätzlicher Mod ist für diesen Plan nicht vorgesehen.

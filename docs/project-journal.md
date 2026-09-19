@@ -48,3 +48,12 @@ dotnet-/DLL-Pfaden, explizitem More-HTTP-API-Backend und localhost:8080. Der Ein
 Vorhandenen LiveSmokeTests erneut separat ausgeführt: ein Test bestanden, alle fünf lesenden MCP-Werkzeuge
 gegen die laufende Kolonie erfolgreich. Das prüft den Server über stdio; die dynamische Werkzeugaufnahme
 im bereits laufenden Codex-Chat wurde nicht nachgewiesen.
+
+## 2026-09-19 — Ersten Schreib-POC geplant
+
+Auf Nutzer-Go Quellenprüfung und Missionsplan Abschnitt 6 ergänzt: genau ein Gebäude pausieren und
+seinen ursprünglichen Pausenstatus wiederherstellen. Aktueller Herstellerquellcode nennt Mod 11.0.0
+und eine Route mit explizitem booleschem Zielzustand. Geplant sind getrennte Schreibfähigkeit,
+standardmäßig deaktiviertes Opt-in, frische Vor-/Nachprüfung und keine blinden Wiederholungen bei unklarem Ausgang.
+Kein Schreibcode implementiert, keine Spielaktion ausgeführt und Client-Schreibfähigkeit nicht aktiviert.
+Nächste Freigabe betrifft Implementierung E/F; konkreter Live-Pilot G wird danach abgestimmt.
