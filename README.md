@@ -12,10 +12,12 @@ Nächste geplante Ausbaustufe: [Phase 2 — Wasser, Nahrung, Holz, Wege und Wohn
 
 Endziel: Der Agent spielt Timberborn über MCP und baut Wasser-, Nahrungs-, Holzversorgung,
 Wege und Wohnraum auf. Aktuell ist die eigene unabhängige, lesende Agent Bridge 0.2.0
-implementiert und gegen die installierten Spiel-DLLs gebaut; ihr Live-Abgleich steht noch aus.
+implementiert und live über alle drei MCP-Werkzeuge geprüft. Bevölkerung, Beispielbestände
+und Wohnraum wurden vom Nutzer im UI bestätigt; räumliche Semantik und Session-Wechsel sind noch offen.
 [Installation und Abnahme](docs/native-bridge-install.md),
 [offizielle Quellen und good references](docs/references/README.md).
-89 reguläre Tests bestanden; zwei separate Live-Tests im Standardlauf übersprungen.
+89 reguläre Tests bestanden; drei separate Live-Tests im Standardlauf übersprungen.
+Nativer lesender MCP-Livetest zusätzlich erfolgreich.
 
 Read-only-POC mit More HTTP API und explizitem Fake-Backend implementiert und live getestet.
 Optionaler einzelner Schreib-POC ebenfalls implementiert und live geprüft: Holzfällerflagge pausieren

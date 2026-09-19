@@ -152,3 +152,15 @@ Mod-Build ohne Warnungen/Fehler, 89 reguläre Tests bestanden. Korrigierte DLL m
 der vorherigen Version installiert und per SHA256 geprüft; privater Schlüssel unverändert.
 Ursprüngliches Paket bleibt historischer Snapshot und enthält diesen Fix nicht; neue Pakete
 aus aktuellem Code bauen. Nächster Spielneustart muss den Fix zur Laufzeit bestätigen.
+
+## 2026-09-20 — Native Bridge live erreichbar und MCP-Lesetest bestanden
+
+Nach Spielneustart Listener erfolgreich gestartet. Bevölkerung 9 Erwachsene/4 Kinder/0 Bots,
+0 Betten/13 Obdachlose und verfügbare Bestände 250 Wasser/300 Beeren/0 Holz vom Nutzer im UI bestätigt.
+Echter stdio-Livetest aller drei nativen MCP-Werkzeuge erfolgreich, Sitzung über die Aufrufe konsistent,
+eine Kartenzelle an beobachteter Objektposition gelesen. Kein Rückgriff auf More HTTP API.
+89 reguläre Tests bestanden; drei Live-Tests im Standardlauf übersprungen, anschließend genau ein
+nativer Lesetest separat bestanden. verify.ps1 deaktiviert dessen Opt-in im normalen Prüflauf.
+Keine Mutation ausgeführt. Fremdmods waren im Spiel weiterhin aktiv; Isolation ohne diese noch nicht
+live getestet. Koordinaten-/Geländesemantik und Session-Wechsel nach Menü/Reload noch offen.
+Die dauerhafte Client-Konfiguration wurde nicht umgestellt; Livetest nutzt eigenen nativen Prozess.

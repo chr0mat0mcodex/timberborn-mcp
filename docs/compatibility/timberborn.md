@@ -18,3 +18,11 @@ Keine Aussage zur Kompatibilität anderer Versionen, großer Kolonien oder zusä
 `http://localhost:8080/` funktioniert in dieser Umgebung. Die numerische IPv4-Adresse
 `http://127.0.0.1:8080/` wurde vom Spiel abgelehnt. Der Client erhält den Hostnamen und setzt
 ihn nicht durch eine numerische URL um. Daraus wird keine allgemeine Ursache abgeleitet.
+
+## Native Bridge — 2026-09-20
+
+Agent Bridge 0.2.0 mit Konfigurationspfad-Fix über ModRepository: im Spiel geladen,
+HTTP-Port 8081 erreichbar, alle drei nativen MCP-Werkzeuge über stdio live erfolgreich.
+Bevölkerung/Bestände/Wohnraum durch Nutzer bestätigt. Eine Kartenzelle technisch gelesen;
+Semantik und Session-Wechsel noch offen. Bisherige Fremdmods weiterhin aktiv, aber vom
+nativen Backend nicht angesprochen; isolierter Spielstart ohne Fremdmods noch nicht geprüft.

@@ -893,3 +893,12 @@ Auf Nutzerauftrag Fremdmods als good references eingeordnet, 17 benötigte offiz
 Community-Referenzdateien lokal gesichert, Quellenstände und extrahierte API-Erkenntnisse
 in [docs/references](docs/references/README.md) dokumentiert. Native Mod braucht keine
 Fremdmods. Spielbibliotheken und das externe MCP-SDK bleiben technische Grundlagen.
+
+### 7.4 Erster nativer Live-Nachweis bestanden
+
+Mod installiert und gestartet; Konfigurationspfad über ModRepository korrigiert.
+Alle drei nativen MCP-Lesewerkzeuge im echten stdio-Livetest erfolgreich. Bevölkerung,
+Beispielbestände und Wohnraum durch Nutzer-UI-Abgleich bestätigt. Einzelne Kartenzelle
+an einer beobachteten Objektposition technisch lesbar, räumliche Bedeutung noch nicht abgenommen.
+Offen: Session-Wechsel beim Neuladen, räumlicher UI-Abgleich und danach begrenzter
+Wohnbau-Validierungspilot. Kein Bauauftrag ausgeführt und keine dauerhafte Client-Umstellung.
