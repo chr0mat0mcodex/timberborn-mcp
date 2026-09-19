@@ -1,5 +1,24 @@
 # Projektjournal
 
+## 2026-09-20 — Lokalen nativen Startweg konsolidiert
+
+Nutzer beauftragt schrittweise eine lokal nutzbare Mod mit MCP und möglichst wenigen
+Fremdmod-Abhängigkeiten. Bestehende Architektur beibehalten; keine neue Abhängigkeit.
+Eigener stdio-Starter wählt native explizit und deaktiviert Vorschau-/Schreibaktionen.
+verify.ps1 unterstützt nun -NativeConfig: reguläre Prüfungen und anschließend genau
+einen begrenzten nativen Lesetest. Auch der Live-Test selbst unterbindet geerbtes
+Vorschau-Opt-in. 109 reguläre Tests und ein nativer Live-Test über sechs Werkzeuge
+bestanden; Starter beendet sich bei stdin-EOF mit Exit 0 ohne stdout-Rauschen.
+
+Installiert bleibt 0.3.0, Quellstand 0.4.0; keine Mod-Dateien oder Client-Einstellungen
+ersetzt. Aktuelle CLI findet keine Registrierung namens timberborn; die historische
+Einrichtungsnotiz ist kein Nachweis der heutigen Client-Verfügbarkeit.
+Nächster Nachweis: Spiel mit ausschließlich eigener Bridge starten, Testkolonie laden,
+nativen Lesetest wiederholen. Dafür ist Nutzerhilfe beim Mod-Menü/Neustart nötig.
+Bislang waren Fremdmods parallel aktiv; fehlende RequiredMods und erfolgreiche native
+Abfragen belegen noch keine isolierte Laufzeit. Danach geschützten 0.4-Validator prüfen,
+bevor reguläre Bauaufträge folgen. Kein autonomer Kolonieaufbau erfolgt.
+
 ## 2026-09-19 — Paket A
 
 Nutzer hat Schritt 5 und damit die Umsetzung des Missionsplans freigegeben.

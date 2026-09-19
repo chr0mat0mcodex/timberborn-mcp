@@ -23,7 +23,7 @@ public sealed class LiveNativeTests(ITestOutputHelper output)
             EnvironmentVariables = new Dictionary<string, string?>
             {
                 ["TIMBERBORN_BACKEND"] = "native", ["TIMBERBORN_NATIVE_CONFIG"] = config,
-                ["TIMBERBORN_ENABLE_WRITES"] = "0"
+                ["TIMBERBORN_ENABLE_WRITES"] = "0", ["TIMBERBORN_ENABLE_VALIDATION"] = "0"
             }
         }), cancellationToken: ct);
         var tools = await client.ListToolsAsync(cancellationToken: ct);

@@ -1,5 +1,7 @@
-param([switch]$Live, [switch]$InitialRestore)
+param([switch]$Live, [switch]$InitialRestore, [string]$NativeConfig)
 $ErrorActionPreference = 'Stop'
+if ($Live -and $NativeConfig) { throw 'Legacy- und nativen Livetest getrennt ausführen.' }
+if ($NativeConfig) { $NativeConfig = (Resolve-Path -LiteralPath $NativeConfig).Path }
 . "$PSScriptRoot/environment.ps1"
 Push-Location $taskRoot
 try {
@@ -14,6 +16,7 @@ try {
     $oldWrites = $env:TIMBERBORN_ENABLE_WRITES
     $oldNativeLive = $env:TIMBERBORN_NATIVE_LIVE_TEST
     $oldValidation = $env:TIMBERBORN_ENABLE_VALIDATION
+    $oldNativeConfig = $env:TIMBERBORN_NATIVE_CONFIG
     try {
         $env:TIMBERBORN_LIVE_TEST = if ($Live) { '1' } else { '0' }
         $env:TIMBERBORN_LIVE_WRITE_TEST = '0'
@@ -22,11 +25,18 @@ try {
         $env:TIMBERBORN_ENABLE_VALIDATION = '0'
         & dotnet test TimberbornMcp.slnx -c Release --no-build --no-restore
         if ($LASTEXITCODE -ne 0) { throw 'Tests fehlgeschlagen.' }
+        if ($NativeConfig) {
+            $env:TIMBERBORN_NATIVE_CONFIG = $NativeConfig
+            $env:TIMBERBORN_NATIVE_LIVE_TEST = '1'
+            & dotnet test tests/Timberborn.IntegrationTests/Timberborn.IntegrationTests.csproj -c Release --no-build --no-restore --filter FullyQualifiedName~LiveNativeTests
+            if ($LASTEXITCODE -ne 0) { throw 'Nativer Lesetest fehlgeschlagen. Kein automatischer Wiederholungsversuch.' }
+        }
     } finally {
         $env:TIMBERBORN_LIVE_TEST = $oldLive
         $env:TIMBERBORN_LIVE_WRITE_TEST = $oldWriteTest
         $env:TIMBERBORN_ENABLE_WRITES = $oldWrites
         $env:TIMBERBORN_NATIVE_LIVE_TEST = $oldNativeLive
         $env:TIMBERBORN_ENABLE_VALIDATION = $oldValidation
+        $env:TIMBERBORN_NATIVE_CONFIG = $oldNativeConfig
     }
 } finally { Pop-Location }

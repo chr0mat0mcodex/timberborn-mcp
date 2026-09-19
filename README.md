@@ -21,6 +21,9 @@ Pilotkatalog und [rein lesende Bauplatzvorprüfung](docs/spatial-precheck.md); r
 lokal gebaut und gepackt, nicht installiert oder live abgenommen.
 [Installation und Abnahme](docs/native-bridge-install.md),
 [offizielle Quellen und good references](docs/references/README.md).
+Für die eigene Bridge: `scripts/start-native.ps1 -ConfigPath '<private Konfiguration>'`;
+Build und nativen Lesetest mit `scripts/verify.ps1 -NativeConfig '<private Konfiguration>'`
+ausführen. Beide Abläufe sind in der Installationsanleitung beschrieben.
 109 reguläre Tests bestanden; drei separate Live-Tests im Standardlauf übersprungen.
 Nativer lesender MCP-Livetest zusätzlich erfolgreich.
 

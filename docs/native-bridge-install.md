@@ -43,6 +43,26 @@ müssen einmal im Spiel geprüft werden. Ein erfolgreicher Build ersetzt diesen 
 
 ## MCP-Verbindung und Abnahme
 
+Einfacher Startweg für einen lokalen stdio-MCP-Client (nach dem Build):
+
+```powershell
+pwsh -NoProfile -File ./scripts/start-native.ps1 -ConfigPath '<installierte Mod>/bridge.local.json'
+```
+
+Im Client absolute Pfade verwenden. Dieser Starter wählt ausdrücklich die eigene Bridge,
+deaktiviert Schreib-/Vorschauaktionen und gibt den Schlüssel nicht aus. Er registriert
+keinen Client, installiert nichts und wartet auf MCP-Nachrichten über stdin.
+
+Wiederholbare Abnahme bei laufendem Spiel und geladener Testkolonie:
+
+```powershell
+pwsh -NoProfile -File ./scripts/verify.ps1 -NativeConfig '<installierte Mod>/bridge.local.json'
+```
+
+Führt zuerst Build und reguläre Tests aus, danach genau den nativen Lesetest mit sechs
+Werkzeugen. Kein Legacy-API-Zugriff, kein automatischer Wiederholungsversuch bei Fehlern.
+Ohne `-NativeConfig` bleibt die Prüfung offline; `-Live` bezeichnet weiterhin den Legacy-Test.
+
 Den vorhandenen stdio-MCP-Server ausdrücklich mit folgenden Prozessvariablen starten:
 
 ```text
