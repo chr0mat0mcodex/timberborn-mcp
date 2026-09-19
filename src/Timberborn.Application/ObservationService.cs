@@ -8,7 +8,7 @@ namespace Timberborn.Application;
 
 public sealed class ObservationService(ITimberbornReadBackend backend)
 {
-    private readonly ConcurrentDictionary<string, DateTimeOffset> checkedCapabilities = new();
+    private readonly ConcurrentDictionary<string, Capability> checkedCapabilities = new();
     private string? gameVersion;
     public string BackendId => backend.Id;
     public bool Simulated => backend.Simulated;
@@ -39,7 +39,7 @@ public sealed class ObservationService(ITimberbornReadBackend backend)
                 "inspect_building" => await BuildingAsync(args, warnings, budget.Token),
                 _ => throw Faults.Exception("invalid_argument")
             };
-            ct.ThrowIfCancellationRequested();
+            budget.Token.ThrowIfCancellationRequested();
             var result = Envelope(data, null, warnings, start);
             FitPage(result);
             return result;
@@ -91,22 +91,29 @@ public sealed class ObservationService(ITimberbornReadBackend backend)
         try
         {
             var value = await read(ct);
-            checkedCapabilities[capability] = DateTimeOffset.UtcNow;
+            checkedCapabilities[capability] = new("available", DateTimeOffset.UtcNow);
             return value;
         }
-        catch
+        catch (BackendException e)
         {
             checkedCapabilities.Clear();
             gameVersion = null;
+            if (e.Fault.Code == "capability_unavailable")
+                checkedCapabilities[capability] = new("unavailable", DateTimeOffset.UtcNow);
+            throw;
+        }
+        catch
+        {
+            checkedCapabilities.Clear(); gameVersion = null;
             throw;
         }
     }
 
     private BackendCapabilities Capabilities()
     {
-        Capability One(string name) => checkedCapabilities.TryGetValue(name, out var time) &&
-            DateTimeOffset.UtcNow - time < TimeSpan.FromSeconds(30)
-            ? new("available", time) : new("unknown", null);
+        Capability One(string name) => checkedCapabilities.TryGetValue(name, out var capability) &&
+            DateTimeOffset.UtcNow - capability.CheckedAtUtc < TimeSpan.FromSeconds(30)
+            ? capability : new("unknown", null);
         return new(One("gameInfo"), One("liveData"), One("population"), One("buildings"), One("buildingDetails"));
     }
 

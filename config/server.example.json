@@ -1,0 +1,11 @@
+{
+  "description": "Beispiel für Prozessvariablen; wird vom Server nicht automatisch als Datei geladen.",
+  "environment": {
+    "TIMBERBORN_BACKEND": "more-http-api",
+    "TIMBERBORN_BASE_URL": "http://localhost:8080/"
+  },
+  "fakeEnvironment": {
+    "TIMBERBORN_BACKEND": "fake",
+    "TIMBERBORN_FAKE_SCENARIO": "healthy"
+  }
+}

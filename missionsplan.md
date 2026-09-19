@@ -1,6 +1,6 @@
 # Missionsplan: Timberborn MCP
 
-Stand: 2026-09-19. Status: Planung, keine Implementierung.
+Stand: 2026-09-19. Status: Read-only-POC implementiert und technisch live geprüft; UI-Werte vom Nutzer bestätigt.
 
 ## Auftrag und Freigabegrenzen
 
@@ -11,14 +11,14 @@ Wetter, Bevölkerung und Gebäuden einer geladenen Timberborn-Kolonie.
 - Schritt 2 (Architekturplanung) wurde ausdrücklich freigegeben und ist unten ausgearbeitet.
 - Schritt 3 (Werkzeugspezifikation) wurde ausdrücklich freigegeben und ist unten ausgearbeitet.
 - Schritt 4 (Umsetzung vorbereiten) wurde ausdrücklich freigegeben und ist unten ausgearbeitet.
-- Freigegeben ist das Erstellen und Fortschreiben dieser Planungsdatei im Projektordner.
+- Schritt 5 wurde mit „5 go“ freigegeben: Umsetzung einschließlich projektlokalem Restore, Build, Tests und Checkpoints.
 - Mods installiert und aktiviert der Nutzer selbst im Spiel.
 - Keine System-, Spiel- oder MCP-Client-Konfiguration ändern; nichts installieren.
-- Keine Implementierung, Spielaktionen, Save-Manipulation oder Veröffentlichung.
-- Implementierungsfreigabe in Schritt 5 und Umsetzung in Schritt 6 stehen noch aus.
+- Implementierung im Projektordner erlaubt; keine Spielaktionen, Save-Manipulation oder Veröffentlichung.
+- Die nachfolgenden Planungsabschnitte dokumentieren den damaligen Stand; aktuelle Ergebnisse stehen in Abschnitt 5.
 
 Grundlage ist das vom Nutzer bereitgestellte `projekt_timberborn_MCP.md`.
-Die jüngere Nutzeranweisung begrenzt den aktuellen Auftrag auf Planung.
+Die Freigabe zur Umsetzung erweitert die vorherige Planungsphase; System- und Spielkonfiguration bleiben ausgenommen.
 
 ## Missionsablauf
 
@@ -28,8 +28,8 @@ Die jüngere Nutzeranweisung begrenzt den aktuellen Auftrag auf Planung.
 | 2. Architektur festlegen | Komponenten, Abhängigkeiten und Datenfluss | Als Plan ausgearbeitet |
 | 3. Werkzeuge definieren | Konkrete Ein-/Ausgaben, Limits und Fehlerverhalten | Als Plan ausgearbeitet |
 | 4. Umsetzung vorbereiten | Konkrete Dateien, Paketversionen und Testfälle | Als Plan ausgearbeitet; Live-API noch nicht erreichbar |
-| 5. Implementierungsfreigabe | Nutzer bestätigt konkreten Umfang | Offen |
-| 6. POC umsetzen und testen | Fake-/HTTP-Tests, danach Spieltest | Offen |
+| 5. Implementierungsfreigabe | Nutzer bestätigt konkreten Umfang | Erteilt |
+| 6. POC umsetzen und testen | Fake-/HTTP-Tests, danach Spieltest | Implementiert; Live-Test und UI-Vergleich erfolgreich |
 
 ## 1. Quellenprüfung
 
@@ -701,9 +701,20 @@ Commits enthalten eigenen Code, synthetische Tests, Lockfiles und Projektdokumen
 Keine Logs, Saves, Geheimnisse, lokale Caches oder Spiel-/Mod-Binärdateien.
 GitHub-Repository, Push, Releases und Änderungen an globaler Codex-Guidance sind nicht Teil dieses Plans.
 
-## Nächster Schritt: Implementierungsfreigabe
+## 5. Umsetzung und Abnahme
 
-Schritt 4 ist als Plan abgeschlossen. Schritt 5 ist die ausdrückliche Freigabe der oben benannten
-Dateien, projektlokalen Restore-/Build-/Testabläufe und anschließenden Umsetzungspakete.
-Der echte Live-Zugriff benötigt noch eine erreichbare, vom Nutzer gestartete Spiel-API.
-Bis zum Implementierungs-GO bleibt es bei dieser Planungsdatei.
+Der Nutzer hat die Implementierung freigegeben. Alle fünf Read-only-Werkzeuge sind implementiert.
+Der Live-Test über das offizielle MCP-C#-Client-SDK bestätigt erfolgreiche stdio-Aufrufe gegen das Spiel.
+Die Nutzerkontrolle bestätigt Zyklus 1 / Tag 1, 9 Erwachsene, 4 Kinder, 0 Bots und 1 Gebäude.
+Es wurden keine Spielaktionen ausgeführt und keine MCP-Client-Konfiguration verändert.
+
+Die zuvor fehlende API-Verbindung ist gelöst: `http://localhost:8080/` funktioniert;
+`127.0.0.1` wird in dieser Installation abgelehnt. Die Host-URL bleibt deshalb localhost,
+während die Socket-Verbindung auf Loopback beschränkt ist.
+
+Umsetzungsdetails/Abweichungen vom Dateiplan stehen in `docs/architecture/decisions.md`:
+zusammengefasste Model-/Service-Dateien, interne JSON-Lesehilfen statt fremder DTOs, Prozessvariablen
+statt automatischem Dateikonfigurationsanbieter, feste öffentliche Limits und konservative ID-Diagnose.
+Abnahmeprotokoll: `docs/testing/live-poc.md`. Versionsnachweise: `docs/compatibility/timberborn.md`.
+
+Weitere Schritte wie Client-Einrichtung, zusätzliche Datenfelder oder Spielaktionen werden separat abgestimmt.

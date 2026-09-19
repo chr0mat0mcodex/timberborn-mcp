@@ -7,14 +7,23 @@ using ModelContextProtocol.Protocol;
 using Timberborn.Application;
 using Timberborn.Backend.Abstractions;
 using Timberborn.Backend.Fake;
+using Timberborn.Backend.MoreHttpApi;
 using Timberborn.McpServer;
 
 var backendName = Environment.GetEnvironmentVariable("TIMBERBORN_BACKEND") ?? "more-http-api";
 var scenario = Environment.GetEnvironmentVariable("TIMBERBORN_FAKE_SCENARIO") ?? "healthy";
 if (scenario is not ("healthy" or "offline" or "partial"))
     throw new InvalidOperationException("Unbekanntes Fake-Szenario.");
-ITimberbornReadBackend backend = backendName == "fake" ? new FakeTimberbornBackend(scenario)
-    : throw new InvalidOperationException("Echtes Backend wird in Paket B ergänzt.");
+ITimberbornReadBackend backend = backendName switch
+{
+    "fake" => new FakeTimberbornBackend(scenario),
+    "more-http-api" => new MoreHttpApiBackend(new()
+    {
+        BaseUrl = Environment.GetEnvironmentVariable("TIMBERBORN_BASE_URL") ?? "http://localhost:8080/",
+        Authorization = Environment.GetEnvironmentVariable("TIMBERBORN_AUTHORIZATION")
+    }),
+    _ => throw new InvalidOperationException("Unbekanntes Backend.")
+};
 var service = new ObservationService(backend);
 var tools = ToolCatalog.Create();
 var builder = Host.CreateApplicationBuilder(new HostApplicationBuilderSettings { Args = [], DisableDefaults = true });
@@ -37,4 +46,5 @@ builder.Services.AddMcpServer().WithStdioServerTransport()
             IsError = result["status"]!.GetValue<string>() == "error"
         };
     });
-await builder.Build().RunAsync();
+try { await builder.Build().RunAsync(); }
+finally { (backend as IDisposable)?.Dispose(); }
