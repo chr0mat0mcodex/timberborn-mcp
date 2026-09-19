@@ -9,7 +9,7 @@ public sealed class LiveNativeTests(ITestOutputHelper output)
     public static bool Enabled => Environment.GetEnvironmentVariable("TIMBERBORN_NATIVE_LIVE_TEST") == "1";
 
     [Fact(Skip = "Native-Livetest nur nach explizitem Opt-in.", SkipUnless = nameof(Enabled))]
-    public async Task ThreeReadToolsAgainstInstalledNativeBridge()
+    public async Task SixReadToolsAgainstInstalledNativeBridge()
     {
         using var budget = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);
         budget.CancelAfter(TimeSpan.FromSeconds(40));
@@ -27,7 +27,7 @@ public sealed class LiveNativeTests(ITestOutputHelper output)
             }
         }), cancellationToken: ct);
         var tools = await client.ListToolsAsync(cancellationToken: ct);
-        Assert.Equal(new[] { "inspect_colony", "inspect_map_region", "timberborn_status" }, tools.Select(t => t.Name).Order());
+        Assert.Equal(new[] { "find_buildings", "inspect_build_catalog", "inspect_colony", "inspect_map_region", "precheck_build_site", "timberborn_status" }, tools.Select(t => t.Name).Order());
         string? session = null;
         async Task<JsonElement> Call(string name, Dictionary<string, object?>? args = null)
         {
@@ -49,7 +49,8 @@ public sealed class LiveNativeTests(ITestOutputHelper output)
         Assert.False(status.GetProperty("writesEnabled").GetBoolean());
         var colony = await Call("inspect_colony");
         var size = colony.GetProperty("mapSize");
-        var sample = colony.GetProperty("objectSample");
+        var objects = await Call("find_buildings", new() { ["offset"] = 0, ["limit"] = 32 });
+        var sample = objects.GetProperty("items");
         Assert.NotEqual(0, sample.GetArrayLength());
         var position = sample[0].GetProperty("position");
         int x = position.GetProperty("x").GetInt32();
@@ -61,7 +62,12 @@ public sealed class LiveNativeTests(ITestOutputHelper output)
         var map = await Call("inspect_map_region", new()
         { ["x"] = x, ["y"] = y, ["z"] = z, ["width"] = 1, ["height"] = 1, ["depth"] = 1 });
         Assert.Equal(1, map.GetProperty("cells").GetArrayLength());
-        output.WriteLine("Native MCP: three read tools succeeded in one game session; one cell at observed object position read. No mutations.");
+        var catalog = await Call("inspect_build_catalog");
+        Assert.Equal(2, catalog.GetProperty("items").GetArrayLength());
+        var site = await Call("precheck_build_site", new()
+        { ["template"] = "Lodge.Folktails", ["x"] = x, ["y"] = y, ["z"] = z, ["rotation"] = 0 });
+        Assert.False(site.GetProperty("gameValidated").GetBoolean());
+        output.WriteLine("Native MCP: six read tools succeeded in one game session, including spatial precheck without placement or preview creation.");
         // Only aggregate diagnostics; no names, entity/session IDs, paths or tokens in test output.
         output.WriteLine("Population: " + colony.GetProperty("population"));
         output.WriteLine("Housing: " + colony.GetProperty("housing"));

@@ -99,6 +99,35 @@ public sealed class BridgeTests
         Assert.Equal("invalid_argument", result["error"]!["code"]!.GetValue<string>());
     }
 
+    [Theory]
+    [InlineData("find_buildings", "{\"offset\":0,\"limit\":33}")]
+    [InlineData("find_buildings", "{\"offset\":-1,\"limit\":1}")]
+    [InlineData("find_buildings", "{\"offset\":0,\"limit\":1,\"id\":1}")]
+    [InlineData("precheck_build_site", "{\"template\":\"DistrictCenter.Folktails\",\"x\":1,\"y\":2,\"z\":3,\"rotation\":0}")]
+    [InlineData("precheck_build_site", "{\"template\":\"Path\",\"x\":1,\"y\":2,\"z\":3,\"rotation\":4}")]
+    [InlineData("precheck_build_site", "{\"template\":\"Path\",\"template\":\"Path\",\"x\":1,\"y\":2,\"z\":3,\"rotation\":0}")]
+    [InlineData("inspect_build_catalog", "{\"export\":1}")]
+    public async Task SpatialInvalidArgumentsNeverReachHttp(string name, string json)
+    {
+        using var tools = new NativeTools(new NativeClient(new(8081, new string('a', 64)), new ResponseHandler("must_not_call")));
+        var result = await tools.Invoke(name, JsonDocument.Parse(json).RootElement, TestContext.Current.CancellationToken);
+        Assert.Equal("invalid_argument", result["error"]!["code"]!.GetValue<string>());
+    }
+
+    [Theory]
+    [InlineData(true, "requires_game_validation")]
+    [InlineData(false, "buildable")]
+    [InlineData(false, "blocked")]
+    public async Task PrecheckCannotTurnIntoUnverifiedBuildPermission(bool validated, string assessment)
+    {
+        var site = new NativeSite("Path", new(1, 2, 3), 0, assessment, validated, [],
+            [new(new(1, 2, 3), true, false, true, false, "Ground")], null, null, [], ["not_full_game_validator"]);
+        var payload = JsonSerializer.Serialize(new BridgeEnvelope<NativeSite>(1, Guid.NewGuid().ToString("D"), DateTimeOffset.UtcNow, "0.3.0", site), NativeJson.Options);
+        using var tools = new NativeTools(new NativeClient(new(8081, new string('a', 64)), new ResponseHandler(payload)));
+        var result = await tools.Invoke("precheck_build_site", JsonSerializer.SerializeToElement(new { template = "Path", x = 1, y = 2, z = 3, rotation = 0 }), TestContext.Current.CancellationToken);
+        Assert.Equal("backend_incompatible", result["error"]!["code"]!.GetValue<string>());
+    }
+
     private sealed class ResponseHandler(string payload) : HttpMessageHandler
     {
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)

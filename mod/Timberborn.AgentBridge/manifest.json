@@ -1,6 +1,6 @@
 {
   "Name": "Timberborn MCP Agent Bridge (Read-only Prototype)",
-  "Version": "0.2.0",
+  "Version": "0.3.0",
   "Id": "chr0mat0mcodex.TimberbornAgentBridge",
   "MinimumGameVersion": "1.1.2.4",
   "Description": "Local authenticated read-only observations for the Timberborn MCP agent. No custom save data.",

@@ -34,9 +34,21 @@ public sealed class NativeBridgeTests
                     queue.Pump(r =>
                     {
                         Interlocked.Increment(ref observations);
-                        object data = r.Route == "snapshot" ? Snapshot() : new NativeMap(new(r.X, r.Y, r.Z), 1, 1, 1,
-                            [new(r.X, r.Y, r.Z, false, true, 2, 0.5f, 0, true)], ["synthetic_test"]);
-                        return JsonSerializer.Serialize(new BridgeEnvelope<object>(1, session, DateTimeOffset.UtcNow, "0.2.0", data), NativeJson.Options);
+                        object data = r.Route switch
+                        {
+                            "snapshot" => Snapshot(),
+                            "map" => new NativeMap(new(r.X, r.Y, r.Z), 1, 1, 1,
+                                [new(r.X, r.Y, r.Z, false, true, 2, 0.5f, 0, true)], ["synthetic_test"]),
+                            "objects" => new NativeObjects("buildings_and_paths", r.Offset, r.Limit, 0, [], false, ["synthetic_test"]),
+                            "catalog" => new NativeCatalog("Folktails",
+                                [new("Lodge.Folktails", true, true, true, new(2, 2, 1), new(1, -1, 0), [new("Log", 12, 0)]),
+                                 new("Path", true, true, true, new(1, 1, 1), null, [])], ["synthetic_test"]),
+                            "site-precheck" => new NativeSite(r.Template, new(r.X, r.Y, r.Z), r.Rotation,
+                                "requires_game_validation", false, [], [new(new(r.X, r.Y, r.Z), true, false, true, false, "Ground")],
+                                null, null, [], ["not_full_game_validator"]),
+                            _ => throw new ArgumentException()
+                        };
+                        return JsonSerializer.Serialize(new BridgeEnvelope<object>(1, session, DateTimeOffset.UtcNow, "0.3.0", data), NativeJson.Options);
                     });
                     await Task.Delay(5, pumpStop.Token);
                 }
@@ -71,7 +83,7 @@ public sealed class NativeBridgeTests
                 }
             }), cancellationToken: ct);
             var tools = await client.ListToolsAsync(cancellationToken: ct);
-            Assert.Equal(new[] { "inspect_colony", "inspect_map_region", "timberborn_status" }, tools.Select(t => t.Name).Order());
+            Assert.Equal(new[] { "find_buildings", "inspect_build_catalog", "inspect_colony", "inspect_map_region", "precheck_build_site", "timberborn_status" }, tools.Select(t => t.Name).Order());
             Assert.All(tools, t => { Assert.True(t.ProtocolTool.Annotations!.ReadOnlyHint); Assert.NotNull(t.ProtocolTool.OutputSchema); });
             var colony = await client.CallToolAsync("inspect_colony", cancellationToken: ct);
             Assert.False(colony.IsError);
@@ -85,7 +97,18 @@ public sealed class NativeBridgeTests
             Assert.Equal(0.5f, map.StructuredContent!.Value.GetProperty("data").GetProperty("cells")[0].GetProperty("waterDepth").GetSingle());
             var status = await client.CallToolAsync("timberborn_status", cancellationToken: ct);
             Assert.False(status.StructuredContent!.Value.GetProperty("data").GetProperty("writesEnabled").GetBoolean());
-            Assert.Equal(3, Volatile.Read(ref observations));
+            var objects = await client.CallToolAsync("find_buildings", new Dictionary<string, object?> { ["offset"] = 0, ["limit"] = 32 }, cancellationToken: ct);
+            Assert.False(objects.IsError);
+            Assert.Equal(0, objects.StructuredContent!.Value.GetProperty("data").GetProperty("total").GetInt32());
+            var catalog = await client.CallToolAsync("inspect_build_catalog", cancellationToken: ct);
+            Assert.False(catalog.IsError);
+            Assert.Equal(12, catalog.StructuredContent!.Value.GetProperty("data").GetProperty("items")[0].GetProperty("costs")[0].GetProperty("required").GetInt32());
+            var site = await client.CallToolAsync("precheck_build_site", new Dictionary<string, object?>
+                { ["template"] = "Path", ["x"] = 1, ["y"] = 2, ["z"] = 3, ["rotation"] = 0 }, cancellationToken: ct);
+            Assert.False(site.IsError);
+            Assert.False(site.StructuredContent!.Value.GetProperty("data").GetProperty("gameValidated").GetBoolean());
+            Assert.Equal("requires_game_validation", site.StructuredContent!.Value.GetProperty("data").GetProperty("assessment").GetString());
+            Assert.Equal(6, Volatile.Read(ref observations));
         }
         finally
         {

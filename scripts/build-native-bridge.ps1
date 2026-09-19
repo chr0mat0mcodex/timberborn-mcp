@@ -10,7 +10,9 @@ try {
     if ($LASTEXITCODE -ne 0) { throw 'Mod-Restore fehlgeschlagen.' }
     & dotnet build $project -c Release --no-restore "-p:TimberbornManagedDir=$managed"
     if ($LASTEXITCODE -ne 0) { throw 'Mod-Build fehlgeschlagen.' }
-    $packageRoot = Join-Path $taskRoot ('.local/packages/agent-bridge-0.2.0-' + (Get-Date -Format 'yyyyMMdd-HHmmss') + '-' + [guid]::NewGuid().ToString('N').Substring(0, 8))
+    $version = (Get-Content -LiteralPath 'mod/Timberborn.AgentBridge/manifest.json' -Raw | ConvertFrom-Json).Version
+    if ($version -notmatch '^\d+\.\d+\.\d+$') { throw 'Ungültige Paketversion.' }
+    $packageRoot = Join-Path $taskRoot ('.local/packages/agent-bridge-' + $version + '-' + (Get-Date -Format 'yyyyMMdd-HHmmss') + '-' + [guid]::NewGuid().ToString('N').Substring(0, 8))
     $installDir = Join-Path $packageRoot 'TimberbornAgentBridge'
     New-Item -ItemType Directory -Path $installDir | Out-Null
     $buildDir = Join-Path $taskRoot 'mod/Timberborn.AgentBridge/bin/Release/netstandard2.1'

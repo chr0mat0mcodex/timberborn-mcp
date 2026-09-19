@@ -50,3 +50,9 @@ bauen: Spielbibliotheken sind absichtlich nicht Teil des Standard-Solution-Build
 Lokales Paket und private Auth-Konfiguration liegen ausschließlich unter .local.
 Installation/Live-Abnahme offen; Codex-Client bleibt bis zur Einrichtung beim alten Backend.
 Community-Quellen sind good references; Katalog und reproduzierbarer Abruf unter docs/references.
+
+Aktueller Stand 0.3.0: sechs native Lesewerkzeuge, 99 reguläre Tests bestanden, drei
+Live-Tests im Standardlauf übersprungen. Native-Livetest nur gezielt mit
+TIMBERBORN_NATIVE_LIVE_TEST=1 und TIMBERBORN_NATIVE_CONFIG, Filter LiveNativeTests.
+verify.ps1 deaktiviert dieses separate Opt-in grundsätzlich. Räumliche Prüfung erfolgt
+strukturiert über Spielservices, ohne Screenshots. Vollständige Bauvalidierung noch offen.

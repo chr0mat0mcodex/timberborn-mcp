@@ -18,12 +18,16 @@ namespace Timberborn.AgentBridge;
 [Context("Game")]
 public sealed class BridgeConfigurator : Configurator
 {
-    protected override void Configure() => Bind<BridgeMod>().AsSingleton();
+    protected override void Configure()
+    {
+        Bind<SpatialObservations>().AsSingleton();
+        Bind<BridgeMod>().AsSingleton();
+    }
 }
 
 public sealed class BridgeMod(ResourceCountingService resources, PopulationService population,
     EntityRegistry entities, ITerrainService terrain, IThreadSafeWaterMap water, IGoodService goods,
-    ModRepository mods)
+    ModRepository mods, SpatialObservations spatial)
     : ILoadableSingleton, IUnloadableSingleton, IUpdatableSingleton
 {
     private readonly MainThreadQueue queue = new();
@@ -57,9 +61,14 @@ public sealed class BridgeMod(ResourceCountingService resources, PopulationServi
     public void Unload() { server?.Dispose(); queue.Dispose(); }
     private string Observe(BridgeRequest request)
     {
-        object data = request.Route == "snapshot" ? Snapshot() : Map(request);
+        object data = request.Route switch
+        {
+            "snapshot" => Snapshot(), "map" => Map(request), "objects" => spatial.Objects(request),
+            "catalog" => spatial.Catalog(), "site-precheck" => spatial.Precheck(request),
+            _ => throw new ArgumentException("invalid_request")
+        };
         return JsonConvert.SerializeObject(new { schemaVersion = 1, sessionId, observedAtUtc = DateTimeOffset.UtcNow,
-            bridgeVersion = "0.2.0", data });
+            bridgeVersion = "0.3.0", data });
     }
     private object Snapshot()
     {

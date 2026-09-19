@@ -1,9 +1,10 @@
-# Eigene Timberborn Agent Bridge — 0.2.0
+# Eigene Timberborn Agent Bridge — 0.3.0
 
 Das Endziel ist ein Agent, der Timberborn über MCP spielt: Wasser, Nahrung, Holz,
 Wege und Wohnraum aufbauen und die Versorgung anhand frischer Beobachtungen steuern.
 Dieser erste unabhängige Mod-Baustein ist ausschließlich lesend. Bau- und
-Steuerungsaktionen folgen nach dem Live-Abgleich der Spielkoordinaten und Zustände.
+Steuerungsaktionen folgen nach strukturiertem Abgleich der Spielkoordinaten und Zustände.
+Keine Screenshot-Auswertung und keine simulierten Maus-/Tastatureingriffe zur Spielsteuerung.
 
 ## Lokales Paket bauen
 
@@ -50,22 +51,28 @@ TIMBERBORN_NATIVE_CONFIG=<absoluter Pfad zur installierten bridge.local.json>
 
 Die Client-Konfiguration bleibt bis zur gesonderten Einrichtung unverändert.
 Es gibt keinen automatischen Wechsel zwischen eigener Mod und Fremdmods.
-Die drei Werkzeuge sind `timberborn_status`, `inspect_colony` und
-`inspect_map_region(x,y,z,width,height,depth)`. Auch mit gesetztem Schreib-Opt-in
+Die sechs Werkzeuge sind `timberborn_status`, `inspect_colony`,
+`inspect_map_region(x,y,z,width,height,depth)`, `find_buildings(offset,limit)`,
+`inspect_build_catalog` und `precheck_build_site(template,x,y,z,rotation)`.
+Die letzten drei benötigen Mod 0.3.0. Auch mit gesetztem Schreib-Opt-in
 bietet dieses Backend keine Schreibwerkzeuge an. Ein Browseraufruf ohne Schlüssel
 bekommt absichtlich HTTP 401; es gibt keinen öffentlichen Ping.
 
 Live-Abnahme nach Installation: Verbindung, drei Beispielgüter (Water/Berries/Log),
-Bevölkerung, belegte/freie Betten und Obdachlose mit der UI vergleichen. Danach
-Objektkoordinate und einen höchstens 8×8×4 Zellen großen Kartenausschnitt prüfen.
+Bevölkerung, belegte/freie Betten und Obdachlose strukturiert abfragen. Die Basiswerte
+wurden für 0.2.0 bereits durch den Nutzer bestätigt. Danach Objektbelegung,
+Eingang und höchstens 8×8×4 Zellen großen Kartenausschnitt über die Spielservices
+gegeneinander prüfen. [Kontrollierter räumlicher Pilot](spatial-precheck.md).
 Zurück zum Menü und Spielstand erneut laden: Sitzung muss wechseln und die
 Verbindung wieder funktionieren. Während des Ladens darf ein Aufruf scheitern.
 Der erste Test verändert keine Gebäude, Pausenstände oder Spielstände.
 
 Grenzen: globale Werte; Beeren sind nicht die gesamte Nahrung. Die Objektstichprobe
 enthält höchstens 16 Blockobjekte, auch natürliche Objekte; Namen sind keine stabilen
-Vorlagen-IDs. Rohkoordinaten und Wasser-/Geländesemantik sind noch live abzugleichen.
-Keine Aussage über Bebaubarkeit, Wegeanbindung oder Reichweite. Ressourcen-/Betten-
+Vorlagen-IDs. Die separate Gebäude-/Wegeabfrage liefert dagegen TemplateSpec-IDs
+und belegte Zellen. Rohkoordinaten und Wasser-/Geländesemantik sind noch live abzugleichen.
+Die neue Bauplatzvorprüfung ersetzt keinen vollständigen Spielvalidator und bestätigt
+keine Distriktanbindung oder Reichweite. Ressourcen-/Betten-
 Zähler können vom Spiel verzögert aktualisiert werden. Die Abfrage läuft auf dem
 Spielhauptthread, bildet aber keinen atomar eingefrorenen Simulationszustand ab.
 

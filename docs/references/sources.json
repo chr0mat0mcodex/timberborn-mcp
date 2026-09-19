@@ -33,7 +33,11 @@
         "ModdableTimberborn/Docs/Areas.MD",
         "MoreHttpApi/Handlers/BlueprintHandler.cs",
         "MoreHttpApi/Handlers/BuildingHandler.cs",
-        "MoreHttpApi/Helpers/HttpHelper.cs"
+        "MoreHttpApi/Helpers/HttpHelper.cs",
+        "ModdableTimberborn/Services/SharedPreviewRepository.cs",
+        "BuildingBlueprints/Services/BlueprintPlacementValidator.cs",
+        "BuildingBlueprints/Services/BlueprintPreviewRepository.cs",
+        "BuildingBlueprints/Services/BlueprintPlacementService.cs"
       ]
     }
   ]

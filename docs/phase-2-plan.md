@@ -1,7 +1,11 @@
 # Phase 2: Grundversorgung aufbauen und betreiben
 
 Stand: 2026-09-19. Status: Paket 2A freigegeben und als begrenzter Pilot abgeschlossen;
-[Ergebnisse und Architekturblocker](phase-2a-results.md). Weitere Implementierung noch nicht freigegeben.
+[Ergebnisse und Architekturblocker](phase-2a-results.md).
+Aktualisierung 2026-09-20: eigene native Mod nach Nutzer-Go umgesetzt und Basiszugriff live geprüft.
+Autonomes Weiterarbeiten freigegeben, bis echte Nutzerhilfe nötig ist. Ausschließlich strukturierte
+Spielabfragen und programmierte Interaktionen, keine Screenshots. 0.3.0 ergänzt den
+[räumlichen Vorprüfungspiloten](spatial-precheck.md); vollständige Bauvalidierung bleibt offen.
 Der Nutzer hat Wasser, Nahrung, Holz und Wege als erstes Spielziel gewählt und Wohnraum ergänzt.
 Phase 1 hat Beobachtung und einen einzelnen Spieleingriff nachgewiesen. Phase 2 soll einen
 kleinen, überprüfbaren Spielablauf ermöglichen: beobachten, Bedarf erkennen, bauen, betreiben, Wirkung prüfen.

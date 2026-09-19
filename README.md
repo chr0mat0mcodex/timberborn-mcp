@@ -11,12 +11,13 @@ Nächste geplante Ausbaustufe: [Phase 2 — Wasser, Nahrung, Holz, Wege und Wohn
 ## Entwicklungsstand
 
 Endziel: Der Agent spielt Timberborn über MCP und baut Wasser-, Nahrungs-, Holzversorgung,
-Wege und Wohnraum auf. Aktuell ist die eigene unabhängige, lesende Agent Bridge 0.2.0
-implementiert und live über alle drei MCP-Werkzeuge geprüft. Bevölkerung, Beispielbestände
-und Wohnraum wurden vom Nutzer im UI bestätigt; räumliche Semantik und Session-Wechsel sind noch offen.
+Wege und Wohnraum auf. Agent Bridge 0.2.0 ist über drei MCP-Werkzeuge live geprüft;
+Bevölkerung, Beispielbestände und Wohnraum wurden vom Nutzer bestätigt, Wiederverbindung
+nach Neuladen erfolgreich. Die Erweiterung 0.3.0 ergänzt Gebäude-/Wegegeometrie,
+Pilotkatalog und [rein lesende Bauplatzvorprüfung](docs/spatial-precheck.md); Live-Abnahme noch offen.
 [Installation und Abnahme](docs/native-bridge-install.md),
 [offizielle Quellen und good references](docs/references/README.md).
-89 reguläre Tests bestanden; drei separate Live-Tests im Standardlauf übersprungen.
+99 reguläre Tests bestanden; drei separate Live-Tests im Standardlauf übersprungen.
 Nativer lesender MCP-Livetest zusätzlich erfolgreich.
 
 Read-only-POC mit More HTTP API und explizitem Fake-Backend implementiert und live getestet.
@@ -80,8 +81,10 @@ Beim bisherigen Backend bleiben fünf Tools offline auflistbar: `timberborn_stat
 `inspect_population`, `find_buildings`, `inspect_building`. Parameter und Ergebnisfelder
 stehen in missionsplan.md Abschnitt 3. Simulierte Daten sind immer markiert.
 
-Das native Backend bietet drei eigene lesende Werkzeuge: `timberborn_status`,
-`inspect_colony` und `inspect_map_region`. Kein automatischer Backendwechsel;
+Das native Backend bietet sechs eigene lesende Werkzeuge: `timberborn_status`,
+`inspect_colony`, `inspect_map_region`, `find_buildings`, `inspect_build_catalog`
+und `precheck_build_site`. Letzteres ist keine vollständige Bauvalidierung.
+Kein automatischer Backendwechsel;
 `TIMBERBORN_ENABLE_WRITES` aktiviert dort keine Schreibfunktionen.
 
 ## Optionaler Schreib-POC

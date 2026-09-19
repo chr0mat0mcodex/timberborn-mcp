@@ -59,6 +59,44 @@ public sealed class NativeClient : IDisposable
             throw new InvalidDataException("Invalid map");
         return result;
     }
+    public async Task<BridgeEnvelope<NativeObjects>> Objects(BridgeRequest r, CancellationToken ct)
+    {
+        if (r.Route != "objects") throw new ArgumentException();
+        var result = await Get<NativeObjects>($"objects?offset={r.Offset}&limit={r.Limit}", ct);
+        var d = result.Data;
+        if (d.Scope != "buildings_and_paths" || d.Offset != r.Offset || d.Limit != r.Limit || d.Total < 0 ||
+            d.Items is null || d.Items.Length != Math.Min(r.Limit, Math.Max(0, d.Total - r.Offset)) ||
+            d.HasMore != ((long)r.Offset + d.Items.Length < d.Total) || d.Limitations is null ||
+            d.Items.Any(o => o is null || o.Id == Guid.Empty || string.IsNullOrEmpty(o.Template) || o.Template.Length > 160 ||
+                o.Position is null || o.OccupiedCells is null || o.OccupiedCells.Length > 64 || o.OccupiedCells.Any(p => p is null)) ||
+            d.Items.Select(o => o.Id).Distinct().Count() != d.Items.Length)
+            throw new InvalidDataException("Invalid objects");
+        return result;
+    }
+    public async Task<BridgeEnvelope<NativeCatalog>> Catalog(CancellationToken ct)
+    {
+        var result = await Get<NativeCatalog>("catalog", ct);
+        var d = result.Data;
+        if (string.IsNullOrEmpty(d.Faction) || d.Items is null || d.Items.Length != 2 || d.Limitations is null ||
+            d.Items.Any(i => i is null || !ValidCosts(i.Costs) || (i.Available && (i.Size is null || i.Unlocked is null))) ||
+            !d.Items.Select(i => i.Template).Order().SequenceEqual(new[] { "Lodge.Folktails", "Path" }))
+            throw new InvalidDataException("Invalid catalog");
+        return result;
+    }
+    public async Task<BridgeEnvelope<NativeSite>> Precheck(BridgeRequest r, CancellationToken ct)
+    {
+        if (r.Route != "site-precheck") throw new ArgumentException();
+        var result = await Get<NativeSite>($"site-precheck?template={Uri.EscapeDataString(r.Template)}&x={r.X}&y={r.Y}&z={r.Z}&rotation={r.Rotation}", ct);
+        var d = result.Data;
+        if (d.Template != r.Template || d.Origin != new Position(r.X, r.Y, r.Z) || d.Rotation != r.Rotation ||
+            d.GameValidated || d.Assessment is not ("blocked" or "requires_game_validation") || d.Reasons is null ||
+            (d.Assessment == "blocked") != (d.Reasons.Length > 0) || d.Cells is null || d.Cells.Length is < 1 or > 64 ||
+            d.Cells.Any(c => c is null || c.Position is null || c.SupportRule is null) || !ValidCosts(d.Costs) || d.Limitations is null)
+            throw new InvalidDataException("Invalid site precheck");
+        return result;
+    }
+    private static bool ValidCosts(NativeCost[]? costs) => costs is not null && costs.Length <= 32 &&
+        costs.All(c => c is not null && !string.IsNullOrEmpty(c.Id) && c.Required >= 0 && c.AvailableGlobally >= 0);
     private async Task<BridgeEnvelope<T>> Get<T>(string route, CancellationToken ct)
     {
         using var budget = CancellationTokenSource.CreateLinkedTokenSource(ct);
@@ -77,7 +115,7 @@ public sealed class NativeClient : IDisposable
             await buffer.WriteAsync(bytes.AsMemory(0, count), budget.Token);
         }
         var result = JsonSerializer.Deserialize<BridgeEnvelope<T>>(buffer.ToArray(), NativeJson.Options);
-        if (result is null || result.SchemaVersion != 1 || result.BridgeVersion != "0.2.0" ||
+        if (result is null || result.SchemaVersion != 1 || result.BridgeVersion is not ("0.2.0" or "0.3.0") ||
             !Guid.TryParseExact(result.SessionId, "D", out var session) || session == Guid.Empty ||
             result.ObservedAtUtc == default || result.Data is null) throw new InvalidDataException("Invalid bridge envelope");
         return result;

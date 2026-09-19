@@ -909,3 +909,17 @@ Hauptmenü/Neuladen vom Nutzer durchgeführt. Listener startet erneut; alle drei
 MCP-Werkzeuge wieder erfolgreich geprüft. Der vorherige Session-ID-Wert liegt nicht vor,
 daher nur Wiederverbindung, nicht der ID-Wechsel selbst, direkt nachgewiesen.
 Nächster Schritt: räumlichen Bezug im UI bestätigen und Wohnbau-Validierungspilot vorbereiten.
+
+### 7.6 Strukturierte Raumabfragen und Bauplatzvorprüfung
+
+Nutzer autorisiert autonomes Weiterarbeiten bis tatsächliche Hilfe benötigt wird und konkretisiert:
+keine Screenshots, Zustände im Spiel abfragen und Interaktionen kontrolliert programmieren.
+Der zuvor vorgeschlagene räumliche UI-Abgleich wird durch API-Konsistenzprüfungen ersetzt.
+Neue Abhängigkeiten bleiben eine Abwägungsfrage und werden vor Aufnahme besprochen.
+
+0.3.0 ergänzt find_buildings, inspect_build_catalog und precheck_build_site.
+Die Vorprüfung verwendet öffentliche Spielgeometrie, prüft erkennbare Hindernisse und zeigt
+Eingang/Kosten. Sie erzeugt keine Entities/Vorschauen und meldet niemals vollständige Bebaubarkeit.
+99 reguläre Tests bestanden; neuer Mod-Build erfolgreich. Geplanter Live-Pilot begrenzt auf
+zwölf Abfragen, dokumentiert in docs/spatial-precheck.md. Neustart für neue DLLs erforderlich.
+Endziel unverändert: über MCP regulär bauen und Grundversorgung einschließlich Wohnraum betreiben.

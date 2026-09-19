@@ -174,3 +174,27 @@ Kein Spielneustart und keine Mutation erforderlich. Vorherige Session-ID wurde n
 ein tatsächlicher ID-Wechsel ist deshalb nicht direkt verglichen. Aktuelle ID nur lokal unter
 .local als Vergleichsbasis gespeichert, keine IDs oder Rohlogs im Repository.
 Wiederverbindung abgenommen; räumlicher UI-Abgleich und Bauvalidierung bleiben offen.
+
+## 2026-09-20 — Strukturierte Raumabfragen und reine Bauplatzvorprüfung 0.3.0
+
+Nutzer beauftragt autonomes Weiterarbeiten bis echte Hilfe nötig ist und präzisiert:
+keine Screenshots; Spielzustand per API, kontrollierte programmierte Interaktionen.
+Räumlichen UI-Abgleich im aktuellen Ablauf durch API-Konsistenzprüfungen ersetzt.
+Abhängigkeiten möglichst vermeiden, bei sinnvollem Mehrwert aber vor Aufnahme abwägen und fragen.
+
+Neue native Leserouten/Werkzeuge für Gebäude/Wege, zwei Pilotvorlagen und Bauplatzvorprüfung.
+Öffentliche TemplateSpec-/Positions-/Block-/Fraktions-/Freischaltungsservices genutzt;
+keine privaten Felder, neue Fremdmods, Preview-Erzeugung, Spawn-/Delete- oder Bauaufrufe.
+BuildingBlueprints-Referenz verwendet teils Probeplatzierung; bewusst nicht übernommen.
+Vorprüfung liefert nur blocked oder requires_game_validation, gameValidated stets false.
+Volle Spielvalidierung, Stützregeln für stapelbare Objekte und Distriktanbindung bleiben offen.
+
+99 reguläre Tests erfolgreich, drei Live-Tests im Standardlauf übersprungen. Mod-Build
+gegen Spiel-DLLs ohne Fehler/Warnungen. Synthetischer stdio-/HTTP-Test umfasst alle sechs
+Werkzeuge, zusätzlich Parametergrenzen und Abweisung irreführender Baufreigaben geprüft.
+Vier Quellen ergänzt: 21 Referenzdateien/61.934 Bytes lokal gesichert, nicht ins Paket übernommen.
+0.3.0 als neues Paket gebaut und fünf Dateien mit Backup in delegierter Installation ersetzt,
+SHA256 geprüft; vorhandener privater Schlüssel unverändert. Aktuelle Session-ID nur lokal
+als Vergleichsbasis gesichert. Neue DLLs noch nicht im laufenden Spiel geladen.
+Nächste notwendige Nutzerhilfe: vollständiger Spielneustart und MCP laden; anschließend
+begrenzter strukturierter Live-Pilot gemäß docs/spatial-precheck.md ohne weitere Umfangsrückfrage.

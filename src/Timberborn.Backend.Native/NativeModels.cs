@@ -39,6 +39,16 @@ public sealed record MapCell(int X, int Y, int Z, bool Underground, bool OnGroun
     float WaterDepth, float Contamination, bool Underwater);
 public sealed record NativeMap(Position Origin, int Width, int Height, int Depth, MapCell[] Cells, string[] Limitations);
 public sealed record NativeStatus(string Connection, string BridgeVersion, bool WritesEnabled);
+public sealed record BuildingPosition(Guid Id, string Template, Position Position, string Orientation, bool Finished,
+    Position? Entrance, Position[] OccupiedCells, bool CellsTruncated);
+public sealed record NativeObjects(string Scope, int Offset, int Limit, int Total, BuildingPosition[] Items, bool HasMore, string[] Limitations);
+public sealed record NativeCost(string Id, int Required, int AvailableGlobally);
+public sealed record CatalogEntry(string Template, bool Available, bool FactionCompatible, bool? Unlocked, Position? Size,
+    Position? Entrance, NativeCost[] Costs);
+public sealed record NativeCatalog(string Faction, CatalogEntry[] Items, string[] Limitations);
+public sealed record SiteCell(Position Position, bool InsideMap, bool Underground, bool OnGround, bool IntersectsObject, string SupportRule);
+public sealed record NativeSite(string Template, Position Origin, int Rotation, string Assessment, bool GameValidated,
+    string[] Reasons, SiteCell[] Cells, Position? Entrance, bool? PathAtEntrance, NativeCost[] Costs, string[] Limitations);
 public sealed record NativeMeta(string Backend, bool Simulated, string? SessionId, DateTimeOffset? ObservedAtUtc);
 public sealed record NativeFault(string Code, string Message, bool Retryable);
 public sealed record NativeResult<T>(int SchemaVersion, string Status, T? Data, NativeMeta Meta, NativeFault? Error);

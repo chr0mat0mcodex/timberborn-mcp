@@ -6,10 +6,11 @@ Spielservices direkt. Community-Mods dienen als Anschauungsmaterial und Vergleic
 
 ## Gesicherte Referenzen
 
-[sources.json](sources.json) bindet 17 benötigte Text-/Quelldateien an feste Git-Commits.
+[sources.json](sources.json) bindet 21 benötigte Text-/Quelldateien an feste Git-Commits.
 `scripts/fetch-references.ps1` legt sie unter `.local/references/` ab, einschließlich
 der jeweiligen MIT-Lizenz und eines Inventars mit Quell-URL, Größe und SHA256.
-Erster Abruf: 17/17 Dateien, 40.818 Bytes. Keine Quellskripte ausgeführt oder importiert.
+Erster Abruf: 17/17 Dateien, 40.818 Bytes. Ergänzter Stand für 0.3.0: 21/21 Dateien,
+61.934 Bytes, einschließlich vier Vorschau-/Platzierungsreferenzen. Keine Quellskripte ausgeführt oder importiert.
 Die Kopien werden weder kompiliert noch ausgeliefert oder ins Projekt-Git kopiert;
 Katalog, Abrufskript und diese extrahierten Erkenntnisse bleiben im Repository.
 
@@ -51,6 +52,10 @@ nicht durch diese MIT-Lizenzen abgedeckt und werden nicht weiterverteilt.
    noch kein abgenommener Bauablauf. Gültigen und ungültigen Wohnbauplatz prüfen,
    Vorschauen aufräumen, danach reguläre Kosten/Platzierung und Ergebnis-ID nachweisen.
    Keine Fertigbau-/Spawn-Abkürzung aus fremden Mods übernehmen.
+
+Die zusätzliche BuildingBlueprints-Referenz prüft teils durch Platzieren und Löschen
+echter Objekte. Das wurde bewusst nicht übernommen. Unsere 0.3.0 verwendet nur
+öffentliche Geometrie-/Zustandsabfragen und kennzeichnet ihre Bauplatzvorprüfung als unvollständig.
 
 Weitere öffentliche Signaturen und Herstellerlinks:
 [API-Machbarkeitsbericht](../architecture/native-game-api.md).
