@@ -1,7 +1,8 @@
 # Kontrollierter Spielvalidator-Pilot — 0.4.0
 
 Status nach Nutzerklärung: gebaut, 109 reguläre Tests bestanden, lokal gepackt;
-nicht installiert oder live geprüft. Fähigkeitsanalyse hat Vorrang vor tatsächlichem Spielen.
+inzwischen auf Nutzerauftrag installiert, noch nicht live geprüft. Mod-Opt-in aktiv;
+MCP-Opt-in bleibt separat erforderlich. Fähigkeitsanalyse hat Vorrang vor tatsächlichem Spielen.
 Der folgende Ablauf ist ein vorbereiteter Nachweisplan, kein ausgeführter Spieltest.
 
 Endziel bleibt reguläres Spielen per MCP. Nach erfolgreichem rein lesendem Raum-Pilot

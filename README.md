@@ -18,7 +18,7 @@ Bevölkerung, Beispielbestände und Wohnraum wurden vom Nutzer bestätigt, Wiede
 nach Neuladen erfolgreich. Die Erweiterung 0.3.0 ergänzt Gebäude-/Wegegeometrie,
 Pilotkatalog und [rein lesende Bauplatzvorprüfung](docs/spatial-precheck.md); räumlicher MCP-Pilot bestanden.
 0.4.0 ergänzt einen [geschützten Spielvalidator-Prototyp](docs/native-validation.md),
-lokal gebaut und gepackt, nicht installiert oder live abgenommen.
+lokal gebaut, gepackt und installiert; Spielstart und Live-Abnahme stehen aus.
 [Installation und Abnahme](docs/native-bridge-install.md),
 [offizielle Quellen und good references](docs/references/README.md).
 Für die eigene Bridge: `scripts/start-native.ps1 -ConfigPath '<private Konfiguration>'`;

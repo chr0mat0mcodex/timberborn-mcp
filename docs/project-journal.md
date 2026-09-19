@@ -1,5 +1,16 @@
 # Projektjournal
 
+## 2026-09-20 — Bridge 0.4.0 installiert, Neustart ausstehend
+
+Auf Nutzerauftrag bei beendetem Spiel das vorbereitete 0.4.0-Paket installiert.
+Fünf Paketdateien mit SHA256 gegen die Quelle geprüft; vorherige Dateien und private
+Konfiguration in einem neuen ignorierten lokalen Backup gesichert. Bestehenden Port
+und Schlüssel erhalten, enableValidation für den angekündigten Pilot aktiviert.
+MCP-Opt-in bleibt separat erforderlich; Standardstarter aktiviert es nicht.
+Noch kein Laufzeitnachweis für 0.4.0. Nächster Schritt nach Nutzer-Spielstart und Laden
+der Testkolonie: Version/Lesefunktionen prüfen, dann maximal zwei Vorschauvalidierungen
+nach docs/native-validation.md. Keine Bauaufträge.
+
 ## 2026-09-20 — Native Bridge ohne aktive Fremdmods live geprüft
 
 Nach Nutzerbestätigung des Spielstarts nur mit MCP-Mod den vorhandenen nativen
