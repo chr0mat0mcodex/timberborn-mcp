@@ -859,3 +859,11 @@ Der ausgearbeitete [Phase-2-Plan](docs/phase-2-plan.md) enthält Funktionsmatrix
 Lücken, mögliche Erweiterungsarchitektur und Pakete 2A–2E mit Abnahmekriterien.
 Status: Planung abgeschlossen, Umsetzung noch nicht freigegeben. Nächste Empfehlung: begrenzter
 Daten-/Schnittstellenpilot 2A, bevor weitere Spielaktionen oder eine zusätzliche Mod implementiert werden.
+
+### 7.1 Paket 2A durchgeführt
+
+Nach Nutzer-Go sechs dokumentierte Leseroutenabfragen durchgeführt und Herstellerimplementierungen geprüft.
+[Pilotbericht](docs/phase-2a-results.md): Wohnbaukatalog live nutzbar; Betten/Güter/Arbeitskräfte haben
+Mod-interne Zugänge; Karte und Bauprüfung bleiben unbelegt. Keine neue Mod oder Spielaktion.
+Nächste Entscheidung: eng begrenztes lesendes Statistikmodul plus gesonderter Raum-/Bauprüfungsnachweis,
+bevor Phase 2B/2C vollständig umgesetzt werden kann.

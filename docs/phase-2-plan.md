@@ -1,6 +1,7 @@
 # Phase 2: Grundversorgung aufbauen und betreiben
 
-Stand: 2026-09-19. Status: Plan zur Umsetzung, noch keine Implementierungsfreigabe für Phase 2.
+Stand: 2026-09-19. Status: Paket 2A freigegeben und als begrenzter Pilot abgeschlossen;
+[Ergebnisse und Architekturblocker](phase-2a-results.md). Weitere Implementierung noch nicht freigegeben.
 Der Nutzer hat Wasser, Nahrung, Holz und Wege als erstes Spielziel gewählt und Wohnraum ergänzt.
 Phase 1 hat Beobachtung und einen einzelnen Spieleingriff nachgewiesen. Phase 2 soll einen
 kleinen, überprüfbaren Spielablauf ermöglichen: beobachten, Bedarf erkennen, bauen, betreiben, Wirkung prüfen.
