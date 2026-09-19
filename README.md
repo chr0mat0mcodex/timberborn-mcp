@@ -26,6 +26,8 @@ Build und nativen Lesetest mit `scripts/verify.ps1 -NativeConfig '<private Konfi
 ausführen. Beide Abläufe sind in der Installationsanleitung beschrieben.
 109 reguläre Tests bestanden; drei separate Live-Tests im Standardlauf übersprungen.
 Nativer lesender MCP-Livetest zusätzlich erfolgreich.
+Auch mit ausschließlich eigener Bridge laut Nutzer-Mod-Auswahl: alle sechs nativen
+Lesewerkzeuge erneut live erfolgreich (0.3.0). Keine Fremdmod für diesen Zugriff erforderlich.
 
 Read-only-POC mit More HTTP API und explizitem Fake-Backend implementiert und live getestet.
 Optionaler einzelner Schreib-POC ebenfalls implementiert und live geprüft: Holzfällerflagge pausieren

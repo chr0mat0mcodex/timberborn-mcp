@@ -32,3 +32,12 @@ Fraktion/Freischaltung/Kosten von Lodge und Path, 64 Gelände-/Wasserzellen und 
 erklärbar abgewiesene Bauplatzvorprüfungen. Objektzahl und beobachtete Bestände unverändert.
 Sitzungswechsel gegenüber vorher lokal gespeicherter ID direkt bestätigt.
 0.4.0 kompiliert und synthetisch geprüft; Vorschau-Liveprüfung steht aus.
+
+## Isolierter Betrieb — 2026-09-20
+
+Nutzer bestätigt Spielstart mit ausschließlich eigener MCP-Mod. Anschließend separaten
+nativen stdio-Lesetest ausgeführt: alle sechs Werkzeuge in derselben Sitzung erfolgreich,
+keine übersprungenen Tests. Damit ist der lesende Betrieb der installierten Bridge 0.3.0
+ohne aktive Fremdmods für diese Testkolonie nachgewiesen. Die Mod-Auswahl wurde durch den
+Nutzer bestätigt, nicht durch eine zusätzliche API-Inventur. Kein Vorschau- oder Bauaufruf.
+Dieser Nachweis gilt nicht für den noch nicht live geprüften Validator aus 0.4.0.

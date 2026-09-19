@@ -1,5 +1,15 @@
 # Projektjournal
 
+## 2026-09-20 — Native Bridge ohne aktive Fremdmods live geprüft
+
+Nach Nutzerbestätigung des Spielstarts nur mit MCP-Mod den vorhandenen nativen
+Lesetest gezielt wiederholt: ein Test bestanden, alle sechs MCP-Werkzeuge erfolgreich
+in einer Sitzung. Schreib-/Vorschau-Opt-ins deaktiviert; keine Spielmutation.
+Keine erneute vollständige Testsuite, da seit dem geprüften Checkpoint kein Code geändert.
+Der unabhängige lesende Betrieb ist für die Testkolonie nachgewiesen; Mod-Auswahl beruht
+auf Nutzerbestätigung. Installierter Stand bleibt 0.3.0. Nächster Schritt: vorbereiteten
+0.4.0-Validator installieren und begrenzt live prüfen; DLL-Austausch erst bei beendetem Spiel.
+
 ## 2026-09-20 — Lokalen nativen Startweg konsolidiert
 
 Nutzer beauftragt schrittweise eine lokal nutzbare Mod mit MCP und möglichst wenigen
