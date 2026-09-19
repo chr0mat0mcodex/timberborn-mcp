@@ -850,3 +850,12 @@ ausgewählt, pausiert (applied) und separat mit Paused=true nachgelesen.
 Anschließend bestätigte der Nutzer sichtbar im Spiel: Test erfolgreich.
 Damit ist der begrenzte Schreib-POC technisch und durch UI-Abgleich abgenommen.
 Letzter bestätigter Zustand: Holzfällerflagge absichtlich pausiert; kein automatisches Wiederaktivieren.
+
+## 7. Phase 2 — Grundversorgung
+
+Nutzerauftrag: zunächst planen, welche Beobachtungen und Eingriffe ein spielender Agent benötigt.
+Gewähltes Ziel: Wasser, Nahrung, Holz, Wege und ausdrücklich auch Wohnraum aufbauen und betreiben.
+Der ausgearbeitete [Phase-2-Plan](docs/phase-2-plan.md) enthält Funktionsmatrix, belegten API-Stand,
+Lücken, mögliche Erweiterungsarchitektur und Pakete 2A–2E mit Abnahmekriterien.
+Status: Planung abgeschlossen, Umsetzung noch nicht freigegeben. Nächste Empfehlung: begrenzter
+Daten-/Schnittstellenpilot 2A, bevor weitere Spielaktionen oder eine zusätzliche Mod implementiert werden.

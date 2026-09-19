@@ -6,6 +6,7 @@ MCP läuft über stdio; der Spielzugriff wird hinter einem eigenen Backend gekap
 Repository: [chr0mat0mcodex/timberborn-mcp](https://github.com/chr0mat0mcodex/timberborn-mcp).
 Für die Mitarbeit gelten [Agentenanweisungen](AGENTS.md) und [Entwicklungsablauf](DEVELOPMENT_WORKFLOW.md).
 Aktuelle Ergebnisse dokumentiert das [Projektjournal](docs/project-journal.md).
+Nächste geplante Ausbaustufe: [Phase 2 — Wasser, Nahrung, Holz, Wege und Wohnraum](docs/phase-2-plan.md).
 
 ## Entwicklungsstand
 
