@@ -135,3 +135,9 @@ Standard-Modordner installiert, sechs Dateien einschließlich privater Konfigura
 per SHA256 mit dem gebauten Paket abgeglichen. Kein vorhandener Modordner überschrieben.
 Spielstart und Aktivierung übernimmt der Nutzer; Live-Abnahme weiterhin offen.
 
+## 2026-09-20 — Erster Startversuch
+
+Spiel lädt die Agent Bridge, aber ihr Listener startet nicht; Port 8081 verweigert
+die Verbindung. Startdiagnose um feste Phasenkennung und Exception-Typ ergänzt,
+ohne Fehlermeldungsinhalt, Pfade oder Schlüssel auszugeben. Mod-Build erfolgreich.
+Live-Abnahme weiterhin offen; erneuter Spielstart für die Diagnose erforderlich.

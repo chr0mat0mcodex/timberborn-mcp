@@ -29,19 +29,23 @@ public sealed class BridgeMod(ResourceCountingService resources, PopulationServi
     private BridgeHttpServer? server;
     public void Load()
     {
+        string stage = "locate_configuration";
         try
         {
             var path = Path.Combine(Path.GetDirectoryName(typeof(BridgeMod).Assembly.Location)!, "bridge.local.json");
+            stage = "read_configuration";
             if (new FileInfo(path).Length > 4096) throw new InvalidOperationException();
             var config = JObject.Parse(File.ReadAllText(path));
+            stage = "create_listener";
             server = new BridgeHttpServer((int?)config["port"] ?? 8081, (string?)config["token"] ?? "", queue);
+            stage = "start_listener";
             server.Start();
             Debug.Log("[Timberborn Agent Bridge] Read-only endpoint ready on loopback.");
         }
-        catch (Exception)
+        catch (Exception ex)
         {
             server?.Dispose(); server = null;
-            Debug.LogError("[Timberborn Agent Bridge] Start failed. Check private configuration and port. No game changes performed.");
+            Debug.LogError($"[Timberborn Agent Bridge] Start failed at {stage}: {ex.GetType().Name}. No game changes performed.");
         }
     }
     public void UpdateSingleton() => queue.Pump(Observe);
