@@ -1308,7 +1308,8 @@ Analysevorrang ist kein Grund, diese ausdrückliche Spielfreigabe auszubremsen.
 - [x] Sonderlayouts, seitliche Geländebefestigung, Entwicklerwerkzeuge und zu große Geometrie ausweisen.
 - [x] 316 reguläre Tests bestanden (303 Unit, 13 Integration); 3 Live-Tests übersprungen.
 - [x] 0.14.0 paketiert; Manifest und Archiv mit ausschließlich fünf Moddateien geprüft.
-- [ ] 0.14.0 installieren; Nutzer um Speichern/Beenden gebeten.
+- [x] 0.14.0 gesichert installiert, fünf Datei-Hashes geprüft, neue Bau-Freigabe ergänzt.
+- [ ] Nutzer startet Timberborn/MCP für Live-Abnahme.
 - [ ] Im Spiel Katalog und zunächst Pumpe, Farm, Lager und Wohnraum prüfen/beauftragen.
 - [ ] Fertigstellung und tatsächliche Versorgung separat bestätigen; Lagerkonfiguration als mögliche Lücke prüfen.
 

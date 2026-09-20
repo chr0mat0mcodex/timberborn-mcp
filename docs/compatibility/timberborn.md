@@ -190,3 +190,7 @@ von waterStress/isDying in dieser Stichprobe nicht nachgewiesen.
 Tests bestanden, Mod gegen öffentliche 1.1.2.4-Referenzen kompiliert. Keine neue
 Fremdmod-Abhängigkeit. Installation und Live-Abnahme noch offen; 0.13.2 bleibt der
 aktuelle live bestätigte Stand. Siehe ../generic-building.md.
+
+0.14.0 anschließend bei beendetem Spiel gesichert installiert. Fünf Paketdateien
+per SHA256 geprüft; bisherige Konfiguration erhalten, nur neue Bau-Freigabe ergänzt.
+Neustart und Live-Abnahme noch offen.

@@ -16,7 +16,8 @@ Nächste geplante Ausbaustufe: [Phase 2 — Wasser, Nahrung, Holz, Wege und Wohn
 Neu: 0.14.0 implementiert [generisches Bauen](docs/generic-building.md): vollständiger
 Gebäudekatalog, Vorprüfung, Spielvalidierung und reguläre Einzelaufträge nach Vorlagen-ID.
 Mehrere Aufträge je Sitzung mit festen Aktions-IDs; Sonderlayouts ausdrücklich begrenzt.
-Installation und Live-Abnahme stehen noch aus; installiert/live bestätigt bleibt 0.13.2.
+0.14.0 ist gesichert installiert; Live-Abnahme nach Neustart steht noch aus.
+Zuletzt live bestätigt: 0.13.2.
 
 Endziel: Der Agent spielt Timberborn über MCP und baut Wasser-, Nahrungs-, Holzversorgung,
 Wege und Wohnraum auf. Agent Bridge 0.2.0 ist über drei MCP-Werkzeuge live geprüft;

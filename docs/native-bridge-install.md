@@ -6,7 +6,8 @@ Neue private Freigabe `enableBuildingPlacement` und MCP-Umgebungsvariable
 16 native Leser plus getrennt freizugebende Aktionen. Für Updates Spiel beenden,
 vorhandenen Modordner sichern und nur die fünf Paketdateien ersetzen; bestehende
 private Konfiguration erhalten und die neue Freigabe gezielt ergänzen.
-Installiert/live bestätigt bleibt 0.13.2 bis zum nächsten Wechsel.
+0.14.0 ist gesichert installiert; Live-Abnahme nach Neustart noch offen.
+Zuletzt live bestätigt bleibt 0.13.2.
 
 Die folgenden Versionsabschnitte dokumentieren frühere Erweiterungen.
 

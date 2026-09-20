@@ -838,3 +838,8 @@ Live-Abnahme stehen aus. Laufendes Spiel noch 0.13.2. Details: docs/generic-buil
 Version und Code-Archiv mit genau fünf Dateien geprüft; keine private Konfiguration
 im Archiv. Timberborn läuft noch; Nutzer um Speichern/Beenden gebeten. Installation
 und anschließende Live-Abnahme bleiben offen. Quellcode-Checkpoint: 4f26990.
+
+0.14.0 bei nachweislich beendetem Spiel gesichert installiert. Fünf Paketdateien per
+SHA256 identisch geprüft. Alle bisherigen Konfigurationsfelder unverändert; allein
+enableBuildingPlacement=true ergänzt. Vollständige lokale Sicherung von 0.13.2
+vorhanden. Nutzer um Neustart/MCP laden gebeten; Live-Abnahme noch offen.
