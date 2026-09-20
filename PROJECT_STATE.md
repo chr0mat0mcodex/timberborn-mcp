@@ -1,6 +1,6 @@
 # Projektstand
 
-Stand: 2026-09-20. Codeversion: **0.21.1**, Gebäudeinventardiagnose gebaut, regulär getestet und installiert; Live-Abnahme offen. Zuvor 0.21.0 mit 30 Lesern live bestätigt.
+Stand: 2026-09-20. Codeversion: **0.21.1**, Gebäudeinventardiagnose gebaut, regulär getestet, installiert und mit allen 30 Lesern live geprüft. Zuvor 0.21.0 mit 30 Lesern live bestätigt.
 Installiert ist **0.21.1**, fünf Datei-Hashes geprüft und Konfiguration erhalten. Zuvor unter **0.20.0**: 29 Leser live geprüft, danach Fehler bei weiter registrierten
 verstorbenen Bibern gefunden (Bedürfniszählung 13 statt 11 lebender Biber).
 Sofort-Wegsuche einschließlich Unterbrechung/Wiederherstellung unter **0.19.1** live bestätigt. Farm-/Holzfällerreichweiten unter 0.19.2 über den konkreten Terrainzugriff bestätigt.
@@ -42,6 +42,7 @@ Beide Pumpen per Weg verbunden; Umlagerung aus globalen Ausgangsbeständen best�
 | Automatisch | 487 reguläre Tests: 474 Unit, 13 Integration; drei opt-in Live-Tests im Standardlauf übersprungen |
 | Mod-Build | Gegen Timberborn 1.1.2.4, ohne Warnungen/Fehler |
 | Installation | Fünf Paketdateien per SHA-256 geprüft, private Konfiguration erhalten |
+| Live 0.21.1 | Alle 30 Leser; fünf Gebäudeinventare erklären exakt 138 Wasser: Tanks 60, Pumpen 30, Distriktzentrum 48; keine Kapazitätsreservierung für Wasser |
 | Live 0.21.0 | Alle 30 Leser; Produktionsgraph samt Ketten/Quellen/Größe/Revision; 11 lebende Biber und zwei Tote korrekt getrennt, beide toten Einzelziele ohne aktuelle Bedürfnisse |
 | Live 0.20.0 | Alle 29 Leser; 42 Bedürfnisse über zwei Seiten, Einzelbiber und Betriebsbelege; Wohnraumbefund unabhängig bestätigt |
 | Live 0.19.2 | Alle 26 Leser bestanden; Holzfäller 611 und Farm 485 Terrainzellen, erste und letzte Ergebnisseite geprüft |

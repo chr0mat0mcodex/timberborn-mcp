@@ -5,7 +5,7 @@ das Spiel strukturiert zu beobachten und über reguläre Spielaktionen zu steuer
 Ziel ist ein Agent, der Wasser, Nahrung, Holz, Wege und Wohnraum aufbaut und betreibt.
 
 **Entwicklungsstand: Agent Bridge 0.21.1**, gebaut gegen Timberborn **1.1.2.4 / Folktails**.
-**0.21.1 ergänzt konkrete Gebäudeinventare; Installiert, Live-Abnahme offen.**
+**0.21.1 ergänzt konkrete Gebäudeinventare; installiert und mit allen 30 Lesern sowie konkreten Inventaren live geprüft.**
 **0.21.0 enthält den Produktionsgraphen und die Lebenszustandskorrektur aus 0.20.1; installiert und mit allen 30 Lesern live geprüft.**
 Zuvor waren unter 0.20.0 alle 29 Leser live geprüft. Ein Folgepilot zeigte,
 dass registrierte verstorbene Biber bislang mitgezählt wurden.

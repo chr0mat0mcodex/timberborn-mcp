@@ -1,7 +1,7 @@
 # Native MCP-Werkzeuge
 
-Stand: Agent Bridge 0.21.1 mit Inventaren in inspect_building_operation; Installiert, Live-Abnahme offen. 0.21.0 mit allen 30 Lesern live bestätigt.
-0.21.0 ist installiert; der Lebenszustandsfix ist mit 11 lebenden und zwei ausgeschlossenen toten Bibern live bestätigt. Aus `NativeTools.Catalog` mit allen Freigaben abgeglichen:
+Stand: Agent Bridge 0.21.1 mit Inventaren in inspect_building_operation; installiert und mit allen 30 Lesern sowie konkreten Inventaren live geprüft. 0.21.0 mit allen 30 Lesern live bestätigt.
+0.21.1 ist installiert; der Lebenszustandsfix ist mit 11 lebenden und zwei ausgeschlossenen toten Bibern live bestätigt. Aus `NativeTools.Catalog` mit allen Freigaben abgeglichen:
 30 Leser und 19 Werkzeuge für Aktionen/Vorschauvalidierung. Nicht jede Kombination
 ist live geprüft; Nachweise und Grenzen stehen in den Fachdokumenten.
 

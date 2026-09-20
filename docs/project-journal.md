@@ -1468,3 +1468,34 @@ stehen aus. Spiel in diesem Entwicklungsschritt nicht verändert.
 ## 2026-09-20 — 0.21.1 installiert
 
 Spielende vor Sicherung und unmittelbar vor Austausch geprüft. 0.21.0 vollständig in neuem lokalem Backup gesichert und verglichen. Fünf Paketdateien ersetzt und SHA-256 verifiziert; private Konfiguration unverändert. 0.21.1 installiert, Neustart/Laden und Inventar-Liveabgleich ausstehend.
+
+
+## 2026-09-20 — Inventardiagnose 0.21.1 live bestätigt
+
+Alle 30 MCP-Leser bestanden; gezielter rein lesender Abgleich an fünf Gebäuden.
+Simulation blieb pausiert (Tag 18, etwa 18:20), Bevölkerung elf Erwachsene.
+
+| Gebäude | Wasserbestand | Gemeldete Inventarkapazität |
+| --- | ---: | ---: |
+| Kleiner Tank 1 | 30 | 30 |
+| Kleiner Tank 2 | 30 | 30 |
+| Wasserpumpe 1 | 15 | 15 |
+| Wasserpumpe 2 | 15 | 15 |
+| Distriktzentrum | 48 | 2147483647 |
+
+Summe 138, exakt gleich dem globalen Wasserbestand. BufferedOutputStock=78 umfasst
+hier 30 Pumpenwasser plus 48 Wasser im Distriktzentrum; StockpiledStock=60 die Tanks.
+Keine Wasser-Kapazitätsreservierungen, jeweils gesamter Wasserbestand unreserviert.
+Die Pumpen sind tatsächlich voll (outputSpace=false), nicht fehlerhaft überfüllt.
+
+Beim Distriktzentrum meldet Inventory.Capacity int.MaxValue, die Definition dagegen
+Capacity=20 und IgnorableCapacity=true. Die globale TotalCapacity=110 ist daher
+nicht durch Addition der fünf rohen Inventory.Capacity-Werte zu rekonstruieren.
+UnreservedCapacity(Water)=0 bei gleichzeitig Full=false im Distriktzentrum zeigt
+ebenfalls: güterspezifische Grenzen und aggregierte Flags nicht gleichsetzen.
+FullyReserved=true bei vollen Tanks/Pumpen beweist keine aktive Lieferreservierung.
+
+Die Bestandszuordnung ist geklärt. Keine nachhaltige Produktionsbilanz oder
+vollständige Umwelt-/Lieferdiagnose abgeleitet. Kein weiterer Tankbau erforderlich
+für diesen Nachweis; nächste Versorgungsprüfung muss normale Entnahme und
+Wiederauffüllung bzw. getrennte Produktions-/Verbrauchshistorie betrachten.

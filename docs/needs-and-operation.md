@@ -105,7 +105,7 @@ und IgnorableCapacity=true. Damit ist eine Überschreitung nomineller Kapazität
 grundsätzlich möglich; die konkrete Verteilung in dieser Kolonie ist noch nicht belegt.
 
 inspect_building_operation erhält inventories für fertiggestellte Gebäude:
-aktivierte Inventory-Komponenten mit Komponentenname, nomineller Gesamtkapazität,
+aktivierte Inventory-Komponenten mit Komponentenname, vom Spiel gemeldeter Gesamtkapazität,
 TotalStock, Input-/Output- und öffentlichen Zugriffsflags, IsFull/IsFullyReserved/
 IsUnblocked sowie je Gut Bestand, unreservierter Bestand, reservierte Kapazität und
 unreservierte Kapazität. Rohwerte; keine erfundene Ursache oder Lieferzusage.
@@ -118,4 +118,35 @@ keine globale Summengleichheit zugesichert. Freie Kapazitäten je Gut nicht addi
 Kapazität kann vom Spiel ignoriert werden, dieses Flag ist hier nicht als Laufzeitwert verfügbar.
 
 0.21.1 ist installiert. Gezielter Live-Abgleich von Distriktzentrum, beiden Pumpen und Tanks
-steht aus. Spiel in diesem Entwicklungsschritt nicht verändert.
+bestanden. Spiel in diesem Entwicklungsschritt nicht verändert.
+
+
+## 2026-09-20 — Inventardiagnose 0.21.1 live bestätigt
+
+Alle 30 MCP-Leser bestanden; gezielter rein lesender Abgleich an fünf Gebäuden.
+Simulation blieb pausiert (Tag 18, etwa 18:20), Bevölkerung elf Erwachsene.
+
+| Gebäude | Wasserbestand | Gemeldete Inventarkapazität |
+| --- | ---: | ---: |
+| Kleiner Tank 1 | 30 | 30 |
+| Kleiner Tank 2 | 30 | 30 |
+| Wasserpumpe 1 | 15 | 15 |
+| Wasserpumpe 2 | 15 | 15 |
+| Distriktzentrum | 48 | 2147483647 |
+
+Summe 138, exakt gleich dem globalen Wasserbestand. BufferedOutputStock=78 umfasst
+hier 30 Pumpenwasser plus 48 Wasser im Distriktzentrum; StockpiledStock=60 die Tanks.
+Keine Wasser-Kapazitätsreservierungen, jeweils gesamter Wasserbestand unreserviert.
+Die Pumpen sind tatsächlich voll (outputSpace=false), nicht fehlerhaft überfüllt.
+
+Beim Distriktzentrum meldet Inventory.Capacity int.MaxValue, die Definition dagegen
+Capacity=20 und IgnorableCapacity=true. Die globale TotalCapacity=110 ist daher
+nicht durch Addition der fünf rohen Inventory.Capacity-Werte zu rekonstruieren.
+UnreservedCapacity(Water)=0 bei gleichzeitig Full=false im Distriktzentrum zeigt
+ebenfalls: güterspezifische Grenzen und aggregierte Flags nicht gleichsetzen.
+FullyReserved=true bei vollen Tanks/Pumpen beweist keine aktive Lieferreservierung.
+
+Die Bestandszuordnung ist geklärt. Keine nachhaltige Produktionsbilanz oder
+vollständige Umwelt-/Lieferdiagnose abgeleitet. Kein weiterer Tankbau erforderlich
+für diesen Nachweis; nächste Versorgungsprüfung muss normale Entnahme und
+Wiederauffüllung bzw. getrennte Produktions-/Verbrauchshistorie betrachten.

@@ -29,7 +29,7 @@ Hier stehen offene Aufgaben; datierte historische Kästchen sind kein aktueller 
    wegen zweier Alterstodesfälle nach rund 1,22 Tagen abgebrochen, keine Dreitagesabnahme.
    Zusätzlicher kleiner Wassertank unter 0.21.0 gebaut und gefüllt; Lager 30→60,
    globale Ausgangsbestände 108→78, Gesamtwasser 138 unverändert. Umlagerung bestätigt,
-   Pumpen weiter ohne Ausgangsplatz. Globale Ausgangsbestände nicht als Pumpenbestand interpretieren. 0.21.1 ergänzt Gebäudeinventare; ist installiert und an Distriktzentrum, Pumpen und Tanks live abzugleichen. Nachhaltigkeit offen.
+   Pumpen weiter ohne Ausgangsplatz. Globale Ausgangsbestände nicht als Pumpenbestand interpretieren. 0.21.1 live bestätigt: Tanks 60, Pumpen 30, Distriktzentrum 48 ergeben 138 Wasser. Kein fehlerhaft überfüllter Pumpenpuffer. Nachhaltigkeit offen.
 
 Diese Reihenfolge ist eine Planung, keine Behauptung bereits vorhandener Werkzeuge.
 Neue Funktionen werden entsprechend dem Projektauftrag vor ihrer Umsetzung konkretisiert.

@@ -12,7 +12,7 @@ unkontrollierter Kolonieaufbau ersetzt keine gezielte Abnahme.
 
 ## Stand
 
-**0.21.1 ergänzt konkrete Gebäudeinventare; Installiert, Live-Abnahme offen.**
+**0.21.1 ergänzt konkrete Gebäudeinventare; installiert und mit allen 30 Lesern sowie konkreten Inventaren live geprüft.**
 
 **0.21.0 liefert einen Produktionsgraphen und korrigiert die Bedürfniszählung bei Todesfällen; installiert, alle 30 Leser und begrenzter Graph-/Lebenszustandspilot live bestanden.
 Fünf Paketdateien geprüft, Konfiguration erhalten. Unter 0.19.2 sind
@@ -54,6 +54,7 @@ Keine Fremdmod-Pflichtbasis; die frühere More-HTTP-API-Phase ist abgeschlossen.
 - [ ] Aktive Hunger-/Durst-UI-Warnungen im Live-Test ergänzen.
 - [x] 0.21.0 mit Produktionsgraph und Lebenszustandskorrektur installieren; Sicherung/Hashes/Konfiguration geprüft.
 - [x] Produktionsgraph und lebende/tote Biber getrennt live prüfen (11 lebend, zwei tot).
+- [x] Gebäudeinventare und globale Wasserbestände abgleichen: 60 Tank + 30 Pumpen + 48 Distriktzentrum = 138.
 - [x] Gebäudezugang und Sofort-Wegverbindung einschließlich Unterbrechung/Wiederherstellung gezielt prüfen.
 - [x] Konkrete Farm-/Holzfällerreichweiten über BuildingTerrainRange live abnehmen (485/611 Zellen; erste/letzte Seite).
 - [x] Native Produktions-/Verbrauchshistorie über einen Tageswechsel prüfen.
