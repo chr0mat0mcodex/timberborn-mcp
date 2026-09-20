@@ -1,5 +1,15 @@
 # Projektjournal
 
+## 2026-09-20 — 0.5.0 für Wegbau-Pilot installiert
+
+Nach Nutzerbestätigung bei beendetem Timberborn das finale vorbereitete 0.5.0-Paket
+installiert. Fünf Dateien SHA256-geprüft, vorherige Installation samt privater Konfiguration
+in neuem lokalen Backup gesichert. Schlüssel und Port erhalten; enablePlacement für den
+beauftragten Einzelweg-Pilot aktiviert. Zusätzliches MCP-Opt-in weiterhin erforderlich;
+Standardstarter bleibt lesend. Kein Spielstart und kein Bauaufruf ausgeführt.
+Nächster Schritt nach Laden von MCP: Version/Sitzung und Standort frisch prüfen,
+genau einen Wegauftrag ausführen und das Ergebnis lesend anhand der Entity-ID bestätigen.
+
 ## 2026-09-20 — Einzelner regulärer Wegauftrag 0.5.0 vorbereitet
 
 Nach ausdrücklichem Go für kontrollierte Bauaufträge zunächst Path-only umgesetzt.

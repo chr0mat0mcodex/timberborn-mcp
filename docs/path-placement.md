@@ -2,7 +2,7 @@
 
 Auf Nutzer-Go implementierter Pilot, noch nicht im Spiel abgenommen. Ziel ist der
 Nachweis des regulären Platzierungspfads und einer überprüfbaren Ergebniszuordnung.
-Installiert und live geprüft bleibt zunächst 0.4.1. Kein autonomer Kolonieaufbau.
+0.5.0 ist installiert; letzter Live-Nachweis bleibt 0.4.1. Kein autonomer Kolonieaufbau.
 
 ## Vertrag
 
