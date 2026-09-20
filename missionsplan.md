@@ -1307,7 +1307,8 @@ Analysevorrang ist kein Grund, diese ausdrückliche Spielfreigabe auszubremsen.
 - [x] Freischaltung/Feature-Toggles prüfen; reguläre Materialien, Bauzeit und PlaceFinished beibehalten.
 - [x] Sonderlayouts, seitliche Geländebefestigung, Entwicklerwerkzeuge und zu große Geometrie ausweisen.
 - [x] 316 reguläre Tests bestanden (303 Unit, 13 Integration); 3 Live-Tests übersprungen.
-- [ ] 0.14.0 paketieren/installieren; benötigt beendetes Spiel.
+- [x] 0.14.0 paketiert; Manifest und Archiv mit ausschließlich fünf Moddateien geprüft.
+- [ ] 0.14.0 installieren; Nutzer um Speichern/Beenden gebeten.
 - [ ] Im Spiel Katalog und zunächst Pumpe, Farm, Lager und Wohnraum prüfen/beauftragen.
 - [ ] Fertigstellung und tatsächliche Versorgung separat bestätigen; Lagerkonfiguration als mögliche Lücke prüfen.
 

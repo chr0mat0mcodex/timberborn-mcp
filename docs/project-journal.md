@@ -833,3 +833,8 @@ Legacy-Piloten bleiben getrennt. Gesundheitsprüfung bei Versionswechsel erhalte
 316 reguläre Tests erfolgreich (303 Unit/13 Integration), drei Live-Tests übersprungen.
 Mod gegen öffentliche lokale 1.1.2.4-Referenzen kompiliert; letzte Paketierung und
 Live-Abnahme stehen aus. Laufendes Spiel noch 0.13.2. Details: docs/generic-building.md.
+
+0.14.0 abschließend gebaut und als eindeutiges lokales Paket erstellt. Manifest-ID,
+Version und Code-Archiv mit genau fünf Dateien geprüft; keine private Konfiguration
+im Archiv. Timberborn läuft noch; Nutzer um Speichern/Beenden gebeten. Installation
+und anschließende Live-Abnahme bleiben offen. Quellcode-Checkpoint: 4f26990.
