@@ -21,13 +21,15 @@ Pilotkatalog und [rein lesende Bauplatzvorprüfung](docs/spatial-precheck.md); r
 dessen erster Livekontrolltest einen belegten Standort fälschlich akzeptierte.
 0.4.1 ergänzt die direkte BlockObject-Prüfung und ist installiert/live geprüft:
 belegter Lodge-Standort abgewiesen, freier Path-Standort akzeptiert, Zustandswachen
-unverändert. Keine Bauaufträge implementiert; keine Baufreigabe aus 0.4.0 ableiten.
+unverändert. Keine Baufreigabe aus 0.4.0 ableiten.
+0.5.0 implementiert einen separat geschützten [einzelnen Wegauftrag](docs/path-placement.md),
+noch nicht installiert oder live geprüft. Kein allgemeiner Haus-/Versorgungsbau.
 [Installation und Abnahme](docs/native-bridge-install.md),
 [offizielle Quellen und good references](docs/references/README.md).
 Für die eigene Bridge: `scripts/start-native.ps1 -ConfigPath '<private Konfiguration>'`;
 Build und nativen Lesetest mit `scripts/verify.ps1 -NativeConfig '<private Konfiguration>'`
 ausführen. Beide Abläufe sind in der Installationsanleitung beschrieben.
-109 reguläre Tests bestanden; drei separate Live-Tests im Standardlauf übersprungen.
+123 reguläre Tests bestanden; drei separate Live-Tests im Standardlauf übersprungen.
 Nativer lesender MCP-Livetest zusätzlich erfolgreich.
 Auch mit ausschließlich eigener Bridge laut Nutzer-Mod-Auswahl: alle sechs nativen
 Lesewerkzeuge erneut live erfolgreich (0.3.0). Keine Fremdmod für diesen Zugriff erforderlich.
@@ -85,6 +87,7 @@ Diagnose geht nach stderr, stdout enthält ausschließlich Protokollnachrichten.
 | TIMBERBORN_BACKEND | more-http-api; alternativ ausdrücklich native oder fake |
 | TIMBERBORN_NATIVE_CONFIG | Bei native: absoluter Pfad zur privaten bridge.local.json, kein Token im Client-Befehl |
 | TIMBERBORN_ENABLE_VALIDATION | Nur `1` bietet im nativen Backend zusätzlich validate_build_site an; Mod-Opt-in ebenfalls erforderlich |
+| TIMBERBORN_ENABLE_PLACEMENT | Nur `1` bietet place_path an; enablePlacement in der Mod ebenfalls erforderlich, ein Versuch je Sitzung |
 | TIMBERBORN_BASE_URL | http://localhost:8080/; nur HTTP-Loopback, kein Pfad/Query/Login |
 | TIMBERBORN_AUTHORIZATION | Optionaler Authorization-Wert; nicht als Argument oder Git-Datei speichern |
 | TIMBERBORN_FAKE_SCENARIO | healthy; alternativ partial oder offline; nur für Simulation relevant |
@@ -131,8 +134,8 @@ Ein leeres Suchergebnis ist Erfolg; unbekannte Werte sind null; Teilfehler bleib
 Seiten sind neue Beobachtungen und kein eingefrorener Spielzustand.
 Die API kann im Menü, beim Laden oder nach Mod-Updates ausfallen; es gibt keine automatische
 Spielsteuerung oder Reparatur. Die native Mod ergänzt drei Beispielbestände, Betten/Personal,
-Objektpositionen und einen begrenzten Gelände-/Wasserausschnitt. Save/Load, Bauen und
-Automationsgraphen sind weiterhin nicht implementiert.
+Objektpositionen und einen begrenzten Gelände-/Wasserausschnitt. Ein einzelner Wegauftrag
+ist als Pilot implementiert; allgemeiner Gebäudebau, Save/Load und Automationsgraphen fehlen.
 
 Kein Client darf aus `readOnlyHint` alleine Sicherheit ableiten: Der Adapter selbst begrenzt die Routen.
 Fremdmod-Routen können auch bei GET Änderungen ausführen; deshalb gibt es kein generisches HTTP-Tool.

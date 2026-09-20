@@ -16,6 +16,7 @@ try {
     $oldWrites = $env:TIMBERBORN_ENABLE_WRITES
     $oldNativeLive = $env:TIMBERBORN_NATIVE_LIVE_TEST
     $oldValidation = $env:TIMBERBORN_ENABLE_VALIDATION
+    $oldPlacement = $env:TIMBERBORN_ENABLE_PLACEMENT
     $oldNativeConfig = $env:TIMBERBORN_NATIVE_CONFIG
     try {
         $env:TIMBERBORN_LIVE_TEST = if ($Live) { '1' } else { '0' }
@@ -23,6 +24,7 @@ try {
         $env:TIMBERBORN_ENABLE_WRITES = '0'
         $env:TIMBERBORN_NATIVE_LIVE_TEST = '0'
         $env:TIMBERBORN_ENABLE_VALIDATION = '0'
+        $env:TIMBERBORN_ENABLE_PLACEMENT = '0'
         & dotnet test TimberbornMcp.slnx -c Release --no-build --no-restore
         if ($LASTEXITCODE -ne 0) { throw 'Tests fehlgeschlagen.' }
         if ($NativeConfig) {
@@ -37,6 +39,7 @@ try {
         $env:TIMBERBORN_ENABLE_WRITES = $oldWrites
         $env:TIMBERBORN_NATIVE_LIVE_TEST = $oldNativeLive
         $env:TIMBERBORN_ENABLE_VALIDATION = $oldValidation
+        $env:TIMBERBORN_ENABLE_PLACEMENT = $oldPlacement
         $env:TIMBERBORN_NATIVE_CONFIG = $oldNativeConfig
     }
 } finally { Pop-Location }

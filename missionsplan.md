@@ -971,3 +971,13 @@ Fortsetzung zum Kolonieaufbau. Vorbereitete 0.4.0 bleibt ein nicht installierter
 Nächste analytische Arbeit: die vorhandene Funktionsmatrix mit den Nachweisen aus 0.3.0
 abgleichen und offene Daten-/Aktionsvoraussetzungen priorisieren, statt weitere Bauversuche
 oder Spielneustarts ohne konkreten Erkenntnisbedarf anzustoßen.
+
+### 7.9 Vorschau bestätigt, regulärer Wegauftrag vorbereitet
+
+0.4.1 hat den begrenzten Live-Kontrollpilot bestanden: belegte Lodge abgewiesen,
+freier Path akzeptiert, Zustandswachen unverändert. Auf anschließendes Nutzer-Go
+kontrollierten regulären Bauauftrag als Path-only-Pilot 0.5.0 implementiert.
+123 reguläre Tests und separater Mod-Build erfolgreich; noch nicht installiert/live geprüft.
+Separate Freigaben, ein Versuch je Sitzung, frische Validierung und exakte Ergebnis-ID;
+kein automatisches Retry oder Fertigbau. [Vertrag und Live-Abnahme](docs/path-placement.md).
+Nächster Nachweis: genau einen Weg über MCP erteilen und als reguläres Objekt nachlesen.

@@ -9,13 +9,15 @@ public sealed class BridgeHttpServer : IDisposable
     private readonly MainThreadQueue queue;
     private readonly string token;
     private readonly bool enableValidation;
+    private readonly bool enablePlacement;
     private readonly CancellationTokenSource shutdown = new();
     private Task? worker;
-    public BridgeHttpServer(int port, string token, MainThreadQueue queue, bool enableValidation = false)
+    public BridgeHttpServer(int port, string token, MainThreadQueue queue, bool enableValidation = false, bool enablePlacement = false)
     {
         if (port < 1024 || port > 65535 || token.Length != 64 || token.Any(c => !Uri.IsHexDigit(c)))
             throw new ArgumentException("invalid_configuration");
         this.token = token; this.queue = queue; this.enableValidation = enableValidation;
+        this.enablePlacement = enablePlacement;
         listener.Prefixes.Add($"http://localhost:{port}/agent-api/v1/");
     }
     public void Start() { listener.Start(); worker = Task.Run(Serve); }
@@ -41,7 +43,7 @@ public sealed class BridgeHttpServer : IDisposable
         { status = 403; json = "{\"error\":\"forbidden\"}"; }
         else if (!Matches(request.Headers["Authorization"]))
         { status = 401; json = "{\"error\":\"unauthorized\"}"; }
-        else if (!MethodAllowed(request.HttpMethod, request.Url!.AbsolutePath, request.HasEntityBody, enableValidation))
+        else if (!MethodAllowed(request.HttpMethod, request.Url!.AbsolutePath, request.HasEntityBody, enableValidation, enablePlacement))
         { status = 405; json = "{\"error\":\"read_only\"}"; }
         else
         {
@@ -63,8 +65,9 @@ public sealed class BridgeHttpServer : IDisposable
         await context.Response.OutputStream.WriteAsync(bytes, 0, bytes.Length, responseDeadline.Token).ConfigureAwait(false);
         context.Response.Close();
     }
-    public static bool MethodAllowed(string method, string path, bool hasBody, bool enableValidation) =>
-        !hasBody && (path == "/agent-api/v1/site-validation" ? enableValidation && method == "POST" : method == "GET");
+    public static bool MethodAllowed(string method, string path, bool hasBody, bool enableValidation, bool enablePlacement = false) =>
+        !hasBody && (path == "/agent-api/v1/path-placement" ? enablePlacement && method == "POST"
+            : path == "/agent-api/v1/site-validation" ? enableValidation && method == "POST" : method == "GET");
     private bool Matches(string? supplied)
     {
         var expected = "Bearer " + token;

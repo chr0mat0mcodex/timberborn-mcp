@@ -51,6 +51,8 @@ public sealed record NativeSite(string Template, Position Origin, int Rotation, 
     string[] Reasons, SiteCell[] Cells, Position? Entrance, bool? PathAtEntrance, NativeCost[] Costs, string[] Limitations);
 public sealed record NativeValidation(string Template, Position Origin, int Rotation, bool GameValidated, bool? Valid,
     bool NoPersistentChangeObserved, bool SessionLocked, int AttemptsRemaining, string[] Limitations);
+public sealed record NativePlacement(string Template, Position Origin, int Rotation, Guid EntityId,
+    string Outcome, bool? Finished, bool SessionLocked, string[] Limitations);
 public sealed record NativeMeta(string Backend, bool Simulated, string? SessionId, DateTimeOffset? ObservedAtUtc);
 public sealed record NativeFault(string Code, string Message, bool Retryable);
 public sealed record NativeResult<T>(int SchemaVersion, string Status, T? Data, NativeMeta Meta, NativeFault? Error);

@@ -25,8 +25,11 @@ public sealed class SiteValidation(PreviewFactory factory, BlockObjectValidation
     private bool faulted;
     private int attempts;
 
-    public object Validate(BridgeRequest request)
+    public object Validate(BridgeRequest request) => Validate(request, out _);
+
+    public object Validate(BridgeRequest request, out bool allowed)
     {
+        allowed = false;
         if (faulted || attempts >= 8) throw new InvalidOperationException("validation_session_locked");
         if (request.Template is not ("Lodge.Folktails" or "Path") ||
             (request.Template == "Lodge.Folktails" && faction.Current.Id != "Folktails")) throw new ArgumentException("invalid_template");
@@ -74,6 +77,7 @@ public sealed class SiteValidation(PreviewFactory factory, BlockObjectValidation
         }
         bool unchanged = beforeIds.SetEquals(RegisteredIds()) && beforeStock.SequenceEqual(Stocks());
         if (!unchanged) faulted = true;
+        allowed = unchanged && valid;
         return new { template = request.Template, origin = new { x = request.X, y = request.Y, z = request.Z },
             rotation = request.Rotation, gameValidated = true, valid = unchanged ? (bool?)valid : null,
             noPersistentChangeObserved = unchanged, sessionLocked = faulted, attemptsRemaining = 8 - attempts,

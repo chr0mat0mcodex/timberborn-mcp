@@ -1,10 +1,16 @@
-# Eigene Timberborn Agent Bridge — 0.4.0
+# Eigene Timberborn Agent Bridge — 0.5.0
+
+0.5.0 ergänzt den separat freizuschaltenden [einzelnen Wegauftrag](path-placement.md).
+Paketstandard: `enablePlacement: false`; MCP benötigt zusätzlich
+`TIMBERBORN_ENABLE_PLACEMENT=1`. Ein Versuch je Sitzung, kein automatisches Retry.
+Installiert/live geprüft bleibt bis zum nächsten Update 0.4.1.
+Die folgenden Vorschauangaben beschreiben weiterhin die separat schaltbare Validierung.
 
 Das Endziel ist ein Agent, der Timberborn über MCP spielt: Wasser, Nahrung, Holz,
 Wege und Wohnraum aufbauen und die Versorgung anhand frischer Beobachtungen steuern.
 Standardmäßig sind sechs Leserouten aktiv. 0.4.0 ergänzt eine separat geschützte
-temporäre Vorschauvalidierung; sie platziert keine Gebäude. Bau- und Steuerungsaktionen
-folgen nach strukturiertem Abgleich der Spielkoordinaten und Zustände.
+temporäre Vorschauvalidierung; sie platziert keine Gebäude. Der Wegpilot aus 0.5.0
+ist separat freizuschalten; weitere Bau- und Steuerungsaktionen sind noch offen.
 Keine Screenshot-Auswertung und keine simulierten Maus-/Tastatureingriffe zur Spielsteuerung.
 
 ## Lokales Paket bauen
@@ -76,7 +82,7 @@ Die sechs Werkzeuge sind `timberborn_status`, `inspect_colony`,
 `inspect_map_region(x,y,z,width,height,depth)`, `find_buildings(offset,limit)`,
 `inspect_build_catalog` und `precheck_build_site(template,x,y,z,rotation)`.
 Die letzten drei benötigen Mod 0.3.0. Auch mit gesetztem Schreib-Opt-in
-bietet dieses Backend keine Schreibwerkzeuge an. Ein Browseraufruf ohne Schlüssel
+bietet dieses Backend ohne separates Placement-Opt-in keine Schreibwerkzeuge an. Ein Browseraufruf ohne Schlüssel
 bekommt absichtlich HTTP 401; es gibt keinen öffentlichen Ping.
 
 Optional ab Mod 0.4.0: `validate_build_site(template,x,y,z,rotation,session)`.
@@ -108,5 +114,6 @@ Spielhauptthread, bildet aber keinen atomar eingefrorenen Simulationszustand ab.
 Transport: ausschließlich Loopback, eigener Bearer-Schlüssel, feste GET-Leserouten,
 keine Browser-Origin-Aufrufe, keine Weiterleitungen, begrenzte Antwortgröße und
 Zeitlimits. Spielzugriffe werden auf dem Hauptthread abgearbeitet; beim Entladen
-werden wartende Anfragen verworfen. Keine Save-Erweiterung und keine Platzierungsroute.
-Die optionale POST-Validierung ist separat freizuschalten.
+werden wartende Anfragen verworfen. Keine eigene Save-Erweiterung.
+POST-Validierung und POST-Wegplatzierung sind getrennt freizuschalten. Ein gebauter
+Weg ist regulärer Spielzustand und kann vom Spiel gespeichert werden.

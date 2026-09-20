@@ -108,6 +108,18 @@ public sealed class NativeClient : IDisposable
             throw new InvalidDataException("Invalid validation result");
         return result;
     }
+    public async Task<BridgeEnvelope<NativePlacement>> PlacePath(BridgeRequest r, CancellationToken ct)
+    {
+        if (r.Route != "path-placement" || r.Template != "Path") throw new ArgumentException();
+        var result = await Get<NativePlacement>($"path-placement?template=Path&x={r.X}&y={r.Y}&z={r.Z}&rotation={r.Rotation}&session={r.Session}", ct, HttpMethod.Post);
+        var d = result.Data;
+        if (result.SessionId != r.Session || d.Template != "Path" || d.Origin != new Position(r.X, r.Y, r.Z) ||
+            d.Rotation != r.Rotation || d.EntityId == Guid.Empty || !d.SessionLocked || d.Limitations is null ||
+            d.Outcome is not ("applied" or "rejected" or "unconfirmed") ||
+            (d.Outcome == "applied" ? d.Finished is null : d.Finished is not null))
+            throw new InvalidDataException("Invalid placement result");
+        return result;
+    }
     private async Task<BridgeEnvelope<T>> Get<T>(string route, CancellationToken ct, HttpMethod? method = null)
     {
         using var budget = CancellationTokenSource.CreateLinkedTokenSource(ct);
@@ -126,7 +138,7 @@ public sealed class NativeClient : IDisposable
             await buffer.WriteAsync(bytes.AsMemory(0, count), budget.Token);
         }
         var result = JsonSerializer.Deserialize<BridgeEnvelope<T>>(buffer.ToArray(), NativeJson.Options);
-        if (result is null || result.SchemaVersion != 1 || result.BridgeVersion is not ("0.2.0" or "0.3.0" or "0.4.0" or "0.4.1") ||
+        if (result is null || result.SchemaVersion != 1 || result.BridgeVersion is not ("0.2.0" or "0.3.0" or "0.4.0" or "0.4.1" or "0.5.0") ||
             !Guid.TryParseExact(result.SessionId, "D", out var session) || session == Guid.Empty ||
             result.ObservedAtUtc == default || result.Data is null) throw new InvalidDataException("Invalid bridge envelope");
         return result;

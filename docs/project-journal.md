@@ -1,5 +1,22 @@
 # Projektjournal
 
+## 2026-09-20 — Einzelner regulärer Wegauftrag 0.5.0 vorbereitet
+
+Nach ausdrücklichem Go für kontrollierte Bauaufträge zunächst Path-only umgesetzt.
+Keine neue Abhängigkeit. Öffentliche Metadaten belegen TemplateSpec.Blueprint,
+EntitySetup.Builder.SetId und IBlockObjectPlacer.Place. Feste POST-Route und separates
+Mod-/MCP-Opt-in; Hauptthread prüft Session vor Einmaligkeitsgate und frischer Validierung.
+Ein Versuch je Szene, auch bei Ablehnung/Fehler. Platzierung regulär über passenden
+Spielplatzierer; Erfolg nur bei exakter Entity-ID/Vorlage/Position/Orientierung,
+Fertigstatus separat. Unklare Ergebnisse niemals automatisch wiederholen.
+
+123 reguläre Tests bestanden (112 Unit, 11 Integration), drei Live-Tests im Standardlauf
+übersprungen. Integration prüft echte stdio-/HTTP-Kette mit synthetischem Platzierer,
+alle vier Opt-in-Kombinationen und Zweitversuchsperre. Mod-Build ohne Warnungen/Fehler,
+neues lokales 0.5.0-Paket erstellt. Nicht installiert, kein Bauauftrag im Spiel ausgeführt.
+Live bleibt 0.4.1. Nächste Nutzerhilfe: Spiel beenden für Update; danach genau ein
+Wegauftrag und lesende Ergebniszuordnung gemäß docs/path-placement.md.
+
 ## 2026-09-20 — 0.4.1 Vorschau-Kontrollpilot bestanden
 
 Version 0.4.1 über MCP bestätigt. Neun fachliche MCP-Aufrufe in einer Sitzung,
