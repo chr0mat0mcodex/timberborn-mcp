@@ -1,5 +1,23 @@
 # Projektjournal
 
+## 2026-09-20 — Pause/Weiterlauf über MCP live bestanden
+
+Bridge 0.8.0: nach Laden zunächst Geschwindigkeit 0. Erster Lauf nach zwei
+Leseaufrufen ohne Änderung beendet. Angepasster Pilot mit zehn MCP-Aufrufen und
+drei eindeutigen Befehlen: 0 -> 1 als Ausgangszustand, 1 -> 0, schließlich 0 -> 1.
+Jeder Wechsel separat nachgelesen; kein Retry und keine Spielsperre aufgehoben.
+
+Tag 2: erste Weiterlaufkontrolle DayProgress 0.2421875 -> 0.24609375.
+Während Pause zwei Beobachtungen im Abstand von 2,5 Sekunden identisch:
+DayProgress 0.24609375 / HoursPassedToday 5.90625. MCP antwortet auch in Pause.
+Nach Rückkehr zu 1x DayProgress 0.24739583 -> 0.25260416 und Stunden
+5.9375 -> 6.0625. Schlusszustand 1 mit nachgewiesenem Zeitfortschritt.
+
+Alle unmittelbaren Änderungsquittungen meldeten matchedImmediately=false und noch
+den alten Wert; nachfolgende Leseaufrufe bestätigten die Änderung. Das ist die
+belegte verzögerte Wirkung von ChangeSpeed, kein Anlass für Wiederholungsbefehle.
+Pause/Normalgeschwindigkeit live bestätigt; höhere Geschwindigkeiten bleiben offen.
+
 ## 2026-09-20 — Zeitsteuerung 0.8.0 installiert
 
 Bei beendetem Timberborn bisherigen Mod-Ordner vollständig lokal gesichert und

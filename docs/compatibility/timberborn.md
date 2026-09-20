@@ -1,5 +1,11 @@
 # Kompatibilität
 
+## Live-Abnahme 0.8.0 — 2026-09-20
+
+Pause/1× über MCP bestanden: Zeitstillstand und erneuter Fortschritt separat gelesen,
+MCP in Pause erreichbar. ChangeSpeed wirkt verzögert; unmittelbare Quittung meldet
+noch alten Wert. Schlusszustand 1×, keine Spielsperren entsperrt oder Retries.
+
 ## Buildstand 0.8.0 — 2026-09-20
 
 Öffentliche SpeedManager-/IDayNightCycle-API gegen lokale 1.1.2.4 gebaut.

@@ -1,6 +1,6 @@
 # Simulation lesen und steuern — Pilot 0.8.0
 
-Status: implementiert und installiert; Live-Abnahme ausstehend. Eigene Mod,
+Status: implementiert, installiert und Live-Abnahme bestanden. Eigene Mod,
 öffentliche Spiel-API, keine Fremdmod und keine UI-Automation.
 
 ## Werkzeuge
@@ -47,5 +47,14 @@ Die etablierte Game-Kontext-DI und öffentliche Update-Queue werden weiterverwen
    nicht blind erneut steuern oder eine fremde Spielsperre entsperren.
 
 Tests prüfen Gates, Parametergrenzen, Session-/Quittungskorrelation, Fehler ohne
-Retry und einen synthetischen MCP-Hin-/Rückweg. Die reale Geschwindigkeitssemantik
-und Erreichbarkeit während Pause bleiben bis zum Live-Test ausdrücklich offen.
+Retry und einen synthetischen MCP-Hin-/Rückweg.
+
+## Live-Ergebnis 2026-09-20
+
+Pause/1× erfolgreich nachgelesen. Zwei Zeitbeobachtungen mit 2,5 Sekunden Abstand
+waren während Pause identisch; danach bei 1× fortschreitend. MCP blieb in Pause
+erreichbar. Schlusszustand 1×. Ausgangszustand nach Laden war 0, daher einmaliger
+Start vor Hin-/Rücktest: insgesamt drei Befehle, zehn fachliche MCP-Aufrufe.
+Alle unmittelbaren Quittungen enthielten noch den alten Geschwindigkeitswert
+(matchedImmediately=false); die Änderung wird im folgenden Spielupdate wirksam.
+Kein automatisches Retry. Höhere Stufen nicht getestet.

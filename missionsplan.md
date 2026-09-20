@@ -1071,3 +1071,10 @@ Spielsperren-Aufhebung. [Vertrag und Hin-/Rücktest](docs/simulation-control.md)
 0.8.0 bei beendetem Spiel gesichert installiert und per SHA256 geprüft.
 Zeitsteuerungs-Opt-in aktiviert, übrige Konfiguration erhalten. Nach Nutzerstart
 Pause/1× mit separater Zustands- und Fortschrittsabfrage live prüfen.
+
+### 7.22 Zeitsteuerung live bestanden
+
+0.8.0 über MCP: Pause hält Spielzeit an, Lesezugriff bleibt erreichbar, 1× lässt
+Zeit wieder fortschreiten. Schlusszustand 1×. Änderungsquittung enthält zunächst
+alten Wert, daher zwingend separat nachlesen und nicht wiederholen. Höhere Stufen
+bleiben offen; Lodge-Lieferung/Fertigstellung und Wohnraumwirkung noch nachzuweisen.
