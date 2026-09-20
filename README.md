@@ -16,14 +16,15 @@ Nächste geplante Ausbaustufe: [Phase 2 — Wasser, Nahrung, Holz, Wege und Wohn
 Neu: 0.15.0 ergänzt [Lager-/Farmoptionen und Gebäudepause](docs/building-settings.md).
 17 native Leser; fünf neue Schreibwerkzeuge mit eigener Freigabe. Anbauflächen
 werden über die bestehenden Flächenwerkzeuge gesteuert. Automatisch geprüft;
-Live-Abnahme nach Neustart offen. Enthält die Layoutkorrektur aus 0.14.1.
+Live bestätigt: Pause, Lagerwahl/-modi, Farmpriorität/Pflanzenwahl und Flächenmarkierungen.
+Enthält die live bestätigte Layoutkorrektur aus 0.14.1.
 
 0.14.0 implementiert [generisches Bauen](docs/generic-building.md): vollständiger
 Gebäudekatalog, Vorprüfung, Spielvalidierung und reguläre Einzelaufträge nach Vorlagen-ID.
 Mehrere Aufträge je Sitzung mit festen Aktions-IDs; Sonderlayouts ausdrücklich begrenzt.
 0.14.0 ist live bestätigt: vier verschiedene Gebäude regulär beauftragt und separat
 nachgelesen; Material-/Baufortschritt beobachtet. 0.14.1 korrigiert den zu engen
-Layoutfilter für einzelne Wege und kleine Lager; Installation/Liveprüfung noch offen.
+Layoutfilter für einzelne Wege und kleine Lager; mit 0.15.0 installiert und live bestätigt.
 
 Endziel: Der Agent spielt Timberborn über MCP und baut Wasser-, Nahrungs-, Holzversorgung,
 Wege und Wohnraum auf. Agent Bridge 0.2.0 ist über drei MCP-Werkzeuge live geprüft;

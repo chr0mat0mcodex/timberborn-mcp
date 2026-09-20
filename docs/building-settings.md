@@ -1,7 +1,6 @@
 # Lager, Farmen und Gebäudepause (0.15.0)
 
-Implementiert und automatisiert geprüft; Live-Abnahme der neuen Einstellungen nach
-Neustart offen. Keine neue Fremdmod-Abhängigkeit. Öffentliche Spielmethoden, keine
+Implementiert, automatisiert geprüft und am Entwicklungsspielstand live bestätigt. Keine neue Fremdmod-Abhängigkeit. Öffentliche Spielmethoden, keine
 UI-Steuerung oder Bestandsmanipulation.
 
 ## Werkzeuge
@@ -57,3 +56,25 @@ unconfirmed keine automatische Wiederholung oder Rücknahme.
 keine Spielwirkung. Mod gegen Timberborn 1.1.2.4 gebaut, null Warnungen/Fehler.
 Live-Abnahme: geeignete fertige Gebäude lesen, Pause hin/zurück, Lagergut/Modes samt
 Rücklesung, Farmpriorität und Pflanzenwahl, danach kleine Anbaufläche markieren/entfernen.
+
+## Live-Abnahme 0.15.0 am 2026-09-20
+
+- Neue Settings-Abfrage an neun Gebäuden: fertige Gebäude und Baustellen korrekt unterschieden.
+- Fertige Wasserpumpe pausiert und fortgesetzt; beide Zustände separat nachgelesen, abschließend aktiv.
+- Farm regulär fertiggestellt. Pflanzen zuerst -> Ernten zuerst -> Pflanzen zuerst bestätigt.
+- Bevorzugte Feldfrucht keine -> Kartoffel -> Karotte bestätigt; abschließend Karotte.
+- Vier Karotten-Markierungen angelegt, separat gezählt (0 -> 4), entfernt und erneut gelesen (4 -> 0).
+- Kleines Lager mit drei Holz regulär gebaut. Lagerauswahl keine -> Beeren -> keine -> Karotten bestätigt.
+- Lagermodi Annehmen -> Beschaffen -> Liefern -> Leeren -> Annehmen bestätigt, jeweils separat gelesen.
+- Absichtlich veralteter erwarteter Lagerwert abgewiesen; nachfolgende Abfrage weiterhin Karotte/Annehmen.
+
+Zwei begrenzte 30-Sekunden-Fenster auf 7x dienten regulärem Baufortschritt; abschließend
+Simulation pausiert, Tag 4, etwa 15:49 Uhr. Kleines Lager leer, Kapazität 30; keine
+Umlagerung/Ernte als bewiesen behaupten. Farm und kleines Lager fertig, zwei neue
+Wege fertig; zusätzliche Pumpe besitzt jetzt einen Baudistrikt, bleibt aber Baustelle.
+Test-Anbaufläche wieder entfernt. Weitere Wohn-/Lagerbaustellen bleiben bestehen.
+
+Bekannte Diagnosegrenze: Die serverseitige Ablehnung eines veralteten Zustands wird
+noch als backend_unavailable statt spezifischem Zustandskonflikt gemeldet. retryable=false;
+keine Wiederholung ausgeführt, tatsächliche unveränderte Auswahl separat bestätigt.
+Künftige Verbesserung: fachliche Konflikte von Transportfehlern unterscheiden.

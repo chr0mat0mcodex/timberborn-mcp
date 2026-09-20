@@ -83,3 +83,7 @@ Sitzung nachlesen. Blockierten Standort kontrolliert ablehnen lassen. Anschließ
 Baufortschritt und Nutzen beobachten. Bei unconfirmed/Fehler nur lesend klären;
 keine automatische Wiederholung. An Sonderlayout oder fehlender Betriebskonfiguration
 gezielt die nächste Lücke festhalten, nicht „vollständig spielbar“ behaupten.
+
+0.15.0: Beide zusätzlichen Layoutklassen live bestätigt. Zwei Path-Einzelobjekte
+regulär platziert/fertig nachgelesen; SmallWarehouse regulär beauftragt und mit drei
+Holz fertiggestellt. Bestehende Farm ebenfalls fertig, neue Pumpe nun mit Baudistrikt.

@@ -1374,3 +1374,17 @@ noch nicht auf keine Präferenz zurückgesetzt werden. Details: docs/building-se
 
 0.15.0 gesichert installiert; fünf Datei-Hashes geprüft, bestehende private
 Konfiguration erhalten, Settings-Freigabe ergänzt. Nutzer um Start/Laden gebeten.
+
+### 7.48 Live-Abnahme der Gebäudeeinstellungen bestanden
+
+- [x] Native Gebäudepause und Fortsetzen an fertiger Pumpe, separat zurückgelesen.
+- [x] Farm regulär fertig; Pflanzen/Ernten-Priorität und Kartoffel/Karotte gesetzt und gelesen.
+- [x] Anbaufläche vier Karottenfelder markiert/entfernt; separat 0 -> 4 -> 0 bestätigt.
+- [x] Kleines Lager regulär fertig; Lagergut auswählen/abwählen und alle vier Modi bestätigt.
+- [x] Veralteter Erwartungswert verhindert Änderung, anschließend unveränderte Auswahl gelesen.
+- [x] Zwei generische Verbindungswege fertig; zusätzliche Pumpenbaustelle hat jetzt Baudistrikt.
+- [x] Schlusszustand: Simulation pausiert; Pumpe aktiv, Farm Pflanzen/Karotte, kleines Lager Karotte/Annehmen.
+- [ ] Tatsächliches Pflanzen, Ernten und Einlagern als nächste getrennte Wirkungsprüfung.
+- [ ] Fachliche Zustandskonflikte als spezifischen Fehler statt backend_unavailable melden.
+
+Keine neue Modinstallation erforderlich. Details und Grenzen: docs/building-settings.md.

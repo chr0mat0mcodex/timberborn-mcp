@@ -208,3 +208,8 @@ Layoutkorrektur 0.14.1 enthalten. Live-Abnahme der neuen Version noch offen.
 0.15.0 anschließend bei beendetem Spiel gesichert installiert; fünf Datei-Hashes
 geprüft und bisherige Konfiguration erhalten. Neue Settings-Freigabe aktiviert.
 Neustart und Live-Abnahme noch offen.
+
+0.15.0 live bestätigt: Gebäudepause hin/zurück, Lagergut wählen/abwählen, alle vier
+Lagermodi, Farmpriorität und bevorzugte Feldfrucht sowie Anbaufläche 0 -> 4 -> 0.
+Separat nachgelesen. SideLine-Lager und zwei TwoSegmentLine-Wege generisch gebaut.
+Kein Nachweis tatsächlicher Ernte/Umlagerung; Simulation abschließend pausiert.
