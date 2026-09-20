@@ -1,7 +1,7 @@
 # Erreichbarkeit, Arbeitsreichweite und Versorgungsverlauf
 
-Codeversion 0.19.0; gegen öffentliche Timberborn-1.1.2.4-APIs gebaut. Installation und
-Live-Abnahme stehen aus. Vier zusätzliche Leser, keine neue Fremdmod oder Bibliothek.
+Codeversion 0.19.0; gegen öffentliche Timberborn-1.1.2.4-APIs gebaut. Installation abgeschlossen;
+Live-Abnahme steht aus. Vier zusätzliche Leser, keine neue Fremdmod oder Bibliothek.
 
 ## Gebäudezugang
 

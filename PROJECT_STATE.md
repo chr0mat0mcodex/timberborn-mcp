@@ -1,7 +1,7 @@
 # Projektstand
 
-Stand: 2026-09-20. Codeversion: **0.19.0**, gebaut; Installation/Live-Abnahme ausstehend.
-Installiert und zuletzt gezielt live bestätigt: **0.18.0**.
+Stand: 2026-09-20. Codeversion: **0.19.0**, gebaut und installiert; Live-Abnahme ausstehend.
+Zuletzt gezielt live bestätigt: **0.18.0**.
 Die Version im [Manifest](mod/Timberborn.AgentBridge/manifest.json) ist die Codeversion;
 ältere datierte Einträge im Journal dokumentieren frühere Zustände.
 

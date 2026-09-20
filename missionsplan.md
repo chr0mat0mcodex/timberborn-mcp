@@ -12,7 +12,7 @@ unkontrollierter Kolonieaufbau ersetzt keine gezielte Abnahme.
 
 ## Stand
 
-**0.19.0 ist implementiert und gebaut; installiert/live bestätigt bleibt 0.18.0.**
+**0.19.0 ist implementiert und installiert; zuletzt live bestätigt bleibt 0.18.0.**
 [Projektstand](PROJECT_STATE.md), [Werkzeugkatalog](docs/tools.md), [offene Arbeiten](BACKLOG.md).
 Keine Fremdmod-Pflichtbasis; die frühere More-HTTP-API-Phase ist abgeschlossen.
 

@@ -1196,3 +1196,12 @@ drei opt-in Live-Tests übersprungen. Neue vier Leser über echten stdio-/HTTP-T
 und Logstatus geprüft. Modpaket gegen 1.1.2.4 ohne Warnungen/Fehler erstellt. Insgesamt
 26 Leser und 19 Aktionen/Validierungen. Nutzer um Speichern/Beenden gebeten; installierte
 Version bleibt 0.18.0 bis zum gesicherten Austausch. Neue Live-Tests noch ausstehend.
+
+
+## 2026-09-20 — 0.19.0 installiert
+
+Nach bestätigtem Spielende Prozess erneut geprüft. Vorherigen Modordner vollständig
+in einer neuen lokalen Sicherung erhalten. Fünf Dateien aus dem geprüften Paket
+installiert und SHA-256 verglichen; private Konfiguration unverändert. Keine fremden
+Bibliotheken installiert. Nutzerstart und Laden von MCP für die neue Live-Abnahme
+abwarten; Biberwarnungen und neue Logistikfälle bleiben offen.

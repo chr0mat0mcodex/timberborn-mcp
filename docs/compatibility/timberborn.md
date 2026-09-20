@@ -4,7 +4,7 @@
 
 | Komponente | Belegter Stand |
 | --- | --- |
-| Eigene Mod | 0.19.0 gebaut; 0.18.0 installiert und gezielt live abgenommen |
+| Eigene Mod | 0.19.0 installiert; 0.18.0 zuletzt gezielt live abgenommen |
 | Spiel | Timberborn 1.1.2.4, Folktails, kleine Entwicklungskolonie |
 | Tests | 431 reguläre Tests; Live-Piloten getrennt |
 | Fremdmods | Keine Pflichtabhängigkeit der eigenen Mod |
