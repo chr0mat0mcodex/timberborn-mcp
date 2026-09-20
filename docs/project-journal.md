@@ -1,5 +1,15 @@
 # Projektjournal
 
+## 2026-09-20 — Materialkorrektur 0.6.1 installiert
+
+Nutzer bestätigt Speichern des Farmhaus-Spielstands und Beenden des Spiels.
+Bei geprüft beendetem Timberborn Paket 0.6.1 installiert, fünf Dateien SHA256-geprüft,
+vorherige Installation samt privater Konfiguration in neuem lokalen Backup gesichert.
+Private Konfiguration bytegleich erhalten. Kein Spielstart oder API-Aufruf.
+Nächster Schritt nach Laden des gespeicherten Farmhaus-Stands: höchstens fünf reine
+Leseaufrufe für Version, Identifikation, Vorlagenkosten, Baustellenbestand und globale
+Vorräte. Materialkorrektur weiterhin ohne Live-Abnahme.
+
 ## 2026-09-20 — Materialvertrag 0.6.1 korrigiert, Live-Abnahme offen
 
 Nach Nutzer-Go lokale Referenzen, öffentliche Signaturen und gezielte Websuche geprüft;

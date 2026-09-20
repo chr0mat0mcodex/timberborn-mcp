@@ -2,6 +2,8 @@
 
 ## Materialkorrektur 0.6.1 — Live-Prüfung offen
 
+0.6.1 ist installiert; Nutzer hat den Farmhaus-Spielstand vor dem Update gespeichert.
+
 Die nicht geklärte Restbedarfsmethode wird nicht mehr aufgerufen. Öffentliche
 BuildingSpec.BuildingCost und ConstructionSite.Inventory.Stock liefern getrennt:
 
