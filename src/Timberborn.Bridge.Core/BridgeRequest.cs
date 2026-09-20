@@ -6,6 +6,7 @@ namespace Timberborn.Bridge.Core;
 public sealed class BridgeRequest
 {
     public string Route { get; }
+    public ActivityRequest? Activity { get; private set; }
     public BuildingSettingsRequest? Settings { get; private set; }
     public bool GenericBuilding => Route is "building-precheck" or "building-validation" or "building-placement";
     public RemovalRequest? Removal { get; private set; }
@@ -33,6 +34,8 @@ public sealed class BridgeRequest
 
     public static BridgeRequest Parse(string path, NameValueCollection query)
     {
+        if (path == "/agent-api/v1/activity") return new BridgeRequest("activity") { Activity=ActivityRequest.Parse(query) };
+        if (path == "/agent-api/v1/activity-log" && query.Count==0) return new BridgeRequest("activity-log");
         if (BuildingSettingsRequest.Handles(path)) { var r=BuildingSettingsRequest.Parse(path,query); return new BridgeRequest(r.Route, session:r.Session) { Settings=r }; }
         if (RemovalRequest.Handles(path)) { var r=RemovalRequest.Parse(path,query); return new BridgeRequest(r.Route, session:r.Session) { Removal=r }; }
         if (ManagementRequest.Handles(path)) { var m=ManagementRequest.Parse(path,query); return new BridgeRequest(m.Route, session: m.Session) { Management=m }; }

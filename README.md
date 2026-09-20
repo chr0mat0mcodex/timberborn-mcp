@@ -13,7 +13,11 @@ Nächste geplante Ausbaustufe: [Phase 2 — Wasser, Nahrung, Holz, Wege und Wohn
 
 ## Entwicklungsstand
 
-Neu: 0.15.0 ergänzt [Lager-/Farmoptionen und Gebäudepause](docs/building-settings.md).
+Neu vorbereitet: 0.16.0 mit [Ingame-MCP-Log und optionaler Aktionsbegründung](docs/activity-log.md).
+Fenster mit 128 Aufrufen, Status, Parameterzusammenfassung und reasoning; 18 native Leser.
+Gesichert installiert; sichtbare Live-Abnahme nach Neustart noch offen.
+
+0.15.0 ergänzt [Lager-/Farmoptionen und Gebäudepause](docs/building-settings.md).
 17 native Leser; fünf neue Schreibwerkzeuge mit eigener Freigabe. Anbauflächen
 werden über die bestehenden Flächenwerkzeuge gesteuert. Automatisch geprüft;
 Live bestätigt: Pause, Lagerwahl/-modi, Farmpriorität/Pflanzenwahl und Flächenmarkierungen.
@@ -71,7 +75,7 @@ Alle Stufen live bestätigt; Simulation abschließend 1×.
 Für die eigene Bridge: `scripts/start-native.ps1 -ConfigPath '<private Konfiguration>'`;
 Build und nativen Lesetest mit `scripts/verify.ps1 -NativeConfig '<private Konfiguration>'`
 ausführen. Beide Abläufe sind in der Installationsanleitung beschrieben.
-350 reguläre Tests bestanden; drei separate Live-Tests im Standardlauf übersprungen.
+362 reguläre Tests bestanden; drei separate Live-Tests im Standardlauf übersprungen.
 Nativer lesender MCP-Livetest zuletzt mit 0.6.1 erfolgreich.
 Auch mit ausschließlich eigener Bridge laut Nutzer-Mod-Auswahl: alle sechs nativen
 Lesewerkzeuge erneut live erfolgreich (0.3.0). Keine Fremdmod für diesen Zugriff erforderlich.

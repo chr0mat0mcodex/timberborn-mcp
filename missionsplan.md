@@ -1414,3 +1414,21 @@ Nebenläufig fertiggestellte Lodge: sechs Betten insgesamt, sieben Obdachlose ve
 - [ ] Dauerhafte Wasserbilanz prüfen: Gesamtvorrat später auf 209 gesunken; Förder-/Verbrauchsraten offen.
 
 Zwei begrenzte 40-Sekunden-Fenster auf Stufe 7; keine neue Modversion erforderlich.
+
+### 7.51 Ingame-MCP-Log und optionale Aktionsbegründung (0.16.0)
+
+Nutzerauftrag: laufendes Fenster für jeden nativen MCP-Toolcall und reasoning pro Aufruf.
+- [x] Nichtmodales Fenster über öffentliche UILayout-API, Schalter rechts unten, Scrollansicht.
+- [x] Uhrzeit, Werkzeug, begrenzte Parameter, Status und optionale lesbare Begründung.
+- [x] reasoning für alle nativen Werkzeuge, maximal 600 Zeichen; strikt validiert.
+- [x] Beginn/Abschluss korreliert; lokale Ablehnungen erfasst, keine Aktionswiederholung bei Logfehlern.
+- [x] 128 Einträge im RAM, Filter, Leeren, Szenenwechsel; keine Dateien/Save-Daten.
+- [x] inspect_agent_log als zusätzlicher Leser; keine zusätzliche Fremdmod.
+- [ ] Installation und Live-/UI-Abnahme nach Speichern/Beenden/Neustart.
+
+Begründung ist eine für den Spieler verfasste Absicht, kein interner Gedankengang.
+Nicht erreichbare Mod bedeutet sichtbare Loglücke in stderr, kein blindes Retry.
+Vertrag und Bedienung: docs/activity-log.md.
+
+0.16.0: 362 reguläre Tests bestanden; Mod gesichert installiert und fünf Datei-Hashes
+geprüft. Keine Konfigurationsänderung. Nutzer um Start und Öffnen von MCP-Log gebeten.

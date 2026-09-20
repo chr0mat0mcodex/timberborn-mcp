@@ -52,10 +52,10 @@ builder.Services.AddMcpServer().WithStdioServerTransport()
     .WithCallToolHandler(async (context, ct) =>
     {
         var request = context.Params ?? throw new McpProtocolException("Missing parameters", McpErrorCode.InvalidParams);
-        if (!tools.Any(t => t.Name == request.Name))
+        if (native is null && !tools.Any(t => t.Name == request.Name))
             throw new McpProtocolException("Unknown tool", McpErrorCode.InvalidParams);
         var arguments = JsonSerializer.SerializeToElement(request.Arguments ?? new Dictionary<string, JsonElement>());
-        var result = native is not null ? await native.Invoke(request.Name, arguments, ct)
+        var result = native is not null ? await native.InvokeLogged(request.Name, arguments, ct)
             : request.Name == "set_building_paused"
                 ? await actions!.InvokeAsync(arguments, ct)
                 : await service!.InvokeAsync(request.Name, arguments, ct);

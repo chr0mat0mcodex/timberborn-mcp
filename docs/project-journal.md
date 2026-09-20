@@ -965,3 +965,17 @@ Beispielbestände Wasser 209, Beeren 255, Holz 20; sechs Betten und sieben Obdac
 Keine Güter künstlich erzeugt, keine Mod-/Produktcodeänderung erforderlich.
 Nächster getrennt geplanter Schritt: verbleibenden Wohnraumbedarf decken; Wasserbilanz
 über längere Zeit samt Produktionsdiagnose und ausreichendem Speicher später prüfen.
+
+## 2026-09-20 — Ingame-MCP-Log 0.16.0 implementiert
+
+Öffentliche UILayout-/UI-Toolkit-Schnittstelle geprüft und nichtmodales Log gebaut.
+Native MCP-Aufrufe mit optionalem reasoning, Beginn/Abschluss, 128 Einträgen im RAM,
+Filter/Leeren und separater Logabfrage. Keine neue Fremdmod, keine Speicherung und
+keine Änderung von Aktionsfreigaben. Fehlerhafte Logübertragung löst kein Retry aus.
+Installation und sichtbare Live-Abnahme noch offen. Siehe activity-log.md.
+
+0.16.0: 362 reguläre Tests bestanden (349 Unit, 13 Integration), drei Live-Tests
+im Standardlauf übersprungen. Mod-Build null Warnungen/Fehler; Codearchiv exakt fünf
+Dateien ohne private Konfiguration. Nach Nutzerbestätigung gesichert installiert,
+fünf Datei-Hashes korrekt und private Konfiguration bytegleich erhalten.
+Neustart und sichtbare Log-Abnahme angefordert; noch nicht live bestätigt.

@@ -1,12 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework><LangVersion>latest</LangVersion>
-    <AssemblyVersion>0.15.0.0</AssemblyVersion><Version>0.15.0</Version>
+    <AssemblyVersion>0.16.0.0</AssemblyVersion><Version>0.16.0</Version>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../../src/Timberborn.Bridge.Core/Timberborn.Bridge.Core.csproj" />
     <Reference Include="$(TimberbornManagedDir)/Timberborn.*.dll"><Private>false</Private></Reference>
     <Reference Include="$(TimberbornManagedDir)/Bindito.Core.dll"><Private>false</Private></Reference>
+    <Reference Include="$(TimberbornManagedDir)/UnityEngine.UIElementsModule.dll"><Private>false</Private></Reference>
     <Reference Include="$(TimberbornManagedDir)/UnityEngine.CoreModule.dll"><Private>false</Private></Reference>
     <Reference Include="$(TimberbornManagedDir)/System.Collections.Immutable.dll"><Private>false</Private></Reference>
     <Reference Include="$(TimberbornManagedDir)/Newtonsoft.Json.dll"><Private>false</Private></Reference>

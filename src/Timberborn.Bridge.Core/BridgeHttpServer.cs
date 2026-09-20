@@ -52,7 +52,15 @@ public sealed class BridgeHttpServer : IDisposable
         {
             using var deadline = CancellationTokenSource.CreateLinkedTokenSource(shutdown.Token);
             deadline.CancelAfter(TimeSpan.FromSeconds(5));
-            try { json = await queue.Enqueue(BridgeRequest.Parse(request.Url!.AbsolutePath, request.QueryString), deadline.Token).ConfigureAwait(false); }
+            try {
+                var query=request.QueryString;
+                if(request.Url!.AbsolutePath=="/agent-api/v1/activity") {
+                    if(query.AllKeys.Any(k=>k is "reasoning" or "summary"))throw new ArgumentException();
+                    query.Add("reasoning",ActivityRequest.Decode(request.Headers["X-Agent-Reasoning"],600));
+                    query.Add("summary",ActivityRequest.Decode(request.Headers["X-Agent-Summary"],400));
+                }
+                json = await queue.Enqueue(BridgeRequest.Parse(request.Url.AbsolutePath, query), deadline.Token).ConfigureAwait(false);
+            }
             catch (ArgumentException) { status = 400; json = "{\"error\":\"invalid_request\"}"; }
             catch (OperationCanceledException) { status = 503; json = "{\"error\":\"session_unavailable\"}"; }
             catch (InvalidOperationException) { status = 503; json = "{\"error\":\"observation_unavailable\"}"; }
@@ -69,7 +77,7 @@ public sealed class BridgeHttpServer : IDisposable
         context.Response.Close();
     }
     public static bool MethodAllowed(string method, string path, bool hasBody, bool enableValidation, bool enablePlacement = false, bool enableLodgePlacement = false, bool enableSpeedControl = false, bool enableStaffing = false, bool enablePriorities = false, bool enableAreas = false, bool enableRemoval = false, bool enableBuildingPlacement = false, bool enableBuildingSettings = false) =>
-        !hasBody && (BuildingSettingsRequest.Handles(path) && path != "/agent-api/v1/building-settings" ? enableBuildingSettings && method == "POST" : path is "/agent-api/v1/building-validation" or "/agent-api/v1/building-placement" ? enableBuildingPlacement && method == "POST" : path == "/agent-api/v1/remove-object" ? enableRemoval && method == "POST" : path == "/agent-api/v1/set-priority" ? enablePriorities && method == "POST" : path == "/agent-api/v1/set-area" ? enableAreas && method == "POST" : path == "/agent-api/v1/workplace-staffing" ? enableStaffing && method == "POST" : path == "/agent-api/v1/simulation-speed" ? enableSpeedControl && method == "POST" : path == "/agent-api/v1/lodge-placement" ? enableLodgePlacement && method == "POST" : path == "/agent-api/v1/path-placement" ? enablePlacement && method == "POST"
+        !hasBody && (path == "/agent-api/v1/activity" ? method == "POST" : BuildingSettingsRequest.Handles(path) && path != "/agent-api/v1/building-settings" ? enableBuildingSettings && method == "POST" : path is "/agent-api/v1/building-validation" or "/agent-api/v1/building-placement" ? enableBuildingPlacement && method == "POST" : path == "/agent-api/v1/remove-object" ? enableRemoval && method == "POST" : path == "/agent-api/v1/set-priority" ? enablePriorities && method == "POST" : path == "/agent-api/v1/set-area" ? enableAreas && method == "POST" : path == "/agent-api/v1/workplace-staffing" ? enableStaffing && method == "POST" : path == "/agent-api/v1/simulation-speed" ? enableSpeedControl && method == "POST" : path == "/agent-api/v1/lodge-placement" ? enableLodgePlacement && method == "POST" : path == "/agent-api/v1/path-placement" ? enablePlacement && method == "POST"
             : path == "/agent-api/v1/site-validation" ? enableValidation && method == "POST" : method == "GET");
     private bool Matches(string? supplied)
     {

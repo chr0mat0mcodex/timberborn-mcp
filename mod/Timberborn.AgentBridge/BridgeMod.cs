@@ -20,6 +20,7 @@ public sealed class BridgeConfigurator : Configurator
 {
     protected override void Configure()
     {
+        Bind<ActivityLog>().AsSingleton(); Bind<ActivityLogWindow>().AsSingleton();
         Bind<BuildingSettings>().AsSingleton(); Bind<BuildingCatalog>().AsSingleton(); Bind<SpatialObservations>().AsSingleton();
         Bind<BuildingObservations>().AsSingleton();
         Bind<WorkforceObservations>().AsSingleton();
@@ -34,7 +35,7 @@ public sealed class BridgeConfigurator : Configurator
 
 public sealed class BridgeMod(ResourceCountingService resources, PopulationService population,
     EntityRegistry entities, ITerrainService terrain, IThreadSafeWaterMap water, IGoodService goods,
-    ModRepository mods, SpatialObservations spatial, SiteValidation validation, PilotPlacement placement, BuildingObservations buildings, SimulationControl simulation, WorkforceObservations workforce, WorkplaceStaffing staffing, PriorityAndConstruction management, AreaManagement areas, RemovalManagement removal, BuildingCatalog catalog, BuildingSettings settings)
+    ModRepository mods, SpatialObservations spatial, SiteValidation validation, PilotPlacement placement, BuildingObservations buildings, SimulationControl simulation, WorkforceObservations workforce, WorkplaceStaffing staffing, PriorityAndConstruction management, AreaManagement areas, RemovalManagement removal, BuildingCatalog catalog, BuildingSettings settings, ActivityLog activityLog, ActivityLogWindow activityWindow)
     : ILoadableSingleton, IUnloadableSingleton, IUpdatableSingleton
 {
     private readonly MainThreadQueue queue = new();
@@ -70,8 +71,16 @@ public sealed class BridgeMod(ResourceCountingService resources, PopulationServi
     private string Observe(BridgeRequest request)
     {
         if ((request.Settings is not null || request.Route is "building-validation" or "building-placement" or "site-validation" or "path-placement" or "lodge-placement" or "building" or "simulation-speed" or "workplace-staffing" or "priority" or "set-priority" or "set-area" or "remove-object") && request.Session != sessionId) throw new ArgumentException("stale_session");
+        object RecordActivity()
+        {
+            var a=request.Activity!;
+            if(a.State!="running" && a.Session!=sessionId)throw new ArgumentException("stale_activity_session");
+            return new { accepted=activityLog.Record(a,DateTimeOffset.UtcNow) };
+        }
         object data = request.Route switch
         {
+            "activity" => RecordActivity(),
+            "activity-log" => new { capacity=ActivityLog.Capacity, items=activityLog.Snapshot().AsEnumerable().Reverse().Take(32).Select(ActivityLog.Payload).ToArray(), revision=activityLog.Revision, windowVisible=activityWindow.Visible, uiAttached=activityWindow.Attached },
             "building-settings" => settings.Read(request.Settings!),
             "set-building-paused" or "set-storage-good" or "set-storage-mode" or "set-farm-priority" or "set-farm-crop" => settings.Set(request.Settings!),
             "simulation" => simulation.Observe(), "simulation-speed" => simulation.Set(request),
@@ -88,7 +97,7 @@ public sealed class BridgeMod(ResourceCountingService resources, PopulationServi
             _ => throw new ArgumentException("invalid_request")
         };
         return JsonConvert.SerializeObject(new { schemaVersion = 1, sessionId, observedAtUtc = DateTimeOffset.UtcNow,
-            bridgeVersion = "0.15.0", data });
+            bridgeVersion = "0.16.0", data });
     }
     private object Snapshot()
     {

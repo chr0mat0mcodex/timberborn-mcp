@@ -79,7 +79,7 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
                     : "Prüft die eigene lesende Spielmod. Kein Fallback auf Fremdmods, keine Schreibfunktionen.",
                 InputSchema = JsonSerializer.SerializeToElement(input), OutputSchema = JsonSerializer.SerializeToElement(options.GetJsonSchemaAsNode(result)),
                 Annotations = new() { ReadOnlyHint = !action, DestructiveHint = action, IdempotentHint = !action, OpenWorldHint = false } };
-        }).Concat(ManagementTools.Catalog(enablePriorities, enableAreas)).Concat(RemovalTools.Catalog(enableRemoval)).Concat(BuildingTools.Catalog(enableBuildingPlacement)).Concat(BuildingSettingsTools.Catalog(enableBuildingSettings)).ToArray();
+        }).Concat(ManagementTools.Catalog(enablePriorities, enableAreas)).Concat(RemovalTools.Catalog(enableRemoval)).Concat(BuildingTools.Catalog(enableBuildingPlacement)).Concat(BuildingSettingsTools.Catalog(enableBuildingSettings)).Append(ActivityTools.Reader()).Select(ActivityTools.WithReasoning).ToArray();
     }
     public async Task<JsonObject> Invoke(string name, JsonElement args, CancellationToken ct)
     {
@@ -87,7 +87,8 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
             new NativeResult<T>(1, "ok", envelope.Data, new("native", false, envelope.SessionId, envelope.ObservedAtUtc), null), NativeJson.Options)!;
         try
         {
-            if (args.ValueKind != JsonValueKind.Object) throw new ArgumentException();
+            args=ActivityTools.WithoutReasoning(args);
+            if(name=="inspect_agent_log") return await ActivityTools.Read(client,args,ct);
             if (BuildingSettingsTools.Handles(name)) return await BuildingSettingsTools.Invoke(client,name,args,enableBuildingSettings,ct);
             if (BuildingTools.Handles(name)) return await BuildingTools.Invoke(client,name,args,enableBuildingPlacement,ct);
             if (RemovalTools.Handles(name)) return await RemovalTools.Invoke(client,name,args,enableRemoval,ct);
@@ -160,6 +161,25 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
                 : ex is JsonException or InvalidDataException ? "backend_incompatible" : "backend_unavailable";
             return (JsonObject)JsonSerializer.SerializeToNode(new NativeResult<object>(1, "error", null,
                 new("native", false, null, null), new(code, BuildingSettingsTools.Writes(name) || name is "place_building" or "place_path" or "place_lodge" or "set_simulation_speed" or "set_workplace_staffing" or "set_building_priority" or "set_area" or "demolish_building" or "remove_planted" or "remove_vegetation" or "remove_debris" ? "Aktionsergebnis möglicherweise unbestätigt. Nur lesend klären; niemals automatisch erneut ausführen." : "Native Bridge: Parameter, Verbindung oder Daten prüfen.", code == "backend_unavailable" && !BuildingSettingsTools.Writes(name) && name is not ("validate_building" or "place_building" or "validate_build_site" or "place_path" or "place_lodge" or "set_simulation_speed" or "set_workplace_staffing" or "set_building_priority" or "set_area" or "demolish_building" or "remove_planted" or "remove_vegetation" or "remove_debris"))), NativeJson.Options)!;
+        }
+    }
+    public async Task<JsonObject> InvokeLogged(string name,JsonElement args,CancellationToken ct)
+    {
+        var id=Guid.NewGuid().ToString("D");var detail=ActivityTools.Describe(args);
+        // Unknown names are never allowed to inject arbitrary text into the game log.
+        var displayName=name.Length is >0 and <=80 && name.All(c=>c is >= 'a' and <= 'z' or >= '0' and <= '9' or '_')?name:"unknown_tool";
+        var logSession=await client.TryRecordActivity(id,displayName,"running","",detail.Reasoning,detail.Summary);
+        string state="error";
+        try {
+            var result=await Invoke(name,args,ct);
+            state=result["status"]?.GetValue<string>()=="error"?"error":result["data"]?["outcome"]?.GetValue<string>() is "applied" or "rejected" or "unconfirmed" ? result["data"]!["outcome"]!.GetValue<string>() : "ok";
+            return result;
+        } catch(OperationCanceledException){state="cancelled";throw;}
+        finally {
+            if(logSession is not null) {
+                var logged=await client.TryRecordActivity(id,displayName,state,logSession,"","");
+                if(logged is null)Console.Error.WriteLine("MCP activity completion could not be recorded; do not retry the action.");
+            } else Console.Error.WriteLine("Ingame MCP activity log unavailable for this call.");
         }
     }
     public void Dispose() => client.Dispose();

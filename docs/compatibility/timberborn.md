@@ -221,3 +221,7 @@ und vier neue Pflanzen mit neuen IDs. Anbaufläche bleibt erhalten; Simulation p
 0.15.0: SmallTank regulär gebaut, auf Wasser gestellt und 30/30 Bestand separat
 bestätigt. Globaler Wasserbestand im ersten Betriebsintervall 217 -> 219; später
 209. Laufender Nachschub und Lagerung belegt, keine nachhaltige Gesamtbilanz.
+
+0.16.0: Ingame-MCP-Log mit reasoning implementiert, 362 reguläre Tests bestanden.
+Mod gegen öffentliche 1.1.2.4-Referenzen gebaut und gesichert installiert; bestehende
+Konfiguration bytegleich. UI-/Live-Abnahme nach Neustart noch offen.
