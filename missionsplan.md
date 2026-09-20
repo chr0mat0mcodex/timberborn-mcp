@@ -1494,7 +1494,7 @@ Neustartabnahme: Erfinder angeschlossen/besetzt, Förster freigeschaltet, fünf 
 - [x] retryable=false und rejected im Ingame-Log für fachliche Ablehnungen.
 - [x] 388 Tests bestanden, Mod gebaut und separat paketiert.
 - [x] 0.17.2 nach bestätigtem Spielende installiert; Sicherung und fünf Hashes geprüft.
-- [ ] template_locked, stale_session und state_conflict live ohne Änderung nachweisen.
+- [x] template_locked, stale_session und state_conflict live bestätigt; Zustand unverändert, Log rejected.
 
 Umfang und Grenzen: docs/bridge-errors.md. Andere Management-/Entfernungsfehler bleiben
 vorerst allgemein; keine vollständige Fehlerabdeckung behaupten.

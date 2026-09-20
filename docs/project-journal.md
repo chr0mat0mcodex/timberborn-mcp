@@ -1104,3 +1104,13 @@ Installation und gezielte Live-Ablehnungen noch offen. Kein Spielzustand geände
 verglichen; private Konfiguration bytegleich erhalten. Begrenzter MCP-Liveprüfer für
 template_locked, stale_session und state_conflict vorbereitet. Nutzer startet das Spiel;
 Live-Abnahme wartet auf Bestätigung des geladenen Spielstands.
+
+## 2026-09-20 — Fachliche Fehlercodes 0.17.2 live bestätigt
+
+Elf MCP-Aufrufe im geladenen Entwicklungsspielstand: gesperrte Bank bei Bauvalidierung
+als template_locked, absichtlich falsche Session bei Gebäudeabfrage als stale_session,
+abweichender erwarteter Pausenwert als state_conflict. Alle drei mit retryable=false.
+Separate Rückabfragen bestätigen unveränderten Gebäude-Pausenwert, Forschungspunktestand
+und vollständige Simulationsbeobachtung. Ingame-Log enthält alle drei als rejected.
+Keine Aktion wiederholt, keine Zustandsänderung durch die Tests. Gezielte Live-Abnahme
+von 0.17.2 abgeschlossen; übrige Fehlerbereiche bleiben wie dokumentiert offen.

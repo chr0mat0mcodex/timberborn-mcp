@@ -35,3 +35,9 @@ keine nachträglich erfundenen spezifischen Fehler liefern.
 
 Live-Abnahme: gesperrte Vorlage, absichtlich veraltete Session und abweichender erwarteter
 Pausenwert; jeweils Ablehnung, fehlende Mutation und Logstatus separat bestätigen.
+
+## Live-Abnahme 0.17.2
+
+Bestätigt: template_locked, stale_session und state_conflict über echte MCP-Aufrufe,
+jeweils retryable=false und rejected im Ingame-Log. Separate Rückabfragen zeigen
+unveränderte Gebäudepause, Forschungspunkte und Simulation. Elf Aufrufe, keine Wiederholung.
