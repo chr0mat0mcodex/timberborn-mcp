@@ -9,12 +9,13 @@ using Timberborn.Bridge.Core;
 
 namespace Timberborn.McpServer;
 
-public sealed class NativeTools(NativeClient client, bool enableValidation = false, bool enablePlacement = false, bool enableLodgePlacement = false) : IDisposable
+public sealed class NativeTools(NativeClient client, bool enableValidation = false, bool enablePlacement = false, bool enableLodgePlacement = false, bool enableSpeedControl = false) : IDisposable
 {
-    public static IReadOnlyList<Tool> Catalog(bool enableValidation = false, bool enablePlacement = false, bool enableLodgePlacement = false)
+    public static IReadOnlyList<Tool> Catalog(bool enableValidation = false, bool enablePlacement = false, bool enableLodgePlacement = false, bool enableSpeedControl = false)
     {
         var options = new JsonSerializerOptions(NativeJson.Options) { TypeInfoResolver = new DefaultJsonTypeInfoResolver() };
-        var names = new List<string> { "timberborn_status", "inspect_colony", "inspect_map_region", "find_buildings", "inspect_build_catalog", "precheck_build_site", "inspect_building" };
+        var names = new List<string> { "timberborn_status", "inspect_colony", "inspect_map_region", "find_buildings", "inspect_build_catalog", "precheck_build_site", "inspect_building", "inspect_simulation" };
+        if (enableSpeedControl) names.Add("set_simulation_speed");
         if (enableValidation) names.Add("validate_build_site");
         if (enablePlacement) names.Add("place_path"); if (enableLodgePlacement) names.Add("place_lodge");
         return names.Select(name =>
@@ -22,9 +23,11 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
             bool map = name == "inspect_map_region";
             bool validation = name == "validate_build_site";
             bool placement = name is "place_path" or "place_lodge";
-            bool action = validation || placement;
-            bool site = name == "precheck_build_site" || action;
+            bool speed = name == "set_simulation_speed";
+            bool action = validation || placement || speed;
+            bool site = name == "precheck_build_site" || validation || placement;
             var properties = new JsonObject();
+            if (speed) foreach (var key in new[] { "speed", "expectedSpeed" }) properties[key] = new JsonObject { ["type"] = "integer", ["enum"] = new JsonArray(0, 1) };
             if (name == "inspect_building")
                 foreach (var key in new[] { "id", "session" }) properties[key] = new JsonObject { ["type"] = "string", ["format"] = "uuid" };
             if (map) foreach (var (key, min, max) in new[] { ("x", 0, 4095), ("y", 0, 4095), ("z", 0, 4095), ("width", 1, 8), ("height", 1, 8), ("depth", 1, 4) })
@@ -49,9 +52,13 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
                 "validate_build_site" => typeof(NativeResult<NativeValidation>),
                 "place_path" or "place_lodge" => typeof(NativeResult<NativePlacement>),
                 "inspect_building" => typeof(NativeResult<NativeBuilding>),
+                "inspect_simulation" => typeof(NativeResult<NativeSimulation>),
+                "set_simulation_speed" => typeof(NativeResult<NativeSpeedResult>),
                 _ => typeof(NativeResult<NativeSnapshot>) };
             return new Tool { Name = name,
-                Description = placement ? "Pilot: erteilt genau einen Auftrag für die angegebene Pilotvorlage (Path oder Lodge.Folktails) über den regulären Spielplatzierer, nach frischer Vorschauvalidierung. Benötigt aktuelle Session-ID und separates Mod-Opt-in. Weg und Lodge teilen sich einen Versuch je Sitzung, auch bei Ablehnung/Fehler. applied bestätigt Entity-ID, Vorlage und Position; finished separat. Bei Fehler/unconfirmed niemals automatisch wiederholen oder zurücksetzen; find_buildings zur Klärung lesen. Keine Erreichbarkeitsgarantie."
+                Description = speed ? "Setzt Pause (0) oder Normalgeschwindigkeit (1). Eigene Freigabe in Mod und MCP, frische Session und expectedSpeed nötig. Vergleicht aktuellen Wert auf dem Spielthread; überschreibt keine abweichende Nutzereinstellung. Entsperrt keine Spielsperren. Kein automatisches Retry; inspect_simulation danach zwingend lesen. matchedImmediately ist nur eine unmittelbare Beobachtung, keine Garantie für tickende Simulation."
+                    : name == "inspect_simulation" ? "Liest SpeedManager.CurrentSpeed, Spieltag, Tagesfortschritt und vergangene Stunden. Keine gemessene Tickrate; eine Spielsperre kann Fortschritt verhindern. Benötigt Bridge 0.8.0."
+                    : placement ? "Pilot: erteilt genau einen Auftrag für die angegebene Pilotvorlage (Path oder Lodge.Folktails) über den regulären Spielplatzierer, nach frischer Vorschauvalidierung. Benötigt aktuelle Session-ID und separates Mod-Opt-in. Weg und Lodge teilen sich einen Versuch je Sitzung, auch bei Ablehnung/Fehler. applied bestätigt Entity-ID, Vorlage und Position; finished separat. Bei Fehler/unconfirmed niemals automatisch wiederholen oder zurücksetzen; find_buildings zur Klärung lesen. Keine Erreichbarkeitsgarantie."
                     : validation ? "Geschützter Pilot: erzeugt/verwendet eine eigene temporäre Vorschau und ruft Spielvalidatoren auf. Kein Bauauftrag. Frische Session-ID erforderlich, maximal 8 Versuche pro Sitzung. Bei Fehler/Zustandsabweichung gesperrt; niemals automatisch wiederholen. Valid bedeutet geometrische Spielprüfung, keine Material-/Liefer-/Fertigstellungszusage."
                     : name == "inspect_building" ? "Liest ein Gebäude/Path anhand Entity-ID und aktueller Session. Meldet Fertigstatus, Baustellenfortschritt, gesamte Vorlagen-Baukosten und aktuellen Baustellenbestand getrennt. Kein berechneter Restbedarf: schon verbaute Materialien und Lieferungen unterwegs sind unbekannt. Dazu Betriebs-, Instant- und Baudistrikt-IDs. Fehlend/kein Gebäude: found=false. Fehlende Komponente ist unbekannt, keine bestätigte Nichtanbindung. Keine Arbeiter-/Liefergarantie. Baustellen-Materialvertrag benötigt Bridge 0.6.1."
                     : name == "find_buildings" ? "Liest Gebäude und Wege mit stabilen Vorlagen-IDs, Position, Eingang und bis zu 64 belegten Zellen je Objekt. Maximal 32 Einträge; Seiten sind frische Beobachtungen."
@@ -84,6 +91,19 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
             if (name == "validate_build_site" && !enableValidation) throw new ArgumentException();
             if (name == "place_path" && !enablePlacement) throw new ArgumentException();
             if (name == "place_lodge" && !enableLodgePlacement) throw new ArgumentException();
+            if (name == "inspect_simulation" && !args.EnumerateObject().Any()) return Wrap(await client.Simulation(ct));
+            if (name == "set_simulation_speed")
+            {
+                if (!enableSpeedControl) throw new ArgumentException();
+                var query = new NameValueCollection();
+                foreach (var p in args.EnumerateObject())
+                {
+                    if (p.Name == "session" && p.Value.ValueKind == JsonValueKind.String) query.Add(p.Name, p.Value.GetString());
+                    else if (p.Value.ValueKind == JsonValueKind.Number && p.Value.TryGetInt32(out var value)) query.Add(p.Name, value.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                    else throw new ArgumentException();
+                }
+                return Wrap(await client.SetSpeed(BridgeRequest.Parse("/agent-api/v1/simulation-speed", query), ct));
+            }
             if (name is "inspect_map_region" or "find_buildings" or "precheck_build_site" or "validate_build_site" or "place_path" or "place_lodge")
             {
                 var query = new NameValueCollection();
@@ -106,14 +126,14 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
             if (args.EnumerateObject().Any() || name is not ("inspect_colony" or "timberborn_status")) throw new ArgumentException();
             var snapshot = await client.Snapshot(ct);
             return name == "inspect_colony" ? Wrap(snapshot) : Wrap(new BridgeEnvelope<NativeStatus>(1, snapshot.SessionId,
-                snapshot.ObservedAtUtc, snapshot.BridgeVersion, new("reachable", snapshot.BridgeVersion, enablePlacement || enableLodgePlacement)));
+                snapshot.ObservedAtUtc, snapshot.BridgeVersion, new("reachable", snapshot.BridgeVersion, enablePlacement || enableLodgePlacement || enableSpeedControl)));
         }
         catch (Exception ex) when (ex is ArgumentException or HttpRequestException or IOException or InvalidDataException or JsonException or UnauthorizedAccessException or OperationCanceledException)
         {
             string code = ex is ArgumentException ? "invalid_argument" : ex is UnauthorizedAccessException ? "authentication_failed"
                 : ex is JsonException or InvalidDataException ? "backend_incompatible" : "backend_unavailable";
             return (JsonObject)JsonSerializer.SerializeToNode(new NativeResult<object>(1, "error", null,
-                new("native", false, null, null), new(code, name is "place_path" or "place_lodge" ? "Bauergebnis möglicherweise unbestätigt. Nur lesend klären; niemals automatisch erneut ausführen." : "Native Bridge: Parameter, Verbindung oder Daten prüfen.", code == "backend_unavailable" && name is not ("validate_build_site" or "place_path" or "place_lodge"))), NativeJson.Options)!;
+                new("native", false, null, null), new(code, name is "place_path" or "place_lodge" or "set_simulation_speed" ? "Aktionsergebnis möglicherweise unbestätigt. Nur lesend klären; niemals automatisch erneut ausführen." : "Native Bridge: Parameter, Verbindung oder Daten prüfen.", code == "backend_unavailable" && name is not ("validate_build_site" or "place_path" or "place_lodge" or "set_simulation_speed"))), NativeJson.Options)!;
         }
     }
     public void Dispose() => client.Dispose();

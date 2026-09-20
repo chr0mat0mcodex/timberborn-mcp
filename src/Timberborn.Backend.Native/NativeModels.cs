@@ -65,3 +65,6 @@ public sealed record NativeBuilding(Guid Id, bool Found, NativeBuildingDetails? 
 public sealed record NativeMeta(string Backend, bool Simulated, string? SessionId, DateTimeOffset? ObservedAtUtc);
 public sealed record NativeFault(string Code, string Message, bool Retryable);
 public sealed record NativeResult<T>(int SchemaVersion, string Status, T? Data, NativeMeta Meta, NativeFault? Error);
+public sealed record NativeSimulation(float CurrentSpeed, int DayNumber, float DayProgress, float HoursPassedToday);
+public sealed record NativeSpeedResult(int RequestedSpeed, float PreviousSpeed, bool MatchedImmediately,
+    NativeSimulation Observation, string[] Limitations);

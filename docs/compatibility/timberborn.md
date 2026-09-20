@@ -1,5 +1,11 @@
 # Kompatibilität
 
+## Buildstand 0.8.0 — 2026-09-20
+
+Öffentliche SpeedManager-/IDayNightCycle-API gegen lokale 1.1.2.4 gebaut.
+158 reguläre Tests bestanden, separater Mod-Build ohne Warnungen/Fehler.
+Pause/1× und Zeitwerte noch nicht live bestätigt; installiert bleibt 0.7.0.
+
 ## Buildstand 0.7.0 — 2026-09-20
 
 Lodge-Pilot gegen lokale Timberborn-1.1.2.4-Assemblies gebaut, keine Warnungen/Fehler.

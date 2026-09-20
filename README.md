@@ -37,12 +37,14 @@ und Bauzeitfortschritt 0 -> rund 11 % beobachtet. Farmhaus noch nicht fertig.
 [Lodge-Auftrag](docs/lodge-placement.md). Installiert und begrenzt live bestätigt: genau eine Lodge regulär beauftragt und
 über dieselbe Entity-ID als aktive Baustelle mit bekanntem Baudistrikt nachgelesen.
 Fertigstellung und zusätzliche Betten noch offen.
+0.8.0 ergänzt [Zeitbeobachtung und Pause/1×](docs/simulation-control.md).
+Gebaut und automatisiert getestet; Installation und Live-Abnahme stehen aus.
 [Installation und Abnahme](docs/native-bridge-install.md),
 [offizielle Quellen und good references](docs/references/README.md).
 Für die eigene Bridge: `scripts/start-native.ps1 -ConfigPath '<private Konfiguration>'`;
 Build und nativen Lesetest mit `scripts/verify.ps1 -NativeConfig '<private Konfiguration>'`
 ausführen. Beide Abläufe sind in der Installationsanleitung beschrieben.
-147 reguläre Tests bestanden; drei separate Live-Tests im Standardlauf übersprungen.
+158 reguläre Tests bestanden; drei separate Live-Tests im Standardlauf übersprungen.
 Nativer lesender MCP-Livetest zuletzt mit 0.6.1 erfolgreich.
 Auch mit ausschließlich eigener Bridge laut Nutzer-Mod-Auswahl: alle sechs nativen
 Lesewerkzeuge erneut live erfolgreich (0.3.0). Keine Fremdmod für diesen Zugriff erforderlich.

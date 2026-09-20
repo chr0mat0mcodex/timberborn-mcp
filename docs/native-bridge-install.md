@@ -1,5 +1,9 @@
 # Eigene Timberborn Agent Bridge — 0.6.1
 
+Neu vorbereitet: 0.8.0 mit [Pause/Normalgeschwindigkeit](simulation-control.md).
+Mod-Opt-in enableSpeedControl und MCP-Opt-in TIMBERBORN_ENABLE_SPEED_CONTROL; beide
+im Standard aus. Installiert/live geprüft bleibt 0.7.0 bis zum nächsten Update.
+
 0.6.1 ersetzt die unklare Restmaterialangabe durch gesamte Vorlagenkosten und
 tatsächlichen Baustellenbestand. Beide Werte getrennt lesen, keinen Restbedarf ableiten.
 0.6.1 ist installiert/live bestätigt. Neu gebaut: 0.7.0 mit separat geschütztem Lodge-Auftrag; noch nicht installiert/live geprüft. Siehe [Lodge-Pilot](lodge-placement.md).

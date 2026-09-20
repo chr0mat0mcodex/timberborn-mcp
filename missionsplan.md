@@ -1057,3 +1057,11 @@ starten; danach genau ein kontrollierter Hausauftrag gemäß Abnahmeplan.
 als aktive Baustelle nachgelesen. Eingang an vorhandenem Weg, Baudistrikt bekannt.
 12 Holz Baukosten, Inventar leer, global 0 Holz, Fortschritt 0. Kein Fertigbau.
 Nächster Wirkungsnachweis: Lieferung, Fertigstellung und zusätzliche Betten lesen.
+
+### 7.20 Simulation gezielt anhalten und weiterführen
+
+Nutzer fordert MCP-Geschwindigkeitssteuerung für eigenständige Tests und Agenten.
+0.8.0 ergänzt Zeitbeobachtung sowie geschützte Pause/1x-Steuerung mit Session- und
+Istwertvergleich. 158 Tests und Mod-Build erfolgreich; Installation/Live-Test offen.
+Höhere Geschwindigkeiten erst nach Beleg der Spielwerte. Keine Zeitsprünge oder
+Spielsperren-Aufhebung. [Vertrag und Hin-/Rücktest](docs/simulation-control.md).

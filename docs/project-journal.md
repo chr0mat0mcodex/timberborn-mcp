@@ -1,5 +1,21 @@
 # Projektjournal
 
+## 2026-09-20 — Pause/Normalgeschwindigkeit vorbereitet (0.8.0)
+
+Auf Nutzerauftrag öffentliche Zeit-API geprüft und inspect_simulation sowie separat
+freigeschaltetes set_simulation_speed ergänzt. Erster Umfang Pause (0)/Normal (1),
+Session und expectedSpeed vor Änderung auf dem Spielthread geprüft. Keine entsperrten
+Spielsperren, Zeitsprünge oder Fremdmod-Abhängigkeiten. Höhere Standardstufen nicht
+belegt und deshalb noch nicht freigegeben. Rücklesen nach jedem Eingriff erforderlich.
+158 reguläre Tests bestanden (145 Unit, 13 Integration), drei Live-Tests übersprungen.
+Separater Mod-Build/Paket ohne Warnungen oder Fehler. Installation/Live-Abnahme offen,
+Timberborn läuft noch mit 0.7.0. [Vertrag und Abnahme](simulation-control.md).
+
+Vier reine MCP-Leseaufrufe zur gespeicherten Lodge: aktiv/unfertig/ungestartet,
+12 Log Kosten, Inventar leer, Baudistrikt bekannt. Global jetzt 2 Log, weiter
+0 Betten/13 Obdachlose. Nutzer meldet Simulation auf einfacher Geschwindigkeit;
+noch keine eigene Geschwindigkeitsabfrage in installierter 0.7.0 verfügbar.
+
 ## 2026-09-20 — Eigener Lodge-Auftrag live bestätigt
 
 Bridge 0.7.0 über echtes MCP-stdio geprüft. Erster begrenzter Suchlauf mit sechs

@@ -18,13 +18,16 @@ public sealed class BridgeRequest
     public int Rotation { get; }
     public string Session { get; }
     public string EntityId { get; }
+    public int Speed { get; }
+    public int ExpectedSpeed { get; }
     private BridgeRequest(string route, int x = 0, int y = 0, int z = 0, int width = 0, int height = 0, int depth = 0,
-        int offset = 0, int limit = 0, string template = "", int rotation = 0, string session = "", string entityId = "")
+        int offset = 0, int limit = 0, string template = "", int rotation = 0, string session = "", string entityId = "", int speed = 0, int expectedSpeed = 0)
     { Route = route; X = x; Y = y; Z = z; Width = width; Height = height; Depth = depth;
-        Offset = offset; Limit = limit; Template = template; Rotation = rotation; Session = session; EntityId = entityId; }
+        Offset = offset; Limit = limit; Template = template; Rotation = rotation; Session = session; EntityId = entityId; Speed = speed; ExpectedSpeed = expectedSpeed; }
 
     public static BridgeRequest Parse(string path, NameValueCollection query)
     {
+        if (path == "/agent-api/v1/simulation" && query.Count == 0) return new("simulation");
         if (path == "/agent-api/v1/snapshot" && query.Count == 0) return new("snapshot");
         if (path == "/agent-api/v1/catalog" && query.Count == 0) return new("catalog");
         if (path == "/agent-api/v1/building" && query.Count == 2)
@@ -45,6 +48,13 @@ public sealed class BridgeRequest
                     CultureInfo.InvariantCulture, out var value) || value < min || value > max)
                 throw new ArgumentException("invalid_request");
             return value;
+        }
+        if (path == "/agent-api/v1/simulation-speed" && query.Count == 3)
+        {
+            var sessions = query.GetValues("session");
+            if (sessions is null || sessions.Length != 1 || !Guid.TryParseExact(sessions[0], "D", out var id) || id == Guid.Empty)
+                throw new ArgumentException("invalid_session");
+            return new("simulation-speed", session: id.ToString("D"), speed: Read("speed", 0, 1), expectedSpeed: Read("expectedSpeed", 0, 1));
         }
         if (path == "/agent-api/v1/objects" && query.Count == 2)
             return new("objects", offset: Read("offset", 0, 65535), limit: Read("limit", 1, 32));

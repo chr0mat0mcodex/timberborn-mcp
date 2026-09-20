@@ -147,6 +147,30 @@ public sealed class NativeClient : IDisposable
         }
         return result;
     }
+    public async Task<BridgeEnvelope<NativeSimulation>> Simulation(CancellationToken ct)
+    {
+        var result = await Get<NativeSimulation>("simulation", ct);
+        ValidateSimulation(result.Data);
+        return result;
+    }
+    public async Task<BridgeEnvelope<NativeSpeedResult>> SetSpeed(BridgeRequest r, CancellationToken ct)
+    {
+        if (r.Route != "simulation-speed") throw new ArgumentException();
+        var result = await Get<NativeSpeedResult>($"simulation-speed?speed={r.Speed}&expectedSpeed={r.ExpectedSpeed}&session={r.Session}", ct, HttpMethod.Post);
+        var d = result.Data;
+        if (result.SessionId != r.Session || d.RequestedSpeed != r.Speed || d.PreviousSpeed != r.ExpectedSpeed ||
+            d.Observation is null || d.Limitations is null || d.MatchedImmediately != (d.Observation.CurrentSpeed == r.Speed))
+            throw new InvalidDataException("Invalid speed receipt");
+        ValidateSimulation(d.Observation);
+        return result;
+    }
+    private static void ValidateSimulation(NativeSimulation d)
+    {
+        if (!float.IsFinite(d.CurrentSpeed) || d.CurrentSpeed < 0 || d.DayNumber < 0 ||
+            !float.IsFinite(d.DayProgress) || d.DayProgress < 0 || d.DayProgress > 1 ||
+            !float.IsFinite(d.HoursPassedToday) || d.HoursPassedToday < 0 || d.HoursPassedToday > 24)
+            throw new InvalidDataException("Invalid simulation observation");
+    }
     private static bool ValidGoods(NativeGoodAmount[]? goods) => goods is not null && goods.Length <= 32 &&
         goods.All(g => g is not null && !string.IsNullOrEmpty(g.Id) && g.Id.Length <= 160 && g.Amount >= 0) &&
         goods.Select(g => g.Id).Distinct().Count() == goods.Length;
@@ -168,7 +192,7 @@ public sealed class NativeClient : IDisposable
             await buffer.WriteAsync(bytes.AsMemory(0, count), budget.Token);
         }
         var result = JsonSerializer.Deserialize<BridgeEnvelope<T>>(buffer.ToArray(), NativeJson.Options);
-        if (result is null || result.SchemaVersion != 1 || result.BridgeVersion is not ("0.2.0" or "0.3.0" or "0.4.0" or "0.4.1" or "0.5.0" or "0.6.0" or "0.6.1" or "0.7.0") ||
+        if (result is null || result.SchemaVersion != 1 || result.BridgeVersion is not ("0.2.0" or "0.3.0" or "0.4.0" or "0.4.1" or "0.5.0" or "0.6.0" or "0.6.1" or "0.7.0" or "0.8.0") ||
             !Guid.TryParseExact(result.SessionId, "D", out var session) || session == Guid.Empty ||
             result.ObservedAtUtc == default || result.Data is null) throw new InvalidDataException("Invalid bridge envelope");
         return result;

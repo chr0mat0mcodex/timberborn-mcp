@@ -26,9 +26,10 @@ public sealed class NativeBridgeTests
         reservation.Start(); int port = ((IPEndPoint)reservation.LocalEndpoint).Port; reservation.Stop();
         var token = Convert.ToHexString(System.Security.Cryptography.RandomNumberGenerator.GetBytes(32));
         using var queue = new MainThreadQueue();
-        using var bridge = new BridgeHttpServer(port, token, queue, enableValidation, enablePlacement, enableLodgePlacement);
+        using var bridge = new BridgeHttpServer(port, token, queue, enableValidation, enablePlacement, enableLodgePlacement, enableSpeedControl: enableLodgePlacement);
         bridge.Start();
         int observations = 0;
+        float currentSpeed = 1;
         var session = Guid.NewGuid().ToString("D");
         var placementGate = new SinglePlacementGate();
         using var pumpStop = CancellationTokenSource.CreateLinkedTokenSource(ct);
@@ -43,6 +44,8 @@ public sealed class NativeBridgeTests
                         Interlocked.Increment(ref observations);
                         object data = r.Route switch
                         {
+                            "simulation" => new NativeSimulation(currentSpeed, 1, 0.5f, 12),
+                            "simulation-speed" when r.Session == session && r.ExpectedSpeed == currentSpeed => new NativeSpeedResult(r.Speed, currentSpeed, true, new NativeSimulation(currentSpeed = r.Speed, 1, 0.5f, 12), ["synthetic_test"]),
                             "snapshot" => Snapshot(),
                             "map" => new NativeMap(new(r.X, r.Y, r.Z), 1, 1, 1,
                                 [new(r.X, r.Y, r.Z, false, true, 2, 0.5f, 0, true)], ["synthetic_test"]),
@@ -60,7 +63,7 @@ public sealed class NativeBridgeTests
                                 Guid.NewGuid(), "applied", r.Template == "Path", true, ["synthetic_test"])),
                             _ => throw new ArgumentException()
                         };
-                        return JsonSerializer.Serialize(new BridgeEnvelope<object>(1, session, DateTimeOffset.UtcNow, "0.7.0", data), NativeJson.Options);
+                        return JsonSerializer.Serialize(new BridgeEnvelope<object>(1, session, DateTimeOffset.UtcNow, "0.8.0", data), NativeJson.Options);
                     });
                     await Task.Delay(5, pumpStop.Token);
                 }
@@ -108,15 +111,16 @@ public sealed class NativeBridgeTests
                     ["TIMBERBORN_ENABLE_WRITES"] = "1",
                     ["TIMBERBORN_ENABLE_VALIDATION"] = enableValidation ? "1" : "0",
                     ["TIMBERBORN_ENABLE_PLACEMENT"] = enablePlacement ? "1" : "0",
-                    ["TIMBERBORN_ENABLE_LODGE_PLACEMENT"] = enableLodgePlacement ? "1" : "0"
+                    ["TIMBERBORN_ENABLE_LODGE_PLACEMENT"] = enableLodgePlacement ? "1" : "0",
+                    ["TIMBERBORN_ENABLE_SPEED_CONTROL"] = enableLodgePlacement ? "1" : "0"
                 }
             }), cancellationToken: ct);
             var tools = await client.ListToolsAsync(cancellationToken: ct);
-            var expected = new List<string> { "find_buildings", "inspect_build_catalog", "inspect_building", "inspect_colony", "inspect_map_region", "precheck_build_site", "timberborn_status" };
+            var expected = new List<string> { "find_buildings", "inspect_build_catalog", "inspect_building", "inspect_colony", "inspect_map_region", "inspect_simulation", "precheck_build_site", "timberborn_status" };
             if (enableValidation) expected.Add("validate_build_site");
-            if (enablePlacement) expected.Add("place_path"); if (enableLodgePlacement) expected.Add("place_lodge");
+            if (enablePlacement) expected.Add("place_path"); if (enableLodgePlacement) { expected.Add("place_lodge"); expected.Add("set_simulation_speed"); }
             Assert.Equal(expected.Order(), tools.Select(t => t.Name).Order());
-            Assert.All(tools, t => { Assert.Equal(t.Name is not ("validate_build_site" or "place_path" or "place_lodge"), t.ProtocolTool.Annotations!.ReadOnlyHint); Assert.NotNull(t.ProtocolTool.OutputSchema); });
+            Assert.All(tools, t => { Assert.Equal(t.Name is not ("validate_build_site" or "place_path" or "place_lodge" or "set_simulation_speed"), t.ProtocolTool.Annotations!.ReadOnlyHint); Assert.NotNull(t.ProtocolTool.OutputSchema); });
             var colony = await client.CallToolAsync("inspect_colony", cancellationToken: ct);
             Assert.False(colony.IsError);
             var json = colony.StructuredContent!.Value;
@@ -172,6 +176,20 @@ public sealed class NativeBridgeTests
                 var repeated = await client.CallToolAsync("place_lodge", args, cancellationToken: ct);
                 Assert.True(repeated.IsError);
                 Assert.False(repeated.StructuredContent!.Value.GetProperty("error").GetProperty("retryable").GetBoolean());
+            }
+            var simulation = await client.CallToolAsync("inspect_simulation", cancellationToken: ct);
+            Assert.Equal(1, simulation.StructuredContent!.Value.GetProperty("data").GetProperty("currentSpeed").GetSingle());
+            if (enableLodgePlacement)
+            {
+                foreach (int speed in new[] { 0, 1 }) {
+                    var result = await client.CallToolAsync("set_simulation_speed", new Dictionary<string, object?> { ["speed"] = speed, ["expectedSpeed"] = 1 - speed, ["session"] = session }, cancellationToken: ct);
+                    Assert.False(result.IsError);
+                    var readback = await client.CallToolAsync("inspect_simulation", cancellationToken: ct);
+                    Assert.Equal(speed, readback.StructuredContent!.Value.GetProperty("data").GetProperty("currentSpeed").GetSingle());
+                }
+                var stale = await client.CallToolAsync("set_simulation_speed", new Dictionary<string, object?> { ["speed"] = 0, ["expectedSpeed"] = 0, ["session"] = session }, cancellationToken: ct);
+                Assert.True(stale.IsError);
+                Assert.Equal(1, currentSpeed);
             }
             var building = await client.CallToolAsync("inspect_building", new Dictionary<string, object?>
                 { ["id"] = Guid.NewGuid().ToString("D"), ["session"] = session }, cancellationToken: ct);

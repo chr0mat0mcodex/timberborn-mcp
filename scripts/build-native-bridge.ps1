@@ -26,7 +26,7 @@ try {
     Compress-Archive -LiteralPath $installDir -DestinationPath (Join-Path $packageRoot 'TimberbornAgentBridge-code-only.zip')
     $privateConfig = Join-Path $installDir 'bridge.local.json'
     $token = [Convert]::ToHexString([System.Security.Cryptography.RandomNumberGenerator]::GetBytes(32))
-    @{ port = $Port; token = $token; enableValidation = $false; enablePlacement = $false; enableLodgePlacement = $false } | ConvertTo-Json | Set-Content -LiteralPath $privateConfig -Encoding utf8NoBOM
+    @{ port = $Port; token = $token; enableValidation = $false; enablePlacement = $false; enableLodgePlacement = $false; enableSpeedControl = $false } | ConvertTo-Json | Set-Content -LiteralPath $privateConfig -Encoding utf8NoBOM
     Write-Output "Lokaler Installationsordner (enthält privaten Schlüssel): $installDir"
     Write-Output "Archiv ohne Schlüssel: $(Join-Path $packageRoot 'TimberbornAgentBridge-code-only.zip')"
     Write-Output 'Keine Dateien im Spiel installiert und keine Client-Konfiguration verändert.'
