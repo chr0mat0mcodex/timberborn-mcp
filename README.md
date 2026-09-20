@@ -34,7 +34,9 @@ Baustellenbestände, ohne Restbedarfsberechnung. Am Farmhaus live bestätigt:
 25 Holz Baukosten; anschließend Lieferung 2 -> 4 Holz, Materialfortschritt 8 -> 16 %
 und Bauzeitfortschritt 0 -> rund 11 % beobachtet. Farmhaus noch nicht fertig.
 0.7.0 erweitert den Baupilot um einen separat freizuschaltenden
-[Lodge-Auftrag](docs/lodge-placement.md). Installiert; Live-Abnahme noch offen.
+[Lodge-Auftrag](docs/lodge-placement.md). Installiert und begrenzt live bestätigt: genau eine Lodge regulär beauftragt und
+über dieselbe Entity-ID als aktive Baustelle mit bekanntem Baudistrikt nachgelesen.
+Fertigstellung und zusätzliche Betten noch offen.
 [Installation und Abnahme](docs/native-bridge-install.md),
 [offizielle Quellen und good references](docs/references/README.md).
 Für die eigene Bridge: `scripts/start-native.ps1 -ConfigPath '<private Konfiguration>'`;

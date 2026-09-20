@@ -1051,3 +1051,9 @@ Baustelle mit Kosten/Fortschritt/Baudistrikt nachlesen. [Vertrag](docs/lodge-pla
 Lodge-Opt-in aktiviert, Token/Port erhalten. Nutzer muss Spiel und MCP-Testkolonie
 starten; danach genau ein kontrollierter Hausauftrag gemäß Abnahmeplan.
 
+### 7.19 Eigener Hausauftrag live bestanden
+
+0.7.0: genau eine Lodge regulär über MCP platziert und mit derselben Entity-ID
+als aktive Baustelle nachgelesen. Eingang an vorhandenem Weg, Baudistrikt bekannt.
+12 Holz Baukosten, Inventar leer, global 0 Holz, Fortschritt 0. Kein Fertigbau.
+Nächster Wirkungsnachweis: Lieferung, Fertigstellung und zusätzliche Betten lesen.

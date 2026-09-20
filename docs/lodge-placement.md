@@ -1,7 +1,7 @@
 # Lodge-Baupilot 0.7.0
 
-Status: implementiert und installiert (0.7.0); Live-Nachweis steht aus. Der
-zuletzt live geprüfte Stand ist 0.6.1. Ziel ist ein regulärer Hausauftrag über MCP
+Status: implementiert, installiert und begrenzt live bestätigt (0.7.0). Der
+zuletzt live geprüfte Stand ist 0.7.0. Ziel ist ein regulärer Hausauftrag über MCP
 und dessen unabhängige Wiedererkennung als Baustelle, noch kein autonomer Hausbau.
 
 ## Vertrag
@@ -47,3 +47,7 @@ und simulierte Bridge. Die Spielplatzierung selbst bleibt bis zur Live-Abnahme o
 Prüfung: 147 reguläre Tests bestanden (134 Unit, 13 Integration), drei Live-Tests
 übersprungen. Separater Mod-Build gegen Timberborn 1.1.2.4 ohne Warnungen/Fehler.
 
+
+Live-Ergebnis: ein Auftrag applied, Entity-ID separat als aktive/unfertige Lodge
+nachgelesen; Eingang am Weg, Baudistrikt bekannt, 12 Log Kosten und leeres Inventar.
+Fortschritt 0; Lieferung/Fertigstellung/Wohnraumwirkung bleiben offen.

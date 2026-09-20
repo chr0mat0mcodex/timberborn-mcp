@@ -1,5 +1,22 @@
 # Projektjournal
 
+## 2026-09-20 — Eigener Lodge-Auftrag live bestätigt
+
+Bridge 0.7.0 über echtes MCP-stdio geprüft. Erster begrenzter Suchlauf mit sechs
+Leseaufrufen fand nur eine blockierte Fläche; keine Mutation. Zweiter Lauf mit
+neun fachlichen Aufrufen: eine weitere blockierte und eine freie gedrehte Fläche
+geprüft, genau ein place_lodge-Auftrag. Ergebnis applied; gleiche Entity-ID separat
+als Lodge.Folktails bei (29,25,3), Rotation Cw90, nachgelesen. Eingang (28,24,3)
+liegt am vorhandenen Weg; bekannter Baudistrikt bestätigt.
+
+Normale aktive Baustelle: unfertig, noch ungestartet, beide Fortschritte 0,
+Vorlagenkosten 12 Log, Baustelleninventar vorhanden/leer, global Log=0.
+Damit eigener Hausauftrag und unabhängige Wiedererkennung live bestanden.
+Materiallieferung, Fertigstellung und zusätzliche Betten dieser Lodge noch offen.
+Keine Ressourcen hinzugefügt, kein Retry, keine Sofortfertigstellung. Die Sitzung
+bleibt für weitere Platzierungen gesperrt. Nächster sinnvoller Nachweis: reguläre
+Lieferung/Fertigstellung und Wohnraumwirkung gezielt lesend beobachten.
+
 ## 2026-09-20 — Bridge 0.7.0 installiert
 
 Spielprozess vor Installation beendet. Bisherigen Mod-Ordner vollständig lokal
