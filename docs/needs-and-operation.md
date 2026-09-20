@@ -1,7 +1,7 @@
 # Bedürfnisse und Betriebsbelege — 0.20.0
 
 Drei rein lesende MCP-Werkzeuge, ohne neue Fremdmod oder Bibliothek. Öffentliche
-Spiel-APIs lokal gegen Timberborn 1.1.2.4 geprüft; gebaut und regulär getestet,
+Spiel-APIs lokal gegen Timberborn 1.1.2.4 geprüft; gebaut, regulär getestet und installiert,
 Live-Abnahme noch ausstehend. Keine Speicherstandänderung oder private Reflection.
 
 ## Koloniebedürfnisse

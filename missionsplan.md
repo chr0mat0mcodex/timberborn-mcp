@@ -13,7 +13,7 @@ unkontrollierter Kolonieaufbau ersetzt keine gezielte Abnahme.
 ## Stand
 
 **0.20.0 ist gebaut und regulär getestet: drei neue Leser für Bedürfnisse und Betrieb.
-Installation/Live-Abnahme stehen aus. 0.19.2 bleibt installiert; dessen 26 Leser,
+0.20.0 ist installiert; Live-Abnahme steht aus. Unter 0.19.2 sind die bisherigen 26 Leser,
 Sofort-Wegsuche, historische Bilanz und Farm-/Holzfällerreichweiten sind live bestätigt.**
 [Projektstand](PROJECT_STATE.md), [Werkzeugkatalog](docs/tools.md), [offene Arbeiten](BACKLOG.md).
 Keine Fremdmod-Pflichtbasis; die frühere More-HTTP-API-Phase ist abgeschlossen.

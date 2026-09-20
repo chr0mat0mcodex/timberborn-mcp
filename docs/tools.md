@@ -1,6 +1,6 @@
 # Native MCP-Werkzeuge
 
-Stand: Agent Bridge 0.20.0 (gebaut/getestet; drei neue Diagnoseleser noch nicht live abgenommen). Aus `NativeTools.Catalog` mit allen Freigaben abgeglichen:
+Stand: Agent Bridge 0.20.0 (gebaut/getestet/installiert; drei neue Diagnoseleser noch nicht live abgenommen). Aus `NativeTools.Catalog` mit allen Freigaben abgeglichen:
 29 Leser und 19 Werkzeuge für Aktionen/Vorschauvalidierung. Nicht jede Kombination
 ist live geprüft; Nachweise und Grenzen stehen in den Fachdokumenten.
 

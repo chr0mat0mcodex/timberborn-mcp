@@ -5,9 +5,9 @@ das Spiel strukturiert zu beobachten und über reguläre Spielaktionen zu steuer
 Ziel ist ein Agent, der Wasser, Nahrung, Holz, Wege und Wohnraum aufbaut und betreibt.
 
 **Entwicklungsstand: Agent Bridge 0.20.0**, gebaut gegen Timberborn **1.1.2.4 / Folktails**.
-**0.20.0 ist gebaut und getestet; Installation und Live-Abnahme stehen aus.**
+**0.20.0 ist gebaut, getestet und installiert; die Live-Abnahme steht aus.**
 Neu: Bedürfnisübersicht, Biber-Bedürfnisdetails und Gebäudebetriebsdiagnose.
-Installiert bleibt 0.19.2; dessen 26 Leser sind live geprüft. 40 registrierte Güter
+Unter 0.19.2 sind die bisherigen 26 Leser live geprüft. 40 registrierte Güter
 und Lagerwarnungen mit betroffenen Zielen sind bestätigt. Weitere Warnungstypen bleiben zu prüfen.
 Die Güterhistorie ist über einen Tageswechsel und die Sofort-Wegsuche einschließlich
 Unterbrechung/Wiederaufbau live bestätigt. Der direkte Terrainzugriff liefert im Live-Pilot

@@ -1,7 +1,7 @@
 # Projektstand
 
-Stand: 2026-09-20. Codeversion: **0.20.0**, gebaut und regulär getestet; Installation/Live-Abnahme ausstehend.
-Installiert und live bestätigt bleibt **0.19.2**.
+Stand: 2026-09-20. Codeversion: **0.20.0**, gebaut, regulär getestet und installiert; Live-Abnahme ausstehend.
+Letzter Live-Nachweis: **0.19.2** mit 26 Lesern.
 Sofort-Wegsuche einschließlich Unterbrechung/Wiederherstellung unter **0.19.1** live bestätigt. Farm-/Holzfällerreichweiten unter 0.19.2 über den konkreten Terrainzugriff bestätigt.
 Die Version im [Manifest](mod/Timberborn.AgentBridge/manifest.json) ist die Codeversion;
 ältere datierte Einträge im Journal dokumentieren frühere Zustände.

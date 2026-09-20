@@ -1283,3 +1283,10 @@ keine aus fehlenden Meldungen oder Stillstand erfundene Gesundheit/Blockade.
 Session-Prüfung und entity_not_found für Einzelbiber ergänzt. Keine neue Abhängigkeit.
 460 reguläre Tests bestanden (447 Unit, 13 Integration), drei opt-in Live-Tests
 übersprungen. Mod-Build ohne Warnungen/Fehler. Installation und Live-Pilot folgen.
+
+## 2026-09-20 — 0.20.0 installiert
+
+Spielprozess vor Sicherung und unmittelbar vor Austausch nicht vorhanden. Vorherigen
+Modordner separat gesichert, fünf Paketdateien per SHA-256 verifiziert und private
+Konfiguration unverändert erhalten. Keine Spieländerungen. Nutzer um Start/Laden
+für den begrenzten Diagnosepilot und die 29-Leser-Abnahme gebeten.
