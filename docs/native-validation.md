@@ -1,6 +1,16 @@
 # Kontrollierter Spielvalidator-Pilot — 0.4.0
 
-## Aktuelles Ergebnis: Kontrolltest fehlgeschlagen
+## Abnahme des Korrekturkandidaten 0.4.1
+
+Nach Neustart live bestätigt: belegter Lodge-Standort abgewiesen, freier und vollständig
+vorgeprüfter Path-Standort akzeptiert. Genau zwei Vorschauversuche, insgesamt neun
+fachliche MCP-Aufrufe. Beide Zustandswachen ohne Abweichung; abschließend Objektzahl
+und beobachtete Vorräte unverändert. Keine Platzierung. Dies bestätigt die zwei
+Kontrollfälle, nicht sämtliche Vorlagen, Baugeometrien oder Erreichbarkeitsregeln.
+Die direkte Objektprüfung behebt den beobachteten Fehlentscheid in diesem Pilot;
+die internen Unterschiede der beiden Spielprüfungen wurden nicht weiter untersucht.
+
+## Vorheriger 0.4.0-Kontrolltest: fehlgeschlagen
 
 0.4.0 ist live erreichbar. Beim ersten Versuch wurde eine Lodge am belegten Standort
 des District Centers trotz räumlich nachgewiesener Kollision als gültig gemeldet.

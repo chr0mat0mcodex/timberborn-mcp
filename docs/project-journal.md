@@ -1,5 +1,17 @@
 # Projektjournal
 
+## 2026-09-20 — 0.4.1 Vorschau-Kontrollpilot bestanden
+
+Version 0.4.1 über MCP bestätigt. Neun fachliche MCP-Aufrufe in einer Sitzung,
+darunter genau zwei Vorschauvalidierungen: Lodge auf belegtem District-Center-Standort
+korrekt valid=false; vollständig vorgeprüfter einfeldriger Path-Standort valid=true.
+Beide internen Entity-/Bestandswachen unverändert, keine Sitzungssperre. Abschließende
+Kolonieabfrage: Objektzahl und drei Ressourcenbeobachtungen gegenüber Beginn identisch.
+Keine Platzierung oder Produktionssteuerung. Der Nachweis gilt für diese zwei Fälle;
+allgemeine Bebaubarkeit, Distriktanbindung und Fertigstellung sind dadurch nicht bewiesen.
+Nächste technische Lücke: regulären Bauauftrag mit stabiler Ergebniszuordnung ermöglichen
+und anschließend Auftrag, Materialversorgung und fertiges Bauwerk getrennt beobachten.
+
 ## 2026-09-20 — Korrekturkandidat 0.4.1 installiert
 
 Auf Nutzer-Go bei beendetem Timberborn das vorbereitete Paket installiert. Fünf
