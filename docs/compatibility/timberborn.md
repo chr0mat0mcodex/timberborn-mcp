@@ -1,5 +1,12 @@
 # Kompatibilität
 
+## Gebäude-/Distriktbeobachtung 0.6.0 — 2026-09-20
+
+District Center und Holzfällerflagge mit bekannten Betriebs-/Instant-Distrikt-IDs
+live gelesen, fertiger Path ohne DistrictBuilding-Komponente. Fehlende Entity und
+fremde Sitzung abgewiesen. Keine unfertigen Strukturen vorhanden, daher Baustellen-
+und Materialfortschritt noch nicht live bestätigt. Keine Mutation im Lesepilot.
+
 ## Aktueller nativer Bau-Pilot — 2026-09-20
 
 Bridge 0.5.0: genau einen Path über den regulären Platzierer per MCP gebaut.

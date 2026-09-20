@@ -997,3 +997,11 @@ Güter und drei Spiel-Distriktzuordnungen getrennt lesen. 132 reguläre Tests be
 Mod gebaut; noch nicht installiert/live geprüft. Erst bestehende Objekte abgleichen,
 danach Material-/Fortschrittsbeobachtung bei einem begrenzten Hausauftrag nachweisen.
 Keine neue Bauaktion ausgeführt. Details: [Gebäudeabfrage](docs/building-observations.md).
+
+### 7.12 Gebäude-/Distrikt-Lesepilot bestanden
+
+0.6.0 live: zwei fertige Gebäude korrekt dem bekannten Distrikt zugeordnet; Path
+ohne Distriktkomponente. Unbekannte Entity/fremde Sitzung abgefangen. Neun fachliche
+Leseaufrufe, unveränderte Objektzahl/Bestände. Keine Baustelle vorhanden; Material-
+und Baufortschritt bleiben live offen. Frühere Testweg-ID im geladenen Stand nicht
+vorhanden, kein erneuter Bau. Nächster Nachweis benötigt einen begrenzten Hausauftrag.

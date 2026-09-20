@@ -26,7 +26,8 @@ unverändert. Keine Baufreigabe aus 0.4.0 ableiten.
 installiert und begrenzt live geprüft: genau ein regulärer Weg gebaut und über seine
 Entity-ID separat als fertig nachgelesen. Kein allgemeiner Haus-/Versorgungsbau.
 0.6.0 ergänzt [Baustellen- und Distriktbeobachtung](docs/building-observations.md),
-gebaut/getestet und installiert, noch nicht live abgenommen.
+an fertigen Gebäuden live geprüft. Aktive Baustellen-/Materialdaten bleiben live offen,
+da im geladenen Stand keine Baustelle existiert. Paths haben keine Distriktkomponente.
 [Installation und Abnahme](docs/native-bridge-install.md),
 [offizielle Quellen und good references](docs/references/README.md).
 Für die eigene Bridge: `scripts/start-native.ps1 -ConfigPath '<private Konfiguration>'`;

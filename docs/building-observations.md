@@ -1,7 +1,12 @@
 # Baustellen und Distriktzuordnung — 0.6.0
 
 Rein lesende Erweiterung vor einem Hausauftrag. Keine neue Abhängigkeit oder Bauaktion.
-Gebaut, synthetisch getestet und installiert; Live-Abnahme nach Spielstart offen.
+Gebaut, synthetisch getestet und auf 0.6.0 begrenzt live geprüft: fertiges District
+Center und Holzfällerflagge mit bekannter Betriebs-/Instant-Distrikt-ID; fertiger Path
+ohne Zuordnungskomponente. Unbekannte Entity und fremde Sitzung geprüft. Neun fachliche
+Leseaufrufe, keine beobachtete Objektzahl-/Bestandsänderung. Im geladenen Stand keine
+Baustelle: Material-/Baufortschritt bleibt live unbelegt. Die frühere Testweg-ID war
+nicht vorhanden; stattdessen bestehenden Path gelesen, keinen neuen gebaut.
 
 `inspect_building(id, session)` liest eine Entity derselben Spielsitzung. ID stammt
 aus find_buildings oder Bau-Receipt, session aus dessen Metadaten. Die Mod prüft

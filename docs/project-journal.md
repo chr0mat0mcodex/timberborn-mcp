@@ -1,5 +1,23 @@
 # Projektjournal
 
+## 2026-09-20 — Gebäude-/Distrikt-Lesepilot auf 0.6.0 bestanden
+
+Neun fachliche MCP-Aufrufe, Schreib-/Vorschau-Opt-ins im Client aus. District Center
+und Holzfällerflagge: fertig, ConstructionSite-Komponente vorhanden, keine aktiven
+Baustellendetails; Betriebs-/Instant-Distrikt entspricht gelistetem District Center,
+Baudistrikt null. Fertiger Path: keine DistrictBuilding-Komponente, alle Zuordnungen
+null; daraus keine Trennung vom Wegenetz ableiten. Entity-/Vorlagen-/Positionsabgleich
+mit Gebäudeliste erfolgreich. Unbekannte Entity liefert found=false; fremde Sitzung
+abgewiesen (derzeit generischer backend_unavailable-Fehler). Objektzahl und drei
+Ressourcenbeobachtungen vor/nach identisch.
+
+Die im früheren Wegbau-Receipt enthaltene Entity-ID fehlt im aktuell geladenen Stand.
+Stattdessen bestehenden Path geprüft; keine Wiederholung des Bauauftrags. Ursache bzw.
+Persistenz des früheren Testwegs nicht nachgewiesen, keine automatische Speicherung.
+Keine unfertigen Strukturen in vollständiger Gebäudeseite: Material-/Baufortschritt
+weiterhin nur synthetisch geprüft. Nächster Schritt: begrenzten Hausauftrag vorbereiten
+und anschließend Baustelle, verbleibende Materialien und Baudistrikt gezielt nachweisen.
+
 ## 2026-09-20 — 0.6.0 installiert, lesende Live-Abnahme ausstehend
 
 Auf Nutzer-Go bei beendetem Timberborn das finale 0.6.0-Paket installiert.
