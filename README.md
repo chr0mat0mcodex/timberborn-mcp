@@ -53,7 +53,7 @@ Alle Stufen live bestätigt; Simulation abschließend 1×.
 Für die eigene Bridge: `scripts/start-native.ps1 -ConfigPath '<private Konfiguration>'`;
 Build und nativen Lesetest mit `scripts/verify.ps1 -NativeConfig '<private Konfiguration>'`
 ausführen. Beide Abläufe sind in der Installationsanleitung beschrieben.
-200 reguläre Tests bestanden; drei separate Live-Tests im Standardlauf übersprungen.
+224 reguläre Tests bestanden; drei separate Live-Tests im Standardlauf übersprungen.
 Nativer lesender MCP-Livetest zuletzt mit 0.6.1 erfolgreich.
 Auch mit ausschließlich eigener Bridge laut Nutzer-Mod-Auswahl: alle sechs nativen
 Lesewerkzeuge erneut live erfolgreich (0.3.0). Keine Fremdmod für diesen Zugriff erforderlich.
@@ -164,3 +164,8 @@ ist als Pilot implementiert; allgemeiner Gebäudebau, Save/Load und Automationsg
 
 Kein Client darf aus `readOnlyHint` alleine Sicherheit ableiten: Der Adapter selbst begrenzt die Routen.
 Fremdmod-Routen können auch bei GET Änderungen ausführen; deshalb gibt es kein generisches HTTP-Tool.
+
+0.12.0 ergänzt [Prioritäten, Baustellen und Flächen](docs/priorities-construction-areas.md):
+13 native Lesewerkzeuge; Arbeitsplatz-/Baupriorität und Flächenmarkierungen separat
+freischaltbar. Implementierung vorbereitet, Live-Abnahme offen. Zapfflächen ausdrücklich
+nicht als eigenständige Markierungsart unterstützt.

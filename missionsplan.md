@@ -1149,3 +1149,16 @@ Nutzerstart begrenzten Hin-/Rücktest mit separatem Zustandsabgleich ausführen.
 - [x] Schlusszustand ursprüngliche Sollbesetzung 2 und Simulation 1×.
 
 26 fachliche MCP-Aufrufe; kein Retry, kein erzwungenes Zuweisen einzelner Arbeiter.
+
+### 7.32 Prioritäten, Baustellenübersicht und Flächenverwaltung
+
+- [x] Separate Arbeitsplatz-/Baustellenpriorität mit Istwertvergleich implementiert.
+- [x] Alle offenen Baustellen seitenweise mit Bauzustand und Priorität abrufbar.
+- [x] Flächenkatalog und Abfrage für Baumfällen, Landwirtschaft und Baumpflanzung.
+- [x] Markierungen bis 4×4 Zellen kontrolliert setzen/entfernen; keine Pflanzen löschen.
+- [ ] 0.12.0 installieren und Arbeitsplatzpriorität live hin/zurück testen.
+- [ ] Baupriorität und Flächenänderungen live abnehmen.
+- [ ] Zapf-/Sammelreichweite analysieren: keine unabhängige Zapfflächen-API belegt.
+
+[Vertrag und Abnahmeplan](docs/priorities-construction-areas.md). Der frühere Personaltest
+betraf Sollbesetzung; Priorisierung ist noch nicht live bestätigt.

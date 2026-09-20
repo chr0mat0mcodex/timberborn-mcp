@@ -6,6 +6,7 @@ namespace Timberborn.Bridge.Core;
 public sealed class BridgeRequest
 {
     public string Route { get; }
+    public ManagementRequest? Management { get; private set; }
     public int X { get; }
     public int Y { get; }
     public int Z { get; }
@@ -29,6 +30,7 @@ public sealed class BridgeRequest
 
     public static BridgeRequest Parse(string path, NameValueCollection query)
     {
+        if (ManagementRequest.Handles(path)) { var m=ManagementRequest.Parse(path,query); return new BridgeRequest(m.Route, session: m.Session) { Management=m }; }
         if (path == "/agent-api/v1/simulation" && query.Count == 0) return new("simulation");
         if (path == "/agent-api/v1/snapshot" && query.Count == 0) return new("snapshot");
         if (path == "/agent-api/v1/catalog" && query.Count == 0) return new("catalog");

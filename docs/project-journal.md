@@ -643,3 +643,21 @@ gespeichert und die Einstiege in README/Phase-2-Plan angepasst. Die bevorstehend
 von 0.4.0 unterbleibt. Spiel nutzt weiterhin 0.3.0, privater Schlüssel und Client-Konfiguration
 unverändert. Nächster Schwerpunkt: Fähigkeiten, benötigte Daten/Aktionen und Evidenzlücken
 systematisch priorisieren; praktische Tests nur mit konkretem Erkenntniszweck.
+
+## 2026-09-20 — 0.12.0 Prioritäten, Baustellen, Flächen vorbereitet
+
+224 reguläre Tests bestanden (211 Unit-, 13 Integrationstests); drei Live-Tests
+im Standardlauf übersprungen. Release-Build und separater Mod-Build ohne Warnungen
+oder Fehler; neues eindeutiges lokales Installationspaket erstellt. Reales stdio/
+authentifiziertes HTTP mit synthetischer Bridge prüft neue Lesewerkzeuge und beide
+Schreibfreigaben inklusive Prioritäts- und Flächen-Hin-/Rückweg. Parameterzahlfehler
+für set_area im Test gefunden und korrigiert; vollständiger Wiederholungslauf bestanden.
+
+Neu: vier Lesewerkzeuge, Arbeitsplatz-/Baupriorität, Baustellenübersicht, Flächenkatalog
+und Markierungen. Nur öffentliche Spiel-APIs, keine neue Fremdmod-Abhängigkeit.
+Zapfmarkierung nicht belegt und ausdrücklich unsupported. Details und Live-Abnahmeplan:
+[Prioritäten, Baustellen und Flächen](priorities-construction-areas.md).
+
+Spiel läuft noch mit 0.11.0. Kein Live-Prioritätstest behauptet: bisher wurde nur
+Sollbesetzung getestet. Nutzer um Speichern/Beenden für sicheren Modwechsel gebeten.
+Installation und Live-Abnahme von 0.12.0 stehen aus.

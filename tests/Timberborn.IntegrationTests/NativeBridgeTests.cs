@@ -26,10 +26,10 @@ public sealed class NativeBridgeTests
         reservation.Start(); int port = ((IPEndPoint)reservation.LocalEndpoint).Port; reservation.Stop();
         var token = Convert.ToHexString(System.Security.Cryptography.RandomNumberGenerator.GetBytes(32));
         using var queue = new MainThreadQueue();
-        using var bridge = new BridgeHttpServer(port, token, queue, enableValidation, enablePlacement, enableLodgePlacement, enableSpeedControl: enableLodgePlacement, enableStaffing: enableValidation);
+        using var bridge = new BridgeHttpServer(port, token, queue, enableValidation, enablePlacement, enableLodgePlacement, enableSpeedControl: enableLodgePlacement, enableStaffing: enableValidation, enablePriorities: enablePlacement, enableAreas: enableLodgePlacement);
         bridge.Start();
         int observations = 0;
-        float currentSpeed = 1; int desiredWorkers = 2;
+        float currentSpeed = 1; int desiredWorkers = 2; string priority = "Normal"; string areaState = "unmarked";
         var session = Guid.NewGuid().ToString("D");
         var placementGate = new SinglePlacementGate();
         using var pumpStop = CancellationTokenSource.CreateLinkedTokenSource(ct);
@@ -45,6 +45,12 @@ public sealed class NativeBridgeTests
                         object data = r.Route switch
                         {
                             "workplace-staffing" when r.Session == session && r.ExpectedDesiredWorkers == desiredWorkers && r.DesiredWorkers <= 4 => new NativeStaffingResult(Guid.Parse(r.EntityId), "DistrictCenter.Folktails", desiredWorkers, r.DesiredWorkers, desiredWorkers = r.DesiredWorkers, 2, 4, "applied", ["synthetic_test"]),
+                            "priority" => new NativePriority(Guid.Parse(r.Management!.Id),r.Management.Kind,priority,priority,"observed",["synthetic_test"]),
+                            "set-priority" when r.Session == session && r.Management!.ExpectedPriority == priority => new NativePriority(Guid.Parse(r.Management.Id),r.Management.Kind,priority,priority=r.Management.Priority,"applied",["synthetic_test"]),
+                            "construction" => new NativeConstructionList(r.Management!.Offset,r.Management.Limit,0,[],false,["synthetic_test"]),
+                            "areas" => new NativeAreas(r.Management!.Kind,true,r.Management.Offset,r.Management.Limit,0,[],false,["synthetic_test"]),
+                            "area-types" => new NativeAreaTypes([new("tree_cutting",true,true,true,"test"),new("crops",true,true,true,"test"),new("tree_planting",true,true,true,"test"),new("tapping",false,false,false,"unsupported")],[],["synthetic_test"]),
+                            "set-area" when r.Session == session && r.Management!.ExpectedResource == areaState => new NativeAreaChange(r.Management.Kind,r.Management.Operation,"applied",[new(new(r.Management.X,r.Management.Y,r.Management.Z),areaState=r.Management.Operation=="mark"?"marked":"unmarked")],["synthetic_test"]),
                             "simulation" => new NativeSimulation(currentSpeed, 1, 0.5f, 12),
                             "simulation-speed" when r.Session == session && r.ExpectedSpeed == currentSpeed => new NativeSpeedResult(r.Speed, currentSpeed, true, new NativeSimulation(currentSpeed = r.Speed, 1, 0.5f, 12), ["synthetic_test"]),
                             "snapshot" => Snapshot(),
@@ -65,7 +71,7 @@ public sealed class NativeBridgeTests
                                 Guid.NewGuid(), "applied", r.Template == "Path", true, ["synthetic_test"])),
                             _ => throw new ArgumentException()
                         };
-                        return JsonSerializer.Serialize(new BridgeEnvelope<object>(1, session, DateTimeOffset.UtcNow, "0.11.0", data), NativeJson.Options);
+                        return JsonSerializer.Serialize(new BridgeEnvelope<object>(1, session, DateTimeOffset.UtcNow, "0.12.0", data), NativeJson.Options);
                     });
                     await Task.Delay(5, pumpStop.Token);
                 }
@@ -115,15 +121,16 @@ public sealed class NativeBridgeTests
                     ["TIMBERBORN_ENABLE_PLACEMENT"] = enablePlacement ? "1" : "0",
                     ["TIMBERBORN_ENABLE_LODGE_PLACEMENT"] = enableLodgePlacement ? "1" : "0",
                     ["TIMBERBORN_ENABLE_SPEED_CONTROL"] = enableLodgePlacement ? "1" : "0",
-                    ["TIMBERBORN_ENABLE_STAFFING"] = enableValidation ? "1" : "0"
+                    ["TIMBERBORN_ENABLE_STAFFING"] = enableValidation ? "1" : "0",
+                    ["TIMBERBORN_ENABLE_PRIORITIES"] = enablePlacement ? "1" : "0", ["TIMBERBORN_ENABLE_AREAS"] = enableLodgePlacement ? "1" : "0"
                 }
             }), cancellationToken: ct);
             var tools = await client.ListToolsAsync(cancellationToken: ct);
-            var expected = new List<string> { "find_buildings", "inspect_build_catalog", "inspect_building", "inspect_colony", "inspect_map_region", "inspect_simulation", "inspect_workforce", "precheck_build_site", "timberborn_status" };
+            var expected = new List<string> { "find_buildings", "inspect_area_types", "inspect_areas", "inspect_build_catalog", "inspect_building", "inspect_building_priority", "inspect_colony", "inspect_construction", "inspect_map_region", "inspect_simulation", "inspect_workforce", "precheck_build_site", "timberborn_status" };
             if (enableValidation) { expected.Add("validate_build_site"); expected.Add("set_workplace_staffing"); }
-            if (enablePlacement) expected.Add("place_path"); if (enableLodgePlacement) { expected.Add("place_lodge"); expected.Add("set_simulation_speed"); }
+            if (enablePlacement) { expected.Add("place_path"); expected.Add("set_building_priority"); } if (enableLodgePlacement) { expected.Add("set_area"); expected.Add("place_lodge"); expected.Add("set_simulation_speed"); }
             Assert.Equal(expected.Order(), tools.Select(t => t.Name).Order());
-            Assert.All(tools, t => { Assert.Equal(t.Name is not ("validate_build_site" or "place_path" or "place_lodge" or "set_simulation_speed" or "set_workplace_staffing"), t.ProtocolTool.Annotations!.ReadOnlyHint); Assert.NotNull(t.ProtocolTool.OutputSchema); });
+            Assert.All(tools, t => { Assert.Equal(t.Name is not ("validate_build_site" or "place_path" or "place_lodge" or "set_simulation_speed" or "set_workplace_staffing" or "set_building_priority" or "set_area"), t.ProtocolTool.Annotations!.ReadOnlyHint); Assert.NotNull(t.ProtocolTool.OutputSchema); });
             var colony = await client.CallToolAsync("inspect_colony", cancellationToken: ct);
             Assert.False(colony.IsError);
             var json = colony.StructuredContent!.Value;
@@ -190,6 +197,21 @@ public sealed class NativeBridgeTests
                 var stale = await client.CallToolAsync("set_workplace_staffing", new Dictionary<string, object?> { ["id"] = id, ["session"] = session, ["desiredWorkers"] = 0, ["expectedDesiredWorkers"] = 3 }, cancellationToken: ct);
                 Assert.True(stale.IsError); Assert.Equal(2, desiredWorkers);
                 Assert.False(stale.StructuredContent!.Value.GetProperty("error").GetProperty("retryable").GetBoolean());
+            }
+            var readPriority = await client.CallToolAsync("inspect_building_priority", new Dictionary<string, object?> { ["id"] = Guid.NewGuid().ToString("D"), ["session"] = session, ["kind"] = "workplace" }, cancellationToken: ct);
+            Assert.False(readPriority.IsError);
+            foreach(var read in new[]{"inspect_construction","inspect_areas"}) {
+                var a=new Dictionary<string,object?>{["offset"]=0,["limit"]=32}; if(read=="inspect_areas")a["kind"]="tree_cutting";
+                Assert.False((await client.CallToolAsync(read,a,cancellationToken:ct)).IsError);
+            }
+            Assert.False((await client.CallToolAsync("inspect_area_types",cancellationToken:ct)).IsError);
+            if(enablePlacement) foreach(var kind in new[]{"workplace","construction"}) foreach(var p in new[]{"High","Normal"}) {
+                var a=new Dictionary<string,object?>{["id"]=Guid.NewGuid().ToString("D"),["session"]=session,["kind"]=kind,["priority"]=p,["expectedPriority"]=priority};
+                Assert.False((await client.CallToolAsync("set_building_priority",a,cancellationToken:ct)).IsError);
+            }
+            if(enableLodgePlacement) foreach(var op in new[]{"mark","remove"}) {
+                var a=new Dictionary<string,object?>{["kind"]="tree_cutting",["operation"]=op,["resource"]="",["expectedResource"]=areaState,["x"]=1,["y"]=2,["z"]=3,["width"]=1,["height"]=1,["session"]=session};
+                Assert.False((await client.CallToolAsync("set_area",a,cancellationToken:ct)).IsError);
             }
             var workforce = await client.CallToolAsync("inspect_workforce", new Dictionary<string, object?> { ["offset"] = 0, ["limit"] = 32 }, cancellationToken: ct);
             Assert.False(workforce.IsError);

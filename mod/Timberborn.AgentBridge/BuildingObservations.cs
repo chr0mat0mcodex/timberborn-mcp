@@ -11,9 +11,9 @@ namespace Timberborn.AgentBridge;
 
 public sealed class BuildingObservations(EntityRegistry entities)
 {
-    public object Observe(BridgeRequest request)
+    public object Observe(BridgeRequest request) => Observe(Guid.Parse(request.EntityId));
+    public object Observe(Guid id)
     {
-        var id = Guid.Parse(request.EntityId);
         var entity = entities.Entities.SingleOrDefault(e => e.EntityId == id && e.Initialized && !e.Deleted);
         object? details = null;
         if (entity is not null && entity.TryGetComponent<BlockObject>(out var block) && !block.IsPreview &&

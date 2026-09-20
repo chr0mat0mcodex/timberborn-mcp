@@ -139,3 +139,12 @@ Zeitlimits. Spielzugriffe werden auf dem Hauptthread abgearbeitet; beim Entladen
 werden wartende Anfragen verworfen. Keine eigene Save-Erweiterung.
 POST-Validierung und POST-Wegplatzierung sind getrennt freizuschalten. Ein gebauter
 Weg ist regulärer Spielzustand und kann vom Spiel gespeichert werden.
+
+## Erweiterung 0.12.0
+
+[Prioritäten, Baustellen und Flächen](priorities-construction-areas.md) ergänzen vier
+Lesewerkzeuge (insgesamt 13) und zwei getrennt gesperrte Schreibwerkzeuge.
+In bridge.local.json enablePriorities bzw. enableAreas aktivieren und im gezielten
+MCP-Testprozess TIMBERBORN_ENABLE_PRIORITIES=1 bzw. TIMBERBORN_ENABLE_AREAS=1 setzen.
+Standardstart und Standardtests bleiben ohne Schreibfreigaben. Mod nur bei beendetem
+Spiel ersetzen; private Konfiguration und bestehende Marketplace-Metadaten erhalten.

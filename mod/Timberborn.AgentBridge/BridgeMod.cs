@@ -24,6 +24,7 @@ public sealed class BridgeConfigurator : Configurator
         Bind<BuildingObservations>().AsSingleton();
         Bind<WorkforceObservations>().AsSingleton();
         Bind<WorkplaceStaffing>().AsSingleton();
+        Bind<PriorityAndConstruction>().AsSingleton(); Bind<AreaManagement>().AsSingleton();
         Bind<SiteValidation>().AsSingleton();
         Bind<PilotPlacement>().AsSingleton();
         Bind<SimulationControl>().AsSingleton();
@@ -33,7 +34,7 @@ public sealed class BridgeConfigurator : Configurator
 
 public sealed class BridgeMod(ResourceCountingService resources, PopulationService population,
     EntityRegistry entities, ITerrainService terrain, IThreadSafeWaterMap water, IGoodService goods,
-    ModRepository mods, SpatialObservations spatial, SiteValidation validation, PilotPlacement placement, BuildingObservations buildings, SimulationControl simulation, WorkforceObservations workforce, WorkplaceStaffing staffing)
+    ModRepository mods, SpatialObservations spatial, SiteValidation validation, PilotPlacement placement, BuildingObservations buildings, SimulationControl simulation, WorkforceObservations workforce, WorkplaceStaffing staffing, PriorityAndConstruction management, AreaManagement areas)
     : ILoadableSingleton, IUnloadableSingleton, IUpdatableSingleton
 {
     private readonly MainThreadQueue queue = new();
@@ -53,7 +54,7 @@ public sealed class BridgeMod(ResourceCountingService resources, PopulationServi
             var config = JObject.Parse(File.ReadAllText(path));
             stage = "create_listener";
             server = new BridgeHttpServer((int?)config["port"] ?? 8081, (string?)config["token"] ?? "", queue,
-                (bool?)config["enableValidation"] == true, (bool?)config["enablePlacement"] == true, (bool?)config["enableLodgePlacement"] == true, (bool?)config["enableSpeedControl"] == true, (bool?)config["enableStaffing"] == true);
+                (bool?)config["enableValidation"] == true, (bool?)config["enablePlacement"] == true, (bool?)config["enableLodgePlacement"] == true, (bool?)config["enableSpeedControl"] == true, (bool?)config["enableStaffing"] == true, (bool?)config["enablePriorities"] == true, (bool?)config["enableAreas"] == true);
             stage = "start_listener";
             server.Start();
             Debug.Log("[Timberborn Agent Bridge] Endpoint ready on loopback; actions require explicit opt-in.");
@@ -68,20 +69,23 @@ public sealed class BridgeMod(ResourceCountingService resources, PopulationServi
     public void Unload() { server?.Dispose(); queue.Dispose(); }
     private string Observe(BridgeRequest request)
     {
-        if ((request.Route is "site-validation" or "path-placement" or "lodge-placement" or "building" or "simulation-speed" or "workplace-staffing") && request.Session != sessionId) throw new ArgumentException("stale_session");
+        if ((request.Route is "site-validation" or "path-placement" or "lodge-placement" or "building" or "simulation-speed" or "workplace-staffing" or "priority" or "set-priority" or "set-area") && request.Session != sessionId) throw new ArgumentException("stale_session");
         object data = request.Route switch
         {
             "simulation" => simulation.Observe(), "simulation-speed" => simulation.Set(request),
             "snapshot" => Snapshot(), "map" => Map(request), "objects" => spatial.Objects(request),
             "catalog" => spatial.Catalog(), "site-precheck" => spatial.Precheck(request),
             "site-validation" => validation.Validate(request),
+            "priority" or "set-priority" => management.Priority(request.Management!),
+            "construction" => management.Construction(request.Management!),
+            "area-types" => areas.Types(), "areas" => areas.Areas(request.Management!), "set-area" => areas.Set(request.Management!),
             "workplace-staffing" => staffing.Set(request),
             "building" => buildings.Observe(request), "workforce" => workforce.Observe(request),
             "path-placement" or "lodge-placement" => placement.Place(request),
             _ => throw new ArgumentException("invalid_request")
         };
         return JsonConvert.SerializeObject(new { schemaVersion = 1, sessionId, observedAtUtc = DateTimeOffset.UtcNow,
-            bridgeVersion = "0.11.0", data });
+            bridgeVersion = "0.12.0", data });
     }
     private object Snapshot()
     {

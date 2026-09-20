@@ -20,6 +20,8 @@ try {
     $oldLodgePlacement = $env:TIMBERBORN_ENABLE_LODGE_PLACEMENT
     $oldSpeedControl = $env:TIMBERBORN_ENABLE_SPEED_CONTROL
     $oldStaffing = $env:TIMBERBORN_ENABLE_STAFFING
+    $oldPriorities = $env:TIMBERBORN_ENABLE_PRIORITIES
+    $oldAreas = $env:TIMBERBORN_ENABLE_AREAS
     $oldNativeConfig = $env:TIMBERBORN_NATIVE_CONFIG
     try {
         $env:TIMBERBORN_LIVE_TEST = if ($Live) { '1' } else { '0' }
@@ -31,6 +33,8 @@ try {
         $env:TIMBERBORN_ENABLE_LODGE_PLACEMENT = '0'
         $env:TIMBERBORN_ENABLE_SPEED_CONTROL = '0'
         $env:TIMBERBORN_ENABLE_STAFFING = '0'
+        $env:TIMBERBORN_ENABLE_PRIORITIES = '0'
+        $env:TIMBERBORN_ENABLE_AREAS = '0'
         & dotnet test TimberbornMcp.slnx -c Release --no-build --no-restore
         if ($LASTEXITCODE -ne 0) { throw 'Tests fehlgeschlagen.' }
         if ($NativeConfig) {
@@ -49,6 +53,8 @@ try {
         $env:TIMBERBORN_ENABLE_LODGE_PLACEMENT = $oldLodgePlacement
         $env:TIMBERBORN_ENABLE_SPEED_CONTROL = $oldSpeedControl
         $env:TIMBERBORN_ENABLE_STAFFING = $oldStaffing
+        $env:TIMBERBORN_ENABLE_PRIORITIES = $oldPriorities
+        $env:TIMBERBORN_ENABLE_AREAS = $oldAreas
         $env:TIMBERBORN_NATIVE_CONFIG = $oldNativeConfig
     }
 } finally { Pop-Location }

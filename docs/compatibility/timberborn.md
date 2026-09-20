@@ -125,3 +125,12 @@ einem Versuch abgebrochen. 0.4.1 als Korrekturkandidat gebaut/gepackt und auf Nu
 installiert und anschließend begrenzt live abgenommen: belegte Lodge abgewiesen,
 freier Path akzeptiert. Zwei Vorschauversuche, keine beobachtete Entity-/Bestandsänderung,
 keine Platzierung. Kein Nachweis für beliebige Vorlagen oder Baugeometrien.
+
+## Agent Bridge 0.12.0 — gebaut, noch nicht live geprüft
+
+Gegen dieselben installierten öffentlichen Spielbibliotheken kompiliert; Mod-Build
+ohne Fehler/Warnungen. 224 reguläre Tests bestanden, 3 Live-Tests übersprungen.
+WorkplacePriority, BuilderPrioritizable, TreeCuttingArea und PlantingService werden
+verwendet. PlantingTool-Konstruktion zur Sperrabfrage kompiliert, DI und Verhalten
+müssen im Spiel noch bestätigt werden. Keine unabhängige tapping-Markierung belegt.
+Installierter Live-Stand bleibt 0.11.0 bis zum nächsten gesicherten Modwechsel.

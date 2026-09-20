@@ -81,3 +81,12 @@ public sealed record NativeWorkforce(string Scope, int Offset, int Limit, int To
 public sealed record NativeStaffingResult(Guid Id, string Template, int PreviousDesiredWorkers,
     int RequestedDesiredWorkers, int ObservedDesiredWorkers, int AssignedWorkers, int MaxWorkers,
     string Outcome, string[] Limitations);
+public sealed record NativePriority(Guid Id, string Kind, string PreviousPriority, string Priority, string Outcome, string[] Limitations);
+public sealed record NativeConstructionEntry(NativeBuilding Building, string? Priority);
+public sealed record NativeConstructionList(int Offset, int Limit, int Total, NativeConstructionEntry[] Items, bool HasMore, string[] Limitations);
+public sealed record NativeAreaKind(string Kind, bool CanRead, bool CanMark, bool CanRemove, string Reason);
+public sealed record NativePlantOption(string Resource, string Kind, string ResourceGroup, bool Unlocked);
+public sealed record NativeAreaTypes(NativeAreaKind[] Kinds, NativePlantOption[] Plants, string[] Limitations);
+public sealed record NativeAreaCell(Position Position, string Resource);
+public sealed record NativeAreas(string Kind, bool Supported, int Offset, int Limit, int? Total, NativeAreaCell[] Items, bool HasMore, string[] Limitations);
+public sealed record NativeAreaChange(string Kind, string Operation, string Outcome, NativeAreaCell[] Items, string[] Limitations);
