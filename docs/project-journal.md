@@ -817,3 +817,19 @@ waterStress=false und ausgewachsen; kein toter Stichprobenbaum enthalten. Das er
 die frühere ungefilterte Kandidateninterpretation, ist aber wegen zwischenzeitlicher
 Spieländerungen kein exakter Vorher-/Nachher-Zähler derselben Baumgesamtheit.
 Simulation unverändert pausiert. Keine Markierungen, Aufträge oder Objekte verändert.
+
+### 2026-09-20 — generischer Bauzugang 0.14.0 vorbereitet
+
+Nutzer hat generischen Gebäudebau und anschließendes praktisches Spielen freigegeben.
+Neue Werkzeuge inspect_build_options, precheck_building, validate_building und
+place_building. Vorlagen aus TemplateService; bestehende öffentliche Vorschau- und
+Platzierer-Services wiederverwendet. Keine Fremdmod-Abhängigkeit. Sonderlayouts
+explizit nicht unterstützt. Neue separate Freigabe enableBuildingPlacement /
+TIMBERBORN_ENABLE_BUILDING_PLACEMENT; Paketstandard aus, 16 Leser standardmäßig.
+
+Aktions-ID ist Entity-ID; Einmal-Ausführung je ID, auch nach Fehler. 256 generische
+Auftragsversuche/Prüfungen und 64 Vorschauvorlagen begrenzen Sitzungszustand.
+Legacy-Piloten bleiben getrennt. Gesundheitsprüfung bei Versionswechsel erhalten.
+316 reguläre Tests erfolgreich (303 Unit/13 Integration), drei Live-Tests übersprungen.
+Mod gegen öffentliche lokale 1.1.2.4-Referenzen kompiliert; letzte Paketierung und
+Live-Abnahme stehen aus. Laufendes Spiel noch 0.13.2. Details: docs/generic-building.md.

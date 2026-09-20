@@ -6,6 +6,7 @@ namespace Timberborn.Bridge.Core;
 public sealed class BridgeRequest
 {
     public string Route { get; }
+    public bool GenericBuilding => Route is "building-precheck" or "building-validation" or "building-placement";
     public RemovalRequest? Removal { get; private set; }
     public ManagementRequest? Management { get; private set; }
     public int X { get; }
@@ -76,6 +77,24 @@ public sealed class BridgeRequest
             return new("workforce", offset: Read("offset", 0, 65535), limit: Read("limit", 1, 32));
         if (path == "/agent-api/v1/objects" && query.Count == 2)
             return new("objects", offset: Read("offset", 0, 65535), limit: Read("limit", 1, 32));
+        if (path == "/agent-api/v1/building-catalog" && query.Count == 2)
+            return new("building-catalog", offset: Read("offset", 0, 65535), limit: Read("limit", 1, 32));
+        if (path is "/agent-api/v1/building-precheck" or "/agent-api/v1/building-validation" or "/agent-api/v1/building-placement")
+        {
+            bool write = path != "/agent-api/v1/building-precheck";
+            bool place = path == "/agent-api/v1/building-placement";
+            if (query.Count != (place ? 7 : write ? 6 : 5)) throw new ArgumentException("invalid_request");
+            var names = query.GetValues("template");
+            if (names is null || names.Length != 1 || !BuildingPolicy.ValidTemplate(names[0])) throw new ArgumentException("invalid_template");
+            string Id(string key) {
+                var values = query.GetValues(key);
+                if (values is null || values.Length != 1 || !Guid.TryParseExact(values[0], "D", out var id) || id == Guid.Empty) throw new ArgumentException("invalid_identifier");
+                return id.ToString("D");
+            }
+            return new(place ? "building-placement" : write ? "building-validation" : "building-precheck",
+                Read("x", 0, 4095), Read("y", 0, 4095), Read("z", 0, 4095), template: names[0],
+                rotation: Read("rotation", 0, 3), session: write ? Id("session") : "", entityId: place ? Id("actionId") : "");
+        }
         bool lodge = path == "/agent-api/v1/lodge-placement"; bool placement = path == "/agent-api/v1/path-placement" || lodge;
         bool validation = path == "/agent-api/v1/site-validation" || placement;
         if ((path == "/agent-api/v1/site-precheck" && query.Count == 5) || (validation && query.Count == 6))

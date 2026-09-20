@@ -185,3 +185,8 @@ Konfiguration unverändert. Lebenszustands-/Filter-Liveabnahme nach Neustart noc
 35 nicht ausgewachsen. Vollständige Kandidatenliste mit 19 geeigneten Kiefern geprüft.
 Kein toter Kandidat, keine Änderungen, Simulation weiterhin pausiert. Positive Fälle
 von waterStress/isDying in dieser Stichprobe nicht nachgewiesen.
+
+0.14.0: generischer Bauzugang mit vier neuen Werkzeugen implementiert. 316 reguläre
+Tests bestanden, Mod gegen öffentliche 1.1.2.4-Referenzen kompiliert. Keine neue
+Fremdmod-Abhängigkeit. Installation und Live-Abnahme noch offen; 0.13.2 bleibt der
+aktuelle live bestätigte Stand. Siehe ../generic-building.md.

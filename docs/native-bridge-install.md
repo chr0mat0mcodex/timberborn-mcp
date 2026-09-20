@@ -1,4 +1,14 @@
-# Eigene Timberborn Agent Bridge — 0.6.1
+# Eigene Timberborn Agent Bridge
+
+Aktuell vorbereitet: **0.14.0**, [generischer Gebäudebau](generic-building.md).
+Neue private Freigabe `enableBuildingPlacement` und MCP-Umgebungsvariable
+`TIMBERBORN_ENABLE_BUILDING_PLACEMENT=1`; beide standardmäßig aus.
+16 native Leser plus getrennt freizugebende Aktionen. Für Updates Spiel beenden,
+vorhandenen Modordner sichern und nur die fünf Paketdateien ersetzen; bestehende
+private Konfiguration erhalten und die neue Freigabe gezielt ergänzen.
+Installiert/live bestätigt bleibt 0.13.2 bis zum nächsten Wechsel.
+
+Die folgenden Versionsabschnitte dokumentieren frühere Erweiterungen.
 
 Neu vorbereitet: 0.11.0 ergänzt alle regulären Geschwindigkeiten 0/1/3/7.
 Die Sollbesetzungssteuerung aus 0.10.0 ist enthalten; bestehende Opt-ins bleiben.

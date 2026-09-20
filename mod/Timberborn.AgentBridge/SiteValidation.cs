@@ -16,24 +16,26 @@ using UnityEngine;
 namespace Timberborn.AgentBridge;
 
 // PreviewFactory uses the game's preview instantiation path, not EntityService placement.
-// Keep at most two hidden previews owned by the game scene, as established mod patterns do.
+// Bound hidden previews owned by the game scene; never use entity deletion for previews.
 public sealed class SiteValidation(PreviewFactory factory, BlockObjectValidationService validators,
     TemplateNameMapper templates, FactionService faction, BuildingUnlockingService unlocks,
-    EntityRegistry entities, ResourceCountingService resources, IGoodService goods, ITerrainService terrain)
+    EntityRegistry entities, ResourceCountingService resources, IGoodService goods, ITerrainService terrain, BuildingCatalog catalog)
 {
     private readonly Dictionary<string, Preview> previews = new();
     private bool faulted;
     private int attempts;
+    private int buildingAttempts;
 
     public object Validate(BridgeRequest request) => Validate(request, out _);
 
     public object Validate(BridgeRequest request, out bool allowed)
     {
         allowed = false;
-        if (faulted || attempts >= 8) throw new InvalidOperationException("validation_session_locked");
-        if (request.Template is not ("Lodge.Folktails" or "Path") ||
-            (request.Template == "Lodge.Folktails" && faction.Current.Id != "Folktails")) throw new ArgumentException("invalid_template");
-        var template = templates.GetTemplate(request.Template);
+        if (faulted || (request.GenericBuilding ? buildingAttempts >= 256 : attempts >= 8) ||
+            (!previews.ContainsKey(request.Template) && previews.Count >= 64)) throw new InvalidOperationException("validation_session_locked");
+        if (!request.GenericBuilding && (request.Template is not ("Lodge.Folktails" or "Path") ||
+            (request.Template == "Lodge.Folktails" && faction.Current.Id != "Folktails"))) throw new ArgumentException("invalid_template");
+        var template = request.GenericBuilding ? catalog.Resolve(request.Template) : templates.GetTemplate(request.Template);
         var building = template.GetSpec<BuildingSpec>();
         var placeable = template.GetSpec<PlaceableBlockObjectSpec>();
         var spec = template.GetSpec<BlockObjectSpec>();
@@ -48,7 +50,7 @@ public sealed class SiteValidation(PreviewFactory factory, BlockObjectValidation
         var beforeStock = Stocks();
         Preview? preview = null;
         bool valid = false;
-        attempts++;
+        if (request.GenericBuilding) buildingAttempts++; else attempts++;
         try
         {
             if (!previews.TryGetValue(request.Template, out preview))
@@ -80,7 +82,7 @@ public sealed class SiteValidation(PreviewFactory factory, BlockObjectValidation
         allowed = unchanged && valid;
         return new { template = request.Template, origin = new { x = request.X, y = request.Y, z = request.Z },
             rotation = request.Rotation, gameValidated = true, valid = unchanged ? (bool?)valid : null,
-            noPersistentChangeObserved = unchanged, sessionLocked = faulted, attemptsRemaining = 8 - attempts,
+            noPersistentChangeObserved = unchanged, sessionLocked = faulted, attemptsRemaining = request.GenericBuilding ? 256 - buildingAttempts : 8 - attempts,
             limitations = new[] { "preview_validation_not_placement", "no_build_order_created", "no_material_delivery_or_completion_guarantee",
                 "registered_entity_ids_and_global_stock_checked_not_all_game_state", "hidden_preview_cached_until_scene_unload" } };
     }

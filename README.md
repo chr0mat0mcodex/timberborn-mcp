@@ -1,8 +1,9 @@
 # Timberborn MCP
 
 Lokaler C#-MCP-Server für Timberborn, standardmäßig ausschließlich lesend. Umsetzung nach `missionsplan.md`.
-Aktueller Vorrang: analysieren und nachweisen, welche Daten und kontrollierten Aktionen
-ein spielender Agent braucht. Tatsächlicher Spielbetrieb ist derzeit sekundär.
+Aktueller Nutzerauftrag: den generischen Bauzugang fertigstellen und anschließend
+im Entwicklungsspielstand Grundversorgung praktisch aufbauen. Fähigkeitsanalyse
+und getrennte Nachweise für Auftrag, Fertigstellung und Wirkung bleiben Grundlage.
 MCP läuft über stdio; der Spielzugriff wird hinter einem eigenen Backend gekapselt.
 
 Repository: [chr0mat0mcodex/timberborn-mcp](https://github.com/chr0mat0mcodex/timberborn-mcp).
@@ -11,6 +12,11 @@ Aktuelle Ergebnisse dokumentiert das [Projektjournal](docs/project-journal.md).
 Nächste geplante Ausbaustufe: [Phase 2 — Wasser, Nahrung, Holz, Wege und Wohnraum](docs/phase-2-plan.md).
 
 ## Entwicklungsstand
+
+Neu: 0.14.0 implementiert [generisches Bauen](docs/generic-building.md): vollständiger
+Gebäudekatalog, Vorprüfung, Spielvalidierung und reguläre Einzelaufträge nach Vorlagen-ID.
+Mehrere Aufträge je Sitzung mit festen Aktions-IDs; Sonderlayouts ausdrücklich begrenzt.
+Installation und Live-Abnahme stehen noch aus; installiert/live bestätigt bleibt 0.13.2.
 
 Endziel: Der Agent spielt Timberborn über MCP und baut Wasser-, Nahrungs-, Holzversorgung,
 Wege und Wohnraum auf. Agent Bridge 0.2.0 ist über drei MCP-Werkzeuge live geprüft;
@@ -53,7 +59,7 @@ Alle Stufen live bestätigt; Simulation abschließend 1×.
 Für die eigene Bridge: `scripts/start-native.ps1 -ConfigPath '<private Konfiguration>'`;
 Build und nativen Lesetest mit `scripts/verify.ps1 -NativeConfig '<private Konfiguration>'`
 ausführen. Beide Abläufe sind in der Installationsanleitung beschrieben.
-279 reguläre Tests bestanden; drei separate Live-Tests im Standardlauf übersprungen.
+316 reguläre Tests bestanden; drei separate Live-Tests im Standardlauf übersprungen.
 Nativer lesender MCP-Livetest zuletzt mit 0.6.1 erfolgreich.
 Auch mit ausschließlich eigener Bridge laut Nutzer-Mod-Auswahl: alle sechs nativen
 Lesewerkzeuge erneut live erfolgreich (0.3.0). Keine Fremdmod für diesen Zugriff erforderlich.

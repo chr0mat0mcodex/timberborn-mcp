@@ -26,12 +26,12 @@ public sealed class NativeBridgeTests
         reservation.Start(); int port = ((IPEndPoint)reservation.LocalEndpoint).Port; reservation.Stop();
         var token = Convert.ToHexString(System.Security.Cryptography.RandomNumberGenerator.GetBytes(32));
         using var queue = new MainThreadQueue();
-        using var bridge = new BridgeHttpServer(port, token, queue, enableValidation, enablePlacement, enableLodgePlacement, enableSpeedControl: enableLodgePlacement, enableStaffing: enableValidation, enablePriorities: enablePlacement, enableAreas: enableLodgePlacement, enableRemoval: enableValidation);
+        using var bridge = new BridgeHttpServer(port, token, queue, enableValidation, enablePlacement, enableLodgePlacement, enableSpeedControl: enableLodgePlacement, enableStaffing: enableValidation, enablePriorities: enablePlacement, enableAreas: enableLodgePlacement, enableRemoval: enableValidation, enableBuildingPlacement: enableLodgePlacement);
         bridge.Start();
         int observations = 0;
         float currentSpeed = 1; int desiredWorkers = 2; string priority = "Normal"; string areaState = "unmarked";
         var session = Guid.NewGuid().ToString("D");
-        var placementGate = new SinglePlacementGate();
+        var placementGate = new SinglePlacementGate(); var buildingGate = new BuildingActionGate();
         using var pumpStop = CancellationTokenSource.CreateLinkedTokenSource(ct);
         var pump = Task.Run(async () =>
         {
@@ -61,10 +61,14 @@ public sealed class NativeBridgeTests
                             "workforce" => new NativeWorkforce("entities_with_worker_component", r.Offset, r.Limit, 0, 0, 0, [], false, ["synthetic_test"]),
                             "objects" => new NativeObjects("buildings_and_paths", r.Offset, r.Limit, 0, [], false, ["synthetic_test"]),
                             "building" => new NativeBuilding(Guid.Parse(r.EntityId), false, null, ["synthetic_test"]),
+                            "building-catalog" => new NativeBuildingCatalog("Folktails",r.Offset,r.Limit,1,
+                                r.Offset==0?[new("WaterPump.Folktails",true,true,true,[],"Single","Square","Water",new(1,2,3),null,false,[new("Log",12,20)])]:[],r.Offset==0&&r.Limit<1,["synthetic_test"]),
+                            "building-validation" when r.Session==session => new NativeValidation(r.Template,new(r.X,r.Y,r.Z),r.Rotation,true,true,true,false,255,["synthetic_test"]),
+                            "building-placement" when r.Session==session => buildingGate.Execute(Guid.Parse(r.EntityId),()=>new NativePlacement(r.Template,new(r.X,r.Y,r.Z),r.Rotation,Guid.Parse(r.EntityId),"applied",false,false,["synthetic_test"])),
                             "catalog" => new NativeCatalog("Folktails",
                                 [new("Lodge.Folktails", true, true, true, new(2, 2, 1), new(1, -1, 0), [new("Log", 12, 0)]),
                                  new("Path", true, true, true, new(1, 1, 1), null, [])], ["synthetic_test"]),
-                            "site-precheck" => new NativeSite(r.Template, new(r.X, r.Y, r.Z), r.Rotation,
+                            "site-precheck" or "building-precheck" => new NativeSite(r.Template, new(r.X, r.Y, r.Z), r.Rotation,
                                 "requires_game_validation", false, [], [new(new(r.X, r.Y, r.Z), true, false, true, false, "Ground")],
                                 null, null, [], ["not_full_game_validator"]),
                             "site-validation" => new NativeValidation(r.Template, new(r.X, r.Y, r.Z), r.Rotation,
@@ -73,7 +77,7 @@ public sealed class NativeBridgeTests
                                 Guid.NewGuid(), "applied", r.Template == "Path", true, ["synthetic_test"])),
                             _ => throw new ArgumentException()
                         };
-                        return JsonSerializer.Serialize(new BridgeEnvelope<object>(1, session, DateTimeOffset.UtcNow, "0.13.0", data), NativeJson.Options);
+                        return JsonSerializer.Serialize(new BridgeEnvelope<object>(1, session, DateTimeOffset.UtcNow, "0.14.0", data), NativeJson.Options);
                     });
                     await Task.Delay(5, pumpStop.Token);
                 }
@@ -117,7 +121,7 @@ public sealed class NativeBridgeTests
                 Arguments = [Path.Combine(StdioServerTests.Root, "src/Timberborn.McpServer/bin/Release/net10.0/Timberborn.McpServer.dll")],
                 EnvironmentVariables = new Dictionary<string, string?>
                 {
-                    ["TIMBERBORN_BACKEND"] = "native", ["TIMBERBORN_NATIVE_CONFIG"] = configPath,
+                    ["TIMBERBORN_ENABLE_BUILDING_PLACEMENT"] = enableLodgePlacement ? "1" : "0", ["TIMBERBORN_BACKEND"] = "native", ["TIMBERBORN_NATIVE_CONFIG"] = configPath,
                     ["TIMBERBORN_ENABLE_WRITES"] = "1", ["TIMBERBORN_ENABLE_REMOVAL"] = enableValidation ? "1" : "0",
                     ["TIMBERBORN_ENABLE_VALIDATION"] = enableValidation ? "1" : "0",
                     ["TIMBERBORN_ENABLE_PLACEMENT"] = enablePlacement ? "1" : "0",
@@ -128,11 +132,25 @@ public sealed class NativeBridgeTests
                 }
             }), cancellationToken: ct);
             var tools = await client.ListToolsAsync(cancellationToken: ct);
-            var expected = new List<string> { "find_buildings", "inspect_area_types", "inspect_areas", "inspect_build_catalog", "inspect_building", "inspect_building_priority", "inspect_colony", "inspect_construction", "inspect_map_region", "inspect_simulation", "inspect_workforce", "inspect_removal_targets", "precheck_build_site", "timberborn_status" };
+            var expected = new List<string> { "find_buildings", "inspect_area_types", "inspect_areas", "inspect_build_catalog", "inspect_build_options", "precheck_building", "inspect_building", "inspect_building_priority", "inspect_colony", "inspect_construction", "inspect_map_region", "inspect_simulation", "inspect_workforce", "inspect_removal_targets", "precheck_build_site", "timberborn_status" };
             if (enableValidation) { expected.Add("validate_build_site"); expected.Add("set_workplace_staffing"); expected.AddRange(["demolish_building","remove_planted","remove_vegetation","remove_debris"]); }
-            if (enablePlacement) { expected.Add("place_path"); expected.Add("set_building_priority"); } if (enableLodgePlacement) { expected.Add("set_area"); expected.Add("place_lodge"); expected.Add("set_simulation_speed"); }
+            if (enablePlacement) { expected.Add("place_path"); expected.Add("set_building_priority"); } if (enableLodgePlacement) { expected.Add("place_building"); expected.Add("validate_building"); expected.Add("set_area"); expected.Add("place_lodge"); expected.Add("set_simulation_speed"); }
             Assert.Equal(expected.Order(), tools.Select(t => t.Name).Order());
-            Assert.All(tools, t => { Assert.Equal(t.Name is not ("validate_build_site" or "place_path" or "place_lodge" or "set_simulation_speed" or "set_workplace_staffing" or "set_building_priority" or "set_area" or "demolish_building" or "remove_planted" or "remove_vegetation" or "remove_debris"), t.ProtocolTool.Annotations!.ReadOnlyHint); Assert.NotNull(t.ProtocolTool.OutputSchema); });
+            Assert.All(tools, t => { Assert.Equal(t.Name is not ("place_building" or "validate_building" or "validate_build_site" or "place_path" or "place_lodge" or "set_simulation_speed" or "set_workplace_staffing" or "set_building_priority" or "set_area" or "demolish_building" or "remove_planted" or "remove_vegetation" or "remove_debris"), t.ProtocolTool.Annotations!.ReadOnlyHint); Assert.NotNull(t.ProtocolTool.OutputSchema); });
+            var optionsResult=await client.CallToolAsync("inspect_build_options",new Dictionary<string,object?>{["offset"]=0,["limit"]=32},cancellationToken:ct);
+            Assert.False(optionsResult.IsError);
+            Assert.Equal("WaterPump.Folktails",optionsResult.StructuredContent!.Value.GetProperty("data").GetProperty("items")[0].GetProperty("template").GetString());
+            var buildArgs=new Dictionary<string,object?>{["template"]="WaterPump.Folktails",["x"]=1,["y"]=2,["z"]=3,["rotation"]=0};
+            Assert.False((await client.CallToolAsync("precheck_building",buildArgs,cancellationToken:ct)).IsError);
+            if(enableLodgePlacement){
+                buildArgs["session"]=session;
+                Assert.False((await client.CallToolAsync("validate_building",buildArgs,cancellationToken:ct)).IsError);
+                buildArgs["actionId"]=Guid.NewGuid().ToString("D");
+                Assert.False((await client.CallToolAsync("place_building",buildArgs,cancellationToken:ct)).IsError);
+                Assert.True((await client.CallToolAsync("place_building",buildArgs,cancellationToken:ct)).IsError);
+                buildArgs["actionId"]=Guid.NewGuid().ToString("D");buildArgs["x"]=4;
+                Assert.False((await client.CallToolAsync("place_building",buildArgs,cancellationToken:ct)).IsError);
+            }
             var colony = await client.CallToolAsync("inspect_colony", cancellationToken: ct);
             Assert.False(colony.IsError);
             var json = colony.StructuredContent!.Value;
@@ -156,14 +174,14 @@ public sealed class NativeBridgeTests
             Assert.False(site.IsError);
             Assert.False(site.StructuredContent!.Value.GetProperty("data").GetProperty("gameValidated").GetBoolean());
             Assert.Equal("requires_game_validation", site.StructuredContent!.Value.GetProperty("data").GetProperty("assessment").GetString());
-            Assert.Equal(6, Volatile.Read(ref observations));
+            Assert.Equal(enableLodgePlacement ? 12 : 8, Volatile.Read(ref observations));
             if (enableValidation)
             {
                 var validation = await client.CallToolAsync("validate_build_site", new Dictionary<string, object?>
                     { ["template"] = "Path", ["x"] = 1, ["y"] = 2, ["z"] = 3, ["rotation"] = 0, ["session"] = session }, cancellationToken: ct);
                 Assert.False(validation.IsError);
                 Assert.True(validation.StructuredContent!.Value.GetProperty("data").GetProperty("noPersistentChangeObserved").GetBoolean());
-                Assert.Equal(7, Volatile.Read(ref observations));
+                Assert.Equal(enableLodgePlacement ? 13 : 9, Volatile.Read(ref observations));
             }
             if (enablePlacement)
             {

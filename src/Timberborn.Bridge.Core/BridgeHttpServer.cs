@@ -11,16 +11,16 @@ public sealed class BridgeHttpServer : IDisposable
     private readonly bool enableValidation;
     private readonly bool enableSpeedControl;
     private readonly bool enableStaffing;
-    private readonly bool enablePriorities, enableAreas, enableRemoval;
+    private readonly bool enablePriorities, enableAreas, enableRemoval, enableBuildingPlacement;
     private readonly bool enablePlacement; private readonly bool enableLodgePlacement;
     private readonly CancellationTokenSource shutdown = new();
     private Task? worker;
-    public BridgeHttpServer(int port, string token, MainThreadQueue queue, bool enableValidation = false, bool enablePlacement = false, bool enableLodgePlacement = false, bool enableSpeedControl = false, bool enableStaffing = false, bool enablePriorities = false, bool enableAreas = false, bool enableRemoval = false)
+    public BridgeHttpServer(int port, string token, MainThreadQueue queue, bool enableValidation = false, bool enablePlacement = false, bool enableLodgePlacement = false, bool enableSpeedControl = false, bool enableStaffing = false, bool enablePriorities = false, bool enableAreas = false, bool enableRemoval = false, bool enableBuildingPlacement = false)
     {
         if (port < 1024 || port > 65535 || token.Length != 64 || token.Any(c => !Uri.IsHexDigit(c)))
             throw new ArgumentException("invalid_configuration");
         this.token = token; this.queue = queue; this.enableValidation = enableValidation;
-        this.enableRemoval=enableRemoval; this.enablePriorities=enablePriorities; this.enableAreas=enableAreas; this.enableStaffing = enableStaffing; this.enableSpeedControl = enableSpeedControl; this.enablePlacement = enablePlacement; this.enableLodgePlacement = enableLodgePlacement;
+        this.enableBuildingPlacement=enableBuildingPlacement; this.enableRemoval=enableRemoval; this.enablePriorities=enablePriorities; this.enableAreas=enableAreas; this.enableStaffing = enableStaffing; this.enableSpeedControl = enableSpeedControl; this.enablePlacement = enablePlacement; this.enableLodgePlacement = enableLodgePlacement;
         listener.Prefixes.Add($"http://localhost:{port}/agent-api/v1/");
     }
     public void Start() { listener.Start(); worker = Task.Run(Serve); }
@@ -46,7 +46,7 @@ public sealed class BridgeHttpServer : IDisposable
         { status = 403; json = "{\"error\":\"forbidden\"}"; }
         else if (!Matches(request.Headers["Authorization"]))
         { status = 401; json = "{\"error\":\"unauthorized\"}"; }
-        else if (!MethodAllowed(request.HttpMethod, request.Url!.AbsolutePath, request.HasEntityBody, enableValidation, enablePlacement, enableLodgePlacement, enableSpeedControl, enableStaffing, enablePriorities, enableAreas, enableRemoval))
+        else if (!MethodAllowed(request.HttpMethod, request.Url!.AbsolutePath, request.HasEntityBody, enableValidation, enablePlacement, enableLodgePlacement, enableSpeedControl, enableStaffing, enablePriorities, enableAreas, enableRemoval, enableBuildingPlacement))
         { status = 405; json = "{\"error\":\"read_only\"}"; }
         else
         {
@@ -68,8 +68,8 @@ public sealed class BridgeHttpServer : IDisposable
         await context.Response.OutputStream.WriteAsync(bytes, 0, bytes.Length, responseDeadline.Token).ConfigureAwait(false);
         context.Response.Close();
     }
-    public static bool MethodAllowed(string method, string path, bool hasBody, bool enableValidation, bool enablePlacement = false, bool enableLodgePlacement = false, bool enableSpeedControl = false, bool enableStaffing = false, bool enablePriorities = false, bool enableAreas = false, bool enableRemoval = false) =>
-        !hasBody && (path == "/agent-api/v1/remove-object" ? enableRemoval && method == "POST" : path == "/agent-api/v1/set-priority" ? enablePriorities && method == "POST" : path == "/agent-api/v1/set-area" ? enableAreas && method == "POST" : path == "/agent-api/v1/workplace-staffing" ? enableStaffing && method == "POST" : path == "/agent-api/v1/simulation-speed" ? enableSpeedControl && method == "POST" : path == "/agent-api/v1/lodge-placement" ? enableLodgePlacement && method == "POST" : path == "/agent-api/v1/path-placement" ? enablePlacement && method == "POST"
+    public static bool MethodAllowed(string method, string path, bool hasBody, bool enableValidation, bool enablePlacement = false, bool enableLodgePlacement = false, bool enableSpeedControl = false, bool enableStaffing = false, bool enablePriorities = false, bool enableAreas = false, bool enableRemoval = false, bool enableBuildingPlacement = false) =>
+        !hasBody && (path is "/agent-api/v1/building-validation" or "/agent-api/v1/building-placement" ? enableBuildingPlacement && method == "POST" : path == "/agent-api/v1/remove-object" ? enableRemoval && method == "POST" : path == "/agent-api/v1/set-priority" ? enablePriorities && method == "POST" : path == "/agent-api/v1/set-area" ? enableAreas && method == "POST" : path == "/agent-api/v1/workplace-staffing" ? enableStaffing && method == "POST" : path == "/agent-api/v1/simulation-speed" ? enableSpeedControl && method == "POST" : path == "/agent-api/v1/lodge-placement" ? enableLodgePlacement && method == "POST" : path == "/agent-api/v1/path-placement" ? enablePlacement && method == "POST"
             : path == "/agent-api/v1/site-validation" ? enableValidation && method == "POST" : method == "GET");
     private bool Matches(string? supplied)
     {

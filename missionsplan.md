@@ -1294,3 +1294,22 @@ Die vollständige tapping-Liste enthält 19 Kandidaten. Für jeden Kandidaten al
 isDying=false, waterStress=false und isGrown=true bestätigt. Kein toter Stichprobenbaum
 enthalten. Simulation 0 -> 0, keine Spieländerungen. Lebens-/Todes- und Wachstumsdaten
 live bestätigt; positiver Wasserstress-/Sterbezustand in dieser Stichprobe nicht belegt.
+
+### 7.44 Generischer Bauzugang implementiert (0.14.0)
+
+Aktueller Nutzerauftrag: jetzt vom Fähigkeitsnachweis zum praktischen Aufbau im
+Entwicklungsspielstand übergehen; erster Schritt generischer Gebäudebau. Der frühere
+Analysevorrang ist kein Grund, diese ausdrückliche Spielfreigabe auszubremsen.
+
+- [x] Seitenweiser Gebäudekatalog aus aktiven Spiel-Template-Sammlungen; keine Gebäudenamenliste.
+- [x] Generische Vorprüfung, Vorschauvalidierung und regulärer Einzelbau nach Vorlagen-ID.
+- [x] Mehrere Aufträge je Sitzung, feste actionId als Entity-ID und Schutz gegen doppelte Ausführung.
+- [x] Freischaltung/Feature-Toggles prüfen; reguläre Materialien, Bauzeit und PlaceFinished beibehalten.
+- [x] Sonderlayouts, seitliche Geländebefestigung, Entwicklerwerkzeuge und zu große Geometrie ausweisen.
+- [x] 316 reguläre Tests bestanden (303 Unit, 13 Integration); 3 Live-Tests übersprungen.
+- [ ] 0.14.0 paketieren/installieren; benötigt beendetes Spiel.
+- [ ] Im Spiel Katalog und zunächst Pumpe, Farm, Lager und Wohnraum prüfen/beauftragen.
+- [ ] Fertigstellung und tatsächliche Versorgung separat bestätigen; Lagerkonfiguration als mögliche Lücke prüfen.
+
+[Vertrag und Abnahmeplan](docs/generic-building.md). Keine neue Fremdmod-Abhängigkeit,
+keine Screenshots oder Maussteuerung. Installiert/live bestätigt bleibt 0.13.2.

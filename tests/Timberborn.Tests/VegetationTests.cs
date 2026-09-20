@@ -21,6 +21,9 @@ public sealed class VegetationTests
     {Assert.Equal(expected,new VegetationState(life,dying,water,grown,0.5f).IsTappingCandidate());}
     [Theory]
     [InlineData("0.13.2","alive",false,true)]
+    [InlineData("0.14.0","alive",false,true)]
+    [InlineData("0.14.0","dead",false,false)]
+    [InlineData("0.14.0",null,false,false)]
     [InlineData("0.13.2","dead",false,false)]
     [InlineData("0.13.2","alive",true,false)]
     [InlineData("0.13.1","alive",false,false)]

@@ -15,7 +15,7 @@ namespace Timberborn.AgentBridge;
 // Pure observations: no preview creation, placement, unlock, service registration or deletion.
 public sealed class SpatialObservations(EntityRegistry entities, TemplateNameMapper templates,
     FactionService faction, BuildingUnlockingService unlocks, ResourceCountingService resources,
-    ITerrainService terrain, IBlockService blocks)
+    ITerrainService terrain, IBlockService blocks, BuildingCatalog catalog)
 {
     private static readonly string[] PilotTemplates = { "Lodge.Folktails", "Path" };
 
@@ -62,9 +62,10 @@ public sealed class SpatialObservations(EntityRegistry entities, TemplateNameMap
 
     public object Precheck(BridgeRequest request)
     {
-        if (!PilotTemplates.Contains(request.Template) || !templates.TryGetTemplate(request.Template, out var template) ||
+        if ((!request.GenericBuilding && !PilotTemplates.Contains(request.Template)) || !templates.TryGetTemplate(request.Template, out var template) ||
             !template.HasSpec<BlockObjectSpec>() || !template.HasSpec<BuildingSpec>() || !template.HasSpec<PlaceableBlockObjectSpec>())
             throw new ArgumentException("unsupported_template");
+        if (request.GenericBuilding) template = catalog.Resolve(request.Template);
         var spec = template.GetSpec<BlockObjectSpec>();
         var building = template.GetSpec<BuildingSpec>();
         var rotation = new[] { Orientation.Cw0, Orientation.Cw90, Orientation.Cw180, Orientation.Cw270 }[request.Rotation];
@@ -74,7 +75,7 @@ public sealed class SpatialObservations(EntityRegistry entities, TemplateNameMap
         var occupied = positioned.GetOccupiedAndUndergroundBlocks().Take(65).ToArray();
         if (occupied.Length == 0 || occupied.Length > 64) throw new ArgumentException("unsupported_geometry");
         var reasons = new HashSet<string>();
-        if (!Compatible(request.Template)) reasons.Add("wrong_faction");
+        if (!request.GenericBuilding && !Compatible(request.Template)) reasons.Add("wrong_faction");
         if (!template.UsableWithCurrentFeatureToggles || !template.GetSpec<PlaceableBlockObjectSpec>().UsableWithCurrentFeatureToggles)
             reasons.Add("template_disabled");
         if (!unlocks.Unlocked(building)) reasons.Add("template_locked");
