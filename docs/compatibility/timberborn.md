@@ -41,3 +41,7 @@ keine übersprungenen Tests. Damit ist der lesende Betrieb der installierten Bri
 ohne aktive Fremdmods für diese Testkolonie nachgewiesen. Die Mod-Auswahl wurde durch den
 Nutzer bestätigt, nicht durch eine zusätzliche API-Inventur. Kein Vorschau- oder Bauaufruf.
 Dieser Nachweis gilt nicht für den noch nicht live geprüften Validator aus 0.4.0.
+
+0.4.0 später live erreichbar, sechs Lesewerkzeuge auch nach Vorschauversuch erfolgreich.
+Validator-Abnahme fehlgeschlagen: belegter Standort fälschlich akzeptiert; Pilot nach
+einem Versuch abgebrochen. 0.4.1 als Korrekturkandidat gebaut/gepackt, noch nicht installiert.

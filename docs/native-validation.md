@@ -1,5 +1,20 @@
 # Kontrollierter Spielvalidator-Pilot — 0.4.0
 
+## Aktuelles Ergebnis: Kontrolltest fehlgeschlagen
+
+0.4.0 ist live erreichbar. Beim ersten Versuch wurde eine Lodge am belegten Standort
+des District Centers trotz räumlich nachgewiesener Kollision als gültig gemeldet.
+Pilot sofort beendet; kein zweiter Vorschauversuch und kein Bauauftrag. Interne Wachen
+meldeten unveränderte registrierte Entity-IDs und globale Bestände. Die sechs rein
+lesenden MCP-Werkzeuge funktionierten anschließend weiterhin.
+
+Korrekturkandidat 0.4.1 ergänzt BlockObject.IsValid() entsprechend dem vorhandenen
+BlueprintPlacementValidator-Referenzmuster und verlangt zusätzlich
+BlockObjectValidationService.IsValid(BlockObject). Die Ursache ist damit noch nicht
+bewiesen; weder öffentliche Signaturen noch ein Build ersetzen den erneuten Live-Test.
+Erst nach erneutem belegten Negativkontrollfall darf der freie Kandidat folgen.
+Die nachfolgenden Abschnitte beschreiben den ursprünglichen 0.4.0-Pilot.
+
 Status nach Nutzerklärung: gebaut, 109 reguläre Tests bestanden, lokal gepackt;
 inzwischen auf Nutzerauftrag installiert, noch nicht live geprüft. Mod-Opt-in aktiv;
 MCP-Opt-in bleibt separat erforderlich. Fähigkeitsanalyse hat Vorrang vor tatsächlichem Spielen.

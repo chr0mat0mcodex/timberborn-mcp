@@ -1,5 +1,22 @@
 # Projektjournal
 
+## 2026-09-20 — Validator-Negativkontrolle auf 0.4.0 fehlgeschlagen
+
+Version 0.4.0 über MCP bestätigt. Kleinen Kartenbereich, vollständige Gebäudeseite und
+Bauplatzvorprüfungen gelesen; freier einfeldriger Path-Kandidat vor dem Schreibpilot
+identifiziert. Erster Vorschauversuch: Lodge auf District Center fälschlich valid=true.
+Sofortiger Abbruch, zweiter Versuch unterblieb. Entity-/Bestandswache meldete keine
+Änderung. Anschließend separater nativer Lesetest über alle sechs Werkzeuge bestanden.
+Keine Platzierung; keine weiteren Vorschauaufrufe in dieser Sitzung.
+
+Referenzmuster und öffentliche Metadaten belegen BlockObject.IsValid(). Korrekturkandidat
+0.4.1 verlangt diese Prüfung zusätzlich zum einzelnen Service-IsValid-Aufruf.
+Hypothese: bisheriger Service-Aufruf deckt die direkte Objektprüfung nicht vollständig ab;
+Ursache noch nicht bestätigt. Installation/erneuter begrenzter Kontrolltest ausstehend.
+109 reguläre Tests bestanden, drei Live-Tests im Standardlauf übersprungen; Mod-Build
+ohne Warnungen/Fehler und neues unveränderliches 0.4.1-Paket erstellt. Diese Prüfungen
+belegen die Live-Semantik der direkten Objektprüfung noch nicht.
+
 ## 2026-09-20 — Bridge 0.4.0 installiert, Neustart ausstehend
 
 Auf Nutzerauftrag bei beendetem Spiel das vorbereitete 0.4.0-Paket installiert.

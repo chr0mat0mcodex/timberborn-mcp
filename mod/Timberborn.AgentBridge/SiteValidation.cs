@@ -57,7 +57,11 @@ public sealed class SiteValidation(PreviewFactory factory, BlockObjectValidation
             preview.Reposition(placement);
             if (!preview.BlockObject.IsPreview || preview.BlockObject.AddedToService)
                 throw new InvalidOperationException("unexpected_preview_state");
-            valid = validators.AreValid(new BaseComponent[] { preview.BlockObject }, out _);
+            // The service alone accepted an occupied footprint in the 0.4.0 live pilot.
+            // Include the object's own validity gate, as used by the reference placement flow.
+            bool objectValid = preview.BlockObject.IsValid();
+            bool serviceValid = validators.IsValid(preview.BlockObject);
+            valid = objectValid && serviceValid;
         }
         catch { faulted = true; throw; }
         finally
