@@ -8,4 +8,4 @@
 <ProjectReference Include="../../src/Timberborn.Contracts/Timberborn.Contracts.csproj" />
 <ProjectReference Include="../../src/Timberborn.Backend.MoreHttpApi/Timberborn.Backend.MoreHttpApi.csproj" />
 <ProjectReference Include="../../src/Timberborn.McpServer/Timberborn.McpServer.csproj" />
-</ItemGroup></Project>
+</ItemGroup><ItemGroup><Compile Include="../Fixtures/ProductionGraphFixture.cs" Link="ProductionGraphFixture.cs" /></ItemGroup></Project>

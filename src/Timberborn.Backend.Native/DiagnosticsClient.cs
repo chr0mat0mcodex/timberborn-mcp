@@ -14,7 +14,7 @@ public sealed partial class NativeClient
 {
     private static void DiagnosticsEnvelope<T>(BridgeEnvelope<T> e,DiagnosticsRequest r,string[]? limits)
     {
-        if(e.BridgeVersion!="0.20.1"||r.Session.Length>0&&e.SessionId!=r.Session||limits is null||limits.Any(s=>s is null))throw new InvalidDataException("Invalid diagnostics envelope");
+        if(e.BridgeVersion is not ("0.20.1" or "0.21.0")||r.Session.Length>0&&e.SessionId!=r.Session||limits is null||limits.Any(s=>s is null))throw new InvalidDataException("Invalid diagnostics envelope");
     }
     private static bool DiagnosticPage(DiagnosticsRequest r,int offset,int limit,int total,int count,bool more)=>offset==r.Offset&&limit==r.Limit&&total>=0&&count==Math.Min(limit,Math.Max(0,total-offset))&&more==((long)offset+count<total);
     private static bool SortedNeedIds(IEnumerable<string> ids)=>ids.All(BuildingPolicy.ValidTemplate)&&ids.SequenceEqual(ids.Distinct().Order(StringComparer.Ordinal));

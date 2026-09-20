@@ -1,8 +1,8 @@
 # Native MCP-Werkzeuge
 
-Stand: Agent Bridge 0.20.1 (Lebenszustandskorrektur gebaut; Installation/Live offen).
+Stand: Agent Bridge 0.21.0 (Produktionsgraph und Lebenszustandskorrektur gebaut; Installation/Live offen).
 0.20.0 bleibt installiert; Bedürfnisleser dieser Version zählen auch registrierte tote Biber. Aus `NativeTools.Catalog` mit allen Freigaben abgeglichen:
-29 Leser und 19 Werkzeuge für Aktionen/Vorschauvalidierung. Nicht jede Kombination
+30 Leser und 19 Werkzeuge für Aktionen/Vorschauvalidierung. Nicht jede Kombination
 ist live geprüft; Nachweise und Grenzen stehen in den Fachdokumenten.
 
 ## Leser
@@ -10,6 +10,7 @@ ist live geprüft; Nachweise und Grenzen stehen in den Fachdokumenten.
 - `timberborn_status`
 - `inspect_colony`
 - `inspect_goods`
+- `inspect_production_graph` — [Definitionsgraph, Quellen und Grenzen](production-dependency-graph.md)
 - `inspect_needs`
 - `inspect_beaver_needs`
 - `inspect_building_operation`

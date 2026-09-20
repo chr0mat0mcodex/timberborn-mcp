@@ -20,7 +20,7 @@ public sealed class BridgeConfigurator : Configurator
 {
     protected override void Configure()
     {
-        Bind<DiagnosticsObservations>().AsSingleton(); Bind<LogisticsObservations>().AsSingleton(); Bind<EconomyObservations>().AsSingleton(); Bind<Research>().AsSingleton(); Bind<ActivityLog>().AsSingleton(); Bind<ActivityLogWindow>().AsSingleton();
+        Bind<ProductionGraph>().AsSingleton(); Bind<DiagnosticsObservations>().AsSingleton(); Bind<LogisticsObservations>().AsSingleton(); Bind<EconomyObservations>().AsSingleton(); Bind<Research>().AsSingleton(); Bind<ActivityLog>().AsSingleton(); Bind<ActivityLogWindow>().AsSingleton();
         Bind<BuildingSettings>().AsSingleton(); Bind<BuildingCatalog>().AsSingleton(); Bind<SpatialObservations>().AsSingleton();
         Bind<BuildingObservations>().AsSingleton();
         Bind<WorkforceObservations>().AsSingleton();
@@ -35,7 +35,7 @@ public sealed class BridgeConfigurator : Configurator
 
 public sealed class BridgeMod(ResourceCountingService resources, PopulationService population,
     EntityRegistry entities, ITerrainService terrain, IThreadSafeWaterMap water, IGoodService goods,
-    ModRepository mods, SpatialObservations spatial, SiteValidation validation, PilotPlacement placement, BuildingObservations buildings, SimulationControl simulation, WorkforceObservations workforce, WorkplaceStaffing staffing, PriorityAndConstruction management, AreaManagement areas, RemovalManagement removal, BuildingCatalog catalog, BuildingSettings settings, ActivityLog activityLog, ActivityLogWindow activityWindow, Research research, EconomyObservations economy, LogisticsObservations logistics, DiagnosticsObservations diagnostics)
+    ModRepository mods, SpatialObservations spatial, SiteValidation validation, PilotPlacement placement, BuildingObservations buildings, SimulationControl simulation, WorkforceObservations workforce, WorkplaceStaffing staffing, PriorityAndConstruction management, AreaManagement areas, RemovalManagement removal, BuildingCatalog catalog, BuildingSettings settings, ActivityLog activityLog, ActivityLogWindow activityWindow, Research research, EconomyObservations economy, LogisticsObservations logistics, DiagnosticsObservations diagnostics, ProductionGraph productionGraph)
     : ILoadableSingleton, IUnloadableSingleton, IUpdatableSingleton
 {
     private readonly MainThreadQueue queue = new();
@@ -84,6 +84,7 @@ public sealed class BridgeMod(ResourceCountingService resources, PopulationServi
             "goods" => economy.Goods(request.Economy!), "alerts" => economy.Alerts(request.Economy!,sessionId), "alert-targets" => economy.Targets(request.Economy!),
             "research" => research.Read(request.Research!), "unlock-building" => research.Unlock(request.Research!),
             "activity" => RecordActivity(),
+            "production-graph" => productionGraph.Read(),
             "activity-log" => new { capacity=ActivityLog.Capacity, items=activityLog.Snapshot().AsEnumerable().Reverse().Take(32).Select(ActivityLog.Payload).ToArray(), revision=activityLog.Revision, windowVisible=activityWindow.Visible, uiAttached=activityWindow.Attached },
             "building-settings" => settings.Read(request.Settings!),
             "set-building-paused" or "set-storage-good" or "set-storage-mode" or "set-farm-priority" or "set-farm-crop" => settings.Set(request.Settings!),
@@ -101,7 +102,7 @@ public sealed class BridgeMod(ResourceCountingService resources, PopulationServi
             _ => throw new ArgumentException("invalid_request")
         };
         return JsonConvert.SerializeObject(new { schemaVersion = 1, sessionId, observedAtUtc = DateTimeOffset.UtcNow,
-            bridgeVersion = "0.20.1", data });
+            bridgeVersion = "0.21.0", data });
     }
     private object Snapshot()
     {

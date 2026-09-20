@@ -1,6 +1,6 @@
 # Projektstand
 
-Stand: 2026-09-20. Codeversion: **0.20.1**, Lebenszustandskorrektur gebaut; Installation/Live-Abnahme ausstehend.
+Stand: 2026-09-20. Codeversion: **0.21.0**, Produktionsgraph und Lebenszustandskorrektur gebaut; Installation/Live-Abnahme ausstehend.
 Installiert bleibt **0.20.0**: 29 Leser live geprüft, danach Fehler bei weiter registrierten
 verstorbenen Bibern gefunden (Bedürfniszählung 13 statt 11 lebender Biber).
 Sofort-Wegsuche einschließlich Unterbrechung/Wiederherstellung unter **0.19.1** live bestätigt. Farm-/Holzfällerreichweiten unter 0.19.2 über den konkreten Terrainzugriff bestätigt.
@@ -20,11 +20,19 @@ Die Version im [Manifest](mod/Timberborn.AgentBridge/manifest.json) ist die Code
 - Direkter Serverstart ohne `TIMBERBORN_BACKEND` fällt im aktuellen Code noch auf `more-http-api`
   zurück. Der dokumentierte Einstieg setzt deshalb ausdrücklich `native`; kein stiller Backendwechsel.
 
+## Produktionsgraph 0.21.0
+
+30 Leser und 19 Aktions-/Validierungswerkzeuge. Neuer Gesamtaufruf für registrierte Güter,
+Rezepte, Gebäude/Baukosten, nominelle Energie und Schnitt-/Sammelquellen.
+Einmal je Szene, geprüfte Verweise und SHA-256-Revision. Ruinenerträge und spezielle
+Betriebsbedingungen sind explizite Lücken; [Vertrag](docs/production-dependency-graph.md).
+Installation, reale Antwortgröße und Live-Abnahme stehen aus.
+
 ## Verifikation
 
 | Ebene | Beleg |
 | --- | --- |
-| Automatisch | 463 reguläre Tests: 450 Unit, 13 Integration; drei opt-in Live-Tests im Standardlauf übersprungen |
+| Automatisch | 478 reguläre Tests: 465 Unit, 13 Integration; drei opt-in Live-Tests im Standardlauf übersprungen |
 | Mod-Build | Gegen Timberborn 1.1.2.4, ohne Warnungen/Fehler |
 | Installation | Fünf Paketdateien per SHA-256 geprüft, private Konfiguration erhalten |
 | Live 0.20.0 | Alle 29 Leser; 42 Bedürfnisse über zwei Seiten, Einzelbiber und Betriebsbelege; Wohnraumbefund unabhängig bestätigt |

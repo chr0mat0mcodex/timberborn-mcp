@@ -25,6 +25,7 @@ Start: [README](../README.md) · [Projektstand](../PROJECT_STATE.md) ·
 | Güter und Status | [Bestände, Warnungen und Ziele](economy-observations.md) |
 | Erreichbarkeit und Bilanz | [Wege, Reichweiten und Güterhistorie](logistics.md), [Mehrtagspilot](supply-balance.md) |
 | Zeit | [Pause und Geschwindigkeiten](simulation-control.md) |
+| Produktionsgraph | [Rohstoffe, Rezepte, Gebäude und Quellen](production-dependency-graph.md), ab 0.21.0; Live-Abnahme offen |
 | Forschung | [Punkte und Freischaltungen](research.md) |
 | Transparenz | [Ingame-Log](activity-log.md), [fachliche Fehler](bridge-errors.md) |
 
@@ -33,8 +34,6 @@ Vertrags. Aktuelle Gesamtversion und Testzahlen stehen zentral im Projektstand.
 Datierte frühere Abnahmen sind kein Beweis für jede spätere Kombination.
 
 ## Geplante Funktionen
-
-- [Produktions-/Abhängigkeitsgraph mit einem MCP-Aufruf](production-dependency-graph.md) — öffentliche Rezeptbasis geprüft, noch nicht implementiert.
 
 - [Weitere Alert-Abdeckung](alerts-plan.md) — aktive Entity-Status implementiert; zusätzliche Fälle offen.
 - [Frage-Popup im Spiel](player-question-popup.md) — öffentlich untersucht, noch nicht implementiert.

@@ -4,9 +4,9 @@
 
 | Komponente | Belegter Stand |
 | --- | --- |
-| Eigene Mod | 0.20.1 gebaut, Lebenszustandsfix noch nicht installiert/live geprüft; 0.20.0 installiert mit bekanntem Bedürfniszählfehler nach Todesfällen; unter 0.19.2 alle 26 Leser und konkrete Farm-/Holzfällerreichweiten live bestätigt; Sofort-Wegsuche einschließlich Unterbrechung zuvor bestätigt |
+| Eigene Mod | 0.21.0 gebaut, Produktionsgraph und Lebenszustandsfix noch nicht installiert/live geprüft; 0.20.0 installiert mit bekanntem Bedürfniszählfehler nach Todesfällen; unter 0.19.2 alle 26 Leser und konkrete Farm-/Holzfällerreichweiten live bestätigt; Sofort-Wegsuche einschließlich Unterbrechung zuvor bestätigt |
 | Spiel | Timberborn 1.1.2.4, Folktails, kleine Entwicklungskolonie |
-| Tests | 463 reguläre Tests; Live-Piloten getrennt |
+| Tests | 478 reguläre Tests; Live-Piloten getrennt |
 | Fremdmods | Keine Pflichtabhängigkeit der eigenen Mod |
 | MCP | Externer C#-Server, native Auswahl, stdio |
 

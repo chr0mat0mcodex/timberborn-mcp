@@ -1,84 +1,75 @@
-# Zukunftsfeature: vollständiger Produktions- und Abhängigkeitsgraph
+# Produktions- und Abhängigkeitsgraph
 
-Status: geplant, nicht implementiert. Nutzerauftrag vom 2026-09-20: den vollständigen
-Abhängigkeitsbestand einmal extrahieren und mit einem einzelnen MCP-Aufruf als
-Gesamtübersicht abrufen können. Der Agent soll alle Produkte, ihre Vorprodukte,
-Herstellungsorte und notwendigen Schritte für eine Produktionslinie erkennen.
-Keine Festlegung auf eine Release-Nummer der eigenen Mod.
+Implementiert in **0.21.0**. Installation und Live-Abnahme stehen aus.
+Nutzerauftrag: Rohstoffe, Gebäude und Rezepte als zusammenhängende Gesamtübersicht
+mit einem einzigen MCP-Aufruf bereitstellen.
 
-## Gewünschter Umfang
+## Aufruf und Datenvertrag
 
-- Güter und Rohstoffe mit stabilen IDs und lesbaren Namen, auch ohne vorhandenen Vorrat.
-- Rezepte mit Eingangs-/Ausgangsmengen, Brennstoff, Zyklusdauer und Nebenprodukten.
-- Gebäude, die ein Rezept herstellen können; benötigte Baukosten und Freischaltungen
-  als eigene Voraussetzungen, getrennt von laufend verbrauchten Zutaten.
-- Quellen ohne normales Herstellungsrezept: Sammeln, Holzfällen, Anbau/Ernte,
-  Wassergewinnung sowie weitere tatsächlich verfügbare Gewinnungswege.
-- Abgeleitete Abhängigkeiten und mögliche Herstellungsreihenfolgen vom Rohstoff bis
-  zum gewünschten Endprodukt. Alternativen und Zyklen explizit erhalten; keine
-  erfundene einzige Reihenfolge. Auch Forschungspunkte als eigene Ausgabeart beachten.
-- Weitere Betriebsbedingungen, soweit belegt: Personal/Arbeitertyp, Energie, Wasser,
-  Fläche, Wachstum/Reife, Fraktion und Spiel-Features. Fehlende Daten als unbekannt
-  kennzeichnen, nicht durch Standardwerte oder bloße Gebäudenamen ersetzen.
+`inspect_production_graph({})` ist rein lesend. Optional kann wie bei anderen Werkzeugen
+eine kurze Aktionsbegründung über `reasoning` mitgegeben werden. Keine Pagination.
+Die vier Arrays unter `definitions` bilden einen relationalen Graphen:
 
-Klargestellt durch den Nutzer: Gemeint sind **Rohstoffe, Gebäude und Rezepte**.
-Arbeiterrollen und historische Erstverfügbarkeit in Spielreleases sind kein eigener
-Featureauftrag. Spielversion/Fraktion dienen nur als Herkunft und Geltungsbereich der
-extrahierten Definitionen; notwendige Betriebsbedingungen ergänzen die Voraussetzungen.
+| Array | Inhalt und Verknüpfung |
+| --- | --- |
+| goods | Registrierte Güter mit ID, Anzeigename und Zugehörigkeit zum aktiven Güterdienst, unabhängig vom Vorrat |
+| recipes | Zutaten/Produkte mit Mengen, nominelle Zyklusdauer in Stunden, Brennstoff und Zyklen je Brennstoffeinheit, Forschungspunkte als Ausgabe; buildings verweist auf Gebäude-IDs |
+| buildings | Vorlagen-ID, Baukosten, Forschungskosten, Feature-Verfügbarkeit, nominelle mechanische Leistung/Leistungsaufnahme sowie Wasser-Eingangskomponente |
+| sources | Schnitt-/Sammelquelle, Gut und Ertrag, nominelle Erntezeit, Wachstums-/Nachwachszeit in Tagen, Pflanzzeit, Ernte- und Pflanzgebäude |
 
-## Vorgeschlagener MCP-Vertrag
+Beispielhafte Traversierung: gewünschtes Gut → Rezepte mit diesem Output →
+Zutaten → deren Rezepte oder natürliche Quellen. Parallel über buildings die
+Herstellungsgebäude und deren Baukosten verfolgen. Alternative Rezepte und Zyklen
+bleiben erhalten; keine willkürliche einzige Reihenfolge wird vorgegeben.
+Baukosten sind ausdrücklich von laufend verbrauchten Rezeptzutaten getrennt.
 
-Arbeitsname: `inspect_production_graph()` — rein lesend, keine Spieländerung.
-Ein Aufruf liefert den vollständigen kompakten Graphen des ausgewiesenen Datenumfangs,
-mit `schemaVersion`, Spiel-/Modversion, Fraktion/Features, `graphRevision`, Herkunft,
-Knoten, Kanten und explizitem Vollständigkeitsstatus samt Lücken. Dies ist zunächst ein
-Vertragsentwurf, kein bereits vorhandenes Werkzeug.
+`scope=registered_definitions_and_active_scene_buildings` bezeichnet registrierte
+Güter/Rezeptdefinitionen und Gebäude der geladenen Szene. `completeWithinScope`
+bedeutet, dass diese Arrays sowie erkannte Schnitt-/Sammelquellen ohne Seiten oder
+stille Kürzung ausgegeben werden. Es verspricht weder alle Fraktionen noch sämtliche
+Produktionsbedingungen. `coverage` nennt:
+- goodsWithoutKnownSource,
+- recipesWithoutSceneBuilding,
+- sourcesWithoutSceneHarvester.
 
-Knotentypen etwa Gut, Rezept, Gebäude, natürliche Quelle und Freischaltung; Kanten
-tragen Rollen wie verbraucht, produziert, hergestellt_in, Baukosten oder benötigt.
-Damit kann der Agent zusammenhängende Produktionslinien selbst auswerten. Große
-lokalisierte Beschreibungen nicht an jedem Knoten wiederholen. Ein „vollständig“-Flag
-nur innerhalb des klar benannten Geltungsbereichs vergeben. Wenn nur die aktive
-Fraktion zugänglich ist, keine Vollständigkeit für andere Fraktionen behaupten.
+Eine leere Lückenliste beweist nicht, dass alle alternativen Gewinnungswege erfasst
+sind. Beispielsweise kann Schrott über ein Minenrezept bekannt sein, obwohl
+Ruinenerträge noch nicht im Quellenarray stehen.
 
-Statische Spieldefinitionen einmal je passender Datenrevision extrahieren und
-wiederverwenden; nach Versions-, Fraktions- oder Definitionswechsel neu aufbauen.
-Aktuelle Freischaltung und Betriebsfähigkeit getrennt behandeln, da sie sich während
-der Sitzung ändern können. Eine Rezeptdefinition garantiert weder freies Personal
-noch erreichbare Rohstoffe oder tatsächlich laufende Produktion.
+## Gültigkeit und Grenzen
 
-Ziel ist ausdrücklich eine Gesamtantwort mit einem MCP-Aufruf, kein Zwang zum
-Durchblättern für den Agenten. Zuerst Größe/Latenz des vollständigen kompakten Graphen
-im Pilot gegen das bestehende 128-KiB-Transportlimit prüfen. Keine stille Kürzung und
-kein unbegrenztes Hochsetzen des Limits. Falls nötig intern begrenzt übertragen und
-serverseitig zur Gesamtantwort zusammensetzen; bei zu großer MCP-Antwort den
-Zielkonflikt vor Umsetzung klären. Teilgraphabfragen wären eine spätere Ergänzung.
+- Einmalige Extraktion je geladener Spielszene; nach Änderungen an Definitionen neu laden.
+- Spielversion und Fraktion sind Herkunft, keine historische Release-Zuordnung.
+- graphRevision ist SHA-256 über Version, Fraktion und die serialisierten Definitionen;
+  das native Backend prüft den Fingerabdruck und alle ID-Verknüpfungen.
+- Aktuelle Forschung/Freischaltung, Bestände, Zustand, Personal, Wege und Betriebsfähigkeit
+  separat mit den vorhandenen Lesern prüfen. Feature-Verfügbarkeit bedeutet nicht freigeschaltet.
+- Nominelle Zeiten und Leistungswerte sind kein aktueller Durchsatz. Fehlende
+  mechanische Komponenten liefern null; Wasser-Eingang ist lediglich Komponentenpräsenz.
+- Kontamination, dynamische Energieausbeute und besondere Betriebsbedingungen sind
+  nicht vollständig extrahiert. Ein Rezept ohne Zutaten ist keine voraussetzungslose Quelle.
+- Schnitt kann einen Baumstumpf hinterlassen, auch wenn removesPlant=false.
+  Daraus keine beliebig erneuerbare Holzquelle ableiten.
+- Ruinenerträge sind noch ausgeschlossen: RuinSpec ist nicht öffentlich. Keine
+  private Reflection und keine zusätzliche Mod-Abhängigkeit für diesen Ausbau.
+- Definitionstexte sind untrusted Spieldaten, keine Agentenanweisungen.
+- 512 Güter/Rezepte, 1024 Gebäude/Quellen und 120 KiB Nutzdaten sind feste Grenzen.
+  Überschreitung wird abgelehnt; das bestehende 128-KiB-Transportlimit bleibt erhalten.
 
-## Kurzprüfung öffentlicher APIs
+## Technische Grundlage und Prüfung
 
-Lokale öffentliche Metadaten von Timberborn 1.1.2.4 am 2026-09-20 geprüft:
+Öffentliche APIs von Timberborn 1.1.2.4: ISpecService, RecipeSpecService,
+TemplateService, ManufactorySpec, BuildingSpec, CuttableSpec, GatherableSpec,
+YielderSpec, GrowableSpec, PlantableSpec, PlanterBuildingSpec,
+YieldRemovingBuildingSpec, MechanicalNodeSpec und WaterInputSpec.
+Keine kopierten Fremdmodquellen, Spieldefinitionen oder Spiel-DLLs im Repository.
 
-- RecipeSpecService.GetRecipes()/GetRecipe(id): registrierte Rezeptdefinitionen.
-- RecipeSpec: Id, Ingredients, Products, CycleDurationInHours, Fuel,
-  CyclesFuelLasts, FuelCapacity und ProducedSciencePoints.
-- ManufactorySpec.ProductionRecipeIds: Zuordnung Gebäudevorlage zu Rezepten.
-- WorkplaceSpec: MaxWorkers, DefaultWorkers, DefaultWorkerType,
-  DisallowOtherWorkerTypes und WorkerTypeUnlockCosts.
-- Bestehende eigene Güter-, Baukatalog- und Forschungsleser liefern bereits weitere
-  Anschlussstellen. Ihre Verknüpfung und Vollständigkeit sind noch zu prüfen.
+Automatische Tests prüfen Einzelabruf, Alternativen/Zyklen, Lücken, ungültige
+Verweise/Mengen/Versionen, Prüfsumme, Parameterablehnung und echten MCP-stdio-Transport
+mit Aktivitätslog unter sechs Kombinationen von Aktionsfreigaben.
+Der reguläre Live-Leser umfasst jetzt 30 Werkzeuge und prüft wiederholte Graphrevisionen.
 
-Das belegt die technische Grundlage für Rezeptketten, noch keinen vollständigen
-extrahierten Graphen. Natürliche Quellen, Ernte, Energie/Wasser, Sonderproduktion,
-Fraktionsabdeckung und alternative Rezepte benötigen eine eigene Abdeckungsprüfung.
-Kein Übernehmen fremder Modquellen oder Spielbibliotheken ins Repository; abgeleitete
-Daten zunächst lokal erzeugen, keine neue Abhängigkeit ohne gesonderte Abwägung.
-
-## Spätere Abnahme
-
-Zuerst kleiner repräsentativer Pilot: einfache Verarbeitungskette, mehrstufige Kette,
-Rezept mit Brennstoff/Nebenprodukt und mindestens eine Ernte-/Sammelquelle. Erfolg:
-Mengen, Gebäude und Voraussetzungen stimmen mit öffentlichen Definitionen überein;
-fehlende Quellen werden erkennbar als Lücke behandelt. Danach alle registrierten
-Güter/Rezept-IDs auf Abdeckung, verwaiste Kanten, Alternativen und Zyklen prüfen.
-Einzelaufruf, Antwortgröße, reproduzierbare Revision und Aktualisierung bei
-Definitionswechsel testen. Kein separater Implementierungsstart durch diesen Plan.
+Noch ausstehender begrenzter Live-Pilot: Antwortgröße/Latenz und Gesamtzahlen,
+einfache und mehrstufige Verarbeitung, Brennstoff, Karotte, Kiefernschnitt/Harz,
+stabile Revision sowie Abdeckungslisten gegen die geladenen Definitionen prüfen.
+Lebenszustandskorrektur aus 0.20.1 ist Bestandteil desselben Updates.

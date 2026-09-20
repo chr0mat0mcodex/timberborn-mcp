@@ -9,7 +9,7 @@ public sealed class LiveNativeTests(ITestOutputHelper output)
     public static bool Enabled => Environment.GetEnvironmentVariable("TIMBERBORN_NATIVE_LIVE_TEST") == "1";
 
     [Fact(Skip = "Native-Livetest nur nach explizitem Opt-in.", SkipUnless = nameof(Enabled))]
-    public async Task TwentyNineReadToolsAgainstInstalledNativeBridge()
+    public async Task ThirtyReadToolsAgainstInstalledNativeBridge()
     {
         using var budget = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);
         budget.CancelAfter(TimeSpan.FromSeconds(40));
@@ -27,7 +27,7 @@ public sealed class LiveNativeTests(ITestOutputHelper output)
             }
         }), cancellationToken: ct);
         var tools = await client.ListToolsAsync(cancellationToken: ct);
-        Assert.Equal(new[] { "inspect_needs", "inspect_beaver_needs", "inspect_building_operation", "inspect_building_access", "inspect_road_connection", "inspect_work_range", "inspect_good_history", "find_buildings", "inspect_alert_targets", "inspect_alerts", "inspect_goods", "inspect_agent_log", "inspect_area_types", "inspect_areas", "inspect_build_catalog", "inspect_build_options", "inspect_building", "inspect_building_priority", "inspect_building_settings", "inspect_colony", "inspect_construction", "inspect_map_region", "inspect_removal_targets", "inspect_research", "inspect_simulation", "inspect_workforce", "precheck_build_site", "precheck_building", "timberborn_status" }.Order(), tools.Select(t => t.Name).Order());
+        Assert.Equal(new[] { "inspect_production_graph", "inspect_needs", "inspect_beaver_needs", "inspect_building_operation", "inspect_building_access", "inspect_road_connection", "inspect_work_range", "inspect_good_history", "find_buildings", "inspect_alert_targets", "inspect_alerts", "inspect_goods", "inspect_agent_log", "inspect_area_types", "inspect_areas", "inspect_build_catalog", "inspect_build_options", "inspect_building", "inspect_building_priority", "inspect_building_settings", "inspect_colony", "inspect_construction", "inspect_map_region", "inspect_removal_targets", "inspect_research", "inspect_simulation", "inspect_workforce", "precheck_build_site", "precheck_building", "timberborn_status" }.Order(), tools.Select(t => t.Name).Order());
         string? session = null;
         async Task<JsonElement> Call(string name, Dictionary<string, object?>? args = null)
         {
@@ -48,6 +48,10 @@ public sealed class LiveNativeTests(ITestOutputHelper output)
         Assert.Equal("reachable", status.GetProperty("connection").GetString());
         Assert.False(status.GetProperty("writesEnabled").GetBoolean());
         await Call("inspect_agent_log");
+        var graph=await Call("inspect_production_graph");
+        Assert.NotEmpty(graph.GetProperty("definitions").GetProperty("goods").EnumerateArray());
+        var graphAgain=await Call("inspect_production_graph");
+        Assert.Equal(graph.GetProperty("graphRevision").GetString(),graphAgain.GetProperty("graphRevision").GetString());
         await Call("inspect_research", new Dictionary<string,object?> { ["offset"]=0,["limit"]=32 });
         await Call("inspect_goods", new() { ["offset"]=0,["limit"]=32 });
         var alerts=await Call("inspect_alerts",new() { ["offset"]=0,["limit"]=32 });

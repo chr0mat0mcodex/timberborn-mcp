@@ -1356,3 +1356,20 @@ RecipeSpec-, ManufactorySpec- und WorkplaceSpec-Signaturen lokal bestätigt. Nut
 Gemeint sind Rohstoffe, Gebäude und Rezepte; keine separate Arbeiterrollen-/Releasehistorie.
 Keine Implementierung, Spieländerung oder Modinstallation in diesem Planungsschritt.
 0.20.1 wartet weiterhin auf Speichern/Beenden und Installation.
+
+## 2026-09-20 — Produktionsgraph 0.21.0
+
+Auf ausdrücklichen Nutzerauftrag aus dem Zukunftsplan umgesetzt: ein MCP-Leseaufruf
+für registrierte Güter, Rezepte (Mengen/Brennstoff/Dauer/Forschungsausgabe), Gebäude
+(Baukosten/Forschungskosten/nominelle Energie) und Schnitt-/Sammelquellen
+(Ertrag/Wachstum/Ernte-/Pflanzgebäude). Szenencache, geprüfte ID-Verweise und SHA-256-
+Revision; keine neue Fremdmod oder Bibliothek. Öffentliche Definitionen verwendet.
+
+RuinSpec ist nicht öffentlich; Ruinenerträge bleiben explizite Lücke, ebenso
+besondere Wasser-/Produktionsbedingungen. Gesamtdaten werden innerhalb des
+definierten Umfangs ohne Pagination ausgegeben, Überschreitung von 120 KiB abgelehnt.
+Keine Behauptung einer allumfassenden Fraktions- oder Betriebsdiagnose.
+
+478 reguläre Tests (465 Unit, 13 Integration) bestehen. Mod gegen Timberborn 1.1.2.4
+gebaut. 0.21.0 enthält den noch nicht live geprüften Lebenszustandsfix aus 0.20.1.
+Timberborn läuft noch mit 0.20.0; Installation und Live-Pilot stehen aus.

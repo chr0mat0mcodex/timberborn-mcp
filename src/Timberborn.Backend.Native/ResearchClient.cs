@@ -10,7 +10,7 @@ public sealed partial class NativeClient
     {
         if(r.Write)throw new ArgumentException();
         var e=await Get<NativeResearch>($"research?offset={r.Offset}&limit={r.Limit}",ct);var d=e.Data;
-        if(e.BridgeVersion is not ("0.17.0" or "0.17.1" or "0.17.2" or "0.18.0" or "0.19.0" or "0.19.1" or "0.19.2" or "0.20.0" or "0.20.1")||d.SciencePoints<0||d.Offset!=r.Offset||d.Limit!=r.Limit||d.Total<0||d.Items is null||
+        if(e.BridgeVersion is not ("0.17.0" or "0.17.1" or "0.17.2" or "0.18.0" or "0.19.0" or "0.19.1" or "0.19.2" or "0.20.0" or "0.20.1" or "0.21.0")||d.SciencePoints<0||d.Offset!=r.Offset||d.Limit!=r.Limit||d.Total<0||d.Items is null||
             d.Items.Length!=Math.Min(r.Limit,Math.Max(0,d.Total-r.Offset))||d.HasMore!=((long)d.Offset+d.Items.Length<d.Total)||d.Limitations is null||
             d.Items.Any(i=>i is null||!BuildingPolicy.ValidTemplate(i.Template)||i.ScienceCost<0)||d.Items.Select(i=>i.Template).Distinct().Count()!=d.Items.Length)
             throw new InvalidDataException("Invalid research observation");
@@ -21,7 +21,7 @@ public sealed partial class NativeClient
         if(!r.Write)throw new ArgumentException();
         var e=await Get<NativeUnlock>($"unlock-building?template={Uri.EscapeDataString(r.Template)}&session={r.Session}&expectedCost={r.ExpectedCost}",ct,HttpMethod.Post);
         var d=e.Data;
-        if(e.BridgeVersion is not ("0.17.0" or "0.17.1" or "0.17.2" or "0.18.0" or "0.19.0" or "0.19.1" or "0.19.2" or "0.20.0" or "0.20.1")||e.SessionId!=r.Session||d.Template!=r.Template||d.ExpectedCost!=r.ExpectedCost||d.ScienceCost<0||d.PointsBefore<0||d.PointsAfter<0||
+        if(e.BridgeVersion is not ("0.17.0" or "0.17.1" or "0.17.2" or "0.18.0" or "0.19.0" or "0.19.1" or "0.19.2" or "0.20.0" or "0.20.1" or "0.21.0")||e.SessionId!=r.Session||d.Template!=r.Template||d.ExpectedCost!=r.ExpectedCost||d.ScienceCost<0||d.PointsBefore<0||d.PointsAfter<0||
             d.Outcome is not ("cost_changed" or "unavailable" or "already_unlocked" or "insufficient_points" or "not_unlockable" or "applied" or "unconfirmed")||
             d.Outcome=="applied" && (!d.Unlocked||d.PreviouslyUnlocked||d.ScienceCost!=r.ExpectedCost||(long)d.PointsBefore-d.ScienceCost!=d.PointsAfter)||
             d.Outcome=="already_unlocked" && (!d.PreviouslyUnlocked||!d.Unlocked)||

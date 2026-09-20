@@ -4,8 +4,8 @@ Eine eigene Timberborn-Mod und ein lokaler C#-MCP-Server ermöglichen einem KI-A
 das Spiel strukturiert zu beobachten und über reguläre Spielaktionen zu steuern.
 Ziel ist ein Agent, der Wasser, Nahrung, Holz, Wege und Wohnraum aufbaut und betreibt.
 
-**Entwicklungsstand: Agent Bridge 0.20.1**, gebaut gegen Timberborn **1.1.2.4 / Folktails**.
-**0.20.1 korrigiert die Bedürfniszählung nach Todesfällen; Installation/Live-Abnahme stehen aus.**
+**Entwicklungsstand: Agent Bridge 0.21.0**, gebaut gegen Timberborn **1.1.2.4 / Folktails**.
+**0.21.0 ergänzt den Produktionsgraphen und enthält die Lebenszustandskorrektur aus 0.20.1; Installation/Live-Abnahme stehen aus.**
 0.20.0 ist noch installiert; dessen 29 Leser waren live geprüft. Ein Folgepilot zeigte,
 dass registrierte verstorbene Biber bislang mitgezählt wurden.
 Neu: Bedürfnisübersicht, Biber-Bedürfnisdetails und Gebäudebetriebsdiagnose.
@@ -14,7 +14,7 @@ und Lagerwarnungen mit betroffenen Zielen sind bestätigt. Weitere Warnungstypen
 Die Güterhistorie ist über einen Tageswechsel und die Sofort-Wegsuche einschließlich
 Unterbrechung/Wiederaufbau live bestätigt. Der direkte Terrainzugriff liefert im Live-Pilot
 485 Zellen für die Farm und 611 für den Holzfäller; erste und letzte Seite geprüft.
-463 reguläre Tests bestehen (450 Unit, 13 Integration).
+478 reguläre Tests bestehen (465 Unit, 13 Integration).
 Die Basisaktionen funktionieren; zuverlässiges autonomes Koloniemanagement ist noch in Entwicklung.
 
 **Keine zusätzliche Spielmod erforderlich.** Die eigene Mod hat `RequiredMods: []`.
@@ -27,6 +27,7 @@ Regression im Repository; [Referenzen und Legacy-Abgrenzung](docs/references/REA
 | Bereich | Implementierter Umfang |
 | --- | --- |
 | Bedürfnisse/Betrieb (0.20.0) | Native Warn-/Kritisch-Flags, Bedürfniswerte, Personal/Arbeitszeit sowie Rezept-, Zutaten-, Brennstoff- und Produktplatzbelege; gezielte Live-Piloten bestanden |
+| Produktionsgraph (0.21.0) | Ein MCP-Abruf für Güter, Rezeptketten, Gebäude/Baukosten, Energie und Schnitt-/Sammelquellen; [Umfang und Grenzen](docs/production-dependency-graph.md), Live-Abnahme offen |
 | Zustand | Bevölkerung, Betten, vollständiger Güterleser, aktive Status mit Zielen, Karte, Gebäude, Baustellen, Arbeiterzuordnung |
 | Logistik | Gebäudezugang, Sofort-Wegsuche einschließlich Unterbrechung, Farm-/Holzfällerreichweiten und Güterhistorie über Tageswechsel live bestätigt |
 | Bauen | Vorlagenkatalog, Kosten/Freischaltung, räumliche Vorprüfung, Spielvalidierung, reguläre Bauaufträge |
