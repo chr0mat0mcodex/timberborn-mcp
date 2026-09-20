@@ -44,7 +44,7 @@ in inspect_building sowie die [kolonieweite Arbeitskräfteliste](docs/workforce-
 inspect_workforce. Live bestätigt: 10 Arbeiter, 3 beschäftigt, 7 unbeschäftigt;
 Arbeitsplatzzuordnungen stimmen mit Gebäudebesetzung überein.
 0.10.0 bereitet [reguläre Sollbesetzung](docs/workplace-staffing.md) vor;
-gebaut/getestet, Installation und Live-Abnahme offen. Spätere Integration:
+gebaut/getestet und installiert; Live-Abnahme offen. Spätere Integration:
 [Agentenfrage als Texteingabe-Popup](docs/player-question-popup.md).
 [Installation und Abnahme](docs/native-bridge-install.md),
 [offizielle Quellen und good references](docs/references/README.md).

@@ -1124,3 +1124,9 @@ Nach Popup-Recherche MCP-Entwicklung fortgesetzt: 0.10.0 mit eigenem geschützte
 set_workplace_staffing. Sollwertvergleich, Spielmaximum, reguläre +/-Schritte,
 keine direkte Biberzuweisung. 191 Tests und Mod-Build erfolgreich; Installation
 und Hin-/Rücktest offen. [Vertrag](docs/workplace-staffing.md).
+
+### 7.29 Sollbesetzungssteuerung installiert
+
+0.10.0 bei beendetem Spiel gesichert installiert, fünf Paketdateien per SHA256
+geprüft. Bestehende Konfiguration erhalten, Staffing-Opt-in aktiviert. Nach
+Nutzerstart begrenzten Hin-/Rücktest mit separatem Zustandsabgleich ausführen.

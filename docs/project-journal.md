@@ -1,5 +1,13 @@
 # Projektjournal
 
+## 2026-09-20 — Sollbesetzungssteuerung 0.10.0 installiert
+
+Bei beendetem Spiel bisherigen Mod-Ordner lokal gesichert und fünf Paketdateien
+ersetzt; SHA256 jeweils abgeglichen. Bestehende Einstellungen erhalten und
+enableStaffing gezielt aktiviert. Keine fremden Mods geändert. Live-Test wartet
+auf Nutzerstart und Laden der MCP-Kolonie: Sollbesetzung eines fertigen Arbeitsplatzes
+um eins erhöhen, separat nachlesen, auf ursprünglichen Sollwert zurückstellen.
+
 ## 2026-09-20 — Popup-Recherche und Sollbesetzung 0.10.0
 
 Nutzeridee für später kurz anhand öffentlicher Spielmetadaten geprüft:

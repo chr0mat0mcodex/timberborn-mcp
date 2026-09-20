@@ -1,6 +1,6 @@
 # Reguläre Sollbesetzung — 0.10.0
 
-Status: implementiert, Installation und Live-Abnahme offen. Öffentliche Workplace-
+Status: implementiert und installiert; Live-Abnahme offen. Öffentliche Workplace-
 API IncreaseDesiredWorkers()/DecreaseDesiredWorkers(), keine Fremdmod-Abhängigkeit.
 
 `set_workplace_staffing(id, session, desiredWorkers, expectedDesiredWorkers)` setzt
