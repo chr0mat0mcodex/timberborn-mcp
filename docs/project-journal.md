@@ -1001,17 +1001,42 @@ Keine neue Fremdabhängigkeit erforderlich. Kostenabzug noch nicht praktisch bel
 Vertrag und negative/positive Abnahmefälle: docs/research.md, Missionsplan 7.52.
 Noch keine Code-, Installations- oder Spielzustandsänderung in diesem Schritt.
 
-## 2026-09-20 � Forschung 0.17.0 gebaut und installiert
+## 2026-09-20 — Forschung 0.17.0 gebaut und installiert
 
-inspect_research erg�nzt Punkte, Freischaltkosten und Zust�nde als 19. nativen Leser.
-unlock_building verwendet regul�res Unlock mit eigener Mod-/MCP-Freigabe, Session,
-erwarteten Kosten, Punktepr�fung und unmittelbarer R�ckabfrage. Bereits entsperrte
-Vorlagen werden nicht erneut freigeschaltet. Keine k�nstlichen Forschungspunkte.
+inspect_research ergänzt Punkte, Freischaltkosten und Zustände als 19. nativen Leser.
+unlock_building verwendet reguläres Unlock mit eigener Mod-/MCP-Freigabe, Session,
+erwarteten Kosten, Punkteprüfung und unmittelbarer Rückabfrage. Bereits entsperrte
+Vorlagen werden nicht erneut freigeschaltet. Keine künstlichen Forschungspunkte.
 Rejection/Noop, exakter Abzug, fehlgeschlagene Nachbedingungen, fehlende Freigabe,
-veraltete Session und Wiederholung automatisch gepr�ft, auch �ber echten MCP-stdio.
-378 regul�re Tests bestanden (365 Unit, 13 Integration), drei Live-Tests bewusst
-�bersprungen; separater Spiel-Mod-Build ohne Warnungen/Fehler.
-0.17.0 bei beendetem Spiel installiert, vollst�ndige Sicherung, f�nf Datei-Hashes
-gepr�ft. Bestehende Konfigurationswerte erhalten, nur enableResearch aktiviert.
+veraltete Session und Wiederholung automatisch geprüft, auch über echten MCP-stdio.
+378 reguläre Tests bestanden (365 Unit, 13 Integration), drei Live-Tests bewusst
+übersprungen; separater Spiel-Mod-Build ohne Warnungen/Fehler.
+0.17.0 bei beendetem Spiel installiert, vollständige Sicherung, fünf Datei-Hashes
+geprüft. Bestehende Konfigurationswerte erhalten, nur enableResearch aktiviert.
 Nutzer um Start/Laden gebeten. Echter Kostenabzug und Bauvalidierung vor/nach Unlock
-noch offen. Logfenster unver�ndert. Vertrag: docs/research.md.
+noch offen. Logfenster unverändert. Vertrag: docs/research.md.
+
+## 2026-09-20 — Forschung 0.17.0: erster Livepilot
+
+Über echten MCP-Zugriff bestätigt: Version 0.17.0, 162 Forschungsvorlagen auf sechs
+Seiten, null Forschungspunkte. Kostenabweichung ergibt cost_changed, zu wenige Punkte
+insufficient_points, bereits freigeschaltete Vorlage already_unlocked. Separate
+Forschungsabfrage bestätigt weiterhin null Punkte und gesperrte Bank.
+
+Ein Erfinder wurde regulär für 12 Holz gebaut und in einem begrenzten 40-Sekunden-
+Fenster fertiggestellt. Er blieb ohne Distrikt/Arbeiter und erzeugte keine Punkte.
+Simulation abschließend pausiert: Tag 10, etwa 18:58 Uhr. Wasser 203, Beeren 250,
+Holz 20; sechs Betten/sieben Obdachlose. Keine künstlichen Forschungspunkte.
+
+Bauvorprüfung-Lücke: pathAtEntrance=true genügt nicht als Nachweis eines begehbaren
+Weges. Der gewählte Erfindereingang liegt an einer durch die Lodge belegten Zelle;
+GetPathObjectAt kann hier nicht als alleinige positive Zugangsaussage dienen.
+Zwei benachbarte freie Wegzellen geprüft, aber keinen ungeprüften Verbindungsbau
+oder weiteren Produktionslauf begonnen. Erfinder bleibt fertig, aktiv und unbesetzt.
+Nächster Pilot benötigt einen freien Erfindereingang und einen nachgewiesenen Anschluss.
+
+Förster-Bauvalidierung vor Unlock liefert einen Fehler, derzeit zu allgemein als
+backend_unavailable klassifiziert. Das ist kein vollständiger Nachweis der konkreten
+Sperrursache. Fehlermeldungen und Eingangs-/Wegprüfung gezielt verbessern.
+Positiver Kostenabzug, Wiederholung nach bezahltem Unlock und Bauvalidierung danach
+bleiben offen. 378 automatische Tests des Implementierungsstands unverändert gültig.

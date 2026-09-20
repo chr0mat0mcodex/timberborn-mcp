@@ -51,10 +51,18 @@ ErfindergebÃ¤ude vorbereiten; keine Punkte injizieren und keine unbegrenzte Simu
 ## Freigabe und Ergebnisse
 
 Mod-Konfiguration: `enableResearch: true`; MCP-Prozess: `TIMBERBORN_ENABLE_RESEARCH=1`.
-Beide standardmäßig aus. `inspect_research` bleibt lesend verfügbar (19 native Leser).
+Beide standardmÃ¤ÃŸig aus. `inspect_research` bleibt lesend verfÃ¼gbar (19 native Leser).
 
 `outcome`: `cost_changed`, `unavailable`, `insufficient_points`, `not_unlockable`
-sind Ablehnungen ohne Änderung; `already_unlocked` ist ein unveränderter Erfolg.
-`applied` bestätigt Freischaltung und den erwarteten Punkteabzug auf dem Spielthread.
-`unconfirmed` oder ein Transportfehler erfordern ausschließlich eine neue Abfrage.
-Die Aktion verwendet keine eigenen Save-Daten und verändert keine Baugeometrie.
+sind Ablehnungen ohne Ã„nderung; `already_unlocked` ist ein unverÃ¤nderter Erfolg.
+`applied` bestÃ¤tigt Freischaltung und den erwarteten Punkteabzug auf dem Spielthread.
+`unconfirmed` oder ein Transportfehler erfordern ausschlieÃŸlich eine neue Abfrage.
+Die Aktion verwendet keine eigenen Save-Daten und verÃ¤ndert keine Baugeometrie.
+
+## Erster Livepilot
+
+Katalog (162 Vorlagen), Kostenabweichung, fehlende Punkte und bereits freigeschaltete
+Vorlage live bestÃ¤tigt; Punkte unverÃ¤ndert null. Ein regulÃ¤r gebauter Erfinder blieb
+wegen fehlenden Anschlusses unbesetzt. Nach 40 Sekunden Simulationspilot wieder pausiert.
+Kostenabzug und positiver Unlock sind ausdrÃ¼cklich noch offen. Details und entdeckte
+BauvorprÃ¼fung-LÃ¼cke im Projektjournal; kein weiterer Produktionslauf ohne Anschluss.

@@ -1446,7 +1446,7 @@ Simulation unverändert pausiert, Pumpe wieder aktiv. Filter/Leeren manuell noch
 - [x] inspect_research: Punkte, Kosten und Freischaltzustände seitenweise lesen.
 - [x] unlock_building: eigenes Opt-in, Session/Kosten prüfen, regulär freischalten
   und Punkte sowie Freischaltzustand zurücklesen; kein automatisches Retry.
-- [x] 0.17.0 gebaut und installiert; 378 regul�re Tests bestanden, f�nf Datei-Hashes gepr�ft.
+- [x] 0.17.0 gebaut und installiert; 378 reguläre Tests bestanden, fünf Datei-Hashes geprüft.
 - [ ] Live: Kostenabzug, unveränderter Zustand bei Ablehnung, kein zweiter Abzug
   bei bereits freigeschalteter Vorlage und Bauvalidierung vor/nach Unlock.
 
@@ -1456,3 +1456,16 @@ belegt; keine erfundene Technologiebaum-Abfrage. Belegstufe derzeit öffentliche
 nicht implementiert oder live bestätigt. Ingame-Log bleibt auf Nutzerwunsch unverändert;
 Scrollen mit der Maus ausdrücklich bestätigt. Wohnraum und übrige Funktionsnachweise
 bleiben offen und werden durch diesen Forschungsschritt nicht als erledigt markiert.
+
+### 7.53 Forschung: Teilabnahme live und Zugangslücke
+
+- [x] 162 Forschungsvorlagen vollständig gelesen; Punkte und Kosten verfügbar.
+- [x] cost_changed, insufficient_points und already_unlocked live ohne Punkteänderung.
+- [x] Einen Erfinder regulär gebaut; nach begrenztem Pilot wieder pausiert.
+- [ ] Erfindereingang frei und mit Distrikt verbinden: fertiges Gebäude bisher unbesetzt.
+- [ ] pathAtEntrance präzisieren: vorhandenes PathObject ist kein ausreichender
+  Nachweis eines nutzbaren Weges; Belegung des Eingangs separat prüfen.
+- [ ] Fehlgeschlagene Bauvalidierung verständlich statt backend_unavailable melden.
+- [ ] Forschungspunkte regulär erzeugen, bezahlten Unlock und exakten Abzug nachweisen.
+
+Positiver Forschungstest ist nicht abgeschlossen. Endzustand pausiert, Tag 10 ca.18:58.

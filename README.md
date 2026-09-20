@@ -13,7 +13,7 @@ Nächste geplante Ausbaustufe: [Phase 2 — Wasser, Nahrung, Holz, Wege und Wohn
 
 ## Entwicklungsstand
 
-Neu: 0.17.0 mit [Forschung und regul�rer Geb�udefreischaltung](docs/research.md).
+Neu: 0.17.0 mit [Forschung und regulärer Gebäudefreischaltung](docs/research.md).
 19 native Leser; unlock_building mit eigenem Opt-in. 378 Tests bestanden, 0.17.0 installiert; Live-Abnahme offen.
 
 0.16.0 mit [Ingame-MCP-Log und optionaler Aktionsbegründung](docs/activity-log.md).

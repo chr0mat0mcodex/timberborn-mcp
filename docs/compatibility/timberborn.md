@@ -230,17 +230,17 @@ Konfiguration bytegleich. UI-/Live-Abnahme nach Neustart noch offen.
 Ã¼ber MCP wahr. Leser und zwei Pumpenaktionen mit reasoning/Abschlussstatus nachgelesen.
 Kein UI-Patch nÃ¶tig, Version bleibt 0.16.0.
 
-## 2026-09-20 — Forschung 0.17.0 gebaut und installiert
+## 2026-09-20 â€” Forschung 0.17.0 gebaut und installiert
 
-inspect_research ergänzt Punkte, Freischaltkosten und Zustände als 19. nativen Leser.
-unlock_building verwendet reguläres Unlock mit eigener Mod-/MCP-Freigabe, Session,
-erwarteten Kosten, Punkteprüfung und unmittelbarer Rückabfrage. Bereits entsperrte
-Vorlagen werden nicht erneut freigeschaltet. Keine künstlichen Forschungspunkte.
+inspect_research ergÃ¤nzt Punkte, Freischaltkosten und ZustÃ¤nde als 19. nativen Leser.
+unlock_building verwendet regulÃ¤res Unlock mit eigener Mod-/MCP-Freigabe, Session,
+erwarteten Kosten, PunkteprÃ¼fung und unmittelbarer RÃ¼ckabfrage. Bereits entsperrte
+Vorlagen werden nicht erneut freigeschaltet. Keine kÃ¼nstlichen Forschungspunkte.
 Rejection/Noop, exakter Abzug, fehlgeschlagene Nachbedingungen, fehlende Freigabe,
-veraltete Session und Wiederholung automatisch geprüft, auch über echten MCP-stdio.
-378 reguläre Tests bestanden (365 Unit, 13 Integration), drei Live-Tests bewusst
-übersprungen; separater Spiel-Mod-Build ohne Warnungen/Fehler.
-0.17.0 bei beendetem Spiel installiert, vollständige Sicherung, fünf Datei-Hashes
-geprüft. Bestehende Konfigurationswerte erhalten, nur enableResearch aktiviert.
+veraltete Session und Wiederholung automatisch geprÃ¼ft, auch Ã¼ber echten MCP-stdio.
+378 regulÃ¤re Tests bestanden (365 Unit, 13 Integration), drei Live-Tests bewusst
+Ã¼bersprungen; separater Spiel-Mod-Build ohne Warnungen/Fehler.
+0.17.0 bei beendetem Spiel installiert, vollstÃ¤ndige Sicherung, fÃ¼nf Datei-Hashes
+geprÃ¼ft. Bestehende Konfigurationswerte erhalten, nur enableResearch aktiviert.
 Nutzer um Start/Laden gebeten. Echter Kostenabzug und Bauvalidierung vor/nach Unlock
-noch offen. Logfenster unverändert. Vertrag: docs/research.md.
+noch offen. Logfenster unverÃ¤ndert. Vertrag: docs/research.md.

@@ -183,5 +183,5 @@ private Konfiguration unverÃ¤ndert lassen. Nach Neustart zuerst rein lesende Abn
 
 `enableResearch` in der privaten Mod-Konfiguration und `TIMBERBORN_ENABLE_RESEARCH=1`
 im MCP-Prozess geben `unlock_building` frei. Beide Freigaben sind erforderlich und
-standardmäßig deaktiviert. `inspect_research` benötigt keine Schreibfreigabe.
+standardmÃ¤ÃŸig deaktiviert. `inspect_research` benÃ¶tigt keine Schreibfreigabe.
 Bestehenden Token und andere Einstellungen bei Updates erhalten.
