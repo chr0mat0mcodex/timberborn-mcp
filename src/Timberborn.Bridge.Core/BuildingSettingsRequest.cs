@@ -61,7 +61,7 @@ public static class SettingChange
     public static SettingChangeResult Execute(string expected, string requested, Func<string> read, Action set)
     {
         var previous=read();
-        if(previous!=expected) throw new ArgumentException("setting_changed");
+        if(previous!=expected) throw new BridgeRejectionException("state_conflict");
         var outcome="applied";
         if(previous!=requested) { try { set(); } catch { outcome="unconfirmed"; } }
         var observed=read();

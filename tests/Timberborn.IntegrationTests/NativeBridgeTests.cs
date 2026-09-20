@@ -37,14 +37,14 @@ public sealed class NativeBridgeTests
             new(settingValues["good"],true,["Berries","Carrot"],settingValues["mode"],true,30,[],false),true,
             new(settingValues["priority"],settingValues["resource"],true,false,[new("Carrot",true)]),["synthetic_hybrid_fixture"]);
         object Change(BuildingSettingsRequest r){
-            if(r.Session!=session)throw new ArgumentException();
+            if(r.Session!=session)throw new BridgeRejectionException("stale_session");
             var key=BuildingSettingsRequest.ValueKey(r.Route);
             var changed=SettingChange.Execute(r.ExpectedValue,r.Value,()=>settingValues[key],()=>settingValues[key]=r.Value);
             var observation=Settings(Guid.Parse(r.Id));
             return new NativeSettingChange(observation.Id,observation.Template,key,changed.Previous,changed.Requested,changed.Observed,changed.Outcome,observation,["synthetic_test"]);
         }
         object Unlock(ResearchRequest r) {
-            if(r.Session!=session)throw new ArgumentException();
+            if(r.Session!=session)throw new BridgeRejectionException("stale_session");
             int before=sciencePoints;bool previous=researchUnlocked;
             var outcome=ResearchTransaction.Execute(r.ExpectedCost,10,true,()=>sciencePoints,()=>researchUnlocked,()=>true,()=>{sciencePoints-=10;researchUnlocked=true;});
             return new NativeUnlock(r.Template,r.ExpectedCost,10,before,sciencePoints,previous,researchUnlocked,outcome);
@@ -171,7 +171,11 @@ public sealed class NativeBridgeTests
             var unlockArgs=new Dictionary<string,object?>{["template"]="SyntheticResearch",["session"]=session,["expectedCost"]=10};
             if(enablePlacement) {
                 unlockArgs["session"]=Guid.NewGuid().ToString("D");
-                Assert.True((await client.CallToolAsync("unlock_building",unlockArgs,cancellationToken:ct)).IsError);
+                var rejected=await client.CallToolAsync("unlock_building",unlockArgs,cancellationToken:ct);
+                Assert.True(rejected.IsError);
+                Assert.Equal("stale_session",rejected.StructuredContent!.Value.GetProperty("error").GetProperty("code").GetString());
+                Assert.False(rejected.StructuredContent.Value.GetProperty("error").GetProperty("retryable").GetBoolean());
+                Assert.Contains(activityLog.Snapshot(),e=>e.Tool=="unlock_building"&&e.State=="rejected");
                 Assert.Equal(20,sciencePoints);
                 unlockArgs["session"]=session;
                 var unlocked=await client.CallToolAsync("unlock_building",unlockArgs,cancellationToken:ct);

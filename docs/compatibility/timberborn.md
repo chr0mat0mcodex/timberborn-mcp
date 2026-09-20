@@ -267,3 +267,23 @@ Förster weiterhin freigeschaltet, Forschungspunkte weiterhin fünf. Simulation 
 pausiert, Tag 13 um 06:30 Uhr. Keine Bau-, Freischalt- oder Geschwindigkeitsänderung.
 Installation und gezielte Live-Abnahme von 0.17.1 abgeschlossen. Vollständige
 Erreichbarkeit und präzisere Fehlermeldungen bleiben getrennte offene Fähigkeiten.
+
+## 2026-09-20 — Fachliche Fehlercodes 0.17.2 vorbereitet
+
+Zentrale Session-Prüfung, gesperrte/deaktivierte Bauvorlagen und Gebäudeeinstellungen
+liefern feste fachliche Codes statt pauschal backend_unavailable. BridgeRejectionException
+besitzt eine Positivliste; Queue/HTTP erhalten ausschließlich den Code (HTTP 409).
+Client lehnt unbekannte Codes, Zusatzfelder und doppelte Schlüssel ab. Keine privaten
+Exception-Texte. MCP retryable=false, Ingame-Log rejected; keine automatische Wiederholung.
+HTTP 400 invalid_request wird als invalid_argument eingeordnet. Andere Fachbereiche
+sind noch nicht vollständig umgestellt; siehe docs/bridge-errors.md.
+
+388 reguläre Tests bestanden (375 Unit, 13 Integration), drei Live-Tests übersprungen.
+Echter MCP-stdio-Pfad für stale_session und Logstatus geprüft; Mod-Build ohne Warnungen
+oder Fehler. Separates Paket 0.17.2 erstellt. Nutzer um Speichern/Beenden gebeten;
+Installation und gezielte Live-Ablehnungen noch offen. Kein Spielzustand geändert.
+
+0.17.2 nach bestätigtem Spielende gesichert installiert. Fünf Paketdateien per Hash
+verglichen; private Konfiguration bytegleich erhalten. Begrenzter MCP-Liveprüfer für
+template_locked, stale_session und state_conflict vorbereitet. Nutzer startet das Spiel;
+Live-Abnahme wartet auf Bestätigung des geladenen Spielstands.

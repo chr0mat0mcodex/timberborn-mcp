@@ -61,6 +61,7 @@ public sealed class BridgeHttpServer : IDisposable
                 }
                 json = await queue.Enqueue(BridgeRequest.Parse(request.Url.AbsolutePath, query), deadline.Token).ConfigureAwait(false);
             }
+            catch (BridgeRejectionException ex) { status = 409; json = "{\"error\":\"" + ex.Code + "\"}"; }
             catch (ArgumentException) { status = 400; json = "{\"error\":\"invalid_request\"}"; }
             catch (OperationCanceledException) { status = 503; json = "{\"error\":\"session_unavailable\"}"; }
             catch (InvalidOperationException) { status = 503; json = "{\"error\":\"observation_unavailable\"}"; }

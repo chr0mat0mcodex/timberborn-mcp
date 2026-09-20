@@ -1486,3 +1486,15 @@ Das Spiel bleibt pausiert, Tag 13 ca.06:32. Forschungstransaktion ist abgenommen
 Fehlerklassifikation und vollständige Begehbarkeit bleiben getrennte offene Fähigkeiten.
 
 Neustartabnahme: Erfinder angeschlossen/besetzt, Förster freigeschaltet, fünf Punkte erhalten; Spiel pausiert. Siehe Projektjournal.
+
+### 7.55 Fachliche Fehler statt Verbindungsfehler (0.17.2)
+
+- [x] Feste Codes für Session, Vorlagensperre/-verfügbarkeit und Gebäudeeinstellungen.
+- [x] Positivliste über Mod, Queue, HTTP und MCP; keine privaten Exception-Texte.
+- [x] retryable=false und rejected im Ingame-Log für fachliche Ablehnungen.
+- [x] 388 Tests bestanden, Mod gebaut und separat paketiert.
+- [x] 0.17.2 nach bestätigtem Spielende installiert; Sicherung und fünf Hashes geprüft.
+- [ ] template_locked, stale_session und state_conflict live ohne Änderung nachweisen.
+
+Umfang und Grenzen: docs/bridge-errors.md. Andere Management-/Entfernungsfehler bleiben
+vorerst allgemein; keine vollständige Fehlerabdeckung behaupten.

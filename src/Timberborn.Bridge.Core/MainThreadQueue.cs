@@ -34,6 +34,7 @@ public sealed class MainThreadQueue : IDisposable
             var work = pending.Dequeue();
             if (work.Token.IsCancellationRequested) { work.Completion.TrySetCanceled(); return; }
             try { work.Completion.TrySetResult(observe(work.Request)); }
+            catch (BridgeRejectionException ex) { work.Completion.TrySetException(new BridgeRejectionException(ex.Code)); }
             catch (ArgumentException) { work.Completion.TrySetException(new ArgumentException("invalid_region")); }
             catch (Exception) { work.Completion.TrySetException(new InvalidOperationException("observation_failed")); }
         }

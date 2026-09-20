@@ -158,10 +158,10 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
         }
         catch (Exception ex) when (ex is ArgumentException or HttpRequestException or IOException or InvalidDataException or JsonException or UnauthorizedAccessException or OperationCanceledException)
         {
-            string code = ex is ArgumentException ? "invalid_argument" : ex is UnauthorizedAccessException ? "authentication_failed"
+            string code = ex is BridgeRejectionException rejection ? rejection.Code : ex is ArgumentException ? "invalid_argument" : ex is UnauthorizedAccessException ? "authentication_failed"
                 : ex is JsonException or InvalidDataException ? "backend_incompatible" : "backend_unavailable";
             return (JsonObject)JsonSerializer.SerializeToNode(new NativeResult<object>(1, "error", null,
-                new("native", false, null, null), new(code, BuildingSettingsTools.Writes(name) || name is "unlock_building" or "place_building" or "place_path" or "place_lodge" or "set_simulation_speed" or "set_workplace_staffing" or "set_building_priority" or "set_area" or "demolish_building" or "remove_planted" or "remove_vegetation" or "remove_debris" ? "Aktionsergebnis möglicherweise unbestätigt. Nur lesend klären; niemals automatisch erneut ausführen." : "Native Bridge: Parameter, Verbindung oder Daten prüfen.", code == "backend_unavailable" && name != "unlock_building" && !BuildingSettingsTools.Writes(name) && name is not ("validate_building" or "place_building" or "validate_build_site" or "place_path" or "place_lodge" or "set_simulation_speed" or "set_workplace_staffing" or "set_building_priority" or "set_area" or "demolish_building" or "remove_planted" or "remove_vegetation" or "remove_debris"))), NativeJson.Options)!;
+                new("native", false, null, null), new(code, ex is BridgeRejectionException ? "Spielzustand lehnt den Aufruf ab; Zustand neu lesen und Entscheidung prüfen. Kein automatisches Retry." : BuildingSettingsTools.Writes(name) || name is "unlock_building" or "place_building" or "place_path" or "place_lodge" or "set_simulation_speed" or "set_workplace_staffing" or "set_building_priority" or "set_area" or "demolish_building" or "remove_planted" or "remove_vegetation" or "remove_debris" ? "Aktionsergebnis möglicherweise unbestätigt. Nur lesend klären; niemals automatisch erneut ausführen." : "Native Bridge: Parameter, Verbindung oder Daten prüfen.", code == "backend_unavailable" && name != "unlock_building" && !BuildingSettingsTools.Writes(name) && name is not ("validate_building" or "place_building" or "validate_build_site" or "place_path" or "place_lodge" or "set_simulation_speed" or "set_workplace_staffing" or "set_building_priority" or "set_area" or "demolish_building" or "remove_planted" or "remove_vegetation" or "remove_debris"))), NativeJson.Options)!;
         }
     }
     public async Task<JsonObject> InvokeLogged(string name,JsonElement args,CancellationToken ct)
@@ -173,7 +173,7 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
         string state="error";
         try {
             var result=await Invoke(name,args,ct);
-            state=result["status"]?.GetValue<string>()=="error"?"error":result["data"]?["outcome"]?.GetValue<string>() is "applied" or "rejected" or "unconfirmed" ? result["data"]!["outcome"]!.GetValue<string>() : "ok";
+            state=result["status"]?.GetValue<string>()=="error"?(BridgeRejectionException.IsCode(result["error"]?["code"]?.GetValue<string>())?"rejected":"error"):result["data"]?["outcome"]?.GetValue<string>() is "applied" or "rejected" or "unconfirmed" ? result["data"]!["outcome"]!.GetValue<string>() : "ok";
             if(name=="unlock_building" && result["data"]?["outcome"]?.GetValue<string>() is "cost_changed" or "unavailable" or "insufficient_points" or "not_unlockable")state="rejected";
             return result;
         } catch(OperationCanceledException){state="cancelled";throw;}

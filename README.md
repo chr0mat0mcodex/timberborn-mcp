@@ -13,6 +13,8 @@ Nächste geplante Ausbaustufe: [Phase 2 — Wasser, Nahrung, Holz, Wege und Wohn
 
 ## Entwicklungsstand
 
+Installiert: 0.17.2 mit [fachlichen Fehlercodes](docs/bridge-errors.md), 388 Tests bestanden; Live-Abnahme offen.
+
 Installiert/live bestätigt: 0.17.1 unterscheidet fertige Wege von anderen Eingangsbelegungen über pathAtEntrance und entranceOccupants.
 
 0.17.0 mit [Forschung und regulärer Gebäudefreischaltung](docs/research.md).

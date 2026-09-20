@@ -28,7 +28,7 @@ public sealed partial class NativeClient
         var result=await Get<NativeAreas>($"areas?kind={r.Kind}&offset={r.Offset}&limit={r.Limit}",ct);var d=result.Data;
         if(d.Kind!=r.Kind||d.Offset!=r.Offset||d.Limit!=r.Limit||d.Items is null||!ValidCells(d.Items)||d.Limitations is null||
             (d.Supported?d.Total is null||d.Total<0||d.Items.Length!=Math.Min(r.Limit,Math.Max(0,d.Total.Value-r.Offset))||d.HasMore!=((long)r.Offset+d.Items.Length<d.Total):d.Total is not null||d.Items.Length!=0||d.HasMore))throw new InvalidDataException("Invalid areas");
-        if(r.Kind=="tapping"&&(result.BridgeVersion is not ("0.13.2" or "0.14.0" or "0.14.1" or "0.15.0" or "0.16.0" or "0.17.0" or "0.17.1")||d.Items.Any(c=>c.Vegetation?.IsTappingCandidate()!=true)))throw new InvalidDataException("Tapping health unavailable or ineligible");
+        if(r.Kind=="tapping"&&(result.BridgeVersion is not ("0.13.2" or "0.14.0" or "0.14.1" or "0.15.0" or "0.16.0" or "0.17.0" or "0.17.1" or "0.17.2")||d.Items.Any(c=>c.Vegetation?.IsTappingCandidate()!=true)))throw new InvalidDataException("Tapping health unavailable or ineligible");
         return result;
     }
     public async Task<BridgeEnvelope<NativeAreaChange>> SetArea(ManagementRequest r,CancellationToken ct)

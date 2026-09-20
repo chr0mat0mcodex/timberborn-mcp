@@ -21,7 +21,7 @@ public sealed class BuildingSettingsTests
     public void StaleOrMatchingSettingDoesNotMutate()
     {
         int calls=0;var value="accept";
-        Assert.Throws<ArgumentException>(()=>SettingChange.Execute("supply","empty",()=>value,()=>calls++));
+        Assert.Throws<BridgeRejectionException>(()=>SettingChange.Execute("supply","empty",()=>value,()=>calls++));
         var result=SettingChange.Execute("accept","accept",()=>value,()=>calls++);
         Assert.Equal("applied",result.Outcome);Assert.Equal(0,calls);
     }

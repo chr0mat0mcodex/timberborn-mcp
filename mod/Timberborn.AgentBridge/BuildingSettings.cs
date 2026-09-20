@@ -18,7 +18,7 @@ public sealed class BuildingSettings(EntityRegistry entities, IGoodService goods
     {
         var e=entities.Entities.SingleOrDefault(e=>e.EntityId==Guid.Parse(r.Id) && e.Initialized && !e.Deleted);
         if(e is null || !e.HasComponent<Building>() || !e.TryGetComponent<BlockObject>(out var block) || block.IsPreview)
-            throw new ArgumentException("building_not_found");
+            throw new BridgeRejectionException("building_not_found");
         return e;
     }
     public object Read(BuildingSettingsRequest r) => Observe(Find(r));
@@ -76,31 +76,31 @@ public sealed class BuildingSettings(EntityRegistry entities, IGoodService goods
         var e=Find(r); var b=e.GetComponent<BlockObject>();
         Func<string> read; Action set;
         if(r.Route=="set-building-paused") {
-            if(!e.TryGetComponent<PausableBuilding>(out var p) || !p.IsPausable()) throw new ArgumentException("not_pausable");
+            if(!e.TryGetComponent<PausableBuilding>(out var p) || !p.IsPausable()) throw new BridgeRejectionException("not_pausable");
             read=()=>p.Paused?"true":"false";
             set=()=>{ if(r.Value=="true") p.Pause(); else p.Resume(); };
         } else {
-            if(!b.IsFinished) throw new ArgumentException("finished_building_required");
+            if(!b.IsFinished) throw new BridgeRejectionException("finished_building_required");
             switch(r.Route) {
                 case "set-storage-good":
                     if(!e.TryGetComponent<Stockpile>(out var s) || !e.TryGetComponent<SingleGoodAllower>(out var a) ||
                         e.HasComponent<FixedStockpile>() || (r.Value!="" && !AllowedGoods(s).Contains(r.Value)))
-                        throw new ArgumentException("unsupported_storage_good");
+                        throw new BridgeRejectionException("unsupported_storage_good");
                     read=()=>Good(a); set=()=>{ if(r.Value=="") a.Disallow(); else a.Allow(r.Value); }; break;
                 case "set-storage-mode":
-                    if(!e.HasComponent<Stockpile>() || !e.TryGetComponent<StockpilePriority>(out var mode)) throw new ArgumentException("not_storage");
+                    if(!e.HasComponent<Stockpile>() || !e.TryGetComponent<StockpilePriority>(out var mode)) throw new BridgeRejectionException("not_storage");
                     read=()=>Mode(mode); set=()=>{ switch(r.Value) { case "accept":mode.Accept();break;case "empty":mode.Empty();break;
                         case "obtain":mode.Obtain();break;case "supply":mode.Supply();break;default:throw new ArgumentException(); } }; break;
                 case "set-farm-priority":
-                    if(!e.TryGetComponent<FarmHouse>(out var f)) throw new ArgumentException("not_farm");
+                    if(!e.TryGetComponent<FarmHouse>(out var f)) throw new BridgeRejectionException("not_farm");
                     read=()=>FarmPriority(f); set=()=>{ if(r.Value=="planting") f.PrioritizePlanting(); else f.UnprioritizePlanting(); }; break;
                 case "set-farm-crop":
                     if(!e.HasComponent<FarmHouse>() || !e.TryGetComponent<PlanterBuilding>(out var planter) ||
-                        !e.TryGetComponent<PlantablePrioritizer>(out var pref)) throw new ArgumentException("not_crop_prioritizer");
+                        !e.TryGetComponent<PlantablePrioritizer>(out var pref)) throw new BridgeRejectionException("not_crop_prioritizer");
                     var plant=planter.AllowedPlantables.SingleOrDefault(p=>p.TemplateName==r.Value);
-                    if(plant is null || !areas.IsPlantUnlocked(plant)) throw new ArgumentException("unavailable_crop");
+                    if(plant is null || !areas.IsPlantUnlocked(plant)) throw new BridgeRejectionException("unavailable_crop");
                     read=()=>Crop(pref); set=()=>pref.PrioritizePlantable(plant); break;
-                default: throw new ArgumentException("unsupported_setting");
+                default: throw new BridgeRejectionException("unsupported_setting");
             }
         }
         var result=SettingChange.Execute(r.ExpectedValue,r.Value,read,set);

@@ -39,8 +39,9 @@ public sealed class SiteValidation(PreviewFactory factory, BlockObjectValidation
         var building = template.GetSpec<BuildingSpec>();
         var placeable = template.GetSpec<PlaceableBlockObjectSpec>();
         var spec = template.GetSpec<BlockObjectSpec>();
-        if (!template.UsableWithCurrentFeatureToggles || !placeable.UsableWithCurrentFeatureToggles || !unlocks.Unlocked(building))
-            throw new ArgumentException("template_unavailable");
+        if (!template.UsableWithCurrentFeatureToggles || !placeable.UsableWithCurrentFeatureToggles )
+            throw new BridgeRejectionException("template_disabled");
+        if (!unlocks.Unlocked(building)) throw new BridgeRejectionException("template_locked");
         var rotation = new[] { Orientation.Cw0, Orientation.Cw90, Orientation.Cw180, Orientation.Cw270 }[request.Rotation];
         var placement = new Placement(new Vector3Int(request.X, request.Y, request.Z), rotation, FlipMode.Unflipped);
         var cells = spec.GetBlocks(placement).Take(65).ToArray();
