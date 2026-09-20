@@ -49,6 +49,7 @@ public sealed class NativeBridgeTests
                             "snapshot" => Snapshot(),
                             "map" => new NativeMap(new(r.X, r.Y, r.Z), 1, 1, 1,
                                 [new(r.X, r.Y, r.Z, false, true, 2, 0.5f, 0, true)], ["synthetic_test"]),
+                            "workforce" => new NativeWorkforce("entities_with_worker_component", r.Offset, r.Limit, 0, 0, 0, [], false, ["synthetic_test"]),
                             "objects" => new NativeObjects("buildings_and_paths", r.Offset, r.Limit, 0, [], false, ["synthetic_test"]),
                             "building" => new NativeBuilding(Guid.Parse(r.EntityId), false, null, ["synthetic_test"]),
                             "catalog" => new NativeCatalog("Folktails",
@@ -116,7 +117,7 @@ public sealed class NativeBridgeTests
                 }
             }), cancellationToken: ct);
             var tools = await client.ListToolsAsync(cancellationToken: ct);
-            var expected = new List<string> { "find_buildings", "inspect_build_catalog", "inspect_building", "inspect_colony", "inspect_map_region", "inspect_simulation", "precheck_build_site", "timberborn_status" };
+            var expected = new List<string> { "find_buildings", "inspect_build_catalog", "inspect_building", "inspect_colony", "inspect_map_region", "inspect_simulation", "inspect_workforce", "precheck_build_site", "timberborn_status" };
             if (enableValidation) expected.Add("validate_build_site");
             if (enablePlacement) expected.Add("place_path"); if (enableLodgePlacement) { expected.Add("place_lodge"); expected.Add("set_simulation_speed"); }
             Assert.Equal(expected.Order(), tools.Select(t => t.Name).Order());
@@ -177,6 +178,9 @@ public sealed class NativeBridgeTests
                 Assert.True(repeated.IsError);
                 Assert.False(repeated.StructuredContent!.Value.GetProperty("error").GetProperty("retryable").GetBoolean());
             }
+            var workforce = await client.CallToolAsync("inspect_workforce", new Dictionary<string, object?> { ["offset"] = 0, ["limit"] = 32 }, cancellationToken: ct);
+            Assert.False(workforce.IsError);
+            Assert.Equal(0, workforce.StructuredContent!.Value.GetProperty("data").GetProperty("total").GetInt32());
             var simulation = await client.CallToolAsync("inspect_simulation", cancellationToken: ct);
             Assert.Equal(1, simulation.StructuredContent!.Value.GetProperty("data").GetProperty("currentSpeed").GetSingle());
             if (enableLodgePlacement)

@@ -1,7 +1,8 @@
 # Eigene Timberborn Agent Bridge — 0.6.1
 
 Neu vorbereitet: 0.9.0 mit [Gebäude-Betriebsdiagnose](building-operations.md).
-Reine Erweiterung von inspect_building, keine zusätzlichen Aktionsfreigaben nötig.
+Zusätzlich [kolonieweite Arbeitskräfteliste](workforce-roster.md) mit inspect_workforce.
+Keine zusätzlichen Aktionsfreigaben nötig.
 Installiert/live geprüft bleibt 0.8.0 bis zum Update.
 
 Neu vorbereitet: 0.8.0 mit [Pause/Normalgeschwindigkeit](simulation-control.md).

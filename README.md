@@ -40,13 +40,14 @@ Fertigstellung und zusätzliche Betten noch offen.
 0.8.0 ergänzt [Zeitbeobachtung und Pause/1×](docs/simulation-control.md).
 Live bestätigt: Pause hält Spielzeit an, MCP bleibt erreichbar, Weiterlauf auf 1× funktioniert.
 0.9.0 ergänzt [Gebäudepause und Arbeitsplatzdiagnose](docs/building-operations.md)
-in inspect_building. Automatisiert getestet; Installation und Live-Abnahme offen.
+in inspect_building sowie die [kolonieweite Arbeitskräfteliste](docs/workforce-roster.md)
+inspect_workforce. Automatisiert getestet; Installation und Live-Abnahme offen.
 [Installation und Abnahme](docs/native-bridge-install.md),
 [offizielle Quellen und good references](docs/references/README.md).
 Für die eigene Bridge: `scripts/start-native.ps1 -ConfigPath '<private Konfiguration>'`;
 Build und nativen Lesetest mit `scripts/verify.ps1 -NativeConfig '<private Konfiguration>'`
 ausführen. Beide Abläufe sind in der Installationsanleitung beschrieben.
-168 reguläre Tests bestanden; drei separate Live-Tests im Standardlauf übersprungen.
+179 reguläre Tests bestanden; drei separate Live-Tests im Standardlauf übersprungen.
 Nativer lesender MCP-Livetest zuletzt mit 0.6.1 erfolgreich.
 Auch mit ausschließlich eigener Bridge laut Nutzer-Mod-Auswahl: alle sechs nativen
 Lesewerkzeuge erneut live erfolgreich (0.3.0). Keine Fremdmod für diesen Zugriff erforderlich.

@@ -1,5 +1,20 @@
 # Projektjournal
 
+## 2026-09-20 — Kolonieweite Arbeitskräfteliste in 0.9.0 ergänzt
+
+Auf ausdrücklichen Nutzerwunsch inspect_workforce(offset, limit): Worker-ID/-Typ,
+Employed, JobRunning und aufgelöster Arbeitsplatz mit Entity-ID, Template und
+Position. Maximal 32 pro Seite, stabile ID-Sortierung; Gesamtzahl, employed und
+unemployed für Entities mit Worker-Komponente. Zuordnung, Beschäftigung und
+laufender Auftrag getrennt, unresolved nicht als arbeitslos interpretiert.
+Keine Personaleinstellung und keine Abhängigkeit von Fremdmods.
+
+179 reguläre Tests bestanden (166 Unit, 13 Integration), drei Live-Tests übersprungen.
+Mod-Build ohne Warnungen/Fehler; neues 0.9.0-Paket erzeugt, altes Paket erhalten.
+Installiert bleibt 0.8.0. Live-Abgleich der Zuordnungen mit Gebäude-Besetzung steht
+aus. [Vertrag und Grenzen](workforce-roster.md). Für Installation neuestes Paket
+mit Arbeitskräfteliste verwenden, nicht älteres 0.9.0-Paket nur mit Gebäudediagnose.
+
 ## 2026-09-20 — Native Betriebsdiagnose vorbereitet (0.9.0)
 
 Nächster freigegebener MCP-Ausbau: inspect_building um operations erweitert.

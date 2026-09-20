@@ -56,6 +56,8 @@ public sealed class BridgeRequest
                 throw new ArgumentException("invalid_session");
             return new("simulation-speed", session: id.ToString("D"), speed: Read("speed", 0, 1), expectedSpeed: Read("expectedSpeed", 0, 1));
         }
+        if (path == "/agent-api/v1/workforce" && query.Count == 2)
+            return new("workforce", offset: Read("offset", 0, 65535), limit: Read("limit", 1, 32));
         if (path == "/agent-api/v1/objects" && query.Count == 2)
             return new("objects", offset: Read("offset", 0, 65535), limit: Read("limit", 1, 32));
         bool lodge = path == "/agent-api/v1/lodge-placement"; bool placement = path == "/agent-api/v1/path-placement" || lodge;

@@ -73,6 +73,24 @@ public sealed class NativeClient : IDisposable
             throw new InvalidDataException("Invalid objects");
         return result;
     }
+    public async Task<BridgeEnvelope<NativeWorkforce>> Workforce(BridgeRequest r, CancellationToken ct)
+    {
+        if (r.Route != "workforce") throw new ArgumentException();
+        var result = await Get<NativeWorkforce>($"workforce?offset={r.Offset}&limit={r.Limit}", ct);
+        var d = result.Data;
+        if (d.Scope != "entities_with_worker_component" || d.Offset != r.Offset || d.Limit != r.Limit || d.Total < 0 ||
+            d.Employed < 0 || d.Unemployed < 0 || (long)d.Employed + d.Unemployed != d.Total ||
+            d.Items is null || d.Items.Length != Math.Min(r.Limit, Math.Max(0, d.Total - r.Offset)) ||
+            d.HasMore != ((long)r.Offset + d.Items.Length < d.Total) || d.Limitations is null ||
+            d.Items.Any(w => w is null || w.Id == Guid.Empty || string.IsNullOrEmpty(w.WorkerType) || w.WorkerType.Length > 160 ||
+                w.AssignmentStatus is not ("assigned" or "unassigned" or "unresolved") ||
+                (w.AssignmentStatus == "assigned") != (w.Workplace is not null) ||
+                (w.Workplace is { } a && (a.Id == Guid.Empty || string.IsNullOrEmpty(a.Template) || a.Template.Length > 160 || a.Position is null))) ||
+            d.Items.Select(w => w.Id).Distinct().Count() != d.Items.Length ||
+            d.Items.Count(w => w.Employed) > d.Employed || d.Items.Count(w => !w.Employed) > d.Unemployed)
+            throw new InvalidDataException("Invalid workforce roster");
+        return result;
+    }
     public async Task<BridgeEnvelope<NativeCatalog>> Catalog(CancellationToken ct)
     {
         var result = await Get<NativeCatalog>("catalog", ct);

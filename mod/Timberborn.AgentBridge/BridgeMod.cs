@@ -22,6 +22,7 @@ public sealed class BridgeConfigurator : Configurator
     {
         Bind<SpatialObservations>().AsSingleton();
         Bind<BuildingObservations>().AsSingleton();
+        Bind<WorkforceObservations>().AsSingleton();
         Bind<SiteValidation>().AsSingleton();
         Bind<PilotPlacement>().AsSingleton();
         Bind<SimulationControl>().AsSingleton();
@@ -31,7 +32,7 @@ public sealed class BridgeConfigurator : Configurator
 
 public sealed class BridgeMod(ResourceCountingService resources, PopulationService population,
     EntityRegistry entities, ITerrainService terrain, IThreadSafeWaterMap water, IGoodService goods,
-    ModRepository mods, SpatialObservations spatial, SiteValidation validation, PilotPlacement placement, BuildingObservations buildings, SimulationControl simulation)
+    ModRepository mods, SpatialObservations spatial, SiteValidation validation, PilotPlacement placement, BuildingObservations buildings, SimulationControl simulation, WorkforceObservations workforce)
     : ILoadableSingleton, IUnloadableSingleton, IUpdatableSingleton
 {
     private readonly MainThreadQueue queue = new();
@@ -73,7 +74,7 @@ public sealed class BridgeMod(ResourceCountingService resources, PopulationServi
             "snapshot" => Snapshot(), "map" => Map(request), "objects" => spatial.Objects(request),
             "catalog" => spatial.Catalog(), "site-precheck" => spatial.Precheck(request),
             "site-validation" => validation.Validate(request),
-            "building" => buildings.Observe(request),
+            "building" => buildings.Observe(request), "workforce" => workforce.Observe(request),
             "path-placement" or "lodge-placement" => placement.Place(request),
             _ => throw new ArgumentException("invalid_request")
         };

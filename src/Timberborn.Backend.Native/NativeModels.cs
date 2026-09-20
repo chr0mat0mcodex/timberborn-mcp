@@ -73,3 +73,8 @@ public sealed record NativeResult<T>(int SchemaVersion, string Status, T? Data, 
 public sealed record NativeSimulation(float CurrentSpeed, int DayNumber, float DayProgress, float HoursPassedToday);
 public sealed record NativeSpeedResult(int RequestedSpeed, float PreviousSpeed, bool MatchedImmediately,
     NativeSimulation Observation, string[] Limitations);
+public sealed record NativeWorkplaceAssignment(Guid Id, string Template, Position Position);
+public sealed record NativeWorker(Guid Id, string WorkerType, bool Employed, bool JobRunning,
+    string AssignmentStatus, NativeWorkplaceAssignment? Workplace);
+public sealed record NativeWorkforce(string Scope, int Offset, int Limit, int Total, int Employed, int Unemployed,
+    NativeWorker[] Items, bool HasMore, string[] Limitations);

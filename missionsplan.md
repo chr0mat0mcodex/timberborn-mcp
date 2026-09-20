@@ -1086,3 +1086,11 @@ Unter-/Überbesetzung und laufender Arbeitsauftrag. Öffentliche APIs, keine neu
 Schreibaktion. 168 reguläre Tests bestanden. Installation und Lesepilot an
 Arbeitsgebäuden, Lodge/Baustelle und Path offen. Erst danach Personalsteuerung
 bewerten; Besetzung ist kein Produktionsnachweis. [Vertrag](docs/building-operations.md).
+
+### 7.24 Kolonieweite Arbeitszuteilung effizient lesen
+
+Auf Nutzerwunsch 0.9.0 um inspect_workforce ergänzt: begrenzte Liste von Arbeitern
+mit Arbeitsplatz-ID/Typ/Position, Beschäftigung und laufendem Arbeitsauftrag.
+179 Tests und Mod-Build erfolgreich. Zusammen mit Gebäudediagnose installieren
+und Zuordnungen live gegen Besetzung prüfen. Keine exakte Tätigkeit behaupten.
+[Vertrag](docs/workforce-roster.md).

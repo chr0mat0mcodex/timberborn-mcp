@@ -14,7 +14,7 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
     public static IReadOnlyList<Tool> Catalog(bool enableValidation = false, bool enablePlacement = false, bool enableLodgePlacement = false, bool enableSpeedControl = false)
     {
         var options = new JsonSerializerOptions(NativeJson.Options) { TypeInfoResolver = new DefaultJsonTypeInfoResolver() };
-        var names = new List<string> { "timberborn_status", "inspect_colony", "inspect_map_region", "find_buildings", "inspect_build_catalog", "precheck_build_site", "inspect_building", "inspect_simulation" };
+        var names = new List<string> { "timberborn_status", "inspect_colony", "inspect_map_region", "find_buildings", "inspect_build_catalog", "precheck_build_site", "inspect_building", "inspect_simulation", "inspect_workforce" };
         if (enableSpeedControl) names.Add("set_simulation_speed");
         if (enableValidation) names.Add("validate_build_site");
         if (enablePlacement) names.Add("place_path"); if (enableLodgePlacement) names.Add("place_lodge");
@@ -32,7 +32,7 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
                 foreach (var key in new[] { "id", "session" }) properties[key] = new JsonObject { ["type"] = "string", ["format"] = "uuid" };
             if (map) foreach (var (key, min, max) in new[] { ("x", 0, 4095), ("y", 0, 4095), ("z", 0, 4095), ("width", 1, 8), ("height", 1, 8), ("depth", 1, 4) })
                 properties[key] = new JsonObject { ["type"] = "integer", ["minimum"] = min, ["maximum"] = max };
-            if (name == "find_buildings")
+            if (name is "find_buildings" or "inspect_workforce")
             {
                 properties["offset"] = new JsonObject { ["type"] = "integer", ["minimum"] = 0, ["maximum"] = 65535 };
                 properties["limit"] = new JsonObject { ["type"] = "integer", ["minimum"] = 1, ["maximum"] = 32 };
@@ -53,10 +53,12 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
                 "place_path" or "place_lodge" => typeof(NativeResult<NativePlacement>),
                 "inspect_building" => typeof(NativeResult<NativeBuilding>),
                 "inspect_simulation" => typeof(NativeResult<NativeSimulation>),
+                "inspect_workforce" => typeof(NativeResult<NativeWorkforce>),
                 "set_simulation_speed" => typeof(NativeResult<NativeSpeedResult>),
                 _ => typeof(NativeResult<NativeSnapshot>) };
             return new Tool { Name = name,
                 Description = speed ? "Setzt Pause (0) oder Normalgeschwindigkeit (1). Eigene Freigabe in Mod und MCP, frische Session und expectedSpeed nötig. Vergleicht aktuellen Wert auf dem Spielthread; überschreibt keine abweichende Nutzereinstellung. Entsperrt keine Spielsperren. Kein automatisches Retry; inspect_simulation danach zwingend lesen. matchedImmediately ist nur eine unmittelbare Beobachtung, keine Garantie für tickende Simulation."
+                    : name == "inspect_workforce" ? "Kolonieweite Zuordnung von Worker-Entities zu Arbeitsgebäuden, maximal 32 je Seite: Arbeiter-ID, WorkerType, Employed, JobRunning, Arbeitsplatz-ID/Vorlage/Position. Totals gelten für Worker-Komponenten, nicht für Bevölkerung oder Arbeitsfähigkeit. assigned/unassigned/unresolved beschreibt die Arbeitsplatzreferenz; Employed bleibt getrennt. Kein exakter Tätigkeitstyp und kein Produktionsbeweis. Seiten sind frische Beobachtungen; Session beachten. Benötigt Bridge 0.9.0."
                     : name == "inspect_simulation" ? "Liest SpeedManager.CurrentSpeed, Spieltag, Tagesfortschritt und vergangene Stunden. Keine gemessene Tickrate; eine Spielsperre kann Fortschritt verhindern. Benötigt Bridge 0.8.0."
                     : placement ? "Pilot: erteilt genau einen Auftrag für die angegebene Pilotvorlage (Path oder Lodge.Folktails) über den regulären Spielplatzierer, nach frischer Vorschauvalidierung. Benötigt aktuelle Session-ID und separates Mod-Opt-in. Weg und Lodge teilen sich einen Versuch je Sitzung, auch bei Ablehnung/Fehler. applied bestätigt Entity-ID, Vorlage und Position; finished separat. Bei Fehler/unconfirmed niemals automatisch wiederholen oder zurücksetzen; find_buildings zur Klärung lesen. Keine Erreichbarkeitsgarantie."
                     : validation ? "Geschützter Pilot: erzeugt/verwendet eine eigene temporäre Vorschau und ruft Spielvalidatoren auf. Kein Bauauftrag. Frische Session-ID erforderlich, maximal 8 Versuche pro Sitzung. Bei Fehler/Zustandsabweichung gesperrt; niemals automatisch wiederholen. Valid bedeutet geometrische Spielprüfung, keine Material-/Liefer-/Fertigstellungszusage."
@@ -104,7 +106,7 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
                 }
                 return Wrap(await client.SetSpeed(BridgeRequest.Parse("/agent-api/v1/simulation-speed", query), ct));
             }
-            if (name is "inspect_map_region" or "find_buildings" or "precheck_build_site" or "validate_build_site" or "place_path" or "place_lodge")
+            if (name is "inspect_map_region" or "find_buildings" or "inspect_workforce" or "precheck_build_site" or "validate_build_site" or "place_path" or "place_lodge")
             {
                 var query = new NameValueCollection();
                 foreach (var property in args.EnumerateObject())
@@ -115,6 +117,7 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
                     if (property.Value.ValueKind != JsonValueKind.Number || !property.Value.TryGetInt32(out var value)) throw new ArgumentException();
                     query.Add(property.Name, value.ToString(System.Globalization.CultureInfo.InvariantCulture));
                 }
+                if (name == "inspect_workforce") return Wrap(await client.Workforce(BridgeRequest.Parse("/agent-api/v1/workforce", query), ct));
                 if (name == "find_buildings") return Wrap(await client.Objects(BridgeRequest.Parse("/agent-api/v1/objects", query), ct));
                 if (name == "validate_build_site") return Wrap(await client.Validate(BridgeRequest.Parse("/agent-api/v1/site-validation", query), ct));
                 if (name == "place_lodge") return Wrap(await client.PlaceLodge(BridgeRequest.Parse("/agent-api/v1/lodge-placement", query), ct));
