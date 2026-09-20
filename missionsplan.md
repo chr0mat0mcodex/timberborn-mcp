@@ -1065,3 +1065,9 @@ Nutzer fordert MCP-Geschwindigkeitssteuerung für eigenständige Tests und Agent
 Istwertvergleich. 158 Tests und Mod-Build erfolgreich; Installation/Live-Test offen.
 Höhere Geschwindigkeiten erst nach Beleg der Spielwerte. Keine Zeitsprünge oder
 Spielsperren-Aufhebung. [Vertrag und Hin-/Rücktest](docs/simulation-control.md).
+
+### 7.21 Zeitsteuerung installiert
+
+0.8.0 bei beendetem Spiel gesichert installiert und per SHA256 geprüft.
+Zeitsteuerungs-Opt-in aktiviert, übrige Konfiguration erhalten. Nach Nutzerstart
+Pause/1× mit separater Zustands- und Fortschrittsabfrage live prüfen.

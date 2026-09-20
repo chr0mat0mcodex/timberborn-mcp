@@ -38,7 +38,7 @@ und Bauzeitfortschritt 0 -> rund 11 % beobachtet. Farmhaus noch nicht fertig.
 über dieselbe Entity-ID als aktive Baustelle mit bekanntem Baudistrikt nachgelesen.
 Fertigstellung und zusätzliche Betten noch offen.
 0.8.0 ergänzt [Zeitbeobachtung und Pause/1×](docs/simulation-control.md).
-Gebaut und automatisiert getestet; Installation und Live-Abnahme stehen aus.
+Gebaut, automatisiert getestet und installiert; Live-Abnahme steht aus.
 [Installation und Abnahme](docs/native-bridge-install.md),
 [offizielle Quellen und good references](docs/references/README.md).
 Für die eigene Bridge: `scripts/start-native.ps1 -ConfigPath '<private Konfiguration>'`;

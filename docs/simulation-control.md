@@ -1,6 +1,6 @@
 # Simulation lesen und steuern — Pilot 0.8.0
 
-Status: implementiert; Installation und Live-Abnahme ausstehend. Eigene Mod,
+Status: implementiert und installiert; Live-Abnahme ausstehend. Eigene Mod,
 öffentliche Spiel-API, keine Fremdmod und keine UI-Automation.
 
 ## Werkzeuge

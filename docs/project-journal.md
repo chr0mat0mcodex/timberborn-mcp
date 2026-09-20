@@ -1,5 +1,13 @@
 # Projektjournal
 
+## 2026-09-20 — Zeitsteuerung 0.8.0 installiert
+
+Bei beendetem Timberborn bisherigen Mod-Ordner vollständig lokal gesichert und
+fünf Paketdateien ersetzt; SHA256 jeweils abgeglichen. Bestehende Konfiguration
+erhalten, enableSpeedControl aktiviert. Keine fremden Mods geändert. Neustart
+und Laden der MCP-Testkolonie durch Nutzer erforderlich; Pause/1× noch nicht live
+geprüft. Nächster Test gemäß [Zeitsteuerungsvertrag](simulation-control.md).
+
 ## 2026-09-20 — Pause/Normalgeschwindigkeit vorbereitet (0.8.0)
 
 Auf Nutzerauftrag öffentliche Zeit-API geprüft und inspect_simulation sowie separat
