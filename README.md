@@ -23,7 +23,8 @@ dessen erster Livekontrolltest einen belegten Standort fälschlich akzeptierte.
 belegter Lodge-Standort abgewiesen, freier Path-Standort akzeptiert, Zustandswachen
 unverändert. Keine Baufreigabe aus 0.4.0 ableiten.
 0.5.0 implementiert einen separat geschützten [einzelnen Wegauftrag](docs/path-placement.md),
-installiert, noch nicht live geprüft. Kein allgemeiner Haus-/Versorgungsbau.
+installiert und begrenzt live geprüft: genau ein regulärer Weg gebaut und über seine
+Entity-ID separat als fertig nachgelesen. Kein allgemeiner Haus-/Versorgungsbau.
 [Installation und Abnahme](docs/native-bridge-install.md),
 [offizielle Quellen und good references](docs/references/README.md).
 Für die eigene Bridge: `scripts/start-native.ps1 -ConfigPath '<private Konfiguration>'`;

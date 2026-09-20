@@ -981,3 +981,11 @@ kontrollierten regulären Bauauftrag als Path-only-Pilot 0.5.0 implementiert.
 Separate Freigaben, ein Versuch je Sitzung, frische Validierung und exakte Ergebnis-ID;
 kein automatisches Retry oder Fertigbau. [Vertrag und Live-Abnahme](docs/path-placement.md).
 Nächster Nachweis: genau einen Weg über MCP erteilen und als reguläres Objekt nachlesen.
+
+### 7.10 Einzelner Wegauftrag live bestanden
+
+0.5.0 installiert und nach Nutzer-Neustart geprüft. Ein regulärer Path-Auftrag,
+applied und separat über dieselbe Entity-ID als fertig bestätigt. Neun fachliche
+MCP-Aufrufe, genau ein neues Objekt, beobachtete Vorräte unverändert. Testweg bleibt
+bestehen, kein weiterer Auftrag in dieser Sitzung. Nächste Fähigkeitslücke: Gebäude
+mit Materialbedarf und Baufortschritt sowie tatsächliche Wege-/Distriktanbindung.

@@ -1,5 +1,12 @@
 # Kompatibilität
 
+## Aktueller nativer Bau-Pilot — 2026-09-20
+
+Bridge 0.5.0: genau einen Path über den regulären Platzierer per MCP gebaut.
+Separate Abfrage bestätigt erwartete Entity-ID, Vorlage, Position und finished=true.
+Ein neues Objekt, beobachtete Vorräte unverändert. Live-Nachweis nur für diesen
+Einzelfall; kein allgemeiner Gebäude-/Versorgungsbau und kein Distriktnachweis.
+
 Stand 2026-09-19. Diese Matrix beschreibt die tatsächlich geprüfte lokale Kombination.
 
 | Komponente | Version | Nachweis |

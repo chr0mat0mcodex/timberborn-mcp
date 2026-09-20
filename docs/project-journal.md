@@ -1,5 +1,18 @@
 # Projektjournal
 
+## 2026-09-20 — Erster regulärer Wegbau über natives MCP bestätigt
+
+0.5.0 live erreichbar. Neun fachliche MCP-Aufrufe: Zustand/Katalog/Karte/Wege gelesen,
+freien trockenen Einzelfeldstandort neben bestehendem fertigem Path vorgeprüft und
+genau einen place_path-Aufruf ausgeführt. Ergebnis applied; folgende unabhängige
+Gebäudeabfrage bestätigt exakt die zurückgegebene Entity-ID, Path und Zielposition,
+finished=true. Genau ein neues Struktur-Objekt, Gesamtobjektzahl +1, drei beobachtete
+Ressourcenwerte unverändert. Kein zweiter Auftrag, keine Löschung oder explizite Speicherung.
+Testweg bleibt bestehen; Einmaligkeitsgate dieser Sitzung verbraucht. Private Versuchsdaten
+und Receipt nur im ignorierten lokalen Pilotordner, keine Entity-/Session-ID eingecheckt.
+Damit regulären Platzierer und SetId-Ergebniszuordnung für diesen Path live nachgewiesen.
+Keine Aussage zur Distriktanbindung oder zu Häusern mit Material-/Bauzeitbedarf.
+
 ## 2026-09-20 — 0.5.0 für Wegbau-Pilot installiert
 
 Nach Nutzerbestätigung bei beendetem Timberborn das finale vorbereitete 0.5.0-Paket

@@ -1,8 +1,11 @@
 # Einzelner Wegauftrag — 0.5.0
 
-Auf Nutzer-Go implementierter Pilot, noch nicht im Spiel abgenommen. Ziel ist der
-Nachweis des regulären Platzierungspfads und einer überprüfbaren Ergebniszuordnung.
-0.5.0 ist installiert; letzter Live-Nachweis bleibt 0.4.1. Kein autonomer Kolonieaufbau.
+Auf Nutzer-Go implementierter Pilot, auf 0.5.0 begrenzt live abgenommen. Genau ein
+Wegauftrag mit applied; separate Gebäudeabfrage bestätigt Entity-ID, Path, Zielposition
+und finished=true. Ein neues Struktur-Objekt, Gesamtobjektzahl +1, beobachtete Vorräte
+unverändert. Neun fachliche MCP-Aufrufe, ein Bauaufruf. Testweg bleibt bestehen.
+Regulärer Platzierungspfad und SetId-Zuordnung für diesen Fall nachgewiesen;
+keine allgemeine Bau-/Erreichbarkeitsgarantie. Kein autonomer Kolonieaufbau.
 
 ## Vertrag
 
