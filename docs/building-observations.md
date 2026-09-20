@@ -1,6 +1,28 @@
-# Baustellen und Distriktzuordnung — 0.6.0
+# Baustellen und Distriktzuordnung — 0.6.1
 
-## Aktueller Baustellennachweis und Materialgrenze
+## Materialkorrektur 0.6.1 — Live-Prüfung offen
+
+Die nicht geklärte Restbedarfsmethode wird nicht mehr aufgerufen. Öffentliche
+BuildingSpec.BuildingCost und ConstructionSite.Inventory.Stock liefern getrennt:
+
+- `construction.materials.buildingCosts`: gesamte Baukosten laut Vorlage.
+- `inventoryAvailable`: ob das Baustelleninventar tatsächlich verfügbar ist.
+- `siteStock`: aktuell darin enthaltene Güter; null bei unbekanntem Inventar,
+  leere Liste bei vorhandenem leerem Inventar. Höchstens 32 eindeutige Güter je Liste.
+
+Keine Subtraktion als behaupteter Restbedarf: bereits verbaute Materialien und
+Lieferungen unterwegs fehlen in diesen Beobachtungen. Das alte Feld
+`remainingRequiredGoods` entfällt. Baustellenantworten aus 0.6.0 werden vom neuen
+Client mangels Materialvertrag als inkompatibel abgewiesen; fertige Objekte bleiben
+lesbar. Die Ursache des früheren Nullwerts ist nicht geklärt. Lokale Referenzen und
+gezielte öffentliche Suche lieferten keine belastbare Methodenbeschreibung;
+kein Decompiling, keine privaten Felder und keine neue Abhängigkeit erforderlich.
+
+Nach Update höchstens fünf reine Leseaufrufe am Nutzer-Farmhaus: Version, Gebäudeliste,
+Gebäudedetails und Koloniebestände. Kosten, Baustellenbestand und globale Vorräte
+getrennt ausweisen. Baustelle muss im geladenen Spielstand vorhanden sein.
+
+## Historischer Baustellennachweis 0.6.0 und Materialgrenze
 
 Nutzerplatziertes EfficientFarmHouse.Folktails live gelesen: unfertig, aktiv, ungestartet,
 Material-/Baufortschritt 0, kein Material zur Fortsetzung, bekannter Baudistrikt.
@@ -32,8 +54,8 @@ die Sitzung auf dem Hauptthread vor der Entity-Auflösung. Feste GET-Route
 - `construction`: an/gestartet/baubereit, Material-/Bauzeitfortschritt, bisherige
   Bauzeit in Stunden, Material zur Wiederaufnahme vorhanden und fertigstellbar.
   Direkte Spielwerte, keine prozentuale Umrechnung vor Live-Abgleich.
-- `remainingRequiredGoods`: höchstens 32 vom Spiel noch benötigt gemeldete Güter.
-  Nicht globaler Lagerbestand und keine Lieferzusage.
+- `remainingRequiredGoods` (nur alter Vertrag 0.6.0): nicht verlässlich interpretiert,
+  in 0.6.1 durch getrennte Kosten-/Inventardaten ersetzt.
 - `district.componentPresent`: Zuordnungskomponente verfügbar. Bei false sind alle
   IDs null; daraus keine bestätigte Trennung vom Wegenetz ableiten.
 - `assignedDistrictId`, `instantDistrictId`, `constructionDistrictId`: getrennte

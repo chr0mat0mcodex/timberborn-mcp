@@ -1,5 +1,22 @@
 # Projektjournal
 
+## 2026-09-20 — Materialvertrag 0.6.1 korrigiert, Live-Abnahme offen
+
+Nach Nutzer-Go lokale Referenzen, öffentliche Signaturen und gezielte Websuche geprüft;
+keine belastbare Beschreibung von RemainingRequiredGoods gefunden. Nullwert-Ursache
+bleibt ungeklärt. Aufruf und missverständliches remainingRequiredGoods-Feld entfernt.
+Stattdessen gesamte BuildingSpec.BuildingCost und tatsächliche ConstructionSite.Inventory.Stock
+getrennt lesen. Inventar fehlt: available=false/stock=null; vorhanden und leer: leere Liste.
+Kein berechneter Restbedarf, da verbrauchtes Material und laufende Lieferungen unbekannt.
+Keine privaten Felder, kein Reverse Engineering, keine neue Abhängigkeit.
+
+Neue Baustellenantworten benötigen Materialvertrag 0.6.1; alte 0.6.0-Baustellen werden
+als inkompatibel abgewiesen statt die alte Nullmenge weiter als Bedarf auszugeben.
+136 reguläre Tests erfolgreich (125 Unit, 11 Integration); drei Live-Tests übersprungen.
+Mod 0.6.1 gebaut/gepackt, noch nicht installiert; laufendes Spiel unverändert 0.6.0.
+Nächster Schritt: Update bei beendetem Spiel, danach höchstens fünf reine Leseaufrufe
+am Farmhaus zum Nachweis tatsächlicher Kosten und Baustellenbestände. Kein Bauauftrag.
+
 ## 2026-09-20 — Nutzer-Farmhaus als echte Baustelle gelesen
 
 Nutzer hat Farmhaus-Bauauftrag platziert. Vier rein lesende MCP-Aufrufe auf 0.6.0:

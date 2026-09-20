@@ -1013,3 +1013,10 @@ Fortschritt 0 und bekannter Baudistrikt. Kein eigener Gebäudeauftrag nötig fü
 Beobachtungsnachweis. Restmaterialabfrage liefert allerdings Log=0 bei fehlenden
 Fortsetzungsmaterialien; Semantik nicht abgenommen. Nächster Schritt: Baukosten und
 Baustelleninventar getrennt prüfen, bevor Restbedarf als Entscheidungsgrundlage dient.
+
+### 7.14 Materialkorrektur vorbereitet
+
+0.6.1 ersetzt die ungeklärte Restbedarfsmethode durch getrennte gesamte Vorlagenkosten
+und tatsächlichen Baustellenbestand. Kein scheinbar exakter Restbedarf aus unbekanntem
+Materialverbrauch. 136 reguläre Tests bestanden, Mod gebaut/gepackt; Update und
+Live-Abgleich am Nutzer-Farmhaus ausstehend. Ursache des alten Nullwerts bleibt ungeklärt.

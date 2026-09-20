@@ -1,7 +1,11 @@
-# Eigene Timberborn Agent Bridge — 0.6.0
+# Eigene Timberborn Agent Bridge — 0.6.1
+
+0.6.1 ersetzt die unklare Restmaterialangabe durch gesamte Vorlagenkosten und
+tatsächlichen Baustellenbestand. Beide Werte getrennt lesen, keinen Restbedarf ableiten.
+Installiert/live geprüft ist vor diesem Update 0.6.0; Materialkorrektur noch nicht live geprüft.
 
 0.6.0 ergänzt die rein lesende [Baustellen-/Distriktabfrage](building-observations.md)
-`inspect_building(id, session)`. Installiert/live geprüft bleibt bis zum Update 0.5.0.
+`inspect_building(id, session)`.
 
 0.5.0 ergänzt den separat freizuschaltenden [einzelnen Wegauftrag](path-placement.md).
 Paketstandard: `enablePlacement: false`; MCP benötigt zusätzlich

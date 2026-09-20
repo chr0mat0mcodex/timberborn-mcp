@@ -29,12 +29,14 @@ Entity-ID separat als fertig nachgelesen. Kein allgemeiner Haus-/Versorgungsbau.
 an fertigen Gebäuden und einem nutzerplatzierten Farmhaus live gelesen. Baustellenstatus
 und Baudistrikt bestätigt; die gemeldete Restmaterialmenge ist noch nicht verlässlich
 interpretiert. Paths haben keine Distriktkomponente.
+0.6.1 ersetzt diese missverständliche Angabe durch getrennte Vorlagen-Baukosten und
+Baustellenbestände, ohne Restbedarfsberechnung. Update und Live-Prüfung stehen aus.
 [Installation und Abnahme](docs/native-bridge-install.md),
 [offizielle Quellen und good references](docs/references/README.md).
 Für die eigene Bridge: `scripts/start-native.ps1 -ConfigPath '<private Konfiguration>'`;
 Build und nativen Lesetest mit `scripts/verify.ps1 -NativeConfig '<private Konfiguration>'`
 ausführen. Beide Abläufe sind in der Installationsanleitung beschrieben.
-132 reguläre Tests bestanden; drei separate Live-Tests im Standardlauf übersprungen.
+136 reguläre Tests bestanden; drei separate Live-Tests im Standardlauf übersprungen.
 Nativer lesender MCP-Livetest zusätzlich erfolgreich.
 Auch mit ausschließlich eigener Bridge laut Nutzer-Mod-Auswahl: alle sechs nativen
 Lesewerkzeuge erneut live erfolgreich (0.3.0). Keine Fremdmod für diesen Zugriff erforderlich.

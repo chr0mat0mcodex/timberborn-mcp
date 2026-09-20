@@ -4,7 +4,6 @@ using Timberborn.Buildings;
 using Timberborn.ConstructionSites;
 using Timberborn.EntitySystem;
 using Timberborn.GameDistricts;
-using Timberborn.Goods;
 using Timberborn.TemplateSystem;
 
 namespace Timberborn.AgentBridge;
@@ -23,16 +22,21 @@ public sealed class BuildingObservations(EntityRegistry entities)
             bool hasConstruction = entity.TryGetComponent<ConstructionSite>(out var site);
             if (hasConstruction && block.IsUnfinished)
             {
-                var remaining = new SortedSet<GoodAmount>(Comparer<GoodAmount>.Create((a, b) => StringComparer.Ordinal.Compare(a.GoodId, b.GoodId)));
-                site.RemainingRequiredGoods(remaining);
-                if (remaining.Count > 32) throw new InvalidOperationException("material_limit");
+                // Do not infer remaining deliveries from RemainingRequiredGoods: its live
+                // semantics were inconsistent with our interpretation on an unstarted site.
+                var costs = template.GetSpec<BuildingSpec>().BuildingCost
+                    .Select(g => new { id = g.Id, amount = g.Amount }).OrderBy(g => g.id, StringComparer.Ordinal).ToArray();
+                var inventory = site.Inventory;
+                var stock = inventory is null ? null : inventory.Stock
+                    .Select(g => new { id = g.GoodId, amount = g.Amount }).OrderBy(g => g.id, StringComparer.Ordinal).ToArray();
+                if (costs.Length > 32 || stock?.Length > 32) throw new InvalidOperationException("material_limit");
                 construction = new
                 {
                     wasStarted = site.WasStarted, isOn = site.IsOn, readyToBuild = site.ReadyToBuild,
                     materialProgress = site.MaterialProgress, buildTimeProgress = site.BuildTimeProgress,
                     buildTimeProgressInHours = site.BuildTimeProgressInHours,
                     hasMaterialsToResumeBuilding = site.HasMaterialsToResumeBuilding, readyToFinish = site.IsReadyToFinish,
-                    remainingRequiredGoods = remaining.Select(g => new { id = g.GoodId, amount = g.Amount }).ToArray()
+                    materials = new { buildingCosts = costs, inventoryAvailable = inventory is not null, siteStock = stock }
                 };
             }
             bool hasDistrict = entity.TryGetComponent<DistrictBuilding>(out var district);
@@ -55,6 +59,8 @@ public sealed class BuildingObservations(EntityRegistry entities)
         return new { id, found = details is not null, details,
             limitations = new[] { "district_assignments_not_worker_or_delivery_guarantee", "navigation_updates_may_lag",
                 "construction_details_only_for_unfinished_entities", "progress_values_from_game_not_completion_prediction",
-                "remaining_required_goods_not_global_stock_or_delivery_eta", "missing_or_nonbuilding_entity_returns_found_false" } };
+                "building_costs_are_total_template_costs_not_remaining_deliveries",
+                "site_stock_excludes_already_consumed_materials_and_incoming_deliveries",
+                "remaining_delivery_requirement_unknown", "missing_or_nonbuilding_entity_returns_found_false" } };
     }
 }

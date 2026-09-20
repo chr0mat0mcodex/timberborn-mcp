@@ -138,13 +138,16 @@ public sealed class NativeClient : IDisposable
                 throw new InvalidDataException("Invalid district assignments");
             if (b.Construction is { } c && (!float.IsFinite(c.MaterialProgress) || c.MaterialProgress < 0 ||
                 !float.IsFinite(c.BuildTimeProgress) || c.BuildTimeProgress < 0 || !float.IsFinite(c.BuildTimeProgressInHours) ||
-                c.BuildTimeProgressInHours < 0 || c.RemainingRequiredGoods is null || c.RemainingRequiredGoods.Length > 32 ||
-                c.RemainingRequiredGoods.Any(g => g is null || string.IsNullOrEmpty(g.Id) || g.Amount < 0) ||
-                c.RemainingRequiredGoods.Select(g => g.Id).Distinct().Count() != c.RemainingRequiredGoods.Length))
+                c.BuildTimeProgressInHours < 0 || c.Materials is null || !ValidGoods(c.Materials.BuildingCosts) ||
+                c.Materials.InventoryAvailable != (c.Materials.SiteStock is not null) ||
+                (c.Materials.SiteStock is not null && !ValidGoods(c.Materials.SiteStock))))
                 throw new InvalidDataException("Invalid construction state");
         }
         return result;
     }
+    private static bool ValidGoods(NativeGoodAmount[]? goods) => goods is not null && goods.Length <= 32 &&
+        goods.All(g => g is not null && !string.IsNullOrEmpty(g.Id) && g.Id.Length <= 160 && g.Amount >= 0) &&
+        goods.Select(g => g.Id).Distinct().Count() == goods.Length;
     private async Task<BridgeEnvelope<T>> Get<T>(string route, CancellationToken ct, HttpMethod? method = null)
     {
         using var budget = CancellationTokenSource.CreateLinkedTokenSource(ct);
@@ -163,7 +166,7 @@ public sealed class NativeClient : IDisposable
             await buffer.WriteAsync(bytes.AsMemory(0, count), budget.Token);
         }
         var result = JsonSerializer.Deserialize<BridgeEnvelope<T>>(buffer.ToArray(), NativeJson.Options);
-        if (result is null || result.SchemaVersion != 1 || result.BridgeVersion is not ("0.2.0" or "0.3.0" or "0.4.0" or "0.4.1" or "0.5.0" or "0.6.0") ||
+        if (result is null || result.SchemaVersion != 1 || result.BridgeVersion is not ("0.2.0" or "0.3.0" or "0.4.0" or "0.4.1" or "0.5.0" or "0.6.0" or "0.6.1") ||
             !Guid.TryParseExact(result.SessionId, "D", out var session) || session == Guid.Empty ||
             result.ObservedAtUtc == default || result.Data is null) throw new InvalidDataException("Invalid bridge envelope");
         return result;

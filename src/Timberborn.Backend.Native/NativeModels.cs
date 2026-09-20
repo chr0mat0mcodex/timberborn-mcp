@@ -54,9 +54,10 @@ public sealed record NativeValidation(string Template, Position Origin, int Rota
 public sealed record NativePlacement(string Template, Position Origin, int Rotation, Guid EntityId,
     string Outcome, bool? Finished, bool SessionLocked, string[] Limitations);
 public sealed record NativeGoodAmount(string Id, int Amount);
+public sealed record NativeConstructionMaterials(NativeGoodAmount[] BuildingCosts, bool InventoryAvailable, NativeGoodAmount[]? SiteStock);
 public sealed record NativeConstruction(bool WasStarted, bool IsOn, bool ReadyToBuild, float MaterialProgress,
     float BuildTimeProgress, float BuildTimeProgressInHours, bool HasMaterialsToResumeBuilding, bool ReadyToFinish,
-    NativeGoodAmount[] RemainingRequiredGoods);
+    NativeConstructionMaterials Materials);
 public sealed record NativeDistrict(bool ComponentPresent, Guid? AssignedDistrictId, Guid? InstantDistrictId, Guid? ConstructionDistrictId);
 public sealed record NativeBuildingDetails(string Template, Position Position, bool Finished, bool Unfinished,
     bool ConstructionComponentPresent, NativeConstruction? Construction, NativeDistrict District);
