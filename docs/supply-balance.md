@@ -79,4 +79,37 @@ Vergleich und keine Nachhaltigkeitszusage; veränderte Bevölkerung beeinflusst 
 Dabei Produktfehler entdeckt: 0.20.0 zählt weiter registrierte tote Biber in der
 Bedürfnisübersicht mit (13 statt 11 lebend). 0.20.1 liest öffentlich Mortal.Dead,
 schließt tote/unbekannte Lebenszustände aus der Bilanz aus und kennzeichnet sie separat.
-Installation und erneute Live-Abnahme der Korrektur stehen aus.
+Die Korrektur ist inzwischen unter 0.21.0 live bestätigt: 11 lebende, zwei ausgeschlossene tote Biber; beide toten Einzelziele ohne aktuelle Bedürfniswerte.
+
+
+## 2026-09-20 — zusätzlicher Wassertank als begrenzter Wirkungstest
+
+Unter 0.21.0 zuerst erneut lesend geprüft: zwei besetzte, aktive Pumpen mit
+hasIngredients=true, hasFuel=true, outputSpace=false. Einziger Tank Water/accept,
+30/30 gefüllt. Daraus einen einzelnen Lagerkapazitätstest abgeleitet.
+
+Produktionsgraph nennt 15 Holz für SmallTank. Freier Bauplatz neben vorhandenem
+Tank, fertiger Weg am Eingang, 20 Holz global; reguläre Spielvalidierung bestanden.
+Ein Bauauftrag erteilt, separat unfertige Baustelle bestätigt. Nach erstem
+15-Sekunden-Abschnitt bei 7× fertig; auf Water gestellt und rückgelesen.
+Nach zweitem Abschnitt neuer Tank 30/30, bestehender Tank ebenfalls gefüllt.
+Gebäudezugang frei, Distriktdistanz 4; Sofort-Wegverbindung von beiden Pumpen bestätigt.
+
+| Wasserfeld | Vorher | Nachher |
+| --- | ---: | ---: |
+| Gesamtbestand | 138 | 138 |
+| Lagerbestand | 30 | 60 |
+| Produktionspuffer | 108 | 78 |
+| Gesamtkapazität | 80 | 110 |
+
+Die 30 Einheiten sind als Umlagerung belegt. Beide Pumpen melden am Ende weiterhin
+outputSpace=false. Kein Nachweis höherer Nettoproduktion oder nachhaltiger Versorgung;
+nicht automatisch weitere Tanks bauen. Vorhandene Pufferbestände übersteigen weiterhin
+die ausgewiesene Kapazität, deren genaue Zusammensetzung bleibt zu untersuchen.
+Eine reine Differenz der Gesamtbestände ist keine Produktions-/Verbrauchsmessung.
+
+Tag 18 etwa 07:21 bis 18:20, rund 0,46 Spieltage; 11 lebende Biber an den
+Kontrollpunkten, keine Hunger-/Durstwarnflags. Beeren 221→214, Holz 20→16 trotz
+Baukosten 15 (gleichzeitige Holzgewinnung nicht aus Nettobestand allein quantifizieren).
+Tank bleibt als nutzbare Testkorrektur bestehen, Simulation am Ende bestätigt pausiert.
+Keine neue Modversion, keine Screenshots, keine weiteren Gebäude-/Personaländerungen.

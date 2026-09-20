@@ -28,6 +28,13 @@ Einmal je Szene, geprüfte Verweise und SHA-256-Revision. Ruinenerträge und spe
 Betriebsbedingungen sind explizite Lücken; [Vertrag](docs/production-dependency-graph.md).
 Live bestätigt: 60 Güter (40 aktiv), 55 Rezepte, 162 Gebäude, 17 Quellen; 58.345 Byte MCP-Nutzdaten, stabile Revision. Zehn repräsentative Definitionen unabhängig mit offiziellen Blueprints verglichen.
 
+## Letzter begrenzter Wirkungstest
+
+Zusätzlichen kleinen Wassertank regulär gebaut, auf Wasser gestellt und 30/30 gefüllt.
+Beide Pumpen per Weg verbunden; Umlagerung aus Pumpenpuffern bestätigt. Gesamtwasser
+138 unverändert, Pumpen weiter outputSpace=false. Keine Nachhaltigkeitszusage.
+11 lebende Biber, Simulation pausiert. [Belege](docs/supply-balance.md).
+
 ## Verifikation
 
 | Ebene | Beleg |

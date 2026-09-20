@@ -60,6 +60,7 @@ Keine Fremdmod-Pflichtbasis; die frühere More-HTTP-API-Phase ist abgeschlossen.
 - [x] Unfertigen Bauauftrag diagnostizieren, separat bestätigen und wieder entfernen.
 - [ ] Produktionshindernisse und Bedürfnisse vollständig unterscheiden (insbesondere Energie, Wasser, Rohstoff- und Lieferwege).
 - [x] Versorgung über rund drei Spieltage bewerten und fehlenden Wohnraum gezielt nachweisen.
+- [x] Einzelnen zusätzlichen Wassertank regulär bauen, konfigurieren und tatsächliche Umlagerung bestätigen; Pumpenengpass noch nicht behoben.
 - [ ] Negative Wasser-/Nahrungs-/Holzbilanz beheben und nachhaltige Versorgung mit Wohnraum abnehmen.
 - [ ] Anschließend einen begrenzten zusammenhängenden Agenten-Spielablauf abnehmen.
 

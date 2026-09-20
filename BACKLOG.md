@@ -27,7 +27,9 @@ Hier stehen offene Aufgaben; datierte historische Kästchen sind kein aktueller 
    [Nachweis und Grenzen](docs/supply-balance.md). Lokale Produktions-/Lagerursachen
    eingrenzen. Mittleres Lager auf Beeren gesetzt; Tagesproduktion steigt auf 19. Vergleich
    wegen zweier Alterstodesfälle nach rund 1,22 Tagen abgebrochen, keine Dreitagesabnahme.
-   Nachhaltigkeit bleibt offen.
+   Zusätzlicher kleiner Wassertank unter 0.21.0 gebaut und gefüllt; Lager 30→60,
+   Pumpenpuffer 108→78, Gesamtwasser 138 unverändert. Umlagerung bestätigt,
+   Pumpen weiter ohne Ausgangsplatz. Puffer-/Kapazitätsbefund gezielt klären; Nachhaltigkeit offen.
 
 Diese Reihenfolge ist eine Planung, keine Behauptung bereits vorhandener Werkzeuge.
 Neue Funktionen werden entsprechend dem Projektauftrag vor ihrer Umsetzung konkretisiert.
