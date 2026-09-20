@@ -1,6 +1,6 @@
 {
   "Name": "Timberborn MCP Agent Bridge (Prototype)",
-  "Version": "0.5.0",
+  "Version": "0.6.0",
   "Id": "chr0mat0mcodex.TimberbornAgentBridge",
   "MinimumGameVersion": "1.1.2.4",
   "Description": "Local authenticated observations, opt-in preview validation and a guarded single-path placement pilot. No custom save data.",

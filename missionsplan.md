@@ -989,3 +989,11 @@ applied und separat über dieselbe Entity-ID als fertig bestätigt. Neun fachlic
 MCP-Aufrufe, genau ein neues Objekt, beobachtete Vorräte unverändert. Testweg bleibt
 bestehen, kein weiterer Auftrag in dieser Sitzung. Nächste Fähigkeitslücke: Gebäude
 mit Materialbedarf und Baufortschritt sowie tatsächliche Wege-/Distriktanbindung.
+
+### 7.11 Baustellen und Distriktzuordnung beobachten
+
+Auf Nutzer-Go 0.6.0 mit gezielter Gebäudeabfrage vorbereitet: Bauzustand, verbleibende
+Güter und drei Spiel-Distriktzuordnungen getrennt lesen. 132 reguläre Tests bestanden,
+Mod gebaut; noch nicht installiert/live geprüft. Erst bestehende Objekte abgleichen,
+danach Material-/Fortschrittsbeobachtung bei einem begrenzten Hausauftrag nachweisen.
+Keine neue Bauaktion ausgeführt. Details: [Gebäudeabfrage](docs/building-observations.md).

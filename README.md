@@ -25,12 +25,14 @@ unverändert. Keine Baufreigabe aus 0.4.0 ableiten.
 0.5.0 implementiert einen separat geschützten [einzelnen Wegauftrag](docs/path-placement.md),
 installiert und begrenzt live geprüft: genau ein regulärer Weg gebaut und über seine
 Entity-ID separat als fertig nachgelesen. Kein allgemeiner Haus-/Versorgungsbau.
+0.6.0 ergänzt [Baustellen- und Distriktbeobachtung](docs/building-observations.md),
+gebaut/getestet, noch nicht installiert oder live abgenommen.
 [Installation und Abnahme](docs/native-bridge-install.md),
 [offizielle Quellen und good references](docs/references/README.md).
 Für die eigene Bridge: `scripts/start-native.ps1 -ConfigPath '<private Konfiguration>'`;
 Build und nativen Lesetest mit `scripts/verify.ps1 -NativeConfig '<private Konfiguration>'`
 ausführen. Beide Abläufe sind in der Installationsanleitung beschrieben.
-123 reguläre Tests bestanden; drei separate Live-Tests im Standardlauf übersprungen.
+132 reguläre Tests bestanden; drei separate Live-Tests im Standardlauf übersprungen.
 Nativer lesender MCP-Livetest zusätzlich erfolgreich.
 Auch mit ausschließlich eigener Bridge laut Nutzer-Mod-Auswahl: alle sechs nativen
 Lesewerkzeuge erneut live erfolgreich (0.3.0). Keine Fremdmod für diesen Zugriff erforderlich.
@@ -98,9 +100,10 @@ Beim bisherigen Backend bleiben fünf Tools offline auflistbar: `timberborn_stat
 `inspect_population`, `find_buildings`, `inspect_building`. Parameter und Ergebnisfelder
 stehen in missionsplan.md Abschnitt 3. Simulierte Daten sind immer markiert.
 
-Das native Backend bietet sechs eigene lesende Werkzeuge: `timberborn_status`,
+Das native Backend bietet sieben eigene lesende Werkzeuge: `timberborn_status`,
 `inspect_colony`, `inspect_map_region`, `find_buildings`, `inspect_build_catalog`
-und `precheck_build_site`. Letzteres ist keine vollständige Bauvalidierung.
+`precheck_build_site` und `inspect_building(id, session)` (ab Mod 0.6.0).
+Die Vorprüfung ist keine vollständige Bauvalidierung.
 Kein automatischer Backendwechsel;
 `TIMBERBORN_ENABLE_WRITES` aktiviert dort keine Schreibfunktionen.
 

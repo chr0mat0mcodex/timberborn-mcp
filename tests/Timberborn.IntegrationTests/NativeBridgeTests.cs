@@ -45,6 +45,7 @@ public sealed class NativeBridgeTests
                             "map" => new NativeMap(new(r.X, r.Y, r.Z), 1, 1, 1,
                                 [new(r.X, r.Y, r.Z, false, true, 2, 0.5f, 0, true)], ["synthetic_test"]),
                             "objects" => new NativeObjects("buildings_and_paths", r.Offset, r.Limit, 0, [], false, ["synthetic_test"]),
+                            "building" => new NativeBuilding(Guid.Parse(r.EntityId), false, null, ["synthetic_test"]),
                             "catalog" => new NativeCatalog("Folktails",
                                 [new("Lodge.Folktails", true, true, true, new(2, 2, 1), new(1, -1, 0), [new("Log", 12, 0)]),
                                  new("Path", true, true, true, new(1, 1, 1), null, [])], ["synthetic_test"]),
@@ -57,7 +58,7 @@ public sealed class NativeBridgeTests
                                 Guid.NewGuid(), "applied", true, true, ["synthetic_test"])),
                             _ => throw new ArgumentException()
                         };
-                        return JsonSerializer.Serialize(new BridgeEnvelope<object>(1, session, DateTimeOffset.UtcNow, "0.5.0", data), NativeJson.Options);
+                        return JsonSerializer.Serialize(new BridgeEnvelope<object>(1, session, DateTimeOffset.UtcNow, "0.6.0", data), NativeJson.Options);
                     });
                     await Task.Delay(5, pumpStop.Token);
                 }
@@ -108,7 +109,7 @@ public sealed class NativeBridgeTests
                 }
             }), cancellationToken: ct);
             var tools = await client.ListToolsAsync(cancellationToken: ct);
-            var expected = new List<string> { "find_buildings", "inspect_build_catalog", "inspect_colony", "inspect_map_region", "precheck_build_site", "timberborn_status" };
+            var expected = new List<string> { "find_buildings", "inspect_build_catalog", "inspect_building", "inspect_colony", "inspect_map_region", "precheck_build_site", "timberborn_status" };
             if (enableValidation) expected.Add("validate_build_site");
             if (enablePlacement) expected.Add("place_path");
             Assert.Equal(expected.Order(), tools.Select(t => t.Name).Order());
@@ -156,6 +157,10 @@ public sealed class NativeBridgeTests
                 Assert.True(repeated.IsError);
                 Assert.False(repeated.StructuredContent!.Value.GetProperty("error").GetProperty("retryable").GetBoolean());
             }
+            var building = await client.CallToolAsync("inspect_building", new Dictionary<string, object?>
+                { ["id"] = Guid.NewGuid().ToString("D"), ["session"] = session }, cancellationToken: ct);
+            Assert.False(building.IsError);
+            Assert.False(building.StructuredContent!.Value.GetProperty("data").GetProperty("found").GetBoolean());
         }
         finally
         {

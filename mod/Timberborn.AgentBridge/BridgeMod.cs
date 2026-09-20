@@ -21,6 +21,7 @@ public sealed class BridgeConfigurator : Configurator
     protected override void Configure()
     {
         Bind<SpatialObservations>().AsSingleton();
+        Bind<BuildingObservations>().AsSingleton();
         Bind<SiteValidation>().AsSingleton();
         Bind<PathPlacement>().AsSingleton();
         Bind<BridgeMod>().AsSingleton();
@@ -29,7 +30,7 @@ public sealed class BridgeConfigurator : Configurator
 
 public sealed class BridgeMod(ResourceCountingService resources, PopulationService population,
     EntityRegistry entities, ITerrainService terrain, IThreadSafeWaterMap water, IGoodService goods,
-    ModRepository mods, SpatialObservations spatial, SiteValidation validation, PathPlacement placement)
+    ModRepository mods, SpatialObservations spatial, SiteValidation validation, PathPlacement placement, BuildingObservations buildings)
     : ILoadableSingleton, IUnloadableSingleton, IUpdatableSingleton
 {
     private readonly MainThreadQueue queue = new();
@@ -64,17 +65,18 @@ public sealed class BridgeMod(ResourceCountingService resources, PopulationServi
     public void Unload() { server?.Dispose(); queue.Dispose(); }
     private string Observe(BridgeRequest request)
     {
-        if ((request.Route is "site-validation" or "path-placement") && request.Session != sessionId) throw new ArgumentException("stale_session");
+        if ((request.Route is "site-validation" or "path-placement" or "building") && request.Session != sessionId) throw new ArgumentException("stale_session");
         object data = request.Route switch
         {
             "snapshot" => Snapshot(), "map" => Map(request), "objects" => spatial.Objects(request),
             "catalog" => spatial.Catalog(), "site-precheck" => spatial.Precheck(request),
             "site-validation" => validation.Validate(request),
+            "building" => buildings.Observe(request),
             "path-placement" => placement.Place(request),
             _ => throw new ArgumentException("invalid_request")
         };
         return JsonConvert.SerializeObject(new { schemaVersion = 1, sessionId, observedAtUtc = DateTimeOffset.UtcNow,
-            bridgeVersion = "0.5.0", data });
+            bridgeVersion = "0.6.0", data });
     }
     private object Snapshot()
     {

@@ -14,7 +14,7 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
     public static IReadOnlyList<Tool> Catalog(bool enableValidation = false, bool enablePlacement = false)
     {
         var options = new JsonSerializerOptions(NativeJson.Options) { TypeInfoResolver = new DefaultJsonTypeInfoResolver() };
-        var names = new List<string> { "timberborn_status", "inspect_colony", "inspect_map_region", "find_buildings", "inspect_build_catalog", "precheck_build_site" };
+        var names = new List<string> { "timberborn_status", "inspect_colony", "inspect_map_region", "find_buildings", "inspect_build_catalog", "precheck_build_site", "inspect_building" };
         if (enableValidation) names.Add("validate_build_site");
         if (enablePlacement) names.Add("place_path");
         return names.Select(name =>
@@ -25,6 +25,8 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
             bool action = validation || placement;
             bool site = name == "precheck_build_site" || action;
             var properties = new JsonObject();
+            if (name == "inspect_building")
+                foreach (var key in new[] { "id", "session" }) properties[key] = new JsonObject { ["type"] = "string", ["format"] = "uuid" };
             if (map) foreach (var (key, min, max) in new[] { ("x", 0, 4095), ("y", 0, 4095), ("z", 0, 4095), ("width", 1, 8), ("height", 1, 8), ("depth", 1, 4) })
                 properties[key] = new JsonObject { ["type"] = "integer", ["minimum"] = min, ["maximum"] = max };
             if (name == "find_buildings")
@@ -46,10 +48,12 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
                 "precheck_build_site" => typeof(NativeResult<NativeSite>), "timberborn_status" => typeof(NativeResult<NativeStatus>),
                 "validate_build_site" => typeof(NativeResult<NativeValidation>),
                 "place_path" => typeof(NativeResult<NativePlacement>),
+                "inspect_building" => typeof(NativeResult<NativeBuilding>),
                 _ => typeof(NativeResult<NativeSnapshot>) };
             return new Tool { Name = name,
                 Description = placement ? "Pilot: platziert genau einen Path über den regulären Spielplatzierer, nach frischer Vorschauvalidierung. Benötigt aktuelle Session-ID und separates Mod-Opt-in. Nur ein Versuch je Sitzung, auch bei Ablehnung/Fehler. applied bestätigt Entity-ID, Vorlage und Position; finished separat. Bei Fehler/unconfirmed niemals automatisch wiederholen oder zurücksetzen; find_buildings zur Klärung lesen. Keine Erreichbarkeitsgarantie."
                     : validation ? "Geschützter Pilot: erzeugt/verwendet eine eigene temporäre Vorschau und ruft Spielvalidatoren auf. Kein Bauauftrag. Frische Session-ID erforderlich, maximal 8 Versuche pro Sitzung. Bei Fehler/Zustandsabweichung gesperrt; niemals automatisch wiederholen. Valid bedeutet geometrische Spielprüfung, keine Material-/Liefer-/Fertigstellungszusage."
+                    : name == "inspect_building" ? "Liest ein Gebäude/Path anhand Entity-ID und aktueller Session. Meldet Fertigstatus, Baustellenfortschritt/verbleibende Güter sowie getrennte Betriebs-, Instant- und Baudistrikt-IDs. Fehlend oder kein Gebäude: found=false. Fehlende Komponente ist unbekannt, keine bestätigte Nichtanbindung. Zuordnung garantiert keine Arbeiter, Lieferung oder Fertigstellung. Ab Bridge 0.6.0."
                     : name == "find_buildings" ? "Liest Gebäude und Wege mit stabilen Vorlagen-IDs, Position, Eingang und bis zu 64 belegten Zellen je Objekt. Maximal 32 Einträge; Seiten sind frische Beobachtungen."
                     : name == "inspect_build_catalog" ? "Liest die Pilotvorlagen Lodge.Folktails und Path, aktive Fraktion, Freischaltung, Geometrie und Kosten. Keine gesamte Bauliste; globale Vorräte garantieren keine lokale Lieferung."
                     : site ? "Rein lesende räumliche Vorprüfung für Lodge.Folktails oder Path. Rotation 0/1/2/3 entspricht Cw0/Cw90/Cw180/Cw270; ungespiegelt. Meldet Hindernisse, Terrain, Eingang und Kosten. gameValidated bleibt false: KEINE vollständige Spiel-Bauprüfung, Freigabe oder Platzierung."
@@ -67,6 +71,16 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
         try
         {
             if (args.ValueKind != JsonValueKind.Object) throw new ArgumentException();
+            if (name == "inspect_building")
+            {
+                var query = new NameValueCollection();
+                foreach (var p in args.EnumerateObject())
+                {
+                    if (p.Value.ValueKind != JsonValueKind.String) throw new ArgumentException();
+                    query.Add(p.Name, p.Value.GetString());
+                }
+                return Wrap(await client.Building(BridgeRequest.Parse("/agent-api/v1/building", query), ct));
+            }
             if (name == "validate_build_site" && !enableValidation) throw new ArgumentException();
             if (name == "place_path" && !enablePlacement) throw new ArgumentException();
             if (name is "inspect_map_region" or "find_buildings" or "precheck_build_site" or "validate_build_site" or "place_path")

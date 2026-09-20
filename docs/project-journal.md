@@ -1,5 +1,20 @@
 # Projektjournal
 
+## 2026-09-20 — Baustellen-/Distriktbeobachtung 0.6.0 vorbereitet
+
+Nach Nutzer-Go als nächsten kleinen Schritt die Ergebnisbeobachtung vor Hausbau
+erweitert: inspect_building(id, session), sieben native Lesewerkzeuge. Feste GET-Route,
+Session-Prüfung im Spielhauptthread, nur initialisierte Gebäude/Paths ohne Previews.
+Fertigstatus, verbleibende Güter/Baufortschritt für unfertige ConstructionSites und
+getrennte DistrictBuilding-Zuordnungen. Keine Gleichsetzung mit Arbeiter-/Liefergarantie.
+Keine neue Abhängigkeit und keine Änderung am Wegbau-Pilot oder laufenden Spiel.
+
+Öffentliche Signaturen gegen lokale Spielbibliotheken geprüft. 132 reguläre Tests
+bestanden (121 Unit, 11 Integration), drei Live-Tests übersprungen; Mod-Build erfolgreich.
+0.6.0 noch nicht installiert/live geprüft; laufendes Spiel bleibt 0.5.0 mit Testweg.
+Nächste Abnahme rein lesend gemäß docs/building-observations.md. Materialfortschritt
+benötigt später eine echte Baustelle; fehlt sie, bleibt dieser Teil ausdrücklich offen.
+
 ## 2026-09-20 — Erster regulärer Wegbau über natives MCP bestätigt
 
 0.5.0 live erreichbar. Neun fachliche MCP-Aufrufe: Zustand/Katalog/Karte/Wege gelesen,

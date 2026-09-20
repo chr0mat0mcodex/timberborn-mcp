@@ -1,14 +1,16 @@
-# Eigene Timberborn Agent Bridge — 0.5.0
+# Eigene Timberborn Agent Bridge — 0.6.0
+
+0.6.0 ergänzt die rein lesende [Baustellen-/Distriktabfrage](building-observations.md)
+`inspect_building(id, session)`. Installiert/live geprüft bleibt bis zum Update 0.5.0.
 
 0.5.0 ergänzt den separat freizuschaltenden [einzelnen Wegauftrag](path-placement.md).
 Paketstandard: `enablePlacement: false`; MCP benötigt zusätzlich
 `TIMBERBORN_ENABLE_PLACEMENT=1`. Ein Versuch je Sitzung, kein automatisches Retry.
-Installiert/live geprüft bleibt bis zum nächsten Update 0.4.1.
 Die folgenden Vorschauangaben beschreiben weiterhin die separat schaltbare Validierung.
 
 Das Endziel ist ein Agent, der Timberborn über MCP spielt: Wasser, Nahrung, Holz,
 Wege und Wohnraum aufbauen und die Versorgung anhand frischer Beobachtungen steuern.
-Standardmäßig sind sechs Leserouten aktiv. 0.4.0 ergänzt eine separat geschützte
+Standardmäßig sind sieben Leserouten aktiv. 0.4.0 ergänzt eine separat geschützte
 temporäre Vorschauvalidierung; sie platziert keine Gebäude. Der Wegpilot aus 0.5.0
 ist separat freizuschalten; weitere Bau- und Steuerungsaktionen sind noch offen.
 Keine Screenshot-Auswertung und keine simulierten Maus-/Tastatureingriffe zur Spielsteuerung.
@@ -65,7 +67,7 @@ Wiederholbare Abnahme bei laufendem Spiel und geladener Testkolonie:
 pwsh -NoProfile -File ./scripts/verify.ps1 -NativeConfig '<installierte Mod>/bridge.local.json'
 ```
 
-Führt zuerst Build und reguläre Tests aus, danach genau den nativen Lesetest mit sechs
+Führt zuerst Build und reguläre Tests aus, danach genau den nativen Lesetest mit sieben
 Werkzeugen. Kein Legacy-API-Zugriff, kein automatischer Wiederholungsversuch bei Fehlern.
 Ohne `-NativeConfig` bleibt die Prüfung offline; `-Live` bezeichnet weiterhin den Legacy-Test.
 
@@ -78,10 +80,10 @@ TIMBERBORN_NATIVE_CONFIG=<absoluter Pfad zur installierten bridge.local.json>
 
 Die Client-Konfiguration bleibt bis zur gesonderten Einrichtung unverändert.
 Es gibt keinen automatischen Wechsel zwischen eigener Mod und Fremdmods.
-Die sechs Werkzeuge sind `timberborn_status`, `inspect_colony`,
+Die sieben Werkzeuge sind `timberborn_status`, `inspect_colony`,
 `inspect_map_region(x,y,z,width,height,depth)`, `find_buildings(offset,limit)`,
-`inspect_build_catalog` und `precheck_build_site(template,x,y,z,rotation)`.
-Die letzten drei benötigen Mod 0.3.0. Auch mit gesetztem Schreib-Opt-in
+`inspect_build_catalog`, `precheck_build_site(template,x,y,z,rotation)` und
+`inspect_building(id, session)` (letzteres ab 0.6.0). Auch mit gesetztem Schreib-Opt-in
 bietet dieses Backend ohne separates Placement-Opt-in keine Schreibwerkzeuge an. Ein Browseraufruf ohne Schlüssel
 bekommt absichtlich HTTP 401; es gibt keinen öffentlichen Ping.
 

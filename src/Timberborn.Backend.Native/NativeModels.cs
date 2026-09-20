@@ -53,6 +53,14 @@ public sealed record NativeValidation(string Template, Position Origin, int Rota
     bool NoPersistentChangeObserved, bool SessionLocked, int AttemptsRemaining, string[] Limitations);
 public sealed record NativePlacement(string Template, Position Origin, int Rotation, Guid EntityId,
     string Outcome, bool? Finished, bool SessionLocked, string[] Limitations);
+public sealed record NativeGoodAmount(string Id, int Amount);
+public sealed record NativeConstruction(bool WasStarted, bool IsOn, bool ReadyToBuild, float MaterialProgress,
+    float BuildTimeProgress, float BuildTimeProgressInHours, bool HasMaterialsToResumeBuilding, bool ReadyToFinish,
+    NativeGoodAmount[] RemainingRequiredGoods);
+public sealed record NativeDistrict(bool ComponentPresent, Guid? AssignedDistrictId, Guid? InstantDistrictId, Guid? ConstructionDistrictId);
+public sealed record NativeBuildingDetails(string Template, Position Position, bool Finished, bool Unfinished,
+    bool ConstructionComponentPresent, NativeConstruction? Construction, NativeDistrict District);
+public sealed record NativeBuilding(Guid Id, bool Found, NativeBuildingDetails? Details, string[] Limitations);
 public sealed record NativeMeta(string Backend, bool Simulated, string? SessionId, DateTimeOffset? ObservedAtUtc);
 public sealed record NativeFault(string Code, string Message, bool Retryable);
 public sealed record NativeResult<T>(int SchemaVersion, string Status, T? Data, NativeMeta Meta, NativeFault? Error);
