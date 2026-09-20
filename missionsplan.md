@@ -1314,4 +1314,18 @@ Analysevorrang ist kein Grund, diese ausdrückliche Spielfreigabe auszubremsen.
 - [ ] Fertigstellung und tatsächliche Versorgung separat bestätigen; Lagerkonfiguration als mögliche Lücke prüfen.
 
 [Vertrag und Abnahmeplan](docs/generic-building.md). Keine neue Fremdmod-Abhängigkeit,
-keine Screenshots oder Maussteuerung. Installiert/live bestätigt bleibt 0.13.2.
+keine Screenshots oder Maussteuerung. Installiert: 0.14.0; zuletzt live bestätigt: 0.13.2.
+
+### 7.45 Zukunftsfeature: Alerts und genaue betroffene Orte
+
+- [x] Öffentliche Spiel-APIs für Statuswarnungen, Zielbezug und Ereignismeldungen geprüft.
+- [ ] inspect_alerts: aktuelle Meldungen samt Anzahl und verfügbaren Statusdetails lesen.
+- [ ] inspect_alert_targets: alle betroffenen Objekte/Biber samt IDs und aktuellen Orten lesen,
+      entsprechend der Information hinter der anklickbaren Warnung, ohne UI-Klicks.
+- [ ] Unterschiedliche Meldungssysteme, verschwundene Ziele und Meldungen ohne Ort kenntlich machen.
+- [ ] Kleinen Live-Pilot gegen Spielangaben abgleichen; vollständige UI-Abdeckung noch unbewiesen.
+
+Grundsätzlich über StatusSubject/StatusInstance und StatusAggregator möglich; dynamische
+Statusdaten und separate Notifications berücksichtigen. Keine zusätzliche Mod erscheint
+für den Kern nötig. Nur recherchiert und geplant, noch nicht implementiert.
+[API-Belege, Vertragsvorschlag und Grenzen](docs/alerts-plan.md).

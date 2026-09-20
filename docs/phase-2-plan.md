@@ -212,3 +212,10 @@ Erfolg bedeutet:
 Nächster empfohlener Auftrag nach Freigabe: Paket 2A ausführen und daraus einen konkreten
 Adapter-/Brückenmod-Vorschlag mit Aufwand, Abhängigkeiten und verbleibenden Lücken ableiten.
 Dieser Plan autorisiert keine neue Implementierung, Installation, Konfigurationsänderung oder Spielaktion.
+
+## 9. Vorgemerkte spätere Funktionen
+
+- [Agentenfrage mit Texteingabe im Spiel](player-question-popup.md): öffentliche Dialog-APIs geprüft; Umsetzung offen.
+- [Alerts mit Detail- und Ortsabfrage](alerts-plan.md): Warnungen unten links und alle
+  betroffenen Ziele strukturiert über MCP lesen. Öffentliche Status-/Ziel-APIs geprüft;
+  vollständige Abdeckung, Positionsauflösung für Biber und Live-Abnahme noch offen.

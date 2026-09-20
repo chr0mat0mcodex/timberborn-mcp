@@ -843,3 +843,12 @@ und anschließende Live-Abnahme bleiben offen. Quellcode-Checkpoint: 4f26990.
 SHA256 identisch geprüft. Alle bisherigen Konfigurationsfelder unverändert; allein
 enableBuildingPlacement=true ergänzt. Vollständige lokale Sicherung von 0.13.2
 vorhanden. Nutzer um Neustart/MCP laden gebeten; Live-Abnahme noch offen.
+
+### 2026-09-20 — Zukunftsfeature Alerts mit Ortsdetails geprüft
+
+Auf Nutzerwunsch nur Kurzrecherche und Planung: öffentliche StatusSubject-/StatusInstance-
+und Aggregator-APIs liefern Warnungen und Zielbezug; SelectNextSubject belegt den
+Auswahlpfad. Separate Notifications/QuickNotifications haben unterschiedliche Orts-
+und Historiengrenzen. API-Signaturen geprüft, keine Live-Abdeckung behauptet.
+In missionsplan.md 7.45 und Phase-2-Zukunftsliste aufgenommen; Details docs/alerts-plan.md.
+Keine Mod-/Spieländerung. Nächster Entwicklungsschritt bleibt Bau-Liveabnahme 0.14.0.
