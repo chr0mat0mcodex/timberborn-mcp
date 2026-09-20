@@ -37,6 +37,6 @@ inspect_building.operations.workplace.assignedWorkers abgleichen; Änderungen
 zwischen Beobachtungen berücksichtigen. Danach genügt im normalen Agentenablauf
 eine kleine Zahl von Listenaufrufen statt einer Abfrage pro Gebäude.
 
-Gehört in das noch nicht installierte 0.9.0-Paket zusammen mit der
+Installiert ist das erweiterte 0.9.0-Paket zusammen mit der
 [Gebäudediagnose](building-operations.md). Das ältere lokale 0.9.0-Paket ohne diese
 Erweiterung wird nicht überschrieben; für Installation das neueste Paket verwenden.

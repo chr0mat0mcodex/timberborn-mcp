@@ -1,6 +1,6 @@
 # Betriebsdiagnose pro Gebäude — 0.9.0
 
-Status: implementiert, Installation und Live-Abnahme offen. Die bestehende Abfrage
+Status: implementiert und installiert; Live-Abnahme offen. Die bestehende Abfrage
 `inspect_building(id, session)` erhält `details.operations`; kein neues Werkzeug,
 keine neue Schreibaktion und keine Fremdmod-Abhängigkeit.
 

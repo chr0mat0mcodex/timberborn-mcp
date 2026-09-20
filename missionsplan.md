@@ -1094,3 +1094,9 @@ mit Arbeitsplatz-ID/Typ/Position, Beschäftigung und laufendem Arbeitsauftrag.
 179 Tests und Mod-Build erfolgreich. Zusammen mit Gebäudediagnose installieren
 und Zuordnungen live gegen Besetzung prüfen. Keine exakte Tätigkeit behaupten.
 [Vertrag](docs/workforce-roster.md).
+
+### 7.25 Betriebsdiagnose und Arbeitskräfteliste installiert
+
+Erweitertes 0.9.0 bei beendetem Spiel gesichert installiert. Fünf Paketdateien per
+SHA256 geprüft; private Konfiguration unverändert. Nach Nutzerstart MCP-Lesepilot
+und Zuordnungsabgleich durchführen. Noch kein Live-Nachweis für diese Erweiterung.

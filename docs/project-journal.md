@@ -1,5 +1,13 @@
 # Projektjournal
 
+## 2026-09-20 — Betriebsdiagnose und Workforce-Liste installiert
+
+Neuestes 0.9.0-Paket mit inspect_workforce bei beendetem Spiel installiert.
+Bisherigen Mod-Ordner vollständig lokal gesichert, fünf Dateien per SHA256 geprüft.
+Private Konfiguration bytegenau erhalten; keine neuen Aktionsfreigaben nötig.
+Live-Abnahme wartet auf Nutzerstart und Laden der MCP-Testkolonie. Danach neun
+Lesewerkzeuge und Arbeitsplatzzuordnungen gegen Gebäude-Besetzung prüfen.
+
 ## 2026-09-20 — Kolonieweite Arbeitskräfteliste in 0.9.0 ergänzt
 
 Auf ausdrücklichen Nutzerwunsch inspect_workforce(offset, limit): Worker-ID/-Typ,
