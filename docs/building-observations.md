@@ -1,7 +1,7 @@
 # Baustellen und Distriktzuordnung — 0.6.0
 
 Rein lesende Erweiterung vor einem Hausauftrag. Keine neue Abhängigkeit oder Bauaktion.
-Gebaut und synthetisch getestet; Live-Abnahme nach Update offen.
+Gebaut, synthetisch getestet und installiert; Live-Abnahme nach Spielstart offen.
 
 `inspect_building(id, session)` liest eine Entity derselben Spielsitzung. ID stammt
 aus find_buildings oder Bau-Receipt, session aus dessen Metadaten. Die Mod prüft

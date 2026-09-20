@@ -1,5 +1,14 @@
 # Projektjournal
 
+## 2026-09-20 — 0.6.0 installiert, lesende Live-Abnahme ausstehend
+
+Auf Nutzer-Go bei beendetem Timberborn das finale 0.6.0-Paket installiert.
+Fünf Paketdateien SHA256-geprüft; vorherige Dateien samt privater Konfiguration in
+neuem lokalen Backup gesichert. Private Konfiguration bytegleich erhalten.
+Noch kein Spielstart oder API-Aufruf. Nach Laden der Testkolonie ausschließlich
+lesenden Pilot gemäß docs/building-observations.md ausführen, ohne Placement-Opt-in
+im MCP-Prozess. Letzter bestätigter Laufzeitstand bleibt bis dahin 0.5.0.
+
 ## 2026-09-20 — Baustellen-/Distriktbeobachtung 0.6.0 vorbereitet
 
 Nach Nutzer-Go als nächsten kleinen Schritt die Ergebnisbeobachtung vor Hausbau
