@@ -1443,10 +1443,10 @@ Simulation unverändert pausiert, Pumpe wieder aktiv. Filter/Leeren manuell noch
   ScienceCost sowie Unlocked, Unlockable und reguläres Unlock vorhanden.
 - [x] Bestehende Bauvalidierung weist gesperrte Vorlagen bereits zurück.
 - [x] MCP-Vertrag und Abnahmekriterien in docs/research.md festgehalten.
-- [ ] inspect_research: Punkte, Kosten und Freischaltzustände seitenweise lesen.
-- [ ] unlock_building: eigenes Opt-in, Session/Kosten prüfen, regulär freischalten
+- [x] inspect_research: Punkte, Kosten und Freischaltzustände seitenweise lesen.
+- [x] unlock_building: eigenes Opt-in, Session/Kosten prüfen, regulär freischalten
   und Punkte sowie Freischaltzustand zurücklesen; kein automatisches Retry.
-- [ ] Automatische Vertrags-/Fehlerfalltests und Mod-Build.
+- [x] 0.17.0 gebaut und installiert; 378 regul�re Tests bestanden, f�nf Datei-Hashes gepr�ft.
 - [ ] Live: Kostenabzug, unveränderter Zustand bei Ablehnung, kein zweiter Abzug
   bei bereits freigeschalteter Vorlage und Bauvalidierung vor/nach Unlock.
 

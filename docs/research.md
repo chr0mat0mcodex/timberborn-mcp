@@ -19,7 +19,7 @@ beweist erst ein Live-Test. Keine neue Fremdmod oder PaketabhÃ¤ngigkeit erforder
 Der bestehende BuildingCatalog liest bereits `Unlocked`. SiteValidation weist
 gesperrte Vorlagen vor der Vorschau mit `template_unavailable` zurÃ¼ck.
 
-## Vorgesehener MCP-Vertrag
+## MCP-Vertrag
 
 - `inspect_research`: Forschungspunkte und seitenweise Vorlagen mit Kosten,
   Freischaltzustand, VerfÃ¼gbarkeit und regulÃ¤rer Freischaltbarkeit. Session und
@@ -47,3 +47,14 @@ gesperrte Vorlagen vor der Vorschau mit `template_unavailable` zurÃ¼ck.
 
 Falls Punkte fehlen, hÃ¶chstens einen begrenzten Produktionspilot mit einem regulÃ¤ren
 ErfindergebÃ¤ude vorbereiten; keine Punkte injizieren und keine unbegrenzte Simulation.
+
+## Freigabe und Ergebnisse
+
+Mod-Konfiguration: `enableResearch: true`; MCP-Prozess: `TIMBERBORN_ENABLE_RESEARCH=1`.
+Beide standardmäßig aus. `inspect_research` bleibt lesend verfügbar (19 native Leser).
+
+`outcome`: `cost_changed`, `unavailable`, `insufficient_points`, `not_unlockable`
+sind Ablehnungen ohne Änderung; `already_unlocked` ist ein unveränderter Erfolg.
+`applied` bestätigt Freischaltung und den erwarteten Punkteabzug auf dem Spielthread.
+`unconfirmed` oder ein Transportfehler erfordern ausschließlich eine neue Abfrage.
+Die Aktion verwendet keine eigenen Save-Daten und verändert keine Baugeometrie.

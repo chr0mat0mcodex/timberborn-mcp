@@ -14,7 +14,7 @@ public sealed partial class NativeClient
         if (r.Route != "building-catalog") throw new ArgumentException();
         var result = await Get<NativeBuildingCatalog>($"building-catalog?offset={r.Offset}&limit={r.Limit}", ct);
         var d = result.Data;
-        if (result.BridgeVersion is not ("0.14.0" or "0.14.1" or "0.15.0" or "0.16.0") || string.IsNullOrEmpty(d.Faction) || d.Offset != r.Offset || d.Limit != r.Limit ||
+        if (result.BridgeVersion is not ("0.14.0" or "0.14.1" or "0.15.0" or "0.16.0" or "0.17.0") || string.IsNullOrEmpty(d.Faction) || d.Offset != r.Offset || d.Limit != r.Limit ||
             d.Total < 0 || d.Items is null || d.Items.Length != Math.Min(r.Limit, Math.Max(0, d.Total-r.Offset)) ||
             d.HasMore != ((long)r.Offset+d.Items.Length < d.Total) || d.Limitations is null ||
             d.Items.Any(i => i is null || !BuildingPolicy.ValidTemplate(i.Template) || i.Size is null ||

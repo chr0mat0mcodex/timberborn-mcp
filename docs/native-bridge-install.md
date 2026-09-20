@@ -178,3 +178,10 @@ ErgÃ¤nzt Lebenszustand, Sterbezustand, Wasserstress und Wachstum natÃ¼rlicher Re
 Die Zapfkandidaten-Abfrage schlieÃŸt tote, sterbende, junge und unbekannte Kiefern aus.
 [Details und Grenzen](vegetation-state.md). Mod bei beendetem Spiel gesichert ersetzen;
 private Konfiguration unverÃ¤ndert lassen. Nach Neustart zuerst rein lesende Abnahme.
+
+## Forschung ab 0.17.0
+
+`enableResearch` in der privaten Mod-Konfiguration und `TIMBERBORN_ENABLE_RESEARCH=1`
+im MCP-Prozess geben `unlock_building` frei. Beide Freigaben sind erforderlich und
+standardmäßig deaktiviert. `inspect_research` benötigt keine Schreibfreigabe.
+Bestehenden Token und andere Einstellungen bei Updates erhalten.

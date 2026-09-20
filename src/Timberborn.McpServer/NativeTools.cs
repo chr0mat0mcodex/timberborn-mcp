@@ -9,9 +9,9 @@ using Timberborn.Bridge.Core;
 
 namespace Timberborn.McpServer;
 
-public sealed class NativeTools(NativeClient client, bool enableValidation = false, bool enablePlacement = false, bool enableLodgePlacement = false, bool enableSpeedControl = false, bool enableStaffing = false, bool enablePriorities = false, bool enableAreas = false, bool enableRemoval = false, bool enableBuildingPlacement = false, bool enableBuildingSettings = false) : IDisposable
+public sealed class NativeTools(NativeClient client, bool enableValidation = false, bool enablePlacement = false, bool enableLodgePlacement = false, bool enableSpeedControl = false, bool enableStaffing = false, bool enablePriorities = false, bool enableAreas = false, bool enableRemoval = false, bool enableBuildingPlacement = false, bool enableBuildingSettings = false, bool enableResearch = false) : IDisposable
 {
-    public static IReadOnlyList<Tool> Catalog(bool enableValidation = false, bool enablePlacement = false, bool enableLodgePlacement = false, bool enableSpeedControl = false, bool enableStaffing = false, bool enablePriorities = false, bool enableAreas = false, bool enableRemoval = false, bool enableBuildingPlacement = false, bool enableBuildingSettings = false)
+    public static IReadOnlyList<Tool> Catalog(bool enableValidation = false, bool enablePlacement = false, bool enableLodgePlacement = false, bool enableSpeedControl = false, bool enableStaffing = false, bool enablePriorities = false, bool enableAreas = false, bool enableRemoval = false, bool enableBuildingPlacement = false, bool enableBuildingSettings = false, bool enableResearch = false)
     {
         var options = new JsonSerializerOptions(NativeJson.Options) { TypeInfoResolver = new DefaultJsonTypeInfoResolver() };
         var names = new List<string> { "timberborn_status", "inspect_colony", "inspect_map_region", "find_buildings", "inspect_build_catalog", "precheck_build_site", "inspect_building", "inspect_simulation", "inspect_workforce" };
@@ -79,7 +79,7 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
                     : "Prüft die eigene lesende Spielmod. Kein Fallback auf Fremdmods, keine Schreibfunktionen.",
                 InputSchema = JsonSerializer.SerializeToElement(input), OutputSchema = JsonSerializer.SerializeToElement(options.GetJsonSchemaAsNode(result)),
                 Annotations = new() { ReadOnlyHint = !action, DestructiveHint = action, IdempotentHint = !action, OpenWorldHint = false } };
-        }).Concat(ManagementTools.Catalog(enablePriorities, enableAreas)).Concat(RemovalTools.Catalog(enableRemoval)).Concat(BuildingTools.Catalog(enableBuildingPlacement)).Concat(BuildingSettingsTools.Catalog(enableBuildingSettings)).Append(ActivityTools.Reader()).Select(ActivityTools.WithReasoning).ToArray();
+        }).Concat(ManagementTools.Catalog(enablePriorities, enableAreas)).Concat(RemovalTools.Catalog(enableRemoval)).Concat(BuildingTools.Catalog(enableBuildingPlacement)).Concat(BuildingSettingsTools.Catalog(enableBuildingSettings)).Concat(ResearchTools.Catalog(enableResearch)).Append(ActivityTools.Reader()).Select(ActivityTools.WithReasoning).ToArray();
     }
     public async Task<JsonObject> Invoke(string name, JsonElement args, CancellationToken ct)
     {
@@ -89,6 +89,7 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
         {
             args=ActivityTools.WithoutReasoning(args);
             if(name=="inspect_agent_log") return await ActivityTools.Read(client,args,ct);
+            if (ResearchTools.Handles(name)) return await ResearchTools.Invoke(client,name,args,enableResearch,ct);
             if (BuildingSettingsTools.Handles(name)) return await BuildingSettingsTools.Invoke(client,name,args,enableBuildingSettings,ct);
             if (BuildingTools.Handles(name)) return await BuildingTools.Invoke(client,name,args,enableBuildingPlacement,ct);
             if (RemovalTools.Handles(name)) return await RemovalTools.Invoke(client,name,args,enableRemoval,ct);
@@ -153,14 +154,14 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
             if (args.EnumerateObject().Any() || name is not ("inspect_colony" or "timberborn_status")) throw new ArgumentException();
             var snapshot = await client.Snapshot(ct);
             return name == "inspect_colony" ? Wrap(snapshot) : Wrap(new BridgeEnvelope<NativeStatus>(1, snapshot.SessionId,
-                snapshot.ObservedAtUtc, snapshot.BridgeVersion, new("reachable", snapshot.BridgeVersion, enablePlacement || enableLodgePlacement || enableSpeedControl || enableStaffing || enablePriorities || enableAreas || enableRemoval || enableBuildingPlacement || enableBuildingSettings)));
+                snapshot.ObservedAtUtc, snapshot.BridgeVersion, new("reachable", snapshot.BridgeVersion, enablePlacement || enableLodgePlacement || enableSpeedControl || enableStaffing || enablePriorities || enableAreas || enableRemoval || enableBuildingPlacement || enableBuildingSettings || enableResearch)));
         }
         catch (Exception ex) when (ex is ArgumentException or HttpRequestException or IOException or InvalidDataException or JsonException or UnauthorizedAccessException or OperationCanceledException)
         {
             string code = ex is ArgumentException ? "invalid_argument" : ex is UnauthorizedAccessException ? "authentication_failed"
                 : ex is JsonException or InvalidDataException ? "backend_incompatible" : "backend_unavailable";
             return (JsonObject)JsonSerializer.SerializeToNode(new NativeResult<object>(1, "error", null,
-                new("native", false, null, null), new(code, BuildingSettingsTools.Writes(name) || name is "place_building" or "place_path" or "place_lodge" or "set_simulation_speed" or "set_workplace_staffing" or "set_building_priority" or "set_area" or "demolish_building" or "remove_planted" or "remove_vegetation" or "remove_debris" ? "Aktionsergebnis möglicherweise unbestätigt. Nur lesend klären; niemals automatisch erneut ausführen." : "Native Bridge: Parameter, Verbindung oder Daten prüfen.", code == "backend_unavailable" && !BuildingSettingsTools.Writes(name) && name is not ("validate_building" or "place_building" or "validate_build_site" or "place_path" or "place_lodge" or "set_simulation_speed" or "set_workplace_staffing" or "set_building_priority" or "set_area" or "demolish_building" or "remove_planted" or "remove_vegetation" or "remove_debris"))), NativeJson.Options)!;
+                new("native", false, null, null), new(code, BuildingSettingsTools.Writes(name) || name is "unlock_building" or "place_building" or "place_path" or "place_lodge" or "set_simulation_speed" or "set_workplace_staffing" or "set_building_priority" or "set_area" or "demolish_building" or "remove_planted" or "remove_vegetation" or "remove_debris" ? "Aktionsergebnis möglicherweise unbestätigt. Nur lesend klären; niemals automatisch erneut ausführen." : "Native Bridge: Parameter, Verbindung oder Daten prüfen.", code == "backend_unavailable" && name != "unlock_building" && !BuildingSettingsTools.Writes(name) && name is not ("validate_building" or "place_building" or "validate_build_site" or "place_path" or "place_lodge" or "set_simulation_speed" or "set_workplace_staffing" or "set_building_priority" or "set_area" or "demolish_building" or "remove_planted" or "remove_vegetation" or "remove_debris"))), NativeJson.Options)!;
         }
     }
     public async Task<JsonObject> InvokeLogged(string name,JsonElement args,CancellationToken ct)
@@ -173,6 +174,7 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
         try {
             var result=await Invoke(name,args,ct);
             state=result["status"]?.GetValue<string>()=="error"?"error":result["data"]?["outcome"]?.GetValue<string>() is "applied" or "rejected" or "unconfirmed" ? result["data"]!["outcome"]!.GetValue<string>() : "ok";
+            if(name=="unlock_building" && result["data"]?["outcome"]?.GetValue<string>() is "cost_changed" or "unavailable" or "insufficient_points" or "not_unlockable")state="rejected";
             return result;
         } catch(OperationCanceledException){state="cancelled";throw;}
         finally {

@@ -1000,3 +1000,18 @@ BuildingSpec.ScienceCost, BuildingUnlockingService.Unlocked/Unlockable/Unlock vo
 Keine neue FremdabhÃ¤ngigkeit erforderlich. Kostenabzug noch nicht praktisch belegt.
 Vertrag und negative/positive AbnahmefÃ¤lle: docs/research.md, Missionsplan 7.52.
 Noch keine Code-, Installations- oder SpielzustandsÃ¤nderung in diesem Schritt.
+
+## 2026-09-20 — Forschung 0.17.0 gebaut und installiert
+
+inspect_research ergänzt Punkte, Freischaltkosten und Zustände als 19. nativen Leser.
+unlock_building verwendet reguläres Unlock mit eigener Mod-/MCP-Freigabe, Session,
+erwarteten Kosten, Punkteprüfung und unmittelbarer Rückabfrage. Bereits entsperrte
+Vorlagen werden nicht erneut freigeschaltet. Keine künstlichen Forschungspunkte.
+Rejection/Noop, exakter Abzug, fehlgeschlagene Nachbedingungen, fehlende Freigabe,
+veraltete Session und Wiederholung automatisch geprüft, auch über echten MCP-stdio.
+378 reguläre Tests bestanden (365 Unit, 13 Integration), drei Live-Tests bewusst
+übersprungen; separater Spiel-Mod-Build ohne Warnungen/Fehler.
+0.17.0 bei beendetem Spiel installiert, vollständige Sicherung, fünf Datei-Hashes
+geprüft. Bestehende Konfigurationswerte erhalten, nur enableResearch aktiviert.
+Nutzer um Start/Laden gebeten. Echter Kostenabzug und Bauvalidierung vor/nach Unlock
+noch offen. Logfenster unverändert. Vertrag: docs/research.md.
