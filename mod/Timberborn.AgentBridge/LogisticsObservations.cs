@@ -21,7 +21,8 @@ public sealed class LogisticsObservations(EntityRegistry entities,IGoodService g
         if(e.TryGetComponent<DistrictBuildingDistance>(out var d)&&d.TryGetDistanceToDistrict(out int value))distance=value;
         bool? entranceBlocked=null,entranceInaccessible=null,unconnectedBlocked=null,buildersReachable=null;
         if(e.TryGetComponent<BlockableEntranceBuilding>(out var entrance)){entranceBlocked=entrance.IsEntranceBlocked();entranceInaccessible=entrance.IsEntranceInaccessible();}
-        if(e.TryGetComponent<IUnconnectedBuildingBlocker>(out var blocker))unconnectedBlocked=blocker.IsUnconnectedBlocked;
+        var blockers=e.AllComponents.OfType<IUnconnectedBuildingBlocker>().ToArray();
+        if(blockers.Length>0)unconnectedBlocked=blockers.Any(b=>b.IsUnconnectedBlocked);
         if(b.IsUnfinished&&e.TryGetComponent<ReachableConstructionSite>(out var site))buildersReachable=site.IsReachableByBuilders();
         var access=e.GetComponentsAllocating<Accessible>();
         return new {id=r.Id,finished=b.IsFinished,position=Vec(b.Coordinates),entranceBlocked,entranceInaccessible,unconnectedBlocked,buildersReachable,distanceToDistrict=distance,
@@ -35,14 +36,15 @@ public sealed class LogisticsObservations(EntityRegistry entities,IGoodService g
         var b=to.GetComponentsAllocating<Accessible>().Where(a=>a.ValidAccessible).ToArray();
         bool supported=from.GetComponent<BlockObject>().IsFinished&&to.GetComponent<BlockObject>().IsFinished&&a.Length==1&&b.Length==1;
         bool? connected=null;float? distance=null;
-        if(supported){connected=a[0].FindRoadPath(b[0],out float value);if(connected==true)distance=value;}
+        if(supported){connected=a[0].FindInstantRoadPath(b[0],out float value);if(connected==true)distance=value;}
         return new {id=r.Id,toId=r.ToId,supported,sourceAccessCount=a.Length,targetAccessCount=b.Length,connected,distance,
-            limitations=new[]{"regular_game_road_path_query","requires_finished_objects_and_one_valid_accessible_each","direction_is_source_to_target","no_terrain_shortcuts","native_distance_not_travel_time","navigation_may_lag","no_worker_or_delivery_guarantee"}};
+            limitations=new[]{"instant_game_road_path_query","requires_finished_objects_and_one_valid_accessible_each","direction_is_source_to_target","no_terrain_shortcuts","native_distance_not_travel_time","navigation_may_lag","no_worker_or_delivery_guarantee"}};
     }
     public object Range(LogisticsRequest r)
     {
-        var e=Find(r.Id);var providers=e.GetComponentsAllocating<IBuildingWithRange>();
-        bool supported=e.GetComponent<BlockObject>().IsFinished&&providers.Count>0;
+        var e=Find(r.Id);// Interface implementations need not be registered as component lookup keys.
+        var providers=e.AllComponents.OfType<IBuildingWithRange>().ToArray();
+        bool supported=e.GetComponent<BlockObject>().IsFinished&&providers.Length>0;
         // Bound enumeration as well as response size; don't silently claim a partial union is complete.
         var cells=supported?providers.SelectMany(p=>p.GetBlocksInRange()).Take(65537).ToArray():Array.Empty<UnityEngine.Vector3Int>();
         if(cells.Length>65536)throw new InvalidOperationException("range_limit");

@@ -12,7 +12,8 @@ unkontrollierter Kolonieaufbau ersetzt keine gezielte Abnahme.
 
 ## Stand
 
-**0.19.0 ist implementiert und installiert; zuletzt live bestätigt bleibt 0.18.0.**
+**0.19.0 ist installiert; der Live-Pilot fand Weg-/Reichweitenlücken.
+0.19.1 ist als Korrektur gebaut, Installation/erneute Abnahme stehen aus.**
 [Projektstand](PROJECT_STATE.md), [Werkzeugkatalog](docs/tools.md), [offene Arbeiten](BACKLOG.md).
 Keine Fremdmod-Pflichtbasis; die frühere More-HTTP-API-Phase ist abgeschlossen.
 
@@ -22,7 +23,7 @@ Keine Fremdmod-Pflichtbasis; die frühere More-HTTP-API-Phase ist abgeschlossen.
 | Bevölkerung und Betten | Live bestätigt |
 | Vollständige Güter, aktive Status und Ziele | 40 Güter und eine Lagerwarnung mit Ziel live bestätigt; Mehrfachziele und Verschwinden bestätigt; Biberwarnungen offen |
 | Karte, Gebäude und Baustellen | Live genutzt; neue Weg-/Zugangs-/Reichweitenleser in 0.19.0 gebaut, Live-Pilot offen |
-| Produktion/Verbrauch über Zeit | Native Güterhistorie in 0.19.0 gebaut; Live-Semantik/Perioden noch prüfen |
+| Produktion/Verbrauch über Zeit | Native Güterhistorie mit Produktion/Verbrauch live lesbar; Zeitsemantik separat prüfen |
 | Generische Bauaufträge | Mehrere Vorlagen live; Geometrien/Sonderformen begrenzt |
 | Lager, Farm, Gebäudepause | Live bestätigt |
 | Personal, Prioritäten, Flächen, Entfernung | Gezielte Live-Piloten bestanden |

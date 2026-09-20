@@ -15,7 +15,7 @@ public sealed partial class NativeClient
 {
     private static void CheckPage<T>(BridgeEnvelope<T> e,EconomyRequest r,int offset,int limit,int total,int count,bool more,string[]? limitations)
     {
-        if(e.BridgeVersion is not ("0.18.0" or "0.19.0")||offset!=r.Offset||limit!=r.Limit||total<0||count!=Math.Min(limit,Math.Max(0,total-offset))||
+        if(e.BridgeVersion is not ("0.18.0" or "0.19.0" or "0.19.1")||offset!=r.Offset||limit!=r.Limit||total<0||count!=Math.Min(limit,Math.Max(0,total-offset))||
             more!=((long)offset+count<total)||limitations is null||limitations.Any(s=>s is null))throw new InvalidDataException("Invalid economy page");
     }
     private static bool Text(string? value,int max)=>value is not null && value.Length<=max;

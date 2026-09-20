@@ -1,7 +1,8 @@
 # Erreichbarkeit, Arbeitsreichweite und Versorgungsverlauf
 
-Codeversion 0.19.0; gegen öffentliche Timberborn-1.1.2.4-APIs gebaut. Installation abgeschlossen;
-Live-Abnahme steht aus. Vier zusätzliche Leser, keine neue Fremdmod oder Bibliothek.
+Codeversion 0.19.1; gegen öffentliche Timberborn-1.1.2.4-APIs gebaut.
+Installiert ist 0.19.0. Dessen Live-Pilot fand zwei zu korrigierende Lücken; 0.19.1
+wartet auf Installation und erneute Abnahme. Vier zusätzliche Leser, keine neue Fremdmod oder Bibliothek.
 
 ## Gebäudezugang
 
@@ -12,7 +13,7 @@ DistrictBuildingDistance.TryGetDistanceToDistrict liefert die native Distriktdis
 Fehlende Komponenten/Werte erscheinen als null, nicht als freie oder blockierte Route.
 Accessible-Anzahl und gültige Accessible-Anzahl werden gesondert ausgegeben.
 
-`inspect_road_connection(id, toId, session)` nutzt Accessible.FindRoadPath zwischen zwei
+`inspect_road_connection(id, toId, session)` nutzt ab 0.19.1 Accessible.FindInstantRoadPath zwischen zwei
 fertigen Blockobjekten mit jeweils genau einer gültigen Accessible-Komponente. Der
 Spielservice prüft die eigentliche Wegverbindung, einschließlich seiner Weggeometrien;
 kein selbstgebauter Nachbarschaftsgraph. Ergebnis ist gerichtet von id nach toId.
@@ -29,7 +30,7 @@ Kameraänderung oder reguläre Spielaktion; nur öffentliche Beobachtungs-/Suchm
 ## Arbeitsreichweite
 
 `inspect_work_range(id, session, offset, limit)` liest GetBlocksInRange sämtlicher
-öffentlicher IBuildingWithRange-Provider des fertigen Gebäudes. Ergebnis ist eine
+öffentlicher IBuildingWithRange-Provider aus AllComponents.OfType des fertigen Gebäudes. Ergebnis ist eine
 entdoppelte Vereinigungsmenge von Spielrasterzellen, sortiert Z/Y/X, mit rangeNames.
 Keine geometrische Kreisnäherung und kein angenommener Radius. Ohne Provider oder bei
 unfertigem Objekt: supported=false; das bedeutet unbekannt, nicht Reichweite null.
@@ -68,9 +69,28 @@ Reflection, Patches oder übernommenen Fremdmodquellen. Mod-Build erfolgreich. T
 Unknown/False-Unterscheidung, falsche Ziele/Session, Seitengrenzen, Reichweitenordnung und
 getrennte native Flüsse/Vorratsdifferenzen; stdio-/HTTP-Pfad ergänzt.
 
-Nach Installation: verbundenes Gebäudepaar und eine kontrolliert unterbrochene Verbindung;
+Live 0.19.0: alle 26 Leser ohne Protokollfehler; Distriktzentrum → Erfinder/Farm/Holzfäller
+mit Distanzen 10/9/17. Historien Water/Berries/Log mit je 13 Samples gelesen.
+Negativtest: entferntes einzelnes Wegstück wurde von FindRoadPath im pausierten Spiel
+weiter als verbunden gemeldet, obwohl die Distriktdistanz fehlte. Wegstück regulär
+wiederhergestellt. Farm und Holzfäller meldeten beim bisherigen Interface-Lookup
+supported=false. Das ist ein korrektes Unknown-Ergebnis, aber keine erfüllte Reichweitenfunktion.
+
+0.19.1 verwendet deshalb die öffentliche Sofort-Wegsuche sowie AllComponents.OfType
+für Interface-Implementierungen statt registrierter Lookup-Schlüssel. Der Native-Client
+lehnt Weg-/Reichweitenantworten aus 0.19.0 nun ausdrücklich ab. Neue Live-Abnahme offen.
+
+Nach Installation erneut: verbundenes Gebäudepaar und eine kontrolliert unterbrochene Verbindung;
 Eingangsblockade/fehlender Zugang separat. Arbeitsreichweiten mindestens Farm/Holzfäller
 gegen vorhandene Karten-/Flächenkoordinaten prüfen. Water/Berries/Log-Historien über
 mindestens zwei Spielzeitpunkte lesen und native Produktions-/Verbrauchswerte mit
 Bestandsänderung getrennt vergleichen. Spieländerungen kontrolliert rückabfragen;
 keine Zusage allgemeiner Fraktions-, Treppen- oder Großkolonieabdeckung aus Einzeltests.
+
+
+Historien-Zeitpilot unter 0.19.0: zwischen Tag 13 um 06:30 und etwa 12:02 blieb das
+letzte Sample unverändert. Nach Fortschritt über Mitternacht bis Tag 14 um etwa 00:49
+kam ein neues Water-Sample hinzu: Produktion 2, Verbrauch 13, Nettobilanz -11; der
+historische Bestand sank passend von 186 auf 175. Dieser Tageswechsel ist live belegt;
+Extrapolation zu dauerhafter Versorgung oder jeder Sampling-Sonderlage bleibt unzulässig.
+Spiel anschließend wieder pausiert. Biberwarnung auch in diesem Zeitraum nicht vorhanden.

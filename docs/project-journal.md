@@ -1205,3 +1205,27 @@ in einer neuen lokalen Sicherung erhalten. Fünf Dateien aus dem geprüften Pake
 installiert und SHA-256 verglichen; private Konfiguration unverändert. Keine fremden
 Bibliotheken installiert. Nutzerstart und Laden von MCP für die neue Live-Abnahme
 abwarten; Biberwarnungen und neue Logistikfälle bleiben offen.
+
+
+## 2026-09-20 — 0.19.0 Live-Pilot: Historie bestätigt, zwei Logistiklücken
+
+Opt-in Test aller 26 Leser bestanden (Protokoll-/Vertragsabnahme). Gezielt bestätigte
+Wege vom Distriktzentrum zu Erfinder/Farm/Holzfäller mit Distanzen 10/9/17. Güterhistorien
+Water/Berries/Log mit 13 Samples lesbar. Ein zusätzlicher Tageswechsel bestätigt neue
+Stichprobe: Water Produktion 2, Verbrauch 13, Nettobilanz -11, Bestand 186 → 175.
+Innerhalb desselben Spieltages blieb die Historie unverändert. Ende Tag 14, ca. 00:49,
+Simulation wieder pausiert. Keine Biberwarnung im geprüften Zeitraum.
+
+Funktionaler Negativtest nicht bestanden: nach Entfernen eines einzelnen Wegstücks
+meldete FindRoadPath im pausierten Spiel weiter connected=true, obwohl die native
+Distriktdistanz bereits null war. Weg regulär wiedergebaut und Antwort erneut gelesen.
+Farm und Holzfäller lieferten über GetComponentsAllocating<IBuildingWithRange> keine
+Provider; die gewünschte Reichweitenfunktion war damit nicht live erfüllt.
+
+0.19.1 wechselt auf öffentliche FindInstantRoadPath und AllComponents.OfType für die
+Interface-Implementierungen. Korrektur gebaut, erneuter Live-Nachweis ausstehend.
+Native-Client verweigert Weg-/Reichweitenantworten aus der unzureichenden 0.19.0.
+Keine privaten Interna, Fremdmods oder neuen Abhängigkeiten. Rohdaten/IDs lokal ignoriert.
+
+Abschlussprüfung 0.19.1: 433 reguläre Tests bestanden (420 Unit, 13 Integration),
+drei opt-in Live-Tests übersprungen. Mod-Build ohne Warnungen/Fehler.

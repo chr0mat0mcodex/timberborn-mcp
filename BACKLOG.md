@@ -14,10 +14,12 @@ Hier stehen offene Aufgaben; datierte historische Kästchen sind kein aktueller 
 3. **Produktionshindernisse und Bedürfnisse:** Hunger/Durst, fehlender Eingang,
    Material, Personal oder andere konkrete Betriebsblockaden zuverlässig unterscheiden.
 4. **Erreichbarkeit und Reichweiten live abnehmen:** 0.19.0 nutzt native Eingangsprüfungen,
-   Accessible.FindRoadPath und IBuildingWithRange. Installiert; Live-Pilot noch offen.
+   Accessible.FindRoadPath und IBuildingWithRange. Live-Pilot fand veraltete Wegantwort
+   im pausierten Spiel und fehlende Provider bei Farm/Holzfäller. 0.19.1 korrigiert den Zugriff;
+   Installation/erneuter Pilot offen.
    Mehrdeutige Zugänge bleiben unsupported; keine allgemeine Geometrieabdeckung behauptet.
 5. **Versorgungsentwicklung live abnehmen:** 0.19.0 liest gespeicherte GoodSamples mit
-   getrennten Produktions-/Verbrauchszählern und Bestandsänderungen. Installiert; Live-Pilot offen;
+   getrennten Produktions-/Verbrauchszählern und Bestandsänderungen. Historien live lesbar;
    Abtastdauer und Periodengrenzen noch nachweisen. [Vertrag](docs/logistics.md).
 
 Diese Reihenfolge ist eine Planung, keine Behauptung bereits vorhandener Werkzeuge.

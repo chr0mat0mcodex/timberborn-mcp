@@ -62,9 +62,9 @@ public sealed class NativeBridgeTests
                         if(r.Route=="activity") {
                             var a=r.Activity!;
                             if(a.State!="running" && a.Session!=session)throw new ArgumentException();
-                            return JsonSerializer.Serialize(new BridgeEnvelope<object>(1,session,DateTimeOffset.UtcNow,"0.19.0",new NativeActivityAck(activityLog.Record(a,DateTimeOffset.UtcNow))),NativeJson.Options);
+                            return JsonSerializer.Serialize(new BridgeEnvelope<object>(1,session,DateTimeOffset.UtcNow,"0.19.1",new NativeActivityAck(activityLog.Record(a,DateTimeOffset.UtcNow))),NativeJson.Options);
                         }
-                        if(r.Route=="activity-log")return JsonSerializer.Serialize(new BridgeEnvelope<object>(1,session,DateTimeOffset.UtcNow,"0.19.0",new NativeActivityLog(128,activityLog.Snapshot().Reverse().Take(32).ToArray(),activityLog.Revision,false,false)),NativeJson.Options);
+                        if(r.Route=="activity-log")return JsonSerializer.Serialize(new BridgeEnvelope<object>(1,session,DateTimeOffset.UtcNow,"0.19.1",new NativeActivityLog(128,activityLog.Snapshot().Reverse().Take(32).ToArray(),activityLog.Revision,false,false)),NativeJson.Options);
                         Interlocked.Increment(ref observations);
                         if(r.Route=="alert-targets" && r.Session!=session)throw new BridgeRejectionException("stale_session");
                         object data = r.Route switch
@@ -113,7 +113,7 @@ public sealed class NativeBridgeTests
                                 Guid.NewGuid(), "applied", r.Template == "Path", true, ["synthetic_test"])),
                             _ => throw new ArgumentException()
                         };
-                        return JsonSerializer.Serialize(new BridgeEnvelope<object>(1, session, DateTimeOffset.UtcNow, "0.19.0", data), NativeJson.Options);
+                        return JsonSerializer.Serialize(new BridgeEnvelope<object>(1, session, DateTimeOffset.UtcNow, "0.19.1", data), NativeJson.Options);
                     });
                     await Task.Delay(5, pumpStop.Token);
                 }
