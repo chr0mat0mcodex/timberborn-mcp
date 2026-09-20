@@ -31,7 +31,8 @@ und Baudistrikt bestätigt; die gemeldete Restmaterialmenge ist noch nicht verl�
 interpretiert. Paths haben keine Distriktkomponente.
 0.6.1 ersetzt diese missverständliche Angabe durch getrennte Vorlagen-Baukosten und
 Baustellenbestände, ohne Restbedarfsberechnung. Am Farmhaus live bestätigt:
-25 Holz Baukosten, vorhandenes leeres Baustelleninventar, global 0 Holz.
+25 Holz Baukosten; anschließend Lieferung 2 -> 4 Holz, Materialfortschritt 8 -> 16 %
+und Bauzeitfortschritt 0 -> rund 11 % beobachtet. Farmhaus noch nicht fertig.
 [Installation und Abnahme](docs/native-bridge-install.md),
 [offizielle Quellen und good references](docs/references/README.md).
 Für die eigene Bridge: `scripts/start-native.ps1 -ConfigPath '<private Konfiguration>'`;

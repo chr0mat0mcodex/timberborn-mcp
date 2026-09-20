@@ -1,11 +1,23 @@
 # Baustellen und Distriktzuordnung — 0.6.1
 
+## Lieferung und Baufortschritt live bestätigt
+
+Nach vom Nutzer eingerichteter Holzversorgung zwei Lesestichproben am Farmhaus:
+Baustellenbestand 2 -> 4 Log, MaterialProgress 0.08 -> 0.16, BuildTimeProgress
+0 -> 0.109375, Bauzeitstunden 0 -> 0.21875. Kosten 25 Log, weiterhin unfertig.
+Acht fachliche MCP-Aufrufe, keine Agenten-Mutation. Fertigstellung noch offen.
+
+In der zweiten Probe global Log=0 bei 4 Log im Baustelleninventar: globale Ressourcen
+nicht als vollständige Baustellenbestände interpretieren. HasMaterialsToResumeBuilding
+war trotz beobachtetem Fortschritt zum Abfragezeitpunkt false; Momentaufnahme, keine
+Aussage über den gesamten Zeitraum seit der vorherigen Beobachtung.
+
 ## Materialkorrektur 0.6.1 — begrenzt live bestätigt
 
 0.6.1 ist installiert. Gespeichertes Farmhaus live gelesen: Baukosten 25 Log,
 Inventar vorhanden und leer, global 0 Log. Baustelle aktiv/unfertig/ungestartet,
 Fortschritt 0 und bekannter Baudistrikt. Vier reine Leseaufrufe, keine Mutation.
-Materiallieferung und Fortschrittsverlauf sind noch nicht beobachtet.
+Dies war der erste Materialabgleich; der spätere Fortschrittsnachweis steht oben.
 
 Die nicht geklärte Restbedarfsmethode wird nicht mehr aufgerufen. Öffentliche
 BuildingSpec.BuildingCost und ConstructionSite.Inventory.Stock liefern getrennt:

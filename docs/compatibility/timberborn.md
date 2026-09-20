@@ -1,5 +1,13 @@
 # Kompatibilität
 
+## Fortschrittsbeobachtung 0.6.1 — 2026-09-20
+
+Farmhauslieferung und Bauarbeit über zwei Lesestichproben nachgewiesen:
+Baustellenbestand 2 -> 4 Log, MaterialProgress 0.08 -> 0.16, BuildTimeProgress
+0 -> 0.109375. Noch unfertig. Holzversorgung vom Nutzer eingerichtet; native
+Produktionssteuerung dadurch nicht nachgewiesen. Globalbestand und Baustellenbestand
+sind getrennte Beobachtungen und waren in der zweiten Probe verschieden (0 bzw. 4 Log).
+
 ## Materialbeobachtung 0.6.1 — 2026-09-20
 
 EfficientFarmHouse.Folktails als gespeicherte Baustelle live gelesen: Vorlagenkosten

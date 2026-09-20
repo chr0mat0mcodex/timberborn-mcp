@@ -1,5 +1,23 @@
 # Projektjournal
 
+## 2026-09-20 — Materiallieferung und Baufortschritt live beobachtet
+
+Nach Nutzerbestätigung der regulären Holzversorgung zwei begrenzte Lesestichproben,
+insgesamt acht fachliche MCP-Aufrufe. Farmhaus weiterhin aktiv/unfertig und bekanntem
+Baudistrikt zugeordnet. Erste Probe: Baustellenbestand 2 Log, MaterialProgress 0.08,
+WasStarted=true, Bauzeitfortschritt/-stunden 0. Zweite Probe: Baustellenbestand 4 Log,
+MaterialProgress 0.16, BuildTimeProgress 0.109375, BuildTimeProgressInHours 0.21875.
+Vorlagenkosten unverändert 25 Log. Damit Lieferung und echter zeitlicher Baufortschritt
+live nachgewiesen; noch keine Fertigstellung und kein eigener Gebäudeauftrag.
+
+Zweite Probe meldet gleichzeitig global Log=0 bei 4 Log im Baustelleninventar.
+Globales ResourceCounting ersetzt daher die separate Baustellenbeobachtung nicht;
+keine Gesamtinventaridentität oder exakte Reservierungs-/Liefersemantik daraus ableiten.
+HasMaterialsToResumeBuilding blieb in beiden Proben false: bedeutet nicht, dass seit
+der letzten Beobachtung keine Arbeit erfolgt ist. Keine Spielmutation durch den Agenten.
+Holzfäller-/Fällmarkierungssteuerung bleibt eine native Funktionslücke; Nutzerhilfe
+hat diesen Lieferpilot ermöglicht. Nach zwei nützlichen Proben kein weiteres Polling.
+
 ## 2026-09-20 — Materialvertrag 0.6.1 am Farmhaus live bestätigt
 
 Vier rein lesende MCP-Aufrufe nach Nutzer-Neustart. Genau ein gespeichertes

@@ -1027,3 +1027,11 @@ Live-Abgleich am Nutzer-Farmhaus ausstehend. Ursache des alten Nullwerts bleibt 
 Baustelleninventar vorhanden/leer, global 0 Holz, bekannter Baudistrikt, Fortschritt 0.
 Vier MCP-Aufrufe, keine Mutation. Nächster Nachweis: reguläre Materiallieferung und
 tatsächlichen Baufortschritt beobachten; dafür muss zuerst Holz verfügbar werden.
+
+### 7.16 Reguläre Lieferung und Baufortschritt nachgewiesen
+
+Nutzer hat Holzversorgung aktiviert. Zwei reine Lesestichproben: Farmhausinventar
+2 -> 4 Holz, MaterialProgress 0.08 -> 0.16, BuildTimeProgress 0 -> 0.109375.
+Bekannter Baudistrikt, weiterhin unfertig. Acht fachliche MCP-Aufrufe, kein Agenteneingriff.
+Global Log=0 bei Baustellenbestand 4 bestätigt die nötige Trennung beider Abfragen.
+Offen: Fertigstellung, eigener Hausauftrag und native Steuerung von Holzfäller/Fällgebiet.
