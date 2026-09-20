@@ -12,7 +12,7 @@ unkontrollierter Kolonieaufbau ersetzt keine gezielte Abnahme.
 
 ## Stand
 
-**0.21.1 ergänzt konkrete Gebäudeinventare; Installation/Live-Abnahme offen.**
+**0.21.1 ergänzt konkrete Gebäudeinventare; Installiert, Live-Abnahme offen.**
 
 **0.21.0 liefert einen Produktionsgraphen und korrigiert die Bedürfniszählung bei Todesfällen; installiert, alle 30 Leser und begrenzter Graph-/Lebenszustandspilot live bestanden.
 Fünf Paketdateien geprüft, Konfiguration erhalten. Unter 0.19.2 sind

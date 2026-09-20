@@ -1,7 +1,7 @@
 # Projektstand
 
-Stand: 2026-09-20. Codeversion: **0.21.1**, Gebäudeinventardiagnose regulär getestet; Installation/Live-Abnahme offen. 0.21.0 bleibt installiert und mit 30 Lesern live bestätigt.
-Installiert ist **0.21.0**, fünf Datei-Hashes geprüft und Konfiguration erhalten. Zuvor unter **0.20.0**: 29 Leser live geprüft, danach Fehler bei weiter registrierten
+Stand: 2026-09-20. Codeversion: **0.21.1**, Gebäudeinventardiagnose gebaut, regulär getestet und installiert; Live-Abnahme offen. Zuvor 0.21.0 mit 30 Lesern live bestätigt.
+Installiert ist **0.21.1**, fünf Datei-Hashes geprüft und Konfiguration erhalten. Zuvor unter **0.20.0**: 29 Leser live geprüft, danach Fehler bei weiter registrierten
 verstorbenen Bibern gefunden (Bedürfniszählung 13 statt 11 lebender Biber).
 Sofort-Wegsuche einschließlich Unterbrechung/Wiederherstellung unter **0.19.1** live bestätigt. Farm-/Holzfällerreichweiten unter 0.19.2 über den konkreten Terrainzugriff bestätigt.
 Die Version im [Manifest](mod/Timberborn.AgentBridge/manifest.json) ist die Codeversion;

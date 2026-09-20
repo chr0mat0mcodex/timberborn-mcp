@@ -1464,3 +1464,7 @@ Installation und gezielter Live-Abgleich von Distriktzentrum, beiden Pumpen und 
 stehen aus. Spiel in diesem Entwicklungsschritt nicht verändert.
 
 0.21.1 gebaut und separat paketiert; 487 reguläre Tests (474 Unit, 13 Integration) bestanden. Mod-Build ohne Warnungen/Fehler. Installation wartet auf Spielende durch Nutzer; noch 0.21.0 installiert.
+
+## 2026-09-20 — 0.21.1 installiert
+
+Spielende vor Sicherung und unmittelbar vor Austausch geprüft. 0.21.0 vollständig in neuem lokalem Backup gesichert und verglichen. Fünf Paketdateien ersetzt und SHA-256 verifiziert; private Konfiguration unverändert. 0.21.1 installiert, Neustart/Laden und Inventar-Liveabgleich ausstehend.

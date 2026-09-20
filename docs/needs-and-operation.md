@@ -117,5 +117,5 @@ aktivierten Inventarkomponenten am fertigen Ziel. Keine Träger-/Baustelleninven
 keine globale Summengleichheit zugesichert. Freie Kapazitäten je Gut nicht addieren;
 Kapazität kann vom Spiel ignoriert werden, dieses Flag ist hier nicht als Laufzeitwert verfügbar.
 
-Installation und gezielter Live-Abgleich von Distriktzentrum, beiden Pumpen und Tanks
-stehen aus. Spiel in diesem Entwicklungsschritt nicht verändert.
+0.21.1 ist installiert. Gezielter Live-Abgleich von Distriktzentrum, beiden Pumpen und Tanks
+steht aus. Spiel in diesem Entwicklungsschritt nicht verändert.
