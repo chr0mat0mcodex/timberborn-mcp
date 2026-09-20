@@ -12,7 +12,7 @@ unkontrollierter Kolonieaufbau ersetzt keine gezielte Abnahme.
 
 ## Stand
 
-**0.19.2 ist gebaut; installiert ist 0.19.1. Sofort-Wegsuche und historische Bilanz
+**0.19.2 ist gebaut und installiert. Sofort-Wegsuche und historische Bilanz
 sind gezielt live bestätigt. Der direkte Terrain-Reichweitenzugriff benötigt den nächsten Live-Test.**
 [Projektstand](PROJECT_STATE.md), [Werkzeugkatalog](docs/tools.md), [offene Arbeiten](BACKLOG.md).
 Keine Fremdmod-Pflichtbasis; die frühere More-HTTP-API-Phase ist abgeschlossen.

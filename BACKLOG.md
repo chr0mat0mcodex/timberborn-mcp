@@ -15,7 +15,7 @@ Hier stehen offene Aufgaben; datierte historische Kästchen sind kein aktueller 
    Material, Personal oder andere konkrete Betriebsblockaden zuverlässig unterscheiden.
 4. **Konkrete Arbeitsreichweiten live abnehmen:** Sofort-Wegsuche unter 0.19.1 besteht
    den Unterbrechungstest. 0.19.2 nutzt BuildingTerrainRange.GetRange für Farm/Holzfäller;
-   Installation/Live-Pilot offen. Allgemeine Range-Provider waren dort nicht vorhanden.
+   Installiert; Live-Pilot offen. Allgemeine Range-Provider waren dort nicht vorhanden.
 5. **Versorgungsentwicklung erweitern:** native Historien und Fortschreibung über einen
    Tageswechsel live bestätigt. Keine momentanen Raten oder Nachhaltigkeitszusage daraus
    ableiten; zusätzliche Perioden/Sonderfälle bleiben offen. [Vertrag](docs/logistics.md).

@@ -4,7 +4,7 @@
 
 | Komponente | Belegter Stand |
 | --- | --- |
-| Eigene Mod | 0.19.1 installiert, Sofort-Wegsuche live; 0.19.2 mit konkreter Terrain-Reichweite gebaut, neue Abnahme offen |
+| Eigene Mod | 0.19.2 installiert; Sofort-Wegsuche zuvor live bestätigt, konkrete Terrain-Reichweite noch abzunehmen |
 | Spiel | Timberborn 1.1.2.4, Folktails, kleine Entwicklungskolonie |
 | Tests | 439 reguläre Tests; Live-Piloten getrennt |
 | Fremdmods | Keine Pflichtabhängigkeit der eigenen Mod |

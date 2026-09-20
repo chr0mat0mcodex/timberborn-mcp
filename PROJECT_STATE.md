@@ -1,8 +1,7 @@
 # Projektstand
 
-Stand: 2026-09-20. Codeversion: **0.19.2**, gebaut; Installation/Live-Abnahme ausstehend.
-Installiert: **0.19.1**. Sofort-Wegsuche einschließlich Unterbrechung/Wiederherstellung
-live bestätigt. Farm-/Holzfällerreichweiten benötigen den neuen konkreten Terrainzugriff.
+Stand: 2026-09-20. Codeversion: **0.19.2**, gebaut und installiert; Live-Abnahme ausstehend.
+Sofort-Wegsuche einschließlich Unterbrechung/Wiederherstellung unter **0.19.1** live bestätigt. Farm-/Holzfällerreichweiten benötigen den neuen konkreten Terrainzugriff.
 Die Version im [Manifest](mod/Timberborn.AgentBridge/manifest.json) ist die Codeversion;
 ältere datierte Einträge im Journal dokumentieren frühere Zustände.
 
@@ -48,7 +47,7 @@ Alle 26 Leser waren unter 0.19.0 live aufrufbar. Funktionale Folgeprüfungen:
 Sofort-Wegsuche unter 0.19.1 mit true → false → true bei Unterbrechung/Wiederaufbau bestätigt;
 Güterhistorie bleibt tagsüber unverändert und erhält zum Tageswechsel neue Produktions-/Verbrauchsdaten.
 Farm/Holzfäller besitzen keine allgemeinen Range-Provider; 0.19.2 ergänzt BuildingTerrainRange.GetRange.
-Installation und Live-Nachweis dieser Reichweite noch offen. Weitere Grenzen: vollständige
+Installiert; Live-Nachweis dieser Reichweite noch offen. Weitere Grenzen: vollständige
 UI-Meldungsabdeckung, Biberwarnungen, Bedürfnisse/Produktionshindernisse und nachhaltige Versorgung.
 Die Grundversorgungsabnahme ist nicht vollständig: einzelne Produktionsketten belegt,
 Wohnraum und nachhaltige Gesamtversorgung noch offen. [Backlog](BACKLOG.md).

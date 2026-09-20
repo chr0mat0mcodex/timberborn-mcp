@@ -1,8 +1,8 @@
 # Erreichbarkeit, Arbeitsreichweite und Versorgungsverlauf
 
-Codeversion 0.19.2. Installiert ist 0.19.1; deren Sofort-Wegsuche ist live bestätigt.
-Der konkrete Terrain-Reichweitenzugriff ist in 0.19.2 ergänzt; Installation/Live-Abnahme
-stehen aus. Vier zusätzliche Leser, keine Fremdmod oder Bibliothek.
+Codeversion und Installation: 0.19.2. Die Sofort-Wegsuche ist unter 0.19.1 live bestätigt.
+Der konkrete Terrain-Reichweitenzugriff ist in 0.19.2 ergänzt und installiert; seine
+Live-Abnahme steht aus. Vier zusätzliche Leser, keine Fremdmod oder Bibliothek.
 
 ## Gebäudezugang
 

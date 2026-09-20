@@ -1252,3 +1252,11 @@ Reflection oder Radius-Schätzung. Installation/erneute Reichweitenabnahme ausst
 Abschlussprüfung 0.19.2: 439 reguläre Tests bestanden (426 Unit, 13 Integration);
 drei opt-in Live-Tests übersprungen. Mod-Build ohne Warnungen/Fehler, neues Paket erstellt.
 Nutzer um Speichern/Beenden für Installation und erneute konkrete Reichweitenprüfung gebeten.
+
+
+## 2026-09-20 — 0.19.2 installiert
+
+Nach bestätigtem Spielende erneut Prozessfreiheit geprüft, vorherigen Modordner vollständig
+gesichert und fünf Paketdateien per SHA-256 verglichen. Private Konfiguration unverändert.
+Keine Spieländerungen während der Installation. Neustart/Laden durch Nutzer und erneute
+Farm-/Holzfällerreichweitenabnahme stehen aus.
