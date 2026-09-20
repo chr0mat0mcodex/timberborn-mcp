@@ -2,7 +2,7 @@
 
 Drei rein lesende MCP-Werkzeuge, ohne neue Fremdmod oder Bibliothek. Öffentliche
 Spiel-APIs lokal gegen Timberborn 1.1.2.4 geprüft; gebaut, regulär getestet und installiert,
-Live-Abnahme noch ausstehend. Keine Speicherstandänderung oder private Reflection.
+gezielte Live-Abnahme bestanden (siehe unten). Keine Speicherstandänderung oder private Reflection.
 
 ## Koloniebedürfnisse
 
@@ -11,6 +11,11 @@ nicht gelöschten Beaver-Entities nach Bedürfnis-ID. Pro Bedürfnis: beobachtet
 aktiv, unter Warnschwelle, kritisch und ungünstig, dazu Minimum/Maximum/Mittel der
 Punkte aktivierter Bedürfnisse. Warn-/Kritisch-Zähler können sich überschneiden.
 Die Flags kommen direkt aus NeedManager; keine selbst erfundenen Hungergrenzen.
+**warning ist ein rohes Unter-Warnschwelle-Flag, keine akute UI-Warnung.** Es ist auch
+bei ungenutztem Komfort sowie inaktiven negativen Bedürfnissen gesetzt. Zum Beispiel
+liefert eine Verletzung bei null Punkten warning=true, aber active=false und favorable=true.
+Deshalb immer critical, active und favorable/unfavorable zusammen betrachten; keine
+Warnzähler über verschiedene Bedürfnisse zu einer Zahl gefährdeter Biber addieren.
 
 Beaver-Gesamtzahl, Zahl mit NeedManager und fehlende Manager getrennt. Fehlende
 Manager sind unbekannt, nicht gesund. Bei keinem aktivierten Bedürfnis sind
@@ -61,8 +66,16 @@ ungültige Punkteskalen und unpassende Rezept-/Komponentenbelege.
 widersprüche und Baustellen mit erfundener Produktion. Alle drei Leser laufen im
 synthetischen authentifizierten HTTP-/stdio-Test mit unterschiedlichen Aktionsfreigaben.
 
-Nächster Live-Pilot: vollständige überschaubare Bedürfnisübersicht und ein Einzelbiber,
-Abgleich mit aktiven Warnungen; fertiggestellter Betrieb und Baustelle; vorhandene
-Pause/Personal-/Arbeitszeitbelege rückvergleichen. Höchstens wenige gezielte Eingriffe,
-kein absichtliches Aushungern der Kolonie für einen Warnungsnachweis. Anschließend
-29-Leser-Abnahme. Nicht vorhandene Warnfälle bleiben offen.
+Live 2026-09-20: alle 29 Leser bestanden. 13 Biber mit NeedManager, keine fehlenden
+Manager, 42 Bedürfnisse vollständig über zwei Seiten; ein Einzelbiber ebenfalls über
+zwei Seiten. Hunger/Durst ohne Warn-/Kritisch-Flags. Shelter bei sieben Bibern ungünstig;
+inspect_colony bestätigt unabhängig sieben Obdachlose bei sechs belegten Betten.
+Fremde Session und unbekannter Biber korrekt mit stale_session/entity_not_found abgelehnt.
+
+Zwei Pumpen: Rezept Water, Zutaten vorhanden, kein Brennstoffverbrauch, outputSpace=false
+und ready=false. Erfinder: SciencePoints, ready=true; Personalzahlen separat über
+inspect_building gegengeprüft. Farm: Personal belegt, manufacturing=null korrekt als
+fehlende Komponente. Kein Bauauftrag vorhanden: Baustellenfall nur regulär getestet.
+Arbeitszeit-/Jobflags sind native Beobachtungen; kein gesonderter Tag-/Nachtwechseltest.
+Keine Simulation oder Gebäudeeinstellung geändert; Spiel blieb pausiert. Aktive
+Biber-UI-Warnung weiterhin nicht vorhanden, daher noch nicht live abgenommen.

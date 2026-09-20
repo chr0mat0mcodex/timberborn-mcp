@@ -11,8 +11,9 @@ Hier stehen offene Aufgaben; datierte historische Kästchen sind kein aktueller 
    bestätigt. Mehrfachziele und Verschwinden einer aktiven Meldung ebenfalls bestanden; Biberwarnungen offen.
    [Vertrag und Nachweise](docs/economy-observations.md). Vollständige UI-Meldungsabdeckung,
    Benachrichtigungshistorie und dynamische Aggregatwerte weiterhin offen.
-3. **Bedürfnis-/Betriebsleser 0.20.0 live abnehmen:** Native Bedürfniswerte und Warn-/Kritisch-Flags
-   sowie Personal, Arbeitszeit, Rezept/Zutaten/Brennstoff/Produktplatz sind gebaut und getestet.
+3. **Bedürfnis-/Betriebsdiagnose vervollständigen:** 0.20.0 mit 29 Lesern und gezielten
+   Bedürfnis-/Betriebspiloten live bestätigt. Rohe Warnschwellenflags nicht als UI-Alarm werten.
+   Baustellenfall sowie aktive Hunger-/Durstfälle fehlen im Live-Nachweis.
    [Vertrag und begrenzter Pilot](docs/needs-and-operation.md). Vollständige Energie-, Wasser-,
    Rohstoff- und Lieferdiagnose weiterhin offen; keine Ursachen aus bloßem Stillstand ableiten.
 4. **Erreichbarkeit breiter prüfen:** Sofort-Wegsuche besteht den Unterbrechungstest.

@@ -1,7 +1,7 @@
 # Projektstand
 
-Stand: 2026-09-20. Codeversion: **0.20.0**, gebaut, regulär getestet und installiert; Live-Abnahme ausstehend.
-Letzter Live-Nachweis: **0.19.2** mit 26 Lesern.
+Stand: 2026-09-20. Codeversion: **0.20.0**, gebaut, regulär getestet, installiert und gezielt live bestätigt.
+Alle **29 Leser** unter 0.20.0 live bestanden.
 Sofort-Wegsuche einschließlich Unterbrechung/Wiederherstellung unter **0.19.1** live bestätigt. Farm-/Holzfällerreichweiten unter 0.19.2 über den konkreten Terrainzugriff bestätigt.
 Die Version im [Manifest](mod/Timberborn.AgentBridge/manifest.json) ist die Codeversion;
 ältere datierte Einträge im Journal dokumentieren frühere Zustände.
@@ -26,6 +26,7 @@ Die Version im [Manifest](mod/Timberborn.AgentBridge/manifest.json) ist die Code
 | Automatisch | 460 reguläre Tests: 447 Unit, 13 Integration; drei opt-in Live-Tests im Standardlauf übersprungen |
 | Mod-Build | Gegen Timberborn 1.1.2.4, ohne Warnungen/Fehler |
 | Installation | Fünf Paketdateien per SHA-256 geprüft, private Konfiguration erhalten |
+| Live 0.20.0 | Alle 29 Leser; 42 Bedürfnisse über zwei Seiten, Einzelbiber und Betriebsbelege; Wohnraumbefund unabhängig bestätigt |
 | Live 0.19.2 | Alle 26 Leser bestanden; Holzfäller 611 und Farm 485 Terrainzellen, erste und letzte Ergebnisseite geprüft |
 | Live 0.18.0 | Alle 22 Leser bestanden; 40 Güter, drei Beispielvorräte deckungsgleich, eine Lagerwarnung mit Ziel und unabhängiger Bestätigung; unbekannte ID und stale_session korrekt |
 | Live 0.17.2 | template_locked, stale_session, state_conflict; unveränderter Zustand, rejected im Log |
@@ -41,7 +42,9 @@ Testlauf startet das Spiel oder prüft alle nativen Leser live.
 
 [29 Leser + 19 freizugebende Werkzeuge](docs/tools.md). Die Steuerungsbasis ist vorhanden.
 Neu in 0.20.0: Bedürfnisübersicht, Details je Biber und Gebäudebetriebsbelege;
-[Diagnosevertrag und Live-Plan](docs/needs-and-operation.md). Noch nicht live abgenommen.
+[Diagnosevertrag und Live-Nachweis](docs/needs-and-operation.md). 13 Biber/42 Bedürfnisse,
+Einzelbiber, Session-/Zielablehnungen, Erfinder/Farm/Pumpen live geprüft. warning ist
+ein rohes Schwellenflag, keine akute UI-Warnung. Baustellenfall derzeit nicht vorhanden.
 Weiterhin implementiert: vollständige registrierte Güter mit ResourceCount-Feldern sowie
 sichtbare aktive Entity-Status und betroffene Ziele; [Vertrag](docs/economy-observations.md).
 Live bestätigt: Lagerwarnung, Mehrfachziele, Verschwinden und Wiederherstellung; Biberwarnungen offen.

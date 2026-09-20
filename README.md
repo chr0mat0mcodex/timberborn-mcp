@@ -5,9 +5,9 @@ das Spiel strukturiert zu beobachten und über reguläre Spielaktionen zu steuer
 Ziel ist ein Agent, der Wasser, Nahrung, Holz, Wege und Wohnraum aufbaut und betreibt.
 
 **Entwicklungsstand: Agent Bridge 0.20.0**, gebaut gegen Timberborn **1.1.2.4 / Folktails**.
-**0.20.0 ist gebaut, getestet und installiert; die Live-Abnahme steht aus.**
+**0.20.0 ist installiert; alle 29 Leser sind live geprüft.**
 Neu: Bedürfnisübersicht, Biber-Bedürfnisdetails und Gebäudebetriebsdiagnose.
-Unter 0.19.2 sind die bisherigen 26 Leser live geprüft. 40 registrierte Güter
+Bedürfnis- und Betriebsbelege sind an konkreten Bibern, Erfinder, Farm und Pumpen bestätigt. 40 registrierte Güter
 und Lagerwarnungen mit betroffenen Zielen sind bestätigt. Weitere Warnungstypen bleiben zu prüfen.
 Die Güterhistorie ist über einen Tageswechsel und die Sofort-Wegsuche einschließlich
 Unterbrechung/Wiederaufbau live bestätigt. Der direkte Terrainzugriff liefert im Live-Pilot
@@ -24,7 +24,7 @@ Regression im Repository; [Referenzen und Legacy-Abgrenzung](docs/references/REA
 
 | Bereich | Implementierter Umfang |
 | --- | --- |
-| Bedürfnisse/Betrieb (0.20.0) | Native Warn-/Kritisch-Flags, Bedürfniswerte, Personal/Arbeitszeit sowie Rezept-, Zutaten-, Brennstoff- und Produktplatzbelege; Live-Abnahme ausstehend |
+| Bedürfnisse/Betrieb (0.20.0) | Native Warn-/Kritisch-Flags, Bedürfniswerte, Personal/Arbeitszeit sowie Rezept-, Zutaten-, Brennstoff- und Produktplatzbelege; gezielte Live-Piloten bestanden |
 | Zustand | Bevölkerung, Betten, vollständiger Güterleser, aktive Status mit Zielen, Karte, Gebäude, Baustellen, Arbeiterzuordnung |
 | Logistik | Gebäudezugang, Sofort-Wegsuche einschließlich Unterbrechung, Farm-/Holzfällerreichweiten und Güterhistorie über Tageswechsel live bestätigt |
 | Bauen | Vorlagenkatalog, Kosten/Freischaltung, räumliche Vorprüfung, Spielvalidierung, reguläre Bauaufträge |

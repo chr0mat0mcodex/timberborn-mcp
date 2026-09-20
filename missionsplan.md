@@ -13,7 +13,7 @@ unkontrollierter Kolonieaufbau ersetzt keine gezielte Abnahme.
 ## Stand
 
 **0.20.0 ist gebaut und regulär getestet: drei neue Leser für Bedürfnisse und Betrieb.
-0.20.0 ist installiert; Live-Abnahme steht aus. Unter 0.19.2 sind die bisherigen 26 Leser,
+0.20.0 ist installiert; alle 29 Leser und gezielte Diagnosepiloten live bestanden. Unter 0.19.2 sind
 Sofort-Wegsuche, historische Bilanz und Farm-/Holzfällerreichweiten sind live bestätigt.**
 [Projektstand](PROJECT_STATE.md), [Werkzeugkatalog](docs/tools.md), [offene Arbeiten](BACKLOG.md).
 Keine Fremdmod-Pflichtbasis; die frühere More-HTTP-API-Phase ist abgeschlossen.
@@ -22,7 +22,7 @@ Keine Fremdmod-Pflichtbasis; die frühere More-HTTP-API-Phase ist abgeschlossen.
 | --- | --- |
 | Eigener MCP-/Mod-Zugang | Live bestätigt; authentifizierter lokaler Transport und Spielthread-Queue |
 | Bevölkerung und Betten | Live bestätigt |
-| Bedürfnisse und Betriebsbelege | Drei Leser in 0.20.0 gebaut/getestet; Live-Pilot ausstehend, keine vollständige Blockadendiagnose |
+| Bedürfnisse und Betriebsbelege | Drei Leser in 0.20.0 live bestätigt; rohe Schwellenflags sind keine UI-Warnung, keine vollständige Blockadendiagnose |
 | Vollständige Güter, aktive Status und Ziele | 40 Güter und eine Lagerwarnung mit Ziel live bestätigt; Mehrfachziele und Verschwinden bestätigt; Biberwarnungen offen |
 | Karte, Gebäude und Baustellen | Live genutzt; Sofort-Wegsuche inklusive Unterbrechung live bestätigt; Farm-/Holzfällerreichweiten live bestätigt |
 | Produktion/Verbrauch über Zeit | Native Güterhistorie mit Produktion/Verbrauch und Fortschreibung über einen Tageswechsel live bestätigt |
@@ -53,7 +53,7 @@ Keine Fremdmod-Pflichtbasis; die frühere More-HTTP-API-Phase ist abgeschlossen.
 - [x] Konkrete Farm-/Holzfällerreichweiten über BuildingTerrainRange live abnehmen (485/611 Zellen; erste/letzte Seite).
 - [x] Native Produktions-/Verbrauchshistorie über einen Tageswechsel prüfen.
 - [x] Native Bedürfnisflags und Betriebsbelege als begrenzte Leser implementieren und regulär testen.
-- [ ] 0.20.0 live abnehmen: Bedürfnisübersicht/Einzelbiber und fertiges Produktionsgebäude.
+- [x] 0.20.0 live abnehmen: Bedürfnisübersicht/Einzelbiber und fertiges Produktionsgebäude.
 - [ ] Produktionshindernisse und Bedürfnisse vollständig unterscheiden (insbesondere Energie, Wasser, Rohstoff- und Lieferwege).
 - [ ] Versorgung über Zeit bewerten und fehlenden Wohnraum gezielt nachweisen.
 - [ ] Anschließend einen begrenzten zusammenhängenden Agenten-Spielablauf abnehmen.

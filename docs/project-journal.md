@@ -1290,3 +1290,17 @@ Spielprozess vor Sicherung und unmittelbar vor Austausch nicht vorhanden. Vorher
 Modordner separat gesichert, fünf Paketdateien per SHA-256 verifiziert und private
 Konfiguration unverändert erhalten. Keine Spieländerungen. Nutzer um Start/Laden
 für den begrenzten Diagnosepilot und die 29-Leser-Abnahme gebeten.
+
+## 2026-09-20 — 0.20.0 Diagnosepilot und 29 Leser live bestätigt
+
+13 Biber, 42 Bedürfnisse vollständig über zwei Seiten; Einzelbiber ebenfalls vollständig.
+Hunger/Durst aktuell unkritisch, sieben ungünstige Shelter-Werte stimmen mit sieben
+Obdachlosen im unabhängigen Kolonieleser überein. Falsche Session und unbekanntes
+Biberziel korrekt abgelehnt. Erfinder bereit, beide Pumpen ohne freien Produktplatz;
+Farm hat keine Manufactory-Komponente. Erfinder-Personal separat gegengeprüft.
+Alle 29 Leser im opt-in MCP-/HTTP-Test bestanden. Keine Spieländerungen.
+
+Wichtige Semantik: warning ist nur das rohe native Unter-Warnschwelle-Flag; auch
+ungenutzter Komfort und inaktive Verletzung können es setzen. Werkzeugbeschreibungen
+und Vertrag präzisiert, kein akuter UI-Alarm daraus abgeleitet. Baustellenfall und
+aktive Biberwarnungen bleiben live offen; keine entsprechenden Ziele vorhanden.
