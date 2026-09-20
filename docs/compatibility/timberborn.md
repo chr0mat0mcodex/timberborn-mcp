@@ -180,3 +180,8 @@ nicht live abgenommen. Installiert bleibt 0.13.1 bis zum nächsten Modwechsel.
 
 0.13.2 inzwischen gesichert installiert, fünf Paketdateien verifiziert und private
 Konfiguration unverändert. Lebenszustands-/Filter-Liveabnahme nach Neustart noch offen.
+
+0.13.2 rein lesend live abgenommen: 101 Stichprobenkiefern mit 61 alive/40 dead,
+35 nicht ausgewachsen. Vollständige Kandidatenliste mit 19 geeigneten Kiefern geprüft.
+Kein toter Kandidat, keine Änderungen, Simulation weiterhin pausiert. Positive Fälle
+von waterStress/isDying in dieser Stichprobe nicht nachgewiesen.

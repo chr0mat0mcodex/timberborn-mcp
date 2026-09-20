@@ -44,3 +44,11 @@ ist nachträglich nicht belegt. Ihr unmittelbares Entfernen allein beweist keine
 Nach Installation lebende/tote/sterbende Ressourcen rein lesend vergleichen und prüfen,
 dass jeder ausgegebene tapping-Kandidat die Zustandsbedingungen erfüllt. Keine weiteren
 Abrissversuche sind für diese Korrektur notwendig.
+
+## Live-Abnahme 0.13.2
+
+101 eindeutige Kiefern aus vier begrenzten Regionen: 61 alive und 40 dead, 35 nicht
+gewachsen (überlappende Kategorie). Vollständige tapping-Liste mit 19 Kandidaten;
+alle erfüllen die vier Zustandsbedingungen, keine tote Stichprobenkiefer enthalten.
+Acht reine MCP-Aufrufe; Simulation pausiert und unverändert. Keine positive Wasserstress-
+oder Sterbezustandsprobe vorhanden, daher diese positiven Live-Fälle weiterhin offen.

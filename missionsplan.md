@@ -1282,3 +1282,15 @@ Lebenszustand der schon entfernten Testkiefern nicht nachträglich behaupten.
 0.13.2 gesichert installiert, fünf SHA256-Prüfungen bestanden; private Konfiguration
 unverändert. 279 reguläre Tests bestanden. Nach Nutzerstart von MCP rein lesende
 Abnahme: lebend/tot/sterbend/Wasserstress/Wachstum sowie tapping-Filter vergleichen.
+
+### 7.43 Lebenszustand und Zapfkandidaten live geprüft
+
+0.13.2 in acht rein lesenden MCP-Aufrufen geprüft. Vier begrenzte Regionen liefern
+101 eindeutige Kiefern: 61 lebend, 40 tot; 35 nicht ausgewachsen (überlappende Kategorie).
+Keine Kiefer der Stichprobe meldete aktuellen Wasserstress. Regionenseiten waren
+Stichproben, kein vollständiger Kartenbestand.
+
+Die vollständige tapping-Liste enthält 19 Kandidaten. Für jeden Kandidaten alive,
+isDying=false, waterStress=false und isGrown=true bestätigt. Kein toter Stichprobenbaum
+enthalten. Simulation 0 -> 0, keine Spieländerungen. Lebens-/Todes- und Wachstumsdaten
+live bestätigt; positiver Wasserstress-/Sterbezustand in dieser Stichprobe nicht belegt.

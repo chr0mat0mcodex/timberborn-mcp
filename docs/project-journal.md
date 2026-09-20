@@ -804,3 +804,16 @@ lokal gesichert, fünf Paketdateien per SHA256 bestätigt, private Konfiguration
 byteidentisch erhalten. Explizite camelCase-Payload für den Newtonsoft-Spielserializer
 verwendet. Nächster Schritt nach Start: Lebenszustände und korrigierte Kandidaten
 rein lesend abgleichen, kein erneuter Abriss notwendig.
+
+## 2026-09-20 — 0.13.2 Lebenszustände live bestätigt
+
+Acht reine MCP-Aufrufe, vier begrenzte Objektregionen. 101 eindeutige Kiefern gelesen:
+61 alive, 40 dead; 35 isGrown=false. Die Wachstumskategorie überlappt Lebenszustände,
+nicht addieren. Kein waterStress=true in der Stichprobe; positive Wasserstress-
+Darstellung damit noch nicht an einem betroffenen Objekt bestätigt.
+
+Vollständige tapping-Liste: 19 Kandidaten. Alle nachweislich alive, nicht dying,
+waterStress=false und ausgewachsen; kein toter Stichprobenbaum enthalten. Das ersetzt
+die frühere ungefilterte Kandidateninterpretation, ist aber wegen zwischenzeitlicher
+Spieländerungen kein exakter Vorher-/Nachher-Zähler derselben Baumgesamtheit.
+Simulation unverändert pausiert. Keine Markierungen, Aufträge oder Objekte verändert.

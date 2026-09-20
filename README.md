@@ -178,4 +178,4 @@ bereits prüfbar; eine Objektabfrage ergänzt jetzt die konkreten Ziel-IDs.
 
 0.13.2 ergänzt [Lebenszustände natürlicher Ressourcen](docs/vegetation-state.md) und
 korrigiert den Zapfkandidatenfilter: tote, sterbende, junge oder unbekannte Kiefern
-werden ausgeschlossen. Gebaut und gesichert installiert; rein lesender Live-Abgleich noch offen.
+werden ausgeschlossen. Installiert und rein lesend live geprüft: lebende/tote Kiefern unterschieden, 19 geeignete Zapfkandidaten bestätigt.
