@@ -990,3 +990,13 @@ bestätigt; zwei zugehörige Logeinträge mit reasoning und applied gelesen.
 Simulation durchgehend pausiert, Tag 10 etwa 04:07 Uhr; Pumpe abschließend aktiv.
 Keine Anzeigeänderung erforderlich, keine neue Modversion. Filter/Leeren und
 Szenenwechselverhalten noch nicht manuell abgenommen; automatisierte Logtests bestehen.
+
+## 2026-09-20 — Forschung: öffentliche API und Abnahmeplan geprüft
+
+Nutzer bestätigt zusätzlich Scrollen im MCP-Log und möchte die Anzeige unverändert
+lassen. Forschung und Gebäudefreischaltung als nächster Funktionsbereich freigegeben.
+Öffentliche Metadaten von Timberborn 1.1.2.4 geprüft: ScienceService.SciencePoints,
+BuildingSpec.ScienceCost, BuildingUnlockingService.Unlocked/Unlockable/Unlock vorhanden.
+Keine neue Fremdabhängigkeit erforderlich. Kostenabzug noch nicht praktisch belegt.
+Vertrag und negative/positive Abnahmefälle: docs/research.md, Missionsplan 7.52.
+Noch keine Code-, Installations- oder Spielzustandsänderung in diesem Schritt.

@@ -1424,7 +1424,7 @@ Nutzerauftrag: laufendes Fenster für jeden nativen MCP-Toolcall und reasoning p
 - [x] Beginn/Abschluss korreliert; lokale Ablehnungen erfasst, keine Aktionswiederholung bei Logfehlern.
 - [x] 128 Einträge im RAM, Filter, Leeren, Szenenwechsel; keine Dateien/Save-Daten.
 - [x] inspect_agent_log als zusätzlicher Leser; keine zusätzliche Fremdmod.
-- [ ] Installation und Live-/UI-Abnahme nach Speichern/Beenden/Neustart.
+- [x] Installation und Live-/UI-Abnahme: Fenster, protokollierte Calls und Scrollen vom Nutzer bestätigt.
 
 Begründung ist eine für den Spieler verfasste Absicht, kein interner Gedankengang.
 Nicht erreichbare Mod bedeutet sichtbare Loglücke in stderr, kein blindes Retry.
@@ -1436,3 +1436,23 @@ geprüft. Keine Konfigurationsänderung. Nutzer um Start und Öffnen von MCP-Log
 0.16.0 live bestätigt: Nutzer findet/öffnet Fenster, UI angebunden und sichtbar.
 Abfragen mit Begründung und Pumpen-Pause/Fortsetzen mit applied im Log separat gelesen.
 Simulation unverändert pausiert, Pumpe wieder aktiv. Filter/Leeren manuell noch offen.
+
+### 7.52 Forschung und Gebäudefreischaltung — API geprüft, Umsetzung freigegeben
+
+- [x] Öffentliche APIs der installierten Spielversion geprüft: SciencePoints,
+  ScienceCost sowie Unlocked, Unlockable und reguläres Unlock vorhanden.
+- [x] Bestehende Bauvalidierung weist gesperrte Vorlagen bereits zurück.
+- [x] MCP-Vertrag und Abnahmekriterien in docs/research.md festgehalten.
+- [ ] inspect_research: Punkte, Kosten und Freischaltzustände seitenweise lesen.
+- [ ] unlock_building: eigenes Opt-in, Session/Kosten prüfen, regulär freischalten
+  und Punkte sowie Freischaltzustand zurücklesen; kein automatisches Retry.
+- [ ] Automatische Vertrags-/Fehlerfalltests und Mod-Build.
+- [ ] Live: Kostenabzug, unveränderter Zustand bei Ablehnung, kein zweiter Abzug
+  bei bereits freigeschalteter Vorlage und Bauvalidierung vor/nach Unlock.
+
+Keine Zusatzmod erforderlich. Keine künstlichen Forschungspunkte, kein UnlockIgnoringCost.
+Konkrete Voraussetzungsknoten sind durch die geprüften öffentlichen Signaturen nicht
+belegt; keine erfundene Technologiebaum-Abfrage. Belegstufe derzeit öffentliche API,
+nicht implementiert oder live bestätigt. Ingame-Log bleibt auf Nutzerwunsch unverändert;
+Scrollen mit der Maus ausdrücklich bestätigt. Wohnraum und übrige Funktionsnachweise
+bleiben offen und werden durch diesen Forschungsschritt nicht als erledigt markiert.

@@ -87,3 +87,5 @@ bestätigt; zwei zugehörige Logeinträge mit reasoning und applied gelesen.
 Simulation durchgehend pausiert, Tag 10 etwa 04:07 Uhr; Pumpe abschließend aktiv.
 Keine Anzeigeänderung erforderlich, keine neue Modversion. Filter/Leeren und
 Szenenwechselverhalten noch nicht manuell abgenommen; automatisierte Logtests bestehen.
+
+Zusätzlich vom Nutzer bestätigt: Scrollen mit der Maus funktioniert. Anzeige auf ausdrücklichen Wunsch unverändert belassen.
