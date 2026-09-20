@@ -1,5 +1,14 @@
 # Projektjournal
 
+## 2026-09-20 — Korrekturkandidat 0.4.1 installiert
+
+Auf Nutzer-Go bei beendetem Timberborn das vorbereitete Paket installiert. Fünf
+Paketdateien per SHA256 geprüft, bisherige Dateien samt privater Konfiguration in
+neuem lokalen Backup gesichert. Private Konfiguration bytegleich erhalten, einschließlich
+Schlüssel, Port und bestehendem Vorschau-Opt-in. Kein Spielstart oder Live-Aufruf.
+Nächster Schritt nach Nutzer-Neustart: Version prüfen und belegten Standort erneut als
+Negativkontrolle verwenden. Bei erneutem Widerspruch sofort stoppen; keine Platzierung.
+
 ## 2026-09-20 — Validator-Negativkontrolle auf 0.4.0 fehlgeschlagen
 
 Version 0.4.0 über MCP bestätigt. Kleinen Kartenbereich, vollständige Gebäudeseite und

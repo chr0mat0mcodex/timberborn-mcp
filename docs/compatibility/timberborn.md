@@ -44,4 +44,5 @@ Dieser Nachweis gilt nicht für den noch nicht live geprüften Validator aus 0.4
 
 0.4.0 später live erreichbar, sechs Lesewerkzeuge auch nach Vorschauversuch erfolgreich.
 Validator-Abnahme fehlgeschlagen: belegter Standort fälschlich akzeptiert; Pilot nach
-einem Versuch abgebrochen. 0.4.1 als Korrekturkandidat gebaut/gepackt, noch nicht installiert.
+einem Versuch abgebrochen. 0.4.1 als Korrekturkandidat gebaut/gepackt und auf Nutzer-Go
+installiert; Neustart und erneute Live-Abnahme stehen aus.
