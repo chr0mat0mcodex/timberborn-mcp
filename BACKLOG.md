@@ -29,12 +29,14 @@ Hier stehen offene Aufgaben; datierte historische Kästchen sind kein aktueller 
    wegen zweier Alterstodesfälle nach rund 1,22 Tagen abgebrochen, keine Dreitagesabnahme.
    Zusätzlicher kleiner Wassertank unter 0.21.0 gebaut und gefüllt; Lager 30→60,
    globale Ausgangsbestände 108→78, Gesamtwasser 138 unverändert. Umlagerung bestätigt,
-   Pumpen weiter ohne Ausgangsplatz. Globale Ausgangsbestände nicht als Pumpenbestand interpretieren. 0.21.1 live bestätigt: Tanks 60, Pumpen 30, Distriktzentrum 48 ergeben 138 Wasser. Kein fehlerhaft überfüllter Pumpenpuffer. Entnahme und Wiederauffüllung beider Pumpen inzwischen über zwölf Messpunkte bestätigt; Gesamtwasser im Fenster 138→130. Nachhaltigkeit und Nahrung/Holz/Wohnraum offen.
+   Pumpen weiter ohne Ausgangsplatz. Globale Ausgangsbestände nicht als Pumpenbestand interpretieren. 0.21.1 live bestätigt: Tanks 60, Pumpen 30, Distriktzentrum 48 ergeben 138 Wasser. Kein fehlerhaft überfüllter Pumpenpuffer. Entnahme und Wiederauffüllung beider Pumpen inzwischen über zwölf Messpunkte bestätigt; Gesamtwasser im Fenster 138→130. Wohnraum inzwischen bestätigt; Nachhaltigkeit von Wasser/Nahrung/Holz offen.
 
 Diese Reihenfolge ist eine Planung, keine Behauptung bereits vorhandener Werkzeuge.
 Neue Funktionen werden entsprechend dem Projektauftrag vor ihrer Umsetzung konkretisiert.
 
 ## Technische Restpunkte
+
+- Sollbesetzung null prüfen: Inventor nimmt desiredWorkers=0 im Live-Test nicht an (observed=1, outcome=unconfirmed). Kein Retry; für Stilllegung reguläre Gebäudepause verwenden.
 
 - Fachliche Fehlercodes auf weitere Personal-, Prioritäts-, Flächen- und Entfernungsfälle ausweiten.
 - Expliziten nativen Einstieg beibehalten; historischen Default bei direktem Serverstart
@@ -47,8 +49,8 @@ Neue Funktionen werden entsprechend dem Projektauftrag vor ihrer Umsetzung konkr
 
 ## Noch offene Spielabnahme
 
-- Vollständigen Wohnraum nachweisen.
-- Nachhaltige Wasser-/Nahrungs-/Holzversorgung über einen begrenzten, aussagekräftigen Zeitraum nachweisen.
+- Wohnraum bestätigt: zusätzliche Lodge fertig, zwölf Betten und keine Obdachlosen. Kapazität bei Bevölkerungswachstum weiter beobachten.
+- Nachhaltige Wasser-/Nahrungs-/Holzversorgung über einen begrenzten, aussagekräftigen Zeitraum nachweisen. Förster und 19 lebende Eichen bestätigt; 79 Pflanzplätze, davon 60 noch offen. Vollständige Bepflanzung, 30-tägige Reife und spätere Holzernte/Nachpflanzung offen. Brettproduktion und Erfinder derzeit pausiert.
 - Güterfluss, Fertigstellung und Wirkung bei weiteren Gebäuden getrennt prüfen.
 
 ## Später

@@ -30,12 +30,22 @@ Live bestätigt: 60 Güter (40 aktiv), 55 Rezepte, 162 Gebäude, 17 Quellen; 58.
 
 ## Letzter begrenzter Wirkungstest
 
-Entnahme und Wiederauffüllung beider Pumpen unter 0.21.1 bestätigt:
-15/15 → 14/13 mit outputSpace=true und ready=true → 15/15.
-Gleichzeitig Gesamtwasser 127→130; im gesamten rund 1,35-tägigen Fenster 138→130.
-Elf Biber, keine Hunger-/Durstwarnflags an zwölf Messpunkten, Spiel pausiert
-Tag 20 etwa 02:43. Tageshistorie erfasst die letzte Wiederauffüllung noch nicht.
-Keine Nachhaltigkeitszusage. [Belege und Grenzen](docs/supply-balance.md).
+Wohnraum auf zwölf Betten erweitert, keine Obdachlosen; Holzlager fertig und
+Einlagerung bestätigt. 16 zusätzliche Karottenzellen tatsächlich bepflanzt.
+Auf ausdrücklichen Nutzerauftrag Sägewerk, Laufrad und Förster regulär gebaut;
+Bretter produziert und geliefert. Förster erreichbar und mit einem Arbeiter besetzt.
+Auf Nutzerwunsch auf 79 Eichen-Pflanzplätze im bestätigten Förster-/Holzfällerbereich erweitert.
+19 Eichen tatsächlich gepflanzt, alle lebend und ohne gemeldeten Wasserstress;
+60 Pflanzaufträge offen. Reifezeit nominell 30 Tage;
+noch keine nachhaltige Holzernte und keine neue Fällmarkierung gesetzt.
+
+Sägewerk, Laufrad und Erfinder pausiert; Farm zwei Arbeiter, Baumeister einer,
+beide Pumpen je ein Arbeiter. Letzter Stand Tag 25 gegen 19:09, Spiel pausiert:
+acht Erwachsene, zwei Kinder, zwölf Betten. Letzte Bestandsabfrage 90 Wasser,
+220 Beeren, zehn Holz. Alterstodesmeldungen, keine abschließenden Hunger-/Durstflags.
+Zuvor Entnahme und Wiederauffüllung beider Pumpen bestätigt.
+[Belege und Grenzen](docs/supply-balance.md).
+
 ## Verifikation
 
 | Ebene | Beleg |
@@ -82,7 +92,7 @@ Eine Lagerkorrektur (Beerenauswahl im bestehenden mittleren Lager) zeigt erhöht
 Produktion; Vergleich nach zwei gemeldeten Alterstodesfällen vorzeitig gestoppt.
 Todesstatus mit zwei BeaverAdult-Zielen gelesen; aktive Hunger-/Durst-UI-Warnung weiter offen.
 Die Grundversorgungsabnahme ist nicht vollständig: einzelne Produktionsketten belegt,
-Wohnraum und nachhaltige Gesamtversorgung noch offen. [Backlog](BACKLOG.md).
+Wohnraum bestätigt, nachhaltige Gesamtversorgung noch offen. [Backlog](BACKLOG.md).
 
 ## Dateien und Veröffentlichung
 

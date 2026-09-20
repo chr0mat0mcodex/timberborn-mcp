@@ -65,6 +65,11 @@ Keine Fremdmod-Pflichtbasis; die frühere More-HTTP-API-Phase ist abgeschlossen.
 - [x] Versorgung über rund drei Spieltage bewerten und fehlenden Wohnraum gezielt nachweisen.
 - [x] Einzelnen zusätzlichen Wassertank regulär bauen, konfigurieren und tatsächliche Umlagerung bestätigen; allein keine Nachhaltigkeitsabnahme.
 - [x] Normale Wasserentnahme, freien Ausgang und Wiederauffüllung beider Pumpen beobachten; getrennt von Tagesbilanz bewerten.
+- [x] Zusätzliche Lodge und Holzlager regulär bauen; zwölf Betten ohne Obdachlose und reale Holzeinlagerung bestätigen.
+- [x] 16 zusätzliche Karottenzellen im Farmbereich markieren und tatsächliches Pflanzen bestätigen; Ernte separat offen.
+- [x] Förster einschließlich vorgelagerter Brettproduktion regulär bauen; zwölf Eichen tatsächlich pflanzen und Reichweite/Besetzung bestätigen.
+- [x] Eichenfläche auf 79 Pflanzplätze erweitern; 19 lebende Eichen nachgelesen.
+- [ ] Verbleibende 60 Pflanzaufträge, Eichenreife, Holzernte und Nachpflanzung über den vollständigen Zyklus bestätigen.
 - [ ] Negative Wasser-/Nahrungs-/Holzbilanz beheben und nachhaltige Versorgung mit Wohnraum abnehmen.
 - [ ] Anschließend einen begrenzten zusammenhängenden Agenten-Spielablauf abnehmen.
 

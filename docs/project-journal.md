@@ -1533,3 +1533,61 @@ Wasser im gesamten Fenster 138→130; keine Nachhaltigkeitszusage. Volle Pumpen
 sind hier kein Beleg eines Defekts: Nach Entnahme konnten sie wieder auffüllen.
 Nächste Grundversorgungsabnahme: Nahrung/Holz über passende Wachstumszyklen und
 fehlenden Wohnraum bearbeiten; kein weiterer Tankbau für diesen Nachweis nötig.
+
+## 2026-09-20 — Wohnraum, Holzlager und zusätzliche Karotten
+
+Unter 0.21.1 eine Lodge, einen kleinen Holzstapel und einen Anschlussweg regulär
+gebaut. Fertigstellung und Zugang bestätigt; 12 Betten, zunächst elf belegte und
+keine Obdachlosen. Holzstapel auf Log gesetzt; tatsächlich zwei Holz eingelagert,
+später 20. 16 zusätzliche Carrot-Zellen im gelesenen Farmbereich markiert und
+alle 16 als gepflanzte Objekte bestätigt; insgesamt 20 Anbauzellen.
+
+Nachfolgende Erntebeobachtung bei einem gemeldeten Alterstod pausiert. Zwölf
+Karotten produziert und verbraucht; Ernte der neuen 16 Zellen damit noch nicht
+isoliert nachgewiesen. Keine vollständige nachhaltige Versorgungsabnahme.
+
+## 2026-09-20 — Förster, Brettproduktion und zwölf Eichen live
+
+0.21.1, ausdrücklicher Spielauftrag: Förster bauen und Eichen pflanzen.
+Förster freigeschaltet, aber keine Bretter vorhanden. Regulär ein Sägewerk
+(15 Holz), ein Laufrad (20 Holz) und den Förster (10 Holz, sieben Bretter)
+gebaut, dazu sechs kostenlose Wegstücke. Fünf Beerenbüsche für Bau und
+Anschluss durch reguläre Arbeiteraufträge entfernt. Keine Fremdmod,
+Save-Manipulation, Sofortfertigstellung oder Screenshot-Steuerung.
+
+Brettproduktion und Lieferung an die Försterbaustelle beobachtet, anschließend
+Fertigstellung bestätigt. Försterzugang frei und erreichbar, Distriktdistanz 14,
+ein Arbeiter zugeordnet. Zwölf Oak-Pflanzmarkierungen in beiden vollständig
+abgefragten Arbeitsbereichen: Förster 538, Holzfäller 578 Zellen. Tatsächliche
+Eichenobjekte 5→11→12; alle zwölf lebend, nicht sterbend und ohne Wasserstress.
+Nominelle Reifezeit laut Produktionsgraph 30 Tage, Ertrag acht Holz pro Eiche;
+noch kein Wachstums-/Fäll-/Nachpflanzzyklus belegt. Keine neue Fällmarkierung gesetzt.
+
+Sägewerk und Laufrad nach dem Försterbau pausiert, um Holz und Personal zu sparen.
+Erfinder ebenfalls pausiert, Farm auf zwei Arbeiter, nach dem Bau Distriktzentrum
+auf einen. Beide Pumpen abschließend wieder mit je einem Arbeiter bestätigt;
+Holzfäller, Sammler und Förster zuvor ebenfalls besetzt. Bevölkerung acht Erwachsene
+und zwei Kinder, zwölf Betten und keine Obdachlosen. Weitere Alterstodesmeldungen;
+abschließende Hunger-/Durstwerte ohne Warn-/Kritisch-Flags. Letzte Vorratsmessung
+90 Wasser, 220 Beeren, zehn Holz (davon neun verfügbar); keine Nachhaltigkeitszusage.
+Spiel am Tag 25 gegen 11:49 pausiert. Keine Mod-/Servercodeänderung.
+
+Nebenbefund: Inventor-Sollbesetzung 1→0 ergab unconfirmed und blieb 1;
+kein Retry. Reguläre Gebäudepause funktionierte. Als technischer Restpunkt erfasst.
+
+### Anschließend: Waldfläche auf Nutzerwunsch vergrößert
+
+Weitere 67 Oak-Pflanzmarkierungen angelegt, insgesamt 79 einzeln rückgelesene
+Eichenplätze. Alle ausgewählten Zellen liegen in beiden aktuellen Arbeitsbereichen.
+Ein zuerst erwogener höherer Bereich wurde von der regulären Pflanzvalidierung
+abgelehnt (invalid_argument); separater Leser bestätigte nur die zuvor angewandten
+34 zusätzlichen Zellen. Abgelehnten Bereich ausgelassen, ausschließlich andere,
+bisher unversuchte ebenerdige Zellen ergänzt. Reichweite allein beweist keine
+Pflanzbarkeit. Bestehende Feldmarkierungen und Vegetation dabei erhalten.
+
+Nach einem kurzen Arbeitsabschnitt 19 echte lebende Eichen bestätigt, keine davon
+sterbend oder mit Wasserstress. Noch 60 Pflanzaufträge offen. Förster weiterhin
+besetzt, zum Abschluss außerhalb der Arbeitszeit. Letzter Zustand Tag 25 gegen
+19:09 pausiert, acht Erwachsene und zwei Kinder; 90 Wasser, 220 Beeren, zehn Holz.
+Keine zusätzlichen Fällmarkierungen. Vollständige Aufforstung und Reife weiterhin
+Arbeits-/Wachstumsprozess, nicht durch Markierungen als abgeschlossen gewertet.
