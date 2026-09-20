@@ -45,4 +45,4 @@ Datierte frühere Abnahmen sind kein Beweis für jede spätere Kombination.
 - [Architekturentscheidungen](architecture/decisions.md) — chronologisch.
 - [Offizielle Quellen und good references](references/README.md).
 
-- [Güter und aktive Statusmeldungen](economy-observations.md): 0.18.0, Live-Abnahme offen.
+- [Güter und aktive Statusmeldungen](economy-observations.md): 0.18.0, Güter und eine Lagerwarnung live bestätigt.

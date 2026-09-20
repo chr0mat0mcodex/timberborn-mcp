@@ -1,6 +1,6 @@
 # Native MCP-Werkzeuge
 
-Stand: Agent Bridge 0.18.0 (neue Leser noch nicht live abgenommen). Aus `NativeTools.Catalog` mit allen Freigaben abgeglichen:
+Stand: Agent Bridge 0.18.0 (alle 22 Leser im opt-in Live-Test bestanden). Aus `NativeTools.Catalog` mit allen Freigaben abgeglichen:
 22 Leser und 19 Werkzeuge für Aktionen/Vorschauvalidierung. Nicht jede Kombination
 ist live geprüft; Nachweise und Grenzen stehen in den Fachdokumenten.
 

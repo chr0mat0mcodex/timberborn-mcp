@@ -1,7 +1,7 @@
 # Spielmeldungen: API-Recherche und weiterer Ausbau
 
-Aktuell: In 0.18.0 sind aktive Entity-Status und Ziellisten implementiert; Live-Abnahme
-steht noch aus. Vertrag und Grenzen: [Güter-/Statusleser](economy-observations.md).
+Aktuell: In 0.18.0 sind aktive Entity-Status und Ziellisten implementiert und an einer
+Lagerwarnung live bestätigt. Biberwarnungen und Mehrfachziele sind noch zu prüfen. Vertrag und Grenzen: [Güter-/Statusleser](economy-observations.md).
 Die folgende Kurzprüfung dokumentiert den ursprünglichen Planungsstand.
 
 ## Historische Kurzprüfung 2026-09-20

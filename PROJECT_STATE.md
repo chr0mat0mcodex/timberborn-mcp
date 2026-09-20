@@ -1,7 +1,6 @@
 # Projektstand
 
-Stand: 2026-09-20. Codeversion: **0.18.0**, gebaut und installiert; neue Live-Abnahme ausstehend.
-Zuletzt gezielt live abgenommen: **0.17.2**.
+Stand: 2026-09-20. Codeversion: **0.18.0**, gebaut, installiert und gezielt live abgenommen.
 Die Version im [Manifest](mod/Timberborn.AgentBridge/manifest.json) ist die Codeversion;
 ältere datierte Einträge im Journal dokumentieren frühere Zustände.
 
@@ -25,6 +24,7 @@ Die Version im [Manifest](mod/Timberborn.AgentBridge/manifest.json) ist die Code
 | Automatisch | 409 reguläre Tests: 396 Unit, 13 Integration; drei opt-in Live-Tests im Standardlauf übersprungen |
 | Mod-Build | Gegen Timberborn 1.1.2.4, ohne Warnungen/Fehler |
 | Installation | Fünf Paketdateien per SHA-256 geprüft, private Konfiguration erhalten |
+| Live 0.18.0 | Alle 22 Leser bestanden; 40 Güter, drei Beispielvorräte deckungsgleich, eine Lagerwarnung mit Ziel und unabhängiger Bestätigung; unbekannte ID und stale_session korrekt |
 | Live 0.17.2 | template_locked, stale_session, state_conflict; unveränderter Zustand, rejected im Log |
 | Live Forschung | Regulär produzierte Punkte, bezahlter Unlock 35 → 5, Wiederholung ohne zweiten Abzug, gültige Bauvalidierung danach |
 | Live Eingang | Echte Path-Vorlage von Lodge-Belegung unterschieden; Distrikt und Personal separat bestätigt |
@@ -39,7 +39,8 @@ Testlauf startet das Spiel oder prüft alle nativen Leser live.
 [22 Leser + 19 freizugebende Werkzeuge](docs/tools.md). Die Steuerungsbasis ist vorhanden.
 Neu implementiert: vollständige registrierte Güter mit ResourceCount-Feldern sowie
 sichtbare aktive Entity-Status und betroffene Ziele; [Vertrag](docs/economy-observations.md).
-Live-Abnahme dieser drei Leser ausstehend. Offen bleiben vollständige UI-Meldungsabdeckung,
+Live bestätigt an einer Lagerwarnung; Biberwarnungen und Mehrfachziele noch nicht live geprüft.
+Offen bleiben vollständige UI-Meldungsabdeckung,
 zuverlässige Blockade-/Bedürfnisdiagnose, Produktions-/Verbrauchsbilanzen und Erreichbarkeit.
 Die Grundversorgungsabnahme ist nicht vollständig: einzelne Produktionsketten belegt,
 Wohnraum und nachhaltige Gesamtversorgung noch offen. [Backlog](BACKLOG.md).

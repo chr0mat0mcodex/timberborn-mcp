@@ -1,7 +1,8 @@
 # Güter und aktive Statusmeldungen
 
-Implementiert ab Agent Bridge **0.18.0**. Build und synthetische Vertragsprüfungen;
-Installation abgeschlossen, Live-Abgleich steht noch aus. Keine zusätzliche Mod oder Bibliothek.
+Implementiert ab Agent Bridge **0.18.0**, installiert und gezielt live geprüft.
+409 reguläre Tests und der opt-in Live-Test aller 22 Leser bestanden. Keine zusätzliche
+Mod oder Bibliothek.
 
 ## Werkzeuge
 
@@ -55,18 +56,24 @@ UI-Status ohne registrierte Entity sind nicht abgedeckt. Fehlende Meldungen bewe
 weder das Fehlen von Hunger/Durst noch eine störungsfreie Produktion. Der Ausbau zu
 verlässlichen Bedürfnissen/Blockadeursachen bleibt separat offen.
 
-## Beobachtungsgrenzen und nächster Nachweis
+## Beobachtungsgrenzen und Live-Nachweis
 
 Seiten sind getrennte frische Beobachtungen. Bei laufendem Spiel können Gruppen,
 Anzahlen, Bestände und Ziele zwischen Aufrufen wechseln; keine atomare Gesamtsicht.
 Antworten bleiben bei 32 Einträgen und 128 KiB Transportlimit. Große Kolonien sind noch
 nicht profiliert; Abfragen laufen nur auf Anforderung, kein permanenter Statuspoller.
 
-Live-Pilot nach Installation: alle Güterseiten einmal lesen, drei alte Beispielwerte
-gegen Kurzansicht bei pausierter Simulation vergleichen; zwei bis drei vorhandene
-Statusgruppen samt Zielen untersuchen, möglichst Gebäude und Biber. Verschwundene oder
-unbekannte Kennung sowie stale_session ohne Eingriffe prüfen. Keine künstliche Notlage
-für diesen ersten Lesepiloten. Erst anschließend weitere Bedürfnisse/Blockaden planen.
+Live-Pilot 2026-09-20: 40 registrierte Güter vollständig über zwei Seiten gelesen;
+alle sechs gemeinsamen Bestands-/Kapazitätsfelder der drei Beispielgüter stimmen mit
+inspect_colony überein. Simulation während des Piloten pausiert und unverändert.
+Eine vorhandene Warnung „No good is selected.“ meldet genau ein mittleres Lager;
+inspect_building_settings bestätigt dort unabhängig selectedGood als leer. Raster-
+und Weltposition sind getrennt vorhanden. Unbekannte Kennung ergibt found=false,
+fremde Session stale_session. Anschließend alle 22 Leser im opt-in Test bestanden.
+
+Nur eine Statusgruppe war vorhanden. Biberwarnungen, Mehrfachziele und das tatsächliche
+Verschwinden einer zuvor aktiven Meldung sind noch nicht live bestätigt. Keine künstliche
+Notlage erzeugt und keine Spielaktion ausgeführt. Diese Zusatzfälle bleiben offen.
 
 ## API-Beleg
 

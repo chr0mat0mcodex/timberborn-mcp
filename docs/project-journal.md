@@ -1156,3 +1156,20 @@ offline bestätigt: 22 Leser + 19 Aktions-/Validierungswerkzeuge. Dokumentlinks 
 fünf Paketdateien per SHA-256 verglichen, private Konfiguration bytegleich erhalten.
 Neue Live-Abnahme steht aus; Nutzerstart und geladenen Entwicklungsspielstand abwarten.
 Keine Versorgungslage oder neue Statusabdeckung im laufenden Spiel bereits bestätigt.
+
+
+## 2026-09-20 — 0.18.0 Güter-/Status-Live-Pilot bestanden
+
+Zehn kontrollierte rein lesende MCP-Aufrufe: 40 Güter über zwei Seiten, vollständiger
+Vergleich der sechs gemeinsamen Zählerfelder für die drei bisherigen Beispielgüter;
+Simulation pausiert und zeitlich unverändert. Eine aktive sichtbare Lagerwarnung
+„No good is selected.“ mit einem konkreten mittleren Lager, Raster-/Weltpositionen
+getrennt. Zwei ergänzende Leseraufrufe bestätigen frische Session und leere Güterwahl
+über inspect_building_settings. Unbekannte Alert-ID ergibt found=false, fremde Session
+stale_session. Keine Bau-, Lager-, Simulations- oder sonstigen Spieländerungen.
+
+Zusätzlich der bestehende opt-in Live-Test aller 22 Leser bestanden. 409 reguläre
+Tests bleiben der automatische Nachweis; der Live-Test wird getrennt gezählt.
+Nur eine Warnungsgruppe vorhanden: Biberwarnungen, Mehrfachziele und tatsächliches
+Verschwinden einer zuvor aktiven Meldung bleiben offen. Rohantworten/IDs ausschließlich
+lokal ignoriert; kein vollständiger UI-Abdeckungsnachweis behauptet.

@@ -12,7 +12,7 @@ unkontrollierter Kolonieaufbau ersetzt keine gezielte Abnahme.
 
 ## Stand
 
-**0.18.0 ist implementiert und installiert; zuletzt live bestätigt: 0.17.2.**
+**0.18.0 ist implementiert, installiert und gezielt live bestätigt.**
 [Projektstand](PROJECT_STATE.md), [Werkzeugkatalog](docs/tools.md), [offene Arbeiten](BACKLOG.md).
 Keine Fremdmod-Pflichtbasis; die frühere More-HTTP-API-Phase ist abgeschlossen.
 
@@ -20,7 +20,7 @@ Keine Fremdmod-Pflichtbasis; die frühere More-HTTP-API-Phase ist abgeschlossen.
 | --- | --- |
 | Eigener MCP-/Mod-Zugang | Live bestätigt; authentifizierter lokaler Transport und Spielthread-Queue |
 | Bevölkerung und Betten | Live bestätigt |
-| Vollständige Güter, aktive Status und Ziele | 0.18.0 implementiert; Live-Pilot offen |
+| Vollständige Güter, aktive Status und Ziele | 40 Güter und eine Lagerwarnung mit Ziel live bestätigt; Biber-/Mehrfachziele offen |
 | Karte, Gebäude und Baustellen | Implementiert/live genutzt; keine vollständige Erreichbarkeitsanalyse |
 | Generische Bauaufträge | Mehrere Vorlagen live; Geometrien/Sonderformen begrenzt |
 | Lager, Farm, Gebäudepause | Live bestätigt |
@@ -42,7 +42,8 @@ Keine Fremdmod-Pflichtbasis; die frühere More-HTTP-API-Phase ist abgeschlossen.
 
 ## Nächste Meilensteine
 
-- [ ] Vollständige Güterübersicht und aktive Status mit konkreten Zielen live abnehmen (0.18.0 gebaut).
+- [x] Güterübersicht und aktive Status mit konkretem Ziel im begrenzten Live-Pilot abnehmen.
+- [ ] Statusabdeckung um Biberwarnungen und Mehrfachziele im Live-Test ergänzen.
 - [ ] Produktionshindernisse, Bedürfnisse und verlässliche Erreichbarkeit.
 - [ ] Versorgung über Zeit bewerten und fehlenden Wohnraum gezielt nachweisen.
 - [ ] Anschließend einen begrenzten zusammenhängenden Agenten-Spielablauf abnehmen.
