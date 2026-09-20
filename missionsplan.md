@@ -1432,3 +1432,7 @@ Vertrag und Bedienung: docs/activity-log.md.
 
 0.16.0: 362 reguläre Tests bestanden; Mod gesichert installiert und fünf Datei-Hashes
 geprüft. Keine Konfigurationsänderung. Nutzer um Start und Öffnen von MCP-Log gebeten.
+
+0.16.0 live bestätigt: Nutzer findet/öffnet Fenster, UI angebunden und sichtbar.
+Abfragen mit Begründung und Pumpen-Pause/Fortsetzen mit applied im Log separat gelesen.
+Simulation unverändert pausiert, Pumpe wieder aktiv. Filter/Leeren manuell noch offen.

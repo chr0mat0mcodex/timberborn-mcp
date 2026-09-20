@@ -979,3 +979,14 @@ im Standardlauf übersprungen. Mod-Build null Warnungen/Fehler; Codearchiv exakt
 Dateien ohne private Konfiguration. Nach Nutzerbestätigung gesichert installiert,
 fünf Datei-Hashes korrekt und private Konfiguration bytegleich erhalten.
 Neustart und sichtbare Log-Abnahme angefordert; noch nicht live bestätigt.
+
+## 2026-09-20 — Ingame-Log 0.16.0 live bestätigt
+
+Nutzer hat Schalter rechts unten gefunden und sichtbares Fenster bestätigt.
+MCP meldet uiAttached=true und nach Öffnen windowVisible=true. Abfragen samt
+Unicode-Begründungen und Abschlussstatus aus dem laufenden Spiel zurückgelesen.
+Kontrollierter Pumpentest: Pause false -> true -> false, beide Zustände separat
+bestätigt; zwei zugehörige Logeinträge mit reasoning und applied gelesen.
+Simulation durchgehend pausiert, Tag 10 etwa 04:07 Uhr; Pumpe abschließend aktiv.
+Keine Anzeigeänderung erforderlich, keine neue Modversion. Filter/Leeren und
+Szenenwechselverhalten noch nicht manuell abgenommen; automatisierte Logtests bestehen.

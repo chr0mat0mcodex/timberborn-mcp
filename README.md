@@ -15,7 +15,7 @@ Nächste geplante Ausbaustufe: [Phase 2 — Wasser, Nahrung, Holz, Wege und Wohn
 
 Neu vorbereitet: 0.16.0 mit [Ingame-MCP-Log und optionaler Aktionsbegründung](docs/activity-log.md).
 Fenster mit 128 Aufrufen, Status, Parameterzusammenfassung und reasoning; 18 native Leser.
-Gesichert installiert; sichtbare Live-Abnahme nach Neustart noch offen.
+Installiert/live bestätigt: Fenster sichtbar, Abfragen und Pumpenaktionen mit Begründungen protokolliert.
 
 0.15.0 ergänzt [Lager-/Farmoptionen und Gebäudepause](docs/building-settings.md).
 17 native Leser; fünf neue Schreibwerkzeuge mit eigener Freigabe. Anbauflächen

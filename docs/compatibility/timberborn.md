@@ -225,3 +225,7 @@ bestätigt. Globaler Wasserbestand im ersten Betriebsintervall 217 -> 219; spät
 0.16.0: Ingame-MCP-Log mit reasoning implementiert, 362 reguläre Tests bestanden.
 Mod gegen öffentliche 1.1.2.4-Referenzen gebaut und gesichert installiert; bestehende
 Konfiguration bytegleich. UI-/Live-Abnahme nach Neustart noch offen.
+
+0.16.0 Log live bestätigt: Fenster vom Nutzer geöffnet; UI-Anbindung und Sichtbarkeit
+über MCP wahr. Leser und zwei Pumpenaktionen mit reasoning/Abschlussstatus nachgelesen.
+Kein UI-Patch nötig, Version bleibt 0.16.0.

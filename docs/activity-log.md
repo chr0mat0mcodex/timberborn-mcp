@@ -1,6 +1,6 @@
 # Ingame-MCP-Log und Aktionsbegründungen (0.16.0)
 
-Implementiert, mit 362 regulären Tests geprüft und gesichert installiert. Visuelle Live-Abnahme steht noch aus.
+Implementiert, mit 362 regulären Tests geprüft und gesichert installiert. Fenster vom Nutzer bestätigt; Leser und kontrollierte Pumpenaktionen live im Log nachgewiesen.
 
 ## Bedienung
 
@@ -76,3 +76,14 @@ und echte MCP-stdio/HTTP-Verbindung einschließlich Unicode-Begründung.
 Live nach Installation: Benutzer öffnet MCP-Log; Leser und kontrollierte Aktion mit
 Begründung ausführen, Einträge separat lesen, Filter/Leeren/Schließen prüfen und
 bestätigen, dass das Fenster die Spielgeschwindigkeit nicht verändert.
+
+## 2026-09-20 — Ingame-Log 0.16.0 live bestätigt
+
+Nutzer hat Schalter rechts unten gefunden und sichtbares Fenster bestätigt.
+MCP meldet uiAttached=true und nach Öffnen windowVisible=true. Abfragen samt
+Unicode-Begründungen und Abschlussstatus aus dem laufenden Spiel zurückgelesen.
+Kontrollierter Pumpentest: Pause false -> true -> false, beide Zustände separat
+bestätigt; zwei zugehörige Logeinträge mit reasoning und applied gelesen.
+Simulation durchgehend pausiert, Tag 10 etwa 04:07 Uhr; Pumpe abschließend aktiv.
+Keine Anzeigeänderung erforderlich, keine neue Modversion. Filter/Leeren und
+Szenenwechselverhalten noch nicht manuell abgenommen; automatisierte Logtests bestehen.
