@@ -19,9 +19,10 @@ Hier stehen offene Aufgaben; datierte historische Kästchen sind kein aktueller 
 4. **Erreichbarkeit breiter prüfen:** Sofort-Wegsuche besteht den Unterbrechungstest.
    0.19.2 liefert für Farm/Holzfäller 485/611 Terrainzellen; erste und letzte Seite live geprüft.
    Weitere Gebäudetypen, Reichweitenänderungen und besondere Weglayouts separat abnehmen.
-5. **Versorgungsentwicklung erweitern:** native Historien und Fortschreibung über einen
-   Tageswechsel live bestätigt. Keine momentanen Raten oder Nachhaltigkeitszusage daraus
-   ableiten; zusätzliche Perioden/Sonderfälle bleiben offen. [Vertrag](docs/logistics.md).
+5. **Versorgungsdefizite gezielt erklären und korrigieren:** rund drei Spieltage beobachtet,
+   elf Messpunkte ohne Hunger/Durst, aber negative Wasser-/Beeren-/Holzbilanz.
+   [Nachweis und Grenzen](docs/supply-balance.md). Lokale Produktions-/Lagerursachen
+   eingrenzen, danach gezielte Korrektur und erneuter Vergleich; Nachhaltigkeit bleibt offen.
 
 Diese Reihenfolge ist eine Planung, keine Behauptung bereits vorhandener Werkzeuge.
 Neue Funktionen werden entsprechend dem Projektauftrag vor ihrer Umsetzung konkretisiert.

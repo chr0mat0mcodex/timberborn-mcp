@@ -57,6 +57,8 @@ Farm/Holzfäller besitzen keine allgemeinen Range-Provider; 0.19.2 ergänzt Buil
 Live bestätigt: Holzfäller 611, Farm 485 Zellen; Quelle building_terrain_range sowie erste und letzte Seite geprüft.
 Das belegt Navigationsreichweite, nicht Erntefähigkeit oder Produktionsleistung. Weitere Grenzen: vollständige
 UI-Meldungsabdeckung, Biberwarnungen, Bedürfnisse/Produktionshindernisse und nachhaltige Versorgung.
+Mehrtagspilot: rund 3,05 Spieltage, elf Messpunkte ohne Hunger/Durst, aber negative
+Wasser-/Beeren-/Holzbilanz. [Auswertung](docs/supply-balance.md). Spiel danach pausiert.
 Die Grundversorgungsabnahme ist nicht vollständig: einzelne Produktionsketten belegt,
 Wohnraum und nachhaltige Gesamtversorgung noch offen. [Backlog](BACKLOG.md).
 

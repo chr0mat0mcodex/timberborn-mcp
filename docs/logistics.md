@@ -121,3 +121,7 @@ Die Zellen belegen native Navigationsreichweite, keine Erntefähigkeit, konkrete
 Arbeitszuordnung oder Produktionsleistung. Weitere Gebäudetypen und Änderungen der
 Reichweite bleiben separate Testfälle. Biberwarnungen waren bislang nicht aktiv und
 sind daher nicht live abgenommen.
+
+Mehrtagspilot unter 0.20.0: drei neue Tagesdatensätze und elf Messpunkte über rund
+3,05 Spieltage; negative Wasser-/Beeren-/Holzbilanz ohne beobachtete Hunger-/Durstflags.
+[Messwerte, Zeitfenster und Grenzen](supply-balance.md).

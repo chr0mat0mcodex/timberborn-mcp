@@ -23,7 +23,7 @@ Start: [README](../README.md) · [Projektstand](../PROJECT_STATE.md) ·
 | Entfernung/Kiefern | [Getrennte Aktionen](removal-and-pine-protection.md), [Lebenszustand](vegetation-state.md) |
 | Bedürfnisse und Betriebsbelege | [Native Werte, Warnflags und Produktionsvoraussetzungen](needs-and-operation.md) |
 | Güter und Status | [Bestände, Warnungen und Ziele](economy-observations.md) |
-| Erreichbarkeit und Bilanz | [Wege, Reichweiten und Güterhistorie](logistics.md) |
+| Erreichbarkeit und Bilanz | [Wege, Reichweiten und Güterhistorie](logistics.md), [Mehrtagspilot](supply-balance.md) |
 | Zeit | [Pause und Geschwindigkeiten](simulation-control.md) |
 | Forschung | [Punkte und Freischaltungen](research.md) |
 | Transparenz | [Ingame-Log](activity-log.md), [fachliche Fehler](bridge-errors.md) |

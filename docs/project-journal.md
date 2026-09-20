@@ -1316,3 +1316,14 @@ unverändert. Keine neue Biberwarnung vorhanden.
 Lokales Pilotskript las beim letzten Listenabgleich zunächst id statt building.id.
 Nach bereits erfolgreichem Aufräumen anhand gespeicherter Antworten korrigiert und
 sämtliche Aussagen geprüft. Kein Modfehler und keine unnötige Wiederholung der Mutation.
+
+## 2026-09-20 — Versorgung über rund drei Spieltage bewertet
+
+Zehn begrenzte Abschnitte bei 7×, dazwischen Pause; elf strukturierte Messpunkte.
+13 Biber blieben erhalten, keine Hunger-/Durstflags an den Messpunkten, Stoppschwellen
+nicht erreicht. Wasser 175→149, Beeren 232→208, Karotten 0→0, Holz 32→20.
+Drei neue native Tagesdatensätze: Wasser Produktion/Verbrauch 10/39, Beeren 12/39,
+Karotten 0/0, Holz 0/12. Momentaufnahmen und historische Abtastgrenzen separat behandelt.
+Keine nachhaltige Versorgung behauptet: Reserven sinken. Keine Gebäude-/Lageränderung.
+Am Ende pausiert; weiterhin nur Lagerwarnung mit Gebäudeziel, keine Biberwarnung.
+Auswertung und nächster begrenzter Diagnoseauftrag in docs/supply-balance.md.
