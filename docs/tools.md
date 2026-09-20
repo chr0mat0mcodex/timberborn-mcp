@@ -1,7 +1,7 @@
 # Native MCP-Werkzeuge
 
-Stand: Agent Bridge 0.19.2 (installiert; alle 26 Leser live geprüft, Terrain-Pilot Farm/Holzfäller bestanden). Aus `NativeTools.Catalog` mit allen Freigaben abgeglichen:
-26 Leser und 19 Werkzeuge für Aktionen/Vorschauvalidierung. Nicht jede Kombination
+Stand: Agent Bridge 0.20.0 (gebaut/getestet; drei neue Diagnoseleser noch nicht live abgenommen). Aus `NativeTools.Catalog` mit allen Freigaben abgeglichen:
+29 Leser und 19 Werkzeuge für Aktionen/Vorschauvalidierung. Nicht jede Kombination
 ist live geprüft; Nachweise und Grenzen stehen in den Fachdokumenten.
 
 ## Leser
@@ -9,6 +9,9 @@ ist live geprüft; Nachweise und Grenzen stehen in den Fachdokumenten.
 - `timberborn_status`
 - `inspect_colony`
 - `inspect_goods`
+- `inspect_needs`
+- `inspect_beaver_needs`
+- `inspect_building_operation`
 - `inspect_building_access`
 - `inspect_road_connection`
 - `inspect_work_range`

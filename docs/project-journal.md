@@ -1273,3 +1273,13 @@ Missionsplan und aktuelle Dokumentation abgeglichen. 439 reguläre Tests und Mod
 bleiben der Nachweis des unveränderten Codes; keine unnötige Wiederholung für diese
 Dokumentationsänderung. Biberwarnungen und allgemeine Bedürfnis-/Produktionsdiagnose
 bleiben offen; einzelne Terrain-Piloten belegen keine vollständige Gebäudedeckung.
+
+## 2026-09-20 — 0.20.0 Bedürfnisse und Gebäudebetrieb gebaut
+
+Drei Leser: aggregierte native Bedürfnisse, Einzelbiber und Gebäudebetriebsbelege.
+Öffentliche NeedManager-/NeedSpec-, Workplace-/Arbeitszeit- und Manufactory-APIs
+geprüft und direkt verwendet. Fehlende Komponenten/Rezepte bleiben unbekannt;
+keine aus fehlenden Meldungen oder Stillstand erfundene Gesundheit/Blockade.
+Session-Prüfung und entity_not_found für Einzelbiber ergänzt. Keine neue Abhängigkeit.
+460 reguläre Tests bestanden (447 Unit, 13 Integration), drei opt-in Live-Tests
+übersprungen. Mod-Build ohne Warnungen/Fehler. Installation und Live-Pilot folgen.

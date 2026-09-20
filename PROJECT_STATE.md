@@ -1,6 +1,7 @@
 # Projektstand
 
-Stand: 2026-09-20. Codeversion: **0.19.2**, gebaut, installiert und gezielt live bestätigt.
+Stand: 2026-09-20. Codeversion: **0.20.0**, gebaut und regulär getestet; Installation/Live-Abnahme ausstehend.
+Installiert und live bestätigt bleibt **0.19.2**.
 Sofort-Wegsuche einschließlich Unterbrechung/Wiederherstellung unter **0.19.1** live bestätigt. Farm-/Holzfällerreichweiten unter 0.19.2 über den konkreten Terrainzugriff bestätigt.
 Die Version im [Manifest](mod/Timberborn.AgentBridge/manifest.json) ist die Codeversion;
 ältere datierte Einträge im Journal dokumentieren frühere Zustände.
@@ -22,7 +23,7 @@ Die Version im [Manifest](mod/Timberborn.AgentBridge/manifest.json) ist die Code
 
 | Ebene | Beleg |
 | --- | --- |
-| Automatisch | 439 reguläre Tests: 426 Unit, 13 Integration; drei opt-in Live-Tests im Standardlauf übersprungen |
+| Automatisch | 460 reguläre Tests: 447 Unit, 13 Integration; drei opt-in Live-Tests im Standardlauf übersprungen |
 | Mod-Build | Gegen Timberborn 1.1.2.4, ohne Warnungen/Fehler |
 | Installation | Fünf Paketdateien per SHA-256 geprüft, private Konfiguration erhalten |
 | Live 0.19.2 | Alle 26 Leser bestanden; Holzfäller 611 und Farm 485 Terrainzellen, erste und letzte Ergebnisseite geprüft |
@@ -38,8 +39,10 @@ Testlauf startet das Spiel oder prüft alle nativen Leser live.
 
 ## Umfang und Grenzen
 
-[26 Leser + 19 freizugebende Werkzeuge](docs/tools.md). Die Steuerungsbasis ist vorhanden.
-Neu implementiert: vollständige registrierte Güter mit ResourceCount-Feldern sowie
+[29 Leser + 19 freizugebende Werkzeuge](docs/tools.md). Die Steuerungsbasis ist vorhanden.
+Neu in 0.20.0: Bedürfnisübersicht, Details je Biber und Gebäudebetriebsbelege;
+[Diagnosevertrag und Live-Plan](docs/needs-and-operation.md). Noch nicht live abgenommen.
+Weiterhin implementiert: vollständige registrierte Güter mit ResourceCount-Feldern sowie
 sichtbare aktive Entity-Status und betroffene Ziele; [Vertrag](docs/economy-observations.md).
 Live bestätigt: Lagerwarnung, Mehrfachziele, Verschwinden und Wiederherstellung; Biberwarnungen offen.
 0.19.0 ergänzt Gebäudezugang, echte Straßenverbindungen, Arbeitsreichweiten und native

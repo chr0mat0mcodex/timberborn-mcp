@@ -11,8 +11,10 @@ Hier stehen offene Aufgaben; datierte historische Kästchen sind kein aktueller 
    bestätigt. Mehrfachziele und Verschwinden einer aktiven Meldung ebenfalls bestanden; Biberwarnungen offen.
    [Vertrag und Nachweise](docs/economy-observations.md). Vollständige UI-Meldungsabdeckung,
    Benachrichtigungshistorie und dynamische Aggregatwerte weiterhin offen.
-3. **Produktionshindernisse und Bedürfnisse:** Hunger/Durst, fehlender Eingang,
-   Material, Personal oder andere konkrete Betriebsblockaden zuverlässig unterscheiden.
+3. **Bedürfnis-/Betriebsleser 0.20.0 live abnehmen:** Native Bedürfniswerte und Warn-/Kritisch-Flags
+   sowie Personal, Arbeitszeit, Rezept/Zutaten/Brennstoff/Produktplatz sind gebaut und getestet.
+   [Vertrag und begrenzter Pilot](docs/needs-and-operation.md). Vollständige Energie-, Wasser-,
+   Rohstoff- und Lieferdiagnose weiterhin offen; keine Ursachen aus bloßem Stillstand ableiten.
 4. **Erreichbarkeit breiter prüfen:** Sofort-Wegsuche besteht den Unterbrechungstest.
    0.19.2 liefert für Farm/Holzfäller 485/611 Terrainzellen; erste und letzte Seite live geprüft.
    Weitere Gebäudetypen, Reichweitenänderungen und besondere Weglayouts separat abnehmen.

@@ -11,7 +11,7 @@ public sealed class BridgeRejectionException : ArgumentException
         Code = code;
     }
     public static bool IsCode(string? code) => code is "stale_session" or "template_locked" or
-        "template_disabled" or "state_conflict" or "building_not_found" or "not_pausable" or
+        "template_disabled" or "state_conflict" or "building_not_found" or "entity_not_found" or "not_pausable" or
         "finished_building_required" or "unsupported_storage_good" or "not_storage" or "not_farm" or
         "not_crop_prioritizer" or "unavailable_crop" or "unsupported_setting";
 }

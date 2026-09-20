@@ -9,6 +9,7 @@ Zustandskonflikt für einen Verbindungsfehler zu halten. Die MCP-Werkzeuge bleib
 | `template_locked` | Forschung und Freischaltung prüfen. |
 | `template_disabled` | Vorlage ist für die aktuellen Spiel-Features nicht verfügbar. |
 | `state_conflict` | Gebäudeeinstellung stimmt nicht mehr mit dem erwarteten Wert überein; neu lesen. |
+| `entity_not_found` | Ab 0.20.0: kein initialisierter, nicht gelöschter Biber mit dieser ID; Ziel neu bestimmen. |
 | `building_not_found` | Gebäude erneut suchen, keine alte ID blind wiederverwenden. |
 | `finished_building_required` | Baufortschritt prüfen. |
 | `not_pausable` | Pausierbarkeit prüfen. |
@@ -17,7 +18,7 @@ Zustandskonflikt für einen Verbindungsfehler zu halten. Die MCP-Werkzeuge bleib
 | `unsupported_setting` | Unterstützte Gebäudeeinstellungen prüfen. |
 
 Diese Codes entstehen ausschließlich an expliziten Vorbedingungen vor dem jeweiligen
-Eingriff. Mod und MainThreadQueue geben nur Codes aus einer festen Positivliste weiter.
+Zugriff oder Eingriff. Mod und MainThreadQueue geben nur Codes aus einer festen Positivliste weiter.
 HTTP 409 enthält genau `error`; der Client akzeptiert ausschließlich bekannte Codes,
 keine zusätzlichen Felder oder doppelten Schlüssel. MCP meldet `status=error`, den Code
 und `retryable=false`. Das Ingame-Log zeigt `rejected`. Keine automatischen Wiederholungen.

@@ -4,9 +4,9 @@
 
 | Komponente | Belegter Stand |
 | --- | --- |
-| Eigene Mod | 0.19.2 installiert; alle 26 Leser und konkrete Farm-/Holzfällerreichweiten live bestätigt; Sofort-Wegsuche einschließlich Unterbrechung zuvor bestätigt |
+| Eigene Mod | 0.20.0 gebaut/getestet, Installation/Live offen; 0.19.2 installiert; alle 26 Leser und konkrete Farm-/Holzfällerreichweiten live bestätigt; Sofort-Wegsuche einschließlich Unterbrechung zuvor bestätigt |
 | Spiel | Timberborn 1.1.2.4, Folktails, kleine Entwicklungskolonie |
-| Tests | 439 reguläre Tests; Live-Piloten getrennt |
+| Tests | 460 reguläre Tests; Live-Piloten getrennt |
 | Fremdmods | Keine Pflichtabhängigkeit der eigenen Mod |
 | MCP | Externer C#-Server, native Auswahl, stdio |
 

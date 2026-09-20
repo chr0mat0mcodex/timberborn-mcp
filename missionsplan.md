@@ -12,8 +12,9 @@ unkontrollierter Kolonieaufbau ersetzt keine gezielte Abnahme.
 
 ## Stand
 
-**0.19.2 ist gebaut und installiert. Sofort-Wegsuche und historische Bilanz
-sind gezielt live bestätigt, ebenso Farm-/Holzfällerreichweiten. Alle 26 Leser bestehen den Live-Test.**
+**0.20.0 ist gebaut und regulär getestet: drei neue Leser für Bedürfnisse und Betrieb.
+Installation/Live-Abnahme stehen aus. 0.19.2 bleibt installiert; dessen 26 Leser,
+Sofort-Wegsuche, historische Bilanz und Farm-/Holzfällerreichweiten sind live bestätigt.**
 [Projektstand](PROJECT_STATE.md), [Werkzeugkatalog](docs/tools.md), [offene Arbeiten](BACKLOG.md).
 Keine Fremdmod-Pflichtbasis; die frühere More-HTTP-API-Phase ist abgeschlossen.
 
@@ -21,6 +22,7 @@ Keine Fremdmod-Pflichtbasis; die frühere More-HTTP-API-Phase ist abgeschlossen.
 | --- | --- |
 | Eigener MCP-/Mod-Zugang | Live bestätigt; authentifizierter lokaler Transport und Spielthread-Queue |
 | Bevölkerung und Betten | Live bestätigt |
+| Bedürfnisse und Betriebsbelege | Drei Leser in 0.20.0 gebaut/getestet; Live-Pilot ausstehend, keine vollständige Blockadendiagnose |
 | Vollständige Güter, aktive Status und Ziele | 40 Güter und eine Lagerwarnung mit Ziel live bestätigt; Mehrfachziele und Verschwinden bestätigt; Biberwarnungen offen |
 | Karte, Gebäude und Baustellen | Live genutzt; Sofort-Wegsuche inklusive Unterbrechung live bestätigt; Farm-/Holzfällerreichweiten live bestätigt |
 | Produktion/Verbrauch über Zeit | Native Güterhistorie mit Produktion/Verbrauch und Fortschreibung über einen Tageswechsel live bestätigt |
@@ -50,7 +52,9 @@ Keine Fremdmod-Pflichtbasis; die frühere More-HTTP-API-Phase ist abgeschlossen.
 - [x] Gebäudezugang und Sofort-Wegverbindung einschließlich Unterbrechung/Wiederherstellung gezielt prüfen.
 - [x] Konkrete Farm-/Holzfällerreichweiten über BuildingTerrainRange live abnehmen (485/611 Zellen; erste/letzte Seite).
 - [x] Native Produktions-/Verbrauchshistorie über einen Tageswechsel prüfen.
-- [ ] Produktionshindernisse und Bedürfnisse vollständig unterscheiden.
+- [x] Native Bedürfnisflags und Betriebsbelege als begrenzte Leser implementieren und regulär testen.
+- [ ] 0.20.0 live abnehmen: Bedürfnisübersicht/Einzelbiber und fertiges Produktionsgebäude.
+- [ ] Produktionshindernisse und Bedürfnisse vollständig unterscheiden (insbesondere Energie, Wasser, Rohstoff- und Lieferwege).
 - [ ] Versorgung über Zeit bewerten und fehlenden Wohnraum gezielt nachweisen.
 - [ ] Anschließend einen begrenzten zusammenhängenden Agenten-Spielablauf abnehmen.
 

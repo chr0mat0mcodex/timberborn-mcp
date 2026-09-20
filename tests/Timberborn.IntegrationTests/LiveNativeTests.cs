@@ -9,7 +9,7 @@ public sealed class LiveNativeTests(ITestOutputHelper output)
     public static bool Enabled => Environment.GetEnvironmentVariable("TIMBERBORN_NATIVE_LIVE_TEST") == "1";
 
     [Fact(Skip = "Native-Livetest nur nach explizitem Opt-in.", SkipUnless = nameof(Enabled))]
-    public async Task TwentySixReadToolsAgainstInstalledNativeBridge()
+    public async Task TwentyNineReadToolsAgainstInstalledNativeBridge()
     {
         using var budget = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);
         budget.CancelAfter(TimeSpan.FromSeconds(40));
@@ -27,7 +27,7 @@ public sealed class LiveNativeTests(ITestOutputHelper output)
             }
         }), cancellationToken: ct);
         var tools = await client.ListToolsAsync(cancellationToken: ct);
-        Assert.Equal(new[] { "inspect_building_access", "inspect_road_connection", "inspect_work_range", "inspect_good_history", "find_buildings", "inspect_alert_targets", "inspect_alerts", "inspect_goods", "inspect_agent_log", "inspect_area_types", "inspect_areas", "inspect_build_catalog", "inspect_build_options", "inspect_building", "inspect_building_priority", "inspect_building_settings", "inspect_colony", "inspect_construction", "inspect_map_region", "inspect_removal_targets", "inspect_research", "inspect_simulation", "inspect_workforce", "precheck_build_site", "precheck_building", "timberborn_status" }.Order(), tools.Select(t => t.Name).Order());
+        Assert.Equal(new[] { "inspect_needs", "inspect_beaver_needs", "inspect_building_operation", "inspect_building_access", "inspect_road_connection", "inspect_work_range", "inspect_good_history", "find_buildings", "inspect_alert_targets", "inspect_alerts", "inspect_goods", "inspect_agent_log", "inspect_area_types", "inspect_areas", "inspect_build_catalog", "inspect_build_options", "inspect_building", "inspect_building_priority", "inspect_building_settings", "inspect_colony", "inspect_construction", "inspect_map_region", "inspect_removal_targets", "inspect_research", "inspect_simulation", "inspect_workforce", "precheck_build_site", "precheck_building", "timberborn_status" }.Order(), tools.Select(t => t.Name).Order());
         string? session = null;
         async Task<JsonElement> Call(string name, Dictionary<string, object?>? args = null)
         {
@@ -58,6 +58,9 @@ public sealed class LiveNativeTests(ITestOutputHelper output)
         await Call("inspect_removal_targets", new() { ["kind"]="all", ["x"]=0, ["y"]=0, ["z"]=0, ["width"]=1, ["height"]=1, ["depth"]=1, ["offset"]=0, ["limit"]=32 });
         var workforce = await Call("inspect_workforce", new() { ["offset"] = 0, ["limit"] = 32 });
         Assert.Equal("entities_with_worker_component", workforce.GetProperty("scope").GetString());
+        await Call("inspect_needs",new(){["offset"]=0,["limit"]=32});
+        var beaver=workforce.GetProperty("items").EnumerateArray().First(w=>w.GetProperty("workerType").GetString()=="Beaver");
+        await Call("inspect_beaver_needs",new(){["id"]=beaver.GetProperty("id").GetString(),["session"]=session,["offset"]=0,["limit"]=32});
         await Call("inspect_area_types");
         await Call("inspect_areas", new() { ["kind"] = "tree_cutting", ["offset"] = 0, ["limit"] = 32 });
         await Call("inspect_construction", new() { ["offset"] = 0, ["limit"] = 32 });
@@ -69,6 +72,7 @@ public sealed class LiveNativeTests(ITestOutputHelper output)
         var center = sample.EnumerateArray().Single(b => b.GetProperty("template").GetString() == "DistrictCenter.Folktails");
         await Call("inspect_building_priority", new() { ["id"] = center.GetProperty("id").GetString(), ["kind"] = "workplace", ["session"] = session });
         await Call("inspect_building_settings", new() { ["id"] = center.GetProperty("id").GetString(), ["session"] = session });
+        await Call("inspect_building_operation",new(){["id"]=center.GetProperty("id").GetString(),["session"]=session});
         await Call("inspect_building_access",new(){["id"]=center.GetProperty("id").GetString(),["session"]=session});
         await Call("inspect_road_connection",new(){["id"]=center.GetProperty("id").GetString(),["toId"]=center.GetProperty("id").GetString(),["session"]=session});
         await Call("inspect_work_range",new(){["id"]=center.GetProperty("id").GetString(),["session"]=session,["offset"]=0,["limit"]=32});
@@ -94,7 +98,7 @@ public sealed class LiveNativeTests(ITestOutputHelper output)
         { ["id"] = sample[0].GetProperty("id").GetString(), ["session"] = session });
         Assert.True(building.GetProperty("found").GetBoolean());
         Assert.Equal(sample[0].GetProperty("template").GetString(), building.GetProperty("details").GetProperty("template").GetString());
-        output.WriteLine("Native MCP: eighteen read tools succeeded in one game session, including generic catalog/precheck without placement or preview creation.");
+        output.WriteLine("Native MCP: twenty-nine read tools succeeded in one game session, including generic catalog/precheck without placement or preview creation.");
         // Only aggregate diagnostics; no names, entity/session IDs, paths or tokens in test output.
         output.WriteLine("Population: " + colony.GetProperty("population"));
         output.WriteLine("Housing: " + colony.GetProperty("housing"));

@@ -6,6 +6,7 @@ namespace Timberborn.Bridge.Core;
 public sealed class BridgeRequest
 {
     public string Route { get; }
+    public DiagnosticsRequest? Diagnostics { get; private set; }
     public LogisticsRequest? Logistics { get; private set; }
     public EconomyRequest? Economy { get; private set; }
     public ResearchRequest? Research { get; private set; }
@@ -37,6 +38,7 @@ public sealed class BridgeRequest
 
     public static BridgeRequest Parse(string path, NameValueCollection query)
     {
+        if (DiagnosticsRequest.Handles(path)) { var d=DiagnosticsRequest.Parse(path,query); return new BridgeRequest(d.Route,session:d.Session) { Diagnostics=d }; }
         if (LogisticsRequest.Handles(path)) { var l=LogisticsRequest.Parse(path,query); return new BridgeRequest(l.Route,session:l.Session) { Logistics=l }; }
         if (EconomyRequest.Handles(path)) { var e=EconomyRequest.Parse(path,query); return new BridgeRequest(e.Route,session:e.Session) { Economy=e }; }
         if (path is "/agent-api/v1/research" or "/agent-api/v1/unlock-building") { var r=ResearchRequest.Parse(path.EndsWith("unlock-building"),query); return new BridgeRequest(r.Write?"unlock-building":"research",session:r.Session) { Research=r }; }

@@ -4,13 +4,15 @@ Eine eigene Timberborn-Mod und ein lokaler C#-MCP-Server ermöglichen einem KI-A
 das Spiel strukturiert zu beobachten und über reguläre Spielaktionen zu steuern.
 Ziel ist ein Agent, der Wasser, Nahrung, Holz, Wege und Wohnraum aufbaut und betreibt.
 
-**Entwicklungsstand: Agent Bridge 0.19.2**, gebaut gegen Timberborn **1.1.2.4 / Folktails**.
-**0.19.2 ist installiert; alle 26 Leser sind live geprüft.** 40 registrierte Güter
+**Entwicklungsstand: Agent Bridge 0.20.0**, gebaut gegen Timberborn **1.1.2.4 / Folktails**.
+**0.20.0 ist gebaut und getestet; Installation und Live-Abnahme stehen aus.**
+Neu: Bedürfnisübersicht, Biber-Bedürfnisdetails und Gebäudebetriebsdiagnose.
+Installiert bleibt 0.19.2; dessen 26 Leser sind live geprüft. 40 registrierte Güter
 und Lagerwarnungen mit betroffenen Zielen sind bestätigt. Weitere Warnungstypen bleiben zu prüfen.
 Die Güterhistorie ist über einen Tageswechsel und die Sofort-Wegsuche einschließlich
 Unterbrechung/Wiederaufbau live bestätigt. Der direkte Terrainzugriff liefert im Live-Pilot
 485 Zellen für die Farm und 611 für den Holzfäller; erste und letzte Seite geprüft.
-439 reguläre Tests bestehen (426 Unit, 13 Integration).
+460 reguläre Tests bestehen (447 Unit, 13 Integration).
 Die Basisaktionen funktionieren; zuverlässiges autonomes Koloniemanagement ist noch in Entwicklung.
 
 **Keine zusätzliche Spielmod erforderlich.** Die eigene Mod hat `RequiredMods: []`.
@@ -22,6 +24,7 @@ Regression im Repository; [Referenzen und Legacy-Abgrenzung](docs/references/REA
 
 | Bereich | Implementierter Umfang |
 | --- | --- |
+| Bedürfnisse/Betrieb (0.20.0) | Native Warn-/Kritisch-Flags, Bedürfniswerte, Personal/Arbeitszeit sowie Rezept-, Zutaten-, Brennstoff- und Produktplatzbelege; Live-Abnahme ausstehend |
 | Zustand | Bevölkerung, Betten, vollständiger Güterleser, aktive Status mit Zielen, Karte, Gebäude, Baustellen, Arbeiterzuordnung |
 | Logistik | Gebäudezugang, Sofort-Wegsuche einschließlich Unterbrechung, Farm-/Holzfällerreichweiten und Güterhistorie über Tageswechsel live bestätigt |
 | Bauen | Vorlagenkatalog, Kosten/Freischaltung, räumliche Vorprüfung, Spielvalidierung, reguläre Bauaufträge |
@@ -32,7 +35,7 @@ Regression im Repository; [Referenzen und Legacy-Abgrenzung](docs/references/REA
 | Simulation | Pause sowie 1×, 3× und 7× |
 | Nachvollziehbarkeit | Ingame-MCP-Log, optionale kurze Aktionsbegründung, feste fachliche Fehlercodes |
 
-26 Lesewerkzeuge und 19 separat freizugebende Werkzeuge für Aktionen/Vorschauvalidierung
+29 Lesewerkzeuge und 19 separat freizugebende Werkzeuge für Aktionen/Vorschauvalidierung
 sind im nativen Katalog implementiert. Die beiden frühen Baupiloten sind weiterhin
 vorhanden; für neue Bauaufgaben dienen die generischen Werkzeuge.
 [Werkzeugübersicht und Freigaben](docs/tools.md).
@@ -42,7 +45,7 @@ Karotten-Anbau-/Erntezyklus und Forschungsproduktion mit bezahlter Freischaltung
 Das bestätigt konkrete Abläufe, nicht jede Vorlage, Fraktion oder eine dauerhaft
 tragfähige Versorgung. Die neuen [Güter-/Statusleser](docs/economy-observations.md) ergänzen die
 bisherige Water/Berries/Log-Kurzansicht. Vollständige UI-Meldungsabdeckung,
-Produktionsblockaden und Erreichbarkeit in weiteren Sonderfällen bleiben [offen](BACKLOG.md).
+die vollständige Diagnose von Produktionsblockaden und Erreichbarkeit in weiteren Sonderfällen bleiben [offen](BACKLOG.md).
 
 ## Aufbau
 
