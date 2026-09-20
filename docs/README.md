@@ -44,3 +44,5 @@ Datierte frühere Abnahmen sind kein Beweis für jede spätere Kombination.
   [Weg](path-placement.md), [Lodge](lodge-placement.md). Für neue Bauaufgaben: generische Werkzeuge.
 - [Architekturentscheidungen](architecture/decisions.md) — chronologisch.
 - [Offizielle Quellen und good references](references/README.md).
+
+- [Güter und aktive Statusmeldungen](economy-observations.md): 0.18.0, Live-Abnahme offen.

@@ -1,6 +1,10 @@
-# Zukunftsfeature: Spielmeldungen mit betroffenen Zielen
+# Spielmeldungen: API-Recherche und weiterer Ausbau
 
-## Kurzprüfung 2026-09-20
+Aktuell: In 0.18.0 sind aktive Entity-Status und Ziellisten implementiert; Live-Abnahme
+steht noch aus. Vertrag und Grenzen: [Güter-/Statusleser](economy-observations.md).
+Die folgende Kurzprüfung dokumentiert den ursprünglichen Planungsstand.
+
+## Historische Kurzprüfung 2026-09-20
 
 **Über öffentliche APIs grundsätzlich machbar.** Geprüft wurden die öffentlichen
 Metadaten der lokal installierten Timberborn-1.1.2.4-Bibliotheken. Keine Implementierung,

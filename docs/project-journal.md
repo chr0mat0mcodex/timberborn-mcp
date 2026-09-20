@@ -1135,3 +1135,24 @@ setzt das Backend ausdrücklich. Mod-Metadaten im bereits installierten Paket bl
 bis zum nächsten Paketupdate auf ihrem bisherigen Textstand. Keine Release-Veröffentlichung.
 Aktuelle funktionale Abnahme bleibt 0.17.2 / 388 Tests; für diesen Metadaten-Schritt
 Werkzeugkatalog, lokale Links, JSON, UTF-8 und Diff geprüft, keine unnötigen Spieltests.
+
+
+## 2026-09-20 — 0.18.0: Güter und aktive Status mit Zielen
+
+Drei neue native Leser: inspect_goods, inspect_alerts, inspect_alert_targets. Vollständige
+registrierte Güter inklusive Nullbeständen und separaten öffentlichen ResourceCount-Feldern;
+aktive sichtbare Entity-Status mit nativen Flags, eindeutiger Zielzahl und aktuellen
+Raster-/Weltpositionen. Opaque Gruppenkennungen sind an die Session gebunden; keine
+Behauptung stabiler Problemcodes oder vollständiger UI-Benachrichtigungshistorie.
+Kein fremder Modcode, neue Abhängigkeiten, Save-Felder oder Spielschreibaktionen.
+[Vertrag und geplanter Live-Pilot](economy-observations.md).
+
+409 reguläre Tests bestanden: 396 Unit + 13 Integration; drei opt-in Live-Tests
+übersprungen. Die zusätzlichen stdio-/HTTP-Aufrufe prüfen Leser, stale_session und
+Log-Einträge mit Begründung. Mod-Build gegen 1.1.2.4 ohne Warnungen/Fehler. Katalog
+offline bestätigt: 22 Leser + 19 Aktions-/Validierungswerkzeuge. Dokumentlinks geprüft.
+
+0.18.0 bei beendetem Timberborn installiert, vorherigen Modordner vollständig gesichert,
+fünf Paketdateien per SHA-256 verglichen, private Konfiguration bytegleich erhalten.
+Neue Live-Abnahme steht aus; Nutzerstart und geladenen Entwicklungsspielstand abwarten.
+Keine Versorgungslage oder neue Statusabdeckung im laufenden Spiel bereits bestätigt.

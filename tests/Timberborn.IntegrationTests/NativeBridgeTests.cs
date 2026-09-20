@@ -62,12 +62,16 @@ public sealed class NativeBridgeTests
                         if(r.Route=="activity") {
                             var a=r.Activity!;
                             if(a.State!="running" && a.Session!=session)throw new ArgumentException();
-                            return JsonSerializer.Serialize(new BridgeEnvelope<object>(1,session,DateTimeOffset.UtcNow,"0.17.0",new NativeActivityAck(activityLog.Record(a,DateTimeOffset.UtcNow))),NativeJson.Options);
+                            return JsonSerializer.Serialize(new BridgeEnvelope<object>(1,session,DateTimeOffset.UtcNow,"0.18.0",new NativeActivityAck(activityLog.Record(a,DateTimeOffset.UtcNow))),NativeJson.Options);
                         }
-                        if(r.Route=="activity-log")return JsonSerializer.Serialize(new BridgeEnvelope<object>(1,session,DateTimeOffset.UtcNow,"0.17.0",new NativeActivityLog(128,activityLog.Snapshot().Reverse().Take(32).ToArray(),activityLog.Revision,false,false)),NativeJson.Options);
+                        if(r.Route=="activity-log")return JsonSerializer.Serialize(new BridgeEnvelope<object>(1,session,DateTimeOffset.UtcNow,"0.18.0",new NativeActivityLog(128,activityLog.Snapshot().Reverse().Take(32).ToArray(),activityLog.Revision,false,false)),NativeJson.Options);
                         Interlocked.Increment(ref observations);
+                        if(r.Route=="alert-targets" && r.Session!=session)throw new BridgeRejectionException("stale_session");
                         object data = r.Route switch
                         {
+                            "goods" => new NativeGoods("global_registered_goods",r.Economy!.Offset,r.Economy.Limit,0,[],false,["synthetic_test"]),
+                            "alerts" => new NativeAlerts("visible_active_entity_statuses",r.Economy!.Offset,r.Economy.Limit,0,[],false,["synthetic_test"]),
+                            "alert-targets" => new NativeAlertTargets(r.Economy!.AlertId,false,r.Economy.Offset,r.Economy.Limit,0,[],false,["synthetic_test"]),
                             "research" => new NativeResearch(sciencePoints,r.Research!.Offset,r.Research.Limit,1,r.Research.Offset==0?[new("SyntheticResearch",10,true,researchUnlocked,!researchUnlocked)]:[],false,["synthetic_test"]),
                             "unlock-building" => Unlock(r.Research!),
                             "building-settings" when r.Session==session => Settings(Guid.Parse(r.Settings!.Id)),
@@ -105,7 +109,7 @@ public sealed class NativeBridgeTests
                                 Guid.NewGuid(), "applied", r.Template == "Path", true, ["synthetic_test"])),
                             _ => throw new ArgumentException()
                         };
-                        return JsonSerializer.Serialize(new BridgeEnvelope<object>(1, session, DateTimeOffset.UtcNow, "0.17.0", data), NativeJson.Options);
+                        return JsonSerializer.Serialize(new BridgeEnvelope<object>(1, session, DateTimeOffset.UtcNow, "0.18.0", data), NativeJson.Options);
                     });
                     await Task.Delay(5, pumpStop.Token);
                 }
@@ -160,11 +164,23 @@ public sealed class NativeBridgeTests
                 }
             }), cancellationToken: ct);
             var tools = await client.ListToolsAsync(cancellationToken: ct);
-            var expected = new List<string> { "find_buildings", "inspect_research", "inspect_agent_log", "inspect_area_types", "inspect_areas", "inspect_build_catalog", "inspect_build_options", "precheck_building", "inspect_building", "inspect_building_priority", "inspect_building_settings", "inspect_colony", "inspect_construction", "inspect_map_region", "inspect_simulation", "inspect_workforce", "inspect_removal_targets", "precheck_build_site", "timberborn_status" };
+            var expected = new List<string> { "find_buildings", "inspect_alert_targets", "inspect_alerts", "inspect_goods", "inspect_research", "inspect_agent_log", "inspect_area_types", "inspect_areas", "inspect_build_catalog", "inspect_build_options", "precheck_building", "inspect_building", "inspect_building_priority", "inspect_building_settings", "inspect_colony", "inspect_construction", "inspect_map_region", "inspect_simulation", "inspect_workforce", "inspect_removal_targets", "precheck_build_site", "timberborn_status" };
             if (enableValidation) { expected.AddRange(["set_building_paused","set_storage_good","set_storage_mode","set_farm_priority","set_farm_crop"]); expected.Add("validate_build_site"); expected.Add("set_workplace_staffing"); expected.AddRange(["demolish_building","remove_planted","remove_vegetation","remove_debris"]); }
             if (enablePlacement) { expected.Add("unlock_building"); expected.Add("place_path"); expected.Add("set_building_priority"); } if (enableLodgePlacement) { expected.Add("place_building"); expected.Add("validate_building"); expected.Add("set_area"); expected.Add("place_lodge"); expected.Add("set_simulation_speed"); }
             Assert.Equal(expected.Order(), tools.Select(t => t.Name).Order());
             Assert.All(tools, t => { Assert.Equal(t.Name is not ("unlock_building" or "set_building_paused" or "set_storage_good" or "set_storage_mode" or "set_farm_priority" or "set_farm_crop" or "place_building" or "validate_building" or "validate_build_site" or "place_path" or "place_lodge" or "set_simulation_speed" or "set_workplace_staffing" or "set_building_priority" or "set_area" or "demolish_building" or "remove_planted" or "remove_vegetation" or "remove_debris"), t.ProtocolTool.Annotations!.ReadOnlyHint); Assert.NotNull(t.ProtocolTool.OutputSchema); });
+            foreach(var name in new[]{"inspect_goods","inspect_alerts","inspect_alert_targets"}) {
+                var args=new Dictionary<string,object?>{["offset"]=0,["limit"]=32,["reasoning"]="Versorgung lesend prüfen."};
+                if(name=="inspect_alert_targets") {args["session"]=session;args["alertId"]=new string('0',64);}
+                var result=await client.CallToolAsync(name,args,cancellationToken:ct);
+                Assert.False(result.IsError);Assert.Equal(0,result.StructuredContent!.Value.GetProperty("data").GetProperty("total").GetInt32());
+                Assert.Contains(activityLog.Snapshot(),e=>e.Tool==name&&e.State=="ok"&&e.Reasoning=="Versorgung lesend prüfen.");
+                if(name=="inspect_alert_targets") {
+                    args["session"]=Guid.NewGuid().ToString();
+                    var rejected=await client.CallToolAsync(name,args,cancellationToken:ct);
+                    Assert.True(rejected.IsError);Assert.Equal("stale_session",rejected.StructuredContent!.Value.GetProperty("error").GetProperty("code").GetString());
+                }
+            }
             var researchResult=await client.CallToolAsync("inspect_research",new Dictionary<string,object?>{["offset"]=0,["limit"]=32},cancellationToken:ct);
             Assert.False(researchResult.IsError);
             Assert.Equal(20,researchResult.StructuredContent!.Value.GetProperty("data").GetProperty("sciencePoints").GetInt32());
@@ -226,14 +242,14 @@ public sealed class NativeBridgeTests
             Assert.False(site.IsError);
             Assert.False(site.StructuredContent!.Value.GetProperty("data").GetProperty("gameValidated").GetBoolean());
             Assert.Equal("requires_game_validation", site.StructuredContent!.Value.GetProperty("data").GetProperty("assessment").GetString());
-            Assert.Equal((enableLodgePlacement ? 12 : 8) + (enablePlacement ? 4 : 1), Volatile.Read(ref observations));
+            Assert.Equal((enableLodgePlacement ? 12 : 8) + (enablePlacement ? 4 : 1) + 4, Volatile.Read(ref observations));
             if (enableValidation)
             {
                 var validation = await client.CallToolAsync("validate_build_site", new Dictionary<string, object?>
                     { ["template"] = "Path", ["x"] = 1, ["y"] = 2, ["z"] = 3, ["rotation"] = 0, ["session"] = session }, cancellationToken: ct);
                 Assert.False(validation.IsError);
                 Assert.True(validation.StructuredContent!.Value.GetProperty("data").GetProperty("noPersistentChangeObserved").GetBoolean());
-                Assert.Equal((enableLodgePlacement ? 13 : 9) + (enablePlacement ? 4 : 1), Volatile.Read(ref observations));
+                Assert.Equal((enableLodgePlacement ? 13 : 9) + (enablePlacement ? 4 : 1) + 4, Volatile.Read(ref observations));
             }
             if (enablePlacement)
             {

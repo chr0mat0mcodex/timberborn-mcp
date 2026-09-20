@@ -16,7 +16,7 @@ pwsh -NoProfile -File ./scripts/verify.ps1
 Das Skript setzt projektlokale Caches, verwendet Locked-Mode-Restore, baut Release und
 führt die regulären Tests mit synthetischen Daten aus. Der erste Restore benötigt
 Netzwerkzugriff; Abhängigkeiten sind in Directory.Packages.props und Lockfiles gepinnt.
-Keine globalen Tools werden installiert. Aktueller Nachweis: 388 Tests.
+Keine globalen Tools werden installiert. Aktueller Nachweis: 409 Tests.
 
 Bei reinen Dokumentations-/Beschreibungsänderungen genügen Inhalts-, Link-, JSON- und
 Diff-Prüfung; keine unnötige Wiederholung der Spieltests.
@@ -48,7 +48,7 @@ pwsh -NoProfile -File ./scripts/verify.ps1 `
 ```
 
 Dieser Aufruf führt zuerst die normalen Prüfungen und danach den nativen Lesetest mit
-19 Werkzeugen aus. Schreibtests sind separate, ausdrücklich freigegebene Piloten mit
+22 Werkzeugen aus. Schreibtests sind separate, ausdrücklich freigegebene Piloten mit
 frischer Session, begrenzten Aktionen und Rückabfragen. Das Skript aktiviert sie nicht.
 `-Live` bezeichnet aus Kompatibilitätsgründen weiterhin den **historischen More-HTTP-API-Lesetest**,
 nicht den nativen Test. [Legacy-Hinweise](docs/legacy-backend.md).

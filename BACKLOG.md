@@ -5,10 +5,11 @@ Hier stehen offene Aufgaben; datierte historische Kästchen sind kein aktueller 
 
 ## Nächster sinnvoller Ausbau
 
-1. **Vollständige Güterübersicht:** alle verfügbaren Güter statt nur Water/Berries/Log;
-   Bestände, Kapazitäten und sinnvolle Abgrenzung zwischen Lagern, Produktion, Baustellen und Transport.
-2. **Alerts und betroffene Ziele:** aktuelle Probleme samt Gebäuden/Bibern/Orten;
-   [öffentliche API bereits untersucht](docs/alerts-plan.md), noch nicht implementiert.
+1. **Güterübersicht live abnehmen:** 0.18.0 liest alle registrierten Güter samt öffentlichen
+   ResourceCount-Feldern. installiert, Live-Pilot ausstehend; keine vollständige Baustellenbilanz.
+2. **Aktive Status und Ziele live abnehmen:** drei Leser in 0.18.0 implementiert;
+   [Vertrag und Pilot](docs/economy-observations.md). Vollständige UI-Meldungsabdeckung,
+   Benachrichtigungshistorie und dynamische Aggregatwerte weiterhin offen.
 3. **Produktionshindernisse und Bedürfnisse:** Hunger/Durst, fehlender Eingang,
    Material, Personal oder andere konkrete Betriebsblockaden zuverlässig unterscheiden.
 4. **Erreichbarkeit und Reichweiten:** durchgängige Wegverbindungen, Distrikt-/Arbeitsreichweite.

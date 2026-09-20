@@ -12,14 +12,15 @@ unkontrollierter Kolonieaufbau ersetzt keine gezielte Abnahme.
 
 ## Stand
 
-**0.17.2 ist implementiert, installiert und gezielt live geprüft.**
+**0.18.0 ist implementiert und installiert; zuletzt live bestätigt: 0.17.2.**
 [Projektstand](PROJECT_STATE.md), [Werkzeugkatalog](docs/tools.md), [offene Arbeiten](BACKLOG.md).
 Keine Fremdmod-Pflichtbasis; die frühere More-HTTP-API-Phase ist abgeschlossen.
 
 | Fähigkeit | Status und verbleibende Grenze |
 | --- | --- |
 | Eigener MCP-/Mod-Zugang | Live bestätigt; authentifizierter lokaler Transport und Spielthread-Queue |
-| Bevölkerung, Betten, Beispielvorräte | Live bestätigt; vollständige Güterübersicht fehlt |
+| Bevölkerung und Betten | Live bestätigt |
+| Vollständige Güter, aktive Status und Ziele | 0.18.0 implementiert; Live-Pilot offen |
 | Karte, Gebäude und Baustellen | Implementiert/live genutzt; keine vollständige Erreichbarkeitsanalyse |
 | Generische Bauaufträge | Mehrere Vorlagen live; Geometrien/Sonderformen begrenzt |
 | Lager, Farm, Gebäudepause | Live bestätigt |
@@ -41,7 +42,7 @@ Keine Fremdmod-Pflichtbasis; die frühere More-HTTP-API-Phase ist abgeschlossen.
 
 ## Nächste Meilensteine
 
-- [ ] Vollständige Güterübersicht und Alerts mit konkreten betroffenen Zielen.
+- [ ] Vollständige Güterübersicht und aktive Status mit konkreten Zielen live abnehmen (0.18.0 gebaut).
 - [ ] Produktionshindernisse, Bedürfnisse und verlässliche Erreichbarkeit.
 - [ ] Versorgung über Zeit bewerten und fehlenden Wohnraum gezielt nachweisen.
 - [ ] Anschließend einen begrenzten zusammenhängenden Agenten-Spielablauf abnehmen.
