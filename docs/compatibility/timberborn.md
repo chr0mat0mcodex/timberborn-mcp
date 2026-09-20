@@ -1,5 +1,11 @@
 # Kompatibilität
 
+## Live-Abnahme 0.11.0 — 2026-09-20
+
+26 MCP-Aufrufe: 0/1/3/7/1 mit Zeitstillstand/-fortschritt bestätigt; Distriktzentrum
+Soll/Ist 2 -> 3 -> 2. Schlusszustand ursprüngliche Besetzung und Simulation 1×.
+Geschwindigkeitsänderung weiterhin erst nach Quittung im nächsten Update sichtbar.
+
 ## Installiert 0.11.0 — 2026-09-20
 
 Alle Standardgeschwindigkeiten 0/1/3/7 anhand mitgeliefertem SpeedControlPanel.uxml

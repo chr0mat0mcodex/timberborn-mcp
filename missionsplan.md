@@ -1137,6 +1137,15 @@ Nutzerstart begrenzten Hin-/Rücktest mit separatem Zustandsabgleich ausführen.
 - [x] MCP-Steuerung für alle vier Werte implementiert, Session-/Istwertschutz erhalten.
 - [x] 200 Tests bestanden, Mod gebaut und 0.11.0 gesichert installiert.
 - [x] Mission und Dokumentation aktualisiert.
-- [ ] Zusätzliche Stufen 3×/7× live prüfen; Pause/1× bereits live bestätigt.
+- [x] Alle regulären Stufen 0/1/3/7 live bestätigt; Schlusszustand 1×.
 
-[Vertrag und Abnahme](docs/simulation-control.md). Sollbesetzungs-Livetest ebenfalls noch offen.
+[Vertrag und Abnahme](docs/simulation-control.md). Sollbesetzungs-Livetest in 0.11.0 ebenfalls bestanden.
+
+### 7.31 Geschwindigkeits- und Personalsteuerung live abgenommen
+
+- [x] Pause/1×/3×/7× separat gelesen, Stillstand/Fortschritt nachgewiesen.
+- [x] Sollbesetzung am Distriktzentrum 2 -> 3 -> 2 bestätigt.
+- [x] Tatsächliche Arbeiterzuordnung ebenfalls 2 -> 3 -> 2 beobachtet.
+- [x] Schlusszustand ursprüngliche Sollbesetzung 2 und Simulation 1×.
+
+26 fachliche MCP-Aufrufe; kein Retry, kein erzwungenes Zuweisen einzelner Arbeiter.

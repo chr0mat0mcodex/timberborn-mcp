@@ -1,6 +1,6 @@
 # Reguläre Sollbesetzung — 0.10.0
 
-Status: implementiert und installiert; Live-Abnahme offen. Öffentliche Workplace-
+Status: implementiert, installiert und in 0.11.0 begrenzt live abgenommen. Öffentliche Workplace-
 API IncreaseDesiredWorkers()/DecreaseDesiredWorkers(), keine Fremdmod-Abhängigkeit.
 
 `set_workplace_staffing(id, session, desiredWorkers, expectedDesiredWorkers)` setzt
@@ -31,3 +31,7 @@ Besetzung begrenzt beobachten. Anschließend mit frisch geprüftem Erwartungswer
 auf ursprüngliche Sollbesetzung zurückstellen und erneut lesen. Keine automatische
 Rücksetzung nach unklarer Antwort; zunächst Zustand klären. Restliche Kolonie bleibt
 außerhalb dieses Tests. Tatsächliche Arbeiteridentität kann sich regulär ändern.
+
+Live: Distriktzentrum Soll 2 -> 3 -> 2, beide Änderungen applied und separat
+nachgelesen. Tatsächliche Zuordnung im Worker-Roster ebenfalls 2 -> 3 -> 2.
+Schlusszustand Soll/Ist/Max 2/2/4, Simulation 1×. Keine direkte Biberzuweisung.

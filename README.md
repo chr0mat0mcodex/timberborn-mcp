@@ -44,10 +44,10 @@ in inspect_building sowie die [kolonieweite Arbeitskräfteliste](docs/workforce-
 inspect_workforce. Live bestätigt: 10 Arbeiter, 3 beschäftigt, 7 unbeschäftigt;
 Arbeitsplatzzuordnungen stimmen mit Gebäudebesetzung überein.
 0.10.0 bereitet [reguläre Sollbesetzung](docs/workplace-staffing.md) vor;
-gebaut/getestet und installiert; Live-Abnahme offen. Spätere Integration:
+gebaut/getestet und in 0.11.0 live bestätigt: Soll- und Istbesetzung 2 → 3 → 2. Spätere Integration:
 [Agentenfrage als Texteingabe-Popup](docs/player-question-popup.md).
 0.11.0 unterstützt Pause und alle drei regulären Geschwindigkeiten (0/1/3/7).
-Gebaut, getestet und installiert; 3×/7× live noch offen.
+Alle Stufen live bestätigt; Simulation abschließend 1×.
 [Installation und Abnahme](docs/native-bridge-install.md),
 [offizielle Quellen und good references](docs/references/README.md).
 Für die eigene Bridge: `scripts/start-native.ps1 -ConfigPath '<private Konfiguration>'`;

@@ -1,5 +1,20 @@
 # Projektjournal
 
+## 2026-09-20 — Alle Geschwindigkeiten und Sollbesetzung live bestanden
+
+0.11.0, begrenzter MCP-Pilot mit 26 fachlichen Aufrufen. Anfangszustand Pause;
+0/1/3/7/1 jeweils separat nachgelesen. Pausenbeobachtungen unverändert; bei ca.
+1,2 Sekunden Messabstand DayProgress-Deltas 0.00260418 (1×), 0.00781250 (3×),
+0.01822915 (7×), 0.00260416 (abschließend 1×). Keine Zusage konstanter realer
+Beschleunigung unter anderer Last. Quittungen weiterhin verzögert wirksam.
+
+Distriktzentrum Sollbesetzung 2 -> 3 -> 2 per regulärer Workplace-API, beide
+Quittungen applied und separat bestätigt. Worker-Roster bestätigt tatsächliche
+Zuordnung 2 -> 3 -> 2. Schlusszustand Soll/Ist/Max 2/2/4, keine Unter-/Überbesetzung.
+Keine direkten Biberzuweisungen, kein Retry, kein Bauauftrag. Simulation abschließend
+1×. Damit reguläre Geschwindigkeitssteuerung und begrenzter Staffing-Hin-/Rücktest
+live abgenommen; die allgemeinen Produktions-/Fällgebietsfragen bleiben offen.
+
 ## 2026-09-20 — Alle regulären Geschwindigkeiten umgesetzt und installiert
 
 0.11.0: set_simulation_speed akzeptiert für Ziel/Erwartungswert exakt 0,1,3,7.

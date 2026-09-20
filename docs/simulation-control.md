@@ -3,7 +3,7 @@
 - [x] Pause und alle drei regulären Spielstufen implementiert: 0, 1, 3, 7.
 - [x] Ziel und expectedSpeed auf diese vier Werte begrenzt; Session-/Istwertschutz erhalten.
 - [x] 200 automatisierte Tests bestanden, Mod 0.11.0 gebaut und installiert.
-- [ ] 3× und 7× live bestätigen. Pause/1× seit 0.8.0 live bestätigt.
+- [x] Alle vier Zustände 0/1/3/7 in 0.11.0 live bestätigt; Schlusszustand 1×.
 
 `set_simulation_speed(speed, expectedSpeed, session)` nutzt die tatsächlichen
 Geschwindigkeitswerte: Pause=0, erste Stufe=1, zweite Stufe=3, dritte Stufe=7.
@@ -82,3 +82,9 @@ Start vor Hin-/Rücktest: insgesamt drei Befehle, zehn fachliche MCP-Aufrufe.
 Alle unmittelbaren Quittungen enthielten noch den alten Geschwindigkeitswert
 (matchedImmediately=false); die Änderung wird im folgenden Spielupdate wirksam.
 Kein automatisches Retry. Höhere Stufen nicht getestet.
+
+## Vollständige Live-Abnahme 0.11.0 — 2026-09-20
+
+0/1/3/7/1 separat nachgelesen. Pause: keine Zeitänderung. Laufende Stufen zeigen
+positive DayProgress-Deltas (rund 0.002604 / 0.007813 / 0.018229 bei kurzem
+Messintervall). Wieder 1× bestätigt. Tatsächliche Tickleistung bleibt lastabhängig.
