@@ -66,3 +66,10 @@ keine freien HTTP-, Reflexions- oder Spielkonsolenwerkzeuge.
 Die oben für 0.12.0 beschriebene tapping-Sperre ist ersetzt: auf Nutzerwunsch als
 Kiefernschutz durch Entfernen regulärer Fällmarkierungen implementiert. Kein eigener
 Zapfzonen-Datentyp im Spiel. [Aktueller Vertrag](removal-and-pine-protection.md).
+
+## Live-Nachweis in 0.13.0
+
+Alle 14 Leserouten geprüft. Arbeitsplatz Normal -> High -> Normal, Baupriorität
+Low -> High -> Low; jede Änderung separat bestätigt, beide Originalwerte erhalten.
+Zwei offene Baustellen. Flächenkatalog und Abfragen erfolgreich; Flächenänderungen
+noch nicht ausgeführt. Priorität ist weiterhin kein Nachweis tatsächlicher Umverteilung.

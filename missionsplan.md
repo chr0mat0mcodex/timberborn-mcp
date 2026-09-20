@@ -1184,3 +1184,16 @@ und bisherige Konfigurationsfelder erhalten. Prioritäts-/Flächenfreigabe für 
 beauftragten Pilot aktiviert; Abriss bleibt bis zu einem geeigneten Testziel gesperrt.
 Nächster Schritt nach Nutzerstart des MCP-Spielstands: neue Lesewerkzeuge prüfen,
 Arbeitsplatz-/Baustellenpriorität kontrolliert hin/zurück testen. Live-Abnahme offen.
+
+### 7.35 Version 0.13.0 lesend und Prioritäten live abgenommen
+
+- [x] Alle 14 nativen Lesewerkzeuge über echtes MCP erfolgreich.
+- [x] Arbeitsplatzpriorität am Distriktzentrum Normal -> High -> Normal, separat nachgelesen.
+- [x] Eine offene Baustelle Low -> High -> Low, separat nachgelesen.
+- [x] Beide Ausgangsprioritäten wiederhergestellt; Simulation blieb pausiert (0).
+- [x] Flächenarten crops/tree_planting/tapping zusätzlich gelesen: 0/0/124 Zellen.
+- [ ] Flächenänderungen und Abriss live prüfen; noch kein Schreibnachweis hierfür.
+
+Zwei offene Baustellen gelesen. Prioritätspilot 18 fachliche MCP-Aufrufe, keine
+Wiederholungen. Die 124 tapping-Zellen sind aktuell unmarkierte Kiefern, keine
+bestätigte Harzproduktion oder zuvor vom Agenten angelegten Zapfzonen.

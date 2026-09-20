@@ -690,3 +690,16 @@ fünf Paketdateien von 0.13.0 installiert und per SHA256 verglichen. Schlüssel,
 und bisherige Felder erhalten. enablePriorities/enableAreas aktiv, enableRemoval aus.
 Keine Spielobjekte geändert. Nach Start und Laden von MCP zunächst Lesetest und
 Prioritäts-Hin-/Rücktest; Flächen und Entfernung noch nicht live abgenommen.
+
+## 2026-09-20 — 0.13.0 Leserouten und Prioritäten live bestätigt
+
+Opt-in-Livetest aller 14 Lesewerkzeuge erfolgreich. Anschließend separater Pilot
+mit 18 MCP-Aufrufen: Arbeitsplatzpriorität Normal -> High -> Normal und Priorität
+an einer von zwei offenen Baustellen Low -> High -> Low. Jede Mutation mit eigenem
+Readback bestätigt; beide Ausgangszustände wiederhergestellt. Simulation 0 -> 0,
+keine Zeitsteuerung, Flächenänderung oder Entfernung ausgeführt.
+
+crops und tree_planting liefern jeweils 0 markierte Zellen; tapping liefert 124
+aktuell nicht zum Fällen markierte Kiefern. Kein Ernte-/Reichweitennachweis. Der neue
+DI-/Pflanzkatalogpfad läuft im Spiel. Flächenmutationen und Abriss bleiben ungeprüft.
+Rohdaten/Session- und Entity-IDs nur im ignorierten lokalen Pilotordner gespeichert.

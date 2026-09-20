@@ -149,3 +149,8 @@ von 0.12.0; beide benötigen die gemeinsame nächste Live-Abnahme.
 
 0.13.0 inzwischen bei beendetem Spiel gesichert installiert; fünf Datei-Hashes
 bestätigt. Installationsprüfung bestanden, Laufzeit-/Live-Abnahme weiterhin offen.
+
+0.13.0 Live-Abnahme: alle 14 Lesewerkzeuge bestanden. Arbeitsplatz- und Baupriorität
+jeweils hin/zurück mit separatem Readback bestätigt, Ausgangszustände wiederhergestellt.
+Katalog-/AreaManagement-DI läuft; crops/tree_planting/tapping lesbar. Simulation blieb
+pausiert. Flächenänderungen, Löschsperren und Abriss-Folgeereignisse weiterhin offen.
