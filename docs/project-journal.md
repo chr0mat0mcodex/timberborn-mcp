@@ -944,3 +944,24 @@ Dieser Pilot bestätigt einen Erntezyklus samt Lagerung und Nachpflanzung, keine
 langfristige Versorgung der ganzen Kolonie. Keine Mod-/Produktcodeänderung nötig.
 Nächste offene Versorgungsnachweise: tatsächliche Wassergewinnung/-lagerung und
 vollständiger Wohnraum; außerdem Ressourcenübersicht über alle Güter statt drei Beispiele.
+
+## 2026-09-20 — Wassergewinnung und Tanklagerung live (0.15.0)
+
+Beide vorhandenen Pumpen fertig, aktiv und mit je einem Arbeiter besetzt gelesen.
+SmallTank regulär mit 15 Holz am bestehenden Weg errichtet, nach Fertigstellung
+Water/accept gewählt. Öffentliche Spielvalidierung und anschließende Gebäudeabfrage
+bestätigen Platzierung, Fertigstellung und Distriktanbindung.
+
+Zwei begrenzte 40-Sekunden-Fenster auf Stufe 7: zunächst Bau, danach Lagerung.
+Tankbestand 0 -> 30 Wasser, Kapazität 30; in separatem MCP-Leselauf bestätigt.
+Im ersten Betriebsintervall global AllStock 217 -> 219, StockpiledStock 0 -> 30.
+Der positive Gesamtzuwachs belegt Wassernachschub neben der bloßen Umlagerung,
+nicht die genaue Förderleistung oder den Anteil einer einzelnen Pumpe.
+Über das gesamte Betriebsfenster sank AllStock anschließend auf 209. Keine dauerhaft
+positive Versorgungsbilanz behaupten; Produktions-/Verbrauchsraten bleiben offen.
+
+Schlusszustand: Tank voll (Water/accept), Spiel pausiert, Tag 10 um etwa 04:07 Uhr.
+Beispielbestände Wasser 209, Beeren 255, Holz 20; sechs Betten und sieben Obdachlose.
+Keine Güter künstlich erzeugt, keine Mod-/Produktcodeänderung erforderlich.
+Nächster getrennt geplanter Schritt: verbleibenden Wohnraumbedarf decken; Wasserbilanz
+über längere Zeit samt Produktionsdiagnose und ausreichendem Speicher später prüfen.

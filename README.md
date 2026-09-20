@@ -20,6 +20,8 @@ Live bestätigt: Pause, Lagerwahl/-modi, Farmpriorität/Pflanzenwahl und Fläche
 Enthält die live bestätigte Layoutkorrektur aus 0.14.1.
 Karottenkette live nachgewiesen: vier Pflanzen angebaut, 12 Karotten eingelagert,
 vier neue Pflanzen nach der Ernte beobachtet. Ein Zyklus, keine Gesamtversorgungszusage.
+Wassertank regulär gebaut und mit 30/30 Wasser gefüllt; positiver Gesamtnachschub
+im ersten Messintervall, langfristige Wasserbilanz weiter offen.
 
 0.14.0 implementiert [generisches Bauen](docs/generic-building.md): vollständiger
 Gebäudekatalog, Vorprüfung, Spielvalidierung und reguläre Einzelaufträge nach Vorlagen-ID.

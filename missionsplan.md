@@ -1401,3 +1401,16 @@ Keine neue Modinstallation erforderlich. Details und Grenzen: docs/building-sett
 Sieben begrenzte 40-Sekunden-Fenster auf Stufe 7; Erfolgskriterium echter Lagerbestand
 beendet den Test. Ein Erntezyklus ist belegt, keine dauerhafte Gesamtversorgung.
 Nebenläufig fertiggestellte Lodge: sechs Betten insgesamt, sieben Obdachlose verbleiben.
+
+### 7.50 Wassertank und laufender Nachschub live nachgewiesen
+
+- [x] Beide Pumpen fertig/aktiv und je mit einem Arbeiter besetzt gelesen.
+- [x] SmallTank mit 15 Holz regulär gebaut, fertig und an Distrikt angebunden.
+- [x] Flüssigkeitsauswahl Water/accept gesetzt und separat nachgelesen.
+- [x] Tankbestand 0 -> 30/30 Wasser, separate Schlussabfrage bestätigt.
+- [x] Globaler Wasserbestand im ersten Betriebsintervall 217 -> 219: positiver Nachschub neben Umlagerung.
+- [x] Simulation abschließend pausiert (Tag 10, etwa 04:07 Uhr).
+- [ ] Vollständigen Wohnraum schaffen: derzeit sechs Betten, sieben Obdachlose.
+- [ ] Dauerhafte Wasserbilanz prüfen: Gesamtvorrat später auf 209 gesunken; Förder-/Verbrauchsraten offen.
+
+Zwei begrenzte 40-Sekunden-Fenster auf Stufe 7; keine neue Modversion erforderlich.

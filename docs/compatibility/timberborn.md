@@ -217,3 +217,7 @@ Kein Nachweis tatsächlicher Ernte/Umlagerung; Simulation abschließend pausiert
 0.15.0 zusätzlich: Karotten-Pflanzen/Wachsen/Ernten/Einlagern live nachgewiesen.
 Vier Pflanzen bis rund 99 % beobachtet, danach 12 Karotten im Lager separat bestätigt
 und vier neue Pflanzen mit neuen IDs. Anbaufläche bleibt erhalten; Simulation pausiert.
+
+0.15.0: SmallTank regulär gebaut, auf Wasser gestellt und 30/30 Bestand separat
+bestätigt. Globaler Wasserbestand im ersten Betriebsintervall 217 -> 219; später
+209. Laufender Nachschub und Lagerung belegt, keine nachhaltige Gesamtbilanz.
