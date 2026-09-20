@@ -2,6 +2,7 @@ using Timberborn.BlockSystem;
 using Timberborn.Bridge.Core;
 using Timberborn.BuildingRange;
 using Timberborn.BuildingsReachability;
+using Timberborn.BuildingsNavigation;
 using Timberborn.EntitySystem;
 using Timberborn.GameDistricts;
 using Timberborn.Goods;
@@ -40,20 +41,26 @@ public sealed class LogisticsObservations(EntityRegistry entities,IGoodService g
         return new {id=r.Id,toId=r.ToId,supported,sourceAccessCount=a.Length,targetAccessCount=b.Length,connected,distance,
             limitations=new[]{"instant_game_road_path_query","requires_finished_objects_and_one_valid_accessible_each","direction_is_source_to_target","no_terrain_shortcuts","native_distance_not_travel_time","navigation_may_lag","no_worker_or_delivery_guarantee"}};
     }
+    private static IEnumerable<UnityEngine.Vector3Int> TerrainCells(BuildingTerrainRange range)
+    { foreach(var cell in range.GetRange())yield return cell; }
     public object Range(LogisticsRequest r)
     {
-        var e=Find(r.Id);// Interface implementations need not be registered as component lookup keys.
+        var e=Find(r.Id);
         var providers=e.AllComponents.OfType<IBuildingWithRange>().ToArray();
-        bool supported=e.GetComponent<BlockObject>().IsFinished&&providers.Length>0;
-        // Bound enumeration as well as response size; don't silently claim a partial union is complete.
-        var cells=supported?providers.SelectMany(p=>p.GetBlocksInRange()).Take(65537).ToArray():Array.Empty<UnityEngine.Vector3Int>();
+        bool hasTerrain=e.TryGetComponent<BuildingTerrainRange>(out var terrainRange);
+        bool supported=e.GetComponent<BlockObject>().IsFinished&&(hasTerrain||providers.Length>0);
+        string source=!supported?"unavailable":hasTerrain?"building_terrain_range":"range_providers";
+        // Prefer the concrete work-navigation component. Some workplaces expose no display provider.
+        IEnumerable<UnityEngine.Vector3Int> range=!supported?Enumerable.Empty<UnityEngine.Vector3Int>():
+            hasTerrain?TerrainCells(terrainRange):providers.SelectMany(p=>p.GetBlocksInRange());
+        var cells=range.Take(65537).ToArray();
         if(cells.Length>65536)throw new InvalidOperationException("range_limit");
         var all=cells.Distinct().OrderBy(p=>p.z).ThenBy(p=>p.y).ThenBy(p=>p.x).ToArray();
         var items=all.Skip(r.Offset).Take(r.Limit).Select(Vec).ToArray();
-        var names=providers.Select(p=>p.RangeName??"").Distinct().Take(17).ToArray();
+        var names=hasTerrain?new[]{"terrain_navigation"}:providers.Select(p=>p.RangeName??"").Distinct().Take(17).ToArray();
         if(names.Length>16||names.Any(n=>n.Length>160))throw new InvalidOperationException("range_names_limit");
-        return new{id=r.Id,supported,rangeNames=names,offset=r.Offset,limit=r.Limit,total=all.Length,items,hasMore=r.Offset+items.Length<all.Length,
-            limitations=new[]{"union_of_public_building_range_providers","range_not_selected_job_or_harvest_eligibility","no_provider_is_unknown_not_zero_work_range","pages_are_separate_observations","game_navigation_may_lag"}};
+        return new{id=r.Id,supported,source,rangeNames=names,offset=r.Offset,limit=r.Limit,total=all.Length,items,hasMore=r.Offset+items.Length<all.Length,
+            limitations=new[]{"source_identifies_native_range_service","range_not_selected_job_or_harvest_eligibility","no_provider_is_unknown_not_zero_work_range","pages_are_separate_observations","game_navigation_may_lag"}};
     }
     public object History(LogisticsRequest r)
     {

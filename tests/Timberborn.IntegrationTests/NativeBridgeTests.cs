@@ -62,16 +62,16 @@ public sealed class NativeBridgeTests
                         if(r.Route=="activity") {
                             var a=r.Activity!;
                             if(a.State!="running" && a.Session!=session)throw new ArgumentException();
-                            return JsonSerializer.Serialize(new BridgeEnvelope<object>(1,session,DateTimeOffset.UtcNow,"0.19.1",new NativeActivityAck(activityLog.Record(a,DateTimeOffset.UtcNow))),NativeJson.Options);
+                            return JsonSerializer.Serialize(new BridgeEnvelope<object>(1,session,DateTimeOffset.UtcNow,"0.19.2",new NativeActivityAck(activityLog.Record(a,DateTimeOffset.UtcNow))),NativeJson.Options);
                         }
-                        if(r.Route=="activity-log")return JsonSerializer.Serialize(new BridgeEnvelope<object>(1,session,DateTimeOffset.UtcNow,"0.19.1",new NativeActivityLog(128,activityLog.Snapshot().Reverse().Take(32).ToArray(),activityLog.Revision,false,false)),NativeJson.Options);
+                        if(r.Route=="activity-log")return JsonSerializer.Serialize(new BridgeEnvelope<object>(1,session,DateTimeOffset.UtcNow,"0.19.2",new NativeActivityLog(128,activityLog.Snapshot().Reverse().Take(32).ToArray(),activityLog.Revision,false,false)),NativeJson.Options);
                         Interlocked.Increment(ref observations);
                         if(r.Route=="alert-targets" && r.Session!=session)throw new BridgeRejectionException("stale_session");
                         object data = r.Route switch
                         {
                             "building-access" => new NativeAccess(r.Logistics!.Id,true,new(1,2,3),false,false,false,null,3,1,1,[]),
                             "road-connection" => new NativeRoad(r.Logistics!.Id,r.Logistics.ToId,true,1,1,true,3,[]),
-                            "work-range" => new NativeRange(r.Logistics!.Id,false,[],r.Logistics.Offset,r.Logistics.Limit,0,[],false,[]),
+                            "work-range" => new NativeRange(r.Logistics!.Id,false,[],r.Logistics.Offset,r.Logistics.Limit,0,[],false,[],"unavailable"),
                             "good-history" => new NativeGoodHistory(r.Logistics!.Good,true,r.Logistics.Offset,r.Logistics.Limit,0,[],false,0,0,null,[]),
                             "goods" => new NativeGoods("global_registered_goods",r.Economy!.Offset,r.Economy.Limit,0,[],false,["synthetic_test"]),
                             "alerts" => new NativeAlerts("visible_active_entity_statuses",r.Economy!.Offset,r.Economy.Limit,0,[],false,["synthetic_test"]),
@@ -113,7 +113,7 @@ public sealed class NativeBridgeTests
                                 Guid.NewGuid(), "applied", r.Template == "Path", true, ["synthetic_test"])),
                             _ => throw new ArgumentException()
                         };
-                        return JsonSerializer.Serialize(new BridgeEnvelope<object>(1, session, DateTimeOffset.UtcNow, "0.19.1", data), NativeJson.Options);
+                        return JsonSerializer.Serialize(new BridgeEnvelope<object>(1, session, DateTimeOffset.UtcNow, "0.19.2", data), NativeJson.Options);
                     });
                     await Task.Delay(5, pumpStop.Token);
                 }

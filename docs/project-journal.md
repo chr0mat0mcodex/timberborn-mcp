@@ -1233,3 +1233,22 @@ drei opt-in Live-Tests übersprungen. Mod-Build ohne Warnungen/Fehler.
 0.19.1 nach bestätigtem Speichern/Spielende installiert. Vorherigen Modordner vollständig
 gesichert, fünf Paketdateien per SHA-256 geprüft, private Konfiguration unverändert.
 Nutzer um Neustart/Laden gebeten; gezielte erneute Abnahme ausstehend.
+
+
+## 2026-09-20 — 0.19.1 Wegunterbrechung bestanden; Terrain-Reichweite nachgebessert
+
+Kontrollierter Live-Pilot bei pausierter Simulation: Distriktzentrum → Erfinder zunächst
+verbunden (Distanz 10), nach Entfernen eines einzelnen Wegstücks connected=false und
+Distanz null, nach regulärem Wiederaufbau wieder verbunden (10). Eingangsblockaden
+blieben false, Distriktdistanz war während der Trennung null. Weg wiederhergestellt.
+
+Farm/Holzfäller meldeten dagegen weiterhin supported=false. AllComponents lieferte
+keine allgemeinen IBuildingWithRange-Provider; der vorige Korrekturansatz reicht nicht.
+Weitere öffentliche Metadaten: BuildingsNavigation.BuildingTerrainRange.GetRange()
+liefert natives ReadOnlyHashSet von Rasterzellen. 0.19.2 ergänzt diesen konkreten Zugriff,
+kennzeichnet die Quelle explizit und verwirft alte Reichweitenantworten. Keine private
+Reflection oder Radius-Schätzung. Installation/erneute Reichweitenabnahme ausstehend.
+
+Abschlussprüfung 0.19.2: 439 reguläre Tests bestanden (426 Unit, 13 Integration);
+drei opt-in Live-Tests übersprungen. Mod-Build ohne Warnungen/Fehler, neues Paket erstellt.
+Nutzer um Speichern/Beenden für Installation und erneute konkrete Reichweitenprüfung gebeten.

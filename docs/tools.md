@@ -1,6 +1,6 @@
 # Native MCP-Werkzeuge
 
-Stand: Agent Bridge 0.19.1 (Korrektur gebaut; 26 Leser unter 0.19.0 aufrufbar, Weg-/Reichweitenabnahme noch offen). Aus `NativeTools.Catalog` mit allen Freigaben abgeglichen:
+Stand: Agent Bridge 0.19.2 (gebaut; Terrain-Reichweitenabnahme offen). Aus `NativeTools.Catalog` mit allen Freigaben abgeglichen:
 26 Leser und 19 Werkzeuge für Aktionen/Vorschauvalidierung. Nicht jede Kombination
 ist live geprüft; Nachweise und Grenzen stehen in den Fachdokumenten.
 

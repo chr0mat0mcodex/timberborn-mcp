@@ -1,8 +1,8 @@
 # Erreichbarkeit, Arbeitsreichweite und Versorgungsverlauf
 
-Codeversion 0.19.1; gegen öffentliche Timberborn-1.1.2.4-APIs gebaut.
-Installiert ist 0.19.1. Der Live-Pilot der vorherigen 0.19.0 fand zwei Lücken;
-die installierte Korrektur wartet auf erneute Abnahme. Vier zusätzliche Leser, keine neue Fremdmod oder Bibliothek.
+Codeversion 0.19.2. Installiert ist 0.19.1; deren Sofort-Wegsuche ist live bestätigt.
+Der konkrete Terrain-Reichweitenzugriff ist in 0.19.2 ergänzt; Installation/Live-Abnahme
+stehen aus. Vier zusätzliche Leser, keine Fremdmod oder Bibliothek.
 
 ## Gebäudezugang
 
@@ -29,17 +29,21 @@ Kameraänderung oder reguläre Spielaktion; nur öffentliche Beobachtungs-/Suchm
 
 ## Arbeitsreichweite
 
-`inspect_work_range(id, session, offset, limit)` liest GetBlocksInRange sämtlicher
-öffentlicher IBuildingWithRange-Provider aus AllComponents.OfType des fertigen Gebäudes. Ergebnis ist eine
-entdoppelte Vereinigungsmenge von Spielrasterzellen, sortiert Z/Y/X, mit rangeNames.
-Keine geometrische Kreisnäherung und kein angenommener Radius. Ohne Provider oder bei
-unfertigem Objekt: supported=false; das bedeutet unbekannt, nicht Reichweite null.
+`inspect_work_range(id, session, offset, limit)` liest ab 0.19.2 bevorzugt die öffentliche
+Komponente `BuildingTerrainRange.GetRange()`. Deren natives ReadOnlyHashSet wird mit
+seinem öffentlichen Enumerator gelesen. Nur wenn diese Komponente fehlt, dienen
+vorhandene IBuildingWithRange-Provider als Alternative. `source` benennt eindeutig
+`building_terrain_range`, `range_providers` oder `unavailable`. Keine Kreisnäherung.
+
+Das fertige Gebäude liefert eindeutige Rasterzellen in Z/Y/X-Sortierung. Bei fehlendem
+Zugang oder unfertigem Objekt bedeutet supported=false unbekannt, nicht Reichweite null.
+Für die konkrete Terrainquelle bezeichnet rangeNames=[terrain_navigation] den technischen
+Vertrag, keinen lokalisierten Spielnamen. Die alternative Quelle vereinigt ihre Provider.
 
 32 Zellen pro Seite; Offset 0..65535. Enumeration auf 65536 Providerzellen begrenzt;
-Überschreitung wird abgelehnt, nicht als vollständige Reichweite ausgegeben. Mehrere
-Provider können unterschiedliche Zwecke haben; die Vereinigungsmenge ist keine feste
-Farmflächenzuordnung und keine Garantie, dass ein bestimmtes Gewächs bearbeitet wird.
-Alle Seiten sind frische Beobachtungen, kein atomarer Snapshot.
+Überschreitung wird abgelehnt, nicht als vollständige Reichweite ausgegeben. Reichweite
+ist keine feste Farmflächenzuordnung und keine Garantie für passende Gewächse, Personal
+oder laufende Arbeit. Seiten sind frische Beobachtungen, kein atomarer Snapshot.
 
 ## Güterhistorie und Bilanz
 
@@ -94,3 +98,12 @@ kam ein neues Water-Sample hinzu: Produktion 2, Verbrauch 13, Nettobilanz -11; d
 historische Bestand sank passend von 186 auf 175. Dieser Tageswechsel ist live belegt;
 Extrapolation zu dauerhafter Versorgung oder jeder Sampling-Sonderlage bleibt unzulässig.
 Spiel anschließend wieder pausiert. Biberwarnung auch in diesem Zeitraum nicht vorhanden.
+
+
+Erneuter Live-Pilot unter 0.19.1: Sofort-Wegsuche bestätigt connected=true vor der
+Unterbrechung, false nach Entfernen eines einzelnen Wegstücks und wieder true nach
+regulärem Wiederaufbau, alles bei pausierter Simulation. Wegstück wiederhergestellt.
+Farm und Holzfäller liefern auch über AllComponents keine IBuildingWithRange-Provider.
+Dieser Ansatz war daher unzureichend. Öffentliche Metadaten belegen den konkreten
+BuildingTerrainRange.GetRange-Zugriff; 0.19.2 nutzt ihn direkt. Alte Reichweitenantworten
+werden vom neuen Client verworfen. Neue Live-Abnahme ausstehend.

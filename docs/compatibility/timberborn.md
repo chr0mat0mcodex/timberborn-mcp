@@ -4,9 +4,9 @@
 
 | Komponente | Belegter Stand |
 | --- | --- |
-| Eigene Mod | 0.19.1 installiert; Korrektur der Weg-/Reichweitenlücken, neue Abnahme offen |
+| Eigene Mod | 0.19.1 installiert, Sofort-Wegsuche live; 0.19.2 mit konkreter Terrain-Reichweite gebaut, neue Abnahme offen |
 | Spiel | Timberborn 1.1.2.4, Folktails, kleine Entwicklungskolonie |
-| Tests | 433 reguläre Tests; Live-Piloten getrennt |
+| Tests | 439 reguläre Tests; Live-Piloten getrennt |
 | Fremdmods | Keine Pflichtabhängigkeit der eigenen Mod |
 | MCP | Externer C#-Server, native Auswahl, stdio |
 

@@ -1,6 +1,6 @@
 {
   "Name": "Timberborn MCP Agent Bridge",
-  "Version": "0.19.1",
+  "Version": "0.19.2",
   "Id": "chr0mat0mcodex.TimberbornAgentBridge",
   "MinimumGameVersion": "1.1.2.4",
   "Description": "Local bridge for AI agents via MCP: structured observations, guarded building and colony actions, research, simulation control and an in-game call log. Actions require opt-in. No required third-party mods or custom save data.",

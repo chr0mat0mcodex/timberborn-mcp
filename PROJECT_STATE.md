@@ -1,8 +1,8 @@
 # Projektstand
 
-Stand: 2026-09-20. Codeversion: **0.19.1**, Korrektur gebaut und installiert; erneute Live-Abnahme ausstehend.
-Zuletzt live geprüft: **0.19.0**. Live-Pilot: Güterhistorien/Zugangsleser funktionieren;
-Wegunterbrechung im pausierten Spiel und Arbeitsreichweiten noch nicht bestanden.
+Stand: 2026-09-20. Codeversion: **0.19.2**, gebaut; Installation/Live-Abnahme ausstehend.
+Installiert: **0.19.1**. Sofort-Wegsuche einschließlich Unterbrechung/Wiederherstellung
+live bestätigt. Farm-/Holzfällerreichweiten benötigen den neuen konkreten Terrainzugriff.
 Die Version im [Manifest](mod/Timberborn.AgentBridge/manifest.json) ist die Codeversion;
 ältere datierte Einträge im Journal dokumentieren frühere Zustände.
 
@@ -23,7 +23,7 @@ Die Version im [Manifest](mod/Timberborn.AgentBridge/manifest.json) ist die Code
 
 | Ebene | Beleg |
 | --- | --- |
-| Automatisch | 433 reguläre Tests: 420 Unit, 13 Integration; drei opt-in Live-Tests im Standardlauf übersprungen |
+| Automatisch | 439 reguläre Tests: 426 Unit, 13 Integration; drei opt-in Live-Tests im Standardlauf übersprungen |
 | Mod-Build | Gegen Timberborn 1.1.2.4, ohne Warnungen/Fehler |
 | Installation | Fünf Paketdateien per SHA-256 geprüft, private Konfiguration erhalten |
 | Live 0.18.0 | Alle 22 Leser bestanden; 40 Güter, drei Beispielvorräte deckungsgleich, eine Lagerwarnung mit Ziel und unabhängiger Bestätigung; unbekannte ID und stale_session korrekt |
@@ -44,12 +44,12 @@ sichtbare aktive Entity-Status und betroffene Ziele; [Vertrag](docs/economy-obse
 Live bestätigt: Lagerwarnung, Mehrfachziele, Verschwinden und Wiederherstellung; Biberwarnungen offen.
 0.19.0 ergänzt Gebäudezugang, echte Straßenverbindungen, Arbeitsreichweiten und native
 Güterhistorien mit Produktions-/Verbrauchswerten. [Vertrag und Pilot](docs/logistics.md).
-Alle 26 Leser unter 0.19.0 live aufrufbar. Der funktionale Negativtest entdeckte jedoch
-veraltete Wegantworten im pausierten Spiel und fehlende Range-Provider bei Farm/Holzfäller.
-Korrektur in 0.19.1: öffentliche Sofort-Wegsuche und Interface-Suche in AllComponents.
-Diese Korrektur ist noch nicht live abgenommen.
-Offen bleiben vollständige UI-Meldungsabdeckung,
-zuverlässige Blockade-/Bedürfnisdiagnose, Produktions-/Verbrauchsbilanzen und Erreichbarkeit.
+Alle 26 Leser waren unter 0.19.0 live aufrufbar. Funktionale Folgeprüfungen:
+Sofort-Wegsuche unter 0.19.1 mit true → false → true bei Unterbrechung/Wiederaufbau bestätigt;
+Güterhistorie bleibt tagsüber unverändert und erhält zum Tageswechsel neue Produktions-/Verbrauchsdaten.
+Farm/Holzfäller besitzen keine allgemeinen Range-Provider; 0.19.2 ergänzt BuildingTerrainRange.GetRange.
+Installation und Live-Nachweis dieser Reichweite noch offen. Weitere Grenzen: vollständige
+UI-Meldungsabdeckung, Biberwarnungen, Bedürfnisse/Produktionshindernisse und nachhaltige Versorgung.
 Die Grundversorgungsabnahme ist nicht vollständig: einzelne Produktionsketten belegt,
 Wohnraum und nachhaltige Gesamtversorgung noch offen. [Backlog](BACKLOG.md).
 

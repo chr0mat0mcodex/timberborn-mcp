@@ -12,8 +12,8 @@ unkontrollierter Kolonieaufbau ersetzt keine gezielte Abnahme.
 
 ## Stand
 
-**0.19.1 ist als Korrektur gebaut und installiert; erneute Live-Abnahme steht aus.
-Der vorherige Live-Pilot von 0.19.0 fand Weg-/Reichweitenlücken.**
+**0.19.2 ist gebaut; installiert ist 0.19.1. Sofort-Wegsuche und historische Bilanz
+sind gezielt live bestätigt. Der direkte Terrain-Reichweitenzugriff benötigt den nächsten Live-Test.**
 [Projektstand](PROJECT_STATE.md), [Werkzeugkatalog](docs/tools.md), [offene Arbeiten](BACKLOG.md).
 Keine Fremdmod-Pflichtbasis; die frühere More-HTTP-API-Phase ist abgeschlossen.
 
@@ -22,7 +22,7 @@ Keine Fremdmod-Pflichtbasis; die frühere More-HTTP-API-Phase ist abgeschlossen.
 | Eigener MCP-/Mod-Zugang | Live bestätigt; authentifizierter lokaler Transport und Spielthread-Queue |
 | Bevölkerung und Betten | Live bestätigt |
 | Vollständige Güter, aktive Status und Ziele | 40 Güter und eine Lagerwarnung mit Ziel live bestätigt; Mehrfachziele und Verschwinden bestätigt; Biberwarnungen offen |
-| Karte, Gebäude und Baustellen | Live genutzt; neue Weg-/Zugangs-/Reichweitenleser in 0.19.0 gebaut, Live-Pilot offen |
+| Karte, Gebäude und Baustellen | Live genutzt; Sofort-Wegsuche inklusive Unterbrechung live bestätigt; konkrete Arbeitsreichweiten noch offen |
 | Produktion/Verbrauch über Zeit | Native Güterhistorie mit Produktion/Verbrauch live lesbar; Zeitsemantik separat prüfen |
 | Generische Bauaufträge | Mehrere Vorlagen live; Geometrien/Sonderformen begrenzt |
 | Lager, Farm, Gebäudepause | Live bestätigt |
@@ -47,7 +47,8 @@ Keine Fremdmod-Pflichtbasis; die frühere More-HTTP-API-Phase ist abgeschlossen.
 - [x] Güterübersicht und aktive Status mit konkretem Ziel im begrenzten Live-Pilot abnehmen.
 - [x] Mehrfachziele und tatsächliches Verschwinden einer Statusgruppe live prüfen.
 - [ ] Biberwarnungen im Live-Test ergänzen.
-- [ ] Neue Gebäudezugangs-, Weg- und Arbeitsreichweitenleser live abnehmen.
+- [x] Gebäudezugang und Sofort-Wegverbindung einschließlich Unterbrechung/Wiederherstellung gezielt prüfen.
+- [ ] Konkrete Farm-/Holzfällerreichweiten über BuildingTerrainRange live abnehmen.
 - [ ] Produktionshindernisse und Bedürfnisse vollständig unterscheiden.
 - [ ] Versorgung über Zeit bewerten und fehlenden Wohnraum gezielt nachweisen.
 - [ ] Anschließend einen begrenzten zusammenhängenden Agenten-Spielablauf abnehmen.

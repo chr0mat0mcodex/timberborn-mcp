@@ -25,7 +25,7 @@ public sealed class LogisticsTests
         Assert.False(BridgeHttpServer.MethodAllowed("POST",path,false,true));
         q.Add(q.GetKey(0),q.Get(0));Assert.Throws<ArgumentException>(()=>BridgeRequest.Parse(path,q));
     }
-    private static JsonObject Envelope(object d)=>JsonSerializer.SerializeToNode(new BridgeEnvelope<object>(1,Session,DateTimeOffset.UtcNow,"0.19.1",d),NativeJson.Options)!.AsObject();
+    private static JsonObject Envelope(object d)=>JsonSerializer.SerializeToNode(new BridgeEnvelope<object>(1,Session,DateTimeOffset.UtcNow,"0.19.2",d),NativeJson.Options)!.AsObject();
     private static async Task<JsonObject> Call(string name,object data,object args)
     {
         using var h=new Reply(data is JsonObject j?j.ToJsonString():Envelope(data).ToJsonString());using var tools=new NativeTools(new NativeClient(new(8081,new string('a',64)),h));
@@ -74,7 +74,7 @@ public sealed class LogisticsTests
     [Fact]
     public async Task RangePagesMustBeSortedUniqueAndBounded()
     {
-        var d=new NativeRange(Id,true,["work"],0,32,2,[new(1,2,3),new(2,2,3)],false,[]);
+        var d=new NativeRange(Id,true,["work"],0,32,2,[new(1,2,3),new(2,2,3)],false,[],"building_terrain_range");
         Assert.Equal("ok",(await Call("inspect_work_range",d,new{id=Id,session=Session,offset=0,limit=32}))["status"]!.GetValue<string>());
         foreach(var bad in new[]{d with{Items=[new(1,2,3),new(1,2,3)]},d with{Items=d.Items.Reverse().ToArray()},d with{Supported=false}})
             Assert.Equal("backend_incompatible",(await Call("inspect_work_range",bad,new{id=Id,session=Session,offset=0,limit=32}))["error"]!["code"]!.GetValue<string>());
@@ -83,10 +83,23 @@ public sealed class LogisticsTests
     [InlineData("inspect_road_connection")][InlineData("inspect_work_range")]
     public async Task PreFixBridgeCannotClaimReliableRoadOrRange(string name)
     {
-        object data=name=="inspect_road_connection"?Road():new NativeRange(Id,false,[],0,32,0,[],false,[]);
+        object data=name=="inspect_road_connection"?Road():new NativeRange(Id,false,[],0,32,0,[],false,[],"unavailable");
         object args=name=="inspect_road_connection"?new{id=Id,toId=To,session=Session}:(object)new{id=Id,session=Session,offset=0,limit=32};
         var e=Envelope(data);e["bridgeVersion"]="0.19.0";
         Assert.Equal("backend_incompatible",(await Call(name,e,args))["error"]!["code"]!.GetValue<string>());
+    }
+    [Theory]
+    [InlineData("building_terrain_range",true,"0.19.2",true)]
+    [InlineData("range_providers",true,"0.19.2",true)]
+    [InlineData("unavailable",false,"0.19.2",true)]
+    [InlineData("unavailable",true,"0.19.2",false)]
+    [InlineData("guessed_radius",true,"0.19.2",false)]
+    [InlineData("unavailable",false,"0.19.1",false)]
+    public async Task RangeRequiresConcreteSourceAndCorrectedVersion(string source,bool supported,string version,bool accepted)
+    {
+        var e=Envelope(new NativeRange(Id,supported,[],0,32,0,[],false,[],source));e["bridgeVersion"]=version;
+        var r=await Call("inspect_work_range",e,new{id=Id,session=Session,offset=0,limit=32});
+        Assert.Equal(accepted?"ok":"error",r["status"]!.GetValue<string>());
     }
     [Fact]
     public void CatalogRequiresNoActionGates()
