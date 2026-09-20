@@ -11,7 +11,7 @@ Hier stehen offene Aufgaben; datierte historische Kästchen sind kein aktueller 
    bestätigt. Mehrfachziele und Verschwinden einer aktiven Meldung ebenfalls bestanden; Biber-Todesstatus mit zwei Entity-Zielen bestätigt; aktive Hunger-/Durst-UI-Warnungen offen.
    [Vertrag und Nachweise](docs/economy-observations.md). Vollständige UI-Meldungsabdeckung,
    Benachrichtigungshistorie und dynamische Aggregatwerte weiterhin offen.
-3. **0.21.0 installieren/live prüfen:** Produktionsgraph einschließlich Größe/Revision und Quellen prüfen; Lebenszustandskorrektur ebenfalls abnehmen. Zuvor registrierte tote Biber
+3. **0.21.0 live prüfen (installiert):** Produktionsgraph einschließlich Größe/Revision und Quellen prüfen; Lebenszustandskorrektur ebenfalls abnehmen. Zuvor registrierte tote Biber
    wurden unter 0.20.0 als Bedürfnisempfänger mitgezählt. Öffentliche Mortal.Dead-Abfrage
    trennt nun lebend/tot/unbekannt; keine aktuellen Bedürfniswerte für tote/unbekannte Ziele.
    **Bedürfnis-/Betriebsdiagnose vervollständigen:** 0.20.0 mit 29 Lesern und gezielten

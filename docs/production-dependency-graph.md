@@ -1,6 +1,6 @@
 # Produktions- und Abhängigkeitsgraph
 
-Implementiert in **0.21.0**. Installation und Live-Abnahme stehen aus.
+Implementiert in **0.21.0**. Installiert; Live-Abnahme steht aus.
 Nutzerauftrag: Rohstoffe, Gebäude und Rezepte als zusammenhängende Gesamtübersicht
 mit einem einzigen MCP-Aufruf bereitstellen.
 

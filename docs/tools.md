@@ -1,7 +1,7 @@
 # Native MCP-Werkzeuge
 
-Stand: Agent Bridge 0.21.0 (Produktionsgraph und Lebenszustandskorrektur gebaut; Installation/Live offen).
-0.20.0 bleibt installiert; Bedürfnisleser dieser Version zählen auch registrierte tote Biber. Aus `NativeTools.Catalog` mit allen Freigaben abgeglichen:
+Stand: Agent Bridge 0.21.0 (Produktionsgraph und Lebenszustandskorrektur installiert; Live-Abnahme offen).
+0.21.0 ist installiert; der Lebenszustandsfix ist noch live zu prüfen. Aus `NativeTools.Catalog` mit allen Freigaben abgeglichen:
 30 Leser und 19 Werkzeuge für Aktionen/Vorschauvalidierung. Nicht jede Kombination
 ist live geprüft; Nachweise und Grenzen stehen in den Fachdokumenten.
 

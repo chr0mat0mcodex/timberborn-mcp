@@ -1373,3 +1373,7 @@ Keine Behauptung einer allumfassenden Fraktions- oder Betriebsdiagnose.
 478 reguläre Tests (465 Unit, 13 Integration) bestehen. Mod gegen Timberborn 1.1.2.4
 gebaut. 0.21.0 enthält den noch nicht live geprüften Lebenszustandsfix aus 0.20.1.
 Timberborn läuft noch mit 0.20.0; Installation und Live-Pilot stehen aus.
+
+## 2026-09-20 — 0.21.0 installiert
+
+Timberborn beendet vorgefunden und unmittelbar vor Austausch erneut geprüft. Installierte 0.20.0 vollständig in einem neuen lokalen Backup gesichert und verglichen. Genau fünf Paketdateien ersetzt und per SHA-256 verifiziert; private Konfiguration unverändert. Spielstart/Laden durch Nutzer und anschließende rein lesende Live-Abnahme stehen aus.

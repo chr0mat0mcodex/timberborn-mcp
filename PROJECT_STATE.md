@@ -1,7 +1,7 @@
 # Projektstand
 
-Stand: 2026-09-20. Codeversion: **0.21.0**, Produktionsgraph und Lebenszustandskorrektur gebaut; Installation/Live-Abnahme ausstehend.
-Installiert bleibt **0.20.0**: 29 Leser live geprüft, danach Fehler bei weiter registrierten
+Stand: 2026-09-20. Codeversion: **0.21.0**, Produktionsgraph und Lebenszustandskorrektur gebaut und installiert; Live-Abnahme ausstehend.
+Installiert ist **0.21.0**, fünf Datei-Hashes geprüft und Konfiguration erhalten. Zuvor unter **0.20.0**: 29 Leser live geprüft, danach Fehler bei weiter registrierten
 verstorbenen Bibern gefunden (Bedürfniszählung 13 statt 11 lebender Biber).
 Sofort-Wegsuche einschließlich Unterbrechung/Wiederherstellung unter **0.19.1** live bestätigt. Farm-/Holzfällerreichweiten unter 0.19.2 über den konkreten Terrainzugriff bestätigt.
 Die Version im [Manifest](mod/Timberborn.AgentBridge/manifest.json) ist die Codeversion;
@@ -26,7 +26,7 @@ Die Version im [Manifest](mod/Timberborn.AgentBridge/manifest.json) ist die Code
 Rezepte, Gebäude/Baukosten, nominelle Energie und Schnitt-/Sammelquellen.
 Einmal je Szene, geprüfte Verweise und SHA-256-Revision. Ruinenerträge und spezielle
 Betriebsbedingungen sind explizite Lücken; [Vertrag](docs/production-dependency-graph.md).
-Installation, reale Antwortgröße und Live-Abnahme stehen aus.
+Reale Antwortgröße und Live-Abnahme stehen aus.
 
 ## Verifikation
 
