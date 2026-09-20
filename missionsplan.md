@@ -1108,3 +1108,19 @@ Zehn reine MCP-Aufrufe: 10 Worker, 3 beschäftigt, 7 unbeschäftigt. Zuordnungen
 Roster stabil, keine ungeklärten Referenzen. Lodge/Path ohne Arbeitsplatz korrekt
 als nicht verfügbar gemeldet. Spiel war pausiert und blieb unverändert. JobRunning
 ist auch in Pause möglich und kein Produktionsbeweis. Native Personalsteuerung offen.
+
+### 7.27 Zukunftsfeature: Frage-Popup mit Texteingabe im Spiel
+
+Auf Nutzerwunsch kurz erforscht: öffentliche InputBoxShower-API mit Textantwort-
+Callback sowie DialogBoxShower mit frei formulierbarer Nachricht/eigenem Inhalt
+vorhanden. Theoretisch machbar, noch nicht implementiert/live getestet. Vorgesehen:
+Frage mit ID öffnen, Antwort/Abbruch asynchron über MCP lesen, ein offener Dialog,
+Sessionbindung und sauberes Schließen. [Recherche und Zukunftsplan](docs/player-question-popup.md).
+Danach laufenden MCP-Ausbau mit regulärer Sollbesetzung fortsetzen.
+
+### 7.28 Reguläre Sollbesetzung vorbereitet
+
+Nach Popup-Recherche MCP-Entwicklung fortgesetzt: 0.10.0 mit eigenem geschütztem
+set_workplace_staffing. Sollwertvergleich, Spielmaximum, reguläre +/-Schritte,
+keine direkte Biberzuweisung. 191 Tests und Mod-Build erfolgreich; Installation
+und Hin-/Rücktest offen. [Vertrag](docs/workplace-staffing.md).

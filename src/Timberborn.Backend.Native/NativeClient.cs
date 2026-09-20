@@ -149,7 +149,7 @@ public sealed class NativeClient : IDisposable
             throw new InvalidDataException("Invalid building result");
         if (d.Details is { } b)
         {
-            if (result.BridgeVersion == "0.9.0" && b.Operations is null)
+            if (result.BridgeVersion is "0.9.0" or "0.10.0" && b.Operations is null)
                 throw new InvalidDataException("Missing operations contract");
             if (b.Operations is { } o)
             {
@@ -174,6 +174,19 @@ public sealed class NativeClient : IDisposable
                 (c.Materials.SiteStock is not null && !ValidGoods(c.Materials.SiteStock))))
                 throw new InvalidDataException("Invalid construction state");
         }
+        return result;
+    }
+    public async Task<BridgeEnvelope<NativeStaffingResult>> SetStaffing(BridgeRequest r, CancellationToken ct)
+    {
+        if (r.Route != "workplace-staffing") throw new ArgumentException();
+        var result = await Get<NativeStaffingResult>($"workplace-staffing?id={r.EntityId}&session={r.Session}&desiredWorkers={r.DesiredWorkers}&expectedDesiredWorkers={r.ExpectedDesiredWorkers}", ct, HttpMethod.Post);
+        var d = result.Data;
+        if (result.SessionId != r.Session || d.Id.ToString("D") != r.EntityId || string.IsNullOrEmpty(d.Template) || d.Template.Length > 160 ||
+            d.PreviousDesiredWorkers != r.ExpectedDesiredWorkers || d.RequestedDesiredWorkers != r.DesiredWorkers ||
+            d.ObservedDesiredWorkers < 0 || d.MaxWorkers < d.ObservedDesiredWorkers || d.AssignedWorkers < 0 ||
+            d.MaxWorkers < d.RequestedDesiredWorkers || d.Outcome is not ("applied" or "unconfirmed") ||
+            (d.Outcome == "applied" && d.ObservedDesiredWorkers != d.RequestedDesiredWorkers) || d.Limitations is null)
+            throw new InvalidDataException("Invalid staffing receipt");
         return result;
     }
     public async Task<BridgeEnvelope<NativeSimulation>> Simulation(CancellationToken ct)
@@ -221,7 +234,7 @@ public sealed class NativeClient : IDisposable
             await buffer.WriteAsync(bytes.AsMemory(0, count), budget.Token);
         }
         var result = JsonSerializer.Deserialize<BridgeEnvelope<T>>(buffer.ToArray(), NativeJson.Options);
-        if (result is null || result.SchemaVersion != 1 || result.BridgeVersion is not ("0.2.0" or "0.3.0" or "0.4.0" or "0.4.1" or "0.5.0" or "0.6.0" or "0.6.1" or "0.7.0" or "0.8.0" or "0.9.0") ||
+        if (result is null || result.SchemaVersion != 1 || result.BridgeVersion is not ("0.2.0" or "0.3.0" or "0.4.0" or "0.4.1" or "0.5.0" or "0.6.0" or "0.6.1" or "0.7.0" or "0.8.0" or "0.9.0" or "0.10.0") ||
             !Guid.TryParseExact(result.SessionId, "D", out var session) || session == Guid.Empty ||
             result.ObservedAtUtc == default || result.Data is null) throw new InvalidDataException("Invalid bridge envelope");
         return result;

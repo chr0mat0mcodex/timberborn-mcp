@@ -1,5 +1,11 @@
 # Kompatibilität
 
+## Buildstand 0.10.0 — 2026-09-20
+
+Sollbesetzung mit öffentlichen Workplace.IncreaseDesiredWorkers/DecreaseDesiredWorkers
+gebaut. 191 reguläre Tests, Mod-Build ohne Warnungen/Fehler. Noch nicht installiert
+oder live geprüft; 0.9.0 bleibt installierter/live bestätigter Stand.
+
 ## Live-Abnahme 0.9.0 — 2026-09-20
 
 Workforce-Roster und Gebäudebesetzung abgeglichen: 10 Worker, 3 beschäftigt, 7 frei,

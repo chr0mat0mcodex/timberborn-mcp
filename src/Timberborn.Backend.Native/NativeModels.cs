@@ -78,3 +78,6 @@ public sealed record NativeWorker(Guid Id, string WorkerType, bool Employed, boo
     string AssignmentStatus, NativeWorkplaceAssignment? Workplace);
 public sealed record NativeWorkforce(string Scope, int Offset, int Limit, int Total, int Employed, int Unemployed,
     NativeWorker[] Items, bool HasMore, string[] Limitations);
+public sealed record NativeStaffingResult(Guid Id, string Template, int PreviousDesiredWorkers,
+    int RequestedDesiredWorkers, int ObservedDesiredWorkers, int AssignedWorkers, int MaxWorkers,
+    string Outcome, string[] Limitations);

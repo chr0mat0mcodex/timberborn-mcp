@@ -18,12 +18,14 @@ public sealed class BridgeRequest
     public int Rotation { get; }
     public string Session { get; }
     public string EntityId { get; }
+    public int DesiredWorkers { get; }
+    public int ExpectedDesiredWorkers { get; }
     public int Speed { get; }
     public int ExpectedSpeed { get; }
     private BridgeRequest(string route, int x = 0, int y = 0, int z = 0, int width = 0, int height = 0, int depth = 0,
-        int offset = 0, int limit = 0, string template = "", int rotation = 0, string session = "", string entityId = "", int speed = 0, int expectedSpeed = 0)
+        int offset = 0, int limit = 0, string template = "", int rotation = 0, string session = "", string entityId = "", int speed = 0, int expectedSpeed = 0, int desiredWorkers = 0, int expectedDesiredWorkers = 0)
     { Route = route; X = x; Y = y; Z = z; Width = width; Height = height; Depth = depth;
-        Offset = offset; Limit = limit; Template = template; Rotation = rotation; Session = session; EntityId = entityId; Speed = speed; ExpectedSpeed = expectedSpeed; }
+        Offset = offset; Limit = limit; Template = template; Rotation = rotation; Session = session; EntityId = entityId; Speed = speed; ExpectedSpeed = expectedSpeed; DesiredWorkers = desiredWorkers; ExpectedDesiredWorkers = expectedDesiredWorkers; }
 
     public static BridgeRequest Parse(string path, NameValueCollection query)
     {
@@ -48,6 +50,15 @@ public sealed class BridgeRequest
                     CultureInfo.InvariantCulture, out var value) || value < min || value > max)
                 throw new ArgumentException("invalid_request");
             return value;
+        }
+        if (path == "/agent-api/v1/workplace-staffing" && query.Count == 4)
+        {
+            string Id(string key) {
+                var values = query.GetValues(key);
+                if (values is null || values.Length != 1 || !Guid.TryParseExact(values[0], "D", out var id) || id == Guid.Empty) throw new ArgumentException("invalid_identifier");
+                return id.ToString("D");
+            }
+            return new("workplace-staffing", session: Id("session"), entityId: Id("id"), desiredWorkers: Read("desiredWorkers", 0, 64), expectedDesiredWorkers: Read("expectedDesiredWorkers", 0, 64));
         }
         if (path == "/agent-api/v1/simulation-speed" && query.Count == 3)
         {

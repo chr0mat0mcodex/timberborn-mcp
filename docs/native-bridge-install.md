@@ -1,5 +1,9 @@
 # Eigene Timberborn Agent Bridge — 0.6.1
 
+Neu vorbereitet: 0.10.0 mit [regulärer Sollbesetzung](workplace-staffing.md).
+Eigene Freigaben enableStaffing / TIMBERBORN_ENABLE_STAFFING; Paketstandard aus.
+Installiert/live bestätigt bleibt 0.9.0 bis zum Update.
+
 Neu vorbereitet: 0.9.0 mit [Gebäude-Betriebsdiagnose](building-operations.md).
 Zusätzlich [kolonieweite Arbeitskräfteliste](workforce-roster.md) mit inspect_workforce.
 Keine zusätzlichen Aktionsfreigaben nötig.

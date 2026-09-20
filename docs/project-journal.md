@@ -1,5 +1,21 @@
 # Projektjournal
 
+## 2026-09-20 — Popup-Recherche und Sollbesetzung 0.10.0
+
+Nutzeridee für später kurz anhand öffentlicher Spielmetadaten geprüft:
+InputBoxShower mit Action<string>-Antwortcallback und DialogBoxShower mit eigener
+Nachricht/Inhalt vorhanden. Theoretisch machbar; Frage-ID, asynchrones Antwortlesen,
+Abbruch und Szenenwechsel als Zukunftsfeature dokumentiert. Kein Popup implementiert.
+Siehe [Popup-Konzept](player-question-popup.md) und Missionsplan 7.27.
+
+Danach freigegebenen MCP-Ausbau fortgesetzt: set_workplace_staffing mit eigener
+Freigabe, Session/Entity/Sollwertvergleich und regulären +/-Methoden. Nur fertige
+Arbeitsplätze, Ziel 0..64 und höchstens MaxWorkers; keine direkte Biberzuweisung.
+Teiländerungen als unconfirmed, niemals automatisch wiederholen/zurückrollen.
+191 reguläre Tests bestanden (178 Unit, 13 Integration), drei Live-Tests übersprungen.
+Mod 0.10.0 gebaut/gepackt ohne Warnungen/Fehler. Installiert/live bleibt 0.9.0;
+Update benötigt beendetes Spiel. [Vertrag und Live-Abnahme](workplace-staffing.md).
+
 ## 2026-09-20 — Workforce und Betriebsdiagnose live bestanden
 
 0.9.0 mit neun angebotenen Lesewerkzeugen; begrenzter Pilot mit zehn fachlichen

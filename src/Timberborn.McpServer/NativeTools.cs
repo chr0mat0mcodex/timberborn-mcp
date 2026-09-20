@@ -9,12 +9,13 @@ using Timberborn.Bridge.Core;
 
 namespace Timberborn.McpServer;
 
-public sealed class NativeTools(NativeClient client, bool enableValidation = false, bool enablePlacement = false, bool enableLodgePlacement = false, bool enableSpeedControl = false) : IDisposable
+public sealed class NativeTools(NativeClient client, bool enableValidation = false, bool enablePlacement = false, bool enableLodgePlacement = false, bool enableSpeedControl = false, bool enableStaffing = false) : IDisposable
 {
-    public static IReadOnlyList<Tool> Catalog(bool enableValidation = false, bool enablePlacement = false, bool enableLodgePlacement = false, bool enableSpeedControl = false)
+    public static IReadOnlyList<Tool> Catalog(bool enableValidation = false, bool enablePlacement = false, bool enableLodgePlacement = false, bool enableSpeedControl = false, bool enableStaffing = false)
     {
         var options = new JsonSerializerOptions(NativeJson.Options) { TypeInfoResolver = new DefaultJsonTypeInfoResolver() };
         var names = new List<string> { "timberborn_status", "inspect_colony", "inspect_map_region", "find_buildings", "inspect_build_catalog", "precheck_build_site", "inspect_building", "inspect_simulation", "inspect_workforce" };
+        if (enableStaffing) names.Add("set_workplace_staffing");
         if (enableSpeedControl) names.Add("set_simulation_speed");
         if (enableValidation) names.Add("validate_build_site");
         if (enablePlacement) names.Add("place_path"); if (enableLodgePlacement) names.Add("place_lodge");
@@ -24,9 +25,14 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
             bool validation = name == "validate_build_site";
             bool placement = name is "place_path" or "place_lodge";
             bool speed = name == "set_simulation_speed";
-            bool action = validation || placement || speed;
+            bool staffing = name == "set_workplace_staffing";
+            bool action = validation || placement || speed || staffing;
             bool site = name == "precheck_build_site" || validation || placement;
             var properties = new JsonObject();
+            if (staffing) {
+                properties["id"] = new JsonObject { ["type"] = "string", ["format"] = "uuid" };
+                foreach (var key in new[] { "desiredWorkers", "expectedDesiredWorkers" }) properties[key] = new JsonObject { ["type"] = "integer", ["minimum"] = 0, ["maximum"] = 64 };
+            }
             if (speed) foreach (var key in new[] { "speed", "expectedSpeed" }) properties[key] = new JsonObject { ["type"] = "integer", ["enum"] = new JsonArray(0, 1) };
             if (name == "inspect_building")
                 foreach (var key in new[] { "id", "session" }) properties[key] = new JsonObject { ["type"] = "string", ["format"] = "uuid" };
@@ -55,9 +61,11 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
                 "inspect_simulation" => typeof(NativeResult<NativeSimulation>),
                 "inspect_workforce" => typeof(NativeResult<NativeWorkforce>),
                 "set_simulation_speed" => typeof(NativeResult<NativeSpeedResult>),
+                "set_workplace_staffing" => typeof(NativeResult<NativeStaffingResult>),
                 _ => typeof(NativeResult<NativeSnapshot>) };
             return new Tool { Name = name,
-                Description = speed ? "Setzt Pause (0) oder Normalgeschwindigkeit (1). Eigene Freigabe in Mod und MCP, frische Session und expectedSpeed nötig. Vergleicht aktuellen Wert auf dem Spielthread; überschreibt keine abweichende Nutzereinstellung. Entsperrt keine Spielsperren. Kein automatisches Retry; inspect_simulation danach zwingend lesen. matchedImmediately ist nur eine unmittelbare Beobachtung, keine Garantie für tickende Simulation."
+                Description = staffing ? "Ändert reguläre Sollbesetzung eines fertigen Arbeitsplatzes. ID, aktuelle Session, gewünschte und zuletzt gelesene Sollbesetzung erforderlich. Eigenes Mod-/MCP-Opt-in; Bereich 0..64 und höchstens Spiel-Maximum. Nutzt reguläre +/-Methoden, keine direkte Arbeiterzuweisung. applied bestätigt nur Sollwert. Teiländerung bei unconfirmed/Fehler möglich: niemals automatisch wiederholen oder zurücksetzen; inspect_building und inspect_workforce nachlesen."
+                    : speed ? "Setzt Pause (0) oder Normalgeschwindigkeit (1). Eigene Freigabe in Mod und MCP, frische Session und expectedSpeed nötig. Vergleicht aktuellen Wert auf dem Spielthread; überschreibt keine abweichende Nutzereinstellung. Entsperrt keine Spielsperren. Kein automatisches Retry; inspect_simulation danach zwingend lesen. matchedImmediately ist nur eine unmittelbare Beobachtung, keine Garantie für tickende Simulation."
                     : name == "inspect_workforce" ? "Kolonieweite Zuordnung von Worker-Entities zu Arbeitsgebäuden, maximal 32 je Seite: Arbeiter-ID, WorkerType, Employed, JobRunning, Arbeitsplatz-ID/Vorlage/Position. Totals gelten für Worker-Komponenten, nicht für Bevölkerung oder Arbeitsfähigkeit. assigned/unassigned/unresolved beschreibt die Arbeitsplatzreferenz; Employed bleibt getrennt. Kein exakter Tätigkeitstyp und kein Produktionsbeweis. Seiten sind frische Beobachtungen; Session beachten. Benötigt Bridge 0.9.0."
                     : name == "inspect_simulation" ? "Liest SpeedManager.CurrentSpeed, Spieltag, Tagesfortschritt und vergangene Stunden. Keine gemessene Tickrate; eine Spielsperre kann Fortschritt verhindern. Benötigt Bridge 0.8.0."
                     : placement ? "Pilot: erteilt genau einen Auftrag für die angegebene Pilotvorlage (Path oder Lodge.Folktails) über den regulären Spielplatzierer, nach frischer Vorschauvalidierung. Benötigt aktuelle Session-ID und separates Mod-Opt-in. Weg und Lodge teilen sich einen Versuch je Sitzung, auch bei Ablehnung/Fehler. applied bestätigt Entity-ID, Vorlage und Position; finished separat. Bei Fehler/unconfirmed niemals automatisch wiederholen oder zurücksetzen; find_buildings zur Klärung lesen. Keine Erreichbarkeitsgarantie."
@@ -94,6 +102,17 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
             if (name == "place_path" && !enablePlacement) throw new ArgumentException();
             if (name == "place_lodge" && !enableLodgePlacement) throw new ArgumentException();
             if (name == "inspect_simulation" && !args.EnumerateObject().Any()) return Wrap(await client.Simulation(ct));
+            if (name == "set_workplace_staffing")
+            {
+                if (!enableStaffing) throw new ArgumentException();
+                var query = new NameValueCollection();
+                foreach (var p in args.EnumerateObject()) {
+                    if ((p.Name is "id" or "session") && p.Value.ValueKind == JsonValueKind.String) query.Add(p.Name, p.Value.GetString());
+                    else if (p.Value.ValueKind == JsonValueKind.Number && p.Value.TryGetInt32(out var v)) query.Add(p.Name, v.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                    else throw new ArgumentException();
+                }
+                return Wrap(await client.SetStaffing(BridgeRequest.Parse("/agent-api/v1/workplace-staffing", query), ct));
+            }
             if (name == "set_simulation_speed")
             {
                 if (!enableSpeedControl) throw new ArgumentException();
@@ -129,14 +148,14 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
             if (args.EnumerateObject().Any() || name is not ("inspect_colony" or "timberborn_status")) throw new ArgumentException();
             var snapshot = await client.Snapshot(ct);
             return name == "inspect_colony" ? Wrap(snapshot) : Wrap(new BridgeEnvelope<NativeStatus>(1, snapshot.SessionId,
-                snapshot.ObservedAtUtc, snapshot.BridgeVersion, new("reachable", snapshot.BridgeVersion, enablePlacement || enableLodgePlacement || enableSpeedControl)));
+                snapshot.ObservedAtUtc, snapshot.BridgeVersion, new("reachable", snapshot.BridgeVersion, enablePlacement || enableLodgePlacement || enableSpeedControl || enableStaffing)));
         }
         catch (Exception ex) when (ex is ArgumentException or HttpRequestException or IOException or InvalidDataException or JsonException or UnauthorizedAccessException or OperationCanceledException)
         {
             string code = ex is ArgumentException ? "invalid_argument" : ex is UnauthorizedAccessException ? "authentication_failed"
                 : ex is JsonException or InvalidDataException ? "backend_incompatible" : "backend_unavailable";
             return (JsonObject)JsonSerializer.SerializeToNode(new NativeResult<object>(1, "error", null,
-                new("native", false, null, null), new(code, name is "place_path" or "place_lodge" or "set_simulation_speed" ? "Aktionsergebnis möglicherweise unbestätigt. Nur lesend klären; niemals automatisch erneut ausführen." : "Native Bridge: Parameter, Verbindung oder Daten prüfen.", code == "backend_unavailable" && name is not ("validate_build_site" or "place_path" or "place_lodge" or "set_simulation_speed"))), NativeJson.Options)!;
+                new("native", false, null, null), new(code, name is "place_path" or "place_lodge" or "set_simulation_speed" or "set_workplace_staffing" ? "Aktionsergebnis möglicherweise unbestätigt. Nur lesend klären; niemals automatisch erneut ausführen." : "Native Bridge: Parameter, Verbindung oder Daten prüfen.", code == "backend_unavailable" && name is not ("validate_build_site" or "place_path" or "place_lodge" or "set_simulation_speed" or "set_workplace_staffing"))), NativeJson.Options)!;
         }
     }
     public void Dispose() => client.Dispose();

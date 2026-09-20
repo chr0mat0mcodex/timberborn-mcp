@@ -26,10 +26,10 @@ public sealed class NativeBridgeTests
         reservation.Start(); int port = ((IPEndPoint)reservation.LocalEndpoint).Port; reservation.Stop();
         var token = Convert.ToHexString(System.Security.Cryptography.RandomNumberGenerator.GetBytes(32));
         using var queue = new MainThreadQueue();
-        using var bridge = new BridgeHttpServer(port, token, queue, enableValidation, enablePlacement, enableLodgePlacement, enableSpeedControl: enableLodgePlacement);
+        using var bridge = new BridgeHttpServer(port, token, queue, enableValidation, enablePlacement, enableLodgePlacement, enableSpeedControl: enableLodgePlacement, enableStaffing: enableValidation);
         bridge.Start();
         int observations = 0;
-        float currentSpeed = 1;
+        float currentSpeed = 1; int desiredWorkers = 2;
         var session = Guid.NewGuid().ToString("D");
         var placementGate = new SinglePlacementGate();
         using var pumpStop = CancellationTokenSource.CreateLinkedTokenSource(ct);
@@ -44,6 +44,7 @@ public sealed class NativeBridgeTests
                         Interlocked.Increment(ref observations);
                         object data = r.Route switch
                         {
+                            "workplace-staffing" when r.Session == session && r.ExpectedDesiredWorkers == desiredWorkers && r.DesiredWorkers <= 4 => new NativeStaffingResult(Guid.Parse(r.EntityId), "DistrictCenter.Folktails", desiredWorkers, r.DesiredWorkers, desiredWorkers = r.DesiredWorkers, 2, 4, "applied", ["synthetic_test"]),
                             "simulation" => new NativeSimulation(currentSpeed, 1, 0.5f, 12),
                             "simulation-speed" when r.Session == session && r.ExpectedSpeed == currentSpeed => new NativeSpeedResult(r.Speed, currentSpeed, true, new NativeSimulation(currentSpeed = r.Speed, 1, 0.5f, 12), ["synthetic_test"]),
                             "snapshot" => Snapshot(),
@@ -64,7 +65,7 @@ public sealed class NativeBridgeTests
                                 Guid.NewGuid(), "applied", r.Template == "Path", true, ["synthetic_test"])),
                             _ => throw new ArgumentException()
                         };
-                        return JsonSerializer.Serialize(new BridgeEnvelope<object>(1, session, DateTimeOffset.UtcNow, "0.8.0", data), NativeJson.Options);
+                        return JsonSerializer.Serialize(new BridgeEnvelope<object>(1, session, DateTimeOffset.UtcNow, "0.10.0", data), NativeJson.Options);
                     });
                     await Task.Delay(5, pumpStop.Token);
                 }
@@ -113,15 +114,16 @@ public sealed class NativeBridgeTests
                     ["TIMBERBORN_ENABLE_VALIDATION"] = enableValidation ? "1" : "0",
                     ["TIMBERBORN_ENABLE_PLACEMENT"] = enablePlacement ? "1" : "0",
                     ["TIMBERBORN_ENABLE_LODGE_PLACEMENT"] = enableLodgePlacement ? "1" : "0",
-                    ["TIMBERBORN_ENABLE_SPEED_CONTROL"] = enableLodgePlacement ? "1" : "0"
+                    ["TIMBERBORN_ENABLE_SPEED_CONTROL"] = enableLodgePlacement ? "1" : "0",
+                    ["TIMBERBORN_ENABLE_STAFFING"] = enableValidation ? "1" : "0"
                 }
             }), cancellationToken: ct);
             var tools = await client.ListToolsAsync(cancellationToken: ct);
             var expected = new List<string> { "find_buildings", "inspect_build_catalog", "inspect_building", "inspect_colony", "inspect_map_region", "inspect_simulation", "inspect_workforce", "precheck_build_site", "timberborn_status" };
-            if (enableValidation) expected.Add("validate_build_site");
+            if (enableValidation) { expected.Add("validate_build_site"); expected.Add("set_workplace_staffing"); }
             if (enablePlacement) expected.Add("place_path"); if (enableLodgePlacement) { expected.Add("place_lodge"); expected.Add("set_simulation_speed"); }
             Assert.Equal(expected.Order(), tools.Select(t => t.Name).Order());
-            Assert.All(tools, t => { Assert.Equal(t.Name is not ("validate_build_site" or "place_path" or "place_lodge" or "set_simulation_speed"), t.ProtocolTool.Annotations!.ReadOnlyHint); Assert.NotNull(t.ProtocolTool.OutputSchema); });
+            Assert.All(tools, t => { Assert.Equal(t.Name is not ("validate_build_site" or "place_path" or "place_lodge" or "set_simulation_speed" or "set_workplace_staffing"), t.ProtocolTool.Annotations!.ReadOnlyHint); Assert.NotNull(t.ProtocolTool.OutputSchema); });
             var colony = await client.CallToolAsync("inspect_colony", cancellationToken: ct);
             Assert.False(colony.IsError);
             var json = colony.StructuredContent!.Value;
@@ -133,7 +135,7 @@ public sealed class NativeBridgeTests
             Assert.False(map.IsError);
             Assert.Equal(0.5f, map.StructuredContent!.Value.GetProperty("data").GetProperty("cells")[0].GetProperty("waterDepth").GetSingle());
             var status = await client.CallToolAsync("timberborn_status", cancellationToken: ct);
-            Assert.Equal(enablePlacement || enableLodgePlacement, status.StructuredContent!.Value.GetProperty("data").GetProperty("writesEnabled").GetBoolean());
+            Assert.Equal(enablePlacement || enableLodgePlacement || enableValidation, status.StructuredContent!.Value.GetProperty("data").GetProperty("writesEnabled").GetBoolean());
             var objects = await client.CallToolAsync("find_buildings", new Dictionary<string, object?> { ["offset"] = 0, ["limit"] = 32 }, cancellationToken: ct);
             Assert.False(objects.IsError);
             Assert.Equal(0, objects.StructuredContent!.Value.GetProperty("data").GetProperty("total").GetInt32());
@@ -177,6 +179,17 @@ public sealed class NativeBridgeTests
                 var repeated = await client.CallToolAsync("place_lodge", args, cancellationToken: ct);
                 Assert.True(repeated.IsError);
                 Assert.False(repeated.StructuredContent!.Value.GetProperty("error").GetProperty("retryable").GetBoolean());
+            }
+            if (enableValidation) {
+                var id = Guid.NewGuid().ToString("D");
+                foreach (var target in new[] { 3, 2 }) {
+                    var staffed = await client.CallToolAsync("set_workplace_staffing", new Dictionary<string, object?> { ["id"] = id, ["session"] = session, ["desiredWorkers"] = target, ["expectedDesiredWorkers"] = desiredWorkers }, cancellationToken: ct);
+                    Assert.False(staffed.IsError);
+                    Assert.Equal(target, staffed.StructuredContent!.Value.GetProperty("data").GetProperty("observedDesiredWorkers").GetInt32());
+                }
+                var stale = await client.CallToolAsync("set_workplace_staffing", new Dictionary<string, object?> { ["id"] = id, ["session"] = session, ["desiredWorkers"] = 0, ["expectedDesiredWorkers"] = 3 }, cancellationToken: ct);
+                Assert.True(stale.IsError); Assert.Equal(2, desiredWorkers);
+                Assert.False(stale.StructuredContent!.Value.GetProperty("error").GetProperty("retryable").GetBoolean());
             }
             var workforce = await client.CallToolAsync("inspect_workforce", new Dictionary<string, object?> { ["offset"] = 0, ["limit"] = 32 }, cancellationToken: ct);
             Assert.False(workforce.IsError);
