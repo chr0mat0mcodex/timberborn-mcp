@@ -9,9 +9,9 @@ using Timberborn.Bridge.Core;
 
 namespace Timberborn.McpServer;
 
-public sealed class NativeTools(NativeClient client, bool enableValidation = false, bool enablePlacement = false, bool enableLodgePlacement = false, bool enableSpeedControl = false, bool enableStaffing = false, bool enablePriorities = false, bool enableAreas = false) : IDisposable
+public sealed class NativeTools(NativeClient client, bool enableValidation = false, bool enablePlacement = false, bool enableLodgePlacement = false, bool enableSpeedControl = false, bool enableStaffing = false, bool enablePriorities = false, bool enableAreas = false, bool enableRemoval = false) : IDisposable
 {
-    public static IReadOnlyList<Tool> Catalog(bool enableValidation = false, bool enablePlacement = false, bool enableLodgePlacement = false, bool enableSpeedControl = false, bool enableStaffing = false, bool enablePriorities = false, bool enableAreas = false)
+    public static IReadOnlyList<Tool> Catalog(bool enableValidation = false, bool enablePlacement = false, bool enableLodgePlacement = false, bool enableSpeedControl = false, bool enableStaffing = false, bool enablePriorities = false, bool enableAreas = false, bool enableRemoval = false)
     {
         var options = new JsonSerializerOptions(NativeJson.Options) { TypeInfoResolver = new DefaultJsonTypeInfoResolver() };
         var names = new List<string> { "timberborn_status", "inspect_colony", "inspect_map_region", "find_buildings", "inspect_build_catalog", "precheck_build_site", "inspect_building", "inspect_simulation", "inspect_workforce" };
@@ -79,7 +79,7 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
                     : "Prüft die eigene lesende Spielmod. Kein Fallback auf Fremdmods, keine Schreibfunktionen.",
                 InputSchema = JsonSerializer.SerializeToElement(input), OutputSchema = JsonSerializer.SerializeToElement(options.GetJsonSchemaAsNode(result)),
                 Annotations = new() { ReadOnlyHint = !action, DestructiveHint = action, IdempotentHint = !action, OpenWorldHint = false } };
-        }).Concat(ManagementTools.Catalog(enablePriorities, enableAreas)).ToArray();
+        }).Concat(ManagementTools.Catalog(enablePriorities, enableAreas)).Concat(RemovalTools.Catalog(enableRemoval)).ToArray();
     }
     public async Task<JsonObject> Invoke(string name, JsonElement args, CancellationToken ct)
     {
@@ -88,6 +88,7 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
         try
         {
             if (args.ValueKind != JsonValueKind.Object) throw new ArgumentException();
+            if (RemovalTools.Handles(name)) return await RemovalTools.Invoke(client,name,args,enableRemoval,ct);
             if (ManagementTools.Handles(name)) return await ManagementTools.Invoke(client,name,args,enablePriorities,enableAreas,ct);
             if (name == "inspect_building")
             {
@@ -149,14 +150,14 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
             if (args.EnumerateObject().Any() || name is not ("inspect_colony" or "timberborn_status")) throw new ArgumentException();
             var snapshot = await client.Snapshot(ct);
             return name == "inspect_colony" ? Wrap(snapshot) : Wrap(new BridgeEnvelope<NativeStatus>(1, snapshot.SessionId,
-                snapshot.ObservedAtUtc, snapshot.BridgeVersion, new("reachable", snapshot.BridgeVersion, enablePlacement || enableLodgePlacement || enableSpeedControl || enableStaffing || enablePriorities || enableAreas)));
+                snapshot.ObservedAtUtc, snapshot.BridgeVersion, new("reachable", snapshot.BridgeVersion, enablePlacement || enableLodgePlacement || enableSpeedControl || enableStaffing || enablePriorities || enableAreas || enableRemoval)));
         }
         catch (Exception ex) when (ex is ArgumentException or HttpRequestException or IOException or InvalidDataException or JsonException or UnauthorizedAccessException or OperationCanceledException)
         {
             string code = ex is ArgumentException ? "invalid_argument" : ex is UnauthorizedAccessException ? "authentication_failed"
                 : ex is JsonException or InvalidDataException ? "backend_incompatible" : "backend_unavailable";
             return (JsonObject)JsonSerializer.SerializeToNode(new NativeResult<object>(1, "error", null,
-                new("native", false, null, null), new(code, name is "place_path" or "place_lodge" or "set_simulation_speed" or "set_workplace_staffing" or "set_building_priority" or "set_area" ? "Aktionsergebnis möglicherweise unbestätigt. Nur lesend klären; niemals automatisch erneut ausführen." : "Native Bridge: Parameter, Verbindung oder Daten prüfen.", code == "backend_unavailable" && name is not ("validate_build_site" or "place_path" or "place_lodge" or "set_simulation_speed" or "set_workplace_staffing" or "set_building_priority" or "set_area"))), NativeJson.Options)!;
+                new("native", false, null, null), new(code, name is "place_path" or "place_lodge" or "set_simulation_speed" or "set_workplace_staffing" or "set_building_priority" or "set_area" or "demolish_building" or "remove_planted" or "remove_vegetation" or "remove_debris" ? "Aktionsergebnis möglicherweise unbestätigt. Nur lesend klären; niemals automatisch erneut ausführen." : "Native Bridge: Parameter, Verbindung oder Daten prüfen.", code == "backend_unavailable" && name is not ("validate_build_site" or "place_path" or "place_lodge" or "set_simulation_speed" or "set_workplace_staffing" or "set_building_priority" or "set_area" or "demolish_building" or "remove_planted" or "remove_vegetation" or "remove_debris"))), NativeJson.Options)!;
         }
     }
     public void Dispose() => client.Dispose();

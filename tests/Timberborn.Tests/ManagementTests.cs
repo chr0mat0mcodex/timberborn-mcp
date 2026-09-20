@@ -18,7 +18,7 @@ public sealed class ManagementTests
         Assert.Throws<ArgumentException>(()=>ManagementRequest.Parse("/agent-api/v1/set-priority",q));
     }
     [Theory]
-    [InlineData("width","5")][InlineData("height","0")][InlineData("kind","tapping")][InlineData("session","bad")][InlineData("operation","destroy")][InlineData("expectedResource","")][InlineData("resource","Pine")][InlineData("x","-1")]
+    [InlineData("width","5")][InlineData("height","0")][InlineData("kind","invalid")][InlineData("session","bad")][InlineData("operation","destroy")][InlineData("expectedResource","")][InlineData("resource","Pine")][InlineData("x","-1")]
     public void RejectsUnsafeAreaArguments(string key,string value)
     {
         var q=Area();q[key]=value;

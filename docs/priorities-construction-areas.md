@@ -60,3 +60,9 @@ keine freien HTTP-, Reflexions- oder Spielkonsolenwerkzeuge.
    und erneut lesen. Bestehende Nutzerflächen erhalten; keine großen Flächenversuche.
 5. Pflanzmarkierung samt regulärer Verfügbarkeit prüfen. Unterstützte Schnittstelle
    von tatsächlicher Pflanzung, Ernte und Erreichbarkeit getrennt bewerten.
+
+## Fortschreibung 0.13.0
+
+Die oben für 0.12.0 beschriebene tapping-Sperre ist ersetzt: auf Nutzerwunsch als
+Kiefernschutz durch Entfernen regulärer Fällmarkierungen implementiert. Kein eigener
+Zapfzonen-Datentyp im Spiel. [Aktueller Vertrag](removal-and-pine-protection.md).

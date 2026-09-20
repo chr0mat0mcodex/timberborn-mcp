@@ -134,3 +134,15 @@ WorkplacePriority, BuilderPrioritizable, TreeCuttingArea und PlantingService wer
 verwendet. PlantingTool-Konstruktion zur Sperrabfrage kompiliert, DI und Verhalten
 müssen im Spiel noch bestätigt werden. Keine unabhängige tapping-Markierung belegt.
 Installierter Live-Stand bleibt 0.11.0 bis zum nächsten gesicherten Modwechsel.
+
+## Agent Bridge 0.13.0 — gebaut, noch nicht live geprüft
+
+255 reguläre Tests bestanden; 3 Live-Tests übersprungen. Mod-Build gegen vorhandene
+Spielversion ohne Fehler/Warnungen. Neue öffentliche APIs: BlockObject.CanDelete,
+EntityService.Delete, Demolishable.Mark/Unmark, RecoveredGoodStack.Delete. Verhalten
+und Folgeereignisse im Spiel noch nicht abgenommen. Kein Saveformat-/Fremdmod-Zuwachs.
+Öffentliche NaturalResource-/Plantable-Signaturen liefern keine Herkunftshistorie.
+Die Kategorien planted/vegetation basieren auf aktueller Pflanzmarkierung und sind
+keine belegte Unterscheidung zwischen natürlich gewachsen und selbst gepflanzt.
+Installierter Stand weiterhin 0.11.0. 0.13.0 enthält auch die ungetesteten Erweiterungen
+von 0.12.0; beide benötigen die gemeinsame nächste Live-Abnahme.

@@ -39,12 +39,13 @@ public sealed class ManagementRequest
             if(r.Route=="areas"){r.Kind=Text("kind");if(!IsKind(r.Kind))throw new ArgumentException();}return r;
         }
         if(r.Route=="set-area" && q.Count==10){
-            r.Kind=Text("kind");if(!IsKind(r.Kind)||r.Kind=="tapping")throw new ArgumentException("unsupported_area_kind");
+            r.Kind=Text("kind");if(!IsKind(r.Kind))throw new ArgumentException("unsupported_area_kind");
             r.Operation=Text("operation");if(r.Operation is not ("mark" or "remove"))throw new ArgumentException();
+            if(r.Kind=="tapping"&&r.Operation!="mark")throw new ArgumentException("use_tree_cutting_to_reenable_cutting");
             r.Resource=Text("resource");r.ExpectedResource=Text("expectedResource");r.Session=Id("session");
             r.X=Number("x",0,4095);r.Y=Number("y",0,4095);r.Z=Number("z",0,4095);r.Width=Number("width",1,4);r.Height=Number("height",1,4);
-            if(r.ExpectedResource.Length==0 || (r.Kind=="tree_cutting" && (r.Resource!="" || r.ExpectedResource is not ("unmarked" or "marked"))) ||
-                (r.Operation=="remove" && r.Resource!="") || (r.Kind!="tree_cutting" && r.Operation=="mark" && r.Resource.Length==0))throw new ArgumentException();
+            if(r.ExpectedResource.Length==0 || ((r.Kind is "tree_cutting" or "tapping") && (r.Resource!="" || r.ExpectedResource is not ("unmarked" or "marked"))) ||
+                (r.Operation=="remove" && r.Resource!="") || ((r.Kind is not ("tree_cutting" or "tapping")) && r.Operation=="mark" && r.Resource.Length==0))throw new ArgumentException();
             return r;
         }
         throw new ArgumentException("invalid_management_route");

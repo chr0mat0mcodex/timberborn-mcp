@@ -16,6 +16,7 @@ var scenario = Environment.GetEnvironmentVariable("TIMBERBORN_FAKE_SCENARIO") ??
 var writesEnabled = Environment.GetEnvironmentVariable("TIMBERBORN_ENABLE_WRITES") == "1";
 var validationEnabled = Environment.GetEnvironmentVariable("TIMBERBORN_ENABLE_VALIDATION") == "1";
 var prioritiesEnabled = Environment.GetEnvironmentVariable("TIMBERBORN_ENABLE_PRIORITIES") == "1";
+var removalEnabled = Environment.GetEnvironmentVariable("TIMBERBORN_ENABLE_REMOVAL") == "1";
 var areasEnabled = Environment.GetEnvironmentVariable("TIMBERBORN_ENABLE_AREAS") == "1";
 var staffingEnabled = Environment.GetEnvironmentVariable("TIMBERBORN_ENABLE_STAFFING") == "1";
 var speedControlEnabled = Environment.GetEnvironmentVariable("TIMBERBORN_ENABLE_SPEED_CONTROL") == "1";
@@ -36,10 +37,10 @@ ITimberbornReadBackend? backend = backendName switch
     _ => throw new InvalidOperationException("Unbekanntes Backend.")
 };
 using var native = backendName == "native" ? new NativeTools(new NativeClient(NativeConfiguration.Load(
-    Environment.GetEnvironmentVariable("TIMBERBORN_NATIVE_CONFIG") ?? throw new InvalidOperationException("TIMBERBORN_NATIVE_CONFIG fehlt."))), validationEnabled, placementEnabled, lodgePlacementEnabled, speedControlEnabled, staffingEnabled, prioritiesEnabled, areasEnabled) : null;
+    Environment.GetEnvironmentVariable("TIMBERBORN_NATIVE_CONFIG") ?? throw new InvalidOperationException("TIMBERBORN_NATIVE_CONFIG fehlt."))), validationEnabled, placementEnabled, lodgePlacementEnabled, speedControlEnabled, staffingEnabled, prioritiesEnabled, areasEnabled, removalEnabled) : null;
 var service = backend is null ? null : new ObservationService(backend);
 var actions = backend is null ? null : new BuildingActionService(backend, (ITimberbornWriteBackend)backend);
-var tools = native is null ? ToolCatalog.Create(writesEnabled) : NativeTools.Catalog(validationEnabled, placementEnabled, lodgePlacementEnabled, speedControlEnabled, staffingEnabled, prioritiesEnabled, areasEnabled);
+var tools = native is null ? ToolCatalog.Create(writesEnabled) : NativeTools.Catalog(validationEnabled, placementEnabled, lodgePlacementEnabled, speedControlEnabled, staffingEnabled, prioritiesEnabled, areasEnabled, removalEnabled);
 var builder = Host.CreateApplicationBuilder(new HostApplicationBuilderSettings { Args = [], DisableDefaults = true });
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole(o => o.LogToStandardErrorThreshold = LogLevel.Trace);

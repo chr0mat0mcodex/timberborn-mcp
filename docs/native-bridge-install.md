@@ -148,3 +148,11 @@ In bridge.local.json enablePriorities bzw. enableAreas aktivieren und im gezielt
 MCP-Testprozess TIMBERBORN_ENABLE_PRIORITIES=1 bzw. TIMBERBORN_ENABLE_AREAS=1 setzen.
 Standardstart und Standardtests bleiben ohne Schreibfreigaben. Mod nur bei beendetem
 Spiel ersetzen; private Konfiguration und bestehende Marketplace-Metadaten erhalten.
+
+## Erweiterung 0.13.0
+
+[Kiefernschutz und Entfernung](removal-and-pine-protection.md): tapping entfernt jetzt
+Fällmarkierungen. Ein zusätzliches Lesewerkzeug (insgesamt 14) und vier getrennte
+Entfernungswerkzeuge. enableRemoval und TIMBERBORN_ENABLE_REMOVAL=1 sind unabhängig
+von Flächen-/Prioritätsfreigaben nötig. Bestehende Konfiguration beim Update erhalten;
+Abriss zunächst deaktiviert lassen, bis ein passendes Testziel feststeht.

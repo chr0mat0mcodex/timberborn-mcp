@@ -33,7 +33,7 @@ public sealed partial class NativeClient
     {
         string E(string s)=>Uri.EscapeDataString(s);
         var result=await Get<NativeAreaChange>($"set-area?kind={r.Kind}&operation={r.Operation}&resource={E(r.Resource)}&expectedResource={E(r.ExpectedResource)}&x={r.X}&y={r.Y}&z={r.Z}&width={r.Width}&height={r.Height}&session={r.Session}",ct,HttpMethod.Post);var d=result.Data;
-        string desired=r.Operation=="remove"?"unmarked":r.Kind=="tree_cutting"?"marked":r.Resource;
+        string desired=r.Operation=="remove"||r.Kind=="tapping"?"unmarked":r.Kind=="tree_cutting"?"marked":r.Resource;
         if(result.SessionId!=r.Session||d.Kind!=r.Kind||d.Operation!=r.Operation||d.Outcome is not ("applied" or "unconfirmed")||d.Items is null||d.Items.Length!=r.Width*r.Height||!ValidCells(d.Items)||d.Items.Any(i=>i.Position.X<r.X||i.Position.X>=r.X+r.Width||i.Position.Y<r.Y||i.Position.Y>=r.Y+r.Height||i.Position.Z!=r.Z||d.Outcome=="applied"&&i.Resource!=desired)||d.Limitations is null)throw new InvalidDataException("Invalid area change");return result;
     }
     private static bool ValidCells(NativeAreaCell[] cells)=>cells.All(c=>c is not null&&c.Position is not null&&c.Position.X>=0&&c.Position.Y>=0&&c.Position.Z>=0&&!string.IsNullOrEmpty(c.Resource)&&c.Resource.Length<=160)&&cells.Select(c=>c.Position).Distinct().Count()==cells.Length;

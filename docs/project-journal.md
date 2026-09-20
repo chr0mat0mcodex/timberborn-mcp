@@ -661,3 +661,24 @@ Zapfmarkierung nicht belegt und ausdrücklich unsupported. Details und Live-Abna
 Spiel läuft noch mit 0.11.0. Kein Live-Prioritätstest behauptet: bisher wurde nur
 Sollbesetzung getestet. Nutzer um Speichern/Beenden für sicheren Modwechsel gebeten.
 Installation und Live-Abnahme von 0.12.0 stehen aus.
+
+## 2026-09-20 — 0.13.0 Kiefernschutz und Entfernung vorbereitet
+
+255 reguläre Tests bestanden (242 Unit-, 13 Integrationstests); drei Live-Tests
+übersprungen. Lösung und Spielmod ohne Warnungen/Fehler gebaut, separates lokales
+Installationspaket erzeugt. 14 native Lesewerkzeuge plus vier separat gesperrte
+Entfernungswerkzeuge. stdio/HTTP-Integration prüft Kategorien und Freigaben synthetisch;
+Kiefernschutz-Antwort muss entfernte Fällmarkierung bestätigen.
+
+Nutzerdefinition tapping umgesetzt: Fällmarkierungen im gewählten Bereich entfernen;
+Abfrage liefert abgeleitete unmarkierte Kiefern, keine eigene persistierte Zone.
+Gebäude/Wege über regulären Entity-Lebenszyklus, Schutt über RecoveredGoodStack.Delete;
+Vegetation über Biber-Entfernungsaufträge. Frische Zielprüfung und CanDelete-Sperren,
+kein Force-Delete. Historisch selbst gepflanzt öffentlich nicht belegbar; stattdessen
+explizit passende aktuelle Pflanzmarkierung, Herkunft unknown. Ruinen nicht als Schutt.
+
+Bauplatz-Hindernisprüfung existiert bereits; neue regionale Objektabfrage liefert
+zusätzlich Identitäten/Kategorien. Keine vollständige Baufreigabe daraus ableiten.
+[Vertrag](removal-and-pine-protection.md). Timberborn weiterhin geöffnet; installierte
+0.11.0 unverändert. Keine realen Objekte entfernt. Live-Abnahme einschließlich
+Arbeitsplatz-/Baustellenpriorität bleibt nach Installation erforderlich.

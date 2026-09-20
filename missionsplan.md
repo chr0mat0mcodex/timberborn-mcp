@@ -1162,3 +1162,16 @@ Nutzerstart begrenzten Hin-/Rücktest mit separatem Zustandsabgleich ausführen.
 
 [Vertrag und Abnahmeplan](docs/priorities-construction-areas.md). Der frühere Personaltest
 betraf Sollbesetzung; Priorisierung ist noch nicht live bestätigt.
+
+### 7.33 Kiefernschutz, getrennte Entfernung und Hindernisse (0.13.0)
+
+- [x] tapping als Entfernen der Fällmarkierung umgesetzt; abgeleitete geschützte Kiefern abfragbar.
+- [x] Gebäude, Pflanzen auf Pflanzmarkierung, übrige Vegetation und Schutt getrennte Werkzeuge.
+- [x] Vorabfrage mit Ziel-IDs, Kategorie, Position, regulärer Löschbarkeit und Auftragsstatus.
+- [x] Bestehende Bauplatz-Hindernisprüfung geprüft; gezielte Objektabfrage ergänzt.
+- [ ] Installation und Live-Abnahme; Prioritätstest aus 7.32 weiterhin offen.
+- [ ] Historische Pflanzenherkunft bleibt unbekannt, keine falsche Herkunftsklassifizierung.
+
+Ersetzt die bisher offene tapping-Semantik aus 7.32: keine neue native Zone, sondern
+vom Nutzer gewünschter Kiefernschutz über reguläre Fällmarkierungen. Keine automatische
+Harzernte behaupten. [Vertrag und Grenzen](docs/removal-and-pine-protection.md).

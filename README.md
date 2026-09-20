@@ -53,7 +53,7 @@ Alle Stufen live bestätigt; Simulation abschließend 1×.
 Für die eigene Bridge: `scripts/start-native.ps1 -ConfigPath '<private Konfiguration>'`;
 Build und nativen Lesetest mit `scripts/verify.ps1 -NativeConfig '<private Konfiguration>'`
 ausführen. Beide Abläufe sind in der Installationsanleitung beschrieben.
-224 reguläre Tests bestanden; drei separate Live-Tests im Standardlauf übersprungen.
+255 reguläre Tests bestanden; drei separate Live-Tests im Standardlauf übersprungen.
 Nativer lesender MCP-Livetest zuletzt mit 0.6.1 erfolgreich.
 Auch mit ausschließlich eigener Bridge laut Nutzer-Mod-Auswahl: alle sechs nativen
 Lesewerkzeuge erneut live erfolgreich (0.3.0). Keine Fremdmod für diesen Zugriff erforderlich.
@@ -169,3 +169,9 @@ Fremdmod-Routen können auch bei GET Änderungen ausführen; deshalb gibt es kei
 13 native Lesewerkzeuge; Arbeitsplatz-/Baupriorität und Flächenmarkierungen separat
 freischaltbar. Implementierung vorbereitet, Live-Abnahme offen. Zapfflächen ausdrücklich
 nicht als eigenständige Markierungsart unterstützt.
+
+0.13.0 ergänzt [Kiefernschutz und getrennte Entfernung](docs/removal-and-pine-protection.md).
+tapping entfernt Fällmarkierungen; Gebäude, Pflanzen auf Pflanzmarkierung, übrige
+Vegetation und Schutt besitzen getrennte Werkzeuge. Hindernisse vor Bauvorhaben sind
+bereits prüfbar; eine Objektabfrage ergänzt jetzt die konkreten Ziel-IDs.
+14 native Lesewerkzeuge. Noch nicht installiert/live abgenommen.

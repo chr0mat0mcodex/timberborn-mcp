@@ -90,3 +90,6 @@ public sealed record NativeAreaTypes(NativeAreaKind[] Kinds, NativePlantOption[]
 public sealed record NativeAreaCell(Position Position, string Resource);
 public sealed record NativeAreas(string Kind, bool Supported, int Offset, int Limit, int? Total, NativeAreaCell[] Items, bool HasMore, string[] Limitations);
 public sealed record NativeAreaChange(string Kind, string Operation, string Outcome, NativeAreaCell[] Items, string[] Limitations);
+public sealed record NativeRemovalTarget(Guid Id,string Kind,string Template,Position Position,string Mode,bool CanDelete,bool Marked,string PlantOrigin,string Classification);
+public sealed record NativeRemovalTargets(string Kind,int Offset,int Limit,int Total,NativeRemovalTarget[] Items,bool HasMore,string[] Limitations);
+public sealed record NativeRemoval(Guid Id,string Kind,string Template,Position Position,string Operation,string Outcome,bool Removed,bool? Marked,string[] Limitations);
