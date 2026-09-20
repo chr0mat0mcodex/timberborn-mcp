@@ -876,3 +876,8 @@ Terrainseiten, Entwicklerwerkzeuge, Hexform und übergroße Geometrie weiterhin 
 
 Patchprüfung: 318 reguläre Tests bestanden (305 Unit, 13 Integration); drei separate
 Live-Tests im Standardlauf übersprungen. 0.14.1 noch nicht installiert/live getestet.
+
+0.14.1 abschließend gebaut (0 Warnungen/Fehler) und eindeutig paketiert; Manifest
+und Code-Archiv mit genau fünf Dateien ohne private Konfiguration geprüft. Nutzer
+um Speichern des Entwicklungsspielstands und Beenden für die Installation gebeten.
+Spiel bleibt auf Pause. GitHub-Codecheckpoint be1b982 verifiziert synchronisiert.

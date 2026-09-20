@@ -1352,3 +1352,7 @@ Live erkannte Einschränkung: SideLine bei kleinen Lagern/Flaggen und TwoSegment
 bei Path wurden unnötig ausgeschlossen. Patch 0.14.1 lässt diese festen Einzelobjekte
 unter unveränderten Geometrie-/Spielvalidatoren zu. Keine Linien-/Bereichsplatzierung.
 Installation und generischer Live-Nachweis von Weg/kleinem Lager nach Patch stehen aus.
+
+0.14.1: 318 reguläre Tests bestanden, Mod gebaut und Paket geprüft. Nutzer um
+Speichern/Beenden gebeten; danach gesicherte Installation und Live-Test von zwei
+Verbindungswegen sowie einem kleinen Lager.
