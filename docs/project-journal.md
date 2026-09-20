@@ -682,3 +682,11 @@ zusätzlich Identitäten/Kategorien. Keine vollständige Baufreigabe daraus able
 [Vertrag](removal-and-pine-protection.md). Timberborn weiterhin geöffnet; installierte
 0.11.0 unverändert. Keine realen Objekte entfernt. Live-Abnahme einschließlich
 Arbeitsplatz-/Baustellenpriorität bleibt nach Installation erforderlich.
+
+## 2026-09-20 — 0.13.0 gesichert installiert
+
+Timberborn-Prozess beendet geprüft. Vollständige lokale Sicherung von 0.11.0 erstellt;
+fünf Paketdateien von 0.13.0 installiert und per SHA256 verglichen. Schlüssel, Port
+und bisherige Felder erhalten. enablePriorities/enableAreas aktiv, enableRemoval aus.
+Keine Spielobjekte geändert. Nach Start und Laden von MCP zunächst Lesetest und
+Prioritäts-Hin-/Rücktest; Flächen und Entfernung noch nicht live abgenommen.

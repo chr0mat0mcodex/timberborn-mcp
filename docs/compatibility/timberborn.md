@@ -146,3 +146,6 @@ Die Kategorien planted/vegetation basieren auf aktueller Pflanzmarkierung und si
 keine belegte Unterscheidung zwischen natürlich gewachsen und selbst gepflanzt.
 Installierter Stand weiterhin 0.11.0. 0.13.0 enthält auch die ungetesteten Erweiterungen
 von 0.12.0; beide benötigen die gemeinsame nächste Live-Abnahme.
+
+0.13.0 inzwischen bei beendetem Spiel gesichert installiert; fünf Datei-Hashes
+bestätigt. Installationsprüfung bestanden, Laufzeit-/Live-Abnahme weiterhin offen.

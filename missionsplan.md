@@ -1175,3 +1175,12 @@ betraf Sollbesetzung; Priorisierung ist noch nicht live bestätigt.
 Ersetzt die bisher offene tapping-Semantik aus 7.32: keine neue native Zone, sondern
 vom Nutzer gewünschter Kiefernschutz über reguläre Fällmarkierungen. Keine automatische
 Harzernte behaupten. [Vertrag und Grenzen](docs/removal-and-pine-protection.md).
+
+### 7.34 Version 0.13.0 installiert
+
+Bei beendetem Timberborn bisherigen Modordner vollständig lokal gesichert und fünf
+Paketdateien installiert; SHA256 stimmt mit gebautem Paket überein. Schlüssel, Port
+und bisherige Konfigurationsfelder erhalten. Prioritäts-/Flächenfreigabe für den
+beauftragten Pilot aktiviert; Abriss bleibt bis zu einem geeigneten Testziel gesperrt.
+Nächster Schritt nach Nutzerstart des MCP-Spielstands: neue Lesewerkzeuge prüfen,
+Arbeitsplatz-/Baustellenpriorität kontrolliert hin/zurück testen. Live-Abnahme offen.
