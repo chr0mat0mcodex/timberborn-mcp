@@ -1,5 +1,26 @@
 # Projektjournal
 
+## 2026-09-20 — Workforce und Betriebsdiagnose live bestanden
+
+0.9.0 mit neun angebotenen Lesewerkzeugen; begrenzter Pilot mit zehn fachlichen
+MCP-Leseaufrufen. Spiel bereits pausiert (Speed 0), unverändert belassen.
+Roster: 10 Worker vom Typ Beaver, 3 employed, 7 unemployed, 0 unresolved.
+Zwei Zuordnungen zum Distriktzentrum und eine zur Holzfällerflagge stimmen exakt
+mit inspect_building überein. Kolonieaggregation ebenfalls 10 einsatzfähig,
+7 unbeschäftigt, 3 besetzte Sollstellen. Roster am Ende unverändert nachgelesen.
+
+Distriktzentrum aktiv, Soll/Ist/Max 2/2/4; Holzfällerflagge aktiv, 1/1/1.
+Beide melden laufenden Arbeitsauftrag. Das ist auch bei pausierter Simulation
+möglich: JobRunning beschreibt Jobzustand, keinen aktuell fortschreitenden Tick.
+Lodge noch unfertig, ohne Workplace-Komponente. Path ebenfalls ohne Workplace,
+PausableBuilding vorhanden, aber canPause=false. Komponentenpräsenz daher nicht
+mit tatsächlicher Pausefähigkeit gleichsetzen. Wohnraum weiter 0 Betten/13 obdachlos.
+
+Arbeitskräfteliste und Betriebsdiagnose im begrenzten Szenario live bestätigt.
+Keine Personal-, Pause-, Bau- oder Geschwindigkeitsänderung. Nächste mögliche
+Erweiterung: reguläre Sollbesetzung kontrolliert verändern und separat nachlesen;
+noch nicht implementiert oder live geprüft.
+
 ## 2026-09-20 — Betriebsdiagnose und Workforce-Liste installiert
 
 Neuestes 0.9.0-Paket mit inspect_workforce bei beendetem Spiel installiert.

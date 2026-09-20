@@ -1100,3 +1100,11 @@ und Zuordnungen live gegen Besetzung prüfen. Keine exakte Tätigkeit behaupten.
 Erweitertes 0.9.0 bei beendetem Spiel gesichert installiert. Fünf Paketdateien per
 SHA256 geprüft; private Konfiguration unverändert. Nach Nutzerstart MCP-Lesepilot
 und Zuordnungsabgleich durchführen. Noch kein Live-Nachweis für diese Erweiterung.
+
+### 7.26 Arbeitskräfte- und Betriebsdiagnose live bestanden
+
+Zehn reine MCP-Aufrufe: 10 Worker, 3 beschäftigt, 7 unbeschäftigt. Zuordnungen
+2 Distriktzentrum/1 Holzfäller stimmen mit Gebäude- und Kolonieangaben überein.
+Roster stabil, keine ungeklärten Referenzen. Lodge/Path ohne Arbeitsplatz korrekt
+als nicht verfügbar gemeldet. Spiel war pausiert und blieb unverändert. JobRunning
+ist auch in Pause möglich und kein Produktionsbeweis. Native Personalsteuerung offen.

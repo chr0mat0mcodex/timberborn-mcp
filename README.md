@@ -41,7 +41,8 @@ Fertigstellung und zusätzliche Betten noch offen.
 Live bestätigt: Pause hält Spielzeit an, MCP bleibt erreichbar, Weiterlauf auf 1× funktioniert.
 0.9.0 ergänzt [Gebäudepause und Arbeitsplatzdiagnose](docs/building-operations.md)
 in inspect_building sowie die [kolonieweite Arbeitskräfteliste](docs/workforce-roster.md)
-inspect_workforce. Automatisiert getestet und installiert; Live-Abnahme offen.
+inspect_workforce. Live bestätigt: 10 Arbeiter, 3 beschäftigt, 7 unbeschäftigt;
+Arbeitsplatzzuordnungen stimmen mit Gebäudebesetzung überein.
 [Installation und Abnahme](docs/native-bridge-install.md),
 [offizielle Quellen und good references](docs/references/README.md).
 Für die eigene Bridge: `scripts/start-native.ps1 -ConfigPath '<private Konfiguration>'`;

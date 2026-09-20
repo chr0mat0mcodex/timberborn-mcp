@@ -1,5 +1,11 @@
 # Kompatibilität
 
+## Live-Abnahme 0.9.0 — 2026-09-20
+
+Workforce-Roster und Gebäudebesetzung abgeglichen: 10 Worker, 3 beschäftigt, 7 frei,
+2 am Distriktzentrum/1 an Holzfällerflagge. Keine ungeklärten Referenzen. Lodge und
+Path ohne Arbeitsplatz; Path canPause=false trotz Pausekomponente. Nur gelesen.
+
 ## Entwicklungsstand 0.9.0 — 2026-09-20
 
 Betriebsdiagnose über öffentliche PausableBuilding-/Workplace-APIs erweitert.

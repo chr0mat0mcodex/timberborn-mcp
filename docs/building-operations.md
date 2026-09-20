@@ -1,6 +1,6 @@
 # Betriebsdiagnose pro Gebäude — 0.9.0
 
-Status: implementiert und installiert; Live-Abnahme offen. Die bestehende Abfrage
+Status: implementiert, installiert und begrenzt live bestätigt. Die bestehende Abfrage
 `inspect_building(id, session)` erhält `details.operations`; kein neues Werkzeug,
 keine neue Schreibaktion und keine Fremdmod-Abhängigkeit.
 
@@ -37,3 +37,8 @@ frischer Entity-IDs abfragen, außerdem Lodge bzw. Baustelle und Path als Gegenp
 Soll-/Ist-/Maximalbesetzung, Gebäudepause und Nullwerte auf plausiblen Komponentenbezug
 prüfen. Keine Personaleinstellung, Pause oder Flächenmarkierung für diesen Lesetest.
 Erst danach gezielte native Personal-/Betriebssteuerung als nächsten Schritt bewerten.
+
+Live: Distriktzentrum 2/2/4, Holzfällerflagge 1/1/1 (Soll/Ist/Max), beide aktiv.
+Lodge unfertig ohne Workplace, Path ohne Workplace und canPause=false trotz
+vorhandener PausableBuilding-Komponente. JobRunning kann während Spielpause true
+bleiben; kein Beleg für aktuell fortschreitende Produktion.

@@ -40,3 +40,10 @@ eine kleine Zahl von Listenaufrufen statt einer Abfrage pro Gebäude.
 Installiert ist das erweiterte 0.9.0-Paket zusammen mit der
 [Gebäudediagnose](building-operations.md). Das ältere lokale 0.9.0-Paket ohne diese
 Erweiterung wird nicht überschrieben; für Installation das neueste Paket verwenden.
+
+## Live bestätigt — 2026-09-20
+
+10 Beaver-Worker, 3 beschäftigt, 7 unbeschäftigt, keine ungeklärten Zuordnungen.
+Zwei Arbeiter im Distriktzentrum und einer an der Holzfällerflagge; Zahlen stimmen
+mit Gebäudebesetzung und Kolonieaggregation überein. Roster vor/nach Abgleich
+unverändert, Simulation bereits pausiert. Zehn reine MCP-Leseaufrufe im Pilot.
