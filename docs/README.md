@@ -34,6 +34,8 @@ Datierte frühere Abnahmen sind kein Beweis für jede spätere Kombination.
 
 ## Geplante Funktionen
 
+- [Produktions-/Abhängigkeitsgraph mit einem MCP-Aufruf](production-dependency-graph.md) — öffentliche Rezeptbasis geprüft, noch nicht implementiert.
+
 - [Weitere Alert-Abdeckung](alerts-plan.md) — aktive Entity-Status implementiert; zusätzliche Fälle offen.
 - [Frage-Popup im Spiel](player-question-popup.md) — öffentlich untersucht, noch nicht implementiert.
 - Weitere Lücken: [Backlog](../BACKLOG.md).

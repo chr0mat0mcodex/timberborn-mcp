@@ -1345,3 +1345,14 @@ vom Client abgelehnt. Mod-Build ohne Warnungen/Fehler, keine neue Abhängigkeit.
 
 Abschlussprüfung: 463 reguläre Tests bestanden (450 Unit, 13 Integration), drei opt-in
 Live-Tests übersprungen. Installation erst nach Speichern/Beenden durch den Nutzer.
+
+## 2026-09-20 — Produktionsgraph als Zukunftsfeature vorgemerkt
+
+Nutzerwunsch: vollständigen Produktions-/Abhängigkeitsbestand einmal extrahieren und
+mit einem MCP-Aufruf als Gesamtübersicht liefern. Umfang, Graph statt reinem Baum,
+Mengen/Rezepte/Gebäude/Freischaltungen, nicht rezeptbasierte Quellen und Größenlimits
+in docs/production-dependency-graph.md geplant. Öffentliche RecipeSpecService-,
+RecipeSpec-, ManufactorySpec- und WorkplaceSpec-Signaturen lokal bestätigt. Nutzer präzisiert:
+Gemeint sind Rohstoffe, Gebäude und Rezepte; keine separate Arbeiterrollen-/Releasehistorie.
+Keine Implementierung, Spieländerung oder Modinstallation in diesem Planungsschritt.
+0.20.1 wartet weiterhin auf Speichern/Beenden und Installation.

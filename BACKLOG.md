@@ -51,6 +51,8 @@ Neue Funktionen werden entsprechend dem Projektauftrag vor ihrer Umsetzung konkr
 
 ## Später
 
+- [Vollständiger Produktions-/Abhängigkeitsgraph](docs/production-dependency-graph.md): einmal aus Spieldefinitionen extrahieren, als Gesamtübersicht mit einem MCP-Aufruf abrufen; Güter, Rezepte, Mengen, Gebäude, Freischaltungen und belegte Betriebsbedingungen.
+
 - [Frage-Popup mit Texteingabe im Spiel](docs/player-question-popup.md).
 - Energieindustrie, Bots, Distriktmigration, komplexe Automationsgraphen, Terraforming und Wasserbau-Großprojekte.
 - Automatisches Speichern/Laden; bislang nicht als MCP-Funktion implementiert.

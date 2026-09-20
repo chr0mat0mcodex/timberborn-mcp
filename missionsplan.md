@@ -65,6 +65,13 @@ Keine Fremdmod-Pflichtbasis; die frühere More-HTTP-API-Phase ist abgeschlossen.
 Diese Reihenfolge beschreibt den nächsten Ausbau, nicht bereits freigegebene Codeänderungen.
 Detailaufgaben und spätere Ideen stehen im [Backlog](BACKLOG.md).
 
+## Vorgemerkte Zukunftsfunktion
+
+- [ ] Vollständigen Produktions-/Abhängigkeitsgraphen einmal extrahieren und mit einem
+  MCP-Aufruf bereitstellen: Produkte, Vorprodukte, Rezepte, Gebäude und Voraussetzungen.
+  [Umfang und öffentliche API-Grundlage](docs/production-dependency-graph.md).
+  Planungseintrag; noch keine Implementierung oder feste Release-Zusage.
+
 ## Nachweise und Historie
 
 Das [Projektjournal](docs/project-journal.md) enthält datierte Ergebnisse.
