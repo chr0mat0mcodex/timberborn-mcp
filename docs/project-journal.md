@@ -1377,3 +1377,29 @@ Timberborn läuft noch mit 0.20.0; Installation und Live-Pilot stehen aus.
 ## 2026-09-20 — 0.21.0 installiert
 
 Timberborn beendet vorgefunden und unmittelbar vor Austausch erneut geprüft. Installierte 0.20.0 vollständig in einem neuen lokalen Backup gesichert und verglichen. Genau fünf Paketdateien ersetzt und per SHA-256 verifiziert; private Konfiguration unverändert. Spielstart/Laden durch Nutzer und anschließende rein lesende Live-Abnahme stehen aus.
+
+
+## Live-Pilot 0.21.0 — 2026-09-20
+
+Alle 30 nativen MCP-Leser bestanden. Produktionsgraph: 60 registrierte Güter,
+davon 40 im aktiven Güterdienst; 55 Rezepte, 162 Gebäudevorlagen und 17 Quellen.
+MCP-Nutzdaten 58.345 Byte (rund 57 KiB); erneuter Abruf mit identischer Revision.
+Ein warmer MCP-Abruf benötigte 168 ms; dies ist kein Kaltstart-/Lastbenchmark.
+Die erfolgreiche Antwort bleibt innerhalb des unveränderten 128-KiB-Transportlimits.
+
+Zehn repräsentative Definitionen unabhängig mit offiziellen lokalen Blueprints
+verglichen: Plank, Gear, TreatedPlank und Bread; Carrot.cut, Pine.cut, Pine.gather;
+LumberMill, GearWorkshop und WoodWorkshop. Mengen, nominelle Zeiten, Brennstoffzyklen,
+Gebäudezuordnung sowie ausgewählte Forschungs-/Energiewerte stimmen.
+Damit sind Holz → Bretter → Zahnräder sowie behandelte Bretter, Brennstoffrezept
+und getrennte Holz-/Harzgewinnung belegt, keine universelle Betriebsdiagnose.
+
+Acht Güter ohne erfasste Quelle und 18 Rezepte ohne Gebäude in der Folktails-Szene
+werden explizit ausgewiesen; alle 17 erfassten Quellen haben eine Erntegebäudezuordnung.
+Registrierte Definitionen anderer Fraktionen sind kein Beweis ihrer Nutzbarkeit
+in der aktuellen Kolonie. Ruinenerträge und Spezialbedingungen bleiben bekannte Lücken.
+
+Lebenszustandsfix ebenfalls bestätigt: Bevölkerung und Bedürfnisse zählen 11 lebende
+Biber, zwei Tote werden ausgeschlossen, kein unbekannter Lebenszustand. Beide über
+Statusziele gefundenen toten Biber liefern lifeState=dead, supported=false und total=0.
+Lebender Einzelbiber liefert alive/supported=true. Rein lesender Test; Spiel blieb pausiert.

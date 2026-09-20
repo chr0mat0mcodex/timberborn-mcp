@@ -25,7 +25,7 @@ Start: [README](../README.md) · [Projektstand](../PROJECT_STATE.md) ·
 | Güter und Status | [Bestände, Warnungen und Ziele](economy-observations.md) |
 | Erreichbarkeit und Bilanz | [Wege, Reichweiten und Güterhistorie](logistics.md), [Mehrtagspilot](supply-balance.md) |
 | Zeit | [Pause und Geschwindigkeiten](simulation-control.md) |
-| Produktionsgraph | [Rohstoffe, Rezepte, Gebäude und Quellen](production-dependency-graph.md), ab 0.21.0; Live-Abnahme offen |
+| Produktionsgraph | [Rohstoffe, Rezepte, Gebäude und Quellen](production-dependency-graph.md), ab 0.21.0; begrenzter Live-Pilot bestanden |
 | Forschung | [Punkte und Freischaltungen](research.md) |
 | Transparenz | [Ingame-Log](activity-log.md), [fachliche Fehler](bridge-errors.md) |
 

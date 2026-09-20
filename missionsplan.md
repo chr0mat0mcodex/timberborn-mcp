@@ -12,7 +12,7 @@ unkontrollierter Kolonieaufbau ersetzt keine gezielte Abnahme.
 
 ## Stand
 
-**0.21.0 liefert einen Produktionsgraphen und korrigiert die Bedürfniszählung bei Todesfällen; installiert, Live-Abnahme offen.
+**0.21.0 liefert einen Produktionsgraphen und korrigiert die Bedürfniszählung bei Todesfällen; installiert, alle 30 Leser und begrenzter Graph-/Lebenszustandspilot live bestanden.
 Fünf Paketdateien geprüft, Konfiguration erhalten. Unter 0.19.2 sind
 Sofort-Wegsuche, historische Bilanz und Farm-/Holzfällerreichweiten sind live bestätigt.**
 [Projektstand](PROJECT_STATE.md), [Werkzeugkatalog](docs/tools.md), [offene Arbeiten](BACKLOG.md).
@@ -51,7 +51,7 @@ Keine Fremdmod-Pflichtbasis; die frühere More-HTTP-API-Phase ist abgeschlossen.
 - [x] Biber-Todesstatus mit zwei konkreten Entity-Zielen live lesen (kein UI-Alert: showAlert=false).
 - [ ] Aktive Hunger-/Durst-UI-Warnungen im Live-Test ergänzen.
 - [x] 0.21.0 mit Produktionsgraph und Lebenszustandskorrektur installieren; Sicherung/Hashes/Konfiguration geprüft.
-- [ ] Produktionsgraph und lebende/tote Biber getrennt live prüfen.
+- [x] Produktionsgraph und lebende/tote Biber getrennt live prüfen (11 lebend, zwei tot).
 - [x] Gebäudezugang und Sofort-Wegverbindung einschließlich Unterbrechung/Wiederherstellung gezielt prüfen.
 - [x] Konkrete Farm-/Holzfällerreichweiten über BuildingTerrainRange live abnehmen (485/611 Zellen; erste/letzte Seite).
 - [x] Native Produktions-/Verbrauchshistorie über einen Tageswechsel prüfen.
@@ -71,7 +71,7 @@ Detailaufgaben und spätere Ideen stehen im [Backlog](BACKLOG.md).
 - [x] Produktions-/Abhängigkeitsgraphen des definierten Umfangs einmal extrahieren und mit einem
   MCP-Aufruf bereitstellen: Produkte, Vorprodukte, Rezepte, Gebäude und Voraussetzungen.
   [Umfang und öffentliche API-Grundlage](docs/production-dependency-graph.md).
-- [ ] Live-Abnahme: Antwortgröße, stabile Revision, Verarbeitungsketten, Brennstoff sowie Ernte-/Sammelquellen prüfen. Ruinenerträge und besondere Betriebsbedingungen bleiben explizite Lücken.
+- [x] Live-Abnahme: Antwortgröße, stabile Revision, Verarbeitungsketten, Brennstoff sowie Ernte-/Sammelquellen geprüft. Ruinenerträge und besondere Betriebsbedingungen bleiben explizite Lücken.
 
 ## Nachweise und Historie
 

@@ -1,6 +1,6 @@
 # Produktions- und Abhängigkeitsgraph
 
-Implementiert in **0.21.0**. Installiert; Live-Abnahme steht aus.
+Implementiert in **0.21.0**. Installiert; begrenzte Live-Abnahme bestanden.
 Nutzerauftrag: Rohstoffe, Gebäude und Rezepte als zusammenhängende Gesamtübersicht
 mit einem einzigen MCP-Aufruf bereitstellen.
 
@@ -69,7 +69,33 @@ Verweise/Mengen/Versionen, Prüfsumme, Parameterablehnung und echten MCP-stdio-T
 mit Aktivitätslog unter sechs Kombinationen von Aktionsfreigaben.
 Der reguläre Live-Leser umfasst jetzt 30 Werkzeuge und prüft wiederholte Graphrevisionen.
 
-Noch ausstehender begrenzter Live-Pilot: Antwortgröße/Latenz und Gesamtzahlen,
+Am 2026-09-20 bestandener begrenzter Live-Pilot: Antwortgröße/Latenz und Gesamtzahlen,
 einfache und mehrstufige Verarbeitung, Brennstoff, Karotte, Kiefernschnitt/Harz,
-stabile Revision sowie Abdeckungslisten gegen die geladenen Definitionen prüfen.
+stabile Revision sowie Abdeckungslisten geprüft.
 Lebenszustandskorrektur aus 0.20.1 ist Bestandteil desselben Updates.
+
+
+## Live-Pilot 0.21.0 — 2026-09-20
+
+Alle 30 nativen MCP-Leser bestanden. Produktionsgraph: 60 registrierte Güter,
+davon 40 im aktiven Güterdienst; 55 Rezepte, 162 Gebäudevorlagen und 17 Quellen.
+MCP-Nutzdaten 58.345 Byte (rund 57 KiB); erneuter Abruf mit identischer Revision.
+Ein warmer MCP-Abruf benötigte 168 ms; dies ist kein Kaltstart-/Lastbenchmark.
+Die erfolgreiche Antwort bleibt innerhalb des unveränderten 128-KiB-Transportlimits.
+
+Zehn repräsentative Definitionen unabhängig mit offiziellen lokalen Blueprints
+verglichen: Plank, Gear, TreatedPlank und Bread; Carrot.cut, Pine.cut, Pine.gather;
+LumberMill, GearWorkshop und WoodWorkshop. Mengen, nominelle Zeiten, Brennstoffzyklen,
+Gebäudezuordnung sowie ausgewählte Forschungs-/Energiewerte stimmen.
+Damit sind Holz → Bretter → Zahnräder sowie behandelte Bretter, Brennstoffrezept
+und getrennte Holz-/Harzgewinnung belegt, keine universelle Betriebsdiagnose.
+
+Acht Güter ohne erfasste Quelle und 18 Rezepte ohne Gebäude in der Folktails-Szene
+werden explizit ausgewiesen; alle 17 erfassten Quellen haben eine Erntegebäudezuordnung.
+Registrierte Definitionen anderer Fraktionen sind kein Beweis ihrer Nutzbarkeit
+in der aktuellen Kolonie. Ruinenerträge und Spezialbedingungen bleiben bekannte Lücken.
+
+Lebenszustandsfix ebenfalls bestätigt: Bevölkerung und Bedürfnisse zählen 11 lebende
+Biber, zwei Tote werden ausgeschlossen, kein unbekannter Lebenszustand. Beide über
+Statusziele gefundenen toten Biber liefern lifeState=dead, supported=false und total=0.
+Lebender Einzelbiber liefert alive/supported=true. Rein lesender Test; Spiel blieb pausiert.

@@ -11,7 +11,7 @@ Hier stehen offene Aufgaben; datierte historische Kästchen sind kein aktueller 
    bestätigt. Mehrfachziele und Verschwinden einer aktiven Meldung ebenfalls bestanden; Biber-Todesstatus mit zwei Entity-Zielen bestätigt; aktive Hunger-/Durst-UI-Warnungen offen.
    [Vertrag und Nachweise](docs/economy-observations.md). Vollständige UI-Meldungsabdeckung,
    Benachrichtigungshistorie und dynamische Aggregatwerte weiterhin offen.
-3. **0.21.0 live prüfen (installiert):** Produktionsgraph einschließlich Größe/Revision und Quellen prüfen; Lebenszustandskorrektur ebenfalls abnehmen. Zuvor registrierte tote Biber
+3. **0.21.0 live bestätigt:** alle 30 Leser, Graphgröße/Revision und repräsentative Quellen/Ketten bestanden; Lebenszustandskorrektur mit 11 lebenden und zwei toten Bibern bestätigt. Zuvor registrierte tote Biber
    wurden unter 0.20.0 als Bedürfnisempfänger mitgezählt. Öffentliche Mortal.Dead-Abfrage
    trennt nun lebend/tot/unbekannt; keine aktuellen Bedürfniswerte für tote/unbekannte Ziele.
    **Bedürfnis-/Betriebsdiagnose vervollständigen:** 0.20.0 mit 29 Lesern und gezielten
@@ -51,7 +51,7 @@ Neue Funktionen werden entsprechend dem Projektauftrag vor ihrer Umsetzung konkr
 
 ## Später
 
-- [Produktionsgraph 0.21.0](docs/production-dependency-graph.md) ist implementiert. Noch offen: Live-Abdeckung, Ruinenerträge und spezielle Betriebsbedingungen; keine neue Fremdmod-Abhängigkeit.
+- [Produktionsgraph 0.21.0](docs/production-dependency-graph.md) ist implementiert. Begrenzter Live-Pilot bestanden. Noch offen: weitere Fraktionen, Ruinenerträge und spezielle Betriebsbedingungen; keine neue Fremdmod-Abhängigkeit.
 
 - [Frage-Popup mit Texteingabe im Spiel](docs/player-question-popup.md).
 - Energieindustrie, Bots, Distriktmigration, komplexe Automationsgraphen, Terraforming und Wasserbau-Großprojekte.

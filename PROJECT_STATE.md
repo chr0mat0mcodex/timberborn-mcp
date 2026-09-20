@@ -1,6 +1,6 @@
 # Projektstand
 
-Stand: 2026-09-20. Codeversion: **0.21.0**, Produktionsgraph und Lebenszustandskorrektur gebaut und installiert; Live-Abnahme ausstehend.
+Stand: 2026-09-20. Codeversion: **0.21.0**, Produktionsgraph und Lebenszustandskorrektur gebaut, installiert und mit allen 30 Lesern live geprüft.
 Installiert ist **0.21.0**, fünf Datei-Hashes geprüft und Konfiguration erhalten. Zuvor unter **0.20.0**: 29 Leser live geprüft, danach Fehler bei weiter registrierten
 verstorbenen Bibern gefunden (Bedürfniszählung 13 statt 11 lebender Biber).
 Sofort-Wegsuche einschließlich Unterbrechung/Wiederherstellung unter **0.19.1** live bestätigt. Farm-/Holzfällerreichweiten unter 0.19.2 über den konkreten Terrainzugriff bestätigt.
@@ -26,7 +26,7 @@ Die Version im [Manifest](mod/Timberborn.AgentBridge/manifest.json) ist die Code
 Rezepte, Gebäude/Baukosten, nominelle Energie und Schnitt-/Sammelquellen.
 Einmal je Szene, geprüfte Verweise und SHA-256-Revision. Ruinenerträge und spezielle
 Betriebsbedingungen sind explizite Lücken; [Vertrag](docs/production-dependency-graph.md).
-Reale Antwortgröße und Live-Abnahme stehen aus.
+Live bestätigt: 60 Güter (40 aktiv), 55 Rezepte, 162 Gebäude, 17 Quellen; 58.345 Byte MCP-Nutzdaten, stabile Revision. Zehn repräsentative Definitionen unabhängig mit offiziellen Blueprints verglichen.
 
 ## Verifikation
 
@@ -35,6 +35,7 @@ Reale Antwortgröße und Live-Abnahme stehen aus.
 | Automatisch | 478 reguläre Tests: 465 Unit, 13 Integration; drei opt-in Live-Tests im Standardlauf übersprungen |
 | Mod-Build | Gegen Timberborn 1.1.2.4, ohne Warnungen/Fehler |
 | Installation | Fünf Paketdateien per SHA-256 geprüft, private Konfiguration erhalten |
+| Live 0.21.0 | Alle 30 Leser; Produktionsgraph samt Ketten/Quellen/Größe/Revision; 11 lebende Biber und zwei Tote korrekt getrennt, beide toten Einzelziele ohne aktuelle Bedürfnisse |
 | Live 0.20.0 | Alle 29 Leser; 42 Bedürfnisse über zwei Seiten, Einzelbiber und Betriebsbelege; Wohnraumbefund unabhängig bestätigt |
 | Live 0.19.2 | Alle 26 Leser bestanden; Holzfäller 611 und Farm 485 Terrainzellen, erste und letzte Ergebnisseite geprüft |
 | Live 0.18.0 | Alle 22 Leser bestanden; 40 Güter, drei Beispielvorräte deckungsgleich, eine Lagerwarnung mit Ziel und unabhängiger Bestätigung; unbekannte ID und stale_session korrekt |

@@ -1,7 +1,7 @@
 # Bedürfnisse und Betriebsbelege — 0.20.1
 
 Drei rein lesende MCP-Werkzeuge, ohne neue Fremdmod oder Bibliothek. Öffentliche
-Spiel-APIs lokal gegen Timberborn 1.1.2.4 geprüft; Lebenszustandskorrektur 0.20.1 gebaut, Installation/Live-Abnahme ausstehend.
+Spiel-APIs lokal gegen Timberborn 1.1.2.4 geprüft; Lebenszustandskorrektur aus 0.20.1 unter 0.21.0 live bestätigt: 11 lebende Biber, zwei Tote ausgeschlossen; beide toten Einzelziele supported=false und leere Bedürfniswerte.
 Historische Nachweise unter 0.20.0 stehen unten; dessen Zählfehler nach Todesfällen ist bekannt. Keine Speicherstandänderung oder private Reflection.
 
 ## Koloniebedürfnisse
