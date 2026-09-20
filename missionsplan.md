@@ -1044,3 +1044,10 @@ Normaler Spielplatzierer, keine Ressourcen oder Sofortfertigstellung. Installati
 und Live-Nachweis ausstehend; 0.6.1 bleibt letzter installierter/live geprüfter Stand.
 Nächster Nachweis: genau einen eigenen Hausauftrag anhand derselben Entity-ID als
 Baustelle mit Kosten/Fortschritt/Baudistrikt nachlesen. [Vertrag](docs/lodge-placement.md).
+
+### 7.18 Lodge-Pilot installiert
+
+0.7.0 bei beendetem Spiel gesichert installiert, Paketdateien per SHA256 geprüft.
+Lodge-Opt-in aktiviert, Token/Port erhalten. Nutzer muss Spiel und MCP-Testkolonie
+starten; danach genau ein kontrollierter Hausauftrag gemäß Abnahmeplan.
+

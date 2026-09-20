@@ -1,5 +1,12 @@
 # Projektjournal
 
+## 2026-09-20 — Bridge 0.7.0 installiert
+
+Spielprozess vor Installation beendet. Bisherigen Mod-Ordner vollständig lokal
+gesichert; fünf Paketdateien ersetzt und per SHA256 abgeglichen. Token und Port
+erhalten, enableLodgePlacement gezielt aktiviert. Keine fremden Mods verändert.
+Live-Nachweis wartet auf Nutzerstart und Laden der MCP-Testkolonie.
+
 ## 2026-09-20 — Lodge-Auftrag vorbereitet (0.7.0)
 
 Separat geschütztes place_lodge ergänzt, gemeinsame Versuchssperre mit Path.

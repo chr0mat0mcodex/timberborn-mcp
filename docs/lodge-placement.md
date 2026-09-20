@@ -1,7 +1,7 @@
 # Lodge-Baupilot 0.7.0
 
-Status: implementiert; Installation und Live-Nachweis stehen aus. Installierter,
-zuletzt live geprüfter Stand ist 0.6.1. Ziel ist ein regulärer Hausauftrag über MCP
+Status: implementiert und installiert (0.7.0); Live-Nachweis steht aus. Der
+zuletzt live geprüfte Stand ist 0.6.1. Ziel ist ein regulärer Hausauftrag über MCP
 und dessen unabhängige Wiedererkennung als Baustelle, noch kein autonomer Hausbau.
 
 ## Vertrag
