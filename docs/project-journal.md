@@ -920,3 +920,27 @@ Bekannte Diagnosegrenze: Die serverseitige Ablehnung eines veralteten Zustands w
 noch als backend_unavailable statt spezifischem Zustandskonflikt gemeldet. retryable=false;
 keine Wiederholung ausgeführt, tatsächliche unveränderte Auswahl separat bestätigt.
 Künftige Verbesserung: fachliche Konflikte von Transportfehlern unterscheiden.
+
+## 2026-09-20 — Karottenkette vollständig live nachgewiesen (0.15.0)
+
+Ausgangslage: Farm fertig/aktiv mit drei von drei Arbeitern, kleines Lager auf
+Karotte/Annehmen mit leerem Bestand. Vier freie Felder regulär als Karotte markiert.
+Sieben begrenzte 40-Sekunden-Fenster auf regulärer Stufe 7, jeweils abschließend
+Pause. Nach dem ersten Pilot seltener abgefragt, da Wachstum stetig und gesund.
+
+- Vier echte Pflanzenobjekte nach Markierung beobachtet; alive, kein Wasserstress.
+- Wachstum über mehrere Beobachtungen von etwa 1 % bis 99 % verfolgt.
+- Anschließend 12 Karotten im kleinen Lager (Kapazität 30) beobachtet und nach Pause
+  über eine separate MCP-Sitzung erneut bestätigt. Kein Bestand durch Bridge erzeugt.
+- Vier neue Pflanzen mit anderen IDs und etwa 3–5 % Wachstum auf denselben Feldern:
+  reguläre Ernte und Nachpflanzung zusammen mit neuem Lagerbestand nachgewiesen.
+- Schlusszustand: Tag 8, 22:45, Simulation pausiert; Farm aktiv mit drei Arbeitern,
+  vier Karotten-Markierungen bleiben für weiteren Betrieb bestehen.
+
+Nebenläufig wurde die vorherige Lodge fertig: sechs Betten, sieben Obdachlose.
+Letzte Beispielbestände: Wasser 222, Beeren 270, Holz 20. Keine Aussage über gesamte
+Nahrung oder dauerhaft ausreichende Versorgung aus diesen drei Beispielen ableiten.
+Dieser Pilot bestätigt einen Erntezyklus samt Lagerung und Nachpflanzung, keine
+langfristige Versorgung der ganzen Kolonie. Keine Mod-/Produktcodeänderung nötig.
+Nächste offene Versorgungsnachweise: tatsächliche Wassergewinnung/-lagerung und
+vollständiger Wohnraum; außerdem Ressourcenübersicht über alle Güter statt drei Beispiele.

@@ -1384,7 +1384,20 @@ Konfiguration erhalten, Settings-Freigabe ergänzt. Nutzer um Start/Laden gebete
 - [x] Veralteter Erwartungswert verhindert Änderung, anschließend unveränderte Auswahl gelesen.
 - [x] Zwei generische Verbindungswege fertig; zusätzliche Pumpenbaustelle hat jetzt Baudistrikt.
 - [x] Schlusszustand: Simulation pausiert; Pumpe aktiv, Farm Pflanzen/Karotte, kleines Lager Karotte/Annehmen.
-- [ ] Tatsächliches Pflanzen, Ernten und Einlagern als nächste getrennte Wirkungsprüfung.
+- [x] Tatsächliches Pflanzen, Ernten und Einlagern separat bestätigt; Details in 7.49.
 - [ ] Fachliche Zustandskonflikte als spezifischen Fehler statt backend_unavailable melden.
 
 Keine neue Modinstallation erforderlich. Details und Grenzen: docs/building-settings.md.
+
+### 7.49 Karottenkette live bestanden
+
+- [x] Vier freie Anbauzellen markiert; Farm mit drei Arbeitern regulär pflanzen lassen.
+- [x] Echte Pflanzen und gesundes Wachstum von etwa 1 % bis 99 % beobachtet.
+- [x] 12 Karotten im kleinen Lager nachgewiesen und separat nachgelesen.
+- [x] Vier neue Pflanzen-IDs auf denselben Feldern bestätigen Nachpflanzung.
+- [x] Simulation abschließend pausiert (Tag 8, 22:45); Anbaufläche bleibt erhalten.
+- [ ] Weitere Grundversorgung getrennt nachweisen: Wassergewinnung/-lagerung, vollständiger Wohnraum.
+
+Sieben begrenzte 40-Sekunden-Fenster auf Stufe 7; Erfolgskriterium echter Lagerbestand
+beendet den Test. Ein Erntezyklus ist belegt, keine dauerhafte Gesamtversorgung.
+Nebenläufig fertiggestellte Lodge: sechs Betten insgesamt, sieben Obdachlose verbleiben.

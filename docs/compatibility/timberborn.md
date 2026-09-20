@@ -213,3 +213,7 @@ Neustart und Live-Abnahme noch offen.
 Lagermodi, Farmpriorität und bevorzugte Feldfrucht sowie Anbaufläche 0 -> 4 -> 0.
 Separat nachgelesen. SideLine-Lager und zwei TwoSegmentLine-Wege generisch gebaut.
 Kein Nachweis tatsächlicher Ernte/Umlagerung; Simulation abschließend pausiert.
+
+0.15.0 zusätzlich: Karotten-Pflanzen/Wachsen/Ernten/Einlagern live nachgewiesen.
+Vier Pflanzen bis rund 99 % beobachtet, danach 12 Karotten im Lager separat bestätigt
+und vier neue Pflanzen mit neuen IDs. Anbaufläche bleibt erhalten; Simulation pausiert.

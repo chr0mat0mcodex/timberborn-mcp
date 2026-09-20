@@ -18,6 +18,8 @@ Neu: 0.15.0 ergänzt [Lager-/Farmoptionen und Gebäudepause](docs/building-setti
 werden über die bestehenden Flächenwerkzeuge gesteuert. Automatisch geprüft;
 Live bestätigt: Pause, Lagerwahl/-modi, Farmpriorität/Pflanzenwahl und Flächenmarkierungen.
 Enthält die live bestätigte Layoutkorrektur aus 0.14.1.
+Karottenkette live nachgewiesen: vier Pflanzen angebaut, 12 Karotten eingelagert,
+vier neue Pflanzen nach der Ernte beobachtet. Ein Zyklus, keine Gesamtversorgungszusage.
 
 0.14.0 implementiert [generisches Bauen](docs/generic-building.md): vollständiger
 Gebäudekatalog, Vorprüfung, Spielvalidierung und reguläre Einzelaufträge nach Vorlagen-ID.
