@@ -36,19 +36,26 @@ Live bestätigt: 60 Güter (40 aktiv), 55 Rezepte, 162 Gebäude, 17 Quellen; 58.
 
 ## Letzter Spielstand und Wirkungstest
 
-Tag 37: zuletzt 14 Biber (elf Erwachsene, drei Kinder), zugleich Höchststand seit Zielbeginn. Jetzt 19 Betten, keine Obdachlosen. Mini-Lodge, Treppe
-und zwei weitere Lodges regulär gebaut; echte Wegverbindungen auf die höhere
-Ebene bestätigt. 19/157 reguläre Gebäudetypen fertig belegt; zusätzlich Lagerfeuer und Zahn-Schleifstein.
+Tag 56: 25 lebende Biber (18 Erwachsene, sieben Kinder), erste Bevölkerungsetappe
+bestätigt. 28 Betten, keine Obdachlosen. Jetzt 21/157 reguläre Gebäudetypen fertig:
+neu Mini-Lodge, Treppe, Lagerfeuer, Zahn-Schleifstein, großes Holzlager und Doppel-Lodge.
+Zusätzliche Standard-Lodges fertig; Plateau- und Dachverbindungen einschließlich
+Sofort-Wegsuche der Doppel-Lodge live bestätigt.
 
-Alle 79 Eichen und zwölf zusätzlichen Birken tatsächlich gepflanzt, lebend und
-ohne gemeldeten Wasserstress. Birken wachsen nominell sieben Tage, Eichen 30.
-15 weitere reife lebende Kiefern regulär zur Holzernte markiert; Vorrat vor dem
-Wohnungsbau 7→35. Letzte Bestände: 90 Wasser, 220 Beeren und acht Holz; Karotten zuletzt Tag 32: 30. Noch keine nachhaltige Gesamtbilanz oder 100-Biber-Abnahme.
+79 Eichen lebend, derzeit noch im Wachstum. Birkenfläche auf 33 Pflanzplätze erweitert;
+vor der jüngsten Erweiterung 24 echte Bäume, davon 23 lebend und ein Erntestumpf.
+Ernte und neue Bauminstanzen an früheren Birkenstellen belegt. Sämtliche Eichenflächen
+für reguläre Ernte markiert. Weitere reife Kiefern innerhalb der Holzfällerreichweite
+zur Ernte freigegeben; zwei geschützte Zapfkiefern ausgespart.
 
-Sägewerk und Laufrad pausiert, Erfinder wieder aktiv. Pumpenpriorität VeryHigh,
-Nahrung und Holz High, Forschung Low. Simulationsabschnitte mit Pausen und
-Kontrollen für Bedürfnisse, Vorräte und Besetzung der Grundversorgung.
-[Spielziele und Checkliste](docs/colony-goals.md), [bisherige Versorgungsbelege](docs/supply-balance.md).
+Großes Holzlager fertig und auf Holz eingestellt (180 Plätze). Karottenfläche von
+20 auf 34 Markierungen erweitert; Farm-Sollbesetzung drei. Zweite Holzfällerflagge fertig bestätigt. Letzte Vorräte vor der nächsten Brettcharge: 89 Wasser, 220 Beeren, 32 Karotten und 150 Holz. Sägewerk und Laufrad für eine überwachte Produktionscharge wieder aktiv.
+Erfinder aktiv; Pumpen VeryHigh, Nahrung/Holz High, Forschung Low.
+
+Begrenzte Simulationsabschnitte kontrollieren Bedürfnisse, Vorräte und Besetzung.
+Keine abschließende Nachhaltigkeits- oder 100-Biber-Abnahme.
+[Spielziele und Checkliste](docs/colony-goals.md), [Versorgungsbelege](docs/supply-balance.md).
+
 ## Verifikation
 
 | Ebene | Beleg |

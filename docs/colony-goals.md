@@ -11,16 +11,16 @@ erweitert den bisherigen Schwerpunkt der begrenzten Funktionstests.
 2. Jede reguläre Gebäudevorlage der aktuellen Folktails-Szene mindestens einmal
    fertiggestellt. Vorhandene fertige Gebäude zählen zum Bestand; Bauaufträge nicht.
    Historisch bestätigte Fertigstellungen bleiben auch nach späterem Abriss erhalten.
-   Aktuell 19 von 157 regulären Vorlagen bestätigt; fünf Entwicklerwerkzeuge ausgeschlossen.
+   Aktuell 21 von 157 regulären Vorlagen bestätigt; fünf Entwicklerwerkzeuge ausgeschlossen.
    Andere Fraktionen sind im aktuellen Katalog nicht enthalten und bleiben separat offen.
 
-## Fortschritt am Tag 37
+## Fortschritt am Tag 56
 
-- Höchststand und letzte Abfrage: 14 lebende Biber (elf Erwachsene, drei Kinder).
-- 19 Betten: Mini-Lodge und zwei weitere Lodges fertig, erhöhte Ebene über fertige Treppe verbunden.
-- 19/157 Gebäudetypen fertig bestätigt; neu MiniLodge, Stairs, Campfire und TeethGrindstone.
-- Alle 79 Eichen und zwölf zusätzlichen Birken tatsächlich gepflanzt, lebend und ohne Wasserstress.
-- Letzte Vorräte: 90 Wasser, 220 Beeren und acht Holz. Karotten zuletzt an Tag 32: 30; Forschung läuft wieder.
+- Erste Etappe erreicht; zuletzt 25 lebende Biber (18 Erwachsene und sieben Kinder).
+- 28 Betten: Mini-Lodge, drei zusätzliche Lodges und eine Doppel-Lodge fertig; Plateau und Dachzugang über Treppen verbunden.
+- 21/157 Gebäudetypen fertig bestätigt; neu MiniLodge, Stairs, Campfire, TeethGrindstone, LargePile und DoubleLodge.
+- 79 Eichen lebend bestätigt. Jetzt 33 Birken-Pflanzplätze; 24 vor der jüngsten Erweiterung tatsächlich bepflanzt, davon 23 lebend und ein Erntestumpf. Birken-Ernte und neue Bauminstanzen an früher belegten Pflanzstellen bestätigt.
+- Letzte Vorräte vor der nächsten Brettcharge: 89 Wasser, 220 Beeren, 32 Karotten und 150 Holz. 180 zusätzliche Holzlagerplätze aktiv; 34 Karottenfelder markiert und Farm-Sollbesetzung auf drei erhöht.
 - Pumpenpriorität VeryHigh, Nahrung und Holz High, Forschung Low; Arbeitsplatzbesetzung separat überwachen.
 
 ## Vorgehen
@@ -85,7 +85,7 @@ Die Tabelle enthält Vorlagenbezeichner, keine Spiel-IDs oder lokalen Rohdaten.
 | DomedGarden.Folktails | Wellbeing | offen | geometry_exceeds_64_cells |
 | DoubleDynamite.Folktails | Landscaping | offen | — |
 | DoubleFloodgate.Folktails | Landscaping | offen | special_layout |
-| DoubleLodge.Folktails | Housing | offen | — |
+| DoubleLodge.Folktails | Housing | ja | — |
 | DoublePlatform.Folktails | Paths | offen | — |
 | Dynamite.Folktails | Landscaping | offen | — |
 | EarthRecultivator.Folktails | Monuments | offen | special_tool_shape, geometry_exceeds_64_cells |
@@ -117,7 +117,7 @@ Die Tabelle enthält Vorlagenbezeichner, keine Spiel-IDs oder lokalen Rohdaten.
 | Indicator.Folktails | Automation | offen | — |
 | Inventor.Folktails | Science | ja | — |
 | Lantern.Folktails | Decoration | offen | — |
-| LargePile.Folktails | Storage | offen | — |
+| LargePile.Folktails | Storage | ja | — |
 | LargeTank.Folktails | Storage | offen | — |
 | LargeWarehouse.Folktails | Storage | offen | — |
 | LargeWaterPump.Folktails | Water | offen | — |

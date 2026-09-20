@@ -1639,3 +1639,48 @@ Lagerfeuer und Zahn-Schleifstein regulär für zusammen 20 Holz fertiggestellt,
 beide erreichbar: jetzt 19/157 Vorlagen. Zehn tote Kiefern auf den Bau-/Wegzellen
 regulär entfernt. Bauarbeiter vorübergehend von eins auf drei erhöht, nach Abschluss
 Sollbesetzung wieder eins. Letzte Bestände 90 Wasser, 220 Beeren und acht Holz.
+
+Fortsetzung bis Tag 51: erste Etappe 20 lebende Biber erreicht. Weiterer Standard-
+Wohnraum und großes Holzlager fertig, Lager auf Holz gestellt (180 Plätze).
+Doppel-Lodge für 150 Forschung freigeschaltet (393→243), reguläre 20 Holz geliefert
+und vollständig gebaut. Zwei Dachwege und eine zusätzliche Treppe erschließen den
+oberen Eingang; echte Wegsuche zum Distrikt positiv. Damit 28 Betten und 21/157 Typen.
+
+Birken-Ernte und Nachpflanzung anhand neuer Bauminstanzen auf zuvor dokumentierten
+Pflanzzellen bestätigt. 79 Eichen weiterhin lebend; jüngster Reifescan etwa 63–79 %.
+Zwölf zusätzliche Birkenplätze auf geräumten toten Kiefernflächen und neun weitere
+auf abgeernteten, innerhalb beider Arbeitsreichweiten liegenden Plätzen markiert.
+Insgesamt jetzt 33 Birken-Pflanzplätze; die jüngsten neun noch nicht als gewachsen
+bestätigt. Fehlende 27 Eichen-Fällmarkierungen ergänzt. Weitere 14 reife lebende
+Kiefern innerhalb der Holzfällerreichweite zur regulären Ernte markiert; zwei
+bestehende Zapfkiefern bleiben geschützt.
+
+Karottenbilanz zeigte steigenden Verbrauch und zeitweilig sinkende Vorräte. Deshalb
+14 freie, ebene und erreichbare Zellen zusätzlich markiert (insgesamt 34), Farm-
+Sollbesetzung zwei→drei. Weitere Holzfällerflagge kostenlos beauftragt; nachlesen.
+Sägewerk kurz betrieben, fünf Bretter belegt; vier für Dachtreppe verwendet,
+Sägewerk und Laufrad wieder pausiert. Mehrere Altersverluste, keine gemeldeten
+Hunger-/Durstflags in den kontrollierten Wachstumsschritten.
+
+Lokale ignorierte MCP-Helfer bei laufendem Server nur ohne Neubau ihrer Projekt-
+referenzen kompilieren; sonst sperrt Windows die aktiven Server-DLLs. Ein zunächst
+lesender Batchhelfer spart wiederholte Neubauten; Einzelaktionen haben frische
+Aktions-IDs, Zustandsbedingungen, Protokolle und keine automatischen Wiederholungen.
+
+Fortsetzung bis Tag 56: 25 lebende Biber, 28 Betten, Holzvorrat auf 150 gestiegen.
+Zweite Holzfällerflagge fertig bestätigt. Nach Aufwandsprüfung hat der Nutzer beide
+Ziele erneut bestätigt und einen effizienteren, gebündelten Langlauf beauftragt.
+Lokaler Beobachter kombiniert Bevölkerung, konkrete Vorräte, Hunger/Durst, kritische
+Arbeitsplätze und tatsächliche Fertigstellungen. Pro Abschnitt höchstens zehn kurze
+Simulationsintervalle, Pause nach jedem Intervall; Abbruch bei Reserve-/Personal-
+problemen, knappem Wohnraum, Zielerreichung oder Zeitgrenze. Lesepilot stoppt bei
+bereits erreichtem Bevölkerungsziel ohne Zeitänderung. Produktionspilot separat.
+
+Gebündelter Produktionspilot mit zwei Zeitabschnitten bestanden: Zielbeobachtung und
+Versorgungsprüfungen laufen ohne einzelne Agentenentscheidungen pro Abruf. Nach der
+festen Grenze korrekt pausiert; Brettziel zehn noch nicht erreicht (fünf vorhanden),
+keine falsche Zielmeldung. Stand danach Tag 57: 27 Biber, ein freies Bett, 166 Holz.
+Einmalige vollständige Terrainaufnahme (2500 Zellen) und aktueller Gebäudebestand
+vorhanden. Nächste vorgeprüfte Charge: vier Lodges auf 40 Betten, Transportposten,
+Hauptstraße und versetztes Lagerfeuer. 29 tote Vegetationshindernisse, kein lebender
+Forst auf den ausgewählten Bauzellen. Baufortschritt erst nach Fertigstellung zählen.
