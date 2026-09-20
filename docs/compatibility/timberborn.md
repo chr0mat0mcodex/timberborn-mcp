@@ -168,3 +168,8 @@ und Clientvalidierung dafür; Patch noch nicht installiert/live abgenommen.
 
 0.13.1 gesichert installiert, fünf Datei-Hashes bestätigt, private Konfiguration
 unverändert. Live-Abnahme der korrigierten Antwort nach Neustart noch offen.
+
+0.13.1 nun live bestätigt: sowohl wartende Markierung als auch unmittelbare reguläre
+Entfernung mit korrektem applied/removed und separatem Zustandsabgleich. Weiterer
+wartender Auftrag nach kurzer 7×-Simulation als verschwunden beobachtet, Holzfällung
+am Ziel ausgeschlossen; Simulation anschließend wieder pausiert. Patch-Abnahme erledigt.

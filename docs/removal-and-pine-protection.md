@@ -124,3 +124,12 @@ weiterhin keine Entfernung als Erfolg melden. Sechs Regressionstestfälle sicher
 Clientvertrag. Korrektur gebaut/automatisiert geprüft; Installation und erneuter
 Live-Nachweis der korrigierten Antwort noch offen. Biberarbeit über Zeit weiterhin
 nicht nachgewiesen; sofortige reguläre Entfernung ersetzt diesen Nachweis nicht.
+
+### Live-Abnahme 0.13.1 abgeschlossen
+
+Wartender Auftrag und Sofortentfernung liefern beide passende applied-Antworten;
+removed unterscheidet sie korrekt. Separate Zustandsabfragen stimmen überein.
+Ein weiterer zunächst wartender Auftrag wurde nach kurzer 7×-Simulation erledigt
+(Entity abwesend, Fällmarkierung zuvor entfernt). Individueller Worker nicht verfolgt.
+Simulation abschließend pausiert, keine offenen Testaufträge. Damit ist der oben noch
+offen genannte Patch-Livenachweis abgeschlossen.

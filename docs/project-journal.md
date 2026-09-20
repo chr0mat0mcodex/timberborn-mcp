@@ -764,3 +764,21 @@ Bei beendetem Spiel vollständige Sicherung von 0.13.0 erstellt und fünf Paketd
 installiert. Alle SHA256-Vergleiche erfolgreich; private Konfiguration byteidentisch.
 Vorhandene Abriss-/Flächen-/Prioritätsfreigaben erhalten. Nächster Schritt nach Start:
 Version/Sitzung lesen und korrigierte Sofortentfernungs-Antwort live nachweisen.
+
+## 2026-09-20 — 0.13.1 vollständig für den Antwortfehler live abgenommen
+
+Neue Sitzung/Version bestätigt. Erster Pilot: wartender Vegetationsauftrag meldet
+applied/removed=false, separat gelesen und zurückgenommen (8 MCP-Aufrufe).
+Weitere Stichprobe auf drei Kandidaten begrenzt; bereits beim zweiten Kandidaten
+reguläre Sofortentfernung: applied/removed=true, separate Abfrage bestätigt Abwesenheit.
+Erster wartender Auftrag zurückgenommen, Stichprobe beendet (10 MCP-Aufrufe).
+
+Abschließender Ausführungspilot an bekannter wartender Kiefer: Fällmarkierung entfernt,
+regulärer Abrissauftrag zunächst pending, dann Simulation auf 7×. Nach zwei Abfragen
+(etwa 6 Sekunden reale Laufzeit) Objekt nicht mehr vorhanden. Anschließend Pause
+wiederhergestellt und separat gelesen (16 MCP-Aufrufe). Kein direkter Worker-Trace;
+Ausführung des wartenden Auftrags aus Zustand und Abwesenheit abgeleitet, Holzfällung
+am Ziel ausgeschlossen. Kein Timeout und kein Retry. Zwei weitere Kiefern entfernt.
+
+Patch 0.13.1 beantwortet beide Fälle korrekt. Alle Testaufträge erledigt oder
+zurückgenommen; Simulation zuletzt 0. Lokale Rohdaten bleiben ausschließlich unter .local.

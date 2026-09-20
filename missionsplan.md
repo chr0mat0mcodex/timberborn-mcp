@@ -1247,3 +1247,18 @@ Timberborn beendet geprüft, 0.13.0 vollständig lokal gesichert. Fünf Paketdat
 von 0.13.1 installiert und per SHA256 geprüft. Private Konfiguration einschließlich
 aller Aktionsfreigaben byteidentisch erhalten. Nach Nutzerstart/MCP laden korrigierte
 Antwort für unmittelbare Vegetationsentfernung prüfen. Installation ist kein Live-Nachweis.
+
+### 7.40 Patch 0.13.1 und wartender Vegetationsauftrag live bestätigt
+
+- [x] Neue Spielsitzung und Modversion 0.13.1 geprüft.
+- [x] Wartender Auftrag korrekt applied/removed=false; Rücknahme separat bestätigt.
+- [x] Sofortige reguläre Entfernung korrekt applied/removed=true; Entity separat abwesend.
+- [x] Begrenzte Stichprobe nach zwei Kandidaten beendet; alle nur wartenden Aufträge zurückgenommen.
+- [x] Anschließend bekannte wartende Kiefer bei ausgeschlossener Holzfällung markiert,
+      Simulation kurz auf 7×; nach zwei Abfragen (etwa 6 Sekunden) Entity abwesend.
+- [x] Simulation wieder auf Pause gesetzt und separat bestätigt; kein offener Testauftrag.
+
+Drei begrenzte Piloten: 8, 10 und 16 MCP-Aufrufe. Sofortfall und Ausführung eines
+zunächst wartenden Auftrags sind getrennt belegt. Kein einzelner ausführender Biber
+verfolgt; Nachweis beruht auf Auftragsstatus, ausgeschlossener Fällmarkierung und
+späterer Entity-Abwesenheit. In dieser Runde zwei weitere Kiefern entfernt.
