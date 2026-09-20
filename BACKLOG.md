@@ -3,6 +3,14 @@
 Aktueller Fähigkeitsstand: [PROJECT_STATE.md](PROJECT_STATE.md).
 Hier stehen offene Aufgaben; datierte historische Kästchen sind kein aktueller Backlog.
 
+## Aktueller Spielauftrag
+
+100 lebende Biber erreichen und alle regulären Gebäudetypen mindestens einmal fertigstellen.
+[Abnahme, Fortschritt und vollständige Checkliste](docs/colony-goals.md).
+Aktuelle Schwerpunkte: Holznachschub, zusätzlicher Wohnraum, Forschung und Versorgung.
+15 reguläre Gebäude sind noch durch den MCP-Baupfad begrenzt; Größen, Sonderlayouts,
+Geländeanschluss und Sitzungsbudgets vor der breiten Bauabnahme erweitern und prüfen.
+
 ## Nächster sinnvoller Ausbau
 
 1. **Güterauswertung erweitern:** 40 registrierte Güter samt ResourceCount-Feldern in
@@ -49,8 +57,8 @@ Neue Funktionen werden entsprechend dem Projektauftrag vor ihrer Umsetzung konkr
 
 ## Noch offene Spielabnahme
 
-- Wohnraum bestätigt: zusätzliche Lodge fertig, zwölf Betten und keine Obdachlosen. Kapazität bei Bevölkerungswachstum weiter beobachten.
-- Nachhaltige Wasser-/Nahrungs-/Holzversorgung über einen begrenzten, aussagekräftigen Zeitraum nachweisen. Förster und 19 lebende Eichen bestätigt; 79 Pflanzplätze, davon 60 noch offen. Vollständige Bepflanzung, 30-tägige Reife und spätere Holzernte/Nachpflanzung offen. Brettproduktion und Erfinder derzeit pausiert.
+- Wohnraum bestätigt: 19 Betten und keine Obdachlosen; neue Mini-Lodge und zwei zusätzliche Lodges fertig. Kapazität bei Bevölkerungswachstum weiter beobachten.
+- Nachhaltige Wasser-/Nahrungs-/Holzversorgung über einen begrenzten, aussagekräftigen Zeitraum nachweisen. Förster, 79 lebende Eichen und zwölf lebende Birken bestätigt. Reife, Ernte und Nachpflanzzyklen offen. Brettproduktion pausiert, Forschung wieder aktiv.
 - Güterfluss, Fertigstellung und Wirkung bei weiteren Gebäuden getrennt prüfen.
 
 ## Später

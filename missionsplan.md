@@ -1,15 +1,18 @@
 # Mission: Timberborn über MCP spielen
 
-## Ziel
+## Aktuelle Spielziele seit 2026-09-21
 
-Ein KI-Agent beobachtet und steuert Timberborn über eine eigene lokale Mod und MCP.
-Er verwendet reguläre Spielregeln und baut eine kleine funktionierende Versorgung
-mit Wasser, Nahrung, Holz, Wegen und Wohnraum auf.
+1. **100 gleichzeitig lebende Biber erreichen** (Erwachsene und Kinder, keine Bots).
+2. **Jedes reguläre Gebäude der aktuellen Fraktion mindestens einmal fertigstellen.**
 
-Aktueller Schwerpunkt ist die Fähigkeit des Agenten: Welche Daten, Eingriffe und
-Rückabfragen benötigt er? Praktische Spieltests belegen diese Fähigkeiten; ein
-unkontrollierter Kolonieaufbau ersetzt keine gezielte Abnahme.
+Der Nutzer hat tatsächlichen Kolonieausbau ausdrücklich zum Auftrag gemacht.
+Der bisherige Schwerpunkt einzelner Funktionstests wird damit um einen fortlaufenden,
+kontrollierten Spielablauf erweitert. Reguläre Kosten, Forschung und Bauzeiten gelten.
+Aktueller Ausgangspunkt: zehn Biber, zwölf Betten, 15 von 157 regulären Bauvorlagen
+fertig vorhanden. Fünf Entwicklerwerkzeuge zählen nicht; andere Fraktionen separat.
+15 reguläre Vorlagen haben noch technische MCP-Baugrenzen und bleiben Teil des Ziels.
 
+[Abnahme, Etappen und vollständige Gebäudecheckliste](docs/colony-goals.md).
 ## Stand
 
 **0.21.1 ergänzt konkrete Gebäudeinventare; installiert und mit allen 30 Lesern sowie konkreten Inventaren live geprüft.**
@@ -35,7 +38,7 @@ Keine Fremdmod-Pflichtbasis; die frühere More-HTTP-API-Phase ist abgeschlossen.
 | Forschung | Erzeugung, Kostenabzug, Freischaltung und kostenfreie Wiederholung live bestätigt |
 | Ingame-MCP-Log | Fenster, Scrollen, Calls und Begründungen live bestätigt |
 | Fachliche Ablehnungen | Drei Fehlerfälle ohne Zustandsänderung live; noch nicht alle Bereiche spezifisch |
-| Vollständige Grundversorgung | Offen: Wohnraum, nachhaltige Bilanz und allgemeine Problembehandlung |
+| Vollständige Grundversorgung | Wohnraum erweitert und belegt; nachhaltige Bilanz und allgemeine Problembehandlung offen |
 
 ## Abnahmeschleife
 
@@ -69,7 +72,8 @@ Keine Fremdmod-Pflichtbasis; die frühere More-HTTP-API-Phase ist abgeschlossen.
 - [x] 16 zusätzliche Karottenzellen im Farmbereich markieren und tatsächliches Pflanzen bestätigen; Ernte separat offen.
 - [x] Förster einschließlich vorgelagerter Brettproduktion regulär bauen; zwölf Eichen tatsächlich pflanzen und Reichweite/Besetzung bestätigen.
 - [x] Eichenfläche auf 79 Pflanzplätze erweitern; 19 lebende Eichen nachgelesen.
-- [ ] Verbleibende 60 Pflanzaufträge, Eichenreife, Holzernte und Nachpflanzung über den vollständigen Zyklus bestätigen.
+- [x] Alle 79 Eichen und zwölf zusätzliche Birken tatsächlich gepflanzt und lebend bestätigt.
+- [ ] Eichen-/Birkenreife, Holzernte und Nachpflanzung über den vollständigen Zyklus bestätigen.
 - [ ] Negative Wasser-/Nahrungs-/Holzbilanz beheben und nachhaltige Versorgung mit Wohnraum abnehmen.
 - [ ] Anschließend einen begrenzten zusammenhängenden Agenten-Spielablauf abnehmen.
 

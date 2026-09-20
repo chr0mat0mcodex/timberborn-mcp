@@ -1,11 +1,17 @@
 # Projektstand
 
-Stand: 2026-09-20. Codeversion: **0.21.1**, Gebäudeinventardiagnose gebaut, regulär getestet, installiert und mit allen 30 Lesern live geprüft. Zuvor 0.21.0 mit 30 Lesern live bestätigt.
+Stand: 2026-09-21. Codeversion: **0.21.1**, Gebäudeinventardiagnose gebaut, regulär getestet, installiert und mit allen 30 Lesern live geprüft. Zuvor 0.21.0 mit 30 Lesern live bestätigt.
 Installiert ist **0.21.1**, fünf Datei-Hashes geprüft und Konfiguration erhalten. Zuvor unter **0.20.0**: 29 Leser live geprüft, danach Fehler bei weiter registrierten
 verstorbenen Bibern gefunden (Bedürfniszählung 13 statt 11 lebender Biber).
 Sofort-Wegsuche einschließlich Unterbrechung/Wiederherstellung unter **0.19.1** live bestätigt. Farm-/Holzfällerreichweiten unter 0.19.2 über den konkreten Terrainzugriff bestätigt.
 Die Version im [Manifest](mod/Timberborn.AgentBridge/manifest.json) ist die Codeversion;
 ältere datierte Einträge im Journal dokumentieren frühere Zustände.
+
+## Aktueller Spielauftrag
+
+Seit 2026-09-21: 100 lebende Biber und jede reguläre Gebäudevorlage mindestens einmal
+fertigstellen. Ausgangspunkt zehn Biber, 15/157 Folktails-Vorlagen bestätigt.
+15 reguläre Vorlagen haben noch MCP-Baugrenzen. [Fortschritt und Checkliste](docs/colony-goals.md).
 
 ## Produkt und Architektur
 
@@ -28,24 +34,21 @@ Einmal je Szene, geprüfte Verweise und SHA-256-Revision. Ruinenerträge und spe
 Betriebsbedingungen sind explizite Lücken; [Vertrag](docs/production-dependency-graph.md).
 Live bestätigt: 60 Güter (40 aktiv), 55 Rezepte, 162 Gebäude, 17 Quellen; 58.345 Byte MCP-Nutzdaten, stabile Revision. Zehn repräsentative Definitionen unabhängig mit offiziellen Blueprints verglichen.
 
-## Letzter begrenzter Wirkungstest
+## Letzter Spielstand und Wirkungstest
 
-Wohnraum auf zwölf Betten erweitert, keine Obdachlosen; Holzlager fertig und
-Einlagerung bestätigt. 16 zusätzliche Karottenzellen tatsächlich bepflanzt.
-Auf ausdrücklichen Nutzerauftrag Sägewerk, Laufrad und Förster regulär gebaut;
-Bretter produziert und geliefert. Förster erreichbar und mit einem Arbeiter besetzt.
-Auf Nutzerwunsch auf 79 Eichen-Pflanzplätze im bestätigten Förster-/Holzfällerbereich erweitert.
-19 Eichen tatsächlich gepflanzt, alle lebend und ohne gemeldeten Wasserstress;
-60 Pflanzaufträge offen. Reifezeit nominell 30 Tage;
-noch keine nachhaltige Holzernte und keine neue Fällmarkierung gesetzt.
+Tag 37: zuletzt 14 Biber (elf Erwachsene, drei Kinder), zugleich Höchststand seit Zielbeginn. Jetzt 19 Betten, keine Obdachlosen. Mini-Lodge, Treppe
+und zwei weitere Lodges regulär gebaut; echte Wegverbindungen auf die höhere
+Ebene bestätigt. 19/157 reguläre Gebäudetypen fertig belegt; zusätzlich Lagerfeuer und Zahn-Schleifstein.
 
-Sägewerk, Laufrad und Erfinder pausiert; Farm zwei Arbeiter, Baumeister einer,
-beide Pumpen je ein Arbeiter. Letzter Stand Tag 25 gegen 19:09, Spiel pausiert:
-acht Erwachsene, zwei Kinder, zwölf Betten. Letzte Bestandsabfrage 90 Wasser,
-220 Beeren, zehn Holz. Alterstodesmeldungen, keine abschließenden Hunger-/Durstflags.
-Zuvor Entnahme und Wiederauffüllung beider Pumpen bestätigt.
-[Belege und Grenzen](docs/supply-balance.md).
+Alle 79 Eichen und zwölf zusätzlichen Birken tatsächlich gepflanzt, lebend und
+ohne gemeldeten Wasserstress. Birken wachsen nominell sieben Tage, Eichen 30.
+15 weitere reife lebende Kiefern regulär zur Holzernte markiert; Vorrat vor dem
+Wohnungsbau 7→35. Letzte Bestände: 90 Wasser, 220 Beeren und acht Holz; Karotten zuletzt Tag 32: 30. Noch keine nachhaltige Gesamtbilanz oder 100-Biber-Abnahme.
 
+Sägewerk und Laufrad pausiert, Erfinder wieder aktiv. Pumpenpriorität VeryHigh,
+Nahrung und Holz High, Forschung Low. Simulationsabschnitte mit Pausen und
+Kontrollen für Bedürfnisse, Vorräte und Besetzung der Grundversorgung.
+[Spielziele und Checkliste](docs/colony-goals.md), [bisherige Versorgungsbelege](docs/supply-balance.md).
 ## Verifikation
 
 | Ebene | Beleg |

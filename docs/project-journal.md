@@ -1591,3 +1591,51 @@ besetzt, zum Abschluss außerhalb der Arbeitszeit. Letzter Zustand Tag 25 gegen
 19:09 pausiert, acht Erwachsene und zwei Kinder; 90 Wasser, 220 Beeren, zehn Holz.
 Keine zusätzlichen Fällmarkierungen. Vollständige Aufforstung und Reife weiterhin
 Arbeits-/Wachstumsprozess, nicht durch Markierungen als abgeschlossen gewertet.
+
+## 2026-09-21 — Neue Spielziele und erster Katalogfortschritt
+
+Nutzerauftrag: 100 gleichzeitig lebende Biber und jedes Gebäude mindestens einmal
+bauen. Vollständiger aktueller Folktails-Katalog gelesen: 162 Einträge, fünf explizite
+Entwicklerwerkzeuge ausgeschlossen, 157 reguläre Vorlagen. 15 Typen bereits fertig
+vorhanden, 15 reguläre Vorlagen vom aktuellen MCP-Baupfad technisch ausgeschlossen.
+Andere Fraktionen separat offen. Gebäudecheckliste in docs/colony-goals.md angelegt;
+Fertigstellungen zählen, bloße Bauaufträge nicht.
+
+Mini-Lodge regulär für 50 Forschungspunkte freigeschaltet (192→142), fünf Holz
+verbaut und zwei Anschlusswege gesetzt. Fertigstellung bestätigt: 13 Betten,
+16/157 Gebäudetypen. Erster Wachstumspilot bis Tag 29 gegen 11:15: Höchststand
+zwölf lebende Biber, danach gemeldeter Alterstod, aktuell neun Erwachsene und
+zwei Kinder. Keine Hunger-/Durstflags, Wasser 89, Beeren 220, Holz sieben.
+
+Zwölf tote Kiefern regulär entfernt und zwölf zusätzliche Birkenplätze markiert,
+79 Eichenplätze erhalten. Birken wachsen nominell sieben statt 30 Tage. Bepflanzung
+und Reife separat offen. 15 weitere lebende ausgewachsene Kiefern innerhalb der
+Holzfällerreichweite gefunden und für reguläre Holzernte markiert; die zuvor für
+Zapftests unmarkierten zwei Kiefern nicht in diesen Auftrag aufgenommen.
+Erfinder nach zusätzlicher erwachsener Arbeitskraft wieder aktiviert.
+
+Weitere Baugrenzen für das Gesamtziel: maximal 64 Blueprint-Zellen, 64 gecachte
+Vorschauvorlagen und 256 Validierungs-/Platzierungsversuche pro geladener Sitzung.
+Explizite Vorschau plus anschließende Platzierung verbrauchen zwei Validierungen.
+Nicht blind Grenzwerte entfernen; große Geometrien und Sonderlayouts getrennt
+gegen öffentliche Spielvalidierung und Antwortgrößen prüfen.
+
+Treppe regulär für 70 Punkte freigeschaltet (175→105), gebaut und darüber eine
+höhere Ebene erschlossen. Fünf tote Bauhindernisse regulär entfernt; teilweise
+sofort, teilweise als Arbeiterauftrag nach Bau des Zugangs. Zwei weitere Lodges
+fertiggestellt. Native Sofort-Wegabfrage zu beiden Häusern connected=true;
+19 Betten. Neuer Gebäudetyp Stairs ergibt 17/157.
+
+Tag 32: 79 Oak- und zwölf Birch-Objekte tatsächlich gepflanzt, alle lebend und
+ohne Wasserstress; Birkenwachstum etwa 54–87 Prozent. Keine bloße Hochrechnung
+von Markierungen. Neun Erwachsene, drei Kinder, 90 Wasser, 220 Beeren, 30 Karotten,
+14 Holz. Hohe/Sehr hohe Arbeitsprioritäten für Nahrung/Holz bzw. Pumpen,
+niedrige für Forschung gesetzt; native Besetzung bleibt separat zu prüfen.
+
+Fortsetzung bis Tag 37: 14 lebende Biber (elf Erwachsene, drei Kinder), 19 Betten.
+Zehn begrenzte Wachstumsabschnitte ohne Hunger-/Durstflags oder ausgefallene
+Grundversorgungsbesetzung; Holz vor dem nächsten Bau auf 28 gestiegen.
+Lagerfeuer und Zahn-Schleifstein regulär für zusammen 20 Holz fertiggestellt,
+beide erreichbar: jetzt 19/157 Vorlagen. Zehn tote Kiefern auf den Bau-/Wegzellen
+regulär entfernt. Bauarbeiter vorübergehend von eins auf drei erhöht, nach Abschluss
+Sollbesetzung wieder eins. Letzte Bestände 90 Wasser, 220 Beeren und acht Holz.
