@@ -93,3 +93,29 @@ found=false und building_not_found anschließend bestätigt. Wasser-/Beeren-/Hol
 vorher/nachher unverändert. Nur bestehende Lagerwarnung vorhanden. Der abschließende
 Listen-ID-Abgleich im lokalen Testskript verwendete zunächst die falsche JSON-Ebene;
 an gespeicherten Antworten korrigiert und erfolgreich geprüft, ohne erneute Mutation.
+
+
+## Inventardiagnose 0.21.1 — 2026-09-20
+
+Korrektur der bisherigen Interpretation: BufferedOutputStock ist ein globaler
+Ausgangsbestandszähler, kein nachgewiesener Pumpenbestand. Die eigene Bridge
+übernimmt das öffentliche ResourceCount-Feld unverändert. Die offizielle
+DistrictCenter.Folktails-Definition enthält SimpleOutputInventorySpec mit Capacity=20
+und IgnorableCapacity=true. Damit ist eine Überschreitung nomineller Kapazität
+grundsätzlich möglich; die konkrete Verteilung in dieser Kolonie ist noch nicht belegt.
+
+inspect_building_operation erhält inventories für fertiggestellte Gebäude:
+aktivierte Inventory-Komponenten mit Komponentenname, nomineller Gesamtkapazität,
+TotalStock, Input-/Output- und öffentlichen Zugriffsflags, IsFull/IsFullyReserved/
+IsUnblocked sowie je Gut Bestand, unreservierter Bestand, reservierte Kapazität und
+unreservierte Kapazität. Rohwerte; keine erfundene Ursache oder Lieferzusage.
+
+Quellen sind öffentliche Inventory-Methoden und BaseComponent.GetComponentsAllocating.
+Maximal acht Inventare mit jeweils 64 Gütern, kein stilles Abschneiden. Inventories=null
+bedeutet bei älteren Bridges oder unfertigen Gebäuden unbekannt; [] bedeutet keine
+aktivierten Inventarkomponenten am fertigen Ziel. Keine Träger-/Baustelleninventarliste,
+keine globale Summengleichheit zugesichert. Freie Kapazitäten je Gut nicht addieren;
+Kapazität kann vom Spiel ignoriert werden, dieses Flag ist hier nicht als Laufzeitwert verfügbar.
+
+Installation und gezielter Live-Abgleich von Distriktzentrum, beiden Pumpen und Tanks
+stehen aus. Spiel in diesem Entwicklungsschritt nicht verändert.

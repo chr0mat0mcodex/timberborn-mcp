@@ -18,7 +18,7 @@ public sealed partial class NativeClient
     public async Task<BridgeEnvelope<NativeProductionGraph>> ProductionGraph(CancellationToken ct)
     {
         var raw=await Get<JsonElement>("production-graph",ct);
-        if(raw.BridgeVersion!="0.21.0")throw new InvalidDataException("Production graph unavailable");
+        if(raw.BridgeVersion is not ("0.21.0" or "0.21.1"))throw new InvalidDataException("Production graph unavailable");
         var graph=raw.Data.Deserialize<NativeProductionGraph>(NativeJson.Options)??throw new InvalidDataException();
         ValidateGraph(graph);
         string context=graph.GameVersion+"\n"+graph.Faction+"\n"+raw.Data.GetProperty("definitions").GetRawText();

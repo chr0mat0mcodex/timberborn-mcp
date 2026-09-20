@@ -16,7 +16,7 @@ pwsh -NoProfile -File ./scripts/verify.ps1
 Das Skript setzt projektlokale Caches, verwendet Locked-Mode-Restore, baut Release und
 führt die regulären Tests mit synthetischen Daten aus. Der erste Restore benötigt
 Netzwerkzugriff; Abhängigkeiten sind in Directory.Packages.props und Lockfiles gepinnt.
-Keine globalen Tools werden installiert. Aktueller Nachweis: 478 Tests.
+Keine globalen Tools werden installiert. Aktueller Nachweis: 487 Tests.
 
 Bei reinen Dokumentations-/Beschreibungsänderungen genügen Inhalts-, Link-, JSON- und
 Diff-Prüfung; keine unnötige Wiederholung der Spieltests.

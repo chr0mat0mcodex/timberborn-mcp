@@ -1422,7 +1422,7 @@ Gebäudezugang frei, Distriktdistanz 4; Sofort-Wegverbindung von beiden Pumpen b
 | --- | ---: | ---: |
 | Gesamtbestand | 138 | 138 |
 | Lagerbestand | 30 | 60 |
-| Produktionspuffer | 108 | 78 |
+| Globale Ausgangsbestände | 108 | 78 |
 | Gesamtkapazität | 80 | 110 |
 
 Die 30 Einheiten sind als Umlagerung belegt. Beide Pumpen melden am Ende weiterhin
@@ -1436,3 +1436,31 @@ Kontrollpunkten, keine Hunger-/Durstwarnflags. Beeren 221→214, Holz 20→16 tr
 Baukosten 15 (gleichzeitige Holzgewinnung nicht aus Nettobestand allein quantifizieren).
 Tank bleibt als nutzbare Testkorrektur bestehen, Simulation am Ende bestätigt pausiert.
 Keine neue Modversion, keine Screenshots, keine weiteren Gebäude-/Personaländerungen.
+
+
+## Inventardiagnose 0.21.1 — 2026-09-20
+
+Korrektur der bisherigen Interpretation: BufferedOutputStock ist ein globaler
+Ausgangsbestandszähler, kein nachgewiesener Pumpenbestand. Die eigene Bridge
+übernimmt das öffentliche ResourceCount-Feld unverändert. Die offizielle
+DistrictCenter.Folktails-Definition enthält SimpleOutputInventorySpec mit Capacity=20
+und IgnorableCapacity=true. Damit ist eine Überschreitung nomineller Kapazität
+grundsätzlich möglich; die konkrete Verteilung in dieser Kolonie ist noch nicht belegt.
+
+inspect_building_operation erhält inventories für fertiggestellte Gebäude:
+aktivierte Inventory-Komponenten mit Komponentenname, nomineller Gesamtkapazität,
+TotalStock, Input-/Output- und öffentlichen Zugriffsflags, IsFull/IsFullyReserved/
+IsUnblocked sowie je Gut Bestand, unreservierter Bestand, reservierte Kapazität und
+unreservierte Kapazität. Rohwerte; keine erfundene Ursache oder Lieferzusage.
+
+Quellen sind öffentliche Inventory-Methoden und BaseComponent.GetComponentsAllocating.
+Maximal acht Inventare mit jeweils 64 Gütern, kein stilles Abschneiden. Inventories=null
+bedeutet bei älteren Bridges oder unfertigen Gebäuden unbekannt; [] bedeutet keine
+aktivierten Inventarkomponenten am fertigen Ziel. Keine Träger-/Baustelleninventarliste,
+keine globale Summengleichheit zugesichert. Freie Kapazitäten je Gut nicht addieren;
+Kapazität kann vom Spiel ignoriert werden, dieses Flag ist hier nicht als Laufzeitwert verfügbar.
+
+Installation und gezielter Live-Abgleich von Distriktzentrum, beiden Pumpen und Tanks
+stehen aus. Spiel in diesem Entwicklungsschritt nicht verändert.
+
+0.21.1 gebaut und separat paketiert; 487 reguläre Tests (474 Unit, 13 Integration) bestanden. Mod-Build ohne Warnungen/Fehler. Installation wartet auf Spielende durch Nutzer; noch 0.21.0 installiert.

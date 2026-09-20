@@ -1,6 +1,6 @@
 # Projektstand
 
-Stand: 2026-09-20. Codeversion: **0.21.0**, Produktionsgraph und Lebenszustandskorrektur gebaut, installiert und mit allen 30 Lesern live geprüft.
+Stand: 2026-09-20. Codeversion: **0.21.1**, Gebäudeinventardiagnose regulär getestet; Installation/Live-Abnahme offen. 0.21.0 bleibt installiert und mit 30 Lesern live bestätigt.
 Installiert ist **0.21.0**, fünf Datei-Hashes geprüft und Konfiguration erhalten. Zuvor unter **0.20.0**: 29 Leser live geprüft, danach Fehler bei weiter registrierten
 verstorbenen Bibern gefunden (Bedürfniszählung 13 statt 11 lebender Biber).
 Sofort-Wegsuche einschließlich Unterbrechung/Wiederherstellung unter **0.19.1** live bestätigt. Farm-/Holzfällerreichweiten unter 0.19.2 über den konkreten Terrainzugriff bestätigt.
@@ -31,7 +31,7 @@ Live bestätigt: 60 Güter (40 aktiv), 55 Rezepte, 162 Gebäude, 17 Quellen; 58.
 ## Letzter begrenzter Wirkungstest
 
 Zusätzlichen kleinen Wassertank regulär gebaut, auf Wasser gestellt und 30/30 gefüllt.
-Beide Pumpen per Weg verbunden; Umlagerung aus Pumpenpuffern bestätigt. Gesamtwasser
+Beide Pumpen per Weg verbunden; Umlagerung aus globalen Ausgangsbeständen bestätigt. Gesamtwasser
 138 unverändert, Pumpen weiter outputSpace=false. Keine Nachhaltigkeitszusage.
 11 lebende Biber, Simulation pausiert. [Belege](docs/supply-balance.md).
 
@@ -39,7 +39,7 @@ Beide Pumpen per Weg verbunden; Umlagerung aus Pumpenpuffern bestätigt. Gesamtw
 
 | Ebene | Beleg |
 | --- | --- |
-| Automatisch | 478 reguläre Tests: 465 Unit, 13 Integration; drei opt-in Live-Tests im Standardlauf übersprungen |
+| Automatisch | 487 reguläre Tests: 474 Unit, 13 Integration; drei opt-in Live-Tests im Standardlauf übersprungen |
 | Mod-Build | Gegen Timberborn 1.1.2.4, ohne Warnungen/Fehler |
 | Installation | Fünf Paketdateien per SHA-256 geprüft, private Konfiguration erhalten |
 | Live 0.21.0 | Alle 30 Leser; Produktionsgraph samt Ketten/Quellen/Größe/Revision; 11 lebende Biber und zwei Tote korrekt getrennt, beide toten Einzelziele ohne aktuelle Bedürfnisse |

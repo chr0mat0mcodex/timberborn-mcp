@@ -28,8 +28,8 @@ Hier stehen offene Aufgaben; datierte historische Kästchen sind kein aktueller 
    eingrenzen. Mittleres Lager auf Beeren gesetzt; Tagesproduktion steigt auf 19. Vergleich
    wegen zweier Alterstodesfälle nach rund 1,22 Tagen abgebrochen, keine Dreitagesabnahme.
    Zusätzlicher kleiner Wassertank unter 0.21.0 gebaut und gefüllt; Lager 30→60,
-   Pumpenpuffer 108→78, Gesamtwasser 138 unverändert. Umlagerung bestätigt,
-   Pumpen weiter ohne Ausgangsplatz. Puffer-/Kapazitätsbefund gezielt klären; Nachhaltigkeit offen.
+   globale Ausgangsbestände 108→78, Gesamtwasser 138 unverändert. Umlagerung bestätigt,
+   Pumpen weiter ohne Ausgangsplatz. Globale Ausgangsbestände nicht als Pumpenbestand interpretieren. 0.21.1 ergänzt Gebäudeinventare; installieren und an Distriktzentrum, Pumpen und Tanks live abgleichen. Nachhaltigkeit offen.
 
 Diese Reihenfolge ist eine Planung, keine Behauptung bereits vorhandener Werkzeuge.
 Neue Funktionen werden entsprechend dem Projektauftrag vor ihrer Umsetzung konkretisiert.

@@ -77,6 +77,41 @@ public sealed class DiagnosticsTests
         var invalid=Detail() with{LifeState=life};
         Assert.Equal("backend_incompatible",(await Call("inspect_beaver_needs",invalid,new{id=Id,session=Session,offset=0,limit=32}))["error"]!["code"]!.GetValue<string>());
     }
+    [Fact]
+    public async Task InventoryMayExceedCapacityWithoutBeingRejected()
+    {
+        var e=Envelope(Operation() with{Inventories=[new("Output",20,78,false,true,false,true,true,true,true,[new("Water",78,70,2,-60)])]});
+        e["bridgeVersion"]="0.21.1";
+        var result=await Call("inspect_building_operation",e,new{id=Id,session=Session});
+        Assert.Equal("ok",result["status"]!.GetValue<string>());
+        Assert.Equal(78,result["data"]!["inventories"]![0]!["totalStock"]!.GetValue<int>());
+        Assert.Equal(-60,result["data"]!["inventories"]![0]!["goods"]![0]!["unreservedCapacity"]!.GetValue<int>());
+    }
+    [Fact]
+    public async Task OlderBridgeLeavesInventoriesUnknownNotEmpty()
+    {
+        var e=Envelope(Operation());e["data"]!.AsObject().Remove("inventories");
+        var r=await Call("inspect_building_operation",e,new{id=Id,session=Session});
+        Assert.Equal("ok",r["status"]!.GetValue<string>());Assert.Null(r["data"]!["inventories"]);
+    }
+    [Theory]
+    [InlineData("nullGoods")][InlineData("negative")][InlineData("unreserved")][InlineData("duplicate")]
+    [InlineData("total")][InlineData("missing")][InlineData("unfinished")]
+    public async Task RejectsInvalidInventoryObservations(string defect)
+    {
+        var e=Envelope(Operation() with{Inventories=[new("Output",30,10,false,true,false,true,false,false,true,[new("Water",10,8,2,18)])]});
+        e["bridgeVersion"]="0.21.1";var d=e["data"]!;var i=d["inventories"]![0]!;
+        switch(defect){
+            case "nullGoods":i["goods"]=null;break;
+            case "negative":i["goods"]![0]!["stock"]=-1;break;
+            case "unreserved":i["goods"]![0]!["unreservedStock"]=11;break;
+            case "duplicate":i["goods"]!.AsArray().Add(i["goods"]![0]!.DeepClone());i["totalStock"]=20;break;
+            case "total":i["totalStock"]=11;break;
+            case "missing":d.AsObject().Remove("inventories");break;
+            case "unfinished":d["finished"]=false;d["workplace"]=null;d["manufacturing"]=null;break;
+        }
+        Assert.Equal("backend_incompatible",(await Call("inspect_building_operation",e,new{id=Id,session=Session}))["error"]!["code"]!.GetValue<string>());
+    }
     private sealed class Reply(string body):HttpMessageHandler
     {
         public int Calls{get;private set;}
