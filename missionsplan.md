@@ -1240,3 +1240,10 @@ Bleibende Teständerungen: Farmhausbaustelle weg, ein Schuttstapel gelöscht (G�
 fünf neue Stapel zunächst verbleibend; einzelne kolonienahe Kiefer entfernt und ihre
 Fällmarkierung entfernt. Weg regulär ersetzt (neue ID). Simulation blieb durchgehend pausiert.
 Nutzer um Speichern/Beenden für Patchinstallation gebeten; keine offenen Wiederholungsversuche.
+
+### 7.39 Patch 0.13.1 installiert
+
+Timberborn beendet geprüft, 0.13.0 vollständig lokal gesichert. Fünf Paketdateien
+von 0.13.1 installiert und per SHA256 geprüft. Private Konfiguration einschließlich
+aller Aktionsfreigaben byteidentisch erhalten. Nach Nutzerstart/MCP laden korrigierte
+Antwort für unmittelbare Vegetationsentfernung prüfen. Installation ist kein Live-Nachweis.

@@ -757,3 +757,10 @@ Installation/Live-Antwortprüfung des Patches offen. Nutzer um Speichern/Beenden
 
 Patchprüfung 0.13.1: 261 reguläre Tests bestanden (248 Unit-, 13 Integrationstests),
 drei Live-Tests im Standardlauf übersprungen. Lösung ohne Warnungen/Fehler gebaut.
+
+## 2026-09-20 — Patch 0.13.1 installiert
+
+Bei beendetem Spiel vollständige Sicherung von 0.13.0 erstellt und fünf Paketdateien
+installiert. Alle SHA256-Vergleiche erfolgreich; private Konfiguration byteidentisch.
+Vorhandene Abriss-/Flächen-/Prioritätsfreigaben erhalten. Nächster Schritt nach Start:
+Version/Sitzung lesen und korrigierte Sofortentfernungs-Antwort live nachweisen.

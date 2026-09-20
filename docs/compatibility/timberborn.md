@@ -165,3 +165,6 @@ wirksam nach neuem Laden des Spielstands; Abriss selbst weiterhin offen.
 live bestätigt. Sonderfall: reguläres Demolishable.Mark kann unmittelbar entfernen;
 separate Abwesenheitsprüfung bestätigt. 0.13.1 korrigiert ausschließlich Antwortbewertung
 und Clientvalidierung dafür; Patch noch nicht installiert/live abgenommen.
+
+0.13.1 gesichert installiert, fünf Datei-Hashes bestätigt, private Konfiguration
+unverändert. Live-Abnahme der korrigierten Antwort nach Neustart noch offen.
