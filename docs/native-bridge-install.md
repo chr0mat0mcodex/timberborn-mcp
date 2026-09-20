@@ -1,8 +1,8 @@
 # Eigene Agent Bridge installieren und MCP starten
 
 Aktueller Entwicklungsstand: **0.19.2**, gebaut gegen Timberborn 1.1.2.4.
-0.19.2 ist lokal installiert. Die Sofort-Wegsuche ist live bestätigt. 0.19.2 ergänzt den
-direkten Terrain-Reichweitenzugriff; Erneute Reichweitenabnahme steht aus.
+0.19.2 ist lokal installiert. Alle 26 Leser sowie konkrete Farm-/Holzfällerreichweiten
+sind live bestätigt; die Sofort-Wegsuche einschließlich Unterbrechung bereits unter 0.19.1.
 Benötigt wird ausschließlich unsere eigene Spielmod; `RequiredMods` ist leer.
 MCP-Server und Mod sind zwei getrennte Prozesse/Komponenten. Kein More-HTTP-API-Setup nötig.
 

@@ -13,7 +13,7 @@ unkontrollierter Kolonieaufbau ersetzt keine gezielte Abnahme.
 ## Stand
 
 **0.19.2 ist gebaut und installiert. Sofort-Wegsuche und historische Bilanz
-sind gezielt live bestätigt. Der direkte Terrain-Reichweitenzugriff benötigt den nächsten Live-Test.**
+sind gezielt live bestätigt, ebenso Farm-/Holzfällerreichweiten. Alle 26 Leser bestehen den Live-Test.**
 [Projektstand](PROJECT_STATE.md), [Werkzeugkatalog](docs/tools.md), [offene Arbeiten](BACKLOG.md).
 Keine Fremdmod-Pflichtbasis; die frühere More-HTTP-API-Phase ist abgeschlossen.
 
@@ -22,8 +22,8 @@ Keine Fremdmod-Pflichtbasis; die frühere More-HTTP-API-Phase ist abgeschlossen.
 | Eigener MCP-/Mod-Zugang | Live bestätigt; authentifizierter lokaler Transport und Spielthread-Queue |
 | Bevölkerung und Betten | Live bestätigt |
 | Vollständige Güter, aktive Status und Ziele | 40 Güter und eine Lagerwarnung mit Ziel live bestätigt; Mehrfachziele und Verschwinden bestätigt; Biberwarnungen offen |
-| Karte, Gebäude und Baustellen | Live genutzt; Sofort-Wegsuche inklusive Unterbrechung live bestätigt; konkrete Arbeitsreichweiten noch offen |
-| Produktion/Verbrauch über Zeit | Native Güterhistorie mit Produktion/Verbrauch live lesbar; Zeitsemantik separat prüfen |
+| Karte, Gebäude und Baustellen | Live genutzt; Sofort-Wegsuche inklusive Unterbrechung live bestätigt; Farm-/Holzfällerreichweiten live bestätigt |
+| Produktion/Verbrauch über Zeit | Native Güterhistorie mit Produktion/Verbrauch und Fortschreibung über einen Tageswechsel live bestätigt |
 | Generische Bauaufträge | Mehrere Vorlagen live; Geometrien/Sonderformen begrenzt |
 | Lager, Farm, Gebäudepause | Live bestätigt |
 | Personal, Prioritäten, Flächen, Entfernung | Gezielte Live-Piloten bestanden |
@@ -48,7 +48,8 @@ Keine Fremdmod-Pflichtbasis; die frühere More-HTTP-API-Phase ist abgeschlossen.
 - [x] Mehrfachziele und tatsächliches Verschwinden einer Statusgruppe live prüfen.
 - [ ] Biberwarnungen im Live-Test ergänzen.
 - [x] Gebäudezugang und Sofort-Wegverbindung einschließlich Unterbrechung/Wiederherstellung gezielt prüfen.
-- [ ] Konkrete Farm-/Holzfällerreichweiten über BuildingTerrainRange live abnehmen.
+- [x] Konkrete Farm-/Holzfällerreichweiten über BuildingTerrainRange live abnehmen (485/611 Zellen; erste/letzte Seite).
+- [x] Native Produktions-/Verbrauchshistorie über einen Tageswechsel prüfen.
 - [ ] Produktionshindernisse und Bedürfnisse vollständig unterscheiden.
 - [ ] Versorgung über Zeit bewerten und fehlenden Wohnraum gezielt nachweisen.
 - [ ] Anschließend einen begrenzten zusammenhängenden Agenten-Spielablauf abnehmen.

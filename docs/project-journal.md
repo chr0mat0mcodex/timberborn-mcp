@@ -1260,3 +1260,16 @@ Nach bestätigtem Spielende erneut Prozessfreiheit geprüft, vorherigen Modordne
 gesichert und fünf Paketdateien per SHA-256 verglichen. Private Konfiguration unverändert.
 Keine Spieländerungen während der Installation. Neustart/Laden durch Nutzer und erneute
 Farm-/Holzfällerreichweitenabnahme stehen aus.
+
+## 2026-09-20 — 0.19.2 Reichweiten und Lesekatalog live bestätigt
+
+Nach Neustart und Laden durch den Nutzer: Holzfäller 611 und Farm 485 Rasterzellen
+über BuildingTerrainRange, supported=true und explizite Quelle bestätigt. Erste und
+letzte Seite jeweils geprüft; letzte Seite genau ein Eintrag, keine Folgeseite.
+Straßenverbindungen zum Distriktzentrum positiv (Distanzen 17/9). Keine Spieländerungen.
+Anschließend opt-in Integrationstest mit allen 26 Lesewerkzeugen bestanden.
+
+Missionsplan und aktuelle Dokumentation abgeglichen. 439 reguläre Tests und Mod-Build
+bleiben der Nachweis des unveränderten Codes; keine unnötige Wiederholung für diese
+Dokumentationsänderung. Biberwarnungen und allgemeine Bedürfnis-/Produktionsdiagnose
+bleiben offen; einzelne Terrain-Piloten belegen keine vollständige Gebäudedeckung.

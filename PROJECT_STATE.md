@@ -1,7 +1,7 @@
 # Projektstand
 
-Stand: 2026-09-20. Codeversion: **0.19.2**, gebaut und installiert; Live-Abnahme ausstehend.
-Sofort-Wegsuche einschließlich Unterbrechung/Wiederherstellung unter **0.19.1** live bestätigt. Farm-/Holzfällerreichweiten benötigen den neuen konkreten Terrainzugriff.
+Stand: 2026-09-20. Codeversion: **0.19.2**, gebaut, installiert und gezielt live bestätigt.
+Sofort-Wegsuche einschließlich Unterbrechung/Wiederherstellung unter **0.19.1** live bestätigt. Farm-/Holzfällerreichweiten unter 0.19.2 über den konkreten Terrainzugriff bestätigt.
 Die Version im [Manifest](mod/Timberborn.AgentBridge/manifest.json) ist die Codeversion;
 ältere datierte Einträge im Journal dokumentieren frühere Zustände.
 
@@ -25,6 +25,7 @@ Die Version im [Manifest](mod/Timberborn.AgentBridge/manifest.json) ist die Code
 | Automatisch | 439 reguläre Tests: 426 Unit, 13 Integration; drei opt-in Live-Tests im Standardlauf übersprungen |
 | Mod-Build | Gegen Timberborn 1.1.2.4, ohne Warnungen/Fehler |
 | Installation | Fünf Paketdateien per SHA-256 geprüft, private Konfiguration erhalten |
+| Live 0.19.2 | Alle 26 Leser bestanden; Holzfäller 611 und Farm 485 Terrainzellen, erste und letzte Ergebnisseite geprüft |
 | Live 0.18.0 | Alle 22 Leser bestanden; 40 Güter, drei Beispielvorräte deckungsgleich, eine Lagerwarnung mit Ziel und unabhängiger Bestätigung; unbekannte ID und stale_session korrekt |
 | Live 0.17.2 | template_locked, stale_session, state_conflict; unveränderter Zustand, rejected im Log |
 | Live Forschung | Regulär produzierte Punkte, bezahlter Unlock 35 → 5, Wiederholung ohne zweiten Abzug, gültige Bauvalidierung danach |
@@ -43,11 +44,12 @@ sichtbare aktive Entity-Status und betroffene Ziele; [Vertrag](docs/economy-obse
 Live bestätigt: Lagerwarnung, Mehrfachziele, Verschwinden und Wiederherstellung; Biberwarnungen offen.
 0.19.0 ergänzt Gebäudezugang, echte Straßenverbindungen, Arbeitsreichweiten und native
 Güterhistorien mit Produktions-/Verbrauchswerten. [Vertrag und Pilot](docs/logistics.md).
-Alle 26 Leser waren unter 0.19.0 live aufrufbar. Funktionale Folgeprüfungen:
+Alle 26 Leser unter 0.19.2 erneut live bestanden. Funktionale Folgeprüfungen:
 Sofort-Wegsuche unter 0.19.1 mit true → false → true bei Unterbrechung/Wiederaufbau bestätigt;
 Güterhistorie bleibt tagsüber unverändert und erhält zum Tageswechsel neue Produktions-/Verbrauchsdaten.
 Farm/Holzfäller besitzen keine allgemeinen Range-Provider; 0.19.2 ergänzt BuildingTerrainRange.GetRange.
-Installiert; Live-Nachweis dieser Reichweite noch offen. Weitere Grenzen: vollständige
+Live bestätigt: Holzfäller 611, Farm 485 Zellen; Quelle building_terrain_range sowie erste und letzte Seite geprüft.
+Das belegt Navigationsreichweite, nicht Erntefähigkeit oder Produktionsleistung. Weitere Grenzen: vollständige
 UI-Meldungsabdeckung, Biberwarnungen, Bedürfnisse/Produktionshindernisse und nachhaltige Versorgung.
 Die Grundversorgungsabnahme ist nicht vollständig: einzelne Produktionsketten belegt,
 Wohnraum und nachhaltige Gesamtversorgung noch offen. [Backlog](BACKLOG.md).

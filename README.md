@@ -5,11 +5,11 @@ das Spiel strukturiert zu beobachten und über reguläre Spielaktionen zu steuer
 Ziel ist ein Agent, der Wasser, Nahrung, Holz, Wege und Wohnraum aufbaut und betreibt.
 
 **Entwicklungsstand: Agent Bridge 0.19.2**, gebaut gegen Timberborn **1.1.2.4 / Folktails**.
-**0.19.2 ist installiert; unter 0.18.0 live bestätigt:** alle 22 Leser, 40 registrierte Güter
-und eine Lagerwarnung mit betroffenem Ziel. Weitere Warnungstypen bleiben zu prüfen.
+**0.19.2 ist installiert; alle 26 Leser sind live geprüft.** 40 registrierte Güter
+und Lagerwarnungen mit betroffenen Zielen sind bestätigt. Weitere Warnungstypen bleiben zu prüfen.
 Die Güterhistorie ist über einen Tageswechsel und die Sofort-Wegsuche einschließlich
-Unterbrechung/Wiederaufbau live bestätigt. 0.19.2 ergänzt den direkten Terrainzugriff
-für Farm-/Holzfällerreichweiten; deren Live-Abnahme steht aus.
+Unterbrechung/Wiederaufbau live bestätigt. Der direkte Terrainzugriff liefert im Live-Pilot
+485 Zellen für die Farm und 611 für den Holzfäller; erste und letzte Seite geprüft.
 439 reguläre Tests bestehen (426 Unit, 13 Integration).
 Die Basisaktionen funktionieren; zuverlässiges autonomes Koloniemanagement ist noch in Entwicklung.
 
@@ -23,7 +23,7 @@ Regression im Repository; [Referenzen und Legacy-Abgrenzung](docs/references/REA
 | Bereich | Implementierter Umfang |
 | --- | --- |
 | Zustand | Bevölkerung, Betten, vollständiger Güterleser, aktive Status mit Zielen, Karte, Gebäude, Baustellen, Arbeiterzuordnung |
-| Logistik (0.19.0) | Gebäudezugang, native Wegsuche, Arbeitsreichweiten, gespeicherte Produktion/Verbrauch; Live-Abnahme offen |
+| Logistik | Gebäudezugang, Sofort-Wegsuche einschließlich Unterbrechung, Farm-/Holzfällerreichweiten und Güterhistorie über Tageswechsel live bestätigt |
 | Bauen | Vorlagenkatalog, Kosten/Freischaltung, räumliche Vorprüfung, Spielvalidierung, reguläre Bauaufträge |
 | Betrieb | Gebäudepause, Sollbesetzung, Arbeitsplatz-/Bauprioritäten, Lagerwahl und Lagermodi |
 | Flächen | Anbau und Baumfällmarkierungen, Pflanzmarkierungen, Kiefernschutz durch Entfernen von Fällmarkierungen |
@@ -42,7 +42,7 @@ Karotten-Anbau-/Erntezyklus und Forschungsproduktion mit bezahlter Freischaltung
 Das bestätigt konkrete Abläufe, nicht jede Vorlage, Fraktion oder eine dauerhaft
 tragfähige Versorgung. Die neuen [Güter-/Statusleser](docs/economy-observations.md) ergänzen die
 bisherige Water/Berries/Log-Kurzansicht. Vollständige UI-Meldungsabdeckung,
-Produktionsblockaden und verlässliche Erreichbarkeit bleiben [offen](BACKLOG.md).
+Produktionsblockaden und Erreichbarkeit in weiteren Sonderfällen bleiben [offen](BACKLOG.md).
 
 ## Aufbau
 

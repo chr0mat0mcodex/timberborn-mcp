@@ -1,8 +1,8 @@
 # Erreichbarkeit, Arbeitsreichweite und Versorgungsverlauf
 
 Codeversion und Installation: 0.19.2. Die Sofort-Wegsuche ist unter 0.19.1 live bestätigt.
-Der konkrete Terrain-Reichweitenzugriff ist in 0.19.2 ergänzt und installiert; seine
-Live-Abnahme steht aus. Vier zusätzliche Leser, keine Fremdmod oder Bibliothek.
+Der konkrete Terrain-Reichweitenzugriff ist unter 0.19.2 für Farm/Holzfäller live bestätigt.
+Vier zusätzliche Leser, keine Fremdmod oder Bibliothek.
 
 ## Gebäudezugang
 
@@ -65,7 +65,7 @@ vollständiger Kalendertage und keine Prognose sicherer Dauer-Versorgung. Eine v
 belegte historische Bilanz ist verfügbar; Dauer, Tagesgrenzen und Fortschreibung werden
 im Live-Pilot gezielt überprüft. 32 Stichproben je Seite, Zeit-/Session-Metadaten wie bisher.
 
-## Belege und nächster Pilot
+## Belege und historische Korrekturschleife
 
 Öffentliche lokale Metadaten und vorhandene Architektur geprüft. Bindito-Singletons und
 Entity-Komponenten entsprechen dem bestehenden offiziellen Integrationsweg. Keine private
@@ -82,9 +82,9 @@ supported=false. Das ist ein korrektes Unknown-Ergebnis, aber keine erfüllte Re
 
 0.19.1 verwendet deshalb die öffentliche Sofort-Wegsuche sowie AllComponents.OfType
 für Interface-Implementierungen statt registrierter Lookup-Schlüssel. Der Native-Client
-lehnt Weg-/Reichweitenantworten aus 0.19.0 nun ausdrücklich ab. Neue Live-Abnahme offen.
+lehnt Weg-/Reichweitenantworten aus 0.19.0 ausdrücklich ab. Die damalige Folgeprüfung ist unten dokumentiert.
 
-Nach Installation erneut: verbundenes Gebäudepaar und eine kontrolliert unterbrochene Verbindung;
+Der damalige Prüfplan nach Installation: verbundenes Gebäudepaar und eine kontrolliert unterbrochene Verbindung;
 Eingangsblockade/fehlender Zugang separat. Arbeitsreichweiten mindestens Farm/Holzfäller
 gegen vorhandene Karten-/Flächenkoordinaten prüfen. Water/Berries/Log-Historien über
 mindestens zwei Spielzeitpunkte lesen und native Produktions-/Verbrauchswerte mit
@@ -106,4 +106,18 @@ regulärem Wiederaufbau, alles bei pausierter Simulation. Wegstück wiederherges
 Farm und Holzfäller liefern auch über AllComponents keine IBuildingWithRange-Provider.
 Dieser Ansatz war daher unzureichend. Öffentliche Metadaten belegen den konkreten
 BuildingTerrainRange.GetRange-Zugriff; 0.19.2 nutzt ihn direkt. Alte Reichweitenantworten
-werden vom neuen Client verworfen. Neue Live-Abnahme ausstehend.
+werden vom neuen Client verworfen. Der folgende Pilot bestätigt die Korrektur.
+
+## Live-Abnahme 0.19.2 — 2026-09-20
+
+Alle 26 Leser im opt-in MCP-/HTTP-Livetest bestanden. Der gezielte Terrain-Pilot
+liefert supported=true und source=building_terrain_range: Holzfäller 611, Farm 485
+Rasterzellen. Jeweils erste und letzte Seite geprüft; die letzte enthält genau einen
+Eintrag und hasMore=false. Mittlere Seiten wurden nicht einzeln vollständig abgerufen.
+Beide Gebäude sind per Sofort-Wegsuche mit dem Distriktzentrum verbunden (17/9).
+Dieser Pilot war ausschließlich lesend.
+
+Die Zellen belegen native Navigationsreichweite, keine Erntefähigkeit, konkrete
+Arbeitszuordnung oder Produktionsleistung. Weitere Gebäudetypen und Änderungen der
+Reichweite bleiben separate Testfälle. Biberwarnungen waren bislang nicht aktiv und
+sind daher nicht live abgenommen.
