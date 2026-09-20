@@ -1205,3 +1205,23 @@ Listenvergleich und zwei Objektstichproben bestätigen die Trennung von markiert
 und unmarkierten Zellen. Die 124 unmarkierten Kiefern sind kartenweite Kandidaten;
 es wurde keine Zapffläche eingerichtet und keine Fällmarkierung entfernt.
 Keine Harzernte oder tatsächlicher Schutzauftrag daraus ableiten. Flächentest offen.
+
+### 7.37 Flächenänderungen live abgenommen; Abrisspilot freigegeben
+
+Nutzerfreigabe: Entwicklungsspielstand darf für nötige Bau-/Abrissversuche verändert
+werden; selbstständig bis tatsächliche Hilfe nötig ist. Kein erneutes Einverständnis
+für jedes passende Testobjekt nötig. Reguläre APIs und Zustandsabgleiche beibehalten.
+
+- [x] An einer fällmarkierten Kiefer tapping ausgeführt: Fällmarkierung entfernt.
+- [x] Separate Abfrage bestätigt 191 -> 190 Fällzellen; anschließend regulär 191 wiederhergestellt.
+- [x] Freie Testzelle vorab geprüft; Carrot-Pflanzmarkierung gesetzt/gelesen/entfernt/gelesen (0 -> 1 -> 0).
+- [x] Pine-Pflanzmarkierung ebenso erfolgreich (0 -> 1 -> 0).
+- [x] Simulation blieb pausiert; keine physische Pflanzung/Ernte behauptet.
+- [x] Private Konfiguration gesichert, enableRemoval auf ausdrückliche Nutzerfreigabe aktiviert.
+- [ ] Nutzer lädt MCP neu, damit die Mod die Abrissfreigabe einliest; danach Abrisspilot fortsetzen.
+
+Nächster Pilot: einzelner Weg/Gebäude mit CanDelete prüfen, entfernen, Abwesenheit und
+Bauhindernis erneut prüfen; soweit Pilotkatalog erlaubt regulär wieder bauen. Vegetation
+markieren, Zustand lesen, Rücknahme prüfen; reale Biberarbeit separat beobachten.
+Schutt nur bei tatsächlichem RecoveredGoodStack prüfen. Kategorie planted benötigt
+passende reale Pflanze plus aktuelle Markierung; keine Herkunft vortäuschen.

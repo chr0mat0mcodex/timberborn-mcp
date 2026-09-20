@@ -174,4 +174,4 @@ nicht als eigenständige Markierungsart unterstützt.
 tapping entfernt Fällmarkierungen; Gebäude, Pflanzen auf Pflanzmarkierung, übrige
 Vegetation und Schutt besitzen getrennte Werkzeuge. Hindernisse vor Bauvorhaben sind
 bereits prüfbar; eine Objektabfrage ergänzt jetzt die konkreten Ziel-IDs.
-14 native Lesewerkzeuge live bestätigt. Arbeitsplatz- und Baupriorität erfolgreich geändert und wiederhergestellt; Flächenänderungen/Abriss noch offen.
+14 native Lesewerkzeuge live bestätigt. Arbeitsplatz- und Baupriorität erfolgreich geändert und wiederhergestellt; Flächenmarkierungen einschließlich Kiefernschutz ebenfalls live geprüft; Abriss noch offen.

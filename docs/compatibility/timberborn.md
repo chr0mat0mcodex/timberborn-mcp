@@ -154,3 +154,9 @@ bestätigt. Installationsprüfung bestanden, Laufzeit-/Live-Abnahme weiterhin of
 jeweils hin/zurück mit separatem Readback bestätigt, Ausgangszustände wiederhergestellt.
 Katalog-/AreaManagement-DI läuft; crops/tree_planting/tapping lesbar. Simulation blieb
 pausiert. Flächenänderungen, Löschsperren und Abriss-Folgeereignisse weiterhin offen.
+
+0.13.0 Flächenmutation live bestätigt: tapping entfernt vorhandene Fällmarkierung,
+tree_cutting stellt sie wieder her (191 -> 190 -> 191). crops/Carrot und
+tree_planting/Pine jeweils setzen/lesen/entfernen/lesen erfolgreich (0 -> 1 -> 0).
+Spiel pausiert; physische Pflanzung/Ernte bleibt ungeprüft. Abrissfreigabe aktiviert,
+wirksam nach neuem Laden des Spielstands; Abriss selbst weiterhin offen.

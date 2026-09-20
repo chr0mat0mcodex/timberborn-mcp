@@ -718,3 +718,19 @@ Damit kein Koordinatenfehler in diesen Stichproben belegt. Die frühere Formulie
 Kiefern als Kandidaten, nicht eingerichtete Zapfflächen. Es wurde bisher keine
 Fällmarkierung entfernt. Nutzeraussage über die markierten Kiefern ist bestätigt.
 Keine Spieländerungen; Flächenmutation und Zapferreichweite bleiben offen.
+
+## 2026-09-20 — Flächensteuerung live bestanden
+
+Kiefernschutz-/Fällpilot: eine bestehende Fällmarkierung über tapping entfernt und
+separat über inspect_areas bestätigt; Markierungszahl 191 -> 190. Über tree_cutting
+wiederhergestellt und separat 191 bestätigt. 10 MCP-Aufrufe inklusive Pflanzkatalog
+und kleiner Geländeabfrage zur Vorbereitung des nächsten Piloten.
+
+Pflanzpilot: freie Zelle über precheck_build_site geprüft, Carrot und danach Pine
+jeweils markiert/abgefragt/entfernt/abgefragt; 0 -> 1 -> 0 für beide Arten bestätigt.
+13 MCP-Aufrufe, Simulation unverändert pausiert. Kein Nachweis physischer Pflanzung.
+
+Nutzer erlaubt ausdrücklich notwendige Bau-/Abrissversuche im Entwicklungsspielstand.
+Private Konfiguration einmalig gesichert und enableRemoval=true gesetzt, alle anderen
+Felder erhalten. Laufende Bridge liest Konfiguration erst beim Kontextladen: Nutzer
+um Hauptmenü und erneutes Laden von MCP gebeten. Abriss noch nicht ausgeführt.

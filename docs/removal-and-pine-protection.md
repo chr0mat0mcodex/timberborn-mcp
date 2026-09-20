@@ -97,3 +97,9 @@ Live-Klarstellung: Die Abfrage ist kartenweit. Unmarkierte Kiefern sind nur mög
 Zapfkandidaten, keine vom Agenten eingerichtete Schutzfläche. Im geprüften markierten
 Bereich wurden 32 Kiefern korrekt als fällmarkiert erkannt und nicht als tapping
 ausgegeben. Die Flächenmutation wurde weiterhin nicht live ausgeführt.
+
+Live-Fortschreibung: tapping und tree_cutting an einer Kiefer mit Rückweg erfolgreich
+(191 -> 190 -> 191 Fällzellen). Carrot- und Pine-Pflanzmarkierungen auf freier Zelle
+jeweils 0 -> 1 -> 0 geprüft. Abrissversuche jetzt ausdrücklich für den Entwicklungs-
+spielstand freigegeben; die frühere Vorgabe zur vorherigen Nutzerwahl eines Testziels
+ist damit überholt. Ziele weiterhin konkret lesen und reguläre Löschsperren beachten.
