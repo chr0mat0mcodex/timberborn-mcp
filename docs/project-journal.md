@@ -1061,3 +1061,10 @@ Distriktverbindung werden nicht als gewöhnlicher Path klassifiziert. Keine neue
 378 Tests bestanden; Mod-Build fehlerfrei und separates Paket erstellt. Noch nicht
 installiert oder live geprüft; Nutzer um Speichern und Beenden gebeten.
 Allgemeine Fehlerklassifikation der Bauvalidierung bleibt ein eigener offener Punkt.
+
+## 2026-09-20 — Eingangskorrektur 0.17.1 installiert
+
+Nach Nutzerbestätigung und geprüftem Spielende vollständig gesichert installiert.
+Fünf Paketdateien per SHA-256 verglichen; private Konfiguration bytegleich erhalten.
+Keine neuen Freigaben oder Abhängigkeiten. Live-Vergleich von belegtem Eingang und
+fertigem Anschlussweg wartet auf Neustart/Laden. Forschungsabnahme von 0.17.0 bleibt gültig.

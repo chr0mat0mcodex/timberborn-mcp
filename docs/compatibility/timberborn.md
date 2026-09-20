@@ -244,3 +244,10 @@ veraltete Session und Wiederholung automatisch geprüft, auch über echten MCP-s
 geprüft. Bestehende Konfigurationswerte erhalten, nur enableResearch aktiviert.
 Nutzer um Start/Laden gebeten. Echter Kostenabzug und Bauvalidierung vor/nach Unlock
 noch offen. Logfenster unverändert. Vertrag: docs/research.md.
+
+## 2026-09-20 — Eingangskorrektur 0.17.1 installiert
+
+Nach Nutzerbestätigung und geprüftem Spielende vollständig gesichert installiert.
+Fünf Paketdateien per SHA-256 verglichen; private Konfiguration bytegleich erhalten.
+Keine neuen Freigaben oder Abhängigkeiten. Live-Vergleich von belegtem Eingang und
+fertigem Anschlussweg wartet auf Neustart/Laden. Forschungsabnahme von 0.17.0 bleibt gültig.
