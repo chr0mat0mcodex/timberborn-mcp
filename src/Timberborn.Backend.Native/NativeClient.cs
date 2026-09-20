@@ -105,7 +105,7 @@ public sealed partial class NativeClient : IDisposable
     {
         if (r.Route is not ("site-precheck" or "building-precheck")) throw new ArgumentException();
         var result = await Get<NativeSite>($"{r.Route}?template={Uri.EscapeDataString(r.Template)}&x={r.X}&y={r.Y}&z={r.Z}&rotation={r.Rotation}", ct);
-        if (r.GenericBuilding && result.BridgeVersion is not ("0.14.0" or "0.14.1" or "0.15.0" or "0.16.0" or "0.17.0")) throw new InvalidDataException("Generic building contract unavailable");
+        if (r.GenericBuilding && result.BridgeVersion is not ("0.14.0" or "0.14.1" or "0.15.0" or "0.16.0" or "0.17.0" or "0.17.1")) throw new InvalidDataException("Generic building contract unavailable");
         var d = result.Data;
         if (d.Template != r.Template || d.Origin != new Position(r.X, r.Y, r.Z) || d.Rotation != r.Rotation ||
             d.GameValidated || d.Assessment is not ("blocked" or "requires_game_validation") || d.Reasons is null ||
@@ -120,7 +120,7 @@ public sealed partial class NativeClient : IDisposable
     {
         if (r.Route is not ("site-validation" or "building-validation")) throw new ArgumentException();
         var result = await Get<NativeValidation>($"{r.Route}?template={Uri.EscapeDataString(r.Template)}&x={r.X}&y={r.Y}&z={r.Z}&rotation={r.Rotation}&session={r.Session}", ct, HttpMethod.Post);
-        if (r.GenericBuilding && result.BridgeVersion is not ("0.14.0" or "0.14.1" or "0.15.0" or "0.16.0" or "0.17.0")) throw new InvalidDataException("Generic building contract unavailable");
+        if (r.GenericBuilding && result.BridgeVersion is not ("0.14.0" or "0.14.1" or "0.15.0" or "0.16.0" or "0.17.0" or "0.17.1")) throw new InvalidDataException("Generic building contract unavailable");
         var d = result.Data;
         if (result.SessionId != r.Session || d.Template != r.Template || d.Origin != new Position(r.X, r.Y, r.Z) ||
             d.Rotation != r.Rotation || !d.GameValidated || (d.AttemptsRemaining < 0 || d.AttemptsRemaining > (r.GenericBuilding ? 255 : 7)) || d.Limitations is null ||
@@ -134,7 +134,7 @@ public sealed partial class NativeClient : IDisposable
     {
         if (!((r.Route == "path-placement" && r.Template == "Path") || (r.Route == "lodge-placement" && r.Template == "Lodge.Folktails") || r.Route == "building-placement")) throw new ArgumentException();
         var result = await Get<NativePlacement>($"{r.Route}?template={Uri.EscapeDataString(r.Template)}&x={r.X}&y={r.Y}&z={r.Z}&rotation={r.Rotation}&session={r.Session}" + (r.Route == "building-placement" ? $"&actionId={r.EntityId}" : ""), ct, HttpMethod.Post);
-        if (r.GenericBuilding && result.BridgeVersion is not ("0.14.0" or "0.14.1" or "0.15.0" or "0.16.0" or "0.17.0")) throw new InvalidDataException("Generic building contract unavailable");
+        if (r.GenericBuilding && result.BridgeVersion is not ("0.14.0" or "0.14.1" or "0.15.0" or "0.16.0" or "0.17.0" or "0.17.1")) throw new InvalidDataException("Generic building contract unavailable");
         var d = result.Data;
         if (result.SessionId != r.Session || d.Template != r.Template || d.Origin != new Position(r.X, r.Y, r.Z) ||
             d.Rotation != r.Rotation || d.EntityId == Guid.Empty || (r.GenericBuilding ? d.EntityId.ToString("D") != r.EntityId || d.SessionLocked : !d.SessionLocked) || d.Limitations is null ||
@@ -152,7 +152,7 @@ public sealed partial class NativeClient : IDisposable
             throw new InvalidDataException("Invalid building result");
         if (d.Details is { } b)
         {
-            if (result.BridgeVersion is "0.9.0" or "0.10.0" or "0.11.0" or "0.12.0" or "0.13.0" or "0.13.1" or "0.13.2" or "0.14.0" or "0.14.1" or "0.15.0" or "0.16.0" or "0.17.0" && b.Operations is null)
+            if (result.BridgeVersion is "0.9.0" or "0.10.0" or "0.11.0" or "0.12.0" or "0.13.0" or "0.13.1" or "0.13.2" or "0.14.0" or "0.14.1" or "0.15.0" or "0.16.0" or "0.17.0" or "0.17.1" && b.Operations is null)
                 throw new InvalidDataException("Missing operations contract");
             if (b.Operations is { } o)
             {
@@ -238,7 +238,7 @@ public sealed partial class NativeClient : IDisposable
             await buffer.WriteAsync(bytes.AsMemory(0, count), budget.Token);
         }
         var result = JsonSerializer.Deserialize<BridgeEnvelope<T>>(buffer.ToArray(), NativeJson.Options);
-        if (result is null || result.SchemaVersion != 1 || result.BridgeVersion is not ("0.2.0" or "0.3.0" or "0.4.0" or "0.4.1" or "0.5.0" or "0.6.0" or "0.6.1" or "0.7.0" or "0.8.0" or "0.9.0" or "0.10.0" or "0.11.0" or "0.12.0" or "0.13.0" or "0.13.1" or "0.13.2" or "0.14.0" or "0.14.1" or "0.15.0" or "0.16.0" or "0.17.0") ||
+        if (result is null || result.SchemaVersion != 1 || result.BridgeVersion is not ("0.2.0" or "0.3.0" or "0.4.0" or "0.4.1" or "0.5.0" or "0.6.0" or "0.6.1" or "0.7.0" or "0.8.0" or "0.9.0" or "0.10.0" or "0.11.0" or "0.12.0" or "0.13.0" or "0.13.1" or "0.13.2" or "0.14.0" or "0.14.1" or "0.15.0" or "0.16.0" or "0.17.0" or "0.17.1") ||
             !Guid.TryParseExact(result.SessionId, "D", out var session) || session == Guid.Empty ||
             result.ObservedAtUtc == default || result.Data is null) throw new InvalidDataException("Invalid bridge envelope");
         return result;

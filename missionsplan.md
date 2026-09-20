@@ -1469,3 +1469,17 @@ bleiben offen und werden durch diesen Forschungsschritt nicht als erledigt marki
 - [ ] Forschungspunkte regulär erzeugen, bezahlten Unlock und exakten Abzug nachweisen.
 
 Positiver Forschungstest ist nicht abgeschlossen. Endzustand pausiert, Tag 10 ca.18:58.
+
+### 7.54 Forschungsabnahme erfolgreich, Eingangskorrektur 0.17.1
+
+- [x] Erfinder mit freiem Eingang und vier Wegzellen regulär angeschlossen; Distrikt
+  und Arbeiter separat bestätigt, alten unbenutzbaren Test-Erfinder entfernt.
+- [x] Regulär 35 Punkte erzeugt; Förster für 30 Punkte freigeschaltet, Rest fünf.
+- [x] Rückabfrage und Wiederholungsaufruf ohne weiteren Abzug bestätigt.
+- [x] Vorher template_locked, nachher reguläre Spielvalidierung gültig.
+- [x] 0.17.1: pathAtEntrance nur für fertige Path-Vorlagen; entranceOccupants zusätzlich.
+- [x] 378 Tests und separater Mod-Build erfolgreich, Paket erstellt.
+- [ ] 0.17.1 installieren und belegten/freien Eingang live vergleichen.
+
+Das Spiel bleibt pausiert, Tag 13 ca.06:32. Forschungstransaktion ist abgenommen;
+Fehlerklassifikation und vollständige Begehbarkeit bleiben getrennte offene Fähigkeiten.

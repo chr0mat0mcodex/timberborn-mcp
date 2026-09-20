@@ -95,13 +95,20 @@ public sealed class SpatialObservations(EntityRegistry entities, TemplateNameMap
         }).ToArray();
         Vector3Int? entrance = null;
         if (spec.Entrance.HasEntrance) entrance = PositionedEntrance.From(geometry, spec.Entrance, placement).Coordinates;
-        bool? pathAtEntrance = entrance.HasValue ? blocks.Contains(entrance.Value) && blocks.GetPathObjectAt(entrance.Value) != null : (bool?)null;
+        // GetPathObjectAt describes an occupation layer, not an actual road template.
+        var entranceObjects = entrance.HasValue && blocks.Contains(entrance.Value)
+            ? blocks.GetObjectsAt(entrance.Value).Where(o => !o.IsPreview).ToArray() : Array.Empty<BlockObject>();
+        bool? pathAtEntrance = entrance.HasValue ? entranceObjects.Any(o => o.IsFinished &&
+            o.TryGetComponent<TemplateSpec>(out var t) && t.TemplateName == "Path") : (bool?)null;
+        var entranceOccupants = entranceObjects.Select(o => o.TryGetComponent<TemplateSpec>(out var t)
+            ? t.TemplateName : "unknown").Distinct().OrderBy(n => n, StringComparer.Ordinal).Take(32).ToArray();
         var costs = Costs(building);
         return new { template = request.Template, origin = Vec(placement.Coordinates), rotation = request.Rotation,
             assessment = reasons.Count > 0 ? "blocked" : "requires_game_validation", gameValidated = false,
             reasons = reasons.OrderBy(r => r).ToArray(), cells, entrance = entrance.HasValue ? Vec(entrance.Value) : null,
-            pathAtEntrance, costs,
+            pathAtEntrance, entranceOccupants, costs,
             limitations = new[] { "not_full_game_validator", "no_preview_or_entity_created", "no_district_or_builder_reachability",
+                "path_at_entrance_means_finished_Path_template_only", "entrance_occupants_are_not_traversability", "stairs_and_special_paths_not_classified_as_Path",
                 "stackable_support_not_validated", "no_water_or_hazard_safety_verdict", "global_stock_not_local_delivery" } };
     }
 

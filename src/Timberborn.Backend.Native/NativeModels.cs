@@ -48,7 +48,7 @@ public sealed record CatalogEntry(string Template, bool Available, bool FactionC
 public sealed record NativeCatalog(string Faction, CatalogEntry[] Items, string[] Limitations);
 public sealed record SiteCell(Position Position, bool InsideMap, bool Underground, bool OnGround, bool IntersectsObject, string SupportRule);
 public sealed record NativeSite(string Template, Position Origin, int Rotation, string Assessment, bool GameValidated,
-    string[] Reasons, SiteCell[] Cells, Position? Entrance, bool? PathAtEntrance, NativeCost[] Costs, string[] Limitations);
+    string[] Reasons, SiteCell[] Cells, Position? Entrance, bool? PathAtEntrance, NativeCost[] Costs, string[] Limitations, string[]? EntranceOccupants = null);
 public sealed record NativeValidation(string Template, Position Origin, int Rotation, bool GameValidated, bool? Valid,
     bool NoPersistentChangeObserved, bool SessionLocked, int AttemptsRemaining, string[] Limitations);
 public sealed record NativePlacement(string Template, Position Origin, int Rotation, Guid EntityId,

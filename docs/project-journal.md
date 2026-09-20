@@ -1040,3 +1040,24 @@ backend_unavailable klassifiziert. Das ist kein vollständiger Nachweis der konk
 Sperrursache. Fehlermeldungen und Eingangs-/Wegprüfung gezielt verbessern.
 Positiver Kostenabzug, Wiederholung nach bezahltem Unlock und Bauvalidierung danach
 bleiben offen. 378 automatische Tests des Implementierungsstands unverändert gültig.
+
+## 2026-09-20 — Forschung live bestanden; Eingangskorrektur 0.17.1 vorbereitet
+
+Ersatz-Erfinder mit vier regulären Wegzellen angeschlossen, alten unbenutzbaren
+Erfinder entfernt. Fertigstellung, Distriktzuordnung, ein Arbeiter und laufender Job
+separat gelesen. In vier begrenzten 40-Sekunden-Fenstern regulär 35 Forschungspunkte
+erzeugt; nach jedem Fenster pausiert. Keine künstlichen Punkte.
+Förster zunächst mit template_locked in der Vorprüfung gesperrt. Regulärer Unlock
+kostet exakt 30 Punkte (35 -> 5), Rückabfrage bestätigt unlocked=true. Wiederholung
+ergibt already_unlocked ohne Abzug (5 -> 5). Anschließende Spielvalidierung gültig,
+kein Förster-Bauauftrag erteilt. Abschließend pausiert, Tag 13 etwa 06:32 Uhr.
+
+0.17.1 korrigiert pathAtEntrance: GetPathObjectAt bezeichnet eine Belegungsschicht,
+keinen sicheren Nachweis einer Wegvorlage. Nur fertige, nicht als Vorschau markierte
+Path-Vorlagen zählen jetzt als Weg. entranceOccupants listet die belegenden Vorlagen
+(maximal 32 unterschiedliche Namen); ältere Bridge-Antworten dürfen das Feld weglassen.
+Belegung ist keine vollständige Begehbarkeitsprüfung; Treppen/Sonderwege und tatsächliche
+Distriktverbindung werden nicht als gewöhnlicher Path klassifiziert. Keine neue Abhängigkeit.
+378 Tests bestanden; Mod-Build fehlerfrei und separates Paket erstellt. Noch nicht
+installiert oder live geprüft; Nutzer um Speichern und Beenden gebeten.
+Allgemeine Fehlerklassifikation der Bauvalidierung bleibt ein eigener offener Punkt.

@@ -17,7 +17,7 @@ public sealed partial class NativeClient
     {
         if(r.Write) throw new ArgumentException();
         var result=await Get<NativeBuildingSettings>($"building-settings?id={r.Id}&session={r.Session}",ct);
-        if(result.BridgeVersion is not ("0.15.0" or "0.16.0" or "0.17.0") || result.SessionId!=r.Session || result.Data.Id.ToString("D")!=r.Id)
+        if(result.BridgeVersion is not ("0.15.0" or "0.16.0" or "0.17.0" or "0.17.1") || result.SessionId!=r.Session || result.Data.Id.ToString("D")!=r.Id)
             throw new InvalidDataException("Settings correlation failed");
         ValidateSettings(result.Data); return result;
     }
@@ -27,7 +27,7 @@ public sealed partial class NativeClient
         string key=BuildingSettingsRequest.ValueKey(r.Route), expected=BuildingSettingsRequest.ExpectedKey(r.Route);
         var result=await Get<NativeSettingChange>($"{r.Route}?id={r.Id}&session={r.Session}&{key}={Uri.EscapeDataString(r.Value)}&{expected}={Uri.EscapeDataString(r.ExpectedValue)}",ct,HttpMethod.Post);
         var d=result.Data;
-        if(result.BridgeVersion is not ("0.15.0" or "0.16.0" or "0.17.0") || result.SessionId!=r.Session || d.Id.ToString("D")!=r.Id ||
+        if(result.BridgeVersion is not ("0.15.0" or "0.16.0" or "0.17.0" or "0.17.1") || result.SessionId!=r.Session || d.Id.ToString("D")!=r.Id ||
             d.Setting!=key || d.PreviousValue!=r.ExpectedValue || d.RequestedValue!=r.Value ||
             d.Outcome is not ("applied" or "unconfirmed") || d.Observation is null || d.Limitations is null)
             throw new InvalidDataException("Invalid settings receipt");

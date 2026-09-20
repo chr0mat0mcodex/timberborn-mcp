@@ -66,3 +66,11 @@ Vorlage live bestätigt; Punkte unverändert null. Ein regulär gebauter Erfinde
 wegen fehlenden Anschlusses unbesetzt. Nach 40 Sekunden Simulationspilot wieder pausiert.
 Kostenabzug und positiver Unlock sind ausdrücklich noch offen. Details und entdeckte
 Bauvorprüfung-Lücke im Projektjournal; kein weiterer Produktionslauf ohne Anschluss.
+
+## Positiver Live-Nachweis
+
+Erfinder regulär gebaut, am Distrikt angeschlossen und mit einem Arbeiter besetzt.
+35 Punkte regulär erzeugt. Förster-Unlock: 35 -> 5 Punkte, unlocked=true separat
+bestätigt. Wiederholung: already_unlocked, 5 -> 5. Vorher template_locked in der
+Vorprüfung, danach gültige Spielvalidierung. Kein Förster-Bauauftrag. Simulation pausiert.
+Damit ist die grundlegende Forschungs-/Freischalttransaktion live bestätigt (0.17.0).
