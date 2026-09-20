@@ -1499,3 +1499,37 @@ Die Bestandszuordnung ist geklärt. Keine nachhaltige Produktionsbilanz oder
 vollständige Umwelt-/Lieferdiagnose abgeleitet. Kein weiterer Tankbau erforderlich
 für diesen Nachweis; nächste Versorgungsprüfung muss normale Entnahme und
 Wiederauffüllung bzw. getrennte Produktions-/Verbrauchshistorie betrachten.
+
+
+## 2026-09-20 — Entnahme und Wiederauffüllung beider Wasserpumpen
+
+0.21.1, ausschließlich Beobachtungen und Geschwindigkeitswechsel. Start pausiert
+Tag 18 18:20, Ende pausiert Tag 20 02:43: rund 1,35 Spieltage.
+Elf Abschnitte von je acht Echtzeitsekunden bei 7×, nach jedem Abschnitt Pause.
+Zwölf Messpunkte. Begrenzung zwölf Abschnitte; vorzeitig bei freiem Pumpenausgang
+und anschließender Bestandszunahme beendet. Stoppschwellen für Bevölkerungsverlust,
+Hunger/Durst und niedrige Wasserreserve waren eingerichtet und wurden nicht ausgelöst.
+
+| Messpunkt | Gesamtwasser | Pumpe 1 | Pumpe 2 | outputSpace / ready |
+| --- | ---: | ---: | ---: | --- |
+| Start | 138 | 15 | 15 | false / false |
+| Tag 19 20:50 | 127 | 14 | 13 | true / true |
+| Tag 19 23:47 | 127 | 14 | 13 | true / true |
+| Tag 20 02:43 | 130 | 15 | 15 | false / false |
+
+Damit sind Entnahme, frei gewordener Produktausgang und Wiederauffüllung beider
+Output-Inventare belegt. Die gleichzeitige Zunahme des Gesamtbestands um drei
+stützt tatsächliche Nachproduktion; keine bloße Umlagerung zwischen Tanks und
+Pumpen. Keine Gebäude-/Personal-/Lager-/Flächenänderung im Messfenster.
+
+Die letzten neu gespeicherten Tagesdatensätze (Zyklus 2, Tage 1 und 2) weisen
+Produktion 0 und Verbrauch 2 bzw. 9 aus. Die beobachtete Wiederauffüllung erfolgte
+nach der letzten Tagesgrenze; deren drei Einheiten sind damit noch nicht als
+abgeschlossener Tagesproduktionszähler bestätigt. Tageshistorie und Momentaufnahmen
+nicht gleichsetzen.
+
+Elf lebende Biber und keine Hunger-/Durstwarnflags an sämtlichen Kontrollpunkten.
+Wasser im gesamten Fenster 138→130; keine Nachhaltigkeitszusage. Volle Pumpen
+sind hier kein Beleg eines Defekts: Nach Entnahme konnten sie wieder auffüllen.
+Nächste Grundversorgungsabnahme: Nahrung/Holz über passende Wachstumszyklen und
+fehlenden Wohnraum bearbeiten; kein weiterer Tankbau für diesen Nachweis nötig.

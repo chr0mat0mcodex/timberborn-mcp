@@ -30,11 +30,12 @@ Live bestätigt: 60 Güter (40 aktiv), 55 Rezepte, 162 Gebäude, 17 Quellen; 58.
 
 ## Letzter begrenzter Wirkungstest
 
-Zusätzlichen kleinen Wassertank regulär gebaut, auf Wasser gestellt und 30/30 gefüllt.
-Beide Pumpen per Weg verbunden; Umlagerung aus globalen Ausgangsbeständen bestätigt. Gesamtwasser
-138 unverändert, Pumpen weiter outputSpace=false. Keine Nachhaltigkeitszusage.
-11 lebende Biber, Simulation pausiert. [Belege](docs/supply-balance.md).
-
+Entnahme und Wiederauffüllung beider Pumpen unter 0.21.1 bestätigt:
+15/15 → 14/13 mit outputSpace=true und ready=true → 15/15.
+Gleichzeitig Gesamtwasser 127→130; im gesamten rund 1,35-tägigen Fenster 138→130.
+Elf Biber, keine Hunger-/Durstwarnflags an zwölf Messpunkten, Spiel pausiert
+Tag 20 etwa 02:43. Tageshistorie erfasst die letzte Wiederauffüllung noch nicht.
+Keine Nachhaltigkeitszusage. [Belege und Grenzen](docs/supply-balance.md).
 ## Verifikation
 
 | Ebene | Beleg |
