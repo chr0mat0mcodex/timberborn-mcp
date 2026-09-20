@@ -11,11 +11,13 @@ namespace Timberborn.IntegrationTests;
 public sealed class NativeBridgeTests
 {
     [Theory]
-    [InlineData(false, false)]
-    [InlineData(true, false)]
-    [InlineData(false, true)]
-    [InlineData(true, true)]
-    public async Task AuthenticatedBridgeThroughRealStdioHonorsIndependentActionGates(bool enableValidation, bool enablePlacement)
+    [InlineData(false, false, false)]
+    [InlineData(true, false, false)]
+    [InlineData(false, true, false)]
+    [InlineData(true, true, false)]
+    [InlineData(false, false, true)]
+    [InlineData(true, true, true)]
+    public async Task AuthenticatedBridgeThroughRealStdioHonorsIndependentActionGates(bool enableValidation, bool enablePlacement, bool enableLodgePlacement)
     {
         using var timeout = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);
         timeout.CancelAfter(TimeSpan.FromSeconds(30));
@@ -24,7 +26,7 @@ public sealed class NativeBridgeTests
         reservation.Start(); int port = ((IPEndPoint)reservation.LocalEndpoint).Port; reservation.Stop();
         var token = Convert.ToHexString(System.Security.Cryptography.RandomNumberGenerator.GetBytes(32));
         using var queue = new MainThreadQueue();
-        using var bridge = new BridgeHttpServer(port, token, queue, enableValidation, enablePlacement);
+        using var bridge = new BridgeHttpServer(port, token, queue, enableValidation, enablePlacement, enableLodgePlacement);
         bridge.Start();
         int observations = 0;
         var session = Guid.NewGuid().ToString("D");
@@ -54,11 +56,11 @@ public sealed class NativeBridgeTests
                                 null, null, [], ["not_full_game_validator"]),
                             "site-validation" => new NativeValidation(r.Template, new(r.X, r.Y, r.Z), r.Rotation,
                                 true, true, true, false, 7, ["synthetic_test"]),
-                            "path-placement" => placementGate.Execute(() => new NativePlacement("Path", new(r.X, r.Y, r.Z), r.Rotation,
-                                Guid.NewGuid(), "applied", true, true, ["synthetic_test"])),
+                            "path-placement" or "lodge-placement" => placementGate.Execute(() => new NativePlacement(r.Template, new(r.X, r.Y, r.Z), r.Rotation,
+                                Guid.NewGuid(), "applied", r.Template == "Path", true, ["synthetic_test"])),
                             _ => throw new ArgumentException()
                         };
-                        return JsonSerializer.Serialize(new BridgeEnvelope<object>(1, session, DateTimeOffset.UtcNow, "0.6.0", data), NativeJson.Options);
+                        return JsonSerializer.Serialize(new BridgeEnvelope<object>(1, session, DateTimeOffset.UtcNow, "0.7.0", data), NativeJson.Options);
                     });
                     await Task.Delay(5, pumpStop.Token);
                 }
@@ -105,15 +107,16 @@ public sealed class NativeBridgeTests
                     ["TIMBERBORN_BACKEND"] = "native", ["TIMBERBORN_NATIVE_CONFIG"] = configPath,
                     ["TIMBERBORN_ENABLE_WRITES"] = "1",
                     ["TIMBERBORN_ENABLE_VALIDATION"] = enableValidation ? "1" : "0",
-                    ["TIMBERBORN_ENABLE_PLACEMENT"] = enablePlacement ? "1" : "0"
+                    ["TIMBERBORN_ENABLE_PLACEMENT"] = enablePlacement ? "1" : "0",
+                    ["TIMBERBORN_ENABLE_LODGE_PLACEMENT"] = enableLodgePlacement ? "1" : "0"
                 }
             }), cancellationToken: ct);
             var tools = await client.ListToolsAsync(cancellationToken: ct);
             var expected = new List<string> { "find_buildings", "inspect_build_catalog", "inspect_building", "inspect_colony", "inspect_map_region", "precheck_build_site", "timberborn_status" };
             if (enableValidation) expected.Add("validate_build_site");
-            if (enablePlacement) expected.Add("place_path");
+            if (enablePlacement) expected.Add("place_path"); if (enableLodgePlacement) expected.Add("place_lodge");
             Assert.Equal(expected.Order(), tools.Select(t => t.Name).Order());
-            Assert.All(tools, t => { Assert.Equal(t.Name is not ("validate_build_site" or "place_path"), t.ProtocolTool.Annotations!.ReadOnlyHint); Assert.NotNull(t.ProtocolTool.OutputSchema); });
+            Assert.All(tools, t => { Assert.Equal(t.Name is not ("validate_build_site" or "place_path" or "place_lodge"), t.ProtocolTool.Annotations!.ReadOnlyHint); Assert.NotNull(t.ProtocolTool.OutputSchema); });
             var colony = await client.CallToolAsync("inspect_colony", cancellationToken: ct);
             Assert.False(colony.IsError);
             var json = colony.StructuredContent!.Value;
@@ -125,7 +128,7 @@ public sealed class NativeBridgeTests
             Assert.False(map.IsError);
             Assert.Equal(0.5f, map.StructuredContent!.Value.GetProperty("data").GetProperty("cells")[0].GetProperty("waterDepth").GetSingle());
             var status = await client.CallToolAsync("timberborn_status", cancellationToken: ct);
-            Assert.Equal(enablePlacement, status.StructuredContent!.Value.GetProperty("data").GetProperty("writesEnabled").GetBoolean());
+            Assert.Equal(enablePlacement || enableLodgePlacement, status.StructuredContent!.Value.GetProperty("data").GetProperty("writesEnabled").GetBoolean());
             var objects = await client.CallToolAsync("find_buildings", new Dictionary<string, object?> { ["offset"] = 0, ["limit"] = 32 }, cancellationToken: ct);
             Assert.False(objects.IsError);
             Assert.Equal(0, objects.StructuredContent!.Value.GetProperty("data").GetProperty("total").GetInt32());
@@ -154,6 +157,19 @@ public sealed class NativeBridgeTests
                 Assert.Equal("applied", placed.StructuredContent!.Value.GetProperty("data").GetProperty("outcome").GetString());
                 // Synthetic transport retry cannot cause a second mutation through the one-shot gate.
                 var repeated = await client.CallToolAsync("place_path", args, cancellationToken: ct);
+                Assert.True(repeated.IsError);
+                Assert.False(repeated.StructuredContent!.Value.GetProperty("error").GetProperty("retryable").GetBoolean());
+            }
+            if (enableLodgePlacement)
+            {
+                var args = new Dictionary<string, object?> { ["template"] = "Lodge.Folktails", ["x"] = 1, ["y"] = 2, ["z"] = 3, ["rotation"] = 0, ["session"] = session };
+                var lodge = await client.CallToolAsync("place_lodge", args, cancellationToken: ct);
+                Assert.Equal(enablePlacement, lodge.IsError == true);
+                if (!enablePlacement) {
+                    Assert.Equal("Lodge.Folktails", lodge.StructuredContent!.Value.GetProperty("data").GetProperty("template").GetString());
+                    Assert.False(lodge.StructuredContent!.Value.GetProperty("data").GetProperty("finished").GetBoolean());
+                }
+                var repeated = await client.CallToolAsync("place_lodge", args, cancellationToken: ct);
                 Assert.True(repeated.IsError);
                 Assert.False(repeated.StructuredContent!.Value.GetProperty("error").GetProperty("retryable").GetBoolean());
             }

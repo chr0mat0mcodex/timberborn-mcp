@@ -33,13 +33,15 @@ interpretiert. Paths haben keine Distriktkomponente.
 Baustellenbestände, ohne Restbedarfsberechnung. Am Farmhaus live bestätigt:
 25 Holz Baukosten; anschließend Lieferung 2 -> 4 Holz, Materialfortschritt 8 -> 16 %
 und Bauzeitfortschritt 0 -> rund 11 % beobachtet. Farmhaus noch nicht fertig.
+0.7.0 erweitert den Baupilot um einen separat freizuschaltenden
+[Lodge-Auftrag](docs/lodge-placement.md). Installation und Live-Abnahme noch offen.
 [Installation und Abnahme](docs/native-bridge-install.md),
 [offizielle Quellen und good references](docs/references/README.md).
 Für die eigene Bridge: `scripts/start-native.ps1 -ConfigPath '<private Konfiguration>'`;
 Build und nativen Lesetest mit `scripts/verify.ps1 -NativeConfig '<private Konfiguration>'`
 ausführen. Beide Abläufe sind in der Installationsanleitung beschrieben.
-136 reguläre Tests bestanden; drei separate Live-Tests im Standardlauf übersprungen.
-Nativer lesender MCP-Livetest zusätzlich erfolgreich.
+147 reguläre Tests bestanden; drei separate Live-Tests im Standardlauf übersprungen.
+Nativer lesender MCP-Livetest zuletzt mit 0.6.1 erfolgreich.
 Auch mit ausschließlich eigener Bridge laut Nutzer-Mod-Auswahl: alle sechs nativen
 Lesewerkzeuge erneut live erfolgreich (0.3.0). Keine Fremdmod für diesen Zugriff erforderlich.
 

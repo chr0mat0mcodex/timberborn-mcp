@@ -2,7 +2,7 @@
 
 0.6.1 ersetzt die unklare Restmaterialangabe durch gesamte Vorlagenkosten und
 tatsächlichen Baustellenbestand. Beide Werte getrennt lesen, keinen Restbedarf ableiten.
-Installiert/live geprüft ist vor diesem Update 0.6.0; Materialkorrektur noch nicht live geprüft.
+0.6.1 ist installiert/live bestätigt. Neu gebaut: 0.7.0 mit separat geschütztem Lodge-Auftrag; noch nicht installiert/live geprüft. Siehe [Lodge-Pilot](lodge-placement.md).
 
 0.6.0 ergänzt die rein lesende [Baustellen-/Distriktabfrage](building-observations.md)
 `inspect_building(id, session)`.

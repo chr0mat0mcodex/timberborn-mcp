@@ -14,6 +14,43 @@ public sealed class PlacementTests
     [InlineData("POST", false, false, false)]
     [InlineData("POST", true, true, false)]
     [InlineData("POST", true, false, true)]
+    public void LodgeRequiresSeparateBodylessPost(string method, bool enabled, bool body, bool allowed) =>
+        Assert.Equal(allowed, BridgeHttpServer.MethodAllowed(method, "/agent-api/v1/lodge-placement", body, true, true, enabled));
+
+    [Theory]
+    [InlineData(false, "Lodge.Folktails", true)]
+    [InlineData(true, "Path", true)]
+    [InlineData(true, "Lodge.Folktails", false)]
+    public async Task LodgeRejectsDisabledWrongTemplateOrStaleFormat(bool enabled, string template, bool validSession)
+    {
+        var handler = new Handler("{}");
+        using var tools = new NativeTools(new NativeClient(new(8081, new string('a', 64)), handler), true, true, enabled);
+        var result = await tools.Invoke("place_lodge", Args(validSession ? Guid.NewGuid().ToString("D") : "bad", template), TestContext.Current.CancellationToken);
+        Assert.Equal("invalid_argument", result["error"]!["code"]!.GetValue<string>());
+        Assert.Equal(0, handler.Calls);
+        Assert.DoesNotContain(NativeTools.Catalog(true, true), t => t.Name == "place_lodge");
+    }
+
+    [Theory]
+    [InlineData("Path", false)]
+    [InlineData("Lodge.Folktails", true)]
+    public async Task LodgeReceiptMustMatchAndCanRemainUnfinished(string template, bool valid)
+    {
+        var session = Guid.NewGuid().ToString("D");
+        var response = new BridgeEnvelope<NativePlacement>(1, session, DateTimeOffset.UtcNow, "0.7.0",
+            new(template, new(1, 2, 3), 0, Guid.NewGuid(), "applied", false, true, ["synthetic_test"]));
+        var handler = new Handler(JsonSerializer.Serialize(response, NativeJson.Options));
+        using var tools = new NativeTools(new NativeClient(new(8081, new string('a', 64)), handler), false, false, true);
+        var result = await tools.Invoke("place_lodge", Args(session, "Lodge.Folktails"), TestContext.Current.CancellationToken);
+        Assert.Equal(valid ? "ok" : "error", result["status"]!.GetValue<string>());
+        Assert.Equal(1, handler.Calls);
+    }
+
+    [Theory]
+    [InlineData("GET", true, false, false)]
+    [InlineData("POST", false, false, false)]
+    [InlineData("POST", true, true, false)]
+    [InlineData("POST", true, false, true)]
     public void PlacementRequiresOwnOptInAndBodylessPost(string method, bool enabled, bool body, bool allowed) =>
         Assert.Equal(allowed, BridgeHttpServer.MethodAllowed(method, "/agent-api/v1/path-placement", body, true, enabled));
 

@@ -1,5 +1,12 @@
 # Projektjournal
 
+## 2026-09-20 — Lodge-Auftrag vorbereitet (0.7.0)
+
+Separat geschütztes place_lodge ergänzt, gemeinsame Versuchssperre mit Path.
+Vollständiger Footprint, frische Spielvalidierung und normale Platzierung mit
+Entity-ID-Korrelation. Keine Fremdabhängigkeiten. Installation/Live-Abnahme offen;
+Spiel läuft noch mit 0.6.1. Vertrag und Abnahme: [Lodge-Pilot](lodge-placement.md).
+
 ## 2026-09-20 — Materiallieferung und Baufortschritt live beobachtet
 
 Nach Nutzerbestätigung der regulären Holzversorgung zwei begrenzte Lesestichproben,

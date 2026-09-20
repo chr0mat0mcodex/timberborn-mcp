@@ -48,14 +48,14 @@ public sealed class BridgeRequest
         }
         if (path == "/agent-api/v1/objects" && query.Count == 2)
             return new("objects", offset: Read("offset", 0, 65535), limit: Read("limit", 1, 32));
-        bool placement = path == "/agent-api/v1/path-placement";
+        bool lodge = path == "/agent-api/v1/lodge-placement"; bool placement = path == "/agent-api/v1/path-placement" || lodge;
         bool validation = path == "/agent-api/v1/site-validation" || placement;
         if ((path == "/agent-api/v1/site-precheck" && query.Count == 5) || (validation && query.Count == 6))
         {
             var values = query.GetValues("template");
             if (values is null || values.Length != 1 || values[0] is not ("Lodge.Folktails" or "Path"))
                 throw new ArgumentException("invalid_request");
-            if (placement && values[0] != "Path") throw new ArgumentException("invalid_template");
+            if (placement && values[0] != (lodge ? "Lodge.Folktails" : "Path")) throw new ArgumentException("invalid_template");
             var session = "";
             if (validation)
             {
@@ -64,7 +64,7 @@ public sealed class BridgeRequest
                     throw new ArgumentException("invalid_session");
                 session = id.ToString("D");
             }
-            return new(placement ? "path-placement" : validation ? "site-validation" : "site-precheck", Read("x", 0, 4095), Read("y", 0, 4095), Read("z", 0, 4095),
+            return new(placement ? (lodge ? "lodge-placement" : "path-placement") : validation ? "site-validation" : "site-precheck", Read("x", 0, 4095), Read("y", 0, 4095), Read("z", 0, 4095),
                 template: values[0], rotation: Read("rotation", 0, 3), session: session);
         }
         if (path != "/agent-api/v1/map" || query.Count != 6) throw new ArgumentException("invalid_request");

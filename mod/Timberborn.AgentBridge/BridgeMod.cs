@@ -23,14 +23,14 @@ public sealed class BridgeConfigurator : Configurator
         Bind<SpatialObservations>().AsSingleton();
         Bind<BuildingObservations>().AsSingleton();
         Bind<SiteValidation>().AsSingleton();
-        Bind<PathPlacement>().AsSingleton();
+        Bind<PilotPlacement>().AsSingleton();
         Bind<BridgeMod>().AsSingleton();
     }
 }
 
 public sealed class BridgeMod(ResourceCountingService resources, PopulationService population,
     EntityRegistry entities, ITerrainService terrain, IThreadSafeWaterMap water, IGoodService goods,
-    ModRepository mods, SpatialObservations spatial, SiteValidation validation, PathPlacement placement, BuildingObservations buildings)
+    ModRepository mods, SpatialObservations spatial, SiteValidation validation, PilotPlacement placement, BuildingObservations buildings)
     : ILoadableSingleton, IUnloadableSingleton, IUpdatableSingleton
 {
     private readonly MainThreadQueue queue = new();
@@ -50,7 +50,7 @@ public sealed class BridgeMod(ResourceCountingService resources, PopulationServi
             var config = JObject.Parse(File.ReadAllText(path));
             stage = "create_listener";
             server = new BridgeHttpServer((int?)config["port"] ?? 8081, (string?)config["token"] ?? "", queue,
-                (bool?)config["enableValidation"] == true, (bool?)config["enablePlacement"] == true);
+                (bool?)config["enableValidation"] == true, (bool?)config["enablePlacement"] == true, (bool?)config["enableLodgePlacement"] == true);
             stage = "start_listener";
             server.Start();
             Debug.Log("[Timberborn Agent Bridge] Endpoint ready on loopback; actions require explicit opt-in.");
@@ -65,18 +65,18 @@ public sealed class BridgeMod(ResourceCountingService resources, PopulationServi
     public void Unload() { server?.Dispose(); queue.Dispose(); }
     private string Observe(BridgeRequest request)
     {
-        if ((request.Route is "site-validation" or "path-placement" or "building") && request.Session != sessionId) throw new ArgumentException("stale_session");
+        if ((request.Route is "site-validation" or "path-placement" or "lodge-placement" or "building") && request.Session != sessionId) throw new ArgumentException("stale_session");
         object data = request.Route switch
         {
             "snapshot" => Snapshot(), "map" => Map(request), "objects" => spatial.Objects(request),
             "catalog" => spatial.Catalog(), "site-precheck" => spatial.Precheck(request),
             "site-validation" => validation.Validate(request),
             "building" => buildings.Observe(request),
-            "path-placement" => placement.Place(request),
+            "path-placement" or "lodge-placement" => placement.Place(request),
             _ => throw new ArgumentException("invalid_request")
         };
         return JsonConvert.SerializeObject(new { schemaVersion = 1, sessionId, observedAtUtc = DateTimeOffset.UtcNow,
-            bridgeVersion = "0.6.1", data });
+            bridgeVersion = "0.7.0", data });
     }
     private object Snapshot()
     {

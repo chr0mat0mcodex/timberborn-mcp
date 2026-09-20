@@ -1,5 +1,11 @@
 # Kompatibilität
 
+## Buildstand 0.7.0 — 2026-09-20
+
+Lodge-Pilot gegen lokale Timberborn-1.1.2.4-Assemblies gebaut, keine Warnungen/Fehler.
+147 reguläre Tests bestanden; drei Live-Tests übersprungen. Noch nicht installiert
+oder live abgenommen. Letzter installierter/live geprüfter Stand: 0.6.1.
+
 ## Fortschrittsbeobachtung 0.6.1 — 2026-09-20
 
 Farmhauslieferung und Bauarbeit über zwei Lesestichproben nachgewiesen:

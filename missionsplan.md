@@ -1035,3 +1035,12 @@ Nutzer hat Holzversorgung aktiviert. Zwei reine Lesestichproben: Farmhausinventa
 Bekannter Baudistrikt, weiterhin unfertig. Acht fachliche MCP-Aufrufe, kein Agenteneingriff.
 Global Log=0 bei Baustellenbestand 4 bestätigt die nötige Trennung beider Abfragen.
 Offen: Fertigstellung, eigener Hausauftrag und native Steuerung von Holzfäller/Fällgebiet.
+
+### 7.17 Eigener Lodge-Auftrag vorbereitet
+
+Auf Nutzer-Go Bridge 0.7.0: separater place_lodge-Befehl für Lodge.Folktails,
+frische Spielvalidierung und gemeinsame Ein-Versuch-Sperre mit dem Wegpilot.
+Normaler Spielplatzierer, keine Ressourcen oder Sofortfertigstellung. Installation
+und Live-Nachweis ausstehend; 0.6.1 bleibt letzter installierter/live geprüfter Stand.
+Nächster Nachweis: genau einen eigenen Hausauftrag anhand derselben Entity-ID als
+Baustelle mit Kosten/Fortschritt/Baudistrikt nachlesen. [Vertrag](docs/lodge-placement.md).

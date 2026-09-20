@@ -108,12 +108,14 @@ public sealed class NativeClient : IDisposable
             throw new InvalidDataException("Invalid validation result");
         return result;
     }
-    public async Task<BridgeEnvelope<NativePlacement>> PlacePath(BridgeRequest r, CancellationToken ct)
+    public Task<BridgeEnvelope<NativePlacement>> PlacePath(BridgeRequest r, CancellationToken ct) { if (r.Route != "path-placement") throw new ArgumentException(); return Place(r, ct); }
+    public Task<BridgeEnvelope<NativePlacement>> PlaceLodge(BridgeRequest r, CancellationToken ct) { if (r.Route != "lodge-placement") throw new ArgumentException(); return Place(r, ct); }
+    private async Task<BridgeEnvelope<NativePlacement>> Place(BridgeRequest r, CancellationToken ct)
     {
-        if (r.Route != "path-placement" || r.Template != "Path") throw new ArgumentException();
-        var result = await Get<NativePlacement>($"path-placement?template=Path&x={r.X}&y={r.Y}&z={r.Z}&rotation={r.Rotation}&session={r.Session}", ct, HttpMethod.Post);
+        if (!((r.Route == "path-placement" && r.Template == "Path") || (r.Route == "lodge-placement" && r.Template == "Lodge.Folktails"))) throw new ArgumentException();
+        var result = await Get<NativePlacement>($"{r.Route}?template={Uri.EscapeDataString(r.Template)}&x={r.X}&y={r.Y}&z={r.Z}&rotation={r.Rotation}&session={r.Session}", ct, HttpMethod.Post);
         var d = result.Data;
-        if (result.SessionId != r.Session || d.Template != "Path" || d.Origin != new Position(r.X, r.Y, r.Z) ||
+        if (result.SessionId != r.Session || d.Template != r.Template || d.Origin != new Position(r.X, r.Y, r.Z) ||
             d.Rotation != r.Rotation || d.EntityId == Guid.Empty || !d.SessionLocked || d.Limitations is null ||
             d.Outcome is not ("applied" or "rejected" or "unconfirmed") ||
             (d.Outcome == "applied" ? d.Finished is null : d.Finished is not null))
@@ -166,7 +168,7 @@ public sealed class NativeClient : IDisposable
             await buffer.WriteAsync(bytes.AsMemory(0, count), budget.Token);
         }
         var result = JsonSerializer.Deserialize<BridgeEnvelope<T>>(buffer.ToArray(), NativeJson.Options);
-        if (result is null || result.SchemaVersion != 1 || result.BridgeVersion is not ("0.2.0" or "0.3.0" or "0.4.0" or "0.4.1" or "0.5.0" or "0.6.0" or "0.6.1") ||
+        if (result is null || result.SchemaVersion != 1 || result.BridgeVersion is not ("0.2.0" or "0.3.0" or "0.4.0" or "0.4.1" or "0.5.0" or "0.6.0" or "0.6.1" or "0.7.0") ||
             !Guid.TryParseExact(result.SessionId, "D", out var session) || session == Guid.Empty ||
             result.ObservedAtUtc == default || result.Data is null) throw new InvalidDataException("Invalid bridge envelope");
         return result;
