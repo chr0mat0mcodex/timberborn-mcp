@@ -5,11 +5,11 @@ das Spiel strukturiert zu beobachten und über reguläre Spielaktionen zu steuer
 Ziel ist ein Agent, der Wasser, Nahrung, Holz, Wege und Wohnraum aufbaut und betreibt.
 
 **Entwicklungsstand: Agent Bridge 0.19.1**, gebaut gegen Timberborn **1.1.2.4 / Folktails**.
-**0.19.0 ist installiert; zuletzt unter 0.18.0 live bestätigt:** alle 22 Leser, 40 registrierte Güter
+**0.19.1 ist installiert; unter 0.18.0 live bestätigt:** alle 22 Leser, 40 registrierte Güter
 und eine Lagerwarnung mit betroffenem Ziel. Weitere Warnungstypen bleiben zu prüfen.
 0.19.0 liefert native Güterhistorien und Gebäudedaten live. Der funktionale Test fand
 Lücken bei Wegunterbrechung im pausierten Spiel und Arbeitsreichweiten; 0.19.1 enthält
-die vorbereitete Korrektur, deren Installation und Live-Abnahme noch ausstehen.
+die installierte Korrektur, deren erneute Live-Abnahme noch aussteht.
 433 reguläre Tests bestehen (420 Unit, 13 Integration).
 Die Basisaktionen funktionieren; zuverlässiges autonomes Koloniemanagement ist noch in Entwicklung.
 

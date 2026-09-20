@@ -4,7 +4,7 @@
 
 | Komponente | Belegter Stand |
 | --- | --- |
-| Eigene Mod | 0.19.0 installiert; 0.19.1 korrigiert beim Live-Pilot entdeckte Weg-/Reichweitenlücken, neue Abnahme offen |
+| Eigene Mod | 0.19.1 installiert; Korrektur der Weg-/Reichweitenlücken, neue Abnahme offen |
 | Spiel | Timberborn 1.1.2.4, Folktails, kleine Entwicklungskolonie |
 | Tests | 433 reguläre Tests; Live-Piloten getrennt |
 | Fremdmods | Keine Pflichtabhängigkeit der eigenen Mod |

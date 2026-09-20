@@ -12,8 +12,8 @@ unkontrollierter Kolonieaufbau ersetzt keine gezielte Abnahme.
 
 ## Stand
 
-**0.19.0 ist installiert; der Live-Pilot fand Weg-/Reichweitenlücken.
-0.19.1 ist als Korrektur gebaut, Installation/erneute Abnahme stehen aus.**
+**0.19.1 ist als Korrektur gebaut und installiert; erneute Live-Abnahme steht aus.
+Der vorherige Live-Pilot von 0.19.0 fand Weg-/Reichweitenlücken.**
 [Projektstand](PROJECT_STATE.md), [Werkzeugkatalog](docs/tools.md), [offene Arbeiten](BACKLOG.md).
 Keine Fremdmod-Pflichtbasis; die frühere More-HTTP-API-Phase ist abgeschlossen.
 

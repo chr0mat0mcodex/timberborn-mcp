@@ -1,7 +1,7 @@
 # Projektstand
 
-Stand: 2026-09-20. Codeversion: **0.19.1**, Korrektur gebaut; Installation/erneute Live-Abnahme ausstehend.
-Installiert: **0.19.0**. Live-Pilot: Güterhistorien/Zugangsleser funktionieren;
+Stand: 2026-09-20. Codeversion: **0.19.1**, Korrektur gebaut und installiert; erneute Live-Abnahme ausstehend.
+Zuletzt live geprüft: **0.19.0**. Live-Pilot: Güterhistorien/Zugangsleser funktionieren;
 Wegunterbrechung im pausierten Spiel und Arbeitsreichweiten noch nicht bestanden.
 Die Version im [Manifest](mod/Timberborn.AgentBridge/manifest.json) ist die Codeversion;
 ältere datierte Einträge im Journal dokumentieren frühere Zustände.

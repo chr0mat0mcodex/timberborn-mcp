@@ -1,8 +1,8 @@
 # Eigene Agent Bridge installieren und MCP starten
 
 Aktueller Entwicklungsstand: **0.19.1**, gebaut gegen Timberborn 1.1.2.4.
-0.19.0 ist lokal installiert. Sein Live-Pilot fand Weg-/Reichweitenlücken; 0.19.1 ist als
-Korrektur vorbereitet. Installation und erneute funktionale Live-Abnahme stehen aus.
+0.19.1 ist lokal installiert. Der Live-Pilot von 0.19.0 fand Weg-/Reichweitenlücken;
+die Korrektur wartet auf erneute funktionale Live-Abnahme.
 Benötigt wird ausschließlich unsere eigene Spielmod; `RequiredMods` ist leer.
 MCP-Server und Mod sind zwei getrennte Prozesse/Komponenten. Kein More-HTTP-API-Setup nötig.
 

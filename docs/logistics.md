@@ -1,8 +1,8 @@
 # Erreichbarkeit, Arbeitsreichweite und Versorgungsverlauf
 
 Codeversion 0.19.1; gegen öffentliche Timberborn-1.1.2.4-APIs gebaut.
-Installiert ist 0.19.0. Dessen Live-Pilot fand zwei zu korrigierende Lücken; 0.19.1
-wartet auf Installation und erneute Abnahme. Vier zusätzliche Leser, keine neue Fremdmod oder Bibliothek.
+Installiert ist 0.19.1. Der Live-Pilot der vorherigen 0.19.0 fand zwei Lücken;
+die installierte Korrektur wartet auf erneute Abnahme. Vier zusätzliche Leser, keine neue Fremdmod oder Bibliothek.
 
 ## Gebäudezugang
 

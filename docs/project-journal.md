@@ -1229,3 +1229,7 @@ Keine privaten Interna, Fremdmods oder neuen Abhängigkeiten. Rohdaten/IDs lokal
 
 Abschlussprüfung 0.19.1: 433 reguläre Tests bestanden (420 Unit, 13 Integration),
 drei opt-in Live-Tests übersprungen. Mod-Build ohne Warnungen/Fehler.
+
+0.19.1 nach bestätigtem Speichern/Spielende installiert. Vorherigen Modordner vollständig
+gesichert, fünf Paketdateien per SHA-256 geprüft, private Konfiguration unverändert.
+Nutzer um Neustart/Laden gebeten; gezielte erneute Abnahme ausstehend.
