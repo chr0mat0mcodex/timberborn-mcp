@@ -1078,3 +1078,11 @@ Pause/1× mit separater Zustands- und Fortschrittsabfrage live prüfen.
 Zeit wieder fortschreiten. Schlusszustand 1×. Änderungsquittung enthält zunächst
 alten Wert, daher zwingend separat nachlesen und nicht wiederholen. Höhere Stufen
 bleiben offen; Lodge-Lieferung/Fertigstellung und Wohnraumwirkung noch nachzuweisen.
+
+### 7.23 Betriebsdiagnose als nächste MCP-Fähigkeit
+
+0.9.0 erweitert inspect_building: Gebäudepause, Soll-/Ist-/Maximalbesetzung,
+Unter-/Überbesetzung und laufender Arbeitsauftrag. Öffentliche APIs, keine neue
+Schreibaktion. 168 reguläre Tests bestanden. Installation und Lesepilot an
+Arbeitsgebäuden, Lodge/Baustelle und Path offen. Erst danach Personalsteuerung
+bewerten; Besetzung ist kein Produktionsnachweis. [Vertrag](docs/building-operations.md).

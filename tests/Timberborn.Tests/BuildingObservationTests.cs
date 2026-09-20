@@ -89,6 +89,49 @@ public sealed class BuildingObservationTests
     }
 
     private static NativeTools Tools(Handler handler) => new(new NativeClient(new(8081, new string('a', 64)), handler));
+    [Theory]
+    [InlineData("working", true)]
+    [InlineData("overstaffed", true)]
+    [InlineData("no_components", true)]
+    [InlineData("unfinished", true)]
+    [InlineData("missing_operations", false)]
+    [InlineData("pause_without_component", false)]
+    [InlineData("workplace_without_component", false)]
+    [InlineData("unfinished_with_workers", false)]
+    [InlineData("negative_workers", false)]
+    [InlineData("desired_above_max", false)]
+    public async Task OperationsPreserveAvailabilityAndRejectContradictions(string scenario, bool valid)
+    {
+        var id = Guid.NewGuid(); var session = Guid.NewGuid().ToString("D");
+        var payload = Payload(id, session, true);
+        payload["bridgeVersion"] = "0.9.0";
+        var details = payload["data"]!["details"]!;
+        details["finished"] = true; details["unfinished"] = false; details["construction"] = null;
+        var operations = JsonSerializer.SerializeToNode(new NativeOperations(true, new(false, true), true,
+            new(1, 1, 1, false, false, true)), NativeJson.Options)!;
+        details["operations"] = operations;
+        switch (scenario)
+        {
+            case "overstaffed": operations["workplace"]!["assignedWorkers"] = 2; operations["workplace"]!["overstaffed"] = true; break;
+            case "no_components": operations["pauseComponentPresent"] = false; operations["pause"] = null;
+                operations["workplaceComponentPresent"] = false; operations["workplace"] = null; break;
+            case "unfinished": details["finished"] = false; details["unfinished"] = true;
+                details["constructionComponentPresent"] = false; operations["workplace"] = null; break;
+            case "missing_operations": details.AsObject().Remove("operations"); break;
+            case "pause_without_component": operations["pauseComponentPresent"] = false; break;
+            case "workplace_without_component": operations["workplaceComponentPresent"] = false; break;
+            case "unfinished_with_workers": details["finished"] = false; break;
+            case "negative_workers": operations["workplace"]!["assignedWorkers"] = -1; break;
+            case "desired_above_max": operations["workplace"]!["desiredWorkers"] = 2; break;
+        }
+        using var tools = Tools(new Handler(payload.ToJsonString()));
+        var result = await tools.Invoke("inspect_building", Args(id.ToString("D"), session), TestContext.Current.CancellationToken);
+        Assert.Equal(valid ? "ok" : "error", result["status"]!.GetValue<string>());
+        if (!valid) Assert.Equal("backend_incompatible", result["error"]!["code"]!.GetValue<string>());
+        if (scenario == "no_components" || scenario == "unfinished")
+            Assert.Null(result["data"]!["details"]!["operations"]!["workplace"]);
+    }
+
     private static JsonElement Args(string id, string session) => JsonSerializer.SerializeToElement(new { id, session });
     private static JsonObject Payload(Guid id, string session, bool found) => (JsonObject)JsonSerializer.SerializeToNode(
         new BridgeEnvelope<NativeBuilding>(1, session, DateTimeOffset.UtcNow, "0.6.1", new(id, found,

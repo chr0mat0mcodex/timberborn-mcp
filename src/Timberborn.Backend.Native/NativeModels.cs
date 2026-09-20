@@ -60,7 +60,12 @@ public sealed record NativeConstruction(bool WasStarted, bool IsOn, bool ReadyTo
     NativeConstructionMaterials Materials);
 public sealed record NativeDistrict(bool ComponentPresent, Guid? AssignedDistrictId, Guid? InstantDistrictId, Guid? ConstructionDistrictId);
 public sealed record NativeBuildingDetails(string Template, Position Position, bool Finished, bool Unfinished,
-    bool ConstructionComponentPresent, NativeConstruction? Construction, NativeDistrict District);
+    bool ConstructionComponentPresent, NativeConstruction? Construction, NativeDistrict District, NativeOperations? Operations = null);
+public sealed record NativePause(bool Paused, bool CanPause);
+public sealed record NativeWorkplace(int DesiredWorkers, int AssignedWorkers, int MaxWorkers,
+    bool Understaffed, bool Overstaffed, bool AnyWorkerHasJobRunning);
+public sealed record NativeOperations(bool PauseComponentPresent, NativePause? Pause,
+    bool WorkplaceComponentPresent, NativeWorkplace? Workplace);
 public sealed record NativeBuilding(Guid Id, bool Found, NativeBuildingDetails? Details, string[] Limitations);
 public sealed record NativeMeta(string Backend, bool Simulated, string? SessionId, DateTimeOffset? ObservedAtUtc);
 public sealed record NativeFault(string Code, string Message, bool Retryable);

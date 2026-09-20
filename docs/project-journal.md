@@ -1,5 +1,20 @@
 # Projektjournal
 
+## 2026-09-20 — Native Betriebsdiagnose vorbereitet (0.9.0)
+
+Nächster freigegebener MCP-Ausbau: inspect_building um operations erweitert.
+Pausefähigkeit/-status und bei fertigen Arbeitsgebäuden Soll-/Ist-/Maximalbesetzung,
+Unter-/Überbesetzung sowie laufender Arbeitsauftrag. Fehlende Komponente und
+unfertiger Arbeitsplatz bleiben explizit nicht verfügbar, keine erfundenen Nullwerte.
+Keine neuen Aktionen, Produktionszusagen oder Fremdmod-Abhängigkeiten.
+
+Öffentliche PausableBuilding-/Workplace-Signaturen lokal geprüft. Community-
+WorkplaceSettings bleibt good reference; dessen SetDesiredWorkers existiert in der
+aktuellen öffentlichen Workplace-Signatur nicht. Personalsteuerung deshalb noch
+separat zu planen. 168 reguläre Tests bestanden (155 Unit, 13 Integration), drei
+Live-Tests übersprungen. Installation und begrenzter Lesepilot offen; installiert
+bleibt 0.8.0. [Vertrag und Abnahme](building-operations.md).
+
 ## 2026-09-20 — Pause/Weiterlauf über MCP live bestanden
 
 Bridge 0.8.0: nach Laden zunächst Geschwindigkeit 0. Erster Lauf nach zwei

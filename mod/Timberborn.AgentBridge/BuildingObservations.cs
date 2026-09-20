@@ -5,6 +5,7 @@ using Timberborn.ConstructionSites;
 using Timberborn.EntitySystem;
 using Timberborn.GameDistricts;
 using Timberborn.TemplateSystem;
+using Timberborn.WorkSystem;
 
 namespace Timberborn.AgentBridge;
 
@@ -40,6 +41,8 @@ public sealed class BuildingObservations(EntityRegistry entities)
                 };
             }
             bool hasDistrict = entity.TryGetComponent<DistrictBuilding>(out var district);
+            bool hasPause = entity.TryGetComponent<PausableBuilding>(out var pause);
+            bool hasWorkplace = entity.TryGetComponent<Workplace>(out var workplace);
             Guid? DistrictId(DistrictCenter? center) => center is null ? null : center.GetComponent<EntityComponent>().EntityId;
             details = new
             {
@@ -47,6 +50,18 @@ public sealed class BuildingObservations(EntityRegistry entities)
                 position = new { x = block.Coordinates.x, y = block.Coordinates.y, z = block.Coordinates.z },
                 finished = block.IsFinished, unfinished = block.IsUnfinished,
                 constructionComponentPresent = hasConstruction, construction,
+                operations = new
+                {
+                    pauseComponentPresent = hasPause,
+                    pause = hasPause ? new { paused = pause.Paused, canPause = pause.IsPausable() } : null,
+                    workplaceComponentPresent = hasWorkplace,
+                    workplace = hasWorkplace && block.IsFinished ? new
+                    {
+                        desiredWorkers = workplace.DesiredWorkers, assignedWorkers = workplace.NumberOfAssignedWorkers,
+                        maxWorkers = workplace.MaxWorkers, understaffed = workplace.Understaffed,
+                        overstaffed = workplace.Overstaffed, anyWorkerHasJobRunning = workplace.AnyWorkerHasJobRunning()
+                    } : null
+                },
                 district = new
                 {
                     componentPresent = hasDistrict,
@@ -61,6 +76,8 @@ public sealed class BuildingObservations(EntityRegistry entities)
                 "construction_details_only_for_unfinished_entities", "progress_values_from_game_not_completion_prediction",
                 "building_costs_are_total_template_costs_not_remaining_deliveries",
                 "site_stock_excludes_already_consumed_materials_and_incoming_deliveries",
-                "remaining_delivery_requirement_unknown", "missing_or_nonbuilding_entity_returns_found_false" } };
+                "remaining_delivery_requirement_unknown", "missing_or_nonbuilding_entity_returns_found_false",
+                "workplace_state_only_for_finished_entities", "assigned_workers_not_actual_production",
+                "running_job_not_confirmed_output", "production_blocking_reasons_not_observed" } };
     }
 }

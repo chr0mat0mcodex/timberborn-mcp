@@ -131,6 +131,17 @@ public sealed class NativeClient : IDisposable
             throw new InvalidDataException("Invalid building result");
         if (d.Details is { } b)
         {
+            if (result.BridgeVersion == "0.9.0" && b.Operations is null)
+                throw new InvalidDataException("Missing operations contract");
+            if (b.Operations is { } o)
+            {
+                if (o.PauseComponentPresent != (o.Pause is not null) ||
+                    (o.WorkplaceComponentPresent && b.Finished) != (o.Workplace is not null))
+                    throw new InvalidDataException("Invalid operation availability");
+                if (o.Workplace is { } w && (w.DesiredWorkers < 0 || w.AssignedWorkers < 0 || w.MaxWorkers < 0 || w.DesiredWorkers > w.MaxWorkers))
+                    throw new InvalidDataException("Invalid workplace counts");
+                // Assigned workers may temporarily exceed desired/max. Keep game flags as observations.
+            }
             if (string.IsNullOrEmpty(b.Template) || b.Template.Length > 160 || b.Position is null || b.District is null ||
                 (b.Finished && b.Unfinished) || (b.Construction is not null && (!b.Unfinished || !b.ConstructionComponentPresent)) ||
                 (b.Unfinished && b.ConstructionComponentPresent && b.Construction is null))
@@ -192,7 +203,7 @@ public sealed class NativeClient : IDisposable
             await buffer.WriteAsync(bytes.AsMemory(0, count), budget.Token);
         }
         var result = JsonSerializer.Deserialize<BridgeEnvelope<T>>(buffer.ToArray(), NativeJson.Options);
-        if (result is null || result.SchemaVersion != 1 || result.BridgeVersion is not ("0.2.0" or "0.3.0" or "0.4.0" or "0.4.1" or "0.5.0" or "0.6.0" or "0.6.1" or "0.7.0" or "0.8.0") ||
+        if (result is null || result.SchemaVersion != 1 || result.BridgeVersion is not ("0.2.0" or "0.3.0" or "0.4.0" or "0.4.1" or "0.5.0" or "0.6.0" or "0.6.1" or "0.7.0" or "0.8.0" or "0.9.0") ||
             !Guid.TryParseExact(result.SessionId, "D", out var session) || session == Guid.Empty ||
             result.ObservedAtUtc == default || result.Data is null) throw new InvalidDataException("Invalid bridge envelope");
         return result;

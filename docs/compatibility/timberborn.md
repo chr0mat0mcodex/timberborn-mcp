@@ -1,5 +1,11 @@
 # Kompatibilität
 
+## Entwicklungsstand 0.9.0 — 2026-09-20
+
+Betriebsdiagnose über öffentliche PausableBuilding-/Workplace-APIs erweitert.
+168 reguläre Tests bestanden. Installation und Live-Abnahme offen; 0.8.0 bleibt
+installierter/live bestätigter Stand. Ältere Bridge liefert operations=null.
+
 ## Live-Abnahme 0.8.0 — 2026-09-20
 
 Pause/1× über MCP bestanden: Zeitstillstand und erneuter Fortschritt separat gelesen,

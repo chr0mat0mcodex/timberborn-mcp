@@ -1,5 +1,9 @@
 # Eigene Timberborn Agent Bridge — 0.6.1
 
+Neu vorbereitet: 0.9.0 mit [Gebäude-Betriebsdiagnose](building-operations.md).
+Reine Erweiterung von inspect_building, keine zusätzlichen Aktionsfreigaben nötig.
+Installiert/live geprüft bleibt 0.8.0 bis zum Update.
+
 Neu vorbereitet: 0.8.0 mit [Pause/Normalgeschwindigkeit](simulation-control.md).
 Mod-Opt-in enableSpeedControl und MCP-Opt-in TIMBERBORN_ENABLE_SPEED_CONTROL; beide
 im Standard aus. Installiert/live geprüft bleibt 0.7.0 bis zum nächsten Update.
