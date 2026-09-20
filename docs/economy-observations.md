@@ -71,9 +71,10 @@ inspect_building_settings bestätigt dort unabhängig selectedGood als leer. Ras
 und Weltposition sind getrennt vorhanden. Unbekannte Kennung ergibt found=false,
 fremde Session stale_session. Anschließend alle 22 Leser im opt-in Test bestanden.
 
-Nur eine Statusgruppe war vorhanden. Biberwarnungen, Mehrfachziele und das tatsächliche
-Verschwinden einer zuvor aktiven Meldung sind noch nicht live bestätigt. Keine künstliche
-Notlage erzeugt und keine Spielaktion ausgeführt. Diese Zusatzfälle bleiben offen.
+Nur eine Statusgruppe war vorhanden. Der erste Pilot änderte keine Spieloptionen. Ein ergänzender gezielter Pilot bestätigte
+anschließend zwei Ziele derselben Warnung sowie found=false nach Beseitigung ihrer
+Ursache. Dafür kurzzeitig Lagergüterauswahl geändert und separat bestätigt zurückgesetzt.
+Biberwarnungen sind noch nicht live bestätigt; im geprüften Zeitraum keine vorhanden.
 
 ## API-Beleg
 

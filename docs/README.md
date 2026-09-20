@@ -21,6 +21,8 @@ Start: [README](../README.md) · [Projektstand](../PROJECT_STATE.md) ·
 | Personal | [Arbeitskräfteliste](workforce-roster.md), [Sollbesetzung](workplace-staffing.md) |
 | Prioritäten und Flächen | [Prioritäten, Baustellen, Flächen](priorities-construction-areas.md) |
 | Entfernung/Kiefern | [Getrennte Aktionen](removal-and-pine-protection.md), [Lebenszustand](vegetation-state.md) |
+| Güter und Status | [Bestände, Warnungen und Ziele](economy-observations.md) |
+| Erreichbarkeit und Bilanz | [Wege, Reichweiten und Güterhistorie](logistics.md) |
 | Zeit | [Pause und Geschwindigkeiten](simulation-control.md) |
 | Forschung | [Punkte und Freischaltungen](research.md) |
 | Transparenz | [Ingame-Log](activity-log.md), [fachliche Fehler](bridge-errors.md) |
@@ -31,7 +33,7 @@ Datierte frühere Abnahmen sind kein Beweis für jede spätere Kombination.
 
 ## Geplante Funktionen
 
-- [Alerts und betroffene Ziele](alerts-plan.md) — öffentlich untersucht, noch nicht implementiert.
+- [Weitere Alert-Abdeckung](alerts-plan.md) — aktive Entity-Status implementiert; zusätzliche Fälle offen.
 - [Frage-Popup im Spiel](player-question-popup.md) — öffentlich untersucht, noch nicht implementiert.
 - Weitere Lücken: [Backlog](../BACKLOG.md).
 

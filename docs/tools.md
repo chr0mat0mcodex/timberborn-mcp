@@ -1,7 +1,7 @@
 # Native MCP-Werkzeuge
 
-Stand: Agent Bridge 0.18.0 (alle 22 Leser im opt-in Live-Test bestanden). Aus `NativeTools.Catalog` mit allen Freigaben abgeglichen:
-22 Leser und 19 Werkzeuge für Aktionen/Vorschauvalidierung. Nicht jede Kombination
+Stand: Agent Bridge 0.19.0 (gebaut; zuletzt 22 Leser unter 0.18.0 live bestanden). Aus `NativeTools.Catalog` mit allen Freigaben abgeglichen:
+26 Leser und 19 Werkzeuge für Aktionen/Vorschauvalidierung. Nicht jede Kombination
 ist live geprüft; Nachweise und Grenzen stehen in den Fachdokumenten.
 
 ## Leser
@@ -9,6 +9,10 @@ ist live geprüft; Nachweise und Grenzen stehen in den Fachdokumenten.
 - `timberborn_status`
 - `inspect_colony`
 - `inspect_goods`
+- `inspect_building_access`
+- `inspect_road_connection`
+- `inspect_work_range`
+- `inspect_good_history`
 - `inspect_alerts`
 - `inspect_alert_targets`
 - `inspect_map_region`
@@ -66,3 +70,5 @@ ist live geprüft; Nachweise und Grenzen stehen in den Fachdokumenten.
   [Fachliche Fehlercodes](bridge-errors.md).
 
 Neue Güter-/Statusverträge: [Details und Grenzen](economy-observations.md).
+
+[Wege, Reichweiten und Güterhistorie](logistics.md).

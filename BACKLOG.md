@@ -8,15 +8,17 @@ Hier stehen offene Aufgaben; datierte historische Kästchen sind kein aktueller 
 1. **Güterauswertung erweitern:** 40 registrierte Güter samt ResourceCount-Feldern in
    0.18.0 live bestätigt. Vollständige Baustellenbilanz und Versorgung über Zeit bleiben offen.
 2. **Statusabdeckung erweitern:** eine Lagerwarnung samt Ziel und leerer Güterwahl live
-   bestätigt. Biberwarnungen, Mehrfachziele und Verschwinden einer aktiven Meldung noch prüfen.
+   bestätigt. Mehrfachziele und Verschwinden einer aktiven Meldung ebenfalls bestanden; Biberwarnungen offen.
    [Vertrag und Nachweise](docs/economy-observations.md). Vollständige UI-Meldungsabdeckung,
    Benachrichtigungshistorie und dynamische Aggregatwerte weiterhin offen.
 3. **Produktionshindernisse und Bedürfnisse:** Hunger/Durst, fehlender Eingang,
    Material, Personal oder andere konkrete Betriebsblockaden zuverlässig unterscheiden.
-4. **Erreichbarkeit und Reichweiten:** durchgängige Wegverbindungen, Distrikt-/Arbeitsreichweite.
-   `pathAtEntrance` und `entranceOccupants` sind einzelne Beobachtungen, keine Routenprüfung.
-5. **Versorgungsentwicklung:** datierte Bestandsverläufe und belastbare Produktions-/Verbrauchsdaten;
-   einen positiven Einzelzeitraum nicht als dauerhaft sichere Versorgung ausgeben.
+4. **Erreichbarkeit und Reichweiten live abnehmen:** 0.19.0 nutzt native Eingangsprüfungen,
+   Accessible.FindRoadPath und IBuildingWithRange. Installation/Pilot noch offen.
+   Mehrdeutige Zugänge bleiben unsupported; keine allgemeine Geometrieabdeckung behauptet.
+5. **Versorgungsentwicklung live abnehmen:** 0.19.0 liest gespeicherte GoodSamples mit
+   getrennten Produktions-/Verbrauchszählern und Bestandsänderungen. Installation/Pilot offen;
+   Abtastdauer und Periodengrenzen noch nachweisen. [Vertrag](docs/logistics.md).
 
 Diese Reihenfolge ist eine Planung, keine Behauptung bereits vorhandener Werkzeuge.
 Neue Funktionen werden entsprechend dem Projektauftrag vor ihrer Umsetzung konkretisiert.

@@ -1173,3 +1173,26 @@ Tests bleiben der automatische Nachweis; der Live-Test wird getrennt gezählt.
 Nur eine Warnungsgruppe vorhanden: Biberwarnungen, Mehrfachziele und tatsächliches
 Verschwinden einer zuvor aktiven Meldung bleiben offen. Rohantworten/IDs ausschließlich
 lokal ignoriert; kein vollständiger UI-Abdeckungsnachweis behauptet.
+
+
+## 2026-09-20 — Weitere Statusfälle und öffentlicher Logistikausbau
+
+0.18.0 live: nach kurzem normalen Simulationslauf weiterhin nur die vorhandene
+Lagerwarnung. Mit vorübergehend aufgehobener Güterwahl eines zweiten Lagers zwei
+Ziele derselben Warnung bestätigt. Nach gültiger Güterwahl beider Lager verschwand
+die zuvor aktive Kennung: found=false. Ursprüngliche Optionen (Carrot bzw. leer)
+anschließend separat zurückgelesen und wiederhergestellt; Simulation pausiert.
+Biberwarnungen sind mangels vorhandenem Fall weiter offen; nicht pauschal als bestanden
+markiert. Keine künstlichen Status oder Rohdaten im Repository.
+
+0.19.0 implementiert vier öffentliche Leser für Gebäudezugang, echte Straßenverbindung,
+Arbeitsreichweiten und native gespeicherte Güterhistorien. Der Spielservice bietet
+bereits Production/Consumption je GoodSample; Vorratsdifferenzen werden nicht dafür
+umgedeutet. [Verträge und Pilot](logistics.md). Installation/Live-Abnahme ausstehend.
+
+
+Abschlussprüfung 0.19.0: 431 reguläre Tests bestanden (418 Unit, 13 Integration),
+drei opt-in Live-Tests übersprungen. Neue vier Leser über echten stdio-/HTTP-Testpfad
+und Logstatus geprüft. Modpaket gegen 1.1.2.4 ohne Warnungen/Fehler erstellt. Insgesamt
+26 Leser und 19 Aktionen/Validierungen. Nutzer um Speichern/Beenden gebeten; installierte
+Version bleibt 0.18.0 bis zum gesicherten Austausch. Neue Live-Tests noch ausstehend.

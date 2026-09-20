@@ -20,7 +20,7 @@ public sealed class BridgeConfigurator : Configurator
 {
     protected override void Configure()
     {
-        Bind<EconomyObservations>().AsSingleton(); Bind<Research>().AsSingleton(); Bind<ActivityLog>().AsSingleton(); Bind<ActivityLogWindow>().AsSingleton();
+        Bind<LogisticsObservations>().AsSingleton(); Bind<EconomyObservations>().AsSingleton(); Bind<Research>().AsSingleton(); Bind<ActivityLog>().AsSingleton(); Bind<ActivityLogWindow>().AsSingleton();
         Bind<BuildingSettings>().AsSingleton(); Bind<BuildingCatalog>().AsSingleton(); Bind<SpatialObservations>().AsSingleton();
         Bind<BuildingObservations>().AsSingleton();
         Bind<WorkforceObservations>().AsSingleton();
@@ -35,7 +35,7 @@ public sealed class BridgeConfigurator : Configurator
 
 public sealed class BridgeMod(ResourceCountingService resources, PopulationService population,
     EntityRegistry entities, ITerrainService terrain, IThreadSafeWaterMap water, IGoodService goods,
-    ModRepository mods, SpatialObservations spatial, SiteValidation validation, PilotPlacement placement, BuildingObservations buildings, SimulationControl simulation, WorkforceObservations workforce, WorkplaceStaffing staffing, PriorityAndConstruction management, AreaManagement areas, RemovalManagement removal, BuildingCatalog catalog, BuildingSettings settings, ActivityLog activityLog, ActivityLogWindow activityWindow, Research research, EconomyObservations economy)
+    ModRepository mods, SpatialObservations spatial, SiteValidation validation, PilotPlacement placement, BuildingObservations buildings, SimulationControl simulation, WorkforceObservations workforce, WorkplaceStaffing staffing, PriorityAndConstruction management, AreaManagement areas, RemovalManagement removal, BuildingCatalog catalog, BuildingSettings settings, ActivityLog activityLog, ActivityLogWindow activityWindow, Research research, EconomyObservations economy, LogisticsObservations logistics)
     : ILoadableSingleton, IUnloadableSingleton, IUpdatableSingleton
 {
     private readonly MainThreadQueue queue = new();
@@ -70,7 +70,7 @@ public sealed class BridgeMod(ResourceCountingService resources, PopulationServi
     public void Unload() { server?.Dispose(); queue.Dispose(); }
     private string Observe(BridgeRequest request)
     {
-        if ((request.Research?.Write == true || request.Settings is not null || request.Route is "alert-targets" or "building-validation" or "building-placement" or "site-validation" or "path-placement" or "lodge-placement" or "building" or "simulation-speed" or "workplace-staffing" or "priority" or "set-priority" or "set-area" or "remove-object") && request.Session != sessionId) throw new BridgeRejectionException("stale_session");
+        if ((request.Logistics is not null && request.Logistics.Route!="good-history" || request.Research?.Write == true || request.Settings is not null || request.Route is "alert-targets" or "building-validation" or "building-placement" or "site-validation" or "path-placement" or "lodge-placement" or "building" or "simulation-speed" or "workplace-staffing" or "priority" or "set-priority" or "set-area" or "remove-object") && request.Session != sessionId) throw new BridgeRejectionException("stale_session");
         object RecordActivity()
         {
             var a=request.Activity!;
@@ -79,6 +79,7 @@ public sealed class BridgeMod(ResourceCountingService resources, PopulationServi
         }
         object data = request.Route switch
         {
+            "building-access" => logistics.Access(request.Logistics!), "road-connection" => logistics.Road(request.Logistics!), "work-range" => logistics.Range(request.Logistics!), "good-history" => logistics.History(request.Logistics!),
             "goods" => economy.Goods(request.Economy!), "alerts" => economy.Alerts(request.Economy!,sessionId), "alert-targets" => economy.Targets(request.Economy!),
             "research" => research.Read(request.Research!), "unlock-building" => research.Unlock(request.Research!),
             "activity" => RecordActivity(),
@@ -99,7 +100,7 @@ public sealed class BridgeMod(ResourceCountingService resources, PopulationServi
             _ => throw new ArgumentException("invalid_request")
         };
         return JsonConvert.SerializeObject(new { schemaVersion = 1, sessionId, observedAtUtc = DateTimeOffset.UtcNow,
-            bridgeVersion = "0.18.0", data });
+            bridgeVersion = "0.19.0", data });
     }
     private object Snapshot()
     {

@@ -1,6 +1,7 @@
 # Projektstand
 
-Stand: 2026-09-20. Codeversion: **0.18.0**, gebaut, installiert und gezielt live abgenommen.
+Stand: 2026-09-20. Codeversion: **0.19.0**, gebaut; Installation/Live-Abnahme ausstehend.
+Installiert und zuletzt gezielt live bestätigt: **0.18.0**.
 Die Version im [Manifest](mod/Timberborn.AgentBridge/manifest.json) ist die Codeversion;
 ältere datierte Einträge im Journal dokumentieren frühere Zustände.
 
@@ -21,7 +22,7 @@ Die Version im [Manifest](mod/Timberborn.AgentBridge/manifest.json) ist die Code
 
 | Ebene | Beleg |
 | --- | --- |
-| Automatisch | 409 reguläre Tests: 396 Unit, 13 Integration; drei opt-in Live-Tests im Standardlauf übersprungen |
+| Automatisch | 431 reguläre Tests: 418 Unit, 13 Integration; drei opt-in Live-Tests im Standardlauf übersprungen |
 | Mod-Build | Gegen Timberborn 1.1.2.4, ohne Warnungen/Fehler |
 | Installation | Fünf Paketdateien per SHA-256 geprüft, private Konfiguration erhalten |
 | Live 0.18.0 | Alle 22 Leser bestanden; 40 Güter, drei Beispielvorräte deckungsgleich, eine Lagerwarnung mit Ziel und unabhängiger Bestätigung; unbekannte ID und stale_session korrekt |
@@ -36,10 +37,13 @@ Testlauf startet das Spiel oder prüft alle nativen Leser live.
 
 ## Umfang und Grenzen
 
-[22 Leser + 19 freizugebende Werkzeuge](docs/tools.md). Die Steuerungsbasis ist vorhanden.
+[26 Leser + 19 freizugebende Werkzeuge](docs/tools.md). Die Steuerungsbasis ist vorhanden.
 Neu implementiert: vollständige registrierte Güter mit ResourceCount-Feldern sowie
 sichtbare aktive Entity-Status und betroffene Ziele; [Vertrag](docs/economy-observations.md).
-Live bestätigt an einer Lagerwarnung; Biberwarnungen und Mehrfachziele noch nicht live geprüft.
+Live bestätigt: Lagerwarnung, Mehrfachziele, Verschwinden und Wiederherstellung; Biberwarnungen offen.
+0.19.0 ergänzt Gebäudezugang, echte Straßenverbindungen, Arbeitsreichweiten und native
+Güterhistorien mit Produktions-/Verbrauchswerten. [Vertrag und Pilot](docs/logistics.md).
+Diese vier Leser sind gebaut, noch nicht live abgenommen.
 Offen bleiben vollständige UI-Meldungsabdeckung,
 zuverlässige Blockade-/Bedürfnisdiagnose, Produktions-/Verbrauchsbilanzen und Erreichbarkeit.
 Die Grundversorgungsabnahme ist nicht vollständig: einzelne Produktionsketten belegt,

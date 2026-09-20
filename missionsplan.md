@@ -12,7 +12,7 @@ unkontrollierter Kolonieaufbau ersetzt keine gezielte Abnahme.
 
 ## Stand
 
-**0.18.0 ist implementiert, installiert und gezielt live bestätigt.**
+**0.19.0 ist implementiert und gebaut; installiert/live bestätigt bleibt 0.18.0.**
 [Projektstand](PROJECT_STATE.md), [Werkzeugkatalog](docs/tools.md), [offene Arbeiten](BACKLOG.md).
 Keine Fremdmod-Pflichtbasis; die frühere More-HTTP-API-Phase ist abgeschlossen.
 
@@ -20,8 +20,9 @@ Keine Fremdmod-Pflichtbasis; die frühere More-HTTP-API-Phase ist abgeschlossen.
 | --- | --- |
 | Eigener MCP-/Mod-Zugang | Live bestätigt; authentifizierter lokaler Transport und Spielthread-Queue |
 | Bevölkerung und Betten | Live bestätigt |
-| Vollständige Güter, aktive Status und Ziele | 40 Güter und eine Lagerwarnung mit Ziel live bestätigt; Biber-/Mehrfachziele offen |
-| Karte, Gebäude und Baustellen | Implementiert/live genutzt; keine vollständige Erreichbarkeitsanalyse |
+| Vollständige Güter, aktive Status und Ziele | 40 Güter und eine Lagerwarnung mit Ziel live bestätigt; Mehrfachziele und Verschwinden bestätigt; Biberwarnungen offen |
+| Karte, Gebäude und Baustellen | Live genutzt; neue Weg-/Zugangs-/Reichweitenleser in 0.19.0 gebaut, Live-Pilot offen |
+| Produktion/Verbrauch über Zeit | Native Güterhistorie in 0.19.0 gebaut; Live-Semantik/Perioden noch prüfen |
 | Generische Bauaufträge | Mehrere Vorlagen live; Geometrien/Sonderformen begrenzt |
 | Lager, Farm, Gebäudepause | Live bestätigt |
 | Personal, Prioritäten, Flächen, Entfernung | Gezielte Live-Piloten bestanden |
@@ -43,8 +44,10 @@ Keine Fremdmod-Pflichtbasis; die frühere More-HTTP-API-Phase ist abgeschlossen.
 ## Nächste Meilensteine
 
 - [x] Güterübersicht und aktive Status mit konkretem Ziel im begrenzten Live-Pilot abnehmen.
-- [ ] Statusabdeckung um Biberwarnungen und Mehrfachziele im Live-Test ergänzen.
-- [ ] Produktionshindernisse, Bedürfnisse und verlässliche Erreichbarkeit.
+- [x] Mehrfachziele und tatsächliches Verschwinden einer Statusgruppe live prüfen.
+- [ ] Biberwarnungen im Live-Test ergänzen.
+- [ ] Neue Gebäudezugangs-, Weg- und Arbeitsreichweitenleser live abnehmen.
+- [ ] Produktionshindernisse und Bedürfnisse vollständig unterscheiden.
 - [ ] Versorgung über Zeit bewerten und fehlenden Wohnraum gezielt nachweisen.
 - [ ] Anschließend einen begrenzten zusammenhängenden Agenten-Spielablauf abnehmen.
 

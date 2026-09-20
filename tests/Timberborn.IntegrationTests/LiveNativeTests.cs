@@ -9,7 +9,7 @@ public sealed class LiveNativeTests(ITestOutputHelper output)
     public static bool Enabled => Environment.GetEnvironmentVariable("TIMBERBORN_NATIVE_LIVE_TEST") == "1";
 
     [Fact(Skip = "Native-Livetest nur nach explizitem Opt-in.", SkipUnless = nameof(Enabled))]
-    public async Task TwentyTwoReadToolsAgainstInstalledNativeBridge()
+    public async Task TwentySixReadToolsAgainstInstalledNativeBridge()
     {
         using var budget = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);
         budget.CancelAfter(TimeSpan.FromSeconds(40));
@@ -27,7 +27,7 @@ public sealed class LiveNativeTests(ITestOutputHelper output)
             }
         }), cancellationToken: ct);
         var tools = await client.ListToolsAsync(cancellationToken: ct);
-        Assert.Equal(new[] { "find_buildings", "inspect_alert_targets", "inspect_alerts", "inspect_goods", "inspect_agent_log", "inspect_area_types", "inspect_areas", "inspect_build_catalog", "inspect_build_options", "inspect_building", "inspect_building_priority", "inspect_building_settings", "inspect_colony", "inspect_construction", "inspect_map_region", "inspect_removal_targets", "inspect_research", "inspect_simulation", "inspect_workforce", "precheck_build_site", "precheck_building", "timberborn_status" }.Order(), tools.Select(t => t.Name).Order());
+        Assert.Equal(new[] { "inspect_building_access", "inspect_road_connection", "inspect_work_range", "inspect_good_history", "find_buildings", "inspect_alert_targets", "inspect_alerts", "inspect_goods", "inspect_agent_log", "inspect_area_types", "inspect_areas", "inspect_build_catalog", "inspect_build_options", "inspect_building", "inspect_building_priority", "inspect_building_settings", "inspect_colony", "inspect_construction", "inspect_map_region", "inspect_removal_targets", "inspect_research", "inspect_simulation", "inspect_workforce", "precheck_build_site", "precheck_building", "timberborn_status" }.Order(), tools.Select(t => t.Name).Order());
         string? session = null;
         async Task<JsonElement> Call(string name, Dictionary<string, object?>? args = null)
         {
@@ -69,6 +69,10 @@ public sealed class LiveNativeTests(ITestOutputHelper output)
         var center = sample.EnumerateArray().Single(b => b.GetProperty("template").GetString() == "DistrictCenter.Folktails");
         await Call("inspect_building_priority", new() { ["id"] = center.GetProperty("id").GetString(), ["kind"] = "workplace", ["session"] = session });
         await Call("inspect_building_settings", new() { ["id"] = center.GetProperty("id").GetString(), ["session"] = session });
+        await Call("inspect_building_access",new(){["id"]=center.GetProperty("id").GetString(),["session"]=session});
+        await Call("inspect_road_connection",new(){["id"]=center.GetProperty("id").GetString(),["toId"]=center.GetProperty("id").GetString(),["session"]=session});
+        await Call("inspect_work_range",new(){["id"]=center.GetProperty("id").GetString(),["session"]=session,["offset"]=0,["limit"]=32});
+        await Call("inspect_good_history",new(){["good"]="Water",["offset"]=0,["limit"]=32});
         var position = sample[0].GetProperty("position");
         int x = position.GetProperty("x").GetInt32();
         int y = position.GetProperty("y").GetInt32();

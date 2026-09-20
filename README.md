@@ -4,10 +4,11 @@ Eine eigene Timberborn-Mod und ein lokaler C#-MCP-Server ermöglichen einem KI-A
 das Spiel strukturiert zu beobachten und über reguläre Spielaktionen zu steuern.
 Ziel ist ein Agent, der Wasser, Nahrung, Holz, Wege und Wohnraum aufbaut und betreibt.
 
-**Entwicklungsstand: Agent Bridge 0.18.0**, gebaut gegen Timberborn **1.1.2.4 / Folktails**.
+**Entwicklungsstand: Agent Bridge 0.19.0**, gebaut gegen Timberborn **1.1.2.4 / Folktails**.
 **0.18.0 ist installiert und gezielt live bestätigt:** alle 22 Leser, 40 registrierte Güter
 und eine Lagerwarnung mit betroffenem Ziel. Weitere Warnungstypen bleiben zu prüfen.
-409 reguläre Tests bestehen (396 Unit, 13 Integration).
+Neue Leser für Wege, Reichweiten und Güterhistorie sind gebaut; Installation/Live-Test stehen aus.
+431 reguläre Tests bestehen (418 Unit, 13 Integration).
 Die Basisaktionen funktionieren; zuverlässiges autonomes Koloniemanagement ist noch in Entwicklung.
 
 **Keine zusätzliche Spielmod erforderlich.** Die eigene Mod hat `RequiredMods: []`.
@@ -20,6 +21,7 @@ Regression im Repository; [Referenzen und Legacy-Abgrenzung](docs/references/REA
 | Bereich | Implementierter Umfang |
 | --- | --- |
 | Zustand | Bevölkerung, Betten, vollständiger Güterleser, aktive Status mit Zielen, Karte, Gebäude, Baustellen, Arbeiterzuordnung |
+| Logistik (0.19.0) | Gebäudezugang, native Wegsuche, Arbeitsreichweiten, gespeicherte Produktion/Verbrauch; Live-Abnahme offen |
 | Bauen | Vorlagenkatalog, Kosten/Freischaltung, räumliche Vorprüfung, Spielvalidierung, reguläre Bauaufträge |
 | Betrieb | Gebäudepause, Sollbesetzung, Arbeitsplatz-/Bauprioritäten, Lagerwahl und Lagermodi |
 | Flächen | Anbau und Baumfällmarkierungen, Pflanzmarkierungen, Kiefernschutz durch Entfernen von Fällmarkierungen |
@@ -28,7 +30,7 @@ Regression im Repository; [Referenzen und Legacy-Abgrenzung](docs/references/REA
 | Simulation | Pause sowie 1×, 3× und 7× |
 | Nachvollziehbarkeit | Ingame-MCP-Log, optionale kurze Aktionsbegründung, feste fachliche Fehlercodes |
 
-22 Lesewerkzeuge und 19 separat freizugebende Werkzeuge für Aktionen/Vorschauvalidierung
+26 Lesewerkzeuge und 19 separat freizugebende Werkzeuge für Aktionen/Vorschauvalidierung
 sind im nativen Katalog implementiert. Die beiden frühen Baupiloten sind weiterhin
 vorhanden; für neue Bauaufgaben dienen die generischen Werkzeuge.
 [Werkzeugübersicht und Freigaben](docs/tools.md).
