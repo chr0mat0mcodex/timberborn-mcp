@@ -251,3 +251,19 @@ Nach Nutzerbestätigung und geprüftem Spielende vollständig gesichert installi
 Fünf Paketdateien per SHA-256 verglichen; private Konfiguration bytegleich erhalten.
 Keine neuen Freigaben oder Abhängigkeiten. Live-Vergleich von belegtem Eingang und
 fertigem Anschlussweg wartet auf Neustart/Laden. Forschungsabnahme von 0.17.0 bleibt gültig.
+
+## 2026-09-20 — Eingangskorrektur 0.17.1 live bestätigt
+
+Sechs ausschließlich lesende MCP-Aufrufe inklusive Status: Bridge 0.17.1 erreichbar.
+Alter Erfindereingang: pathAtEntrance=false, entranceOccupants=[Lodge.Folktails].
+Neuer Erfindereingang: pathAtEntrance=true, entranceOccupants=[Path].
+Die Gesamtvorprüfung am neuen Standort meldet erwartungsgemäß object_intersection,
+weil der fertige Erfinder selbst dort steht; das widerspricht dem freien Anschlussweg
+am Eingang nicht. Am alten Standort bleibt die Gesamtbewertung requires_game_validation:
+Eingangsbelegung wird separat ausgewiesen, nicht als vollständige Begehbarkeitsprüfung.
+
+Erfinder nach Neustart fertig, Distrikt zugeordnet, ein Arbeiter und laufender Job.
+Förster weiterhin freigeschaltet, Forschungspunkte weiterhin fünf. Simulation bleibt
+pausiert, Tag 13 um 06:30 Uhr. Keine Bau-, Freischalt- oder Geschwindigkeitsänderung.
+Installation und gezielte Live-Abnahme von 0.17.1 abgeschlossen. Vollständige
+Erreichbarkeit und präzisere Fehlermeldungen bleiben getrennte offene Fähigkeiten.

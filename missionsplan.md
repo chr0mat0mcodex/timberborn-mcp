@@ -1480,7 +1480,9 @@ Positiver Forschungstest ist nicht abgeschlossen. Endzustand pausiert, Tag 10 ca
 - [x] 0.17.1: pathAtEntrance nur für fertige Path-Vorlagen; entranceOccupants zusätzlich.
 - [x] 378 Tests und separater Mod-Build erfolgreich, Paket erstellt.
 - [x] 0.17.1 gesichert installiert; fünf Datei-Hashes und unveränderte Konfiguration geprüft.
-- [ ] Belegten/freien Eingang mit 0.17.1 live vergleichen.
+- [x] 0.17.1 live: Lodge-Belegung mit pathAtEntrance=false und echter Path mit true bestätigt.
 
 Das Spiel bleibt pausiert, Tag 13 ca.06:32. Forschungstransaktion ist abgenommen;
 Fehlerklassifikation und vollständige Begehbarkeit bleiben getrennte offene Fähigkeiten.
+
+Neustartabnahme: Erfinder angeschlossen/besetzt, Förster freigeschaltet, fünf Punkte erhalten; Spiel pausiert. Siehe Projektjournal.
