@@ -1,8 +1,11 @@
 # Baustellen und Distriktzuordnung — 0.6.1
 
-## Materialkorrektur 0.6.1 — Live-Prüfung offen
+## Materialkorrektur 0.6.1 — begrenzt live bestätigt
 
-0.6.1 ist installiert; Nutzer hat den Farmhaus-Spielstand vor dem Update gespeichert.
+0.6.1 ist installiert. Gespeichertes Farmhaus live gelesen: Baukosten 25 Log,
+Inventar vorhanden und leer, global 0 Log. Baustelle aktiv/unfertig/ungestartet,
+Fortschritt 0 und bekannter Baudistrikt. Vier reine Leseaufrufe, keine Mutation.
+Materiallieferung und Fortschrittsverlauf sind noch nicht beobachtet.
 
 Die nicht geklärte Restbedarfsmethode wird nicht mehr aufgerufen. Öffentliche
 BuildingSpec.BuildingCost und ConstructionSite.Inventory.Stock liefern getrennt:

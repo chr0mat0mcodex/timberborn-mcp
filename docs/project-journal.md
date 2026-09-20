@@ -1,5 +1,16 @@
 # Projektjournal
 
+## 2026-09-20 — Materialvertrag 0.6.1 am Farmhaus live bestätigt
+
+Vier rein lesende MCP-Aufrufe nach Nutzer-Neustart. Genau ein gespeichertes
+EfficientFarmHouse.Folktails: Vorlagenkosten 25 Log, Baustelleninventar verfügbar
+und leer, global Log=0. Auftrag aktiv/unfertig/ungestartet, Material-/Bauzeitfortschritt
+0, keine Materialien zur Fortsetzung, bekannter Baudistrikt. Neue getrennte Kosten-
+und Inventarausgabe damit für diesen Fall live bestätigt; keine Mutation.
+Keine Erklärung des alten RemainingRequiredGoods-Nullwerts und kein zeitlicher
+Liefer-/Baufortschrittsnachweis. Nächste Abnahme benötigt reguläre Holzversorgung
+und erneute begrenzte Beobachtungen derselben Baustelle.
+
 ## 2026-09-20 — Materialkorrektur 0.6.1 installiert
 
 Nutzer bestätigt Speichern des Farmhaus-Spielstands und Beenden des Spiels.

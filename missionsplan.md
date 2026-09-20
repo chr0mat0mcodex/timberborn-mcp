@@ -1020,3 +1020,10 @@ Baustelleninventar getrennt prüfen, bevor Restbedarf als Entscheidungsgrundlage
 und tatsächlichen Baustellenbestand. Kein scheinbar exakter Restbedarf aus unbekanntem
 Materialverbrauch. 136 reguläre Tests bestanden, Mod gebaut/gepackt; Update und
 Live-Abgleich am Nutzer-Farmhaus ausstehend. Ursache des alten Nullwerts bleibt ungeklärt.
+
+### 7.15 Materialkorrektur live bestätigt
+
+0.6.1 am gespeicherten Farmhaus rein lesend geprüft: 25 Holz Vorlagenkosten,
+Baustelleninventar vorhanden/leer, global 0 Holz, bekannter Baudistrikt, Fortschritt 0.
+Vier MCP-Aufrufe, keine Mutation. Nächster Nachweis: reguläre Materiallieferung und
+tatsächlichen Baufortschritt beobachten; dafür muss zuerst Holz verfügbar werden.

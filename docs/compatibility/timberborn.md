@@ -1,5 +1,12 @@
 # Kompatibilität
 
+## Materialbeobachtung 0.6.1 — 2026-09-20
+
+EfficientFarmHouse.Folktails als gespeicherte Baustelle live gelesen: Vorlagenkosten
+25 Log, Inventar verfügbar/leer, global Log=0, Fortschritt 0, Baudistrikt bekannt.
+Kosten und aktueller Bestand getrennt bestätigt; kein Restbedarfs-/Lieferzeitversprechen,
+kein Nachweis zeitlicher Lieferung oder Fertigstellung. Vier reine Leseaufrufe.
+
 ## Gebäude-/Distriktbeobachtung 0.6.0 — 2026-09-20
 
 District Center und Holzfällerflagge mit bekannten Betriebs-/Instant-Distrikt-IDs
