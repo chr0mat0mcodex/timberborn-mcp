@@ -1309,12 +1309,12 @@ Analysevorrang ist kein Grund, diese ausdrückliche Spielfreigabe auszubremsen.
 - [x] 316 reguläre Tests bestanden (303 Unit, 13 Integration); 3 Live-Tests übersprungen.
 - [x] 0.14.0 paketiert; Manifest und Archiv mit ausschließlich fünf Moddateien geprüft.
 - [x] 0.14.0 gesichert installiert, fünf Datei-Hashes geprüft, neue Bau-Freigabe ergänzt.
-- [ ] Nutzer startet Timberborn/MCP für Live-Abnahme.
-- [ ] Im Spiel Katalog und zunächst Pumpe, Farm, Lager und Wohnraum prüfen/beauftragen.
+- [x] Nutzerstart erfolgt; 0.14.0 und frische Sitzung über MCP bestätigt.
+- [x] Katalog vollständig gelesen; Pumpe, Farm, mittleres Lager und Wohnraum regulär beauftragt und separat nachgelesen.
 - [ ] Fertigstellung und tatsächliche Versorgung separat bestätigen; Lagerkonfiguration als mögliche Lücke prüfen.
 
 [Vertrag und Abnahmeplan](docs/generic-building.md). Keine neue Fremdmod-Abhängigkeit,
-keine Screenshots oder Maussteuerung. Installiert: 0.14.0; zuletzt live bestätigt: 0.13.2.
+keine Screenshots oder Maussteuerung. 0.14.0 installiert und generischer Bau live bestätigt; Details in 7.46.
 
 ### 7.45 Zukunftsfeature: Alerts und genaue betroffene Orte
 
@@ -1329,3 +1329,26 @@ Grundsätzlich über StatusSubject/StatusInstance und StatusAggregator möglich;
 Statusdaten und separate Notifications berücksichtigen. Keine zusätzliche Mod erscheint
 für den Kern nötig. Nur recherchiert und geplant, noch nicht implementiert.
 [API-Belege, Vertragsvorschlag und Grenzen](docs/alerts-plan.md).
+
+### 7.46 Generischer Bau live bestätigt; Layoutkorrektur 0.14.1
+
+- [x] Katalog vollständig: 162 Vorlagen, 119 vom ursprünglichen Filter unterstützt.
+- [x] Vier freie Standorte über echte Spielvalidatoren geprüft; belegte Lodge abgelehnt.
+- [x] Farmhaus, Lodge, mittleres Lager und Wasserpumpe in derselben Sitzung platziert;
+      eigene IDs, Vorlagen und aktive Baustellen separat nachgelesen.
+- [x] Belegter Standort auch beim Platzierungsversuch ohne neues Objekt abgelehnt.
+- [x] Zwei begrenzte 30-Sekunden-Fenster mit 7x: Farmhaus von 0 auf 76 % Materialfortschritt,
+      zuletzt 19 Holz im Baustellenbestand und rund 70 % Bauzeitfortschritt.
+- [x] Zuvor vorhandene Pumpe fertig und mit einem Arbeiter besetzt; laufender Job beobachtet.
+- [x] Simulation abschließend pausiert: Tag 3, 17:37 Spielzeit; keine Wiederholungsversuche.
+- [ ] Zusätzliche Testpumpe ans Wegenetz anschließen (zwei Wegfelder fehlen).
+- [ ] Generisch beauftragte Gebäude fertigstellen und Betriebs-/Lagerkonfiguration prüfen.
+
+Vier bleibende Bauaufträge: Farm, Lodge und Lager besitzen einen Baudistrikt; die neue
+Pumpe noch nicht. Bestehende halb fertige Pumpe blieb erhalten und wurde vom Spiel fertiggestellt.
+Keine Nahrungserzeugung, neue Betten oder Lagerfunktion als schon bestätigt behaupten.
+
+Live erkannte Einschränkung: SideLine bei kleinen Lagern/Flaggen und TwoSegmentLine
+bei Path wurden unnötig ausgeschlossen. Patch 0.14.1 lässt diese festen Einzelobjekte
+unter unveränderten Geometrie-/Spielvalidatoren zu. Keine Linien-/Bereichsplatzierung.
+Installation und generischer Live-Nachweis von Weg/kleinem Lager nach Patch stehen aus.

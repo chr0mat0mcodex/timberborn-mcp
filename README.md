@@ -16,8 +16,9 @@ Nächste geplante Ausbaustufe: [Phase 2 — Wasser, Nahrung, Holz, Wege und Wohn
 Neu: 0.14.0 implementiert [generisches Bauen](docs/generic-building.md): vollständiger
 Gebäudekatalog, Vorprüfung, Spielvalidierung und reguläre Einzelaufträge nach Vorlagen-ID.
 Mehrere Aufträge je Sitzung mit festen Aktions-IDs; Sonderlayouts ausdrücklich begrenzt.
-0.14.0 ist gesichert installiert; Live-Abnahme nach Neustart steht noch aus.
-Zuletzt live bestätigt: 0.13.2.
+0.14.0 ist live bestätigt: vier verschiedene Gebäude regulär beauftragt und separat
+nachgelesen; Material-/Baufortschritt beobachtet. 0.14.1 korrigiert den zu engen
+Layoutfilter für einzelne Wege und kleine Lager; Installation/Liveprüfung noch offen.
 
 Endziel: Der Agent spielt Timberborn über MCP und baut Wasser-, Nahrungs-, Holzversorgung,
 Wege und Wohnraum auf. Agent Bridge 0.2.0 ist über drei MCP-Werkzeuge live geprüft;
@@ -60,7 +61,7 @@ Alle Stufen live bestätigt; Simulation abschließend 1×.
 Für die eigene Bridge: `scripts/start-native.ps1 -ConfigPath '<private Konfiguration>'`;
 Build und nativen Lesetest mit `scripts/verify.ps1 -NativeConfig '<private Konfiguration>'`
 ausführen. Beide Abläufe sind in der Installationsanleitung beschrieben.
-316 reguläre Tests bestanden; drei separate Live-Tests im Standardlauf übersprungen.
+318 reguläre Tests bestanden; drei separate Live-Tests im Standardlauf übersprungen.
 Nativer lesender MCP-Livetest zuletzt mit 0.6.1 erfolgreich.
 Auch mit ausschließlich eigener Bridge laut Nutzer-Mod-Auswahl: alle sechs nativen
 Lesewerkzeuge erneut live erfolgreich (0.3.0). Keine Fremdmod für diesen Zugriff erforderlich.

@@ -194,3 +194,8 @@ aktuelle live bestätigte Stand. Siehe ../generic-building.md.
 0.14.0 anschließend bei beendetem Spiel gesichert installiert. Fünf Paketdateien
 per SHA256 geprüft; bisherige Konfiguration erhalten, nur neue Bau-Freigabe ergänzt.
 Neustart und Live-Abnahme noch offen.
+
+0.14.0 live bestätigt: kompletter Katalog und vier generische Bauaufträge samt
+Rücklesung; belegter Standort in Validator/Platzierer abgelehnt. Farm im Lauf auf
+76 % Materialfortschritt, alte Pumpe fertig/besetzt, Schlusszustand pausiert.
+Layoutfilter für kleine Lager und Wege zu streng; Korrektur 0.14.1 vorbereitet.

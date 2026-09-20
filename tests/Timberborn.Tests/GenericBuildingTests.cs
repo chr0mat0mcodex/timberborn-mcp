@@ -13,7 +13,9 @@ public sealed class GenericBuildingTests
     [Theory]
     [InlineData("Single", "Square", false, false, 12, true)]
     [InlineData("Rectangle", "Square", false, false, 1, true)]
-    [InlineData("TwoSegmentLine", "Square", false, false, 12, false)]
+    [InlineData("TwoSegmentLine", "Square", false, false, 1, true)]
+    [InlineData("SideLine", "Square", false, false, 2, true)]
+    [InlineData("Half", "Square", false, false, 12, false)]
     [InlineData("Single", "Hex", false, false, 12, false)]
     [InlineData("Single", "Square", true, false, 12, false)]
     [InlineData("Single", "Square", false, true, 12, false)]
@@ -83,7 +85,7 @@ public sealed class GenericBuildingTests
     public async Task ReceiptCorrelationAndNoRetry(string variant)
     {
         var q=Query();var session=q["session"]!;var id=Guid.Parse(q["actionId"]!);
-        var envelope=new BridgeEnvelope<NativePlacement>(1,variant=="session"?Guid.NewGuid().ToString("D"):session,DateTimeOffset.UtcNow,variant=="old_version"?"0.13.2":"0.14.0",
+        var envelope=new BridgeEnvelope<NativePlacement>(1,variant=="session"?Guid.NewGuid().ToString("D"):session,DateTimeOffset.UtcNow,variant=="old_version"?"0.13.2":"0.14.1",
             new("WaterPump.Folktails",new(variant=="position"?2:1,2,3),0,variant=="id"?Guid.NewGuid():id,"applied",false,false,["synthetic_test"]));
         var handler=new Handler(variant=="transport"?null:JsonSerializer.Serialize(envelope,NativeJson.Options));
         using var tools=new NativeTools(new NativeClient(new(8081,new string('a',64)),handler),enableBuildingPlacement:true);
@@ -118,7 +120,7 @@ public sealed class GenericBuildingTests
         var entry=new BuildingOption("WaterPump.Folktails",true,true,true,variant=="unsupported"?["special_layout"]:[],"Single","Square","Water",new(1,2,3),null,false,[new("Log",variant=="cost"?-1:12,20)]);
         var items=variant=="duplicate"?new[]{entry,entry}:new[]{entry};
         var data=new NativeBuildingCatalog("Folktails",0,32,items.Length,items,variant=="pagination",["synthetic_test"]);
-        var json=JsonSerializer.Serialize(new BridgeEnvelope<NativeBuildingCatalog>(1,Guid.NewGuid().ToString("D"),DateTimeOffset.UtcNow,"0.14.0",data),NativeJson.Options);
+        var json=JsonSerializer.Serialize(new BridgeEnvelope<NativeBuildingCatalog>(1,Guid.NewGuid().ToString("D"),DateTimeOffset.UtcNow,"0.14.1",data),NativeJson.Options);
         using var client=new NativeClient(new(8081,new string('a',64)),new CatalogHandler(json));
         var r=BridgeRequest.Parse("/agent-api/v1/building-catalog",new(){["offset"]="0",["limit"]="32"});
         if(variant=="ok")Assert.Single((await client.BuildingCatalog(r,TestContext.Current.CancellationToken)).Data.Items);

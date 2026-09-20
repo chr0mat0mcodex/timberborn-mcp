@@ -1,8 +1,11 @@
-# Generisches Bauen — 0.14.0
+# Generisches Bauen — 0.14.0 / Patch 0.14.1
 
 Ziel: Grundversorgung im Entwicklungsspielstand regulär aufbauen, ohne für jeden
 Gebäudetyp ein eigenes MCP-Werkzeug zu implementieren. Keine neue Fremdmod-Abhängigkeit.
-Implementiert; Live-Abnahme nach Installation noch offen.
+0.14.0 live geprüft: kompletter Katalog (162 Einträge, davon 119 unterstützt), vier
+reguläre Aufträge für Farmhaus, Lodge, mittleres Lager und Pumpe mit getrennten
+Entity-Rücklesungen; belegter Standort in Validator und Platzierer abgelehnt.
+Patch 0.14.1 korrigiert den dabei erkannten zu engen Layoutfilter; noch nicht live geprüft.
 
 | Werkzeug | Zweck |
 |---|---|
@@ -22,10 +25,12 @@ place_path und place_lodge bleiben als unveränderte Pilotverträge erhalten.
 
 - Einzelplatzierung, ungespiegelt; rotation 0/1/2/3 = Cw0/90/180/270.
 - x/y/z bezeichnet den BlockObject-Ursprung, nicht einen angenommenen UI-Mausanker.
-- Layout Single oder Rectangle, Square-Werkzeugform, höchstens 64 Blockzellen.
-  Rectangle bedeutet hier genau ein Objekt, kein Bereichsauftrag.
+- Ab 0.14.1 Layout Single, Rectangle, SideLine oder TwoSegmentLine,
+  Square-Werkzeugform, höchstens 64 Blockzellen. Immer genau ein festes
+  Blueprint-Objekt, kein Ziehbereich oder automatisch erzeugter Linienzug.
 - Keine Entwicklerwerkzeuge, seitliche Geländebefestigung oder Sonderlayouts
-  (z.B. variable Brückenspannen). Solche Einträge bleiben mit Ablehnungsgrund sichtbar.
+  (weiterhin Line und Half). Solche Einträge bleiben mit Ablehnungsgrund sichtbar.
+  Keine variable Spanne, Drehung per UI oder freie Größenwahl implementiert.
 - Aktuelle Feature-Toggles und Freischaltung werden vor dem Auftrag geprüft.
   Kein Freischalten, keine Materialerzeugung, keine erzwungene Fertigstellung.
   Das Spiel entscheidet anhand PlaceFinished, welche Objekte sofort fertig sind.
@@ -61,6 +66,14 @@ Referenzbasis: [offizielle Quellen und bestehende good references](references/RE
 [Vorschauvalidierung](native-validation.md) und [Lodge-Pilot](lodge-placement.md).
 
 ## Begrenzte Live-Abnahme
+
+Der erste Pilot zeigte: Path verwendet TwoSegmentLine, kleine Lager/Tanks und
+Holzfällerflaggen SideLine. Der frühere Filter verwechselte diese Werkzeuglayouts
+mit einer grundsätzlichen Unmöglichkeit, das einzelne feste Blueprint zu platzieren.
+0.14.1 lässt diese beiden Layouts zu; der Platzierer verwendet weiterhin exakt eine
+Geometrie mit unveränderten Feature-, Freischaltungs-, Hindernis- und Spielprüfungen.
+Path war über den alten Einzelweg-Piloten bereits live platziert worden. Die neuen
+Layoutklassen müssen zusätzlich über den generischen Weg praktisch abgenommen werden.
 
 Nach Modwechsel zuerst Version, Sitzung, vollständigen Katalog und Koloniezustand lesen.
 Pumpe, Farmhaus, Lager und Wohnraum als erste vier Gebäudefamilien untersuchen.

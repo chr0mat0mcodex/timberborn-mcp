@@ -852,3 +852,27 @@ Auswahlpfad. Separate Notifications/QuickNotifications haben unterschiedliche Or
 und Historiengrenzen. API-Signaturen geprüft, keine Live-Abdeckung behauptet.
 In missionsplan.md 7.45 und Phase-2-Zukunftsliste aufgenommen; Details docs/alerts-plan.md.
 Keine Mod-/Spieländerung. Nächster Entwicklungsschritt bleibt Bau-Liveabnahme 0.14.0.
+
+### 2026-09-20 — generischer Bau 0.14.0 live geprüft
+
+MCP-Katalog vollständig gelesen: 162 Einträge, 119 unterstützt. Terrain-/Hindernis-
+vorprüfung erkannte zunächst ungeeignete Standorte; zwei gezielte Kartenregionen
+lieferten vier freie Plätze westlich des Weges. Spielvalidator bestätigte alle vier,
+belegte Lodge wurde abgelehnt. Vier reguläre Aufträge (Farm, Lodge, mittleres Lager,
+Pumpe) in derselben Sitzung mit unabhängigen ID-/Vorlagen-/Baustellenrücklesungen.
+Belegter Standort auch im Platzierer rejected. Alle Änderungen regulär, keine Cheats.
+
+Zwei 30-Sekunden-Simulationsfenster auf 7x; anschließend wieder Pause bestätigt.
+Farm: Materialfortschritt 0 -> 76 %, Baustellenbestand 19 Holz; Bauzeit rund 70 %.
+Vorhandene Pumpe separat als fertig und 1/1 besetzt mit laufendem Job gelesen.
+Neue Pumpe noch ohne Baudistrikt, zwei Verbindungswege fehlen. Wohnraum bleibt 3 Betten,
+10 Obdachlose; die neu beauftragte Lodge ist noch nicht fertig. Vier neue Aufträge
+bleiben erhalten. Kein vollständiger Produktions- oder Versorgungsnachweis.
+
+Live gefundener Filterfehler: UI-Layouts SideLine/TwoSegmentLine schlossen kleine
+Lager, Flaggen und einzelne Wege aus. 0.14.1 erweitert genau diese Layoutklassen für
+feste Einzelgeometrie; sämtliche anderen Bauprüfungen bleiben bestehen. Line/Half,
+Terrainseiten, Entwicklerwerkzeuge, Hexform und übergroße Geometrie weiterhin abgewiesen.
+
+Patchprüfung: 318 reguläre Tests bestanden (305 Unit, 13 Integration); drei separate
+Live-Tests im Standardlauf übersprungen. 0.14.1 noch nicht installiert/live getestet.
