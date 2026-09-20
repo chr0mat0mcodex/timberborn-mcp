@@ -65,7 +65,8 @@ public sealed class BridgeRequest
             var sessions = query.GetValues("session");
             if (sessions is null || sessions.Length != 1 || !Guid.TryParseExact(sessions[0], "D", out var id) || id == Guid.Empty)
                 throw new ArgumentException("invalid_session");
-            return new("simulation-speed", session: id.ToString("D"), speed: Read("speed", 0, 1), expectedSpeed: Read("expectedSpeed", 0, 1));
+            int Speed(string key) { int value = Read(key, 0, 7); if (value is not (0 or 1 or 3 or 7)) throw new ArgumentException("invalid_speed"); return value; }
+            return new("simulation-speed", session: id.ToString("D"), speed: Speed("speed"), expectedSpeed: Speed("expectedSpeed"));
         }
         if (path == "/agent-api/v1/workforce" && query.Count == 2)
             return new("workforce", offset: Read("offset", 0, 65535), limit: Read("limit", 1, 32));

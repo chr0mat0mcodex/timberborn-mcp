@@ -1130,3 +1130,13 @@ und Hin-/Rücktest offen. [Vertrag](docs/workplace-staffing.md).
 0.10.0 bei beendetem Spiel gesichert installiert, fünf Paketdateien per SHA256
 geprüft. Bestehende Konfiguration erhalten, Staffing-Opt-in aktiviert. Nach
 Nutzerstart begrenzten Hin-/Rücktest mit separatem Zustandsabgleich ausführen.
+
+### 7.30 Vollständige reguläre Geschwindigkeitssteuerung
+
+- [x] Herstellerwerte belegt: Pause 0, Stufe 1 = 1×, Stufe 2 = 3×, Stufe 3 = 7×.
+- [x] MCP-Steuerung für alle vier Werte implementiert, Session-/Istwertschutz erhalten.
+- [x] 200 Tests bestanden, Mod gebaut und 0.11.0 gesichert installiert.
+- [x] Mission und Dokumentation aktualisiert.
+- [ ] Zusätzliche Stufen 3×/7× live prüfen; Pause/1× bereits live bestätigt.
+
+[Vertrag und Abnahme](docs/simulation-control.md). Sollbesetzungs-Livetest ebenfalls noch offen.

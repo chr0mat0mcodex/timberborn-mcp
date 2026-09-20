@@ -1,5 +1,11 @@
 # Kompatibilität
 
+## Installiert 0.11.0 — 2026-09-20
+
+Alle Standardgeschwindigkeiten 0/1/3/7 anhand mitgeliefertem SpeedControlPanel.uxml
+belegt. 200 Tests bestanden, Mod-Build/Installation geprüft. 3×/7× und Sollbesetzung
+noch nicht live abgenommen; ältere Live-Nachweise bleiben begrenzt gültig.
+
 ## Buildstand 0.10.0 — 2026-09-20
 
 Sollbesetzung mit öffentlichen Workplace.IncreaseDesiredWorkers/DecreaseDesiredWorkers

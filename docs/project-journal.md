@@ -1,5 +1,22 @@
 # Projektjournal
 
+## 2026-09-20 — Alle regulären Geschwindigkeiten umgesetzt und installiert
+
+0.11.0: set_simulation_speed akzeptiert für Ziel/Erwartungswert exakt 0,1,3,7.
+Herstellerdaten aus Modding/UI.zip, Views/Game/SpeedControlPanel.uxml belegen
+Speed0/Speed1/Speed3/Speed7 als Pause und drei Standardstufen. Keine Screenshots,
+UI-Automation oder fremden Assets kopiert. Öffentliche SpeedManager-API bleibt.
+
+200 reguläre Tests bestanden (187 Unit, 13 Integration), drei Live-Tests übersprungen.
+MCP-Integration testet 0 -> 1 -> 3 -> 7 -> 1 und ungültige Zwischenwerte.
+Mod-Build ohne Warnungen/Fehler. Bei weiterhin beendetem Spiel 0.11.0 installiert:
+vorherige Mod gesichert, fünf Paketdateien SHA256-geprüft, Konfiguration bytegenau
+beibehalten. Sollbesetzungsfunktion aus 0.10.0 enthalten und weiter freigeschaltet.
+
+Umsetzung/automatisierte Abnahme abgehakt. 3×/7× und Sollbesetzung noch nicht live
+getestet. Nach Nutzerstart beide begrenzten Piloten ausführen; keine vollständige
+Live-Freigabe aus Build-/Simulationstests ableiten.
+
 ## 2026-09-20 — Sollbesetzungssteuerung 0.10.0 installiert
 
 Bei beendetem Spiel bisherigen Mod-Ordner lokal gesichert und fünf Paketdateien

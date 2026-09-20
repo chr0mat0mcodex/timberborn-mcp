@@ -65,7 +65,7 @@ public sealed class NativeBridgeTests
                                 Guid.NewGuid(), "applied", r.Template == "Path", true, ["synthetic_test"])),
                             _ => throw new ArgumentException()
                         };
-                        return JsonSerializer.Serialize(new BridgeEnvelope<object>(1, session, DateTimeOffset.UtcNow, "0.10.0", data), NativeJson.Options);
+                        return JsonSerializer.Serialize(new BridgeEnvelope<object>(1, session, DateTimeOffset.UtcNow, "0.11.0", data), NativeJson.Options);
                     });
                     await Task.Delay(5, pumpStop.Token);
                 }
@@ -198,11 +198,13 @@ public sealed class NativeBridgeTests
             Assert.Equal(1, simulation.StructuredContent!.Value.GetProperty("data").GetProperty("currentSpeed").GetSingle());
             if (enableLodgePlacement)
             {
-                foreach (int speed in new[] { 0, 1 }) {
-                    var result = await client.CallToolAsync("set_simulation_speed", new Dictionary<string, object?> { ["speed"] = speed, ["expectedSpeed"] = 1 - speed, ["session"] = session }, cancellationToken: ct);
+                int expectedSpeed = 1;
+                foreach (int speed in new[] { 0, 1, 3, 7, 1 }) {
+                    var result = await client.CallToolAsync("set_simulation_speed", new Dictionary<string, object?> { ["speed"] = speed, ["expectedSpeed"] = expectedSpeed, ["session"] = session }, cancellationToken: ct);
                     Assert.False(result.IsError);
                     var readback = await client.CallToolAsync("inspect_simulation", cancellationToken: ct);
                     Assert.Equal(speed, readback.StructuredContent!.Value.GetProperty("data").GetProperty("currentSpeed").GetSingle());
+                    expectedSpeed = speed;
                 }
                 var stale = await client.CallToolAsync("set_simulation_speed", new Dictionary<string, object?> { ["speed"] = 0, ["expectedSpeed"] = 0, ["session"] = session }, cancellationToken: ct);
                 Assert.True(stale.IsError);

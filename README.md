@@ -46,12 +46,14 @@ Arbeitsplatzzuordnungen stimmen mit Gebäudebesetzung überein.
 0.10.0 bereitet [reguläre Sollbesetzung](docs/workplace-staffing.md) vor;
 gebaut/getestet und installiert; Live-Abnahme offen. Spätere Integration:
 [Agentenfrage als Texteingabe-Popup](docs/player-question-popup.md).
+0.11.0 unterstützt Pause und alle drei regulären Geschwindigkeiten (0/1/3/7).
+Gebaut, getestet und installiert; 3×/7× live noch offen.
 [Installation und Abnahme](docs/native-bridge-install.md),
 [offizielle Quellen und good references](docs/references/README.md).
 Für die eigene Bridge: `scripts/start-native.ps1 -ConfigPath '<private Konfiguration>'`;
 Build und nativen Lesetest mit `scripts/verify.ps1 -NativeConfig '<private Konfiguration>'`
 ausführen. Beide Abläufe sind in der Installationsanleitung beschrieben.
-191 reguläre Tests bestanden; drei separate Live-Tests im Standardlauf übersprungen.
+200 reguläre Tests bestanden; drei separate Live-Tests im Standardlauf übersprungen.
 Nativer lesender MCP-Livetest zuletzt mit 0.6.1 erfolgreich.
 Auch mit ausschließlich eigener Bridge laut Nutzer-Mod-Auswahl: alle sechs nativen
 Lesewerkzeuge erneut live erfolgreich (0.3.0). Keine Fremdmod für diesen Zugriff erforderlich.

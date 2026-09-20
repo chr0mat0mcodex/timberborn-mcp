@@ -1,4 +1,28 @@
-# Simulation lesen und steuern — Pilot 0.8.0
+# Simulation lesen und steuern — 0.11.0
+
+- [x] Pause und alle drei regulären Spielstufen implementiert: 0, 1, 3, 7.
+- [x] Ziel und expectedSpeed auf diese vier Werte begrenzt; Session-/Istwertschutz erhalten.
+- [x] 200 automatisierte Tests bestanden, Mod 0.11.0 gebaut und installiert.
+- [ ] 3× und 7× live bestätigen. Pause/1× seit 0.8.0 live bestätigt.
+
+`set_simulation_speed(speed, expectedSpeed, session)` nutzt die tatsächlichen
+Geschwindigkeitswerte: Pause=0, erste Stufe=1, zweite Stufe=3, dritte Stufe=7.
+Bestehende Freigaben enableSpeedControl/TIMBERBORN_ENABLE_SPEED_CONTROL bleiben.
+Keine Debuggeschwindigkeiten, Zeitsprünge oder Entsperrung von Spielsperren.
+Die Wirkung ist verzögert: immer inspect_simulation separat nachlesen.
+
+Quelle der Standardwerte: vom Hersteller mitgeliefertes Modding/UI.zip,
+Views/Game/SpeedControlPanel.uxml in Timberborn 1.1.2.4. Darin heißen die vier
+Buttons Speed0, Speed1, Speed3, Speed7; zugehörige Klassen speed-button--0 bis --3.
+Nur als Daten gelesen, keine UI-Automation, keine Spielassets ins Repository kopiert.
+
+Live-Abnahme: aktuellen Zustand lesen, jede Stufe höchstens einmal gezielt setzen,
+Geschwindigkeit und Zeitfortschritt nachlesen, zum Schluss gewünschte 1× herstellen.
+Keine feste Echtzeit-Beschleunigungsquote verlangen: Tickleistung kann begrenzen.
+Kein automatisches Retry nach Fehler oder abweichendem Zustand.
+
+## Historischer Pause-/Normalgeschwindigkeitspilot 0.8.0
+
 
 Status: implementiert, installiert und Live-Abnahme bestanden. Eigene Mod,
 öffentliche Spiel-API, keine Fremdmod und keine UI-Automation.

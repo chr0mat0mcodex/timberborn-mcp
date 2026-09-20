@@ -1,5 +1,8 @@
 # Eigene Timberborn Agent Bridge — 0.6.1
 
+Neu vorbereitet: 0.11.0 ergänzt alle regulären Geschwindigkeiten 0/1/3/7.
+Die Sollbesetzungssteuerung aus 0.10.0 ist enthalten; bestehende Opt-ins bleiben.
+
 Neu vorbereitet: 0.10.0 mit [regulärer Sollbesetzung](workplace-staffing.md).
 Eigene Freigaben enableStaffing / TIMBERBORN_ENABLE_STAFFING; Paketstandard aus.
 Installiert/live bestätigt bleibt 0.9.0 bis zum Update.

@@ -17,6 +17,6 @@ public sealed class SimulationControl(SpeedManager speed, IDayNightCycle time)
         return new { requestedSpeed = request.Speed, previousSpeed = previous,
             matchedImmediately = speed.CurrentSpeed == request.Speed, observation = Observe(),
             limitations = new[] { "read_simulation_to_confirm", "no_automatic_retry", "game_locks_not_overridden",
-                "pause_and_normal_speed_only", "speed_is_not_measured_tick_throughput" } };
+                "standard_speeds_only_0_1_3_7", "speed_is_not_measured_tick_throughput" } };
     }
 }

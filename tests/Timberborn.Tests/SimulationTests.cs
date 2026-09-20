@@ -9,6 +9,29 @@ namespace Timberborn.Tests;
 public sealed class SimulationTests
 {
     [Theory]
+    [InlineData(0, true)]
+    [InlineData(1, true)]
+    [InlineData(2, false)]
+    [InlineData(3, true)]
+    [InlineData(4, false)]
+    [InlineData(6, false)]
+    [InlineData(7, true)]
+    [InlineData(8, false)]
+    [InlineData(-1, false)]
+    public void OnlyStandardSpeedsAcceptedForTargetAndExpectation(int value, bool valid)
+    {
+        foreach (var key in new[] { "speed", "expectedSpeed" })
+        {
+            var query = new System.Collections.Specialized.NameValueCollection {
+                ["speed"] = "1", ["expectedSpeed"] = "1", ["session"] = Guid.NewGuid().ToString("D") };
+            query[key] = value.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            if (valid) {
+                var request = BridgeRequest.Parse("/agent-api/v1/simulation-speed", query);
+                Assert.Equal(value, key == "speed" ? request.Speed : request.ExpectedSpeed);
+            } else Assert.Throws<ArgumentException>(() => BridgeRequest.Parse("/agent-api/v1/simulation-speed", query));
+        }
+    }
+    [Theory]
     [InlineData("POST", false, false, false)]
     [InlineData("GET", true, false, false)]
     [InlineData("POST", true, true, false)]
