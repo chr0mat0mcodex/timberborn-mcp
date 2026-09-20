@@ -1005,3 +1005,11 @@ ohne Distriktkomponente. Unbekannte Entity/fremde Sitzung abgefangen. Neun fachl
 Leseaufrufe, unveränderte Objektzahl/Bestände. Keine Baustelle vorhanden; Material-
 und Baufortschritt bleiben live offen. Frühere Testweg-ID im geladenen Stand nicht
 vorhanden, kein erneuter Bau. Nächster Nachweis benötigt einen begrenzten Hausauftrag.
+
+### 7.13 Nutzer-Farmhaus schließt die Baustellenlücke teilweise
+
+Vom Nutzer platziertes Farmhaus rein lesend geprüft: aktiv/unfertig/ungestartet,
+Fortschritt 0 und bekannter Baudistrikt. Kein eigener Gebäudeauftrag nötig für diesen
+Beobachtungsnachweis. Restmaterialabfrage liefert allerdings Log=0 bei fehlenden
+Fortsetzungsmaterialien; Semantik nicht abgenommen. Nächster Schritt: Baukosten und
+Baustelleninventar getrennt prüfen, bevor Restbedarf als Entscheidungsgrundlage dient.

@@ -1,5 +1,21 @@
 # Projektjournal
 
+## 2026-09-20 — Nutzer-Farmhaus als echte Baustelle gelesen
+
+Nutzer hat Farmhaus-Bauauftrag platziert. Vier rein lesende MCP-Aufrufe auf 0.6.0:
+genau eine EfficientFarmHouse.Folktails gefunden, unfinished=true, finished=false,
+isOn=true, wasStarted=false, readyToBuild=false, Material-/Bauzeitfortschritt und
+Bauzeitstunden 0. HasMaterialsToResumeBuilding=false, readyToFinish=false.
+ConstructionDistrict referenziert bekanntes District Center; Betriebs-/Instant-Distrikt
+null. Global Log=0, Water=250, Berries=300. Keine Mutation oder eigener Hausauftrag.
+
+Wichtiger Semantikbefund: RemainingRequiredGoods liefert Log mit Amount=0 trotz
+Materialfortschritt 0 und fehlender Fortsetzungsmaterialien. Die Bedeutung/Verwendung
+dieser Methode ist damit nicht als verlässlicher Restbedarf abgenommen. Nicht als
+"kein Material nötig" interpretieren. Nächste Untersuchung: Baukosten, Baustelleninventar
+und Methodenvoraussetzungen getrennt prüfen. Echte Baustellendaten/Zuordnung jetzt
+live lesbar; Materialmengen-Semantik und tatsächlicher Fortschrittsverlauf bleiben offen.
+
 ## 2026-09-20 — Gebäude-/Distrikt-Lesepilot auf 0.6.0 bestanden
 
 Neun fachliche MCP-Aufrufe, Schreib-/Vorschau-Opt-ins im Client aus. District Center

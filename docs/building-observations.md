@@ -1,5 +1,16 @@
 # Baustellen und Distriktzuordnung — 0.6.0
 
+## Aktueller Baustellennachweis und Materialgrenze
+
+Nutzerplatziertes EfficientFarmHouse.Folktails live gelesen: unfertig, aktiv, ungestartet,
+Material-/Baufortschritt 0, kein Material zur Fortsetzung, bekannter Baudistrikt.
+RemainingRequiredGoods meldet dabei Log=0. Diese Methodensemantik ist noch ungeklärt:
+den Wert nicht als verlässlichen Restbedarf oder Materialfreiheit verwenden. Baukosten
+und Baustelleninventar müssen separat nachgewiesen werden. Kein zeitlicher Baufortschritt
+beobachtet und kein Hausauftrag über MCP erteilt. Vier reine Leseaufrufe.
+
+Die folgenden Abschnitte dokumentieren Vertrag und vorherigen Test an fertigen Objekten.
+
 Rein lesende Erweiterung vor einem Hausauftrag. Keine neue Abhängigkeit oder Bauaktion.
 Gebaut, synthetisch getestet und auf 0.6.0 begrenzt live geprüft: fertiges District
 Center und Holzfällerflagge mit bekannter Betriebs-/Instant-Distrikt-ID; fertiger Path
