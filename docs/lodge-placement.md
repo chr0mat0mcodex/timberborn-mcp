@@ -1,5 +1,7 @@
 # Lodge-Baupilot 0.7.0
 
+> Historischer Pilot-/Nachweisbericht. Alte Versionsstände und Grenzen gelten für den damaligen Test. Aktueller Einstieg: [native Installation](native-bridge-install.md), [generischer Bau](generic-building.md) und [Projektstand](../PROJECT_STATE.md).
+
 Status: implementiert, installiert und begrenzt live bestätigt (0.7.0). Der
 zuletzt live geprüfte Stand ist 0.7.0. Ziel ist ein regulärer Hausauftrag über MCP
 und dessen unabhängige Wiedererkennung als Baustelle, noch kein autonomer Hausbau.

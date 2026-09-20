@@ -1,5 +1,7 @@
 # Kontrollierter Spielvalidator-Pilot — 0.4.0
 
+> Historischer Pilot-/Nachweisbericht. Alte Versionsstände und Grenzen gelten für den damaligen Test. Aktueller Einstieg: [native Installation](native-bridge-install.md), [generischer Bau](generic-building.md) und [Projektstand](../PROJECT_STATE.md).
+
 ## Abnahme des Korrekturkandidaten 0.4.1
 
 Nach Neustart live bestätigt: belegter Lodge-Standort abgewiesen, freier und vollständig

@@ -1,5 +1,7 @@
 # Architekturentscheidungen
 
+> Chronologische Entscheidungen. Der aktive Pfad ist die [eigene native Bridge](native-game-api.md); frühe More-HTTP-API-Entscheidungen dokumentieren den abgelösten POC.
+
 ## 2026-09-19 — POC-Implementierung
 
 - MCP läuft extern auf .NET 10 über das offizielle C# SDK und stdio.

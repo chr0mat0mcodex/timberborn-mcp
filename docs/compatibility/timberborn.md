@@ -1,4 +1,23 @@
-# Kompatibilität
+# Kompatibilität und Live-Nachweise
+
+## Aktueller Stand
+
+| Komponente | Belegter Stand |
+| --- | --- |
+| Eigene Mod | 0.17.2, installiert und gezielt live abgenommen |
+| Spiel | Timberborn 1.1.2.4, Folktails, kleine Entwicklungskolonie |
+| Tests | 388 reguläre Tests; Live-Piloten getrennt |
+| Fremdmods | Keine Pflichtabhängigkeit der eigenen Mod |
+| MCP | Externer C#-Server, native Auswahl, stdio |
+
+Aktuelle Funktionen und Grenzen: [Projektstand](../../PROJECT_STATE.md).
+Keine Zusage für sämtliche Spielversionen, Fraktionen, Vorlagen oder Modkombinationen.
+
+## Historisches Nachweisprotokoll
+
+Die folgenden datierten Einträge behalten ihren damaligen Versions-/Installationsstand.
+Ein altes „offen“ oder „installiert bleibt …“ ist kein aktueller Status.
+
 
 ## Live-Abnahme 0.11.0 — 2026-09-20
 

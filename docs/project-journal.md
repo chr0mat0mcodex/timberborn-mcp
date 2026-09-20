@@ -1,5 +1,7 @@
 # Projektjournal
 
+> Chronologisches Journal. Aktuell: [Projektstand](../PROJECT_STATE.md), [Mission](../missionsplan.md) und [Backlog](../BACKLOG.md). Frühere Einträge beschreiben ihren damaligen Zustand.
+
 ## 2026-09-20 — Alle Geschwindigkeiten und Sollbesetzung live bestanden
 
 0.11.0, begrenzter MCP-Pilot mit 26 fachlichen Aufrufen. Anfangszustand Pause;
@@ -1114,3 +1116,22 @@ Separate Rückabfragen bestätigen unveränderten Gebäude-Pausenwert, Forschung
 und vollständige Simulationsbeobachtung. Ingame-Log enthält alle drei als rejected.
 Keine Aktion wiederholt, keine Zustandsänderung durch die Tests. Gezielte Live-Abnahme
 von 0.17.2 abgeschlossen; übrige Fehlerbereiche bleiben wie dokumentiert offen.
+
+## 2026-09-20 — Projektmetadaten und Dokumentation konsolidiert
+
+Nutzerauftrag: veraltete More-HTTP-API-/Read-only-Außendarstellung vollständig bereinigen.
+README, Installation, Workflow und Beispielkonfiguration auf den nativen Einstieg
+umgestellt; PROJECT_STATE, BACKLOG und Dokumentations-/Werkzeugübersicht ergänzt.
+NativeTools.Catalog offline abgeglichen: 19 Leser und 19 freizugebende Werkzeuge.
+Alte Mission und ursprünglicher Phase-2-Plan separat archiviert; aktueller Missionsplan
+enthält Ziele, belegte Fähigkeiten und echte offene Schritte. Historische Berichte bleiben
+als solche gekennzeichnet, Fremdmods als good references/Legacy abgegrenzt.
+AGENTS.md nach gesondertem Nutzer-Go von den überholten POC-/Installationsverboten bereinigt.
+GitHub-About und Topics sowie Name/Beschreibung im Quellmanifest aktualisiert.
+
+Keine C#-Implementierung, Spielsteuerung, Versionsnummer oder laufende Installation geändert.
+Der direkte Server-Default bleibt ein dokumentierter Legacy-Restpunkt; native Einrichtung
+setzt das Backend ausdrücklich. Mod-Metadaten im bereits installierten Paket bleiben
+bis zum nächsten Paketupdate auf ihrem bisherigen Textstand. Keine Release-Veröffentlichung.
+Aktuelle funktionale Abnahme bleibt 0.17.2 / 388 Tests; für diesen Metadaten-Schritt
+Werkzeugkatalog, lokale Links, JSON, UTF-8 und Diff geprüft, keine unnötigen Spieltests.

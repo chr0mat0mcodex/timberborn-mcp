@@ -1,6 +1,7 @@
 # Ingame-MCP-Log und Aktionsbegründungen (0.16.0)
 
-Implementiert, mit 362 regulären Tests geprüft und gesichert installiert. Fenster vom Nutzer bestätigt; Leser und kontrollierte Pumpenaktionen live im Log nachgewiesen.
+Implementiert und live bestätigt: Fenster, Scrollen sowie geloggte Abfragen/Aktionen mit Begründung.
+Seit 0.17.2 erscheinen fachliche Ablehnungen als rejected. Aktuelle Testzahlen: [Projektstand](../PROJECT_STATE.md).
 
 ## Bedienung
 

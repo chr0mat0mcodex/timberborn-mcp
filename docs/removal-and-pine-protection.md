@@ -1,6 +1,7 @@
 # Kiefernschutz, Abriss und Hindernisse (0.13.0)
 
-Stand: implementiert, Live-Abnahme offen. Ergänzt 0.12.0 ohne Fremdmod-Abhängigkeit.
+Stand: implementiert; Kiefernschutz, Abriss/Wiederaufbau und Vegetationsentfernung gezielt live bestätigt.
+Lebenszustände werden seit 0.13.2 berücksichtigt. [Aktueller Projektstand](../PROJECT_STATE.md).
 
 ## Zapffläche als Kiefernschutz
 

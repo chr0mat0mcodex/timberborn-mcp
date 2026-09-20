@@ -1,17 +1,68 @@
-# Entwicklungsablauf
+# Entwicklung und Verifikation
 
-## Prüfen
+Aktuelle Architektur und Nachweise: [Projektstand](PROJECT_STATE.md).
+Der Entwicklungsweg verwendet die eigene Agent Bridge. Frühere Read-only-POC-Stände
+stehen im Journal und sind keine aktuelle Beschreibung des Funktionsumfangs.
+
+## Build und Tests
 
 Vor Änderungen `git status --short --branch` prüfen und vorhandene Nutzeränderungen erhalten.
-Für Codeänderungen im Repository ausführen:
+Für Codeänderungen im Repository:
 
 ```powershell
 pwsh -NoProfile -File ./scripts/verify.ps1
 ```
 
-Das Skript verwendet projektlokale Caches, Locked-Mode-Restore, Release-Build und gewöhnliche Tests.
-`-Live` greift zusätzlich auf die vom Nutzer vorbereitete Testkolonie zu und bleibt ausdrücklich opt-in.
-Bei reinen Dokumentationsänderungen genügen Inhalts-, Link- und Diff-Prüfung; keine unnötige Wiederholung der Spieltests.
+Das Skript setzt projektlokale Caches, verwendet Locked-Mode-Restore, baut Release und
+führt die regulären Tests mit synthetischen Daten aus. Der erste Restore benötigt
+Netzwerkzugriff; Abhängigkeiten sind in Directory.Packages.props und Lockfiles gepinnt.
+Keine globalen Tools werden installiert. Aktueller Nachweis: 388 Tests.
+
+Bei reinen Dokumentations-/Beschreibungsänderungen genügen Inhalts-, Link-, JSON- und
+Diff-Prüfung; keine unnötige Wiederholung der Spieltests.
+
+## Eigene Mod bauen und paketieren
+
+```powershell
+pwsh -NoProfile -File ./scripts/build-native-bridge.ps1 `
+  -TimberbornManagedDir '<Spielverzeichnis>/Timberborn_Data/Managed'
+```
+
+Der Mod-Build ist separat vom Solution-Build: proprietäre Spielbibliotheken liegen nicht
+im Repository. Ziel netstandard2.1; Server/Tests gemäß .NET-SDK-Version in global.json.
+Jeder Aufruf erzeugt ein neues Paket unter `.local/packages/`; das verteilbare ZIP enthält
+nur eigene DLLs, Manifest, Lizenz und Installationshinweise. Die zusätzlich lokal erzeugte
+private Konfiguration gehört nicht ins ZIP oder Git.
+
+Updates erst nach Speichern/Beenden des Spiels. Installationsziel und Mod-ID prüfen,
+vorhandenen Modordner vollständig sichern, fünf Paketdateien vergleichen und private
+Konfiguration/Identitätsdateien erhalten. Keine Spielbibliotheken oder Fremdmods mitkopieren.
+[Installation](docs/native-bridge-install.md).
+
+## Live-Prüfung
+
+```powershell
+# Eigene Mod, geladenes Testspiel, ausschließlich lesender MCP-Abnahmetest:
+pwsh -NoProfile -File ./scripts/verify.ps1 `
+  -NativeConfig '<installierte Mod>/bridge.local.json'
+```
+
+Dieser Aufruf führt zuerst die normalen Prüfungen und danach den nativen Lesetest mit
+19 Werkzeugen aus. Schreibtests sind separate, ausdrücklich freigegebene Piloten mit
+frischer Session, begrenzten Aktionen und Rückabfragen. Das Skript aktiviert sie nicht.
+`-Live` bezeichnet aus Kompatibilitätsgründen weiterhin den **historischen More-HTTP-API-Lesetest**,
+nicht den nativen Test. [Legacy-Hinweise](docs/legacy-backend.md).
+
+Vorprüfung, Spielvalidierung, Auftrag, Fertigstellung und Wirkung getrennt nachweisen.
+Fehler oder unconfirmed nicht automatisch wiederholen. Spielende/Neustart bleibt beim
+Nutzer; die Kontrolle erfolgt über strukturierte MCP-/API-Abfragen, nicht über UI-Eingaben.
+
+## Dokumentation
+
+README beschreibt das Produkt, PROJECT_STATE den aktuellen belegten Stand, BACKLOG offene
+Arbeiten, missionsplan die Ziele/Abnahmeschritte. Fachdokumente enthalten Verträge und Grenzen.
+Datierte Ergebnisse gehören ins Projektjournal; historische Befunde nicht als neuen aktuellen
+Status an bestehende Einführungen anhängen. Versions-/Installations-/Live-Stand unterscheiden.
 
 ## Checkpoint und Push
 
@@ -26,38 +77,3 @@ Standardbranch bei Projektanlage: `master`. Neue Arbeitsbranches erhalten das Pr
 6. Remote-Commit mit lokalem HEAD vergleichen und Push-Erfolg berichten. Bei fehlendem Zugang oder Netzwerkfehler bleibt der lokale Checkpoint erhalten; fehlende Synchronisierung ausdrücklich melden.
 
 Der Nutzer hat diese fortlaufende Sicherung während der Projektarbeit autorisiert. Dafür ist nicht bei jedem normalen Push eine neue Bestätigung erforderlich. Eine neue Veröffentlichung außerhalb dieses Repositorys oder eine Erweiterung des freigegebenen Funktionsumfangs ist davon nicht gedeckt.
-
-## Aktueller Ausgangspunkt
-
-Read-only-POC mit fünf MCP-Werkzeugen implementiert. Zuletzt geprüft: 47 gewöhnliche Tests erfolgreich,
-zusätzlicher expliziter Live-Test erfolgreich, UI-Werte vom Nutzer bestätigt. Meilenstein: `poc-readonly-v0.1`.
-Der lokale Codex-Client wurde am 2026-09-19 auf ausdrücklichen Nutzerauftrag als `timberborn` eingerichtet.
-Registrierung geprüft; separater stdio-Livetest aller fünf Werkzeuge erneut erfolgreich.
-Die Werkzeugverfügbarkeit im bereits laufenden Chat ist damit noch nicht bestätigt.
-Weitere Funktionen benötigen eine neue Umfangsfreigabe.
-
-Freigegebene Erweiterung vom 2026-09-19: set_building_paused als einzelnes Schreibwerkzeug hinter
-TIMBERBORN_ENABLE_WRITES=1 implementiert. Aktuell 74 reguläre Tests bestanden; gesonderter Live-Schreibpilot
-an genau einer Holzfällerflagge erfolgreich einschließlich Rückweg und Schlussabfrage.
-UI-Abgleich vom Nutzer bestätigt: nach dem erfolgreichen Hin-/Rücktest auf gesonderten Auftrag erneut
-pausiert und sichtbar bestätigt. Letzter bestätigter Zustand absichtlich pausiert; nicht automatisch reaktivieren.
-Standardkonfiguration weiterhin lesend. Details: missionsplan.md Abschnitt 6.
-
-Aktualisierung 2026-09-20: eigene native Agent Bridge 0.2.0 nach Freigabe implementiert;
-89 reguläre Tests bestanden, eigener Mod-Build erfolgreich. Mod-Projekt separat über
-`scripts/build-native-bridge.ps1 -TimberbornManagedDir '<Spiel>/Timberborn_Data/Managed'`
-bauen: Spielbibliotheken sind absichtlich nicht Teil des Standard-Solution-Builds.
-Lokales Paket und private Auth-Konfiguration liegen ausschließlich unter .local.
-Installation/Live-Abnahme offen; Codex-Client bleibt bis zur Einrichtung beim alten Backend.
-Community-Quellen sind good references; Katalog und reproduzierbarer Abruf unter docs/references.
-
-Aktueller Stand 0.3.0: sechs native Lesewerkzeuge, 99 reguläre Tests bestanden, drei
-Live-Tests im Standardlauf übersprungen. Native-Livetest nur gezielt mit
-TIMBERBORN_NATIVE_LIVE_TEST=1 und TIMBERBORN_NATIVE_CONFIG, Filter LiveNativeTests.
-verify.ps1 deaktiviert dieses separate Opt-in grundsätzlich. Räumliche Prüfung erfolgt
-strukturiert über Spielservices, ohne Screenshots. Vollständige Bauvalidierung noch offen.
-
-Aktueller Analyseprototyp 0.4.0: zusätzliche geschützte Vorschauvalidierung gebaut,
-109 reguläre Tests bestanden, nicht installiert oder live ausgeführt. Installierter/live
-geprüfter Stand bleibt 0.3.0. Nutzerpriorität: Fähigkeitsanalyse vor praktischem Spielen;
-siehe aktueller Missionsschwerpunkt in AGENTS.md und missionsplan.md.

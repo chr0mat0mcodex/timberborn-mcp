@@ -3,7 +3,7 @@
 ## Einstieg
 
 - Standardmäßig auf Deutsch, knapp und technisch nachvollziehbar arbeiten.
-- Vor Änderungen Git-Status, README.md, DEVELOPMENT_WORKFLOW.md und die relevanten Abschnitte von missionsplan.md lesen.
+- Vor Änderungen Git-Status, README.md, PROJECT_STATE.md, DEVELOPMENT_WORKFLOW.md und die relevanten Abschnitte von missionsplan.md lesen. Offene Arbeiten stehen in BACKLOG.md.
 - Aktuelle Ergebnisse stehen in docs/project-journal.md, Architekturentscheidungen in docs/architecture/decisions.md, getestete Versionen in docs/compatibility/timberborn.md.
 - Historische Planungsabschnitte sind keine aktuelle Zustandsbeschreibung. Aussagen gegen Dateien und Git prüfen.
 
@@ -17,8 +17,8 @@
 
 ## Eingriffsgrenzen
 
-- Der freigegebene POC liest ausschließlich Spielzustand. Keine Schreibwerkzeuge, Save-Manipulation oder generischen HTTP-Werkzeuge ohne neue ausdrückliche Freigabe.
-- Mods installiert und aktiviert der Nutzer. Keine System-, Spiel- oder MCP-Client-Konfiguration selbstständig ändern.
+- Aktuelle Architektur: eigene Agent Bridge und natives MCP-Backend. More HTTP API ist ein vorhandener Legacy-Adapter, keine Laufzeitabhängigkeit der eigenen Mod. Bereits freigegebene Entwicklung und gezielte Spieltests dürfen im bestehenden Umfang fortgesetzt werden; neue Bereiche benötigen Freigabe. Keine Save-Manipulation oder generischen HTTP-Werkzeuge.
+- Installation/Updates der eigenen Mod und bestehende lokale Freigaben sind im beauftragten Entwicklungsablauf autorisiert. Vor Dateiaustausch Spielende prüfen, Mod sichern, Paketdateien verifizieren und private Konfiguration erhalten. Speichern, Beenden und Neustarten übernimmt der Nutzer; Spiel nicht ungefragt beenden. Fremdmods, zusätzliche Abhängigkeiten und darüber hinausgehende System-/Clientänderungen vorher abstimmen.
 - Größere Architekturänderungen und neue Funktionen zunächst konkret vorschlagen und auf Freigabe warten.
 - Änderungen an dauerhaften Agentenregeln zuerst beschreiben und freigeben lassen; bereits ausdrücklich beauftragte Regeländerungen nicht erneut bestätigen lassen.
 - Bestehende fremde Änderungen erhalten. Keine destruktiven Git-Befehle oder Force-Pushes.

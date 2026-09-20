@@ -1,5 +1,7 @@
 # Live-Abnahme POC
 
+> Historischer Pilot-/Nachweisbericht. Alte Versionsstände und Grenzen gelten für den damaligen Test. Aktueller Einstieg: [native Installation](../native-bridge-install.md), [generischer Bau](../generic-building.md) und [Projektstand](../../PROJECT_STATE.md).
+
 Datum: 2026-09-19. Vom Nutzer vorbereitete und freigegebene Testkolonie: MCP.
 
 - Spiel und Mod-Ladevorgang anhand gezielter Logauszüge bestätigt.

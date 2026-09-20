@@ -15,7 +15,12 @@ License identifiers were checked against restored NuGet package metadata.
 Transitive dependencies are listed in the lockfiles; their package notices must be retained if binaries
 are redistributed. This repository does not bundle dependency binaries or a release package.
 
-The HTTP contract was studied through the public More HTTP API source in
+For the retained legacy adapter, the HTTP contract was studied through the public More HTTP API source in
 https://github.com/datvm/TimberbornMods and verified against a user-provided local installation.
 The adapter is an independent client; no game DLLs, mod DLLs or third-party source fragments are included.
 Timberborn is by Mechanistry. This project is not an official Mechanistry product.
+
+The active native game bridge uses public APIs from the locally installed game.
+Game/Unity assemblies are compile references and are not distributed here.
+The native mod has no required third-party mods; see docs/references/README.md for
+official and community references. Normal .NET/NuGet dependencies remain as listed above.

@@ -1,5 +1,7 @@
 # Strukturierter räumlicher Pilot — Agent Bridge 0.3.0
 
+> Historischer Pilot-/Nachweisbericht. Alte Versionsstände und Grenzen gelten für den damaligen Test. Aktueller Einstieg: [native Installation](native-bridge-install.md), [generischer Bau](generic-building.md) und [Projektstand](../PROJECT_STATE.md).
+
 Nutzer-Go: autonom weiterarbeiten, bis tatsächliche Hilfe nötig ist. Zustände direkt
 im Spiel abfragen, Interaktionen programmieren und kontrollieren; keine Screenshots.
 Aktueller Schritt erweitert ausschließlich Leserouten. Noch keine Vorschauobjekte,

@@ -2,8 +2,8 @@
 
 - [x] Pause und alle drei regulären Spielstufen implementiert: 0, 1, 3, 7.
 - [x] Ziel und expectedSpeed auf diese vier Werte begrenzt; Session-/Istwertschutz erhalten.
-- [x] 200 automatisierte Tests bestanden, Mod 0.11.0 gebaut und installiert.
-- [x] Alle vier Zustände 0/1/3/7 in 0.11.0 live bestätigt; Schlusszustand 1×.
+- [x] In 0.11.0 eingeführt und live abgenommen; aktueller Gesamtstand: [Projektstand](../PROJECT_STATE.md).
+- [x] Alle vier Zustände 0/1/3/7 live bestätigt. Ein damaliger Schlusszustand ist keine aktuelle Spieleinstellung.
 
 `set_simulation_speed(speed, expectedSpeed, session)` nutzt die tatsächlichen
 Geschwindigkeitswerte: Pause=0, erste Stufe=1, zweite Stufe=3, dritte Stufe=7.

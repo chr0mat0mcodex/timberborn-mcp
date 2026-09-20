@@ -1,5 +1,7 @@
 # Einzelner Wegauftrag — 0.5.0
 
+> Historischer Pilot-/Nachweisbericht. Alte Versionsstände und Grenzen gelten für den damaligen Test. Aktueller Einstieg: [native Installation](native-bridge-install.md), [generischer Bau](generic-building.md) und [Projektstand](../PROJECT_STATE.md).
+
 Auf Nutzer-Go implementierter Pilot, auf 0.5.0 begrenzt live abgenommen. Genau ein
 Wegauftrag mit applied; separate Gebäudeabfrage bestätigt Entity-ID, Path, Zielposition
 und finished=true. Ein neues Struktur-Objekt, Gesamtobjektzahl +1, beobachtete Vorräte

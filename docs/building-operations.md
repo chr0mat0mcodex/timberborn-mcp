@@ -22,7 +22,7 @@ Vorübergehende Überbesetzung wird erhalten und nicht als fehlerhafte Antwort v
 Öffentliche Signaturen gegen lokale Timberborn-1.1.2.4-Bibliotheken geprüft.
 Community-WorkplaceSettings dient nur als good reference: seine SetDesiredWorkers-
 Methode ist in der aktuellen öffentlichen Workplace-Signatur nicht vorhanden.
-Spätere Personalsteuerung muss daher separat anhand der aktuellen API geklärt werden.
+Die reguläre Sollbesetzung ist inzwischen über IncreaseDesiredWorkers/DecreaseDesiredWorkers implementiert und live geprüft; siehe [Personalsteuerung](workplace-staffing.md).
 Keine private Reflection, Kopie fremden Codes oder zusätzliche Mod-DLL.
 
 ## Kompatibilität und Abnahme

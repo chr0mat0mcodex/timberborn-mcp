@@ -5,7 +5,10 @@ Gebäudetyp ein eigenes MCP-Werkzeug zu implementieren. Keine neue Fremdmod-Abh�
 0.14.0 live geprüft: kompletter Katalog (162 Einträge, davon 119 unterstützt), vier
 reguläre Aufträge für Farmhaus, Lodge, mittleres Lager und Pumpe mit getrennten
 Entity-Rücklesungen; belegter Standort in Validator und Platzierer abgelehnt.
-Patch 0.14.1 korrigiert den dabei erkannten zu engen Layoutfilter; noch nicht live geprüft.
+Die Layoutkorrektur aus 0.14.1 wurde mit späteren Versionen installiert und live bestätigt.
+Seit 0.17.1 unterscheidet die Vorprüfung fertige Path-Vorlagen und entranceOccupants;
+seit 0.17.2 liefert die Spielvalidierung template_locked/template_disabled.
+Aktueller Gesamtstand: [PROJECT_STATE.md](../PROJECT_STATE.md).
 
 | Werkzeug | Zweck |
 |---|---|

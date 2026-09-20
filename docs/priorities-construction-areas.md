@@ -1,6 +1,7 @@
 # Prioritäten, Baustellen und Flächen (0.12.0)
 
-Stand: implementiert; Live-Abnahme nach Installation offen. Keine neue Fremdmod-Abhängigkeit.
+Stand: implementiert und durch gezielte Prioritäts-/Flächenpiloten live bestätigt. Keine Fremdmod-Abhängigkeit.
+Die Versionsnummer im Titel bezeichnet die Einführung; [aktueller Projektstand](../PROJECT_STATE.md).
 
 ## Werkzeuge
 

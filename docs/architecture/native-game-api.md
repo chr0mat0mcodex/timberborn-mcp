@@ -1,16 +1,38 @@
-# Eigene Spielschnittstelle: Machbarkeit und Zielarchitektur
+# Native Spielschnittstelle
 
-Stand 2026-09-19. Nutzer hat Umplanung und Prüfung direkter Spielservices freigegeben.
-Ergebnis: eigene kleine Spielmod bevorzugen; ModdableTimberborn ist keine notwendige Pflichtbasis.
-Externer MCP-Server, Verträge, Prüfungen und allgemeine Bibliotheken bleiben erhalten.
-More HTTP API bleibt zunächst Vergleichsadapter; Community-Mods dienen als Referenz.
-Keine Fremdmods jetzt entfernen. Kein automatischer Backendwechsel innerhalb einer Aktion.
+Aktiver und live geprüfter Aufbau, Agent Bridge 0.17.2:
 
-Aktualisierung 2026-09-20: Punkte 1/2 nach Nutzer-Go implementiert, eigener Mod-Build erfolgreich,
-89 reguläre Tests bestanden. Installation und Live-Abnahme noch offen. Keine Fremdmod-Pflichtbasis
-im nativen Backend. [Installationsanleitung](../native-bridge-install.md),
-[gesicherte good references und extrahierte Erkenntnisse](../references/README.md).
-Die folgenden Recherchebefunde beschreiben den Ausgangspunkt vor dieser Implementierung.
+```text
+MCP-Client → stdio → Timberborn.McpServer / NativeTools
+  → NativeClient → authentifiziertes Loopback-HTTP
+  → eigene Agent Bridge → MainThreadQueue → öffentliche Spielservices
+```
+
+Die Mod läuft im Game-Kontext über Configurator und Singleton-Lebenszyklus.
+Sie nutzt reguläre Spielservices für Beobachtungen, Vorschauvalidierung, Bau,
+Konfiguration, Personal, Flächen, Entfernung, Zeitsteuerung und Forschung.
+Feste Routen und separate Opt-ins begrenzen die Aktionen; Antworten und Warteschlange
+sind begrenzt. Kein allgemeines URL-/Methodenwerkzeug und kein automatischer Retry.
+
+Die eigene Mod benötigt keine andere Mod. Das offizielle Modding-Beispiel und
+Community-Projekte sind [Referenzen](../references/README.md); Spielbibliotheken sind
+lokale Compile-Referenzen und werden nicht veröffentlicht. Keine Verwendung von
+Harmony-Patches oder privaten Runtime-Reflections im eigenen Modpfad.
+
+NativeTools verwendet eigene Native-Verträge. Die ursprünglichen Contracts/Application-
+und MoreHttpApi-Schichten bleiben beim Legacy-/Fake-Pfad; die Historie ist keine
+Behauptung einer einheitlichen Parität aller Backends.
+
+Der implementierte Zugang ist kein vollständiges Weltmodell: Warenabdeckung,
+Erreichbarkeit, Produktionsblockaden und Meldungen bleiben begrenzt.
+[Projektstand](../../PROJECT_STATE.md), [Installation](../native-bridge-install.md),
+[Werkzeuge](../tools.md), [Backlog](../../BACKLOG.md).
+
+## Historische API-Recherche vom 2026-09-19
+
+Die folgenden Signaturbefunde und damaligen offenen Fragen erklären den Entwurf.
+Sie sind keine aktuelle Installations-/Funktionsübersicht; spätere Implementierungen
+und Live-Nachweise stehen im Projektstand und Journal.
 
 ## Belegstufen und Grenzen
 

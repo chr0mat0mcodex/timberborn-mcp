@@ -1,6 +1,10 @@
 # Baustellen und Distriktzuordnung — 0.6.1
 
-## Lieferung und Baufortschritt live bestätigt
+Aktueller Vertrag: inspect_building liefert Baufortschritt, Vorlagenkosten, Baustellenbestand,
+Distrikt- und Betriebsdaten. Fertigstellung wurde an späteren regulären Bauaufträgen
+live bestätigt. [Projektstand](../PROJECT_STATE.md).
+
+## Historischer Liefer-/Baufortschrittstest von 0.6.1
 
 Nach vom Nutzer eingerichteter Holzversorgung zwei Lesestichproben am Farmhaus:
 Baustellenbestand 2 -> 4 Log, MaterialProgress 0.08 -> 0.16, BuildTimeProgress

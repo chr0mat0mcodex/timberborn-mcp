@@ -1,8 +1,8 @@
 {
-  "description": "Beispiel für Prozessvariablen; wird vom Server nicht automatisch als Datei geladen.",
+  "description": "Beispiel für Prozessvariablen des nativen MCP-Servers; diese Datei wird nicht automatisch geladen. Alle Aktionen ohne zusätzliche Freigaben deaktiviert.",
   "environment": {
-    "TIMBERBORN_BACKEND": "more-http-api",
-    "TIMBERBORN_BASE_URL": "http://localhost:8080/"
+    "TIMBERBORN_BACKEND": "native",
+    "TIMBERBORN_NATIVE_CONFIG": "<absoluter Pfad zur installierten privaten bridge.local.json>"
   },
   "fakeEnvironment": {
     "TIMBERBORN_BACKEND": "fake",

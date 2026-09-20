@@ -19,7 +19,7 @@ Katalog, Abrufskript und diese extrahierten Erkenntnisse bleiben im Repository.
 | [Mechanistry Modding Tools](https://github.com/mechanistry/timberborn-modding/tree/976487702864412bbcd2dbd6abaf1058465e1ea4) | **official reference** | Game-Kontext, Configurator, Lebenszyklus, Manifest und Paketstruktur; ausgewählte offizielle Beispiele und Buildquellen lokal gesichert |
 | [ModdableTimberborn](https://github.com/datvm/TimberbornMods/tree/1c057bda82ec955d1712937da916cddf0f382f24/ModdableTimberborn) | **good reference** | Güter-/Betten-/Personalbegriffe, Workplace-Sollbesetzung, Grenzen von Areas; keine Abhängigkeit unserer Mod |
 | [More HTTP API](https://github.com/datvm/TimberbornMods/tree/1c057bda82ec955d1712937da916cddf0f382f24/MoreHttpApi) | **good reference / Legacy-Vergleichsbackend** | Blueprint-Katalog, Building-Handler, HTTP-Fehler-/Antwortkonventionen; native Mod benötigt weder Router noch DLL |
-| [TimberUi](https://github.com/datvm/TimberbornMods/tree/1c057bda82ec955d1712937da916cddf0f382f24/TimberUi) | **good reference** | mögliche spätere Ingame-UI; aktuell kein UI-Bedarf und daher keine Quelldateien importiert |
+| [TimberUi](https://github.com/datvm/TimberbornMods/tree/1c057bda82ec955d1712937da916cddf0f382f24/TimberUi) | **good reference** | UI-Anschauungsmaterial; unser Ingame-Log nutzt die öffentliche Spiel-UI direkt, keine TimberUi-Abhängigkeit |
 | [Mod Settings](https://github.com/eMkaQQ/timberborn-modding) | **good reference** | mögliche Einstellungsoberflächen; private Bridge-Konfiguration benötigt diese Mod nicht; keine Quellübernahme |
 | [Harmony](https://github.com/pardeike/Harmony) | **good reference** | Patch-Technik nur für belegte API-Lücken; aktuell keine Patches, keine DLL-Referenz |
 
@@ -29,10 +29,13 @@ verlinkte Projekte wurden nicht übernommen; deren konkrete Datei-/Versionslizen
 wäre erst bei einer tatsächlichen Übernahme zu prüfen. Die Spielbibliotheken sind
 nicht durch diese MIT-Lizenzen abgedeckt und werden nicht weiterverteilt.
 
-## Extrahierte technische Erkenntnisse
+## Historische extrahierte Erkenntnisse
+
+Die folgenden Punkte stammen aus der frühen Recherche. Aktuelle Umsetzung und
+Live-Nachweise: [Projektstand](../../PROJECT_STATE.md).
 
 1. **Start/Lebenszyklus:** offizielle HelloWorld-Registrierung zeigt Game-Kontext und
-   Singleton-Bindung. Unsere Mod bindet nur ihren eigenen Dienst. Load/Update/Unload
+   Singleton-Bindung. Unsere Mod bindet ihre eigenen Dienste. Load/Update/Unload
    begrenzen HTTP-Queue und Spielsession; Spielzugriffe erfolgen im Update-Hook.
 2. **Bestände:** GoodStatsProvider verweist auf ResourceCountingService und unterscheidet
    AvailableStock von InputOutputCapacity. Wir fragen den Spielservice direkt ab;
