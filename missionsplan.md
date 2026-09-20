@@ -1197,3 +1197,11 @@ Arbeitsplatz-/Baustellenpriorität kontrolliert hin/zurück testen. Live-Abnahme
 Zwei offene Baustellen gelesen. Prioritätspilot 18 fachliche MCP-Aufrufe, keine
 Wiederholungen. Die 124 tapping-Zellen sind aktuell unmarkierte Kiefern, keine
 bestätigte Harzproduktion oder zuvor vom Agenten angelegten Zapfzonen.
+
+### 7.36 Kiefernabfrage: Kandidaten von eingerichteten Zapfflächen unterscheiden
+
+Nutzerabgleich: markierte Kiefern sind tatsächlich fällmarkiert. Vollständiger
+Listenvergleich und zwei Objektstichproben bestätigen die Trennung von markierten
+und unmarkierten Zellen. Die 124 unmarkierten Kiefern sind kartenweite Kandidaten;
+es wurde keine Zapffläche eingerichtet und keine Fällmarkierung entfernt.
+Keine Harzernte oder tatsächlicher Schutzauftrag daraus ableiten. Flächentest offen.

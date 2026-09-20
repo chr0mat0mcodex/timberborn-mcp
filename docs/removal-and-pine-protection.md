@@ -12,7 +12,7 @@ entfernt noch Zapfer gebaut oder Arbeiter zugeordnet.
 
 inspect_areas(kind=tapping) liefert die Positionen aller vorhandenen Kiefern ohne
 Fällmarkierung, einschließlich ursprünglich unmarkierter Bäume. Das ist ein aus dem
-Spielzustand abgeleiteter Schutzstatus, keine gespeicherte benannte Zapfzone. Auch
+Spielzustand abgeleiteter Kandidatenstatus, keine gespeicherte benannte Zapfzone. Auch
 andere Bäume im gewählten Rechteck verlieren ihre Fällmarkierung. Kein Nachweis für
 Reichweite, Reife, Harzertrag oder bereits reservierte Holzfälleraufträge.
 
@@ -92,3 +92,8 @@ an begrenztem Testbereich nachlesen. Für irreversiblen Abriss zunächst ein ent
 Testobjekt bestimmen; kein bestehendes Versorgungsgebäude oder Bewuchs als stilles Testziel.
 Pflanzenauftrag und tatsächliche Räumung getrennt beobachten. Mod-Komponentenanbindung,
 CanDelete-Semantik und normale Folgeereignisse sind live noch zu prüfen.
+
+Live-Klarstellung: Die Abfrage ist kartenweit. Unmarkierte Kiefern sind nur mögliche
+Zapfkandidaten, keine vom Agenten eingerichtete Schutzfläche. Im geprüften markierten
+Bereich wurden 32 Kiefern korrekt als fällmarkiert erkannt und nicht als tapping
+ausgegeben. Die Flächenmutation wurde weiterhin nicht live ausgeführt.

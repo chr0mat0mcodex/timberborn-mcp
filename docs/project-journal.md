@@ -703,3 +703,18 @@ crops und tree_planting liefern jeweils 0 markierte Zellen; tapping liefert 124
 aktuell nicht zum Fällen markierte Kiefern. Kein Ernte-/Reichweitennachweis. Der neue
 DI-/Pflanzkatalogpfad läuft im Spiel. Flächenmutationen und Abriss bleiben ungeprüft.
 Rohdaten/Session- und Entity-IDs nur im ignorierten lokalen Pilotordner gespeichert.
+
+## 2026-09-20 — Korrektur zur Interpretation der Kiefernabfrage
+
+Nutzer weist auf zum Fällen markierte Kiefern hin. Rein lesende Diagnose: komplette
+Listen mit 124 tapping-Kandidaten und 191 Fällmarkierungszellen verglichen. Keine
+Überschneidung, auch nicht bei XY ohne Höhenvergleich. Zwei gezielte Regionen gelesen:
+in der ersten Stichprobe 32 Kiefern, alle 32 fällmarkiert und keine tapping-Kandidaten;
+in der zweiten 32 Kiefern, davon 15 fällmarkiert und 17 unmarkiert. Regionenseiten
+waren begrenzt, keine Aussage über vollständige regionale Baumzahlen.
+
+Damit kein Koordinatenfehler in diesen Stichproben belegt. Die frühere Formulierung
+„geschützte Kiefern“ war missverständlich: tapping listet kartenweit unmarkierte
+Kiefern als Kandidaten, nicht eingerichtete Zapfflächen. Es wurde bisher keine
+Fällmarkierung entfernt. Nutzeraussage über die markierten Kiefern ist bestätigt.
+Keine Spieländerungen; Flächenmutation und Zapferreichweite bleiben offen.
