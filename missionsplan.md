@@ -1225,3 +1225,18 @@ Bauhindernis erneut prüfen; soweit Pilotkatalog erlaubt regulär wieder bauen. 
 markieren, Zustand lesen, Rücknahme prüfen; reale Biberarbeit separat beobachten.
 Schutt nur bei tatsächlichem RecoveredGoodStack prüfen. Kategorie planted benötigt
 passende reale Pflanze plus aktuelle Markierung; keine Herkunft vortäuschen.
+
+### 7.38 Abriss und Wiederaufbau live; Antwortkorrektur 0.13.1
+
+- [x] Weg entfernt, alte ID abwesend, Bauplatz frei, regulär wieder gebaut und fertig gelesen.
+- [x] Vegetations-Entfernungsauftrag mark/unmark mit separaten Rücklesungen bestätigt.
+- [x] Kategorie planted über passende Markierung geprüft; eigener Entfernungsauftrag mark/unmark bestätigt.
+- [x] Farmhausbaustelle abgerissen, sechs neue Schuttstapel beobachtet; einen entfernt und nachgelesen.
+- [x] Einzelne Kiefer über reguläres Mark sofort entfernt, Abwesenheit separat bestätigt.
+- [ ] Korrigierte Antwort 0.13.1 installieren/live prüfen (0.13.0 meldete unnötig unconfirmed).
+- [ ] Tatsächliche Ausführung eines wartenden Biberauftrags über Simulationszeit noch offen.
+
+Bleibende Teständerungen: Farmhausbaustelle weg, ein Schuttstapel gelöscht (Güterverlust),
+fünf neue Stapel zunächst verbleibend; einzelne kolonienahe Kiefer entfernt und ihre
+Fällmarkierung entfernt. Weg regulär ersetzt (neue ID). Simulation blieb durchgehend pausiert.
+Nutzer um Speichern/Beenden für Patchinstallation gebeten; keine offenen Wiederholungsversuche.

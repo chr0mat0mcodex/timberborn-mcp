@@ -160,3 +160,8 @@ tree_cutting stellt sie wieder her (191 -> 190 -> 191). crops/Carrot und
 tree_planting/Pine jeweils setzen/lesen/entfernen/lesen erfolgreich (0 -> 1 -> 0).
 Spiel pausiert; physische Pflanzung/Ernte bleibt ungeprüft. Abrissfreigabe aktiviert,
 wirksam nach neuem Laden des Spielstands; Abriss selbst weiterhin offen.
+
+0.13.0: Gebäude-/Wegabriss plus Wegneubau, Aufträge vegetation/planted und Schuttlöschung
+live bestätigt. Sonderfall: reguläres Demolishable.Mark kann unmittelbar entfernen;
+separate Abwesenheitsprüfung bestätigt. 0.13.1 korrigiert ausschließlich Antwortbewertung
+und Clientvalidierung dafür; Patch noch nicht installiert/live abgenommen.

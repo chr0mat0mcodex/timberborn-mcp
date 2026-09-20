@@ -156,3 +156,10 @@ Fällmarkierungen. Ein zusätzliches Lesewerkzeug (insgesamt 14) und vier getren
 Entfernungswerkzeuge. enableRemoval und TIMBERBORN_ENABLE_REMOVAL=1 sind unabhängig
 von Flächen-/Prioritätsfreigaben nötig. Bestehende Konfiguration beim Update erhalten;
 Abriss zunächst deaktiviert lassen, bis ein passendes Testziel feststeht.
+
+## Patch 0.13.1
+
+Korrigiert die Ergebnisbewertung für reguläre Vegetations-Mark-Aufrufe, die ein Objekt
+sofort entfernen. Keine neue Konfiguration; bestehende Opt-ins erhalten. Installation
+wie gewohnt bei beendetem Spiel mit Sicherung. Live-Nachweis der korrigierten Antwort
+erfolgt nach Neustart; 0.13.0 hatte die tatsächliche Entfernung bereits ausgeführt.

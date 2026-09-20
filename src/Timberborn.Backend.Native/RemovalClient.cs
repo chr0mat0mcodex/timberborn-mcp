@@ -13,7 +13,7 @@ public sealed partial class NativeClient
     {
         var result=await Get<NativeRemoval>($"remove-object?kind={r.Kind}&id={r.Id}&session={r.Session}&template={Uri.EscapeDataString(r.Template)}&x={r.X}&y={r.Y}&z={r.Z}&operation={r.Operation}&expectedMarked={r.ExpectedMarked.ToString().ToLowerInvariant()}",ct,HttpMethod.Post);
         var d=result.Data;
-        if(result.SessionId!=r.Session||d.Id.ToString("D")!=r.Id||d.Kind!=r.Kind||d.Template!=r.Template||d.Position!=new Position(r.X,r.Y,r.Z)||d.Operation!=r.Operation||d.Outcome is not ("applied" or "unconfirmed")||d.Limitations is null||(d.Removed?d.Marked is not null:d.Marked is null)||(d.Outcome=="applied"&&(r.Operation=="delete"?!d.Removed:d.Removed||d.Marked!=(r.Operation=="mark"))))throw new InvalidDataException("Invalid removal receipt");
+        if(result.SessionId!=r.Session||d.Id.ToString("D")!=r.Id||d.Kind!=r.Kind||d.Template!=r.Template||d.Position!=new Position(r.X,r.Y,r.Z)||d.Operation!=r.Operation||d.Outcome is not ("applied" or "unconfirmed")||d.Limitations is null||(d.Removed?d.Marked is not null:d.Marked is null)||(d.Outcome=="applied"&&(r.Operation=="delete"?!d.Removed:r.Operation=="mark"?!d.Removed&&d.Marked!=true:d.Removed||d.Marked!=false)))throw new InvalidDataException("Invalid removal receipt");
         return result;
     }
 }

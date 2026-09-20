@@ -734,3 +734,26 @@ Nutzer erlaubt ausdrücklich notwendige Bau-/Abrissversuche im Entwicklungsspiel
 Private Konfiguration einmalig gesichert und enableRemoval=true gesetzt, alle anderen
 Felder erhalten. Laufende Bridge liest Konfiguration erst beim Kontextladen: Nutzer
 um Hauptmenü und erneutes Laden von MCP gebeten. Abriss noch nicht ausgeführt.
+
+## 2026-09-20 — Abrisspiloten und unmittelbar abgeschlossene Entfernung
+
+Neue Spielsitzung und Abrissfreigabe bestätigt. Wegabriss/Abwesenheit/Bauplatzprüfung/
+regulärer Neubau erfolgreich. Vegetationsauftrag mark/unmark erfolgreich (Pilot 15 Aufrufe).
+Pine auf aktueller Pflanzmarkierung als planted klassifiziert, Auftrag mark/unmark geprüft,
+Markierung entfernt und vegetation-Kategorie wiederhergestellt (11 Aufrufe).
+
+Farmhausbaustelle mit 14 Holz im Baustellenbestand entfernt. Sechs neue Schuttstapel
+im Bereich beobachtet, einer regulär entfernt und separat als abwesend bestätigt
+(9 Aufrufe). Farmhaus bleibt entfernt, fünf Stapel zunächst vorhanden; Güter im
+entfernten Stapel verloren. Bestehende Nutzerfreigabe für Entwicklungsspielstand genutzt.
+
+Bei weiterer kolonienaher Kiefer zunächst Fällmarkierung entfernt, dann Demolishable.Mark.
+Spiel entfernte das Objekt unmittelbar in Pause. Receipt removed=true, outcome=unconfirmed;
+separate Diagnose bestätigte Entity abwesend, Zelle leer und Geschwindigkeit 0. Kein
+Retry und keine Zeitsteuerung ausgeführt. 0.13.0 bewertete nur wartende Markierungen
+als Erfolg: 0.13.1 korrigiert Mod und Clientvertrag für regulär sofort erledigte mark-
+Aktionen. Sechs Regressionstestfälle; keine Änderung am eigentlichen Spieleingriff.
+Installation/Live-Antwortprüfung des Patches offen. Nutzer um Speichern/Beenden gebeten.
+
+Patchprüfung 0.13.1: 261 reguläre Tests bestanden (248 Unit-, 13 Integrationstests),
+drei Live-Tests im Standardlauf übersprungen. Lösung ohne Warnungen/Fehler gebaut.

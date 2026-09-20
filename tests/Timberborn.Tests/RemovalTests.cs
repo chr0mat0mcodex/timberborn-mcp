@@ -62,6 +62,23 @@ public sealed class RemovalTests
         var result=await tools.Invoke("set_area",JsonSerializer.SerializeToElement(new{kind="tapping",operation="mark",resource="",expectedResource="marked",session,x=1,y=2,z=3,width=1,height=1}),TestContext.Current.CancellationToken);
         Assert.Equal(valid?"ok":"error",result["status"]!.GetValue<string>());Assert.Equal(1,h.Calls);
     }
+    [Theory]
+    [InlineData("mark",true,null,true)]
+    [InlineData("mark",false,true,true)]
+    [InlineData("mark",false,false,false)]
+    [InlineData("unmark",true,null,false)]
+    [InlineData("unmark",false,false,true)]
+    [InlineData("unmark",false,true,false)]
+    public async Task RegularMarkMayCompleteImmediately(string operation,bool removed,bool? marked,bool valid)
+    {
+        var id=Guid.NewGuid();var session=Guid.NewGuid().ToString();
+        var data=new NativeRemoval(id,"vegetation","Pine",new(1,2,3),operation,"applied",removed,marked,["synthetic_test"]);
+        var h=new Handler(JsonSerializer.Serialize(new BridgeEnvelope<NativeRemoval>(1,session,DateTimeOffset.UtcNow,"0.13.1",data),NativeJson.Options));
+        using var tools=new NativeTools(new NativeClient(new(8081,new string('a',64)),h),enableRemoval:true);
+        var result=await tools.Invoke("remove_vegetation",JsonSerializer.SerializeToElement(new{id,session,template="Pine",x=1,y=2,z=3,operation,expectedMarked=operation=="unmark"}),TestContext.Current.CancellationToken);
+        Assert.Equal(valid?"ok":"error",result["status"]!.GetValue<string>());Assert.Equal(1,h.Calls);
+        if(!valid)Assert.False(result["error"]!["retryable"]!.GetValue<bool>());
+    }
     private static NameValueCollection Query()=>new(){{"kind","buildings"},{"operation","delete"},{"template","Synthetic"},{"expectedMarked","false"},{"session",Guid.NewGuid().ToString()},{"id",Guid.NewGuid().ToString()},{"x","1"},{"y","2"},{"z","3"}};
     private sealed class Handler(string json):HttpMessageHandler
     {

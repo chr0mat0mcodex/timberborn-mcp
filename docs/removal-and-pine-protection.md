@@ -36,7 +36,7 @@ Vorlage, Ankerposition, Kategorie, Modus, CanDelete und Entfernungsmarkierung.
 
 Für alle Aktionen erforderlich: id, session, template, x/y/z (Ankerposition), operation,
 expectedMarked. Gebäude/Schutt erlauben nur delete und expectedMarked=false. Pflanzen
-erlauben mark/unmark; sie werden durch reguläre Biberarbeit entfernt, nicht sofort.
+erlauben mark/unmark. Der reguläre Mark-Aufruf kann einen Auftrag setzen oder geeignete Ressourcen unmittelbar entfernen.
 Nicht jede Vegetation muss Demolishable unterstützen; die Abfrage meldet das.
 Ruinen zählen ausdrücklich nicht als Schuttstapel und werden nicht entfernt.
 
@@ -103,3 +103,24 @@ Live-Fortschreibung: tapping und tree_cutting an einer Kiefer mit Rückweg erfol
 jeweils 0 -> 1 -> 0 geprüft. Abrissversuche jetzt ausdrücklich für den Entwicklungs-
 spielstand freigegeben; die frühere Vorgabe zur vorherigen Nutzerwahl eines Testziels
 ist damit überholt. Ziele weiterhin konkret lesen und reguläre Löschsperren beachten.
+
+## Live-Abnahme und Korrektur 0.13.1
+
+Weg entfernt, alte Entity-ID anschließend nicht gefunden, freier Bauplatz geprüft und
+Weg regulär neu gebaut. Vegetation sowie Pflanzen auf passender Pflanzmarkierung:
+Aufträge mark/unmark mit separaten Rücklesungen bestanden. Farmhausbaustelle mit
+14 Holz im Baustellenbestand entfernt; dabei sechs neue Schuttstapel beobachtet.
+Ein neuer Stapel entfernt und Abwesenheit bestätigt, fünf bleiben zunächst liegen.
+
+Ein weiterer Vegetations-Mark-Aufruf entfernte eine Kiefer bereits bei pausierter
+Simulation. Separate Abfrage bestätigte die Abwesenheit und leere Zelle; keine
+Spielzeitfortschaltung und kein forcierter Delete-Aufruf durch unsere Bridge.
+Warum diese konkrete Ressource sofort entfernt wurde, ist damit nicht abschließend
+geklärt. Die Antwort von 0.13.0 war unnötig unconfirmed, weil nur IsMarked erwartet wurde.
+
+0.13.1 akzeptiert beim regulären mark sowohl einen gesetzten Auftrag als auch eine
+bereits entfernte Entity als applied. removed unterscheidet beide Fälle. unmark darf
+weiterhin keine Entfernung als Erfolg melden. Sechs Regressionstestfälle sichern den
+Clientvertrag. Korrektur gebaut/automatisiert geprüft; Installation und erneuter
+Live-Nachweis der korrigierten Antwort noch offen. Biberarbeit über Zeit weiterhin
+nicht nachgewiesen; sofortige reguläre Entfernung ersetzt diesen Nachweis nicht.

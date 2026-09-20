@@ -53,7 +53,8 @@ public sealed class RemovalManagement(EntityRegistry entities, EntityService ser
             else if(r.Kind=="buildings")service.Delete(e);
             else if(r.Operation=="mark")d.Mark();else d.Unmark();
             bool gone=e.Deleted||!entities.Entities.Any(x=>x.EntityId==e.EntityId);
-            if(r.Operation=="delete"?gone:!gone&&d.IsMarked==(r.Operation=="mark"))outcome="applied";
+            // The regular Mark() can immediately remove an eligible resource; this is a completed action too.
+            if(r.Operation=="delete"?gone:r.Operation=="mark"?gone||d.IsMarked:!gone&&!d.IsMarked)outcome="applied";
         } catch { /* Lifecycle may have partially run. Never repeat automatically. */ }
         bool removed=e.Deleted||!entities.Entities.Any(x=>x.EntityId==e.EntityId);
         return new{id=Guid.Parse(r.Id),kind=r.Kind,template=r.Template,position=Vec(p),operation=r.Operation,outcome,removed,marked=removed?(bool?)null:demo?d.IsMarked:false,
