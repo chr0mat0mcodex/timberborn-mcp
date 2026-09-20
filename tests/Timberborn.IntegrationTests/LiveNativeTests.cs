@@ -9,7 +9,7 @@ public sealed class LiveNativeTests(ITestOutputHelper output)
     public static bool Enabled => Environment.GetEnvironmentVariable("TIMBERBORN_NATIVE_LIVE_TEST") == "1";
 
     [Fact(Skip = "Native-Livetest nur nach explizitem Opt-in.", SkipUnless = nameof(Enabled))]
-    public async Task SixteenReadToolsAgainstInstalledNativeBridge()
+    public async Task SeventeenReadToolsAgainstInstalledNativeBridge()
     {
         using var budget = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);
         budget.CancelAfter(TimeSpan.FromSeconds(40));
@@ -22,12 +22,12 @@ public sealed class LiveNativeTests(ITestOutputHelper output)
             Arguments = [Path.Combine(StdioServerTests.Root, "src/Timberborn.McpServer/bin/Release/net10.0/Timberborn.McpServer.dll")],
             EnvironmentVariables = new Dictionary<string, string?>
             {
-                ["TIMBERBORN_BACKEND"] = "native", ["TIMBERBORN_NATIVE_CONFIG"] = config, ["TIMBERBORN_ENABLE_BUILDING_PLACEMENT"] = "0",
+                ["TIMBERBORN_BACKEND"] = "native", ["TIMBERBORN_NATIVE_CONFIG"] = config, ["TIMBERBORN_ENABLE_BUILDING_SETTINGS"] = "0", ["TIMBERBORN_ENABLE_BUILDING_PLACEMENT"] = "0",
                 ["TIMBERBORN_ENABLE_WRITES"] = "0", ["TIMBERBORN_ENABLE_VALIDATION"] = "0", ["TIMBERBORN_ENABLE_PLACEMENT"] = "0", ["TIMBERBORN_ENABLE_LODGE_PLACEMENT"] = "0", ["TIMBERBORN_ENABLE_SPEED_CONTROL"] = "0", ["TIMBERBORN_ENABLE_STAFFING"] = "0", ["TIMBERBORN_ENABLE_PRIORITIES"] = "0", ["TIMBERBORN_ENABLE_AREAS"] = "0", ["TIMBERBORN_ENABLE_REMOVAL"] = "0"
             }
         }), cancellationToken: ct);
         var tools = await client.ListToolsAsync(cancellationToken: ct);
-        Assert.Equal(new[] { "find_buildings", "inspect_area_types", "inspect_areas", "inspect_build_catalog", "inspect_build_options", "inspect_building", "inspect_building_priority", "inspect_colony", "inspect_construction", "inspect_map_region", "inspect_removal_targets", "inspect_simulation", "inspect_workforce", "precheck_build_site", "precheck_building", "timberborn_status" }, tools.Select(t => t.Name).Order());
+        Assert.Equal(new[] { "find_buildings", "inspect_area_types", "inspect_areas", "inspect_build_catalog", "inspect_build_options", "inspect_building", "inspect_building_priority", "inspect_building_settings", "inspect_colony", "inspect_construction", "inspect_map_region", "inspect_removal_targets", "inspect_simulation", "inspect_workforce", "precheck_build_site", "precheck_building", "timberborn_status" }, tools.Select(t => t.Name).Order());
         string? session = null;
         async Task<JsonElement> Call(string name, Dictionary<string, object?>? args = null)
         {
@@ -62,6 +62,7 @@ public sealed class LiveNativeTests(ITestOutputHelper output)
         Assert.NotEqual(0, sample.GetArrayLength());
         var center = sample.EnumerateArray().Single(b => b.GetProperty("template").GetString() == "DistrictCenter.Folktails");
         await Call("inspect_building_priority", new() { ["id"] = center.GetProperty("id").GetString(), ["kind"] = "workplace", ["session"] = session });
+        await Call("inspect_building_settings", new() { ["id"] = center.GetProperty("id").GetString(), ["session"] = session });
         var position = sample[0].GetProperty("position");
         int x = position.GetProperty("x").GetInt32();
         int y = position.GetProperty("y").GetInt32();
@@ -83,7 +84,7 @@ public sealed class LiveNativeTests(ITestOutputHelper output)
         { ["id"] = sample[0].GetProperty("id").GetString(), ["session"] = session });
         Assert.True(building.GetProperty("found").GetBoolean());
         Assert.Equal(sample[0].GetProperty("template").GetString(), building.GetProperty("details").GetProperty("template").GetString());
-        output.WriteLine("Native MCP: sixteen read tools succeeded in one game session, including generic catalog/precheck without placement or preview creation.");
+        output.WriteLine("Native MCP: seventeen read tools succeeded in one game session, including generic catalog/precheck without placement or preview creation.");
         // Only aggregate diagnostics; no names, entity/session IDs, paths or tokens in test output.
         output.WriteLine("Population: " + colony.GetProperty("population"));
         output.WriteLine("Housing: " + colony.GetProperty("housing"));

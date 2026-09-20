@@ -1,14 +1,19 @@
 # Eigene Timberborn Agent Bridge
 
-Aktuell vorbereitet: **0.14.1**, [generischer Gebäudebau](generic-building.md).
+Aktuell vorbereitet: **0.15.0**, [Lager-/Farmoptionen und Gebäudepause](building-settings.md).
 Neue private Freigabe `enableBuildingPlacement` und MCP-Umgebungsvariable
 `TIMBERBORN_ENABLE_BUILDING_PLACEMENT=1`; beide standardmäßig aus.
-16 native Leser plus getrennt freizugebende Aktionen. Für Updates Spiel beenden,
+17 native Leser plus getrennt freizugebende Aktionen. Für Updates Spiel beenden,
 vorhandenen Modordner sichern und nur die fünf Paketdateien ersetzen; bestehende
 private Konfiguration erhalten und die neue Freigabe gezielt ergänzen.
 Installiert/live geprüft: 0.14.0 (vier generische Bauaufträge). Patch 0.14.1 erweitert
 den Einzelbau um SideLine/TwoSegmentLine für kleine Lager/Flaggen und Wege.
 Patchinstallation und Live-Abnahme dieser Layouts noch offen.
+
+0.15.0 benötigt zusätzlich Mod-Freigabe enableBuildingSettings=true und
+MCP-Umgebungsvariable TIMBERBORN_ENABLE_BUILDING_SETTINGS=1 für neue Settings-Aktionen.
+Beide standardmäßig aus. Bestehende Flächenfreigabe bleibt separat. Die Layoutkorrektur
+aus 0.14.1 ist enthalten. Neue Einstellungen sind noch nicht live bestätigt.
 
 Die folgenden Versionsabschnitte dokumentieren frühere Erweiterungen.
 

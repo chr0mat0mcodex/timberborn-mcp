@@ -199,3 +199,12 @@ Neustart und Live-Abnahme noch offen.
 Rücklesung; belegter Standort in Validator/Platzierer abgelehnt. Farm im Lauf auf
 76 % Materialfortschritt, alte Pumpe fertig/besetzt, Schlusszustand pausiert.
 Layoutfilter für kleine Lager und Wege zu streng; Korrektur 0.14.1 vorbereitet.
+
+0.15.0: native Lager-/Farmoptionen und Gebäudepause implementiert; 350 reguläre
+Tests bestanden, Mod gegen 1.1.2.4 mit null Warnungen/Fehlern gebaut. Vorhandene
+Anbauflächen-Werkzeuge weiterverwendet. Neue Settings benötigen eigene Freigabe.
+Layoutkorrektur 0.14.1 enthalten. Live-Abnahme der neuen Version noch offen.
+
+0.15.0 anschließend bei beendetem Spiel gesichert installiert; fünf Datei-Hashes
+geprüft und bisherige Konfiguration erhalten. Neue Settings-Freigabe aktiviert.
+Neustart und Live-Abnahme noch offen.

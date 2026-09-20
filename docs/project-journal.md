@@ -881,3 +881,20 @@ Live-Tests im Standardlauf übersprungen. 0.14.1 noch nicht installiert/live get
 und Code-Archiv mit genau fünf Dateien ohne private Konfiguration geprüft. Nutzer
 um Speichern des Entwicklungsspielstands und Beenden für die Installation gebeten.
 Spiel bleibt auf Pause. GitHub-Codecheckpoint be1b982 verifiziert synchronisiert.
+
+## 2026-09-20 — Gebäudeeinstellungen 0.15.0
+
+Nutzerauftrag Lageroptionen, Anbaufläche und Gebäudepause umgesetzt. Neue native
+Settings-Abfrage plus fünf Schreibwerkzeuge: Pause, Lagergut, Lagermodus,
+Pflanzen-/Erntenpriorität und bevorzugte Feldfrucht. Bestehende Flächenwerkzeuge
+bleiben zuständig; Markierungen sind keiner bestimmten Farm fest zugewiesen.
+Öffentliche Spielmethoden aus lokalen Referenzen; keine neue Abhängigkeit oder
+private Reflection. Crop-Priorität löschen mangels belegter Rücksetzsemantik offen.
+350 reguläre Tests bestanden (337 Unit, 13 Integration), drei Live-Tests übersprungen;
+Mod-Build null Warnungen/Fehler. Neue Spielwirkung ausdrücklich noch nicht live belegt.
+0.14.1-Layoutkorrektur in 0.15.0 enthalten. Vertrag: building-settings.md.
+
+0.15.0 bei beendetem Spiel gesichert installiert. Paketarchiv enthält genau fünf
+Code-/Dokumentdateien, keinen Schlüssel. Alle fünf installierten Datei-Hashes stimmen;
+vorhandene private Konfiguration erhalten und nur enableBuildingSettings aktiviert.
+Neustart/Laden des Entwicklungsspielstands vom Nutzer angefordert; Live-Abnahme offen.

@@ -18,13 +18,13 @@ public sealed class AreaManagement(TreeCuttingArea cutting, PlantingService plan
     private static object Vec(Vector3Int p)=>new{x=p.x,y=p.y,z=p.z};
     private PlantableSpec[] Plants()=>templates.GetAll<PlantableSpec>().Where(p=>mapper.GetTemplate(p.TemplateName).UsableWithCurrentFeatureToggles).ToArray();
     private static string Kind(PlantableSpec p)=>p.ResourceGroup=="Forester"?"tree_planting":"crops";
-    private bool Unlocked(PlantableSpec p)=>!unlocking.IsLocked(new PlantingTool(describer,selection,devSpawner,unlocking,processors,p,p.ResourceGroup));
+    public bool IsPlantUnlocked(PlantableSpec p)=>!unlocking.IsLocked(new PlantingTool(describer,selection,devSpawner,unlocking,processors,p,p.ResourceGroup));
     public object Types()=>new {
         kinds=new[]{new{kind="tree_cutting",canRead=true,canMark=true,canRemove=true,reason="native_cutting_area"},
             new{kind="crops",canRead=true,canMark=true,canRemove=true,reason="native_planting_designations_not_harvest_zones"},
             new{kind="tree_planting",canRead=true,canMark=true,canRemove=true,reason="native_planting_designations"},
             new{kind="tapping",canRead=true,canMark=true,canRemove=false,reason="derived_pine_protection_by_removing_cutting_designations"}},
-        plants=Plants().OrderBy(p=>p.TemplateName).Take(65).Select(p=>new{resource=p.TemplateName,kind=Kind(p),resourceGroup=p.ResourceGroup,unlocked=Unlocked(p)}).ToArray(),
+        plants=Plants().OrderBy(p=>p.TemplateName).Take(65).Select(p=>new{resource=p.TemplateName,kind=Kind(p),resourceGroup=p.ResourceGroup,unlocked=IsPlantUnlocked(p)}).ToArray(),
         limitations=new[]{"tapping_is_cutting_protection_not_a_native_zone_or_yield_guarantee","planting_not_instant_growth_or_harvest","plant_tools_checked_without_entering_tool_or_unlocking"}};
     private string State(Vector3Int p,string kind)=>(kind is "tree_cutting" or "tapping")?(cutting.IsInCuttingArea(p)?"marked":"unmarked"):(planting.IsResourceAt(p)?planting.GetResourceAt(p):"unmarked");
     public object Areas(ManagementRequest r)
@@ -48,7 +48,7 @@ public sealed class AreaManagement(TreeCuttingArea cutting, PlantingService plan
             if(r.ExpectedResource!="unmarked"&&!all.Any(p=>p.TemplateName==r.ExpectedResource&&Kind(p)==r.Kind))throw new ArgumentException("wrong_existing_area_kind");
             if(r.Operation=="mark"){
                 var plant=all.SingleOrDefault(p=>p.TemplateName==r.Resource&&Kind(p)==r.Kind);
-                if(plant is null||!Unlocked(plant))throw new ArgumentException("plant_unavailable");
+                if(plant is null||!IsPlantUnlocked(plant))throw new ArgumentException("plant_unavailable");
                 if(cells.Any(p=>!validator.CanPlant(p,r.Resource)))throw new ArgumentException("planting_blocked");
             }
         }else if(r.Kind=="tree_cutting"&&r.Operation=="mark"&&cells.Any(p=>terrain.Underground(p)||!terrain.OnGround(p)))throw new ArgumentException("invalid_cutting_ground");

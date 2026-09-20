@@ -13,7 +13,12 @@ Nächste geplante Ausbaustufe: [Phase 2 — Wasser, Nahrung, Holz, Wege und Wohn
 
 ## Entwicklungsstand
 
-Neu: 0.14.0 implementiert [generisches Bauen](docs/generic-building.md): vollständiger
+Neu: 0.15.0 ergänzt [Lager-/Farmoptionen und Gebäudepause](docs/building-settings.md).
+17 native Leser; fünf neue Schreibwerkzeuge mit eigener Freigabe. Anbauflächen
+werden über die bestehenden Flächenwerkzeuge gesteuert. Automatisch geprüft;
+Live-Abnahme nach Neustart offen. Enthält die Layoutkorrektur aus 0.14.1.
+
+0.14.0 implementiert [generisches Bauen](docs/generic-building.md): vollständiger
 Gebäudekatalog, Vorprüfung, Spielvalidierung und reguläre Einzelaufträge nach Vorlagen-ID.
 Mehrere Aufträge je Sitzung mit festen Aktions-IDs; Sonderlayouts ausdrücklich begrenzt.
 0.14.0 ist live bestätigt: vier verschiedene Gebäude regulär beauftragt und separat
@@ -61,7 +66,7 @@ Alle Stufen live bestätigt; Simulation abschließend 1×.
 Für die eigene Bridge: `scripts/start-native.ps1 -ConfigPath '<private Konfiguration>'`;
 Build und nativen Lesetest mit `scripts/verify.ps1 -NativeConfig '<private Konfiguration>'`
 ausführen. Beide Abläufe sind in der Installationsanleitung beschrieben.
-318 reguläre Tests bestanden; drei separate Live-Tests im Standardlauf übersprungen.
+350 reguläre Tests bestanden; drei separate Live-Tests im Standardlauf übersprungen.
 Nativer lesender MCP-Livetest zuletzt mit 0.6.1 erfolgreich.
 Auch mit ausschließlich eigener Bridge laut Nutzer-Mod-Auswahl: alle sechs nativen
 Lesewerkzeuge erneut live erfolgreich (0.3.0). Keine Fremdmod für diesen Zugriff erforderlich.

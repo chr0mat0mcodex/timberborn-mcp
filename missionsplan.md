@@ -1356,3 +1356,21 @@ Installation und generischer Live-Nachweis von Weg/kleinem Lager nach Patch steh
 0.14.1: 318 reguläre Tests bestanden, Mod gebaut und Paket geprüft. Nutzer um
 Speichern/Beenden gebeten; danach gesicherte Installation und Live-Test von zwei
 Verbindungswegen sowie einem kleinen Lager.
+
+### 7.47 Lager, Farmoptionen und native Gebäudepause (0.15.0)
+
+- [x] inspect_building_settings: Pause, Lagergut/-modus/-bestand und Farmoptionen lesen.
+- [x] set_building_paused: regulär pausieren/fortsetzen, unabhängig vom alten Fremdmod-Backend.
+- [x] set_storage_good/set_storage_mode: erlaubtes Gut auswählen/abwählen und vier Lagermodi.
+- [x] set_farm_priority/set_farm_crop: Pflanzen/Ernten zuerst und bevorzugte freigeschaltete Pflanze.
+- [x] Bestehende Anbauflächen-Abfrage und Markieren/Entfernen weiterverwenden; keine feste Farmzuordnung.
+- [x] Eigene Schreibfreigabe, Session-/Erwartungsprüfung und einmalige Änderung mit Rücklesung.
+- [x] 350 reguläre Tests bestanden (337 Unit, 13 Integration); drei Live-Tests übersprungen.
+- [x] Mod gegen öffentliche Spielreferenzen gebaut, keine neue Fremdmod-Abhängigkeit.
+- [ ] Neue Einstellungen im Spiel live abnehmen, Fertigstellung der Farm/Lager ggf. abwarten.
+
+Die Layoutkorrektur aus 0.14.1 ist enthalten. Feldfrucht-Präferenz kann gesetzt, aber
+noch nicht auf keine Präferenz zurückgesetzt werden. Details: docs/building-settings.md.
+
+0.15.0 gesichert installiert; fünf Datei-Hashes geprüft, bestehende private
+Konfiguration erhalten, Settings-Freigabe ergänzt. Nutzer um Start/Laden gebeten.
