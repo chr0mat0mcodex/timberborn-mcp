@@ -4,6 +4,7 @@ using Timberborn.Bridge.Core;
 using Timberborn.Buildings;
 using Timberborn.EntitySystem;
 using Timberborn.NeedSystem;
+using Timberborn.MortalSystem;
 using Timberborn.StatusSystem;
 using Timberborn.TemplateSystem;
 using Timberborn.Workshops;
@@ -13,11 +14,13 @@ namespace Timberborn.AgentBridge;
 public sealed class DiagnosticsObservations(EntityRegistry entities)
 {
     private IEnumerable<EntityComponent> Beavers()=>entities.Entities.Where(e=>e.Initialized&&!e.Deleted&&e.HasComponent<Beaver>());
+    private static string Life(EntityComponent e)=>e.TryGetComponent<Mortal>(out var m)?m.Dead?"dead":"alive":"unknown";
     private static string Text(string? s)=>s is null?"":s.Length<=512?s:s.Substring(0,512);
-    private static string[] NeedLimits()=>new[]{"native_need_flags_not_inferred_from_alert_absence","counts_include_only_enabled_needs","warning_and_critical_counts_may_overlap","no_personal_names","pages_are_separate_observations","not_a_diagnosis_of_food_or_water_access"};
+    private static string[] NeedLimits()=>new[]{"only_confirmed_living_beavers_contribute_needs","dead_or_unknown_life_state_has_no_current_need_observation","native_need_flags_not_inferred_from_alert_absence","counts_include_only_enabled_needs","warning_and_critical_counts_may_overlap","no_personal_names","pages_are_separate_observations","not_a_diagnosis_of_food_or_water_access"};
     public object Needs(DiagnosticsRequest r)
     {
-        var beavers=Beavers().ToArray();
+        var allBeavers=Beavers().ToArray();
+        var beavers=allBeavers.Where(e=>Life(e)=="alive").ToArray();
         var managers=beavers.Where(e=>e.HasComponent<NeedManager>()).Select(e=>e.GetComponent<NeedManager>()).ToArray();
         var all=managers.SelectMany(m=>m.NeedSpecs.Select(s=>(Manager:m,Spec:s))).GroupBy(x=>x.Spec.Id).OrderBy(g=>g.Key,StringComparer.Ordinal).ToArray();
         var items=all.Skip(r.Offset).Take(r.Limit).Select(g=>{
@@ -28,18 +31,19 @@ public sealed class DiagnosticsObservations(EntityRegistry entities)
                 critical=enabled.Count(x=>x.Manager.NeedIsInCriticalState(g.Key)),unfavorable=enabled.Count(x=>!x.Manager.NeedIsFavorable(g.Key)),
                 minimumPoints=points.Length>0?(float?)points.Min():null,maximumPoints=points.Length>0?(float?)points.Max():null,averagePoints=points.Length>0?(double?)points.Average(x=>(double)x):null};
         }).ToArray();
-        return new {scope="beavers_with_need_manager",beavers=beavers.Length,observedBeavers=managers.Length,missingNeedManagers=beavers.Length-managers.Length,
+        return new {scope="living_beavers_with_need_manager",beavers=beavers.Length,observedBeavers=managers.Length,missingNeedManagers=beavers.Length-managers.Length,deadExcluded=allBeavers.Count(e=>Life(e)=="dead"),unknownLifeStateExcluded=allBeavers.Count(e=>Life(e)=="unknown"),
             offset=r.Offset,limit=r.Limit,total=all.Length,items,hasMore=r.Offset+items.Length<all.Length,limitations=NeedLimits()};
     }
     public object BeaverNeeds(DiagnosticsRequest r)
     {
         var e=Beavers().SingleOrDefault(e=>e.EntityId==Guid.Parse(r.Id))??throw new BridgeRejectionException("entity_not_found");
-        var has=e.TryGetComponent<NeedManager>(out var m);
+        var lifeState=Life(e);
+        var has=e.TryGetComponent<NeedManager>(out var m)&&lifeState=="alive";
         var all=has?m.NeedSpecs.OrderBy(s=>s.Id,StringComparer.Ordinal).ToArray():Array.Empty<Timberborn.NeedSpecs.NeedSpec>();
         var items=all.Skip(r.Offset).Take(r.Limit).Select(s=>new {id=s.Id,displayName=Text(s.DisplayName?.Value),points=m.GetNeedPoints(s.Id),minimum=s.MinimumValue,maximum=s.MaximumValue,
             enabled=m.NeedIsEnabled(s.Id),active=m.NeedIsActive(s.Id),criticalNeed=m.NeedIsCritical(s.Id),critical=m.NeedIsInCriticalState(s.Id),warning=m.NeedIsBelowWarningThreshold(s.Id),favorable=m.NeedIsFavorable(s.Id)}).ToArray();
         var p=e.Transform.position;
-        return new {id=r.Id,supported=has,worldPosition=new{x=p.x,y=p.y,z=p.z},offset=r.Offset,limit=r.Limit,total=all.Length,items,hasMore=r.Offset+items.Length<all.Length,limitations=NeedLimits()};
+        return new {id=r.Id,lifeState,supported=has,worldPosition=new{x=p.x,y=p.y,z=p.z},offset=r.Offset,limit=r.Limit,total=all.Length,items,hasMore=r.Offset+items.Length<all.Length,limitations=NeedLimits()};
     }
     public object Operation(DiagnosticsRequest r)
     {

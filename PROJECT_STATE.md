@@ -1,7 +1,8 @@
 # Projektstand
 
-Stand: 2026-09-20. Codeversion: **0.20.0**, gebaut, regulär getestet, installiert und gezielt live bestätigt.
-Alle **29 Leser** unter 0.20.0 live bestanden.
+Stand: 2026-09-20. Codeversion: **0.20.1**, Lebenszustandskorrektur gebaut; Installation/Live-Abnahme ausstehend.
+Installiert bleibt **0.20.0**: 29 Leser live geprüft, danach Fehler bei weiter registrierten
+verstorbenen Bibern gefunden (Bedürfniszählung 13 statt 11 lebender Biber).
 Sofort-Wegsuche einschließlich Unterbrechung/Wiederherstellung unter **0.19.1** live bestätigt. Farm-/Holzfällerreichweiten unter 0.19.2 über den konkreten Terrainzugriff bestätigt.
 Die Version im [Manifest](mod/Timberborn.AgentBridge/manifest.json) ist die Codeversion;
 ältere datierte Einträge im Journal dokumentieren frühere Zustände.
@@ -23,7 +24,7 @@ Die Version im [Manifest](mod/Timberborn.AgentBridge/manifest.json) ist die Code
 
 | Ebene | Beleg |
 | --- | --- |
-| Automatisch | 460 reguläre Tests: 447 Unit, 13 Integration; drei opt-in Live-Tests im Standardlauf übersprungen |
+| Automatisch | 463 reguläre Tests: 450 Unit, 13 Integration; drei opt-in Live-Tests im Standardlauf übersprungen |
 | Mod-Build | Gegen Timberborn 1.1.2.4, ohne Warnungen/Fehler |
 | Installation | Fünf Paketdateien per SHA-256 geprüft, private Konfiguration erhalten |
 | Live 0.20.0 | Alle 29 Leser; 42 Bedürfnisse über zwei Seiten, Einzelbiber und Betriebsbelege; Wohnraumbefund unabhängig bestätigt |
@@ -59,6 +60,9 @@ Das belegt Navigationsreichweite, nicht Erntefähigkeit oder Produktionsleistung
 UI-Meldungsabdeckung, Biberwarnungen, Bedürfnisse/Produktionshindernisse und nachhaltige Versorgung.
 Mehrtagspilot: rund 3,05 Spieltage, elf Messpunkte ohne Hunger/Durst, aber negative
 Wasser-/Beeren-/Holzbilanz. [Auswertung](docs/supply-balance.md). Spiel danach pausiert.
+Eine Lagerkorrektur (Beerenauswahl im bestehenden mittleren Lager) zeigt erhöhte
+Produktion; Vergleich nach zwei gemeldeten Alterstodesfällen vorzeitig gestoppt.
+Todesstatus mit zwei BeaverAdult-Zielen gelesen; aktive Hunger-/Durst-UI-Warnung weiter offen.
 Die Grundversorgungsabnahme ist nicht vollständig: einzelne Produktionsketten belegt,
 Wohnraum und nachhaltige Gesamtversorgung noch offen. [Backlog](BACKLOG.md).
 

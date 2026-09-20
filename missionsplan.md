@@ -12,8 +12,8 @@ unkontrollierter Kolonieaufbau ersetzt keine gezielte Abnahme.
 
 ## Stand
 
-**0.20.0 ist gebaut und regulär getestet: drei neue Leser für Bedürfnisse und Betrieb.
-0.20.0 ist installiert; alle 29 Leser und gezielte Diagnosepiloten live bestanden. Unter 0.19.2 sind
+**0.20.1 korrigiert die Bedürfniszählung bei Todesfällen; gebaut, Installation/Live-Abnahme offen.
+0.20.0 bleibt installiert. Unter 0.19.2 sind
 Sofort-Wegsuche, historische Bilanz und Farm-/Holzfällerreichweiten sind live bestätigt.**
 [Projektstand](PROJECT_STATE.md), [Werkzeugkatalog](docs/tools.md), [offene Arbeiten](BACKLOG.md).
 Keine Fremdmod-Pflichtbasis; die frühere More-HTTP-API-Phase ist abgeschlossen.
@@ -48,7 +48,9 @@ Keine Fremdmod-Pflichtbasis; die frühere More-HTTP-API-Phase ist abgeschlossen.
 
 - [x] Güterübersicht und aktive Status mit konkretem Ziel im begrenzten Live-Pilot abnehmen.
 - [x] Mehrfachziele und tatsächliches Verschwinden einer Statusgruppe live prüfen.
-- [ ] Biberwarnungen im Live-Test ergänzen.
+- [x] Biber-Todesstatus mit zwei konkreten Entity-Zielen live lesen (kein UI-Alert: showAlert=false).
+- [ ] Aktive Hunger-/Durst-UI-Warnungen im Live-Test ergänzen.
+- [ ] Lebenszustandskorrektur 0.20.1 installieren und lebende/tote Biber getrennt live prüfen.
 - [x] Gebäudezugang und Sofort-Wegverbindung einschließlich Unterbrechung/Wiederherstellung gezielt prüfen.
 - [x] Konkrete Farm-/Holzfällerreichweiten über BuildingTerrainRange live abnehmen (485/611 Zellen; erste/letzte Seite).
 - [x] Native Produktions-/Verbrauchshistorie über einen Tageswechsel prüfen.

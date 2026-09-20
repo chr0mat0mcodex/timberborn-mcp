@@ -8,10 +8,13 @@ Hier stehen offene Aufgaben; datierte historische Kästchen sind kein aktueller 
 1. **Güterauswertung erweitern:** 40 registrierte Güter samt ResourceCount-Feldern in
    0.18.0 live bestätigt. Vollständige Baustellenbilanz und nachhaltige Versorgung bleiben offen; Tageshistorien sind bestätigt.
 2. **Statusabdeckung erweitern:** eine Lagerwarnung samt Ziel und leerer Güterwahl live
-   bestätigt. Mehrfachziele und Verschwinden einer aktiven Meldung ebenfalls bestanden; Biberwarnungen offen.
+   bestätigt. Mehrfachziele und Verschwinden einer aktiven Meldung ebenfalls bestanden; Biber-Todesstatus mit zwei Entity-Zielen bestätigt; aktive Hunger-/Durst-UI-Warnungen offen.
    [Vertrag und Nachweise](docs/economy-observations.md). Vollständige UI-Meldungsabdeckung,
    Benachrichtigungshistorie und dynamische Aggregatwerte weiterhin offen.
-3. **Bedürfnis-/Betriebsdiagnose vervollständigen:** 0.20.0 mit 29 Lesern und gezielten
+3. **Lebenszustandskorrektur 0.20.1 installieren/live prüfen:** registrierte tote Biber
+   wurden unter 0.20.0 als Bedürfnisempfänger mitgezählt. Öffentliche Mortal.Dead-Abfrage
+   trennt nun lebend/tot/unbekannt; keine aktuellen Bedürfniswerte für tote/unbekannte Ziele.
+   **Bedürfnis-/Betriebsdiagnose vervollständigen:** 0.20.0 mit 29 Lesern und gezielten
    Bedürfnis-/Betriebspiloten live bestätigt. Rohe Warnschwellenflags nicht als UI-Alarm werten.
    Baustellenfall einschließlich Aufräumen live bestätigt; aktive Hunger-/Durstfälle fehlen noch.
    [Vertrag und begrenzter Pilot](docs/needs-and-operation.md). Vollständige Energie-, Wasser-,
@@ -22,7 +25,9 @@ Hier stehen offene Aufgaben; datierte historische Kästchen sind kein aktueller 
 5. **Versorgungsdefizite gezielt erklären und korrigieren:** rund drei Spieltage beobachtet,
    elf Messpunkte ohne Hunger/Durst, aber negative Wasser-/Beeren-/Holzbilanz.
    [Nachweis und Grenzen](docs/supply-balance.md). Lokale Produktions-/Lagerursachen
-   eingrenzen, danach gezielte Korrektur und erneuter Vergleich; Nachhaltigkeit bleibt offen.
+   eingrenzen. Mittleres Lager auf Beeren gesetzt; Tagesproduktion steigt auf 19. Vergleich
+   wegen zweier Alterstodesfälle nach rund 1,22 Tagen abgebrochen, keine Dreitagesabnahme.
+   Nachhaltigkeit bleibt offen.
 
 Diese Reihenfolge ist eine Planung, keine Behauptung bereits vorhandener Werkzeuge.
 Neue Funktionen werden entsprechend dem Projektauftrag vor ihrer Umsetzung konkretisiert.

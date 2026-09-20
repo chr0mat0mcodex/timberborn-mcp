@@ -84,3 +84,7 @@ ResourceCount, StatusSubject, StatusInstance und BaseComponent.Transform. Das pa
 zum bestehenden offiziellen Bindito-/Singleton- und Entity-Zugriff. Kein fremder
 Modcode übernommen, keine private Reflection oder Harmony-Patches. Frühere Recherche:
 [Alerts-Plan](alerts-plan.md), [native API](architecture/native-game-api.md).
+
+Ergänzender Statusnachweis: zwei Biber-Entities mit „Died of old age.“ und passenden
+BeaverAdult-Zielen gelesen. showAlert=false: aktiver Todesstatus, keine unten links
+angezeigte Hunger-/Durstwarnung. Letztere bleibt live offen.

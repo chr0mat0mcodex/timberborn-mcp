@@ -62,15 +62,15 @@ public sealed class NativeBridgeTests
                         if(r.Route=="activity") {
                             var a=r.Activity!;
                             if(a.State!="running" && a.Session!=session)throw new ArgumentException();
-                            return JsonSerializer.Serialize(new BridgeEnvelope<object>(1,session,DateTimeOffset.UtcNow,"0.20.0",new NativeActivityAck(activityLog.Record(a,DateTimeOffset.UtcNow))),NativeJson.Options);
+                            return JsonSerializer.Serialize(new BridgeEnvelope<object>(1,session,DateTimeOffset.UtcNow,"0.20.1",new NativeActivityAck(activityLog.Record(a,DateTimeOffset.UtcNow))),NativeJson.Options);
                         }
-                        if(r.Route=="activity-log")return JsonSerializer.Serialize(new BridgeEnvelope<object>(1,session,DateTimeOffset.UtcNow,"0.20.0",new NativeActivityLog(128,activityLog.Snapshot().Reverse().Take(32).ToArray(),activityLog.Revision,false,false)),NativeJson.Options);
+                        if(r.Route=="activity-log")return JsonSerializer.Serialize(new BridgeEnvelope<object>(1,session,DateTimeOffset.UtcNow,"0.20.1",new NativeActivityLog(128,activityLog.Snapshot().Reverse().Take(32).ToArray(),activityLog.Revision,false,false)),NativeJson.Options);
                         Interlocked.Increment(ref observations);
                         if((r.Route=="alert-targets" || r.Diagnostics is not null && r.Route!="needs") && r.Session!=session)throw new BridgeRejectionException("stale_session");
                         object data = r.Route switch
                         {
-                            "needs" => new NativeNeeds("beavers_with_need_manager",0,0,0,r.Diagnostics!.Offset,r.Diagnostics.Limit,0,[],false,[]),
-                            "beaver-needs" => new NativeBeaverNeeds(r.Diagnostics!.Id,true,new(1,2,3),r.Diagnostics.Offset,r.Diagnostics.Limit,0,[],false,[]),
+                            "needs" => new NativeNeeds("living_beavers_with_need_manager",0,0,0,r.Diagnostics!.Offset,r.Diagnostics.Limit,0,[],false,[],0,0),
+                            "beaver-needs" => new NativeBeaverNeeds(r.Diagnostics!.Id,true,new(1,2,3),r.Diagnostics.Offset,r.Diagnostics.Limit,0,[],false,[],"alive"),
                             "building-operation" => new NativeOperation(r.Diagnostics!.Id,"SyntheticWorkshop",true,false,null,null,[],[]),
                             "building-access" => new NativeAccess(r.Logistics!.Id,true,new(1,2,3),false,false,false,null,3,1,1,[]),
                             "road-connection" => new NativeRoad(r.Logistics!.Id,r.Logistics.ToId,true,1,1,true,3,[]),
@@ -116,7 +116,7 @@ public sealed class NativeBridgeTests
                                 Guid.NewGuid(), "applied", r.Template == "Path", true, ["synthetic_test"])),
                             _ => throw new ArgumentException()
                         };
-                        return JsonSerializer.Serialize(new BridgeEnvelope<object>(1, session, DateTimeOffset.UtcNow, "0.20.0", data), NativeJson.Options);
+                        return JsonSerializer.Serialize(new BridgeEnvelope<object>(1, session, DateTimeOffset.UtcNow, "0.20.1", data), NativeJson.Options);
                     });
                     await Task.Delay(5, pumpStop.Token);
                 }

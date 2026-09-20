@@ -1,13 +1,15 @@
-# Bedürfnisse und Betriebsbelege — 0.20.0
+# Bedürfnisse und Betriebsbelege — 0.20.1
 
 Drei rein lesende MCP-Werkzeuge, ohne neue Fremdmod oder Bibliothek. Öffentliche
-Spiel-APIs lokal gegen Timberborn 1.1.2.4 geprüft; gebaut, regulär getestet und installiert,
-gezielte Live-Abnahme bestanden (siehe unten). Keine Speicherstandänderung oder private Reflection.
+Spiel-APIs lokal gegen Timberborn 1.1.2.4 geprüft; Lebenszustandskorrektur 0.20.1 gebaut, Installation/Live-Abnahme ausstehend.
+Historische Nachweise unter 0.20.0 stehen unten; dessen Zählfehler nach Todesfällen ist bekannt. Keine Speicherstandänderung oder private Reflection.
 
 ## Koloniebedürfnisse
 
 `inspect_needs(offset, limit)` gruppiert NeedManager.NeedSpecs aller initialisierten,
-nicht gelöschten Beaver-Entities nach Bedürfnis-ID. Pro Bedürfnis: beobachtet, aktiviert,
+nicht gelöschten, über Mortal.Dead als lebend bestätigten Beaver-Entities nach Bedürfnis-ID.
+Scope: living_beavers_with_need_manager. deadExcluded und unknownLifeStateExcluded
+zählen ausgeschlossene registrierte Objekte separat; sie fließen nicht in Bedürfnisse ein. Pro Bedürfnis: beobachtet, aktiviert,
 aktiv, unter Warnschwelle, kritisch und ungünstig, dazu Minimum/Maximum/Mittel der
 Punkte aktivierter Bedürfnisse. Warn-/Kritisch-Zähler können sich überschneiden.
 Die Flags kommen direkt aus NeedManager; keine selbst erfundenen Hungergrenzen.
@@ -25,7 +27,10 @@ pro Seite, ordinal nach ID; Seiten sind getrennte Beobachtungen.
 
 ## Einzelbiber
 
-`inspect_beaver_needs(id, session, offset, limit)` liefert native Punkte, definierte
+`inspect_beaver_needs(id, session, offset, limit)` liefert lifeState alive/dead/unknown.
+Nur lebende Ziele mit NeedManager liefern supported=true und aktuelle Bedürfniswerte;
+tote/unbekannte Ziele liefern supported=false und leere Seiten. Gelöschte Ziele bleiben
+entity_not_found. Für lebende Ziele liefert der Leser native Punkte, definierte
 Minimal-/Maximalwerte, enabled/active, criticalNeed/critical, warning und favorable.
 Deaktivierte Bedürfnisse bleiben erkennbar; ihre Flags nicht als akuten Bedarf zählen.
 Die ID kann aus Arbeiterliste oder Warnungszielen stammen. Die Arbeiterliste ist keine
@@ -61,7 +66,7 @@ Feste GET-Routen über authentifizierten Loopback, Hauptthread-Queue und bestehe
 Der Client verwirft alte Bridge-Versionen, widersprüchliche Seitendaten/Zähler,
 ungültige Punkteskalen und unpassende Rezept-/Komponentenbelege.
 
-460 reguläre Tests (447 Unit, 13 Integration), darunter neue Gegenbeispiele für
+463 reguläre Tests (450 Unit, 13 Integration), darunter neue Gegenbeispiele für
 überhöhte Warnzähler, fehlende Manager, falsche Session/Ziele, Duplikate, Rezept-
 widersprüche und Baustellen mit erfundener Produktion. Alle drei Leser laufen im
 synthetischen authentifizierten HTTP-/stdio-Test mit unterschiedlichen Aktionsfreigaben.

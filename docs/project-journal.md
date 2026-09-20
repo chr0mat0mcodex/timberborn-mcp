@@ -1327,3 +1327,21 @@ Karotten 0/0, Holz 0/12. Momentaufnahmen und historische Abtastgrenzen separat b
 Keine nachhaltige Versorgung behauptet: Reserven sinken. Keine Gebäude-/Lageränderung.
 Am Ende pausiert; weiterhin nur Lagerwarnung mit Gebäudeziel, keine Biberwarnung.
 Auswertung und nächster begrenzter Diagnoseauftrag in docs/supply-balance.md.
+
+## 2026-09-20 — Beerenlager korrigiert, Todesfälle stoppen Vergleich
+
+Leeres verbundenes mittleres Lager auf Beeren gesetzt; Auswahl unabhängig bestätigt,
+Lagerwarnung verschwunden. Vergleich nach rund 1,22 Spieltagen automatisch pausiert,
+weil Bevölkerung 13→11. Entity-Status meldet zwei Alterstodesfälle mit BeaverAdult-Zielen;
+kein Hunger/Durst an Messpunkten. Beerenbestand 208→221, neue Tagesproduktion 19 statt
+zuvor 2/6/4; zugleich Karottenernte zwölf und geringerer Beerenverbrauch. Keine
+vollständige Dreitages-/Nachhaltigkeitsabnahme. Lagerkorrektur bleibt bestehen.
+
+Bedürfnisübersicht blieb fälschlich bei 13 registrierten Bibern. Öffentliche Mortal.Dead-
+Signatur geprüft; 0.20.1 nimmt nur bestätigte lebende Biber in Bedürfnisse auf und
+weist tote/unbekannte Lebenszustände separat aus. Einzelziele erhalten lifeState und
+für tote/unbekannte Ziele keine aktuellen Bedürfniswerte. Alter Diagnostikvertrag wird
+vom Client abgelehnt. Mod-Build ohne Warnungen/Fehler, keine neue Abhängigkeit.
+
+Abschlussprüfung: 463 reguläre Tests bestanden (450 Unit, 13 Integration), drei opt-in
+Live-Tests übersprungen. Installation erst nach Speichern/Beenden durch den Nutzer.

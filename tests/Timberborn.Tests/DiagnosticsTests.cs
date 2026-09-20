@@ -11,7 +11,7 @@ namespace Timberborn.Tests;
 public sealed class DiagnosticsTests
 {
     private static readonly string Session=Guid.NewGuid().ToString(),Id=Guid.NewGuid().ToString();
-    private static JsonObject Envelope(object d)=>JsonSerializer.SerializeToNode(new BridgeEnvelope<object>(1,Session,DateTimeOffset.UtcNow,"0.20.0",d),NativeJson.Options)!.AsObject();
+    private static JsonObject Envelope(object d)=>JsonSerializer.SerializeToNode(new BridgeEnvelope<object>(1,Session,DateTimeOffset.UtcNow,"0.20.1",d),NativeJson.Options)!.AsObject();
     private static async Task<JsonObject> Call(string name,object data,object args)
     {
         using var h=new Reply(data is JsonObject j?j.ToJsonString():Envelope(data).ToJsonString());using var tools=new NativeTools(new NativeClient(new(8081,new string('a',64)),h));
@@ -27,8 +27,8 @@ public sealed class DiagnosticsTests
         Assert.True(BridgeHttpServer.MethodAllowed("GET",path,false,false));Assert.False(BridgeHttpServer.MethodAllowed("POST",path,false,true));
         q.Add(q.GetKey(0),q.Get(0));Assert.Throws<ArgumentException>(()=>BridgeRequest.Parse(path,q));
     }
-    private static NativeNeeds Overview()=>new("beavers_with_need_manager",3,2,1,0,32,1,[new("Thirst","Thirst",2,2,2,1,1,1,0,1,0.5)],false,[]);
-    private static NativeBeaverNeeds Detail()=>new(Id,true,new(1,2,3),0,32,1,[new("Thirst","Thirst",0,0,1,true,true,true,true,true,false)],false,[]);
+    private static NativeNeeds Overview()=>new("living_beavers_with_need_manager",3,2,1,0,32,1,[new("Thirst","Thirst",2,2,2,1,1,1,0,1,0.5)],false,[],0,0);
+    private static NativeBeaverNeeds Detail()=>new(Id,true,new(1,2,3),0,32,1,[new("Thirst","Thirst",0,0,1,true,true,true,true,true,false)],false,[],"alive");
     private static NativeOperation Operation()=>new(Id,"SyntheticWorkshop",true,false,new(0,2,3,true,false,false),new(true,"SyntheticRecipe",false,false,true,false,true,0),[],[]);
     [Fact]
     public async Task NeedCountsCanOverlapAndMissingManagersAreExplicit()
@@ -38,11 +38,11 @@ public sealed class DiagnosticsTests
         Assert.Equal("ok",(await Call("inspect_needs",n,new{offset=0,limit=32}))["status"]!.GetValue<string>());
     }
     [Theory]
-    [InlineData("warning")][InlineData("missing")][InlineData("average")][InlineData("empty")][InlineData("page")][InlineData("version")]
+    [InlineData("dead_count")][InlineData("warning")][InlineData("missing")][InlineData("average")][InlineData("empty")][InlineData("page")][InlineData("version")]
     public async Task RejectsMisleadingNeedOverview(string defect)
     {
         var e=Envelope(Overview());var d=e["data"]!;var n=d["items"]![0]!;
-        switch(defect){case "warning":n["warning"]=3;break;case "missing":d["missingNeedManagers"]=0;break;case "average":n["averagePoints"]=2;break;case "empty":n["minimumPoints"]=null;break;case "page":d["hasMore"]=true;break;case "version":e["bridgeVersion"]="0.19.2";break;}
+        switch(defect){case "dead_count":d["deadExcluded"]=-1;break;case "warning":n["warning"]=3;break;case "missing":d["missingNeedManagers"]=0;break;case "average":n["averagePoints"]=2;break;case "empty":n["minimumPoints"]=null;break;case "page":d["hasMore"]=true;break;case "version":e["bridgeVersion"]="0.20.0";break;}
         Assert.Equal("backend_incompatible",(await Call("inspect_needs",e,new{offset=0,limit=32}))["error"]!["code"]!.GetValue<string>());
     }
     [Theory]
@@ -67,6 +67,15 @@ public sealed class DiagnosticsTests
         var e=Envelope(Operation());var d=e["data"]!;
         switch(defect){case "recipe":d["manufacturing"]!["recipe"]=null;break;case "unknown":d["manufacturing"]!["hasIngredients"]=null;break;case "unfinished":d["finished"]=false;break;case "staff":d["workplace"]!["anyJobRunning"]=true;break;case "progress":d["manufacturing"]!["productionProgress"]=-1;break;}
         Assert.Equal("backend_incompatible",(await Call("inspect_building_operation",e,new{id=Id,session=Session}))["error"]!["code"]!.GetValue<string>());
+    }
+    [Theory]
+    [InlineData("dead")][InlineData("unknown")]
+    public async Task NonLivingNeedsAreNotCurrentObservations(string life)
+    {
+        var valid=Detail() with{LifeState=life,Supported=false,Total=0,Items=[]};
+        Assert.Equal("ok",(await Call("inspect_beaver_needs",valid,new{id=Id,session=Session,offset=0,limit=32}))["status"]!.GetValue<string>());
+        var invalid=Detail() with{LifeState=life};
+        Assert.Equal("backend_incompatible",(await Call("inspect_beaver_needs",invalid,new{id=Id,session=Session,offset=0,limit=32}))["error"]!["code"]!.GetValue<string>());
     }
     private sealed class Reply(string body):HttpMessageHandler
     {

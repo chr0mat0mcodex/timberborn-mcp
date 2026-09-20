@@ -1,8 +1,8 @@
 # Eigene Agent Bridge installieren und MCP starten
 
-Aktueller Entwicklungsstand: **0.20.0**, gebaut gegen Timberborn 1.1.2.4.
-0.20.0 ist gebaut, getestet und installiert; alle 29 Leser sowie gezielte Bedürfnis-/
-Betriebspiloten sind live bestätigt. Drei neue Diagnoseleser: Bedürfnisse der Kolonie,
+Aktueller Entwicklungsstand: **0.20.1**, gebaut gegen Timberborn 1.1.2.4.
+0.20.1 ist gebaut; Installation/Live-Abnahme stehen aus. Noch installiert: 0.20.0,
+mit bekanntem Fehler bei der Zählung verstorbener Biber in der Bedürfnisübersicht. Drei neue Diagnoseleser: Bedürfnisse der Kolonie,
 Details je Biber und Gebäudebetrieb; [Vertrag](needs-and-operation.md).
 Benötigt wird ausschließlich unsere eigene Spielmod; `RequiredMods` ist leer.
 MCP-Server und Mod sind zwei getrennte Prozesse/Komponenten. Kein More-HTTP-API-Setup nötig.
