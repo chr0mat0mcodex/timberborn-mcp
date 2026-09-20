@@ -13,7 +13,7 @@ Hier stehen offene Aufgaben; datierte historische Kästchen sind kein aktueller 
    Benachrichtigungshistorie und dynamische Aggregatwerte weiterhin offen.
 3. **Bedürfnis-/Betriebsdiagnose vervollständigen:** 0.20.0 mit 29 Lesern und gezielten
    Bedürfnis-/Betriebspiloten live bestätigt. Rohe Warnschwellenflags nicht als UI-Alarm werten.
-   Baustellenfall sowie aktive Hunger-/Durstfälle fehlen im Live-Nachweis.
+   Baustellenfall einschließlich Aufräumen live bestätigt; aktive Hunger-/Durstfälle fehlen noch.
    [Vertrag und begrenzter Pilot](docs/needs-and-operation.md). Vollständige Energie-, Wasser-,
    Rohstoff- und Lieferdiagnose weiterhin offen; keine Ursachen aus bloßem Stillstand ableiten.
 4. **Erreichbarkeit breiter prüfen:** Sofort-Wegsuche besteht den Unterbrechungstest.

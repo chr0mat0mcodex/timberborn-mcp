@@ -1304,3 +1304,15 @@ Wichtige Semantik: warning ist nur das rohe native Unter-Warnschwelle-Flag; auch
 ungenutzter Komfort und inaktive Verletzung können es setzen. Werkzeugbeschreibungen
 und Vertrag präzisiert, kein akuter UI-Alarm daraus abgeleitet. Baustellenfall und
 aktive Biberwarnungen bleiben live offen; keine entsprechenden Ziele vorhanden.
+
+## 2026-09-20 — Baustellen-Diagnose live abgeschlossen
+
+Nach lesender Platzprüfung regulär validierten kleinen Lagerauftrag bei pausierter
+Simulation angelegt. Unfertig, keine Betriebs-/Manufactorydaten; separate Baustellenliste
+und Gebäudeleser bestätigen Auftrag und leeres Materialinventar. Gezielt wieder entfernt,
+Abwesenheit sowie building_not_found rückgeprüft. Beispielbestände Wasser/Beeren/Holz
+unverändert. Keine neue Biberwarnung vorhanden.
+
+Lokales Pilotskript las beim letzten Listenabgleich zunächst id statt building.id.
+Nach bereits erfolgreichem Aufräumen anhand gespeicherter Antworten korrigiert und
+sämtliche Aussagen geprüft. Kein Modfehler und keine unnötige Wiederholung der Mutation.

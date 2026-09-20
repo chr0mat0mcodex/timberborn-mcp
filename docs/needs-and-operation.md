@@ -75,7 +75,16 @@ Fremde Session und unbekannter Biber korrekt mit stale_session/entity_not_found 
 Zwei Pumpen: Rezept Water, Zutaten vorhanden, kein Brennstoffverbrauch, outputSpace=false
 und ready=false. Erfinder: SciencePoints, ready=true; Personalzahlen separat über
 inspect_building gegengeprüft. Farm: Personal belegt, manufacturing=null korrekt als
-fehlende Komponente. Kein Bauauftrag vorhanden: Baustellenfall nur regulär getestet.
+fehlende Komponente. Baustellenfall anschließend mit temporärem kleinem Lager live geprüft (siehe Ergänzung).
 Arbeitszeit-/Jobflags sind native Beobachtungen; kein gesonderter Tag-/Nachtwechseltest.
 Keine Simulation oder Gebäudeeinstellung geändert; Spiel blieb pausiert. Aktive
 Biber-UI-Warnung weiterhin nicht vorhanden, daher noch nicht live abgenommen.
+
+Ergänzender Baustellenpilot: validierter temporärer 1×1-Lagerauftrag bei pausierter
+Simulation. Betriebsleser liefert finished=false, workplace=null, manufacturing=null.
+Separater Gebäudeleser und Baustellenliste bestätigen denselben Auftrag: noch nicht
+begonnen, Materialinventar leer, reguläre Kosten drei Holz. Testauftrag gezielt entfernt;
+found=false und building_not_found anschließend bestätigt. Wasser-/Beeren-/Holzwerte
+vorher/nachher unverändert. Nur bestehende Lagerwarnung vorhanden. Der abschließende
+Listen-ID-Abgleich im lokalen Testskript verwendete zunächst die falsche JSON-Ebene;
+an gespeicherten Antworten korrigiert und erfolgreich geprüft, ohne erneute Mutation.

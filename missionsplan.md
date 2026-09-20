@@ -54,6 +54,7 @@ Keine Fremdmod-Pflichtbasis; die frühere More-HTTP-API-Phase ist abgeschlossen.
 - [x] Native Produktions-/Verbrauchshistorie über einen Tageswechsel prüfen.
 - [x] Native Bedürfnisflags und Betriebsbelege als begrenzte Leser implementieren und regulär testen.
 - [x] 0.20.0 live abnehmen: Bedürfnisübersicht/Einzelbiber und fertiges Produktionsgebäude.
+- [x] Unfertigen Bauauftrag diagnostizieren, separat bestätigen und wieder entfernen.
 - [ ] Produktionshindernisse und Bedürfnisse vollständig unterscheiden (insbesondere Energie, Wasser, Rohstoff- und Lieferwege).
 - [ ] Versorgung über Zeit bewerten und fehlenden Wohnraum gezielt nachweisen.
 - [ ] Anschließend einen begrenzten zusammenhängenden Agenten-Spielablauf abnehmen.

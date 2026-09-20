@@ -44,7 +44,7 @@ Testlauf startet das Spiel oder prüft alle nativen Leser live.
 Neu in 0.20.0: Bedürfnisübersicht, Details je Biber und Gebäudebetriebsbelege;
 [Diagnosevertrag und Live-Nachweis](docs/needs-and-operation.md). 13 Biber/42 Bedürfnisse,
 Einzelbiber, Session-/Zielablehnungen, Erfinder/Farm/Pumpen live geprüft. warning ist
-ein rohes Schwellenflag, keine akute UI-Warnung. Baustellenfall derzeit nicht vorhanden.
+ein rohes Schwellenflag, keine akute UI-Warnung. Baustellenfall mit temporärem Lagerauftrag und bestätigter Entfernung ebenfalls live geprüft.
 Weiterhin implementiert: vollständige registrierte Güter mit ResourceCount-Feldern sowie
 sichtbare aktive Entity-Status und betroffene Ziele; [Vertrag](docs/economy-observations.md).
 Live bestätigt: Lagerwarnung, Mehrfachziele, Verschwinden und Wiederherstellung; Biberwarnungen offen.
