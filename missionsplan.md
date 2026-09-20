@@ -1262,3 +1262,23 @@ Drei begrenzte Piloten: 8, 10 und 16 MCP-Aufrufe. Sofortfall und Ausführung ein
 zunächst wartenden Auftrags sind getrennt belegt. Kein einzelner ausführender Biber
 verfolgt; Nachweis beruht auf Auftragsstatus, ausgeschlossener Fällmarkierung und
 späterer Entity-Abwesenheit. In dieser Runde zwei weitere Kiefern entfernt.
+
+### 7.41 Lebenszustand natürlicher Ressourcen korrigiert (0.13.2)
+
+Nutzerhinweis bestätigt: Bis 0.13.1 keine Trennung lebend/tot in Zapfkandidaten und
+Abrissbeobachtung. Öffentliche Lebenszyklus-/Wasserstress-/Wachstumsdaten ergänzt.
+
+- [x] lifeState, isDying, waterStress, isGrown und growthProgress strukturiert ausgeben.
+- [x] tapping nur für nachweislich lebende, ausgewachsene, nicht sterbende Kiefern ohne Wasserstress.
+- [x] Tote Ressourcen als Hindernisse/Abrissziele weiterhin sichtbar, Zustand ausdrücklich kennzeichnen.
+- [x] Unbekannte Angaben nicht als gesund behandeln; alte tapping-Antworten ablehnen.
+- [ ] 0.13.2 installieren und Lebenszustände/korrigierte Kandidaten rein lesend live abgleichen.
+
+[Vertrag](docs/vegetation-state.md). Historische 124 Kandidaten waren ungefiltert;
+Lebenszustand der schon entfernten Testkiefern nicht nachträglich behaupten.
+
+### 7.42 Lebenszustandskorrektur installiert
+
+0.13.2 gesichert installiert, fünf SHA256-Prüfungen bestanden; private Konfiguration
+unverändert. 279 reguläre Tests bestanden. Nach Nutzerstart von MCP rein lesende
+Abnahme: lebend/tot/sterbend/Wasserstress/Wachstum sowie tapping-Filter vergleichen.

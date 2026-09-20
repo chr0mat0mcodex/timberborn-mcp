@@ -163,3 +163,10 @@ Korrigiert die Ergebnisbewertung für reguläre Vegetations-Mark-Aufrufe, die ei
 sofort entfernen. Keine neue Konfiguration; bestehende Opt-ins erhalten. Installation
 wie gewohnt bei beendetem Spiel mit Sicherung. Live-Nachweis der korrigierten Antwort
 erfolgt nach Neustart; 0.13.0 hatte die tatsächliche Entfernung bereits ausgeführt.
+
+## Patch 0.13.2
+
+Ergänzt Lebenszustand, Sterbezustand, Wasserstress und Wachstum natürlicher Ressourcen.
+Die Zapfkandidaten-Abfrage schließt tote, sterbende, junge und unbekannte Kiefern aus.
+[Details und Grenzen](vegetation-state.md). Mod bei beendetem Spiel gesichert ersetzen;
+private Konfiguration unverändert lassen. Nach Neustart zuerst rein lesende Abnahme.

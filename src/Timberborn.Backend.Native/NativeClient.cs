@@ -149,7 +149,7 @@ public sealed partial class NativeClient : IDisposable
             throw new InvalidDataException("Invalid building result");
         if (d.Details is { } b)
         {
-            if (result.BridgeVersion is "0.9.0" or "0.10.0" or "0.11.0" or "0.12.0" or "0.13.0" or "0.13.1" && b.Operations is null)
+            if (result.BridgeVersion is "0.9.0" or "0.10.0" or "0.11.0" or "0.12.0" or "0.13.0" or "0.13.1" or "0.13.2" && b.Operations is null)
                 throw new InvalidDataException("Missing operations contract");
             if (b.Operations is { } o)
             {
@@ -234,7 +234,7 @@ public sealed partial class NativeClient : IDisposable
             await buffer.WriteAsync(bytes.AsMemory(0, count), budget.Token);
         }
         var result = JsonSerializer.Deserialize<BridgeEnvelope<T>>(buffer.ToArray(), NativeJson.Options);
-        if (result is null || result.SchemaVersion != 1 || result.BridgeVersion is not ("0.2.0" or "0.3.0" or "0.4.0" or "0.4.1" or "0.5.0" or "0.6.0" or "0.6.1" or "0.7.0" or "0.8.0" or "0.9.0" or "0.10.0" or "0.11.0" or "0.12.0" or "0.13.0" or "0.13.1") ||
+        if (result is null || result.SchemaVersion != 1 || result.BridgeVersion is not ("0.2.0" or "0.3.0" or "0.4.0" or "0.4.1" or "0.5.0" or "0.6.0" or "0.6.1" or "0.7.0" or "0.8.0" or "0.9.0" or "0.10.0" or "0.11.0" or "0.12.0" or "0.13.0" or "0.13.1" or "0.13.2") ||
             !Guid.TryParseExact(result.SessionId, "D", out var session) || session == Guid.Empty ||
             result.ObservedAtUtc == default || result.Data is null) throw new InvalidDataException("Invalid bridge envelope");
         return result;

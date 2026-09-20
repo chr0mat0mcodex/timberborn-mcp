@@ -53,7 +53,7 @@ Alle Stufen live bestätigt; Simulation abschließend 1×.
 Für die eigene Bridge: `scripts/start-native.ps1 -ConfigPath '<private Konfiguration>'`;
 Build und nativen Lesetest mit `scripts/verify.ps1 -NativeConfig '<private Konfiguration>'`
 ausführen. Beide Abläufe sind in der Installationsanleitung beschrieben.
-261 reguläre Tests bestanden; drei separate Live-Tests im Standardlauf übersprungen.
+279 reguläre Tests bestanden; drei separate Live-Tests im Standardlauf übersprungen.
 Nativer lesender MCP-Livetest zuletzt mit 0.6.1 erfolgreich.
 Auch mit ausschließlich eigener Bridge laut Nutzer-Mod-Auswahl: alle sechs nativen
 Lesewerkzeuge erneut live erfolgreich (0.3.0). Keine Fremdmod für diesen Zugriff erforderlich.
@@ -175,3 +175,7 @@ tapping entfernt Fällmarkierungen; Gebäude, Pflanzen auf Pflanzmarkierung, üb
 Vegetation und Schutt besitzen getrennte Werkzeuge. Hindernisse vor Bauvorhaben sind
 bereits prüfbar; eine Objektabfrage ergänzt jetzt die konkreten Ziel-IDs.
 14 native Lesewerkzeuge live bestätigt. Arbeitsplatz- und Baupriorität erfolgreich geändert und wiederhergestellt; Flächenmarkierungen einschließlich Kiefernschutz ebenfalls live geprüft; Abriss-/Wiederaufbaupiloten bestanden. 0.13.1 korrigiert die Antwort bei sofort abgeschlossener Vegetationsentfernung; Patch installiert und live bestätigt: wartende sowie sofort erledigte Entfernung korrekt gemeldet.
+
+0.13.2 ergänzt [Lebenszustände natürlicher Ressourcen](docs/vegetation-state.md) und
+korrigiert den Zapfkandidatenfilter: tote, sterbende, junge oder unbekannte Kiefern
+werden ausgeschlossen. Gebaut und gesichert installiert; rein lesender Live-Abgleich noch offen.

@@ -133,3 +133,10 @@ Ein weiterer zunächst wartender Auftrag wurde nach kurzer 7×-Simulation erledi
 (Entity abwesend, Fällmarkierung zuvor entfernt). Individueller Worker nicht verfolgt.
 Simulation abschließend pausiert, keine offenen Testaufträge. Damit ist der oben noch
 offen genannte Patch-Livenachweis abgeschlossen.
+
+## Änderung 0.13.2: Baumgesundheit berücksichtigen
+
+Die bisherigen ungefilterten unmarkierten Kiefern sind keine verlässlichen gesunden
+Zapfkandidaten. Ab 0.13.2 Lebenszustand, Sterben, Wasserstress und Wachstum ausgeben;
+tapping nur bei nachweislich geeigneten Lebens-/Wachstumszuständen. Tote Vegetation
+bleibt für Abriss sichtbar. [Aktueller Vertrag](vegetation-state.md).

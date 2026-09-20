@@ -87,9 +87,9 @@ public sealed record NativeConstructionList(int Offset, int Limit, int Total, Na
 public sealed record NativeAreaKind(string Kind, bool CanRead, bool CanMark, bool CanRemove, string Reason);
 public sealed record NativePlantOption(string Resource, string Kind, string ResourceGroup, bool Unlocked);
 public sealed record NativeAreaTypes(NativeAreaKind[] Kinds, NativePlantOption[] Plants, string[] Limitations);
-public sealed record NativeAreaCell(Position Position, string Resource);
+public sealed record NativeAreaCell(Position Position, string Resource, Timberborn.Bridge.Core.VegetationState? Vegetation = null);
 public sealed record NativeAreas(string Kind, bool Supported, int Offset, int Limit, int? Total, NativeAreaCell[] Items, bool HasMore, string[] Limitations);
 public sealed record NativeAreaChange(string Kind, string Operation, string Outcome, NativeAreaCell[] Items, string[] Limitations);
-public sealed record NativeRemovalTarget(Guid Id,string Kind,string Template,Position Position,string Mode,bool CanDelete,bool Marked,string PlantOrigin,string Classification);
+public sealed record NativeRemovalTarget(Guid Id,string Kind,string Template,Position Position,string Mode,bool CanDelete,bool Marked,string PlantOrigin,string Classification, Timberborn.Bridge.Core.VegetationState? Vegetation = null);
 public sealed record NativeRemovalTargets(string Kind,int Offset,int Limit,int Total,NativeRemovalTarget[] Items,bool HasMore,string[] Limitations);
 public sealed record NativeRemoval(Guid Id,string Kind,string Template,Position Position,string Operation,string Outcome,bool Removed,bool? Marked,string[] Limitations);

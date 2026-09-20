@@ -33,7 +33,7 @@ public sealed class RemovalManagement(EntityRegistry entities, EntityService ser
         var items=all.Skip(r.Offset).Take(r.Limit).Select(e=>{
             var b=e.GetComponent<BlockObject>();var kind=Kind(e);bool demo=e.TryGetComponent<Demolishable>(out var d);
             string mode=kind is "buildings" or "debris"?"delete":kind is "planted" or "vegetation"&&demo?"demolition_mark":"unsupported";
-            return new{id=e.EntityId,kind,template=e.TryGetComponent<TemplateSpec>(out var t)?t.TemplateName:"unknown",position=Vec(b.Coordinates),mode,canDelete=b.CanDelete(),marked=demo&&d.IsMarked,plantOrigin="unknown",classification=kind=="planted"?"matching_current_planting_designation":"current_components"};
+            return new{id=e.EntityId,kind,template=e.TryGetComponent<TemplateSpec>(out var t)?t.TemplateName:"unknown",position=Vec(b.Coordinates),mode,canDelete=b.CanDelete(),marked=demo&&d.IsMarked,vegetation=VegetationObservations.ToPayload(VegetationObservations.Observe(e)),plantOrigin="unknown",classification=kind=="planted"?"matching_current_planting_designation":"current_components"};
         }).ToArray();
         return new{kind=r.Kind,offset=r.Offset,limit=r.Limit,total=all.Length,items,hasMore=r.Offset+items.Length<all.Length,limitations=new[]{"objects_overlapping_region_not_full_build_validation","planted_means_matching_current_designation_not_historical_origin","other_objects_not_removable_by_this_tool","pages_are_fresh_observations"}};
     }

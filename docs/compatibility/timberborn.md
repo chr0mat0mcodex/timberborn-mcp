@@ -173,3 +173,10 @@ unverändert. Live-Abnahme der korrigierten Antwort nach Neustart noch offen.
 Entfernung mit korrektem applied/removed und separatem Zustandsabgleich. Weiterer
 wartender Auftrag nach kurzer 7×-Simulation als verschwunden beobachtet, Holzfällung
 am Ziel ausgeschlossen; Simulation anschließend wieder pausiert. Patch-Abnahme erledigt.
+
+0.13.2 gegen unveränderte öffentliche Spielbibliotheken gebaut. 279 reguläre Tests
+bestanden, 3 Live-Tests übersprungen. Neue Gesundheitsdaten und Kandidatenfilter noch
+nicht live abgenommen. Installiert bleibt 0.13.1 bis zum nächsten Modwechsel.
+
+0.13.2 inzwischen gesichert installiert, fünf Paketdateien verifiziert und private
+Konfiguration unverändert. Lebenszustands-/Filter-Liveabnahme nach Neustart noch offen.

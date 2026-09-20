@@ -27,7 +27,9 @@ public sealed partial class NativeClient
     {
         var result=await Get<NativeAreas>($"areas?kind={r.Kind}&offset={r.Offset}&limit={r.Limit}",ct);var d=result.Data;
         if(d.Kind!=r.Kind||d.Offset!=r.Offset||d.Limit!=r.Limit||d.Items is null||!ValidCells(d.Items)||d.Limitations is null||
-            (d.Supported?d.Total is null||d.Total<0||d.Items.Length!=Math.Min(r.Limit,Math.Max(0,d.Total.Value-r.Offset))||d.HasMore!=((long)r.Offset+d.Items.Length<d.Total):d.Total is not null||d.Items.Length!=0||d.HasMore))throw new InvalidDataException("Invalid areas");return result;
+            (d.Supported?d.Total is null||d.Total<0||d.Items.Length!=Math.Min(r.Limit,Math.Max(0,d.Total.Value-r.Offset))||d.HasMore!=((long)r.Offset+d.Items.Length<d.Total):d.Total is not null||d.Items.Length!=0||d.HasMore))throw new InvalidDataException("Invalid areas");
+        if(r.Kind=="tapping"&&(result.BridgeVersion!="0.13.2"||d.Items.Any(c=>c.Vegetation?.IsTappingCandidate()!=true)))throw new InvalidDataException("Tapping health unavailable or ineligible");
+        return result;
     }
     public async Task<BridgeEnvelope<NativeAreaChange>> SetArea(ManagementRequest r,CancellationToken ct)
     {
@@ -36,5 +38,5 @@ public sealed partial class NativeClient
         string desired=r.Operation=="remove"||r.Kind=="tapping"?"unmarked":r.Kind=="tree_cutting"?"marked":r.Resource;
         if(result.SessionId!=r.Session||d.Kind!=r.Kind||d.Operation!=r.Operation||d.Outcome is not ("applied" or "unconfirmed")||d.Items is null||d.Items.Length!=r.Width*r.Height||!ValidCells(d.Items)||d.Items.Any(i=>i.Position.X<r.X||i.Position.X>=r.X+r.Width||i.Position.Y<r.Y||i.Position.Y>=r.Y+r.Height||i.Position.Z!=r.Z||d.Outcome=="applied"&&i.Resource!=desired)||d.Limitations is null)throw new InvalidDataException("Invalid area change");return result;
     }
-    private static bool ValidCells(NativeAreaCell[] cells)=>cells.All(c=>c is not null&&c.Position is not null&&c.Position.X>=0&&c.Position.Y>=0&&c.Position.Z>=0&&!string.IsNullOrEmpty(c.Resource)&&c.Resource.Length<=160)&&cells.Select(c=>c.Position).Distinct().Count()==cells.Length;
+    private static bool ValidCells(NativeAreaCell[] cells)=>cells.All(c=>c is not null&&c.Position is not null&&c.Position.X>=0&&c.Position.Y>=0&&c.Position.Z>=0&&!string.IsNullOrEmpty(c.Resource)&&c.Resource.Length<=160&&(c.Vegetation is null||c.Vegetation.IsValid()))&&cells.Select(c=>c.Position).Distinct().Count()==cells.Length;
 }

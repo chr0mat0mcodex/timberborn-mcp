@@ -29,12 +29,12 @@ public sealed class AreaManagement(TreeCuttingArea cutting, PlantingService plan
     private string State(Vector3Int p,string kind)=>(kind is "tree_cutting" or "tapping")?(cutting.IsInCuttingArea(p)?"marked":"unmarked"):(planting.IsResourceAt(p)?planting.GetResourceAt(p):"unmarked");
     public object Areas(ManagementRequest r)
     {
-        // Protected pines are derived from current world state, including naturally unmarked pines.
-        var protectedPines=entities.Entities.Where(e=>e.Initialized&&!e.Deleted&&e.HasComponent<TreeComponent>()&&e.TryGetComponent<TemplateSpec>(out var t)&&t.TemplateName=="Pine"&&e.TryGetComponent<BlockObject>(out var b)&&!b.IsPreview&&!cutting.IsInCuttingArea(b.Coordinates)).Select(e=>e.GetComponent<BlockObject>().Coordinates).Distinct();
+        // Only observed living, mature, non-dying and non-water-stressed pines qualify.
+        var pineStates=entities.Entities.Where(e=>e.Initialized&&!e.Deleted&&e.HasComponent<TreeComponent>()&&e.TryGetComponent<TemplateSpec>(out var t)&&t.TemplateName=="Pine"&&e.TryGetComponent<BlockObject>(out var b)&&!b.IsPreview&&!cutting.IsInCuttingArea(b.Coordinates)).Select(e=>new{position=e.GetComponent<BlockObject>().Coordinates,state=VegetationObservations.Observe(e)}).Where(p=>p.state?.IsTappingCandidate()==true).GroupBy(p=>p.position).ToDictionary(g=>g.Key,g=>g.First().state!);
         var catalog=Plants().ToDictionary(p=>p.TemplateName,p=>Kind(p));
-        var coordinates=(r.Kind=="tapping"?protectedPines:r.Kind=="tree_cutting"?cutting.CuttingArea:planting.PlantingCoordinates.Where(p=>catalog.TryGetValue(planting.GetResourceAt(p),out var k)&&k==r.Kind))
+        var coordinates=(r.Kind=="tapping"?pineStates.Keys.AsEnumerable():r.Kind=="tree_cutting"?cutting.CuttingArea:planting.PlantingCoordinates.Where(p=>catalog.TryGetValue(planting.GetResourceAt(p),out var k)&&k==r.Kind))
             .OrderBy(p=>p.z).ThenBy(p=>p.y).ThenBy(p=>p.x).ToArray();
-        var items=coordinates.Skip(r.Offset).Take(r.Limit).Select(p=>new{position=Vec(p),resource=State(p,r.Kind)}).ToArray();
+        var items=coordinates.Skip(r.Offset).Take(r.Limit).Select(p=>new{position=Vec(p),resource=State(p,r.Kind),vegetation=r.Kind=="tapping"?VegetationObservations.ToPayload(pineStates[p]):null}).ToArray();
         return new{kind=r.Kind,supported=true,offset=r.Offset,limit=r.Limit,total=(int?)coordinates.Length,items,hasMore=r.Offset+items.Length<coordinates.Length,
             limitations=new[]{"cells_not_named_rectangular_zones","pages_are_fresh_observations","planting_removal_does_not_remove_plants","no_reachability_or_yield_guarantee","tapping_lists_current_uncut_pines_not_persisted_zones"}};
     }

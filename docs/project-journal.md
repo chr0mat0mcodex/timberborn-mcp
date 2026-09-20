@@ -782,3 +782,25 @@ am Ziel ausgeschlossen. Kein Timeout und kein Retry. Zwei weitere Kiefern entfer
 
 Patch 0.13.1 beantwortet beide Fälle korrekt. Alle Testaufträge erledigt oder
 zurückgenommen; Simulation zuletzt 0. Lokale Rohdaten bleiben ausschließlich unter .local.
+
+## 2026-09-20 — Nutzerhinweis: Lebenszustand bislang nicht berücksichtigt
+
+Codeprüfung bestätigt: Pine-Vorlage und fehlende Fällmarkierung allein wurden als
+tapping-Kandidat gewertet; Objektabfrage ohne Lebenszustand. 0.13.2 ergänzt öffentliche
+LivingNaturalResource.IsDead, DyingNaturalResource.IsDying, WateredNaturalResource-
+DyingProgress und Growable-Werte. Tote/sterbende/junge/unbekannte Kandidaten ausgeschlossen,
+Lebenszustand in Objektlisten sichtbar. Keine Änderung der regulären Abrissaktion.
+
+261 vorherige Tests und Live-Abnahmen belegten Transport/Aktionen, nicht Baumgesundheit.
+Die ungefilterten 124 Kiefern sind kein Nachweis gesunder Harzbäume; der Zustand bereits
+entfernter Kiefern lässt sich nicht rekonstruieren. Vertrag: vegetation-state.md.
+Installation und rein lesender Live-Nachweis der neuen Zustandsfelder stehen aus.
+
+Prüfstand 0.13.2: 279 reguläre Tests bestanden (266 Unit-, 13 Integrationstests), drei
+Live-Tests übersprungen. Lösung und separater Mod-Build ohne Fehler/Warnungen.
+
+0.13.2 nach Nutzerfreigabe bei beendetem Spiel installiert. Vorversion vollständig
+lokal gesichert, fünf Paketdateien per SHA256 bestätigt, private Konfiguration
+byteidentisch erhalten. Explizite camelCase-Payload für den Newtonsoft-Spielserializer
+verwendet. Nächster Schritt nach Start: Lebenszustände und korrigierte Kandidaten
+rein lesend abgleichen, kein erneuter Abriss notwendig.
