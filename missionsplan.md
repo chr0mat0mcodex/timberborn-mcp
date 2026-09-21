@@ -90,13 +90,18 @@ Detailaufgaben und spätere Ideen stehen im [Backlog](BACKLOG.md).
   [Umfang und öffentliche API-Grundlage](docs/production-dependency-graph.md).
 - [x] Live-Abnahme: Antwortgröße, stabile Revision, Verarbeitungsketten, Brennstoff sowie Ernte-/Sammelquellen geprüft. Ruinenerträge und besondere Betriebsbedingungen bleiben explizite Lücken.
 
-## Zukünftige Steuerfunktionen
+## Wichtige zukünftige Steuerfunktionen
 
-- [ ] Simulation für eine vorgegebene Ingame-Dauer (Stunden, Tage, Wochen) oder bis
+- [ ] **WICHTIG:** Simulation für eine vorgegebene Ingame-Dauer (Stunden, Tage, Wochen) oder bis
   zu einem konkreten Ingame-Zeitpunkt laufen lassen. Zielkontrolle, automatisches
   Pausieren sowie Status/Abbruch sollen als MCP-Funktion bereitstehen, statt vom
   Agenten aus Echtzeit-Wartebefehlen zusammengesetzt zu werden.
   [Featureplan und Abnahmekriterien](docs/simulation-runs-plan.md).
+- [ ] **WICHTIG:** Bauplatzsuche nach Gebäude und Suchbereich mit konkret geprüften
+  Positionen/Drehungen, Zugängen und klar benannten nötigen Vorarbeiten.
+- [ ] **WICHTIG:** Bauaufträge mit vollständiger Wegversperrung standardmäßig vor
+  Ausführung verweigern; Ursache, Konfliktzellen und betroffene Zugänge melden.
+  [Bauplatzsuche und Wegschutz: Featureplan](docs/building-site-search-plan.md).
 
 ## Nachweise und Historie
 

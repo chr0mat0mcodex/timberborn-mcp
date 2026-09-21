@@ -1,6 +1,7 @@
 # Zukunftsfeature: Simulation nach Spielzeit laufen lassen
 
 Status: **geplant, nicht implementiert**. Nutzerwunsch vom 2026-09-21.
+Priorität: **WICHTIG** — grundlegende Agentensteuerung, ausdrücklich priorisiert.
 Ergänzt die vorhandene [Geschwindigkeitssteuerung](simulation-control.md).
 
 ## Zweck und gewünschte Aufrufe

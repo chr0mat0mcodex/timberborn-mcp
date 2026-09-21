@@ -61,12 +61,21 @@ Neue Funktionen werden entsprechend dem Projektauftrag vor ihrer Umsetzung konkr
 - Nachhaltige Wasser-/Nahrungs-/Holzversorgung über einen begrenzten, aussagekräftigen Zeitraum nachweisen. Förster und 79 lebende Eichen bestätigt. Birken-Ernte/Nachpflanzung an konkreten Stellen belegt; inzwischen 33 Birken-Pflanzplätze. Eichen-Ernte/Nachpflanzung an 19 früher belegten Standorten bestätigt; dauerhafte Gesamtbilanz offen. Zwei Sägewerke und zwei Erfinder aktiv; erste Zahnräder produziert. 63 Karottenfelder, zwei aktive Farmen und drei aktive Pumpen; erste südliche Ernte/Nachpflanzung bestätigt. Nächste Etappe: Wohnraum und Versorgung für 60 Biber, Energie und größerer Wasservorrat.
 - Güterfluss, Fertigstellung und Wirkung bei weiteren Gebäuden getrennt prüfen.
 
-## Später
+## Wichtige Future-Features
 
-- **Ingame-Zeitläufe:** Simulation für X Spielstunden/-tage/-wochen oder bis zu einem
+- **WICHTIG — Ingame-Zeitläufe:** Simulation für X Spielstunden/-tage/-wochen oder bis zu einem
   konkreten Spielzeitpunkt laufen lassen und automatisch pausieren; Zeitmessung,
   Auftragsstatus und Abbruch übernimmt der MCP-/Mod-Pfad.
   [Featureplan und Abnahme](docs/simulation-runs-plan.md), noch nicht implementiert.
+
+- **WICHTIG — Bauplatzsuche:** Gebäudevorlage und Suchbereich angeben; konkrete,
+  geprüfte Plätze mit Drehung, Eingang, Anschluss und etwaigen Vorarbeiten erhalten.
+- **WICHTIG — Schutz vor Wegversperrung:** Bauaufträge standardmäßig verweigern,
+  wenn sie die letzte nutzbare Verbindung oder Gebäudezugänge versperren; konkrete
+  Konflikte und betroffene Ziele melden. Auch direkte Platzierungen absichern.
+  [Gemeinsamer Featureplan und Abnahme](docs/building-site-search-plan.md), noch nicht implementiert.
+
+## Später
 
 - [Produktionsgraph 0.21.0](docs/production-dependency-graph.md) ist implementiert. Begrenzter Live-Pilot bestanden. Noch offen: weitere Fraktionen, Ruinenerträge und spezielle Betriebsbedingungen; keine neue Fremdmod-Abhängigkeit.
 
