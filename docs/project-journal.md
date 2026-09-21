@@ -1709,3 +1709,43 @@ zurückgelesen. Letzter Kontrollpunkt Tag 61, abends: weiterhin 33 Biber/40 Bett
 Keine Hunger-/Durstflags; alle vier überwachten Versorgungsarbeitsplätze besetzt.
 Simulation pausiert. Zusätzliche Leistung nicht als vollständig ausgemessene
 Energieversorgung werten; Farm-/Nahrungsausbau hat vor weiterer Wohnraumerweiterung Vorrang.
+
+## 2026-09-21: Wiederaufnahme und Ausbau der Grundversorgung
+
+Nach erneuter Nutzerfreigabe Stand Tag 61 mit 33 Bibern/40 Betten über MCP bestätigt.
+Letzte Tagesbilanzen zeigen schwankende Karottenernten bei steigendem Verbrauch.
+13 freie, erreichbare Karottenzellen ohne Rodung markiert. Die automatische
+Aktionsprüfung lehnte die weitergehende Entfernung lebender Beerenbüsche zunächst
+ab; keine Umgehung. Nach konkreter Nutzerfreigabe exakt 25 ausgewählte Büsche
+regulär entfernt und das Verschwinden aller Ziele unabhängig bestätigt.
+
+Zweites Farmhaus, dritte Wasserpumpe und drei Anschlusswege fertig gebaut.
+16 zusätzliche Karottenzellen im südlichen Block; insgesamt 63 Markierungen.
+Alle 16 südlichen Pflanzen tatsächlich vorhanden, lebend und ohne Wasserstress.
+Neue Farm mit drei Arbeitern, neue Pumpe mit einem Arbeiter in Betrieb bestätigt;
+Farmpriorität High, Pumpenpriorität VeryHigh, Farmpräferenz Carrot gesetzt.
+Zwei kleine Lager gebaut, unabhängig als fertig gelesen, anschließend auf Gear
+und Carrot gestellt und Güterwahl zurückgelesen; je 30 zusätzliche Lagerplätze.
+Ein begrenzter Erntepilot überwacht sechs kritische Versorgungsarbeitsplätze.
+
+Forstnachweis ergänzt: aktuelle Pflanzenabfrage gegen frühere lebende Eichen an
+identischen Standorten verglichen. 19 neue lebende Eicheninstanzen im Wachstum
+belegen Nachpflanzung nach der regulären Erntefreigabe; dort keine Räumaufträge.
+Zusammen mit früheren Birken-Erntebelegen ist der Zyklus an repräsentativen Stellen
+bestätigt. Keine exakte Zuordnung des globalen Holzzuwachses zu einzelnen Bäumen.
+
+Erntepilot bis Tag 68 abgeschlossen: Ziel mindestens 60 Karotten am achten
+Kontrollpunkt erreicht (65). 40 lebende Biber, 40 Betten, 165 Wasser, 220 Beeren,
+246 Holz, 56 Bretter und 24 Zahnräder. Alle sechs überwachten Grundversorgungs-
+arbeitsplätze besetzt; keine Hunger-/Durstflags. Letzte zwei gespeicherte
+Karotten-Tagesproben: 69/41 und 48/43 Produktion/Verbrauch, zusammen netto +33.
+Alle 16 südlichen Karotten durch neue Pflanzeninstanzen ersetzt: erste Ernte und
+Nachpflanzung belegt. Das ist ein begrenzter Nachweis bei 40 Bibern, keine
+Dauerbetriebs- oder 100-Biber-Abnahme. Farm-/Pumpenpriorität und Karottenpräferenz
+zusätzlich unabhängig zurückgelesen. Simulation am Ende des Piloten pausiert.
+
+Bank (80 Forschung) und 1x1-Dach (60 Forschung) regulär freigeschaltet; beide sowie
+Strauch auf freien vorgeprüften Zellen errichtet und alle drei fertig zurückgelesen.
+Damit 26/157 reguläre Gebäudetypen bestätigt. Letzter Kontrollpunkt Tag 68 abends:
+40 lebende Biber (38 Erwachsene, zwei Kinder), 40 Betten, 141 Wasser, 220 Beeren,
+33 Karotten, 232 Holz, 56 Bretter, 25 Zahnräder. Simulation wieder pausiert.

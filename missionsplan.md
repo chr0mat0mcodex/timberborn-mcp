@@ -12,6 +12,9 @@ Aktueller Ausgangspunkt: zehn Biber, zwölf Betten, 15 von 157 regulären Bauvor
 fertig vorhanden. Fünf Entwicklerwerkzeuge zählen nicht; andere Fraktionen separat.
 15 reguläre Vorlagen haben noch technische MCP-Baugrenzen und bleiben Teil des Ziels.
 
+Aktueller Nachweis Tag 68: 40 lebende Biber, 40 Betten, 26/157 Gebäudetypen.
+63 Karottenfelder, zwei Farmen und drei Pumpen; begrenzter Erntepilot bestanden.
+
 [Abnahme, Etappen und vollständige Gebäudecheckliste](docs/colony-goals.md).
 ## Stand
 
@@ -73,7 +76,7 @@ Keine Fremdmod-Pflichtbasis; die frühere More-HTTP-API-Phase ist abgeschlossen.
 - [x] Förster einschließlich vorgelagerter Brettproduktion regulär bauen; zwölf Eichen tatsächlich pflanzen und Reichweite/Besetzung bestätigen.
 - [x] Eichenfläche auf 79 Pflanzplätze erweitern; 19 lebende Eichen nachgelesen.
 - [x] Alle 79 Eichen und zwölf zusätzliche Birken tatsächlich gepflanzt und lebend bestätigt.
-- [ ] Eichen-/Birkenreife, Holzernte und Nachpflanzung über den vollständigen Zyklus bestätigen.
+- [x] Wachstum, reguläre Holzernte und Nachpflanzung an repräsentativen Eichen-/Birkenstandorten bestätigt; 19 neue lebende Eicheninstanzen an zuvor belegten Pflanzplätzen. Keine vollständige Ertragsbilanz aller Bäume.
 - [ ] Negative Wasser-/Nahrungs-/Holzbilanz beheben und nachhaltige Versorgung mit Wohnraum abnehmen.
 - [ ] Anschließend einen begrenzten zusammenhängenden Agenten-Spielablauf abnehmen.
 

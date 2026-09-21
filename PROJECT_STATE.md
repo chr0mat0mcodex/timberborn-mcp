@@ -36,23 +36,27 @@ Live bestätigt: 60 Güter (40 aktiv), 55 Rezepte, 162 Gebäude, 17 Quellen; 58.
 
 ## Letzter Spielstand und Wirkungstest
 
-Tag 61: 33 lebende Biber (25 Erwachsene, acht Kinder), 40 Betten und keine
-Obdachlosen. Jetzt 23/157 reguläre Gebäudetypen fertig; zuletzt Transportposten
-und Zahnradwerk ergänzt. Vier weitere Lodges, zweites Sägewerk, zusätzlicher
-Antrieb, zweiter Erfinder und zwei Tanks in überwachten Bauchargen fertiggestellt.
-Ein tatsächlich produziertes Zahnrad bestätigt. Beide neuen Tanks auf Wasser
-eingestellt; damit 120 Tankplätze. Beide neuen Tanks mit je 30 Wasser gefüllt bestätigt.
-Plateau- und Dachverbindungen einschließlich Sofort-Wegsuche der Doppel-Lodge bestätigt.
+Tag 68, abends: 40 lebende Biber (38 Erwachsene, zwei Kinder), 40 Betten und keine
+Obdachlosen. 26/157 reguläre Gebäudetypen fertig, zuletzt Bank, Strauch und 1x1-Dach.
+Zweites Farmhaus und dritte Wasserpumpe fertig, mit drei bzw. einem
+Arbeiter in Betrieb bestätigt. Neue Farm High, neue Pumpe VeryHigh; Karottenpräferenz
+unabhängig zurückgelesen. Weitere 25 Beerenbüsche nach konkreter Freigabe geräumt.
 
-Letzte vollständige Pflanzenabfrage: 79 Eichen lebend und damals im Wachstum. Birkenfläche auf 33 Pflanzplätze erweitert;
-vor der jüngsten Erweiterung 24 echte Bäume, davon 23 lebend und ein Erntestumpf.
-Ernte und neue Bauminstanzen an früheren Birkenstellen belegt. Sämtliche Eichenflächen
-für reguläre Ernte markiert. Weitere reife Kiefern innerhalb der Holzfällerreichweite
-zur Ernte freigegeben; zwei geschützte Zapfkiefern ausgespart.
+Karottenfläche von 34 auf 63 Markierungen erweitert: 13 freie Zellen und 16 im
+südlichen Versorgungsblock. Alle 16 südlichen Pflanzen lebend ohne Wasserstress;
+später 16 neue Pflanzeninstanzen nach der ersten Ernte bestätigt. Erntepilot nach
+acht begrenzten Intervallen regulär bei 65 Karotten beendet. Letzte zwei gespeicherte
+Tagesproben: 117 produziert, 84 verbraucht. Noch keine 100-Biber-Versorgungsabnahme.
 
-Großes Holzlager fertig und auf Holz eingestellt (180 Plätze). Karottenfläche von
-20 auf 34 Markierungen erweitert; Farm-Sollbesetzung drei. Zweite Holzfällerflagge fertig bestätigt. Nach zusätzlichem Antrieb: 138 Wasser, 220 Beeren, sieben Karotten, 241 Holz, 35 Bretter und vier Zahnräder. Industrie aktiv; weitere Energie und Pumpenkapazität bleiben auszubauen.
-Erfinder aktiv; bestehende Pumpen VeryHigh, Nahrung/Holz High, ursprünglicher Erfinder Low.
+Zwei zusätzliche kleine Lager fertig, auf Carrot/Gear eingestellt und zurückgelesen
+(je 30 Plätze). Zahnradbestand über den früheren Ausgabepuffer von zehn gestiegen.
+Nach kleiner Baucharge: 141 Wasser, 220 Beeren, 33 Karotten, 232 Holz,
+56 Bretter und 25 Zahnräder. Wasserlager 120 Plätze plus drei Pumpenpuffer.
+
+Forst: 79 Eichen zuvor lebend bestätigt, 33 Birken-Pflanzplätze. Eichen-Ernte und
+Nachpflanzung nun an 19 früher belegten Standorten durch neue lebende Bauminstanzen
+bestätigt; entsprechender Birkennachweis besteht bereits. Dauerhafte Ertragsbilanz
+offen. Großes Holzlager auf Holz, zwei Sägewerke und zwei Erfinder aktiv.
 
 Begrenzte Simulationsabschnitte kontrollieren Bedürfnisse, Vorräte und Besetzung.
 Keine abschließende Nachhaltigkeits- oder 100-Biber-Abnahme.

@@ -11,16 +11,16 @@ erweitert den bisherigen Schwerpunkt der begrenzten Funktionstests.
 2. Jede reguläre Gebäudevorlage der aktuellen Folktails-Szene mindestens einmal
    fertiggestellt. Vorhandene fertige Gebäude zählen zum Bestand; Bauaufträge nicht.
    Historisch bestätigte Fertigstellungen bleiben auch nach späterem Abriss erhalten.
-   Aktuell 23 von 157 regulären Vorlagen bestätigt; fünf Entwicklerwerkzeuge ausgeschlossen.
+   Aktuell 26 von 157 regulären Vorlagen bestätigt; fünf Entwicklerwerkzeuge ausgeschlossen.
    Andere Fraktionen sind im aktuellen Katalog nicht enthalten und bleiben separat offen.
 
-## Fortschritt am Tag 61
+## Fortschritt am Tag 68
 
-- Erste Etappe erreicht; zuletzt 33 lebende Biber (25 Erwachsene und acht Kinder).
+- 40-Biber-Etappe erreicht; zuletzt 40 lebende Biber (38 Erwachsene und zwei Kinder).
 - 40 Betten; vier weitere Lodges und der Transportposten in einer überwachten Baucharge fertig. Plateau und Dachzugang über Treppen verbunden.
-- 23/157 Gebäudetypen fertig bestätigt; zusätzlich HaulingPost und GearWorkshop. Das erste Zahnrad ist tatsächlich produziert.
-- 79 Eichen lebend bestätigt. Jetzt 33 Birken-Pflanzplätze; 24 vor der jüngsten Erweiterung tatsächlich bepflanzt, davon 23 lebend und ein Erntestumpf. Birken-Ernte und neue Bauminstanzen an früher belegten Pflanzstellen bestätigt.
-- Zuletzt nach zusätzlichem Antrieb: 138 Wasser, 220 Beeren, sieben Karotten, 241 Holz, 35 Bretter und vier Zahnräder. Wasserlager auf 120 Plätze erweitert; beide neuen Tanks separat mit je 30 Wasser bestätigt. 180 zusätzliche Holzlagerplätze aktiv; 34 Karottenfelder markiert und Farm-Sollbesetzung drei.
+- 26/157 Gebäudetypen fertig bestätigt; zuletzt Bench, Shrub und Roof1x1. Zahnradproduktion und zusätzliche Güterlager in Betrieb.
+- 79 Eichen lebend bestätigt. Jetzt 33 Birken-Pflanzplätze; 24 vor der jüngsten Erweiterung tatsächlich bepflanzt, davon 23 lebend und ein Erntestumpf. Birken-Ernte und neue Bauminstanzen an früher belegten Pflanzstellen bestätigt; nun auch 19 neue lebende Eicheninstanzen an vorherigen Eichenstandorten.
+- Erntepilot erreichte 65 Karotten; nach anschließender Baucharge zuletzt 141 Wasser, 220 Beeren, 33 Karotten, 232 Holz, 56 Bretter und 25 Zahnräder. 63 Karottenzellen und zwei besetzte Farmen; erste Ernte/Nachpflanzung aller 16 neuen südlichen Pflanzen bestätigt. Drei Pumpen und 120 Wasserlagerplätze. Zwei zusätzliche 30er-Lager für Karotten und Zahnräder aktiv.
 - Pumpenpriorität VeryHigh, Nahrung und Holz High, Forschung Low; Arbeitsplatzbesetzung separat überwachen.
 
 ## Vorgehen
@@ -44,8 +44,8 @@ Vorräten, Hunger/Durst, kritischem Personal, Wohnraum und Fertigstellungen.
 Ablehnungen stoppen die Charge; angenommene Aufträge werden vor Fortsetzung
 mit dem Spielbestand abgeglichen und nicht wiederholt. Kein Hintergrunddienst.
 
-Nächste Etappe: Betrieb des zusätzlichen Antriebs prüfen, Pumpenstandort klären,
-Nahrungsproduktion und Energieleistung für 40 und später 100 Biber erweitern.
+Nächste Etappe: Wohnraum und Grundversorgung auf 60 Biber erweitern,
+Energieleistung und Wasserreserve für später 100 Biber ausbauen.
 Zwei Sägewerke und zwei Erfinder stehen; dauerhafte Versorgung ist noch nicht
 nachgewiesen. Die 15 technischen Baugrenzen bleiben offen.
 
@@ -72,7 +72,7 @@ Die Tabelle enthält Vorlagenbezeichner, keine Spiel-IDs oder lokalen Rohdaten.
 | Bakery.Folktails | Food | offen | — |
 | BeaverStatue.Folktails | Decoration | offen | — |
 | Beehive.Folktails | Food | offen | — |
-| Bench.Folktails | Decoration | offen | — |
+| Bench.Folktails | Decoration | ja | — |
 | BotAssembler.Folktails | Science | offen | — |
 | BotPartFactory.Folktails | Science | offen | — |
 | BrazierOfBonding.Folktails | Monuments | offen | — |
@@ -170,7 +170,7 @@ Die Tabelle enthält Vorlagenbezeichner, keine Spiel-IDs oder lokalen Rohdaten.
 | Refinery.Folktails | Science | offen | — |
 | Relay.Folktails | Automation | offen | — |
 | ResourceCounter.Folktails | Automation | offen | — |
-| Roof1x1.Folktails | Decoration | offen | — |
+| Roof1x1.Folktails | Decoration | ja | — |
 | Roof1x2.Folktails | Decoration | offen | — |
 | Roof2x2.Folktails | Decoration | offen | — |
 | Roof2x3.Folktails | Decoration | offen | — |
@@ -181,7 +181,7 @@ Die Tabelle enthält Vorlagenbezeichner, keine Spiel-IDs oder lokalen Rohdaten.
 | ScavengerFlag.Folktails | Metal | offen | — |
 | ScienceCounter.Folktails | Automation | offen | — |
 | Shower.Folktails | Wellbeing | offen | — |
-| Shrub.Folktails | Decoration | offen | — |
+| Shrub.Folktails | Decoration | ja | — |
 | SmallPile.Folktails | Storage | ja | — |
 | SmallTank.Folktails | Storage | ja | — |
 | SmallWarehouse.Folktails | Storage | ja | — |
