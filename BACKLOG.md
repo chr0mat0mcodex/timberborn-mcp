@@ -63,6 +63,11 @@ Neue Funktionen werden entsprechend dem Projektauftrag vor ihrer Umsetzung konkr
 
 ## Später
 
+- **Ingame-Zeitläufe:** Simulation für X Spielstunden/-tage/-wochen oder bis zu einem
+  konkreten Spielzeitpunkt laufen lassen und automatisch pausieren; Zeitmessung,
+  Auftragsstatus und Abbruch übernimmt der MCP-/Mod-Pfad.
+  [Featureplan und Abnahme](docs/simulation-runs-plan.md), noch nicht implementiert.
+
 - [Produktionsgraph 0.21.0](docs/production-dependency-graph.md) ist implementiert. Begrenzter Live-Pilot bestanden. Noch offen: weitere Fraktionen, Ruinenerträge und spezielle Betriebsbedingungen; keine neue Fremdmod-Abhängigkeit.
 
 - [Frage-Popup mit Texteingabe im Spiel](docs/player-question-popup.md).

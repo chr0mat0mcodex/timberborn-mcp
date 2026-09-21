@@ -35,6 +35,7 @@ Datierte frühere Abnahmen sind kein Beweis für jede spätere Kombination.
 
 ## Geplante Funktionen
 
+- [Simulation nach Ingame-Dauer oder bis Zielzeitpunkt](simulation-runs-plan.md) — geplant, noch nicht implementiert.
 - [Weitere Alert-Abdeckung](alerts-plan.md) — aktive Entity-Status implementiert; zusätzliche Fälle offen.
 - [Frage-Popup im Spiel](player-question-popup.md) — öffentlich untersucht, noch nicht implementiert.
 - Weitere Lücken: [Backlog](../BACKLOG.md).
