@@ -36,21 +36,23 @@ Live bestätigt: 60 Güter (40 aktiv), 55 Rezepte, 162 Gebäude, 17 Quellen; 58.
 
 ## Letzter Spielstand und Wirkungstest
 
-Tag 56: 25 lebende Biber (18 Erwachsene, sieben Kinder), erste Bevölkerungsetappe
-bestätigt. 28 Betten, keine Obdachlosen. Jetzt 21/157 reguläre Gebäudetypen fertig:
-neu Mini-Lodge, Treppe, Lagerfeuer, Zahn-Schleifstein, großes Holzlager und Doppel-Lodge.
-Zusätzliche Standard-Lodges fertig; Plateau- und Dachverbindungen einschließlich
-Sofort-Wegsuche der Doppel-Lodge live bestätigt.
+Tag 61: 33 lebende Biber (25 Erwachsene, acht Kinder), 40 Betten und keine
+Obdachlosen. Jetzt 23/157 reguläre Gebäudetypen fertig; zuletzt Transportposten
+und Zahnradwerk ergänzt. Vier weitere Lodges, zweites Sägewerk, zusätzlicher
+Antrieb, zweiter Erfinder und zwei Tanks in überwachten Bauchargen fertiggestellt.
+Ein tatsächlich produziertes Zahnrad bestätigt. Beide neuen Tanks auf Wasser
+eingestellt; damit 120 Tankplätze. Beide neuen Tanks mit je 30 Wasser gefüllt bestätigt.
+Plateau- und Dachverbindungen einschließlich Sofort-Wegsuche der Doppel-Lodge bestätigt.
 
-79 Eichen lebend, derzeit noch im Wachstum. Birkenfläche auf 33 Pflanzplätze erweitert;
+Letzte vollständige Pflanzenabfrage: 79 Eichen lebend und damals im Wachstum. Birkenfläche auf 33 Pflanzplätze erweitert;
 vor der jüngsten Erweiterung 24 echte Bäume, davon 23 lebend und ein Erntestumpf.
 Ernte und neue Bauminstanzen an früheren Birkenstellen belegt. Sämtliche Eichenflächen
 für reguläre Ernte markiert. Weitere reife Kiefern innerhalb der Holzfällerreichweite
 zur Ernte freigegeben; zwei geschützte Zapfkiefern ausgespart.
 
 Großes Holzlager fertig und auf Holz eingestellt (180 Plätze). Karottenfläche von
-20 auf 34 Markierungen erweitert; Farm-Sollbesetzung drei. Zweite Holzfällerflagge fertig bestätigt. Letzte Vorräte vor der nächsten Brettcharge: 89 Wasser, 220 Beeren, 32 Karotten und 150 Holz. Sägewerk und Laufrad für eine überwachte Produktionscharge wieder aktiv.
-Erfinder aktiv; Pumpen VeryHigh, Nahrung/Holz High, Forschung Low.
+20 auf 34 Markierungen erweitert; Farm-Sollbesetzung drei. Zweite Holzfällerflagge fertig bestätigt. Nach zusätzlichem Antrieb: 138 Wasser, 220 Beeren, sieben Karotten, 241 Holz, 35 Bretter und vier Zahnräder. Industrie aktiv; weitere Energie und Pumpenkapazität bleiben auszubauen.
+Erfinder aktiv; bestehende Pumpen VeryHigh, Nahrung/Holz High, ursprünglicher Erfinder Low.
 
 Begrenzte Simulationsabschnitte kontrollieren Bedürfnisse, Vorräte und Besetzung.
 Keine abschließende Nachhaltigkeits- oder 100-Biber-Abnahme.

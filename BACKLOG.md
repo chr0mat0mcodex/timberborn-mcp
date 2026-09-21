@@ -57,8 +57,8 @@ Neue Funktionen werden entsprechend dem Projektauftrag vor ihrer Umsetzung konkr
 
 ## Noch offene Spielabnahme
 
-- Wohnraum bestätigt: 28 Betten, 20 lebende Biber und keine Obdachlosen; Doppel-Lodge über Dachweg erreichbar. Kapazität bei Bevölkerungswachstum weiter beobachten.
-- Nachhaltige Wasser-/Nahrungs-/Holzversorgung über einen begrenzten, aussagekräftigen Zeitraum nachweisen. Förster und 79 lebende Eichen bestätigt. Birken-Ernte/Nachpflanzung an konkreten Stellen belegt; inzwischen 33 Birken-Pflanzplätze. Vollständiger Eichenzyklus und dauerhafte Gesamtbilanz offen. Brettproduktion pausiert, Forschung wieder aktiv.
+- Wohnraum bestätigt: 40 Betten, zuletzt 33 lebende Biber und keine Obdachlosen; Doppel-Lodge über Dachweg erreichbar. Kapazität bei Bevölkerungswachstum weiter beobachten.
+- Nachhaltige Wasser-/Nahrungs-/Holzversorgung über einen begrenzten, aussagekräftigen Zeitraum nachweisen. Förster und 79 lebende Eichen bestätigt. Birken-Ernte/Nachpflanzung an konkreten Stellen belegt; inzwischen 33 Birken-Pflanzplätze. Vollständiger Eichenzyklus und dauerhafte Gesamtbilanz offen. Zwei Sägewerke und zwei Erfinder aktiv; erste Zahnräder produziert. Nahrung und Energie als nächste Engpässe prüfen.
 - Güterfluss, Fertigstellung und Wirkung bei weiteren Gebäuden getrennt prüfen.
 
 ## Später

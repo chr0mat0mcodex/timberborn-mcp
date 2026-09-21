@@ -1684,3 +1684,28 @@ Einmalige vollständige Terrainaufnahme (2500 Zellen) und aktueller Gebäudebest
 vorhanden. Nächste vorgeprüfte Charge: vier Lodges auf 40 Betten, Transportposten,
 Hauptstraße und versetztes Lagerfeuer. 29 tote Vegetationshindernisse, kein lebender
 Forst auf den ausgewählten Bauzellen. Baufortschritt erst nach Fertigstellung zählen.
+
+Fortsetzung des gebündelten Laufs: Vier Lodges, Transportposten und versetztes
+Lagerfeuer vollständig fertig, damit 40 Betten. Weitere Industriecharge mit
+Zahnradwerk, zweitem Sägewerk, Antrieb, zweitem Erfinder und zwei kleinen Tanks
+fertig bestätigt. Nun 23/157 Gebäudetypen. Tatsächliche Zahnradproduktion belegt;
+beide neuen Tanks auf Wasser eingestellt und unabhängig mit je 30 Wasser gelesen.
+Tag 61 vor zusätzlichem Laufrad: 33 lebende Biber, 150 Wasser, 220 Beeren,
+13 Karotten, 243 Holz, 25 Bretter und zwei Zahnräder. Farm vollständig mit drei
+Arbeitern besetzt. Nahrungsmenge, weitere Energie und nachhaltige Versorgung für
+40/100 Biber bleiben auszubauen; keine Dauerbetriebsabnahme aus Momentbeständen.
+
+Die erste zusätzliche Pumpe wurde vom Spiel abgelehnt. Batch stoppte, Bestand
+lesend abgeglichen, angenommene Aufträge nicht wiederholt. Zwei weitere geprüfte
+Standorte überschneiden bestehende Vegetation/Anbau; noch kein Ersatzauftrag.
+Generische validate_building-Vorschau benötigt BUILDING_PLACEMENT, nicht das
+historische VALIDATION-Gate. Falsches Gate führte ohne Aktion zu invalid_argument.
+Korrigierte Vorschau bestätigte die ungeeignete erste Pumpenposition. Lokaler
+Helfer und Rohdaten bleiben ignoriert; keine neue Modversion oder Abhängigkeit.
+
+Zusätzliches Laufrad nach abgeschlossener Räumung regulär gebaut und fertig
+zurückgelesen. Letzter Kontrollpunkt Tag 61, abends: weiterhin 33 Biber/40 Betten,
+138 Wasser, 220 Beeren, sieben Karotten, 241 Holz, 35 Bretter und vier Zahnräder.
+Keine Hunger-/Durstflags; alle vier überwachten Versorgungsarbeitsplätze besetzt.
+Simulation pausiert. Zusätzliche Leistung nicht als vollständig ausgemessene
+Energieversorgung werten; Farm-/Nahrungsausbau hat vor weiterer Wohnraumerweiterung Vorrang.

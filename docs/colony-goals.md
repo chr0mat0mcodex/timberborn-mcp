@@ -11,16 +11,16 @@ erweitert den bisherigen Schwerpunkt der begrenzten Funktionstests.
 2. Jede reguläre Gebäudevorlage der aktuellen Folktails-Szene mindestens einmal
    fertiggestellt. Vorhandene fertige Gebäude zählen zum Bestand; Bauaufträge nicht.
    Historisch bestätigte Fertigstellungen bleiben auch nach späterem Abriss erhalten.
-   Aktuell 21 von 157 regulären Vorlagen bestätigt; fünf Entwicklerwerkzeuge ausgeschlossen.
+   Aktuell 23 von 157 regulären Vorlagen bestätigt; fünf Entwicklerwerkzeuge ausgeschlossen.
    Andere Fraktionen sind im aktuellen Katalog nicht enthalten und bleiben separat offen.
 
-## Fortschritt am Tag 56
+## Fortschritt am Tag 61
 
-- Erste Etappe erreicht; zuletzt 25 lebende Biber (18 Erwachsene und sieben Kinder).
-- 28 Betten: Mini-Lodge, drei zusätzliche Lodges und eine Doppel-Lodge fertig; Plateau und Dachzugang über Treppen verbunden.
-- 21/157 Gebäudetypen fertig bestätigt; neu MiniLodge, Stairs, Campfire, TeethGrindstone, LargePile und DoubleLodge.
+- Erste Etappe erreicht; zuletzt 33 lebende Biber (25 Erwachsene und acht Kinder).
+- 40 Betten; vier weitere Lodges und der Transportposten in einer überwachten Baucharge fertig. Plateau und Dachzugang über Treppen verbunden.
+- 23/157 Gebäudetypen fertig bestätigt; zusätzlich HaulingPost und GearWorkshop. Das erste Zahnrad ist tatsächlich produziert.
 - 79 Eichen lebend bestätigt. Jetzt 33 Birken-Pflanzplätze; 24 vor der jüngsten Erweiterung tatsächlich bepflanzt, davon 23 lebend und ein Erntestumpf. Birken-Ernte und neue Bauminstanzen an früher belegten Pflanzstellen bestätigt.
-- Letzte Vorräte vor der nächsten Brettcharge: 89 Wasser, 220 Beeren, 32 Karotten und 150 Holz. 180 zusätzliche Holzlagerplätze aktiv; 34 Karottenfelder markiert und Farm-Sollbesetzung auf drei erhöht.
+- Zuletzt nach zusätzlichem Antrieb: 138 Wasser, 220 Beeren, sieben Karotten, 241 Holz, 35 Bretter und vier Zahnräder. Wasserlager auf 120 Plätze erweitert; beide neuen Tanks separat mit je 30 Wasser bestätigt. 180 zusätzliche Holzlagerplätze aktiv; 34 Karottenfelder markiert und Farm-Sollbesetzung drei.
 - Pumpenpriorität VeryHigh, Nahrung und Holz High, Forschung Low; Arbeitsplatzbesetzung separat überwachen.
 
 ## Vorgehen
@@ -34,6 +34,20 @@ erweitert den bisherigen Schwerpunkt der begrenzten Funktionstests.
   Vorräte, Tagesbilanzen, Personal und konkrete Fertigstellungen. Bei akuter Unterversorgung
   pausieren und die Ursache bearbeiten; normale Alterstodesfälle einzeln einordnen.
 - Keine Nachhaltigkeit aus Bauaufträgen oder Momentaufnahmen ableiten.
+
+## Gebündelter Lauf
+
+Nach dem Aufwandscheck beide Ziele bestätigt. Lokaler MCP-Batchhelfer verwendet
+begrenzte Bauchargen und überwachte Simulationsintervalle statt einzelner
+Agentenentscheidungen pro Abruf. Nach jedem Intervall Pause und Kontrolle von
+Vorräten, Hunger/Durst, kritischem Personal, Wohnraum und Fertigstellungen.
+Ablehnungen stoppen die Charge; angenommene Aufträge werden vor Fortsetzung
+mit dem Spielbestand abgeglichen und nicht wiederholt. Kein Hintergrunddienst.
+
+Nächste Etappe: Betrieb des zusätzlichen Antriebs prüfen, Pumpenstandort klären,
+Nahrungsproduktion und Energieleistung für 40 und später 100 Biber erweitern.
+Zwei Sägewerke und zwei Erfinder stehen; dauerhafte Versorgung ist noch nicht
+nachgewiesen. Die 15 technischen Baugrenzen bleiben offen.
 
 ## Offene technische Baugrenzen
 
@@ -100,14 +114,14 @@ Die Tabelle enthält Vorlagenbezeichner, keine Spiel-IDs oder lokalen Rohdaten.
 | FountainOfJoy.Folktails | Monuments | offen | geometry_exceeds_64_cells |
 | Gate.Folktails | Paths | offen | — |
 | GathererFlag.Folktails | Food | ja | — |
-| GearWorkshop.Folktails | Wood | offen | — |
+| GearWorkshop.Folktails | Wood | ja | — |
 | GeothermalEngine.Folktails | Power | offen | — |
 | GravityBattery.Folktails | Power | offen | — |
 | Grill.Folktails | Food | offen | — |
 | Gristmill.Folktails | Food | offen | — |
 | HallOfAbundance.Folktails | Monuments | offen | geometry_exceeds_64_cells |
 | Hammock.Folktails | Decoration | offen | — |
-| HaulingPost.Folktails | DistrictManagement | offen | — |
+| HaulingPost.Folktails | DistrictManagement | ja | — |
 | Hedge.Folktails | Decoration | offen | — |
 | Herbalist.Folktails | Wellbeing | offen | — |
 | HttpAdapter.Folktails | Automation | offen | — |
