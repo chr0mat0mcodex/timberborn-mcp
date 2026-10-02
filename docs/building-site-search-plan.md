@@ -1,7 +1,7 @@
 # Bauvorhaben mit Anschlussweg: Bauplatzsuche und Wegschutz
 
 Status: Gemeinsamer Bauplan am 2026-10-02 zur Umsetzung freigegeben. In **0.24.0** ist
-die rein lesende Kandidatensuche installiert; Live-Nachweis, gemeinsame
+die rein lesende Kandidatensuche begrenzt live bestätigt; gemeinsame
 Spielvalidierung und Ausführung stehen aus. Wegschutz weiterhin experimentell,
 kein vollständiger Schutz. Priorität: **WICHTIG**.
 [Aktueller Diagnosevertrag, Bausperre und Pilot](road-protection.md).
@@ -169,3 +169,13 @@ als optionaler Hinweis in die Bauplatzsuche. Auch direkte Platzierungen müssen 
 Vorhandene Einzelplatzierung und Erreichbarkeitsleser sind Grundlagen. Eine
 Bereichssuche und der vorausschauende Schutz vor Wegversperrung sind damit noch
 nicht implementiert oder live nachgewiesen.
+
+### Live-Pilot 0.24.0 (2026-10-02)
+
+Drei Suchfälle, 18 MCP-Aufrufe einschließlich separater Vorprüfungen/Rückabfragen:
+Lodge ohne Kandidat im untersuchten Bereich; kleines Lager liefert vier Optionen
+mit zwei bis vier neuen Wegzellen, nach 56/64 Ursprüngen korrekt begrenzt; zu enger
+Einzelzellenbereich liefert keinen Kandidaten. Erste Lageroption und beide neuen
+Wegzellen separat vorgeprüft, ohne Konfliktgründe. Kein Ersatz für Spielvalidatoren.
+Alle Optionen nicht ausführbar; 172 Gebäude/Wegobjekte und pausierte Spielzeit
+unverändert. Kandidatensuche begrenzt bestätigt, gemeinsame Validierung noch offen.

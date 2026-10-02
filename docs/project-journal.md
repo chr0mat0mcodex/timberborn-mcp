@@ -1910,3 +1910,17 @@ Planbindung und Ausführung bleiben offen. Installation/Live-Pilot ausstehend.
 Spielende geprüft, Vorversion 0.23.2 vollständig gesichert und Sicherung per Hash
 verifiziert. Fünf Paketdateien ersetzt und geprüft; private Konfiguration und
 Zusatzdateien unverändert. Begrenzter Bauplan-Live-Pilot nach Nutzerneustart offen.
+
+## 2026-10-02 — 0.24.0 Bauplan-Kandidatensuche live geprüft
+
+Drei kleine Suchfälle mit insgesamt 18 MCP-Aufrufen inklusive Rückabfragen:
+Lodge im untersuchten Bereich ohne Kandidaten (64/64 Ursprünge), kleines Lager
+mit vier Kandidaten nach 56/64 Ursprüngen (option_limit, searchComplete=false),
+zu enger Einzelzellenbereich ohne Kandidaten (1/1). Lageroptionen benötigen zwei
+bis vier neue ebene Wegzellen. Alle executable=false und Prüfgrenzen vorhanden.
+Erste Option mit separaten Vorprüfungen für Gebäude und beide neuen Wegzellen
+abgeglichen: keine Vorprüfungsgründe, weiterhin requires_game_validation.
+Dies ist keine unabhängige native Gesamtplanvalidierung oder Baufreigabe.
+172 Gebäude/Wegobjekte, pausierte Spielzeit und abgefragte Bestandswegverbindung
+unverändert. Kein Bauauftrag und keine Vorschau. Nächster Schritt: gemeinsame
+native Vorschau für gewählten Gebäude-/Wegplan, dann Planbindung/Ausführung.

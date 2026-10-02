@@ -1,6 +1,6 @@
 # Projektstand
 
-Stand: 2026-10-02. Codeversion: **0.24.0**, rein lesende Bauplan-Kandidatensuche installiert; Live-Test offen.
+Stand: 2026-10-02. Codeversion: **0.24.0**, rein lesende Bauplan-Kandidatensuche im begrenzten Live-Pilot bestätigt.
 **Alle Bauaufträge auch in 0.24.0 vorläufig gesperrt**, bis Baustellen und Wegknoten zuverlässig abgedeckt sind.
 [Diagnosevertrag und nächster Pilot](docs/road-protection.md). Kein fertiger Wegschutz.
 Nächster freigegebener Ausbau: [gemeinsamer Bauplan für Gebäude und Anschlussweg](docs/building-site-search-plan.md),
