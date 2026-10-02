@@ -101,13 +101,20 @@ Detailaufgaben und spätere Ideen stehen im [Backlog](BACKLOG.md).
   anschließend Zielzeit und Pause unabhängig zurücklesen. Keine langen Spielschleifen vor Pilotnachweis.
 - [ ] **WICHTIG:** Bauplatzsuche nach Gebäude und Suchbereich mit konkret geprüften
   Positionen/Drehungen, Zugängen und klar benannten nötigen Vorarbeiten.
+- [ ] **Freigegebener nächster Ausbau (2026-10-02):** Gebäude und Anschlussweg als
+  gemeinsames Bauvorhaben planen, zusammen prüfen und kontrolliert ausführen.
+  Zunächst ebene Wege: Anschluss zuerst setzen und Nutzbarkeit bestätigen, dann
+  Gebäudeauftrag. Teilerfolge melden; kein automatischer Abriss-Rollback.
+  Bestehende Zugänge und Bauarbeiter-Erreichbarkeit bleiben Pflichtprüfungen.
 - [ ] **WICHTIG:** Bauaufträge mit vollständiger Wegversperrung standardmäßig vor
   Ausführung verweigern; Ursache, Konfliktzellen und betroffene Zugänge melden.
   [Bauplatzsuche und Wegschutz: Featureplan](docs/building-site-search-plan.md).
   Diagnose-Prototyp 0.23.0 in drei Vorschauen geprüft: Wiederherstellung bestätigt,
   Sperrwirkung unter 0.23.1 im Kontrolltest bestätigt. 0.23.1 ergänzt Kontrollvorschauen und verbundene
   Ausgangszugänge; installiert, begrenzter Kontrolltest bestanden. Keine Freigabe als fertiger Wegschutz.
-  [Offener Live-Pilot und derzeitige Bausperre](docs/road-protection.md).
+  0.23.2 bestätigt Wegpunkte und erfasst Baustellenpunkte; Schutz der
+  Bauarbeiter-Erreichbarkeit weiterhin offen.
+  [Live-Nachweise und derzeitige Bausperre](docs/road-protection.md).
 
 ## Nachweise und Historie
 
@@ -115,6 +122,3 @@ Das [Projektjournal](docs/project-journal.md) enthält datierte Ergebnisse.
 Die [ursprüngliche Mission einschließlich aller Meilensteine bis 0.17.2](docs/history/missionsplan-2026-09-20.md)
 bleibt als Historie erhalten. Dortige alte Verbote, Installationsstände und offene Kästchen
 beschreiben ihren damaligen Zeitpunkt und sind keine aktuelle Arbeitsanweisung.
-
-Wegschutz-Folgeschritt 0.23.2: Wegpunkte und bestehende Baustellenzugänge gebaut;
-Installation/Live-Nachweis offen. Kein Abschluss der vollständigen Wegschutz-Abnahme.

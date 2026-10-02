@@ -1886,3 +1886,11 @@ Erfassung der Punkte ist belegt, Schutz der Bauarbeiter-Erreichbarkeit ausdrück
 nicht. Weitere gleichartige Vorschauen liefern dafür keinen Nachweis; nächster
 Entwicklungsschritt ist ein separater Vergleich der Bauarbeiter-/Geländenavigation
 unter Vorschau. Keine sichere Baufreigabe und keine Baustellen-Schutzabnahme.
+
+## 2026-10-02 — Plan für Gebäude mit Anschlussweg freigegeben
+
+Featureplan, Missionsplan, Projektstand, Architekturentscheidung und Backlog an
+Nutzerentscheidung angepasst: gemeinsames Planen/Prüfen, ebener Anschlussweg
+zuerst, Gebäude nach bestätigtem Zugang. Teilfehler und Wiederholung explizit
+behandeln. Alte offene Installations-/Baustellentest-Angaben im Backlog bereinigt.
+Nur Dokumentation geändert, keine Spielaktion oder neue Implementierung.

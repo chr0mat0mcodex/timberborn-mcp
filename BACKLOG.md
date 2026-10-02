@@ -78,7 +78,16 @@ Neue Funktionen werden entsprechend dem Projektauftrag vor ihrer Umsetzung konkr
   0.23.0: drei Vorschauen geprüft, negative Sperrwirkung unter 0.23.1 im Kontrolltest bestätigt.
   0.23.1 ergänzt Kontrollvorschauen und verbundene Ausgangszugänge; installiert, begrenzter Kontrolltest bestanden.
   [Diagnose-Prototyp](docs/road-protection.md), alle Bauaufträge bis zum vollständigen Nachweis gesperrt.
-  Nächster Schritt: begrenzter Live-Vorschautest; danach Baustellen-/Wegknotenabdeckung.
+  0.23.2: Wegpunkte und Sperrwirkung live bestätigt; neun Baustellenpunkte erfasst,
+  aber trotz buildersReachable=true keine Distriktweg-Verbindung. Bauarbeiter-/
+  Geländenavigation unter Vorschau sowie hypothetische Bauphase bleiben offen.
+
+- **WICHTIG — Gemeinsamer Bauplan (zur Umsetzung freigegeben):** Gebäude und Anschlussweg
+  zusammen planen und prüfen; zunächst ebene Wege. Erst Wege regulär setzen und
+  Nutzbarkeit bestätigen, danach Gebäudeauftrag. Grenzen, erneute Validierung,
+  Aktions-IDs und Teilergebnisse vorsehen; kein automatischer Abriss-Rollback.
+  Anschlussprüfung ersetzt weder Schutz bestehender Zugänge noch Bauarbeiterprüfung.
+  [Beschlossener Ablauf und Abnahme](docs/building-site-search-plan.md).
 
 ## Später
 
@@ -87,16 +96,3 @@ Neue Funktionen werden entsprechend dem Projektauftrag vor ihrer Umsetzung konkr
 - [Frage-Popup mit Texteingabe im Spiel](docs/player-question-popup.md).
 - Energieindustrie, Bots, Distriktmigration, komplexe Automationsgraphen, Terraforming und Wasserbau-Großprojekte.
 - Automatisches Speichern/Laden; bislang nicht als MCP-Funktion implementiert.
-
-0.23.2 ergänzt eigene Prüfpunkte für Wege und gültige Zugänge bestehender Baustellen.
-Installation und Live-Abnahme offen. Hypothetischer Bauzustand neuer Gebäude,
-mehrteilige Wegobjekte und distriktlose Netze bleiben Nachweislücken; Bauaufträge gesperrt.
-
-0.23.2 Live-Pilot: Wegpunkte einschließlich drei verlorener Wegzellen bestätigt;
-Baustellenfall offen, weil keine Baustelle existiert. Nächster Nachweis benötigt
-einen regulären offenen Bauauftrag mit Wegzugang. Vollständiger Wegschutz bleibt offen.
-
-Baustellen-Test ergänzt: neun Prüfpunkte eines Nutzer-Bauauftrags erkannt, aber
-keiner als Distriktweg verbunden trotz buildersReachable=true. Nächster Schritt:
-Bauarbeiter-/Geländenavigation unter Vorschau separat prüfen. Eine weitere Baustelle
-ist dafür derzeit nicht nötig; die vorhandene bleibt unverändert.

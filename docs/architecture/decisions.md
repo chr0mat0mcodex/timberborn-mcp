@@ -38,3 +38,13 @@ Ein Vorschauvergleich ersetzt keinen Nachweis der Baustellen-/Wegknotenabdeckung
 Der experimentelle Stand 0.23.0 hält den Baupfad deshalb geschlossen; Live-Pilot
 muss die Semantik vor einer Erweiterung belegen. Aktueller Umfang und Grenzen:
 [Wegschutz-Diagnose](../road-protection.md).
+
+## 2026-10-02 — Gebäude und Anschlussweg gemeinsam planen
+
+Nutzerentscheidung: nächster Ausbau verbindet Bauplatzsuche und Anschlussweg in
+einem gemeinsamen Bauvorhaben. Die Mod prüft Spielzustand und setzt reguläre
+Aktionen; MCP bietet Planwahl und Ausführung. Erste Stufe ausschließlich ebene
+Wege. Anschluss vor Gebäude setzen und unabhängig bestätigen; bestehenden
+Wegschutz und Bauarbeiterprüfung nicht dadurch ersetzen. Mehrere Aktionen sind
+nicht atomar: Teilerfolge melden, stoppen, keine automatische Abriss-Rücknahme.
+[Vertrag und Abnahme](../building-site-search-plan.md). Noch nicht implementiert.

@@ -3,6 +3,8 @@
 Stand: 2026-10-02. Codeversion: **0.23.2**, Wegprüfpunkte im begrenzten Live-Test bestätigt; Baustellenpunkte erfasst, Bauarbeiter-Erreichbarkeit durch Distriktwegprüfung nicht abgedeckt.
 **Alle Bauaufträge in 0.23.x vorläufig gesperrt**, bis Baustellen und Wegknoten zuverlässig abgedeckt sind.
 [Diagnosevertrag und nächster Pilot](docs/road-protection.md). Kein fertiger Wegschutz.
+Nächster freigegebener Ausbau: [gemeinsamer Bauplan für Gebäude und Anschlussweg](docs/building-site-search-plan.md),
+zunächst ebene Wege. Geplant, noch nicht implementiert; keine Aufhebung der Bausperre.
 Ingame-Zeitläufe aus 0.22.0 gebaut und automatisch geprüft;
 Begrenzte Live-Abnahme bestanden. [Vertrag und Pilot](docs/simulation-runs-plan.md).
 Aktueller Schwerpunkt ist MCP-Entwicklung; kein autonomer Kolonieaufbau als Fortsetzung.
