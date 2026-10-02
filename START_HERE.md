@@ -12,8 +12,9 @@ historischer Bauplan ist Voraussetzung.
 - Die regulären automatischen Prüfungen bestehen; die Bauprojektausführung dieser
   Version braucht noch einen erfolgreichen Live-Nachweis.
 - Aktueller Arbeitsbranch: `codex/road-protection-pilot`.
-- Nächster Schritt: laufende Bridge und Session lesen, einen gültigen Bauprojektfall
-  finden, ausführen und Ergebnis strukturiert abgleichen.
+- Nächster Schritt: eine Fähigkeit umsetzen und am menschlichen Test-Gate anhalten:
+  `scripts/prepare-human-live-test.ps1` übergeben, auf `live bereit` warten und
+  erst nach bestandenem Abschluss-Livetest committen.
 
 ## Orientierung
 

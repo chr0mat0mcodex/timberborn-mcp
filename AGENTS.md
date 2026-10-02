@@ -21,11 +21,29 @@ Aktuelle Codegrenzen sind technische Tatsachen, keine dauerhaften Freigabegrenze
 Ihre sinnvolle Weiterentwicklung gehört zum Entwicklungsauftrag. Datenschutz,
 Schutz anderer Projekte/Systemdateien und nachvollziehbare Git-Checkpoints bleiben.
 
+## Entwicklungszyklus: Agent → Mensch → Live-Test
+
+1. Der Agent implementiert eine klar abgegrenzte Fähigkeit und führt nur gezielte,
+   günstige Quellcode-/Diff-Prüfungen aus. Er startet weder die vollständige
+   Test-/Build-/Deploy-Kette noch installiert er die Mod selbst.
+2. Am Test-Gate übergibt der Agent an den Menschen. Der Mensch führt
+   `scripts/prepare-human-live-test.ps1` aus; das Skript testet, baut, paketiert,
+   installiert die Mod mit Sicherung und prüft die installierten Paketdateien.
+3. Nach erfolgreichem Skriptlauf startet und lädt der Mensch Timberborn und meldet
+   dem Agenten `live bereit`. Erst dann führt der Agent den gezielten MCP-Livetest
+   für die jeweilige Fähigkeit durch.
+4. Der Agent nennt vor der Übergabe den erwarteten Nachweis und nach dem Livetest
+   das konkrete Ergebnis. Bei Fehlern wird diagnostiziert; keine automatische
+   Wiederholung der vollständigen Kette.
+5. Git-Commit und Push erfolgen ausschließlich nach erfolgreichem Skriptlauf und
+   bestandenem feature-spezifischem Livetest. Unfertige oder nur statisch geprüfte
+   Änderungen bleiben uncommitted.
+
 ## Einstieg
 
 - Standardmäßig auf Deutsch, knapp und technisch nachvollziehbar arbeiten.
 - Vor Änderungen Git-Status prüfen und die für den Arbeitsschritt relevanten Abschnitte von README.md, PROJECT_STATE.md, DEVELOPMENT_WORKFLOW.md und missionsplan.md lesen. Offene Arbeiten stehen in BACKLOG.md; keine vollständige Historie ohne konkreten Bedarf laden.
-- Aktuelle Ergebnisse stehen in docs/project-journal.md, Architekturentscheidungen in docs/architecture/decisions.md, getestete Versionen in docs/compatibility/timberborn.md.
+- Architekturentscheidungen stehen in docs/architecture/decisions.md, getestete Versionen in docs/compatibility/timberborn.md.
 - Historische Planungsabschnitte sind keine aktuelle Zustandsbeschreibung. Aussagen gegen Dateien und Git prüfen.
 
 ## Aktueller Missionsschwerpunkt
@@ -39,7 +57,7 @@ Schutz anderer Projekte/Systemdateien und nachvollziehbare Git-Checkpoints bleib
 ## Eingriffsgrenzen
 
 - Aktuelle Architektur: eigene Agent Bridge und natives MCP-Backend. More HTTP API ist ein vorhandener Legacy-Adapter, keine Laufzeitabhängigkeit der eigenen Mod. Reguläre Spielservices und strukturierte MCP-Aufrufe bleiben der Funktionsnachweis; Save-Manipulation oder generische HTTP-Werkzeuge sind kein Ersatz für eine funktionierende Schnittstelle.
-- Installation/Updates der eigenen Mod sind autorisiert. Vor Dateiaustausch Spielende prüfen, Mod sichern, Paketdateien verifizieren und private Konfiguration erhalten. Erforderliches Beenden/Neustarten wie bisher mit dem Nutzer koordinieren; Speichern ist keine Voraussetzung. Fremdmods, zusätzliche Abhängigkeiten und darüber hinausgehende System-/Clientänderungen vorher abstimmen.
+- Installation/Updates der eigenen Mod erfolgen ausschließlich durch den Menschen über `scripts/prepare-human-live-test.ps1`. Das Skript prüft vor dem Austausch, sichert die vorhandene Mod, erhält die private Konfiguration und verifiziert das Paket. Fremdmods, zusätzliche Abhängigkeiten und darüber hinausgehende System-/Clientänderungen vorher abstimmen.
 - Routineimplementierung und technische Tests innerhalb des MCP-Projektziels selbstständig durchführen. Grundlegende Architekturwechsel oder unklare, aufwendige Erweiterungen vorher konkret abklären; nicht jede neue Funktion oder jeder Test benötigt eine eigene Freigaberunde.
 - Änderungen an dauerhaften Agentenregeln zuerst beschreiben und freigeben lassen; bereits ausdrücklich beauftragte Regeländerungen nicht erneut bestätigen lassen.
 - Bestehende fremde Änderungen erhalten. Keine destruktiven Git-Befehle oder Force-Pushes.
@@ -48,7 +66,7 @@ Schutz anderer Projekte/Systemdateien und nachvollziehbare Git-Checkpoints bleib
 
 - Dokumentierte Schnittstellen und bestehende Schichten verwenden. Fake-Daten immer als Simulation kennzeichnen; unbekannte Werte nicht erfinden.
 - stdout bleibt ausschließlich MCP-Protokoll; Diagnose nach stderr.
-- Codeänderungen gemäß DEVELOPMENT_WORKFLOW.md prüfen. Das lokale Spiel ist das freigegebene Testsystem; kein bestimmter Save-Name oder Koloniezustand erforderlich. Technische Aktionsschalter, Session-Bindung und Rückabfragen dienen korrekten Tests, nicht dem Erhalt der Kolonie. Unbestätigte Aktionen vor einer Wiederholung diagnostizieren statt blind erneut senden.
+- Den Übergabezyklus in DEVELOPMENT_WORKFLOW.md einhalten. Das lokale Spiel ist das freigegebene Testsystem; kein bestimmter Save-Name oder Koloniezustand erforderlich. Technische Aktionsschalter, Session-Bindung und Rückabfragen dienen korrekten Tests, nicht dem Erhalt der Kolonie. Unbestätigte Aktionen vor einer Wiederholung diagnostizieren statt blind erneut senden.
 - Keine Zugangsdaten, Auth-Dateien, Rohlogs, Chats, persönlichen Erinnerungen, Screenshots, Anhänge, SQLite-Zustände, Spielstände, Spiel-/Mod-Binärdateien oder Laufzeitcaches committen.
 - Synthetische Testdaten verwenden. Keine persönlichen Namen, lokalen Benutzerpfade oder Spiel-IDs in Fixtures aufnehmen.
 - Relevante Ergebnisse und Fallstricke knapp im Projektjournal bzw. passenden Fachdokument festhalten, ohne Rohdaten abzulegen.
@@ -56,5 +74,5 @@ Schutz anderer Projekte/Systemdateien und nachvollziehbare Git-Checkpoints bleib
 ## GitHub-Sicherung
 
 - Der Nutzer hat Veröffentlichung und regelmäßige Pushes dieses Projekts nach chr0mat0mcodex/timberborn-mcp ausdrücklich beauftragt.
-- Nach sinnvoll abgeschlossenen, geprüften Arbeitsständen gezielt committen und zum eingerichteten origin pushen; Ablauf und Grenzen stehen in DEVELOPMENT_WORKFLOW.md.
+- Erst nach erfolgreichem menschlichem Skriptlauf und bestandenem Abschluss-Livetest eines Features gezielt committen und zum eingerichteten origin pushen; Ablauf und Grenzen stehen in DEVELOPMENT_WORKFLOW.md.
 - Diese Regel gilt während der Projektarbeit. Sie richtet keinen Hintergrunddienst oder Zeitplan ein.
