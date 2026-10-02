@@ -66,7 +66,7 @@ keine freien HTTP-, Reflexions- oder Spielkonsolenwerkzeuge.
 
 Die oben für 0.12.0 beschriebene tapping-Sperre ist ersetzt: auf Nutzerwunsch als
 Kiefernschutz durch Entfernen regulärer Fällmarkierungen implementiert. Kein eigener
-Zapfzonen-Datentyp im Spiel. [Aktueller Vertrag](removal-and-pine-protection.md).
+Zapfzonen bleiben ein abgeleiteter Flächentyp; Details liefert der Werkzeugkatalog.
 
 ## Live-Nachweis in 0.13.0
 

@@ -1,17 +1,11 @@
 # Eigene Agent Bridge installieren und MCP starten
 
-Aktueller Entwicklungsstand: **0.25.0, begrenzter Bauprojekt-Pilot**.
-Normale Bauaufträge bleiben gesperrt. Der ausdrücklich aktivierte Entwicklungspilot
-setzt höchstens zwei ebene Wege und ein kleines Lager mit Rückprüfungen.
+Aktueller Entwicklungsstand: **0.25.0 mit begrenzter Bauprojektausführung**.
+Der aktuelle Vertrag beschreibt Planung, Vorschau, schrittweise Ausführung und
+Rückprüfung; der vollständige Live-Nachweis steht noch aus.
 [Vertrag und Grenzen](building-project-execution-proposal.md).
-0.25.0 ist installiert; 0.24.1 vollständig gesichert, fünf Datei-Hashes geprüft.
-Private Konfiguration und Zusatzdateien unverändert; Live-Abnahme steht aus.
-Gebaut gegen Timberborn 1.1.2.4. Bestehende private Konfiguration unverändert erhalten;
-kein neuer Konfigurationsschlüssel, explizite Auswahl über `mode=development_pilot`.
-Neu: [Ingame-Zeitläufe](simulation-runs-plan.md), automatisch und im begrenzten MCP-Live-Pilot geprüft.
-0.21.1 erweitert die Gebäudediagnose um Inventare; installiert und mit allen 30 Lesern sowie konkreten Inventaren live geprüft. Bereits unter 0.21.0 mit Produktionsgraph und Lebenszustandskorrektur alle 30 Leser und der gezielte Graph-/Lebenszustandspilot sind live bestanden. Zuvor 0.20.0
-mit bekanntem Fehler bei der Zählung verstorbener Biber in der Bedürfnisübersicht. Drei neue Diagnoseleser: Bedürfnisse der Kolonie,
-Details je Biber und Gebäudebetrieb; [Vertrag](needs-and-operation.md).
+Die Bridge wird gegen Timberborn 1.1.2.4 gebaut. Private Konfiguration bleibt bei
+Updates erhalten. Zeit-, Diagnose- und Bauwerkzeuge sind im Werkzeugkatalog beschrieben.
 Benötigt wird ausschließlich unsere eigene Spielmod; `RequiredMods` ist leer.
 MCP-Server und Mod sind zwei getrennte Prozesse/Komponenten. Kein More-HTTP-API-Setup nötig.
 

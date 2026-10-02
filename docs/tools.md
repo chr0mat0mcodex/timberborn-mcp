@@ -42,7 +42,7 @@ sind unter 0.21.1 live belegt. Nachweise und Grenzen stehen in den Fachdokumente
 ## Freizugebende Werkzeuge
 
 - `set_workplace_staffing`
-- `run_simulation_for`, `run_simulation_until`, `cancel_simulation_run` — [Zeitläufe](simulation-runs-plan.md)
+- `run_simulation_for`, `run_simulation_until`, `cancel_simulation_run`
 - `set_simulation_speed`
 - `validate_build_site`
 - `place_path`
@@ -70,7 +70,7 @@ sind unter 0.21.1 live belegt. Nachweise und Grenzen stehen in den Fachdokumente
 - Validierung mit Vorschau zählt nicht als rein lesend und benötigt eine eigene Freigabe.
 - Aktionsfreigaben werden in Mod und MCP-Prozess geprüft; [vollständige Tabelle](native-bridge-install.md).
 - reasoning ist optional für alle nativen Werkzeuge: kurze für den Spieler lesbare
-  Absicht, keine internen Gedankengänge. [Ingame-Log](activity-log.md).
+  Absicht, keine internen Gedankengänge.
 - Eingabeschemata, verlangte Session-/Erwartungswerte und Grenzen liefert MCP tools/list.
   Kein generischer HTTP-Aufruf und kein automatischer Backendwechsel.
 - Ergebnis separat prüfen; applied ist kein Beleg für abgeschlossenen Bau oder Versorgung.
@@ -78,7 +78,7 @@ sind unter 0.21.1 live belegt. Nachweise und Grenzen stehen in den Fachdokumente
 
 Neue Güter-/Statusverträge: [Details und Grenzen](economy-observations.md).
 
-[Wege, Reichweiten und Güterhistorie](logistics.md).
+Weg-, Reichweiten- und Güterhistorien sind über eigene strukturierte Werkzeuge verfügbar.
 `roadProtection` ergänzt ab 0.23.2 Weg-/Baustellen-Prüfpunktzahlen und `affected.kind`; bei `road_cell` bezeichnet `entrance` die Wegkoordinate. Diese Diagnose erweitert keine Baufreigabe.
 
 ## Bauplan-Kandidatensuche (0.24.0)

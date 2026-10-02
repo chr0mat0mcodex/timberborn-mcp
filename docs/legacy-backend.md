@@ -18,6 +18,5 @@ Diese Auswahl benötigt einen separat eingerichteten Legacy-Mod-Stack. Die direk
 Server-Defaults wurden in der Dokumentationsbereinigung nicht geändert;
 `start-native.ps1` wählt ausdrücklich das native Backend.
 
-[Früher Live-Nachweis](testing/live-poc.md), [Phase-2A-Recherche](phase-2a-results.md),
-[Referenzkatalog](references/README.md). Historische Testwerte und Beschränkungen
-beschreiben ihren damaligen Zeitpunkt, nicht den aktuellen Entwicklungsstand.
+[Referenzkatalog](references/README.md). Historische Testwerte wurden aus der
+Projektdokumentation entfernt.

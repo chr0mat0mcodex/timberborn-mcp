@@ -1,112 +1,32 @@
 # Timberborn MCP
 
-Für die Fortsetzung in einem neuen Chat: [START_HERE.md](START_HERE.md) und
-[technische Übergabe](docs/session-handoff.md).
+Eine eigene Timberborn-Mod und ein lokaler C#-MCP-Server ermöglichen strukturierte
+Beobachtung und kontrollierte Eingriffe über reguläre Spielservices.
 
-**Entwicklungsmodus: Testsystem. Schnelle und effiziente Entwicklung hat Vorrang.**
-Der Spielstand ist austauschbar; Kolonieerhalt oder frühere Spielziele bremsen keine
-Tests. [Kernanweisungen](AGENTS.md).
+## Status
 
-Eine eigene Timberborn-Mod und ein lokaler C#-MCP-Server ermöglichen einem KI-Agenten,
-das Spiel strukturiert zu beobachten und über reguläre Spielaktionen zu steuern.
-Ziel ist ein Agent, der Wasser, Nahrung, Holz, Wege und Wohnraum aufbaut und betreibt.
+Agent Bridge 0.25.0 ist gebaut, installiert und über MCP erreichbar. Die regulären
+automatischen Prüfungen bestehen. Die aktuelle Bauprojektausführung benötigt noch
+einen vollständigen Live-Nachweis.
 
-**Entwicklungsstand: Agent Bridge 0.25.0 (begrenzter Bauprojekt-Pilot)**.
-Ein expliziter Entwicklungsaufruf koppelt kleines Lager und bis zu zwei neue Wege:
-frische gemeinsame Vorschau, schrittweise Platzierung, Auftragsstatus und reale
-Zugangsprüfung. **0.25.0 ist installiert und dateigeprüft; Live-Abnahme steht aus.**
-Normale Bauaufrufe sind im aktuellen Code gesperrt; vollständiger Wegschutz ist offen.
-Diese Implementierungsgrenze ist keine dauerhafte Arbeitsfreigabegrenze.
-[Umfang, Ausnahme und Abnahme](docs/building-project-execution-proposal.md).
-Die Mod wird gebaut gegen Timberborn **1.1.2.4 / Folktails**.
-Bereits live geprüft wurden unter anderem Ingame-Zeitläufe mit automatischer Pause,
-Produktionsgraph, Gebäudeinventare, Güter-/Statusabfragen und konkrete Weg-/Arbeitsreichweiten.
-Die jeweiligen Versionen, Fälle und offenen Grenzen stehen in der
-[Nachweisdokumentation](docs/compatibility/timberborn.md).
-648 reguläre Tests bestehen (635 Unit, 13 Integration). Die neue Bauprojektausführung
-von 0.25.0 ist noch nicht live abgenommen; frühere erfolgreiche Bauaktionen ersetzen
-diesen Nachweis nicht.
+## Umfang
 
-**Keine zusätzliche Spielmod erforderlich.** Die eigene Mod hat `RequiredMods: []`.
-More HTTP API, ModdableTimberborn, TimberUi, Mod Settings und Harmony sind keine
-Pflichtabhängigkeiten. Ein älterer More-HTTP-API-Adapter bleibt für Vergleich und
-Regression im Repository; [Referenzen und Legacy-Abgrenzung](docs/references/README.md).
+- Zustands-, Güter-, Personal-, Bau-, Forschungs- und Flächenabfragen
+- Produktions-, Zugangs- und Versorgungsdiagnosen
+- Kontrollierte Aktionen für Bau, Betrieb, Forschung, Entfernung und Simulation
+- Sessionbindung, Aktions-IDs, Rücklesungen und fachliche Fehlercodes
 
-## Was bereits funktioniert
-
-| Bereich | Implementierter Umfang |
-| --- | --- |
-| Bedürfnisse/Betrieb (0.20.0) | Native Warn-/Kritisch-Flags, Bedürfniswerte, Personal/Arbeitszeit sowie Rezept-, Zutaten-, Brennstoff- und Produktplatzbelege; gezielte Live-Piloten bestanden |
-| Produktionsgraph (0.21.0) | Ein MCP-Abruf für Güter, Rezeptketten, Gebäude/Baukosten, Energie und Schnitt-/Sammelquellen; [Umfang und Grenzen](docs/production-dependency-graph.md), begrenzter Live-Pilot bestanden |
-| Zustand | Bevölkerung, Betten, vollständiger Güterleser, aktive Status mit Zielen, Karte, Gebäude, Baustellen, Arbeiterzuordnung |
-| Logistik | Gebäudezugang, Sofort-Wegsuche einschließlich Unterbrechung, Farm-/Holzfällerreichweiten und Güterhistorie über Tageswechsel live bestätigt |
-| Bauen | Katalog und Vorprüfungen; normale Bauaufträge aktuell gesperrt. 0.25.0: enger Pilot für Lager plus Wege installiert, Live-Abnahme offen |
-| Betrieb | Gebäudepause, Sollbesetzung, Arbeitsplatz-/Bauprioritäten, Lagerwahl und Lagermodi |
-| Flächen | Anbau und Baumfällmarkierungen, Pflanzmarkierungen, Kiefernschutz durch Entfernen von Fällmarkierungen |
-| Entfernen | Getrennte Gebäude-, Schutt- und Vegetationsaktionen mit begrenzten Einzelzielen |
-| Forschung | Punkte und Kosten lesen; Gebäude regulär gegen Forschungspunkte freischalten |
-| Simulation | Pause sowie 1×, 3× und 7× |
-| Nachvollziehbarkeit | Ingame-MCP-Log, optionale kurze Aktionsbegründung, feste fachliche Fehlercodes |
-
-33 Lesewerkzeuge und 24 technisch separat aktivierbare Werkzeuge für Aktionen/Vorschauvalidierung
-sind im nativen Katalog implementiert. Frühe Baupiloten bleiben aus Kompatibilitätsgründen
-vorhanden. Für den nächsten realen Bautest ist die Bauprojektausführung aus 0.25.0
-vorgesehen; normale generische Platzierungen sind im aktuellen Code noch gesperrt.
-[Werkzeugübersicht und Freigaben](docs/tools.md).
-
-Live nachgewiesen sind unter anderem regulärer Gebäudebau, Wasserlagerung, ein
-Karotten-Anbau-/Erntezyklus und Forschungsproduktion mit bezahlter Freischaltung.
-Das bestätigt konkrete Abläufe, nicht jede Vorlage, Fraktion oder eine dauerhaft
-tragfähige Versorgung. Die neuen [Güter-/Statusleser](docs/economy-observations.md) ergänzen die
-bisherige Water/Berries/Log-Kurzansicht. Vollständige UI-Meldungsabdeckung,
-die vollständige Diagnose von Produktionsblockaden und Erreichbarkeit in weiteren Sonderfällen bleiben [offen](BACKLOG.md).
-
-## Aufbau
-
-```mermaid
-flowchart LR
-    A[MCP-Client / KI-Agent] -->|stdio| B[Lokaler C#-MCP-Server]
-    B -->|Authentifiziertes Loopback-HTTP| C[Eigene Agent Bridge]
-    C -->|Hauptthread-Queue| D[Öffentliche Timberborn-Spielservices]
-```
-
-MCP läuft über stdio. HTTP ist der lokale interne Transport unserer eigenen Mod,
-keine Abhängigkeit von der Fremdmod More HTTP API. Spielsteuerung erfolgt ausschließlich
-programmiert über Spielservices, ohne Screenshot-Auswertung oder simulierte Eingaben.
+MCP nutzt stdio. Die eigene Mod kommuniziert ausschließlich über authentifiziertes
+Loopback-HTTP und die Hauptthread-Queue. Es gibt keine Pflichtabhängigkeit zu
+Fremdmods und keine Screenshot- oder Eingabesteuerung.
 
 ## Einstieg
 
-Benötigt: Timberborn, .NET SDK gemäß [global.json](global.json), für den Mod-Build die
-Bibliotheken der eigenen Spielinstallation. Die Spielbibliotheken werden nicht mitgeliefert.
-
 ```powershell
-# Server bauen und normale Tests ausführen; kein Spielzugriff:
 pwsh -NoProfile -File ./scripts/verify.ps1
-
-# Eigenes Mod-Paket gegen die installierten Spielbibliotheken bauen:
-pwsh -NoProfile -File ./scripts/build-native-bridge.ps1 `
-  -TimberbornManagedDir '<Spielverzeichnis>/Timberborn_Data/Managed'
-
-# MCP ausdrücklich nativ und lesend starten:
-pwsh -NoProfile -File ./scripts/start-native.ps1 `
-  -ConfigPath '<installierte Mod>/bridge.local.json'
+pwsh -NoProfile -File ./scripts/build-native-bridge.ps1 -TimberbornManagedDir '<Spielverzeichnis>/Timberborn_Data/Managed'
 ```
 
-[Installation und MCP-Client-Einrichtung](docs/native-bridge-install.md) beschreiben
-Paket, private Konfiguration und optionale Aktionsfreigaben. Ohne passende Freigaben
-in **Mod und MCP-Prozess** werden die Aktionen nicht ausgeführt. Der Lesestarter setzt
-alle Aktionsschalter ausdrücklich auf aus.
-
-## Projektnavigation
-
-- [Projektstand und Nachweise](PROJECT_STATE.md)
-- [Mission und Abnahmeziele](missionsplan.md)
-- [Priorisierte offene Arbeiten](BACKLOG.md)
-- [Entwicklung, Tests und Updates](DEVELOPMENT_WORKFLOW.md)
-- [Aktuelle Architektur](docs/architecture/native-game-api.md)
-- [Fachdokumentation](docs/README.md)
-- [Chronologisches Projektjournal](docs/project-journal.md) und [historischer Missionsverlauf](docs/history/missionsplan-2026-09-20.md)
-- [Agentenanweisungen](AGENTS.md)
-
-Quellcode: [MIT-Lizenz](LICENSE). Bibliotheken und Referenzen behalten ihre eigenen
-[Lizenzbedingungen](THIRD-PARTY-NOTICES.md). Inoffizielles Projekt; Timberborn stammt von Mechanistry.
+Weitere Informationen: [Einstieg](START_HERE.md), [Projektstand](PROJECT_STATE.md),
+[Installation](docs/native-bridge-install.md), [Werkzeuge](docs/tools.md) und
+[Entwicklungsablauf](DEVELOPMENT_WORKFLOW.md).

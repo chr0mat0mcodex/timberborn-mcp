@@ -1,79 +1,23 @@
 # Architekturentscheidungen
 
-> Chronologische Entscheidungen. Der aktive Pfad ist die [eigene native Bridge](native-game-api.md); frühe More-HTTP-API-Entscheidungen dokumentieren den abgelösten POC.
+## Native Bridge statt Fremdmod-Abhängigkeit
 
-## 2026-09-19 — POC-Implementierung
+Die eigene Agent Bridge ist die Laufzeitbasis. Der MCP-Server spricht sie über
+authentifiziertes Loopback-HTTP an; Spielzugriffe laufen über die Hauptthread-Queue
+und öffentliche Timberborn-Services. More HTTP API bleibt ein Legacy-Adapter.
 
-- MCP läuft extern auf .NET 10 über das offizielle C# SDK und stdio.
-- Contracts/Application enthalten keine Unity- oder Mod-Abhängigkeiten.
-- More HTTP API ist der erste reale Adapter; Fake ist nur explizit wählbar.
-- Ausschließlich feste Leserouten, keine generische URL-/Methodenweiterleitung.
-- Hostname localhost wird beibehalten; die tatsächliche Verbindung bleibt auf Loopback-IP-Adressen begrenzt.
-- Ausgabe ist limitiert und enthält keine ungefilterten Mod-Einstellungen oder Dateiverzeichnisse.
-- Keine Voraussage des Wetters, bevor das Backend die Prognose sichtbar markiert.
-- Kleine zusammengehörige Records stehen in Models.cs; Application-Operationen in ObservationService.cs.
-  Der Dateiplan wurde deshalb zusammengefasst, die Projektgrenzen bleiben unverändert.
-- Backend-internes JSON wird mit geprüften JsonElement-Lesehilfen abgebildet. Es werden keine
-  externen DTO-Assemblies referenziert. Diese Wahl spart eine zweite umfangreiche Fremdmodellhierarchie.
-- SDK-Handler werden direkt registriert; explizite Eingabeschemata und zentrale Validierung weisen
-  unbekannte Parameter ab. Ausgabeschemata werden aus den eigenen Ergebnistypen exportiert.
-- Ein GUID-Typ im eigenen Vertrag reicht im POC; separate EntityId-Wrapper sind noch nicht nötig.
-- Konfiguration ausschließlich über Prozessvariablen. server.example.json beschreibt diese;
-  es ist kein automatisch geladener Dateikonfigurationsanbieter.
-- Laufzeitlimits aus dem Missionsplan sind im POC fest. HTTP-Limits sind im Adapter konstruierbar;
-  es gibt noch keine benutzerseitige Erweiterung der Limits ohne Änderung und erneuten Test.
-- Einzelgebäude zuerst gegen Gebäudeliste prüfen, da die fremde Einzelroute den Typ nicht garantiert.
-  Nicht gelistete IDs ergeben entity_not_found. Eine separate Nicht-Gebäude-Diagnose ist ohne
-  verlässliche Entity-Typabfrage nicht belegt und wird daher nicht behauptet.
-- Epoch-/Koloniewechsel sind über diese API nicht sicher identifizierbar. Beobachtungen werden
-  pro Aufruf frisch erhoben, keine Entity-Daten über Aufrufe gecacht. Capabilities sind nur kurze
-  Hinweise (30 Sekunden) und kein Beweis für die nächste Abfrage.
-- Benutzeroberflächenvergleich bleibt Teil der Live-Abnahme; automatische Tests ändern keine Spielwerte.
+## Strukturierte Werkzeuge statt UI-Automatisierung
 
-## 2026-10-02 — Vorschau-Navigation vor eigener Graphrekonstruktion
+Zustände und Aktionen werden über feste MCP-Werkzeuge modelliert. Screenshotauswertung,
+simulierte Eingaben und Save-Manipulation sind keine Ersatzschnittstellen.
 
-Für Wegschutz zunächst öffentliche Preview-/Distrikt-Services verwenden. Keine
-XY-Nachbarschaftsannahmen, realen Probeabrisse oder privaten Navigationsgraphen.
-Ein Vorschauvergleich ersetzt keinen Nachweis der Baustellen-/Wegknotenabdeckung.
-Der experimentelle Stand 0.23.0 hält den Baupfad deshalb geschlossen; Live-Pilot
-muss die Semantik vor einer Erweiterung belegen. Aktueller Umfang und Grenzen:
-[Wegschutz-Diagnose](../road-protection.md).
+## Kontrollierte Aktionen
 
-## 2026-10-02 — Gebäude und Anschlussweg gemeinsam planen
+Schreiboperationen nutzen Sessionbindung, Erwartungswerte, Aktions-IDs, technische
+Freigaben und Rücklesungen. Unbestätigte Ergebnisse werden diagnostiziert, nicht
+automatisch wiederholt.
 
-Nutzerentscheidung: nächster Ausbau verbindet Bauplatzsuche und Anschlussweg in
-einem gemeinsamen Bauvorhaben. Die Mod prüft Spielzustand und setzt reguläre
-Aktionen; MCP bietet Planwahl und Ausführung. Erste Stufe ausschließlich ebene
-Wege. Anschluss vor Gebäude setzen und unabhängig bestätigen; bestehenden
-Wegschutz und Bauarbeiterprüfung nicht dadurch ersetzen. Mehrere Aktionen sind
-nicht atomar: Teilerfolge melden, stoppen, keine automatische Abriss-Rücknahme.
-[Vertrag und Abnahme](../building-site-search-plan.md). Zum Entscheidungszeitpunkt noch nicht implementiert; Umsetzung und Ausnahme folgen im nächsten Eintrag.
+## Bauprojekte
 
-## 2026-10-02 — Eng begrenzte Bauausführung trotz offener Bauphasen-Vorhersage
-
-Nach erfolgreicher gemeinsamer Vorschau hat der Nutzer den konkreten Pilot ausdrücklich
-freigegeben: ein kleines Lager mit höchstens zwei neuen ebenen Wegen. 0.25.0 trennt
-`execute_building_project_pilot` vom unverändert gesperrten normalen Baupfad.
-`mode=development_pilot` benennt die Ausnahme; nur
-`construction_and_road_node_coverage_unproven` darf vorab offenbleiben. Bekannte Verluste,
-Geometriefehler oder andere unklare Voraussetzungen bleiben Ablehnungsgründe.
-
-Auftrags-ID und Status statt blindem Wiederholen. Schritte über mehrere Hauptthread-
-Updates; reale Wege zuerst bestätigen, danach regulären Lagerauftrag und tatsächlichen
-Bauarbeiterzugang prüfen. Teilerfolge bleiben stehen, kein automatischer Abriss.
-Keine neue Fremdmod oder private Zustandsmanipulation. Installiert, aber noch kein
-Live-Nachweis der realen Ausführung. [Vertrag](../building-project-execution-proposal.md).
-
-## 2026-10-02 — Testsystem und Entwicklungsgeschwindigkeit maßgeblich
-
-Der Nutzer erklärt Spielstand und Kolonie ausdrücklich für austauschbar. Schnelle,
-effiziente MCP-Entwicklung hat Vorrang. Frühere enge Ingame-Einzelgenehmigungen,
-Kolonie-Erhaltungsziele und die damalige Begrenzung weiterer Tests werden als
-Arbeitsanweisungen ersetzt. Bauen, Abreißen und andere erforderliche Spieltests
-sind grundsätzlich erlaubt; keine Speichern-/Wiederherstellungspflicht.
-
-Version 0.25.0 bleibt technisch unverändert: ihre vorhandenen Limits sind zu beachten,
-aber bei sinnvollem Entwicklungsbedarf zu verbessern statt als dauerhafte Nutzergrenze
-zu behandeln. Wegschutz und korrekte Mutationsergebnisse bleiben Produktfunktionen;
-ihre Tests dienen Funktionsqualität, nicht dem Save-Erhalt. Datenschutz, Git-Sicherung,
-Schutz außerhalb des Testsystems und technische Installationskontrollen bleiben.
+Bauprojekte bleiben mehrstufig: Suche, Vorschau, schrittweise Ausführung und
+Statusabgleich. Wegschutz und Bauarbeiterzugang sind eigene Nachweispflichten.

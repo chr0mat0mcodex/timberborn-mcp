@@ -1,6 +1,6 @@
 # Simulation lesen und steuern — 0.11.0
 
-Ab 0.22.0 ergänzt: [begrenzte Ingame-Zeitläufe](simulation-runs-plan.md).
+Begrenzte Ingame-Zeitläufe sind als eigene MCP-Aktion verfügbar.
 Ein gültiger expliziter Geschwindigkeitsaufruf unterbricht einen aktiven Zeitlauf,
 auch wenn derselbe Geschwindigkeitswert angefordert wird.
 
