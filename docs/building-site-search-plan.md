@@ -206,3 +206,14 @@ Nächster Live-Pilot: höchstens zwei gemeinsame Vorschauen eines frisch gelesen
 kleinen Plans, plus Ablehnung einer geänderten Plan-Kennung. Vor/nachher Weltbestand,
 Navigation und Pause lesen. Bei Fehler/Wiederherstellungsabweichung stoppen; keine
 reale Platzierung als Ersatztest. Erst nach Nachweis Planbindung/Ausführung erweitern.
+
+### Live-Abnahme 0.24.1 — begrenzter gemeinsamer Vorschaufall
+
+Zwei Vorschauen desselben frisch gelesenen Lagerplans mit zwei Wegfeldern bestanden,
+auch mit wiederverwendeten Vorschauen: Gebäude/Wege gültig, Eingang im Vorschau-
+Distriktnetz verbunden, keine Verluste je Wegpräfix oder Gesamtzustand, Navigation
+wiederhergestellt. Absichtlich falsche Plan-Kennung ergibt state_conflict ohne
+zusätzlichen Budgetverbrauch. Insgesamt 15 MCP-Aufrufe, 172 Gebäude/Wegobjekte,
+pausierte Spielzeit und abgefragte Bestandsverbindung unverändert. Keine Bauaufträge.
+Dies bestätigt keine Bauphase oder Bauarbeiter-Erreichbarkeit. Vor kontrollierter
+Ausführung diese Nachweislücke lösen; executable bleibt false.

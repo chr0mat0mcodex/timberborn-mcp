@@ -1,10 +1,10 @@
 # Projektstand
 
-Stand: 2026-10-02. Codeversion: **0.24.1**, gemeinsame Gebäude-/Wegvorschau installiert; Live-Test offen.
+Stand: 2026-10-02. Codeversion: **0.24.1**, gemeinsame Gebäude-/Wegvorschau im begrenzten Live-Pilot bestätigt.
 **Alle Bauaufträge auch in 0.24.1 vorläufig gesperrt**, bis Baustellen und Wegknoten zuverlässig abgedeckt sind.
 [Diagnosevertrag und nächster Pilot](docs/road-protection.md). Kein fertiger Wegschutz.
 Nächster freigegebener Ausbau: [gemeinsamer Bauplan für Gebäude und Anschlussweg](docs/building-site-search-plan.md),
-zunächst ebene Wege. Kandidatensuche live bestätigt; gemeinsame Vorschau gebaut, Live-Nachweis und Ausführung offen. Keine Aufhebung der Bausperre.
+zunächst ebene Wege. Kandidatensuche live bestätigt; gemeinsame Vorschau live bestätigt, Bauphasen-Nachweis und Ausführung offen. Keine Aufhebung der Bausperre.
 Ingame-Zeitläufe aus 0.22.0 gebaut und automatisch geprüft;
 Begrenzte Live-Abnahme bestanden. [Vertrag und Pilot](docs/simulation-runs-plan.md).
 Aktueller Schwerpunkt ist MCP-Entwicklung; kein autonomer Kolonieaufbau als Fortsetzung.

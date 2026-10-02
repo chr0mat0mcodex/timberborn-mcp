@@ -1942,3 +1942,18 @@ Bauarbeiter-Erreichbarkeit weiterhin nicht als bewiesen behandeln.
 Spielende geprüft, Vorversion 0.24.0 vollständig gesichert und Sicherung per Hash
 verifiziert. Fünf Paketdateien ersetzt und geprüft; private Konfiguration und
 Zusatzdateien unverändert. Gemeinsamer Vorschau-Live-Pilot nach Nutzerneustart offen.
+
+## 2026-10-02 — 0.24.1 gemeinsame Vorschau live bestätigt
+
+15 MCP-Aufrufe: frischer Lagerplan mit zwei neuen Wegfeldern, zwei gemeinsame
+Vorschauen einschließlich Wiederverwendung und eine absichtlich falsche
+Plan-Kennung. Beide Male buildingValid=true, roadValid=[true,true], keine Verluste
+in beiden Wegpräfixen, previewEntranceConnected=true und Navigation wiederhergestellt.
+558 Vergleiche, 170 verbundene Ausgangspaare, 119 Weg- und neun Baustellenprüfpunkte;
+kein Verlust. Objekt-/Vorratskontrolle unverändert, keine Sitzungssperre.
+Falsche Kennung korrekt als state_conflict abgelehnt; nur die zwei echten
+Vorschauen verbrauchten Prüfbudget (16 auf 14). Unabhängig abgefragte Bestandsweg-
+verbindung unverändert, 172 Gebäude/Wegobjekte und pausierte Spielzeit erhalten.
+Keine reguläre Platzierung. Belegt ist der kleine gemeinsame Vorschaufall, nicht
+Bauarbeiter-Erreichbarkeit, hypothetische Bauphase oder vollständiger Wegschutz.
+executable bleibt false. Nächste Lücke vor Ausführung: Bauphasen-/Bauarbeiterprüfung.

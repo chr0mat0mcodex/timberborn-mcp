@@ -103,3 +103,8 @@ Neue Funktionen werden entsprechend dem Projektauftrag vor ihrer Umsetzung konkr
 0.24.1: validate_building_project ergänzt gemeinsame Vorschau von höchstens acht
 Wegfeldern und einem Gebäude, mit frischer Plan-Kennung und Nachkontrolle. Gebaut,
 Installation/Live-Test offen; ausführbare Baupläne weiterhin nicht freigegeben.
+
+0.24.1 Live-Pilot bestanden: Lager plus zwei Wege gemeinsam gültig, Vorschau-Eingang
+verbunden, keine Verbindungsverluste, Wiederherstellung und Cache-Wiederverwendung
+bestätigt. Falsche Plan-Kennung abgelehnt. Vor Ausführung bleiben Bauphase und
+Bauarbeiter-Erreichbarkeit offen; keine Freigabe allein aus diesem Vorschautest.
