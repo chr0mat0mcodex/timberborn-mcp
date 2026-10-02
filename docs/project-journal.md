@@ -1957,3 +1957,14 @@ verbindung unverändert, 172 Gebäude/Wegobjekte und pausierte Spielzeit erhalte
 Keine reguläre Platzierung. Belegt ist der kleine gemeinsame Vorschaufall, nicht
 Bauarbeiter-Erreichbarkeit, hypothetische Bauphase oder vollständiger Wegschutz.
 executable bleibt false. Nächste Lücke vor Ausführung: Bauphasen-/Bauarbeiterprüfung.
+
+## 2026-10-02 — größerer Ausführungsschritt und Architekturgrenze
+
+Nutzer wünscht größere Entwicklungsschritte statt einzelner kleiner Installationen.
+Öffentliche ConstructionSiteAccessible- und Vorschau-Reichweitenzugriffe gezielt
+geprüft; noch kein Nachweis der hypothetischen Bauphase. Konkretes Gesamtpaket für
+Ausführung, Auftragsstatus, Wiederholschutz, Nachkontrolle und Testfälle vorbereitet.
+Separate Entscheidung nötig, ob ein eng begrenzter Entwicklungs-Baupilot den fehlenden
+Vorabnachweis offen ausweisen darf; Normalmodus unverändert gesperrt. Kein Code-/
+Spiel-/Konfigurationswechsel und keine Aktivierung eines solchen Pilotmodus.
+[Entscheidungsvorlage](building-project-execution-proposal.md).
