@@ -179,3 +179,30 @@ Einzelzellenbereich liefert keinen Kandidaten. Erste Lageroption und beide neuen
 Wegzellen separat vorgeprüft, ohne Konfliktgründe. Kein Ersatz für Spielvalidatoren.
 Alle Optionen nicht ausführbar; 172 Gebäude/Wegobjekte und pausierte Spielzeit
 unverändert. Kandidatensuche begrenzt bestätigt, gemeinsame Validierung noch offen.
+
+## Gemeinsame Vorschau (0.24.1, Live-Nachweis offen)
+
+`validate_building_project` übernimmt dieselben Suchparameter wie der Planungsaufruf
+sowie `optionIndex` (0..3) und `planKey` aus dessen aktueller Antwort. Ab 0.24.1 enthält
+jede Option eine SHA-256-Kennung aus Session, Distrikt, Vorlage und konkretem Vorschlag.
+Sie ist kein gespeicherter Ausführungsplan. Die Mod berechnet frisch nach; geänderte
+oder verschwundene Auswahl wird vor Vorschauerzeugung als state_conflict abgelehnt.
+
+Maximal acht neue Wege plus ein Gebäude, 16 Projektvorschauen je Sitzung; gemeinsame
+Grenze von 64 gecachten Vorschauobjekten mit der Einzelvalidierung. POST und bestehendes
+Bau-Opt-in erforderlich. Wege in Anschlussreihenfolge temporär registrieren und einzeln
+prüfen, Verbindungsverluste je Wegpräfix zählen. Dann Gebäude hinzufügen, beide
+Spielvalidatoren auf Gebäude und Wege anwenden, Eingang im Vorschau-Distriktnetz
+abfragen. Alle Vorschauen in umgekehrter Reihenfolge entfernen, auch nach Fehlern.
+Navigation, registrierte Objekt-IDs und globale Vorräte anschließend kontrollieren;
+Fehler sperren weitere Einzel-/Projektvalidierungen bis zum Sitzungsneustart.
+
+Antwort trennt buildingValid, roadValid, roadStepLostConnections,
+previewEntranceConnected, roadProtection und Wiederherstellung. executable bleibt
+false: weder Bauarbeiterzugang noch hypothetische Bauphase oder vollständiger
+Wegschutz sind dadurch bewiesen. Kein Bauauftrag und kein automatisches Wiederholen.
+
+Nächster Live-Pilot: höchstens zwei gemeinsame Vorschauen eines frisch gelesenen
+kleinen Plans, plus Ablehnung einer geänderten Plan-Kennung. Vor/nachher Weltbestand,
+Navigation und Pause lesen. Bei Fehler/Wiederherstellungsabweichung stoppen; keine
+reale Platzierung als Ersatztest. Erst nach Nachweis Planbindung/Ausführung erweitern.

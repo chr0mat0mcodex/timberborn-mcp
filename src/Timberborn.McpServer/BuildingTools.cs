@@ -12,16 +12,16 @@ namespace Timberborn.McpServer;
 public static class BuildingTools
 {
     private static readonly Dictionary<string,string> Routes = new() {
-        ["plan_building_project"]="building-plan", ["inspect_build_options"]="building-catalog", ["precheck_building"]="building-precheck",
+        ["validate_building_project"]="building-project-validation", ["plan_building_project"]="building-plan", ["inspect_build_options"]="building-catalog", ["precheck_building"]="building-precheck",
         ["validate_building"]="building-validation", ["place_building"]="building-placement" };
     public static bool Handles(string name) => Routes.ContainsKey(name);
-    public static bool Writes(string name) => name is "validate_building" or "place_building";
+    public static bool Writes(string name) => name is "validate_building_project" or "validate_building" or "place_building";
     public static IEnumerable<Tool> Catalog(bool enabled)
     {
         var options = new JsonSerializerOptions(NativeJson.Options) { TypeInfoResolver = new DefaultJsonTypeInfoResolver() };
         foreach (var name in Routes.Keys.Where(n => enabled || !Writes(n)))
         {
-            bool plan = name == "plan_building_project", catalog = name == "inspect_build_options", write = Writes(name), place = name == "place_building";
+            bool projectValidation = name == "validate_building_project", plan = name is "plan_building_project" or "validate_building_project", catalog = name == "inspect_build_options", write = Writes(name), place = name == "place_building";
             var props = new JsonObject();
             void Num(string key, int min, int max) => props[key] = new JsonObject { ["type"]="integer", ["minimum"]=min, ["maximum"]=max };
             if (catalog) { Num("offset",0,65535); Num("limit",1,32); }
@@ -31,6 +31,7 @@ public static class BuildingTools
                 Num("rotation",0,3);
                 if(plan) { Num("width",1,8);Num("height",1,8);props["districtId"]=new JsonObject {["type"]="string",["format"]="uuid"}; }
                 if (write || plan) props["session"] = new JsonObject { ["type"]="string", ["format"]="uuid" };
+                if(projectValidation) { Num("optionIndex",0,3);props["planKey"]=new JsonObject {["type"]="string",["pattern"]="^[a-f0-9]{64}$"}; }
                 if (place) props["actionId"] = new JsonObject { ["type"]="string", ["format"]="uuid" };
             }
             string description = catalog ? "Vollständiger seitenweiser Gebäudekatalog der aktiven Spiel-Template-Sammlungen: IDs, Baukosten, Freischaltung, Geometrie, supported und unsupportedReasons. Alle Seiten lesen. supported beschreibt den Baupfad, keinen Live-Nachweis oder funktionierenden Betrieb. Gebäudekonfiguration nach Bau separat."
@@ -38,7 +39,8 @@ public static class BuildingTools
                 : write ? "Prüft eine unterstützte Katalogvorlage über eigene Spielvorschau und beide Spielvalidatoren, ohne Bauauftrag. Frische session erforderlich. Maximal 256 generische Prüfungen (inklusive Platzierungen) und 64 gecachte Vorlagen je Sitzung. Keine Erreichbarkeits-/Liefergarantie. Fehler nicht automatisch wiederholen."
                 : "Liest Hindernisse, Gelände, Eingang und Kosten für eine unterstützte Katalogvorlage. x/y/z ist BlockObject-Ursprung; rotation 0/1/2/3=Cw0/90/180/270, ungespiegelt. Keine vollständige Spielvalidierung oder Erreichbarkeitsgarantie. Sonderlayouts laut Katalog nicht unterstützt.";
             if(plan) description="Liest bis zu vier NICHT AUSFÜHRBARE Kandidaten für Gebäude und ebenen Anschlussweg. x/y/z plus width/height (1..8) begrenzen Grundriss UND komplette Route, eine rotation (0..3). districtId muss fertiges Distriktzentrum sein; aktuelle session erforderlich. Maximal 64 Ursprünge, deterministische Reihenfolge, keine globale Optimierung. Nur Bodenwege, keine Treppen/Rodung/Plattformen. routeCells und newRoadCells laufen vom bestehenden Distriktweg zum Eingang. Vorprüfungen und Rasterroute sind keine gemeinsame Spielvalidierung, Baustellen-Erreichbarkeit oder Wegschutzgarantie. executable ist immer false. Kein Bauauftrag, keine Vorschau, kein gespeicherter Ausführungsplan; keine automatische Umsetzung über Einzelplatzierungen. searchComplete/stopReason lesen. Ab Bridge 0.24.0.";
-            Type result = plan ? typeof(NativeResult<NativeBuildingPlan>) : catalog ? typeof(NativeResult<NativeBuildingCatalog>) : place ? typeof(NativeResult<NativePlacement>)
+            if(projectValidation) description="Gemeinsame temporäre Vorschau für einen frisch neu berechneten Bauplan. Gleiche Suchparameter plus optionIndex und planKey aus plan_building_project, aktuelle session. Höchstens acht neue Wege und ein Gebäude; 16 Versuche/Sitzung. Separates Bau-Opt-in. Kein Bauauftrag, executable bleibt false. Prüft Wegpräfixe, Gebäude und Vorschau-Eingangsverbindung sowie Wiederherstellung; kein Bauarbeiter-/Bauphasennachweis. Bei Fehler oder sessionLocked nicht wiederholen.";
+            Type result = projectValidation ? typeof(NativeResult<NativeProjectValidation>) : plan ? typeof(NativeResult<NativeBuildingPlan>) : catalog ? typeof(NativeResult<NativeBuildingCatalog>) : place ? typeof(NativeResult<NativePlacement>)
                 : write ? typeof(NativeResult<NativeValidation>) : typeof(NativeResult<NativeSite>);
             if (write) description += " Ab Bridge 0.23.0 experimentelle Wegschutz-Diagnose: roadProtection getrennt prüfen; valid ist nur geometrische Spielvalidierung. Nur roadProtection.status=safe erlaubt Platzierung. Diese Diagnoseversion liefert mangels belegter Baustellen-/Wegknotenabdeckung noch keine safe-Freigaben und verweigert deshalb sämtliche Bauaufträge. blocked benennt verlorene Distriktzugänge, unknown eine Nachweislücke. Keine ungeprüfte Umgehung über Pilotplatzierungen.";
             yield return new Tool { Name=name, Description=description,
@@ -53,7 +55,7 @@ public static class BuildingTools
         if (Writes(name) && !enabled) throw new ArgumentException();
         var q = new NameValueCollection();
         foreach (var p in args.EnumerateObject()) {
-            if (p.Name is "template" or "session" or "actionId" or "districtId") {
+            if (p.Name is "template" or "session" or "actionId" or "districtId" or "planKey") {
                 if (p.Value.ValueKind != JsonValueKind.String) throw new ArgumentException();
                 q.Add(p.Name,p.Value.GetString());
             } else {
@@ -63,6 +65,7 @@ public static class BuildingTools
         }
         JsonObject Wrap<T>(BridgeEnvelope<T> e) => (JsonObject)JsonSerializer.SerializeToNode(
             new NativeResult<T>(1,"ok",e.Data,new("native",false,e.SessionId,e.ObservedAtUtc),null),NativeJson.Options)!;
+        if(name=="validate_building_project")return Wrap(await client.ValidateProject(BuildingProjectValidationRequest.Parse(q),ct));
         if(name=="plan_building_project")return Wrap(await client.BuildingPlan(BuildingPlanRequest.Parse(q),ct));
         var r = BridgeRequest.Parse("/agent-api/v1/"+Routes[name],q);
         return name switch {

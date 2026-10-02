@@ -1,6 +1,6 @@
 # Eigene Agent Bridge installieren und MCP starten
 
-Aktueller Entwicklungsstand: **0.24.0, experimentelle Wegschutz-Diagnose**,
+Aktueller Entwicklungsstand: **0.24.1, experimentelle Wegschutz-Diagnose**,
 **Diese Diagnoseversion sperrt vorläufig sämtliche MCP-Bauaufträge.** Nur für den
 [begrenzten Vorschau-Pilot](road-protection.md) installieren; kein fertiger Wegschutz.
 0.24.0 ist für den Bauplan-Pilot installiert; 0.23.2 wurde gesichert. Gebaut gegen Timberborn 1.1.2.4.

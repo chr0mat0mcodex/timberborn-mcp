@@ -99,3 +99,7 @@ Neue Funktionen werden entsprechend dem Projektauftrag vor ihrer Umsetzung konkr
 - [Frage-Popup mit Texteingabe im Spiel](docs/player-question-popup.md).
 - Energieindustrie, Bots, Distriktmigration, komplexe Automationsgraphen, Terraforming und Wasserbau-Großprojekte.
 - Automatisches Speichern/Laden; bislang nicht als MCP-Funktion implementiert.
+
+0.24.1: validate_building_project ergänzt gemeinsame Vorschau von höchstens acht
+Wegfeldern und einem Gebäude, mit frischer Plan-Kennung und Nachkontrolle. Gebaut,
+Installation/Live-Test offen; ausführbare Baupläne weiterhin nicht freigegeben.

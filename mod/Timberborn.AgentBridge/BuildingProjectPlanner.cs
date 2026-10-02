@@ -8,6 +8,8 @@ using Timberborn.Navigation;
 using Timberborn.TemplateSystem;
 using Timberborn.TerrainSystem;
 using UnityEngine;
+using System.Security.Cryptography;
+using System.Text;
 namespace Timberborn.AgentBridge;
 
 // Bounded, observational candidate search; never a replacement for native path validation.
@@ -46,10 +48,14 @@ public sealed class BuildingProjectPlanner(EntityRegistry entities, SpatialObser
             int start=(entry.y-r.Y)*r.Width+entry.x-r.X;
             var route=FlatRoadSearch.Find(r.Width,r.Height,start,allowed,goals);
             if(route is null) { rejectedCandidates++;continue; }
-            options.Add(new { origin=Vec(p),rotation=r.Rotation,entrance=Vec(entry),
+            var option=new { origin=Vec(p),rotation=r.Rotation,entrance=Vec(entry),
                 connection=Vec(Cell(route[0])),newRoadCells=route.Where(n=>!road[n]).Select(n=>Vec(Cell(n))).ToArray(),
                 routeCells=route.Select(n=>Vec(Cell(n))).ToArray(),executable=false,
-                reasons=new[]{"joint_game_validation_pending","construction_reachability_unproven","road_protection_incomplete"} });
+                reasons=new[]{"joint_game_validation_pending","construction_reachability_unproven","road_protection_incomplete"} };
+            var payload=JObject.FromObject(option);
+            using(var hash=SHA256.Create())
+                payload["planKey"]=BitConverter.ToString(hash.ComputeHash(Encoding.UTF8.GetBytes(r.Session+"|"+r.DistrictId+"|"+r.Template+"|"+payload.ToString(Newtonsoft.Json.Formatting.None)))).Replace("-","").ToLowerInvariant();
+            options.Add(payload);
         }
         return new {template=r.Template,districtId=r.DistrictId,origin=Vec(new(r.X,r.Y,r.Z)),width=r.Width,height=r.Height,rotation=r.Rotation,
             checkedCandidates,rejectedCandidates,totalCandidates=count,searchComplete=checkedCandidates==count,

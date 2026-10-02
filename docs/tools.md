@@ -1,7 +1,7 @@
 # Native MCP-Werkzeuge
 
-Stand: Agent Bridge 0.24.0 (Diagnose-Prototyp; sämtliche Bauaufträge vorläufig gesperrt).
-[Grund, Ergebnisvertrag und nächster Pilot](road-protection.md). 32 Leser und 22 Werkzeuge für Aktionen/Vorschauvalidierung.
+Stand: Agent Bridge 0.24.1 (Diagnose-Prototyp; sämtliche Bauaufträge vorläufig gesperrt).
+[Grund, Ergebnisvertrag und nächster Pilot](road-protection.md). 32 Leser und 23 Werkzeuge für Aktionen/Vorschauvalidierung.
 Neu: Ingame-Zeitläufe, automatisch und im begrenzten MCP-Live-Pilot geprüft. Die 30 bisherigen Leser
 sind unter 0.21.1 live belegt. Nachweise und Grenzen stehen in den Fachdokumenten.
 
@@ -89,3 +89,8 @@ Gebäudeursprung, Eingang, Anschlussziel und Wegzellen in Anschlussreihenfolge.
 Alle Optionen executable=false; noch keine gemeinsame Spielvalidierung oder
 Ausführung. Suchabdeckung und Abbruchgrund ausdrücklich lesen.
 [Umfang, Grenzen und Pilot](building-site-search-plan.md).
+
+`validate_building_project` (0.24.1) benötigt die Plan-Suchparameter plus optionIndex
+und planKey. Bau-Opt-in erforderlich, maximal acht neue Wege und 16 Prüfungen/Sitzung.
+Temporäre gemeinsame Vorschau, kein Bauauftrag; executable bleibt false. Ergebnisse
+und Grenzen stehen im [Bauplan-Vertrag](building-site-search-plan.md).

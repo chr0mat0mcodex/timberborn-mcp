@@ -1924,3 +1924,15 @@ Dies ist keine unabhängige native Gesamtplanvalidierung oder Baufreigabe.
 172 Gebäude/Wegobjekte, pausierte Spielzeit und abgefragte Bestandswegverbindung
 unverändert. Kein Bauauftrag und keine Vorschau. Nächster Schritt: gemeinsame
 native Vorschau für gewählten Gebäude-/Wegplan, dann Planbindung/Ausführung.
+
+## 2026-10-02 — 0.24.1 gemeinsame Bauplan-Vorschau vorbereitet
+
+validate_building_project ergänzt eine gemeinsame Vorschau für höchstens acht
+neue Wegfelder und ein Gebäude. Auswahl durch frische Plan-Kennung; geänderte
+Kandidaten als state_conflict vor Vorschauerzeugung abweisen. Native Validatoren,
+Wegpräfix-Verluste und Eingangsverbindung separat erfassen, sämtliche Vorschauen
+anschließend entfernen. Geteilte Fehlersperre mit Einzelvalidierung; kein Bauauftrag.
+614 reguläre Tests bestanden (601 Unit, 13 Integration), drei opt-in Live-Tests
+übersprungen. Mod-Build/Paketierung ohne Warnungen/Fehler. Installation und begrenzter
+Live-Pilot offen; installiert bleibt 0.24.0. executable bleibt false, Bauphase und
+Bauarbeiter-Erreichbarkeit weiterhin nicht als bewiesen behandeln.
