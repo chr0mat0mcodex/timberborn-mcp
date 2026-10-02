@@ -32,6 +32,28 @@ public sealed class RoadProtectionTests
 
     private static NativeRoadProtection Evidence() => new("safe",[],4,0,true,true,[],false,[new(1,2,3)],[]);
 
+    [Theory]
+    [InlineData(null)] [InlineData(-1)] [InlineData(0)] [InlineData(5)]
+    public void NewReceiptCannotClaimSafetyWithoutConnectedBaseline(int? count) =>
+        Assert.Throws<InvalidDataException>(() => RoadProtectionContract.Validate(Evidence() with { ConnectedBefore = count }, true, true));
+
+    [Fact]
+    public void EmptyBaselineIsDiagnosticOnly()
+    {
+        var d = Evidence() with { Status = "unknown", ConstructionCovered = false, ConnectedBefore = 0 };
+        RoadProtectionContract.Validate(d, false, true);
+        Assert.Throws<InvalidDataException>(() => RoadProtectionContract.Validate(d, true, true));
+        RoadProtectionContract.Validate(Evidence() with { ConnectedBefore = 2 }, true, true);
+    }
+
+    [Fact]
+    public void LossCannotExceedPreviouslyConnectedCount()
+    {
+        var d = Evidence() with { Status = "blocked", LostConnections = 1, ConnectedBefore = 0,
+            Affected = [new(Guid.NewGuid(), new(1,2,3), new(4,5,6))] };
+        Assert.Throws<InvalidDataException>(() => RoadProtectionContract.Validate(d, false, true));
+    }
+
     [Fact]
     public void CompletedCoverageIsRequiredForPlacement()
     {
@@ -68,18 +90,23 @@ public sealed class RoadProtectionTests
     }
 
     [Theory]
-    [InlineData("place_building",false,false)]
-    [InlineData("place_building",true,true)]
-    [InlineData("place_building",true,false)]
-    [InlineData("validate_building",false,false)]
-    [InlineData("validate_building",true,false)]
-    public async Task NewBridgeRequiresGuardEvidenceAndRejectsUnsafeSuccess(string tool,bool evidence,bool applied)
+    [InlineData("place_building",false,false,"0.23.0")]
+    [InlineData("place_building",false,false,"0.23.1")]
+    [InlineData("place_building",true,true,"0.23.0")]
+    [InlineData("place_building",true,true,"0.23.1")]
+    [InlineData("place_building",true,false,"0.23.0")]
+    [InlineData("place_building",true,false,"0.23.1")]
+    [InlineData("validate_building",false,false,"0.23.0")]
+    [InlineData("validate_building",false,false,"0.23.1")]
+    [InlineData("validate_building",true,false,"0.23.0")]
+    [InlineData("validate_building",true,false,"0.23.1")]
+    public async Task NewBridgeRequiresGuardEvidenceAndRejectsUnsafeSuccess(string tool,bool evidence,bool applied,string version)
     {
         var session=Guid.NewGuid().ToString("D");var id=Guid.NewGuid();
-        var guard=evidence?Evidence() with{Status="unknown",ConstructionCovered=false,Reasons=["construction_and_road_node_coverage_unproven"]}:null;
+        var guard=evidence?Evidence() with{Status="unknown",ConstructionCovered=false,ConnectedBefore=2,Reasons=["construction_and_road_node_coverage_unproven"]}:null;
         object data=tool=="place_building" ? new NativePlacement("Path",new(1,2,3),0,id,applied?"applied":"rejected",null,false,[],guard)
             : new NativeValidation("Path",new(1,2,3),0,true,true,true,false,255,[],guard);
-        var payload=JsonSerializer.Serialize(new BridgeEnvelope<object>(1,session,DateTimeOffset.UtcNow,"0.23.0",data),NativeJson.Options);
+        var payload=JsonSerializer.Serialize(new BridgeEnvelope<object>(1,session,DateTimeOffset.UtcNow,version,data),NativeJson.Options);
         using var tools=new NativeTools(new NativeClient(new(8081,new string('a',64)),new Handler(payload)),enableBuildingPlacement:true);
         var args=new Dictionary<string,object?> { ["session"]=session,["template"]="Path",["x"]=1,["y"]=2,["z"]=3,["rotation"]=0 };
         if(tool=="place_building")args["actionId"]=id.ToString("D");

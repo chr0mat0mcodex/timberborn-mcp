@@ -56,7 +56,7 @@ public sealed record NativePlacement(string Template, Position Origin, int Rotat
 public sealed record NativeRoadAffected(Guid Id, Position Entrance, Position DistrictCenter);
 public sealed record NativeRoadProtection(string Status, string[] Reasons, int CheckedConnections, int LostConnections,
     bool Restored, bool ConstructionCovered, NativeRoadAffected[] Affected, bool AffectedTruncated,
-    Position[] CandidateCells, string[] Limitations);
+    Position[] CandidateCells, string[] Limitations, int? ConnectedBefore = null);
 public sealed record NativeGoodAmount(string Id, int Amount);
 public sealed record NativeConstructionMaterials(NativeGoodAmount[] BuildingCosts, bool InventoryAvailable, NativeGoodAmount[]? SiteStock);
 public sealed record NativeConstruction(bool WasStarted, bool IsOn, bool ReadyToBuild, float MaterialProgress,

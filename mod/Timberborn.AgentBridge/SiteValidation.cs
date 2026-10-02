@@ -74,16 +74,14 @@ public sealed class SiteValidation(PreviewFactory factory, BlockObjectValidation
             bool objectValid = preview.BlockObject.IsValid();
             bool serviceValid = validators.IsValid(preview.BlockObject);
             valid = objectValid && serviceValid;
-            if (valid)
+            // Diagnose rejected geometry too: an occupied entrance is a useful negative
+            // control. Placement still requires valid below; this only touches previews.
+            preview.RemoveFromPreviewServices();
+            sample = roads.Capture();
+            if (sample.Complete)
             {
-                // Baseline must be free of this preview. All effects stay in preview services.
-                preview.RemoveFromPreviewServices();
-                sample = roads.Capture();
-                if (sample.Complete)
-                {
-                    preview.AddToPreviewServices();
-                    previewConnections = roads.Read(sample, true);
-                }
+                preview.AddToPreviewServices();
+                previewConnections = roads.Read(sample, true);
             }
         }
         catch { faulted = true; throw; }

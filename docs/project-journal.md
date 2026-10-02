@@ -1809,3 +1809,18 @@ Spielende vor Sicherung und Austausch geprüft. Vorversion 0.22.0 vollständig g
 alle fünf Paketdateien per Hash bestätigt und private Zusatzdateien unverändert.
 Noch kein Live-Nachweis: Nutzer startet/lädt den Entwicklungsspielstand für den
 begrenzten Vorschau-Pilot. Sämtliche MCP-Bauaufträge bleiben in dieser Version gesperrt.
+
+## 2026-10-02 — Wegschutz-Pilot und Kontrollvorschau 0.23.1
+
+Drei Vorschaufälle mit 27 MCP-Aufrufen unter 0.23.0: freier Wegplatz und zweite
+Höhenebene geometrisch gültig, jeweils 430 Vergleiche ohne Verlust, Wiederherstellung
+bestätigt. Unabhängige Wegverbindung unverändert, 171 Gebäude/Wegobjekte erhalten,
+Spiel pausiert. Der Sperrfall war geometrisch ungültig und übersprang die Diagnose;
+keine negative Sperrwirkung belegt. Keine tatsächlichen Bau-/Abrissaufträge erteilt.
+
+0.23.1 diagnostiziert auch ungültige Kontrollvorschauen und meldet connectedBefore;
+eine rein unverbundene Ausgangsbasis ergibt unknown. Geometrische Baufreigabe und
+vollständige Wegschutzfreigabe bleiben getrennt; sämtliche Bauaufträge weiter gesperrt.
+564 reguläre Tests bestanden (551 Unit, 13 Integration), drei opt-in Tests übersprungen.
+Installation und Live-Nachweis der Korrektur ausstehend; installiert bleibt 0.23.0.
+Mod-Build und Paketierung ohne Warnungen/Fehler abgeschlossen.

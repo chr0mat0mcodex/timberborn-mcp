@@ -16,6 +16,7 @@ public sealed class RoadProtection(EntityRegistry entities)
         public string status = "unknown";
         public string[] reasons = Array.Empty<string>();
         public int checkedConnections;
+        public int connectedBefore;
         public int lostConnections;
         public bool restored;
         public bool constructionCovered;
@@ -60,8 +61,9 @@ public sealed class RoadProtection(EntityRegistry entities)
         if (probes.Count == 0 || probes.Count * sample.Districts.Length > 16384) { sample.Reason = "navigation_comparison_limit"; return sample; }
         sample.Before = Read(sample, false);
         sample.PreviewBefore = Read(sample, true);
-        sample.Complete = sample.Before.SequenceEqual(sample.PreviewBefore);
-        sample.Reason = sample.Complete ? "" : "navigation_preview_baseline_mismatch";
+        bool matches = sample.Before.SequenceEqual(sample.PreviewBefore);
+        sample.Complete = matches && sample.Before.Any(connected => connected);
+        sample.Reason = !matches ? "navigation_preview_baseline_mismatch" : sample.Complete ? "" : "navigation_no_connected_baseline";
         return sample;
     }
 
@@ -70,7 +72,8 @@ public sealed class RoadProtection(EntityRegistry entities)
 
     public Report Finish(Sample sample, bool[]? withPreview, IEnumerable<Block> candidate)
     {
-        var report = new Report { candidateCells = candidate.Select(c => Vec(c.Coordinates)).ToArray() };
+        var report = new Report { candidateCells = candidate.Select(c => Vec(c.Coordinates)).ToArray(),
+            checkedConnections = sample.Before.Length, connectedBefore = sample.Before.Count(connected => connected) };
         if (!sample.Complete || withPreview is null) { report.reasons = new[] { sample.Reason.Length > 0 ? sample.Reason : "preview_navigation_unavailable" }; return report; }
         report.checkedConnections = sample.Before.Length;
         report.restored = sample.Before.SequenceEqual(Read(sample, false)) && sample.PreviewBefore.SequenceEqual(Read(sample, true));

@@ -1,7 +1,7 @@
 # Projektstand
 
-Stand: 2026-10-02. Codeversion: **0.23.0**, experimentelle Wegschutz-Diagnose; installiert, Live-Pilot offen.
-**Alle Bauaufträge in 0.23.0 vorläufig gesperrt**, bis Baustellen und Wegknoten zuverlässig abgedeckt sind.
+Stand: 2026-10-02. Codeversion: **0.23.1**, experimentelle Wegschutz-Diagnose; Installation und Live-Test offen.
+**Alle Bauaufträge in 0.23.x vorläufig gesperrt**, bis Baustellen und Wegknoten zuverlässig abgedeckt sind.
 [Diagnosevertrag und nächster Pilot](docs/road-protection.md). Kein fertiger Wegschutz.
 Ingame-Zeitläufe aus 0.22.0 gebaut und automatisch geprüft;
 Begrenzte Live-Abnahme bestanden. [Vertrag und Pilot](docs/simulation-runs-plan.md).
@@ -74,7 +74,7 @@ Keine abschließende Nachhaltigkeits- oder 100-Biber-Abnahme.
 
 | Ebene | Beleg |
 | --- | --- |
-| Automatisch | 553 reguläre Tests: 540 Unit, 13 Integration; drei opt-in Live-Tests im Standardlauf übersprungen |
+| Automatisch | 564 reguläre Tests: 551 Unit, 13 Integration; drei opt-in Live-Tests im Standardlauf übersprungen |
 | Mod-Build | Gegen Timberborn 1.1.2.4, ohne Warnungen/Fehler |
 | Installation | Fünf Paketdateien per SHA-256 geprüft, private Konfiguration erhalten |
 | Live 0.21.1 | Alle 30 Leser; fünf Gebäudeinventare erklären exakt 138 Wasser: Tanks 60, Pumpen 30, Distriktzentrum 48; keine Kapazitätsreservierung für Wasser |

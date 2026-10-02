@@ -1,8 +1,8 @@
-# Wegschutz-Diagnose — experimentell in 0.23.0
+# Wegschutz-Diagnose — experimentell in 0.23.x
 
 **Kein fertiger Wegschutz. Nicht als reguläre Bauversion verwenden.**
 0.23.0 ist seit 2026-10-02 für den freigegebenen Diagnose-Pilot installiert; 0.22.0 vollständig gesichert.
-In 0.23.0 sind sämtliche MCP-Bauaufträge vorläufig gesperrt, einschließlich Path/Lodge-
+In 0.23.x sind sämtliche MCP-Bauaufträge vorläufig gesperrt, einschließlich Path/Lodge-
 Pilotpfaden. Der Grund ist die noch nicht belegte Abdeckung von Baustellen und reinen
 Wegknoten. Sonstige Werkzeuge behalten ihren bisherigen Umfang.
 
@@ -40,6 +40,7 @@ und eine `safe`-Freigabe in dieser Version absichtlich nicht erreichbar.
   `existing_district_access_lost`, `navigation_preview_baseline_mismatch`,
   `navigation_not_restored`, `construction_and_road_node_coverage_unproven`.
 - `checkedConnections`, `lostConnections`, `restored`, `constructionCovered`.
+- `connectedBefore`: ab 0.23.1 verpflichtend, tatsächlich verbundene Ausgangspaare.
 - `affected`: höchstens 32 betroffene Objekt-IDs, Eingangskoordinaten und
   Distriktzentrum-Koordinaten; `affectedTruncated` kennzeichnet weitere Treffer.
 - `candidateCells`: höchstens 64 geprüfte Bauzellen. **Keine Behauptung, dass jede
@@ -49,19 +50,37 @@ Geometrisches `valid=true` bleibt getrennt von Wegsicherheit. Der Platzierer pr�
 beides vor dem regulären Bauaufruf und verweigert unbekannte Sicherheit. Die
 MCP-Schicht weist eine behauptete erfolgreiche Platzierung ohne sicheren Beleg zurück.
 Ein abgelehnter Auftrag verbraucht wie bisher seine Aktions-ID; nicht blind wiederholen.
-Früh abgelehnte Belegung/Geometrie erhält einen entsprechenden ungeprüften Status.
+Früh abgelehnte Platzierungsaufträge erhalten einen ungeprüften Status. Eine explizite
+Validierung diagnostiziert ab 0.23.1 auch geometrisch ungültige Kontrollvorschauen.
 
 Limits: 4096 registrierte Blockobjekte, 16 fertige Distriktzentren, 4096 Zugänge,
 16384 Zugehörigkeitsvergleiche. Überschreitung/fehlende Daten ergeben `unknown`.
 Vorhandene entity-/Bestandskontrolle und Sessionbindung bleiben erhalten.
 
-## Nächster Nachweis: kleiner Pilot, noch offen
+## Live-Pilot 0.23.0 und Korrektur 0.23.1
+
+Am 2026-10-02 drei Vorschauen mit insgesamt 27 MCP-Aufrufen geprüft. Freier Wegplatz
+und Lodge auf einer zweiten Höhe: geometrisch gültig, jeweils 430 Zugang-/Distriktpaare
+verglichen, keine verlorene Verbindung, Vorschau-Navigation wiederhergestellt.
+430 bezeichnet Vergleiche, nicht nachgewiesen verbundene Zugänge. Unabhängige
+Wegabfrage unverändert; alle 171 Gebäude/Wegobjekte erhalten, Simulation pausiert.
+Der beabsichtigte Sperrfall war geometrisch ungültig und wurde deshalb vor der
+Navigationsdiagnose ausgesondert. **Keine negative Sperrwirkung live nachgewiesen.**
+
+0.23.1 diagnostiziert deshalb auch geometrisch ungültige Vorschauen, ohne deren
+Bauzulässigkeit zu ändern. `connectedBefore` zählt tatsächlich verbundene
+Ausgangspaare; eine vollständig unverbundene Basis ergibt `unknown` mit
+`navigation_no_connected_baseline`. Der Native-Vertrag verlangt das Feld ab 0.23.1;
+0.23.0 bleibt ohne dieses Feld lesbar. Alle Bauaufträge bleiben gesperrt.
+Installation und Live-Nachweis dieser Korrektur stehen aus.
+
+## Nächster Nachweis: begrenzte Kontrollvorschau
 
 Nach Installation ausschließlich Validierung, keine realen Bau-/Abrissaktionen:
 
 1. Ein bekannt freier Platz: geometrisches Ergebnis und `unknown` wegen fehlender
    Vollabdeckung nachvollziehbar; Weltbestand unverändert.
-2. Ein geometrisch zulässiger Platz vor einem bestehenden Zugang: native
+2. Ein bewusst geometrisch ungültiger Kontrollplatz auf einem bestehenden Zugang: native
    Vorschau muss eine verlorene Verbindung melden und das betroffene Objekt nennen.
 3. Alternative Verbindung beziehungsweise zweite Höhe: Unterschied nachvollziehbar;
    Ausgangsnavigation nach jeder Vorschau unabhängig unverändert zurücklesen.
