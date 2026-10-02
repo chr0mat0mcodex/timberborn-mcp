@@ -3,6 +3,7 @@ using Timberborn.Bridge.Core;
 using Timberborn.EntitySystem;
 using Timberborn.GameDistricts;
 using Timberborn.Navigation;
+using Timberborn.PathSystem;
 using UnityEngine;
 
 namespace Timberborn.AgentBridge;
@@ -17,6 +18,8 @@ public sealed class RoadProtection(EntityRegistry entities)
         public string[] reasons = Array.Empty<string>();
         public int checkedConnections;
         public int connectedBefore;
+        public int roadProbeCount;
+        public int constructionProbeCount;
         public int lostConnections;
         public bool restored;
         public bool constructionCovered;
@@ -28,7 +31,7 @@ public sealed class RoadProtection(EntityRegistry entities)
     public sealed class Sample
     {
         public DistrictCenter[] Districts = Array.Empty<DistrictCenter>();
-        public (Guid Id, Vector3Int Cell, Vector3 Access)[] Probes = Array.Empty<(Guid, Vector3Int, Vector3)>();
+        public (Guid Id, Vector3Int Cell, Vector3 Access, string Kind)[] Probes = Array.Empty<(Guid, Vector3Int, Vector3, string)>();
         public bool[] Before = Array.Empty<bool>();
         public bool[] PreviewBefore = Array.Empty<bool>();
         public bool Complete;
@@ -42,18 +45,25 @@ public sealed class RoadProtection(EntityRegistry entities)
         if (all.Length > 4096) { sample.Reason = "navigation_object_limit"; return sample; }
         sample.Districts = all.Where(e => e.GetComponent<BlockObject>().IsFinished && e.HasComponent<DistrictCenter>()).Select(e => e.GetComponent<DistrictCenter>()).ToArray();
         if (sample.Districts.Length is < 1 or > 16) { sample.Reason = "navigation_district_coverage_unknown"; return sample; }
-        var probes = new List<(Guid, Vector3Int, Vector3)>();
+        var probes = new List<(Guid, Vector3Int, Vector3, string)>();
         foreach (var e in all)
         {
             var b = e.GetComponent<BlockObject>();
-            if (!b.IsFinished) continue; // Unfinished sites are not counted as a working detour.
+            // Existing sites are targets only, never assumed to be finished detours.
+            if (b.IsFinished && e.TryGetComponent<PathSpec>(out var path))
+            {
+                if (probes.Count >= 4096) { sample.Reason = "navigation_access_limit"; return sample; }
+                var cell = b.TransformCoordinates(path.MainPathCoordinates);
+                probes.Add((e.EntityId, cell, NavigationCoordinateSystem.GridToWorld(cell), "road_cell"));
+            }
             foreach (var access in e.GetComponentsAllocating<Accessible>())
             {
                 if (!access.ValidAccessible) continue;
                 foreach (var position in access.Accesses)
                 {
                     if (probes.Count >= 4096) { sample.Reason = "navigation_access_limit"; return sample; }
-                    probes.Add((e.EntityId, b.HasEntrance ? b.PositionedEntrance.Coordinates : b.Coordinates, position));
+                    probes.Add((e.EntityId, b.HasEntrance ? b.PositionedEntrance.Coordinates : b.Coordinates, position,
+                        b.IsFinished ? "building_access" : "construction_access"));
                 }
             }
         }
@@ -73,7 +83,9 @@ public sealed class RoadProtection(EntityRegistry entities)
     public Report Finish(Sample sample, bool[]? withPreview, IEnumerable<Block> candidate)
     {
         var report = new Report { candidateCells = candidate.Select(c => Vec(c.Coordinates)).ToArray(),
-            checkedConnections = sample.Before.Length, connectedBefore = sample.Before.Count(connected => connected) };
+            checkedConnections = sample.Before.Length, connectedBefore = sample.Before.Count(connected => connected),
+            roadProbeCount = sample.Probes.Count(p => p.Kind == "road_cell"),
+            constructionProbeCount = sample.Probes.Count(p => p.Kind == "construction_access") };
         if (!sample.Complete || withPreview is null) { report.reasons = new[] { sample.Reason.Length > 0 ? sample.Reason : "preview_navigation_unavailable" }; return report; }
         report.checkedConnections = sample.Before.Length;
         report.restored = sample.Before.SequenceEqual(Read(sample, false)) && sample.PreviewBefore.SequenceEqual(Read(sample, true));
@@ -88,7 +100,7 @@ public sealed class RoadProtection(EntityRegistry entities)
         report.affected = lost.Take(32).Select(index => {
             var p = sample.Probes[index % sample.Probes.Length];
             var d = sample.Districts[index / sample.Probes.Length];
-            return (object)new { id = p.Id, entrance = Vec(p.Cell), districtCenter = Vec(d.CenterCoordinates) };
+            return (object)new { id = p.Id, entrance = Vec(p.Cell), districtCenter = Vec(d.CenterCoordinates), kind = p.Kind };
         }).ToArray();
         report.affectedTruncated = lost.Length > report.affected.Length;
         return report;

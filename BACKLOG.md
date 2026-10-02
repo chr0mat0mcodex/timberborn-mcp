@@ -87,3 +87,7 @@ Neue Funktionen werden entsprechend dem Projektauftrag vor ihrer Umsetzung konkr
 - [Frage-Popup mit Texteingabe im Spiel](docs/player-question-popup.md).
 - Energieindustrie, Bots, Distriktmigration, komplexe Automationsgraphen, Terraforming und Wasserbau-Großprojekte.
 - Automatisches Speichern/Laden; bislang nicht als MCP-Funktion implementiert.
+
+0.23.2 ergänzt eigene Prüfpunkte für Wege und gültige Zugänge bestehender Baustellen.
+Installation und Live-Abnahme offen. Hypothetischer Bauzustand neuer Gebäude,
+mehrteilige Wegobjekte und distriktlose Netze bleiben Nachweislücken; Bauaufträge gesperrt.

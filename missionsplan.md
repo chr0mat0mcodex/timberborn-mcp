@@ -115,3 +115,6 @@ Das [Projektjournal](docs/project-journal.md) enthält datierte Ergebnisse.
 Die [ursprüngliche Mission einschließlich aller Meilensteine bis 0.17.2](docs/history/missionsplan-2026-09-20.md)
 bleibt als Historie erhalten. Dortige alte Verbote, Installationsstände und offene Kästchen
 beschreiben ihren damaligen Zeitpunkt und sind keine aktuelle Arbeitsanweisung.
+
+Wegschutz-Folgeschritt 0.23.2: Wegpunkte und bestehende Baustellenzugänge gebaut;
+Installation/Live-Nachweis offen. Kein Abschluss der vollständigen Wegschutz-Abnahme.

@@ -53,10 +53,11 @@ public sealed record NativeValidation(string Template, Position Origin, int Rota
     bool NoPersistentChangeObserved, bool SessionLocked, int AttemptsRemaining, string[] Limitations, NativeRoadProtection? RoadProtection = null);
 public sealed record NativePlacement(string Template, Position Origin, int Rotation, Guid EntityId,
     string Outcome, bool? Finished, bool SessionLocked, string[] Limitations, NativeRoadProtection? RoadProtection = null);
-public sealed record NativeRoadAffected(Guid Id, Position Entrance, Position DistrictCenter);
+public sealed record NativeRoadAffected(Guid Id, Position Entrance, Position DistrictCenter, string? Kind = null);
 public sealed record NativeRoadProtection(string Status, string[] Reasons, int CheckedConnections, int LostConnections,
     bool Restored, bool ConstructionCovered, NativeRoadAffected[] Affected, bool AffectedTruncated,
-    Position[] CandidateCells, string[] Limitations, int? ConnectedBefore = null);
+    Position[] CandidateCells, string[] Limitations, int? ConnectedBefore = null,
+    int? RoadProbeCount = null, int? ConstructionProbeCount = null);
 public sealed record NativeGoodAmount(string Id, int Amount);
 public sealed record NativeConstructionMaterials(NativeGoodAmount[] BuildingCosts, bool InventoryAvailable, NativeGoodAmount[]? SiteStock);
 public sealed record NativeConstruction(bool WasStarted, bool IsOn, bool ReadyToBuild, float MaterialProgress,

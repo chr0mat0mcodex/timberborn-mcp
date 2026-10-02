@@ -1842,3 +1842,14 @@ Beide Male restored=true; unabhängige Wegverbindung unverändert, alle 171
 Gebäude/Wegobjekte erhalten, Spielzeit unverändert pausiert. Keine Bau-/Abrissaufträge.
 Damit ist native Vorschau-Sperrwirkung belegt, nicht vollständiger Wegschutz.
 Baustellen und reine Wegknoten bleiben offen; Bauaufträge bleiben gesperrt.
+
+## 2026-10-02 — 0.23.2 erweitert Diagnoseprüfpunkte
+
+Öffentliche PathSpec-/BlockObject-/NavigationCoordinateSystem-Zugriffe ergänzen
+Hauptwegpunkte fertiger Wegobjekte. Gültige Accessible-Zugänge unfertiger Objekte
+werden als Baustellenziele mitgeprüft; betroffene Ziele erhalten eine Artkennung.
+Prüfpunktzahlen werden separat ausgegeben, Grenzen gelten für alle Arten zusammen.
+Keine private Reflection und keine neue Abhängigkeit. Neuer hypothetischer
+Bauzustand weiterhin unbelegt; constructionCovered=false, Bauaufträge gesperrt.
+Installation und Live-Nachweis offen; installiert bleibt 0.23.1.
+577 reguläre Tests bestanden (564 Unit, 13 Integration); Mod-Build ohne Warnungen/Fehler.

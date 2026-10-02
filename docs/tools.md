@@ -1,6 +1,6 @@
 # Native MCP-Werkzeuge
 
-Stand: Agent Bridge 0.23.1 (Diagnose-Prototyp; sämtliche Bauaufträge vorläufig gesperrt).
+Stand: Agent Bridge 0.23.2 (Diagnose-Prototyp; sämtliche Bauaufträge vorläufig gesperrt).
 [Grund, Ergebnisvertrag und nächster Pilot](road-protection.md). 31 Leser und 22 Werkzeuge für Aktionen/Vorschauvalidierung.
 Neu: Ingame-Zeitläufe, automatisch und im begrenzten MCP-Live-Pilot geprüft. Die 30 bisherigen Leser
 sind unter 0.21.1 live belegt. Nachweise und Grenzen stehen in den Fachdokumenten.
@@ -79,3 +79,4 @@ sind unter 0.21.1 live belegt. Nachweise und Grenzen stehen in den Fachdokumente
 Neue Güter-/Statusverträge: [Details und Grenzen](economy-observations.md).
 
 [Wege, Reichweiten und Güterhistorie](logistics.md).
+`roadProtection` ergänzt ab 0.23.2 Weg-/Baustellen-Prüfpunktzahlen und `affected.kind`; bei `road_cell` bezeichnet `entrance` die Wegkoordinate. Diese Diagnose erweitert keine Baufreigabe.

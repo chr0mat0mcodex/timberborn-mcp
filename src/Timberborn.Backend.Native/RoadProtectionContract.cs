@@ -2,7 +2,7 @@ namespace Timberborn.Backend.Native;
 
 public static class RoadProtectionContract
 {
-    public static void Validate(NativeRoadProtection? d, bool applied, bool requireBaseline = false)
+    public static void Validate(NativeRoadProtection? d, bool applied, bool requireBaseline = false, bool requireProbeKinds = false)
     {
         if (d is null || d.Status is not ("safe" or "blocked" or "unknown") || d.Reasons is null || d.Reasons.Length > 8 ||
             d.Reasons.Any(s => string.IsNullOrEmpty(s) || s.Length > 100) || d.Limitations is null || d.Limitations.Length > 16 ||
@@ -11,7 +11,11 @@ public static class RoadProtectionContract
             requireBaseline && d.ConnectedBefore is null || d.ConnectedBefore is < 0 ||
             d.ConnectedBefore > d.CheckedConnections || d.LostConnections > d.ConnectedBefore ||
             d.Status == "safe" && d.ConnectedBefore == 0 ||
+            requireProbeKinds && (d.RoadProbeCount is null || d.ConstructionProbeCount is null) ||
+            d.RoadProbeCount is < 0 or > 4096 || d.ConstructionProbeCount is < 0 or > 4096 ||
+            d.RoadProbeCount + d.ConstructionProbeCount > 4096 ||
             d.Affected.Any(a => a is null || a.Id == Guid.Empty || a.Entrance is null || a.DistrictCenter is null) ||
+            d.Affected.Any(a => requireProbeKinds && a.Kind is null || a.Kind is not (null or "building_access" or "construction_access" or "road_cell")) ||
             d.Affected.Length != Math.Min(d.LostConnections, 32) || d.AffectedTruncated != (d.LostConnections > d.Affected.Length) ||
             d.CandidateCells is null || d.CandidateCells.Length > 64 || d.CandidateCells.Any(c => c is null) ||
             d.Status == "safe" && (!d.Restored || !d.ConstructionCovered || d.LostConnections != 0 || d.CheckedConnections == 0) ||

@@ -33,6 +33,35 @@ public sealed class RoadProtectionTests
     private static NativeRoadProtection Evidence() => new("safe",[],4,0,true,true,[],false,[new(1,2,3)],[]);
 
     [Theory]
+    [InlineData("road_cell")] [InlineData("construction_access")] [InlineData("building_access")]
+    public void TypedLossRemainsBlocked(string kind)
+    {
+        var d = Evidence() with { Status = "blocked", ConnectedBefore = 2, RoadProbeCount = 1,
+            ConstructionProbeCount = 1, LostConnections = 1,
+            Affected = [new(Guid.NewGuid(), new(1,2,3), new(4,5,6), kind)] };
+        RoadProtectionContract.Validate(d, false, true, true);
+        Assert.Throws<InvalidDataException>(() => RoadProtectionContract.Validate(d, true, true, true));
+    }
+
+    [Theory]
+    [InlineData("missing_counts")] [InlineData("negative")] [InlineData("overflow")]
+    [InlineData("missing_kind")] [InlineData("unknown_kind")]
+    public void TypedReceiptRequiresBoundedCountsAndKnownTargets(string defect)
+    {
+        var d = Evidence() with { Status = "blocked", ConnectedBefore = 2, RoadProbeCount = 1,
+            ConstructionProbeCount = 1, LostConnections = 1,
+            Affected = [new(Guid.NewGuid(), new(1,2,3), new(4,5,6), "road_cell")] };
+        d = defect switch {
+            "missing_counts" => d with { RoadProbeCount = null },
+            "negative" => d with { ConstructionProbeCount = -1 },
+            "overflow" => d with { RoadProbeCount = 4096 },
+            "missing_kind" => d with { Affected = [d.Affected[0] with { Kind = null }] },
+            _ => d with { Affected = [d.Affected[0] with { Kind = "invented" }] }
+        };
+        Assert.Throws<InvalidDataException>(() => RoadProtectionContract.Validate(d, false, true, true));
+    }
+
+    [Theory]
     [InlineData(null)] [InlineData(-1)] [InlineData(0)] [InlineData(5)]
     public void NewReceiptCannotClaimSafetyWithoutConnectedBaseline(int? count) =>
         Assert.Throws<InvalidDataException>(() => RoadProtectionContract.Validate(Evidence() with { ConnectedBefore = count }, true, true));
@@ -92,18 +121,23 @@ public sealed class RoadProtectionTests
     [Theory]
     [InlineData("place_building",false,false,"0.23.0")]
     [InlineData("place_building",false,false,"0.23.1")]
+    [InlineData("place_building",false,false,"0.23.2")]
     [InlineData("place_building",true,true,"0.23.0")]
     [InlineData("place_building",true,true,"0.23.1")]
+    [InlineData("place_building",true,true,"0.23.2")]
     [InlineData("place_building",true,false,"0.23.0")]
     [InlineData("place_building",true,false,"0.23.1")]
+    [InlineData("place_building",true,false,"0.23.2")]
     [InlineData("validate_building",false,false,"0.23.0")]
     [InlineData("validate_building",false,false,"0.23.1")]
+    [InlineData("validate_building",false,false,"0.23.2")]
     [InlineData("validate_building",true,false,"0.23.0")]
     [InlineData("validate_building",true,false,"0.23.1")]
+    [InlineData("validate_building",true,false,"0.23.2")]
     public async Task NewBridgeRequiresGuardEvidenceAndRejectsUnsafeSuccess(string tool,bool evidence,bool applied,string version)
     {
         var session=Guid.NewGuid().ToString("D");var id=Guid.NewGuid();
-        var guard=evidence?Evidence() with{Status="unknown",ConstructionCovered=false,ConnectedBefore=2,Reasons=["construction_and_road_node_coverage_unproven"]}:null;
+        var guard=evidence?Evidence() with{Status="unknown",ConstructionCovered=false,ConnectedBefore=2,RoadProbeCount=1,ConstructionProbeCount=0,Reasons=["construction_and_road_node_coverage_unproven"]}:null;
         object data=tool=="place_building" ? new NativePlacement("Path",new(1,2,3),0,id,applied?"applied":"rejected",null,false,[],guard)
             : new NativeValidation("Path",new(1,2,3),0,true,true,true,false,255,[],guard);
         var payload=JsonSerializer.Serialize(new BridgeEnvelope<object>(1,session,DateTimeOffset.UtcNow,version,data),NativeJson.Options);

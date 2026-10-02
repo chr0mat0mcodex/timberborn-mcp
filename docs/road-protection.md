@@ -41,6 +41,10 @@ und eine `safe`-Freigabe in dieser Version absichtlich nicht erreichbar.
   `navigation_not_restored`, `construction_and_road_node_coverage_unproven`.
 - `checkedConnections`, `lostConnections`, `restored`, `constructionCovered`.
 - `connectedBefore`: ab 0.23.1 verpflichtend, tatsächlich verbundene Ausgangspaare.
+- Ab 0.23.2: `roadProbeCount` und `constructionProbeCount` zählen Prüfpunkte vor
+  dem Vergleich mit Distrikten. `affected.kind` unterscheidet `road_cell`,
+  `construction_access` und `building_access`. Das historische Feld `entrance`
+  enthält bei `road_cell` die Wegkoordinate, sonst die Gebäude-Eingangskoordinate.
 - `affected`: höchstens 32 betroffene Objekt-IDs, Eingangskoordinaten und
   Distriktzentrum-Koordinaten; `affectedTruncated` kennzeichnet weitere Treffer.
 - `candidateCells`: höchstens 64 geprüfte Bauzellen. **Keine Behauptung, dass jede
@@ -99,3 +103,27 @@ und sichere Bauaufträge freigeben. Keine Entfernung der Sperre nur aufgrund ein
 positiven Einzelplatztests. Bauplatzsuche bleibt ein separates Folgefeature.
 
 Nächster Entwicklungsschritt: Baustellen- und reine Wegknotenabdeckung prüfen und ergänzen. Die bestätigte Vorschau-Sperrwirkung allein erlaubt noch keine sichere Baufreigabe.
+
+## 0.23.2 — Wegpunkte und bestehende Baustellen (Live-Nachweis offen)
+
+Fertige Objekte mit öffentlichem `PathSpec` liefern ihren Hauptwegpunkt über
+`BlockObject.TransformCoordinates(MainPathCoordinates)` und
+`NavigationCoordinateSystem.GridToWorld`. Diese Punkte werden zusätzlich zu
+Gebäudezugängen gegen die native aktuelle und Vorschau-Distriktzugehörigkeit geprüft.
+Unfertige vorhandene Objekte werden mit ihren gültigen `Accessible`-Zugängen
+einbezogen; ein Baustellenzugang wird nicht als fertiger Umweg angenommen.
+Die Grenzen von 4096 Prüfpunkten und 16384 Vergleichen gelten für alle Arten zusammen.
+
+Das beweist weder Bauarbeiter-Erreichbarkeit über Gelände noch die komplette
+Navigation eines Wegobjekts mit mehreren Ebenen. Distriktlose Wegnetze und der
+hypothetische Bauzustand des neu geplanten Objekts sind weiterhin nicht abgedeckt.
+Öffentliche Metadaten bieten `IBlockObjectNavMesh`, aber keine belegte Funktion
+zum Umschalten einer isolierten Vorschau in eine Baustellenvorschau. Interne
+BlockObjectNavMesh-/Preview-Typen werden nicht per privater Reflection verwendet.
+`constructionCovered=false` und die Platzierungssperre bleiben erhalten.
+
+Nächster Pilot nach Installation: höchstens drei reine Vorschauen (bekannter
+Sperrplatz, freier Wegplatz, vorhandener Baustellenzugang sofern beobachtbar).
+Prüfpunktzahlen und betroffene Arten prüfen; Navigation, Weltbestand und Pause
+zurücklesen. Fehlt eine erwartete Punktart oder Wiederherstellung, stoppen und
+die Koordinaten-/Zugangsabbildung klären. Kein umfassender Wegschutz-Abnahmehaken.
