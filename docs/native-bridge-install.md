@@ -46,7 +46,7 @@ Spiel-/Unity-DLLs und fremde Mod-DLLs gehören nicht in das Paket.
 
 ## Installation und Updates
 
-1. Spielstand speichern und Timberborn beenden.
+1. Timberborn für den Dateiaustausch beenden; Speichern ist im Testsystem nicht erforderlich.
 2. Vorhandenen eigenen Modordner vollständig sichern.
 3. Den Paketordner `TimberbornAgentBridge` unter dem lokalen Timberborn-Modverzeichnis
    installieren (Windows-Standard: `<Dokumente>/Timberborn/Mods/`).

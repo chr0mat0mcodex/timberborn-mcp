@@ -3,6 +3,10 @@
 Für die Fortsetzung in einem neuen Chat: [START_HERE.md](START_HERE.md) und
 [technische Übergabe](docs/session-handoff.md).
 
+**Entwicklungsmodus: Testsystem. Schnelle und effiziente Entwicklung hat Vorrang.**
+Der Spielstand ist austauschbar; Kolonieerhalt oder frühere Spielziele bremsen keine
+Tests. [Kernanweisungen](AGENTS.md).
+
 Eine eigene Timberborn-Mod und ein lokaler C#-MCP-Server ermöglichen einem KI-Agenten,
 das Spiel strukturiert zu beobachten und über reguläre Spielaktionen zu steuern.
 Ziel ist ein Agent, der Wasser, Nahrung, Holz, Wege und Wohnraum aufbaut und betreibt.
@@ -11,7 +15,8 @@ Ziel ist ein Agent, der Wasser, Nahrung, Holz, Wege und Wohnraum aufbaut und bet
 Ein expliziter Entwicklungsaufruf koppelt kleines Lager und bis zu zwei neue Wege:
 frische gemeinsame Vorschau, schrittweise Platzierung, Auftragsstatus und reale
 Zugangsprüfung. **0.25.0 ist installiert und dateigeprüft; Live-Abnahme steht aus.**
-Normale Bauaufrufe bleiben gesperrt; vollständiger Wegschutz ist weiterhin offen.
+Normale Bauaufrufe sind im aktuellen Code gesperrt; vollständiger Wegschutz ist offen.
+Diese Implementierungsgrenze ist keine dauerhafte Arbeitsfreigabegrenze.
 [Umfang, Ausnahme und Abnahme](docs/building-project-execution-proposal.md).
 Die Mod wird gebaut gegen Timberborn **1.1.2.4 / Folktails**.
 Neu: [begrenzte Ingame-Zeitläufe](docs/simulation-runs-plan.md) mit automatischer Pause,
@@ -50,7 +55,7 @@ Regression im Repository; [Referenzen und Legacy-Abgrenzung](docs/references/REA
 | Simulation | Pause sowie 1×, 3× und 7× |
 | Nachvollziehbarkeit | Ingame-MCP-Log, optionale kurze Aktionsbegründung, feste fachliche Fehlercodes |
 
-29 Lesewerkzeuge und 19 separat freizugebende Werkzeuge für Aktionen/Vorschauvalidierung
+33 Lesewerkzeuge und 24 technisch separat aktivierbare Werkzeuge für Aktionen/Vorschauvalidierung
 sind im nativen Katalog implementiert. Die beiden frühen Baupiloten sind weiterhin
 vorhanden; für neue Bauaufgaben dienen die generischen Werkzeuge.
 [Werkzeugübersicht und Freigaben](docs/tools.md).

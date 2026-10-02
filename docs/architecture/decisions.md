@@ -63,3 +63,17 @@ Updates; reale Wege zuerst bestätigen, danach regulären Lagerauftrag und tats�
 Bauarbeiterzugang prüfen. Teilerfolge bleiben stehen, kein automatischer Abriss.
 Keine neue Fremdmod oder private Zustandsmanipulation. Installiert, aber noch kein
 Live-Nachweis der realen Ausführung. [Vertrag](../building-project-execution-proposal.md).
+
+## 2026-10-02 — Testsystem und Entwicklungsgeschwindigkeit maßgeblich
+
+Der Nutzer erklärt Spielstand und Kolonie ausdrücklich für austauschbar. Schnelle,
+effiziente MCP-Entwicklung hat Vorrang. Frühere enge Ingame-Einzelgenehmigungen,
+Kolonie-Erhaltungsziele und die damalige Begrenzung weiterer Tests werden als
+Arbeitsanweisungen ersetzt. Bauen, Abreißen und andere erforderliche Spieltests
+sind grundsätzlich erlaubt; keine Speichern-/Wiederherstellungspflicht.
+
+Version 0.25.0 bleibt technisch unverändert: ihre vorhandenen Limits sind zu beachten,
+aber bei sinnvollem Entwicklungsbedarf zu verbessern statt als dauerhafte Nutzergrenze
+zu behandeln. Wegschutz und korrekte Mutationsergebnisse bleiben Produktfunktionen;
+ihre Tests dienen Funktionsqualität, nicht dem Save-Erhalt. Datenschutz, Git-Sicherung,
+Schutz außerhalb des Testsystems und technische Installationskontrollen bleiben.

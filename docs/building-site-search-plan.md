@@ -1,5 +1,9 @@
 # Bauvorhaben mit Anschlussweg: Bauplatzsuche und Wegschutz
 
+**Arbeitsweise:** Testsystem, schnelle und effiziente Entwicklung. Ältere Einzel-
+freigaben und Spielstandschutzvorgaben sind überholt; Versionsgrenzen unten
+beschreiben den Code. [Aktuelle Direktiven](../AGENTS.md).
+
 Status: Kandidatensuche und gemeinsame Vorschau in 0.24.1 begrenzt live bestätigt.
 0.25.0 implementiert den ausdrücklich freigegebenen Entwicklungs-Baupilot für ein
 kleines Lager plus höchstens zwei ebene Wege. Installation abgeschlossen; Live-Abnahme steht aus.

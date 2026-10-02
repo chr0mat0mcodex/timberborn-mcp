@@ -1,147 +1,44 @@
-# Mission: Timberborn über MCP spielen
+# Mission: Timberborn über MCP steuerbar machen
 
-## Aktueller Schwerpunkt und Weiterführung
+## Prioritäten
 
-Stand 2026-10-02: MCP-Entwicklung, anschließend ein begrenzter Live-Baupilot.
-0.25.0 ist installiert; der erste reale Bau samt Wegen steht noch aus.
-[Übergabe für den nächsten Chat](START_HERE.md). Kein autonomer Kolonieaufbau
-als unmittelbare Fortsetzung. Die folgenden Spielziele bleiben beauftragt und offen.
+1. **Testsystem:** Spielstände und Kolonien sind austauschbares Testmaterial.
+2. **Schnelle und effiziente Entwicklung:** funktionierende, nachvollziehbar geprüfte
+   MCP-Fähigkeiten liefern; unnötige Freigabe-, Dokumentations- und Testschleifen vermeiden.
 
-## Weiterhin offene Spielziele seit 2026-09-21
+Maßgeblich sind die [Projektanweisungen](AGENTS.md). Das Endziel bleibt ein Agent,
+welcher Timberborn per MCP spielen kann. Koloniepflege, Ressourcenschonung oder der
+Erhalt eines konkreten Spielstands sind keine Anforderungen an die Entwicklung.
+Frühere Ziele wie 100 Biber und alle Gebäude dienen allenfalls als spätere
+Belastungs-/Abdeckungsszenarien, nicht als fortlaufende Aufgaben.
 
-1. **100 gleichzeitig lebende Biber erreichen** (Erwachsene und Kinder, keine Bots).
-2. **Jedes reguläre Gebäude der aktuellen Fraktion mindestens einmal fertigstellen.**
+## Aktueller Stand und nächste Arbeit
 
-Der Nutzer hat tatsächlichen Kolonieausbau ausdrücklich zum Auftrag gemacht.
-Der bisherige Schwerpunkt einzelner Funktionstests wird damit um einen fortlaufenden,
-kontrollierten Spielablauf erweitert. Reguläre Kosten, Forschung und Bauzeiten gelten.
-Ursprünglicher Ausgangspunkt: zehn Biber, zwölf Betten, 15 von 157 regulären Bauvorlagen
-fertig vorhanden. Fünf Entwicklerwerkzeuge zählen nicht; andere Fraktionen separat.
-15 reguläre Vorlagen haben noch technische MCP-Baugrenzen und bleiben Teil des Ziels.
+0.25.0 ist installiert, 648 reguläre Tests bestehen. Die gemeinsame Bauvorschau
+ist live belegt; die neue tatsächliche Ausführung steht noch zur Live-Prüfung an.
 
-Historischer Nachweis Tag 68 (nicht frisch abgefragt): 40 lebende Biber, 40 Betten, 26/157 Gebäudetypen.
-63 Karottenfelder, zwei Farmen und drei Pumpen; begrenzter Erntepilot bestanden.
+- [x] Eigene Mod und nativen MCP-Zugang ohne Fremdmod-Pflichtbasis bereitstellen.
+- [x] Zustandsdaten, Güter, Personal, Baustellen, Flächen, Forschung und Produktionsgraph bereitstellen.
+- [x] Basisaktionen, Lager-/Farmoptionen, Pause/Geschwindigkeiten und Ingame-Zeitläufe implementieren.
+- [x] Ingame-Log mit kurzen Aktionsbegründungen implementieren und praktisch prüfen.
+- [x] Bauplatzsuche, gemeinsame Gebäude-/Wegvorschau und schrittweise Ausführung implementieren.
+- [ ] Reale Bauprojektausführung mit 0.25.0 prüfen; Fehler direkt eingrenzen und beheben.
+- [ ] Bau-/Wegfunktionen zu einem praktisch nutzbaren Umfang ausbauen: weitere Vorlagen,
+  sinnvolle Projektgrößen und reale Zugänge. Aktuelle Grenzen sind technische Entwicklungsaufgaben.
+- [ ] Problemdiagnose vervollständigen und an repräsentativen Szenarien prüfen.
 
-[Abnahme, Etappen und vollständige Gebäudecheckliste](docs/colony-goals.md).
-## Stand
+Ein funktionierender Nachweis genügt für den jeweiligen Fall; nicht pauschal alle
+alten Tests wiederholen. Bauen, Abreißen oder Veränderung der Testkolonie ist ein
+normales Testmittel. Rückabfragen dienen korrekten Ergebnissen. Schädliche Platzierungen
+gezielt ablehnen zu können bleibt ein Produktfeature, kein Gebot zur Schonung des Testsaves.
 
-**0.25.0: begrenzter Bauprojekt-Pilot gebaut und installiert, 648 reguläre Tests
-bestanden. Live-Abnahme noch offen.** Gemeinsame Vorschau in 0.24.1 live bestätigt;
-normale Bauaufträge bleiben mangels vollständigem Bauphasen-Nachweis gesperrt.
-0.22.0-Zeitläufe, 0.21.x-Produktionsgraph und Gebäudeinventare sowie frühere
-Basisfunktionen wurden in den jeweils dokumentierten Piloten live geprüft.
-[Projektstand](PROJECT_STATE.md), [Werkzeugkatalog](docs/tools.md), [offene Arbeiten](BACKLOG.md).
-Keine Fremdmod-Pflichtbasis; die frühere More-HTTP-API-Phase ist abgeschlossen.
-
-| Fähigkeit | Status und verbleibende Grenze |
-| --- | --- |
-| Eigener MCP-/Mod-Zugang | Live bestätigt; authentifizierter lokaler Transport und Spielthread-Queue |
-| Bevölkerung und Betten | Live bestätigt |
-| Bedürfnisse und Betriebsbelege | Drei Leser in 0.20.0 live bestätigt; rohe Schwellenflags sind keine UI-Warnung, keine vollständige Blockadendiagnose |
-| Vollständige Güter, aktive Status und Ziele | 40 Güter und eine Lagerwarnung mit Ziel live bestätigt; Mehrfachziele und Verschwinden bestätigt; Biberwarnungen offen |
-| Karte, Gebäude und Baustellen | Live genutzt; Sofort-Wegsuche inklusive Unterbrechung live bestätigt; Farm-/Holzfällerreichweiten live bestätigt |
-| Produktion/Verbrauch über Zeit | Native Güterhistorie mit Produktion/Verbrauch und Fortschreibung über einen Tageswechsel live bestätigt |
-| Generische Bauaufträge | Frühere Versionen mit mehreren Vorlagen live; aktueller Normalpfad gesperrt, enger 0.25.0-Pilot noch live zu prüfen |
-| Lager, Farm, Gebäudepause | Live bestätigt |
-| Personal, Prioritäten, Flächen, Entfernung | Gezielte Live-Piloten bestanden |
-| Simulation | Pause, 1×, 3×, 7× sowie begrenzte Ingame-Zeitläufe mit Zielpause/Abbruch live bestätigt |
-| Forschung | Erzeugung, Kostenabzug, Freischaltung und kostenfreie Wiederholung live bestätigt |
-| Ingame-MCP-Log | Fenster, Scrollen, Calls und Begründungen live bestätigt |
-| Fachliche Ablehnungen | Drei Fehlerfälle ohne Zustandsänderung live; noch nicht alle Bereiche spezifisch |
-| Vollständige Grundversorgung | Wohnraum erweitert und belegt; nachhaltige Bilanz und allgemeine Problembehandlung offen |
-
-## Abnahmeschleife
-
-1. Frischen Zustand, Session und konkrete Ziele lesen.
-2. Fehlende Voraussetzungen und Kosten feststellen.
-3. Geometrische Vorprüfung und reguläre Spielvalidierung unterscheiden.
-4. Eine begrenzte Aktion ausführen.
-5. Ergebnis separat lesen: Auftrag, Fertigstellung, Anschluss, Besetzung und Wirkung sind unterschiedliche Belege.
-6. Nur bei belegtem Nutzen fortsetzen; unbestätigte Aktionen nicht automatisch wiederholen.
-
-## Weitere Meilensteine und bereits erbrachte Nachweise
-
-- [x] Güterübersicht und aktive Status mit konkretem Ziel im begrenzten Live-Pilot abnehmen.
-- [x] Mehrfachziele und tatsächliches Verschwinden einer Statusgruppe live prüfen.
-- [x] Biber-Todesstatus mit zwei konkreten Entity-Zielen live lesen (kein UI-Alert: showAlert=false).
-- [ ] Aktive Hunger-/Durst-UI-Warnungen im Live-Test ergänzen.
-- [x] 0.21.0 mit Produktionsgraph und Lebenszustandskorrektur installieren; Sicherung/Hashes/Konfiguration geprüft.
-- [x] Produktionsgraph und lebende/tote Biber getrennt live prüfen (11 lebend, zwei tot).
-- [x] Gebäudeinventare und globale Wasserbestände abgleichen: 60 Tank + 30 Pumpen + 48 Distriktzentrum = 138.
-- [x] Gebäudezugang und Sofort-Wegverbindung einschließlich Unterbrechung/Wiederherstellung gezielt prüfen.
-- [x] Konkrete Farm-/Holzfällerreichweiten über BuildingTerrainRange live abnehmen (485/611 Zellen; erste/letzte Seite).
-- [x] Native Produktions-/Verbrauchshistorie über einen Tageswechsel prüfen.
-- [x] Native Bedürfnisflags und Betriebsbelege als begrenzte Leser implementieren und regulär testen.
-- [x] 0.20.0 live abnehmen: Bedürfnisübersicht/Einzelbiber und fertiges Produktionsgebäude.
-- [x] Unfertigen Bauauftrag diagnostizieren, separat bestätigen und wieder entfernen.
-- [ ] Produktionshindernisse und Bedürfnisse vollständig unterscheiden (insbesondere Energie, Wasser, Rohstoff- und Lieferwege).
-- [x] Versorgung über rund drei Spieltage bewerten und fehlenden Wohnraum gezielt nachweisen.
-- [x] Einzelnen zusätzlichen Wassertank regulär bauen, konfigurieren und tatsächliche Umlagerung bestätigen; allein keine Nachhaltigkeitsabnahme.
-- [x] Normale Wasserentnahme, freien Ausgang und Wiederauffüllung beider Pumpen beobachten; getrennt von Tagesbilanz bewerten.
-- [x] Zusätzliche Lodge und Holzlager regulär bauen; zwölf Betten ohne Obdachlose und reale Holzeinlagerung bestätigen.
-- [x] 16 zusätzliche Karottenzellen im Farmbereich markieren und tatsächliches Pflanzen bestätigen; Ernte separat offen.
-- [x] Förster einschließlich vorgelagerter Brettproduktion regulär bauen; zwölf Eichen tatsächlich pflanzen und Reichweite/Besetzung bestätigen.
-- [x] Eichenfläche auf 79 Pflanzplätze erweitern; 19 lebende Eichen nachgelesen.
-- [x] Alle 79 Eichen und zwölf zusätzliche Birken tatsächlich gepflanzt und lebend bestätigt.
-- [x] Wachstum, reguläre Holzernte und Nachpflanzung an repräsentativen Eichen-/Birkenstandorten bestätigt; 19 neue lebende Eicheninstanzen an zuvor belegten Pflanzplätzen. Keine vollständige Ertragsbilanz aller Bäume.
-- [ ] Negative Wasser-/Nahrungs-/Holzbilanz beheben und nachhaltige Versorgung mit Wohnraum abnehmen.
-- [ ] Anschließend einen begrenzten zusammenhängenden Agenten-Spielablauf abnehmen.
-
-Diese Reihenfolge beschreibt den nächsten Ausbau, nicht bereits freigegebene Codeänderungen.
-Detailaufgaben und spätere Ideen stehen im [Backlog](BACKLOG.md).
-
-## Produktionsgraph — Umsetzung 0.21.0
-
-- [x] Produktions-/Abhängigkeitsgraphen des definierten Umfangs einmal extrahieren und mit einem
-  MCP-Aufruf bereitstellen: Produkte, Vorprodukte, Rezepte, Gebäude und Voraussetzungen.
-  [Umfang und öffentliche API-Grundlage](docs/production-dependency-graph.md).
-- [x] Live-Abnahme: Antwortgröße, stabile Revision, Verarbeitungsketten, Brennstoff sowie Ernte-/Sammelquellen geprüft. Ruinenerträge und besondere Betriebsbedingungen bleiben explizite Lücken.
-
-## Wichtige zukünftige Steuerfunktionen
-
-- [x] **WICHTIG — Implementierung 0.22.0:** Simulation für eine vorgegebene Ingame-Dauer (Stunden, Tage, Wochen) oder bis
-  zu einem konkreten Ingame-Zeitpunkt laufen lassen. Zielkontrolle, automatisches
-  Pausieren sowie Status/Abbruch stehen als MCP-Funktion bereit, statt vom
-  Agenten aus Echtzeit-Wartebefehlen zusammengesetzt zu werden.
-  [Featureplan und Abnahmekriterien](docs/simulation-runs-plan.md).
-- [x] Live-Abnahme der Zeitläufe (2026-10-02): kleiner Pilot auf 1/3/7, Tagesgrenze, Abbruch und Eingriff;
-  anschließend Zielzeit und Pause unabhängig zurücklesen. Keine langen Spielschleifen vor Pilotnachweis.
-- [ ] **WICHTIG:** Bauplatzsuche nach Gebäude und Suchbereich mit konkret geprüften
-  Positionen/Drehungen, Zugängen und klar benannten nötigen Vorarbeiten.
-- [ ] **Freigegebener nächster Ausbau (2026-10-02):** Gebäude und Anschlussweg als
-  gemeinsames Bauvorhaben planen, zusammen prüfen und kontrolliert ausführen.
-  Zunächst ebene Wege: Anschluss zuerst setzen und Nutzbarkeit bestätigen, dann
-  Gebäudeauftrag. Teilerfolge melden; kein automatischer Abriss-Rollback.
-  Bestehende Zugänge und Bauarbeiter-Erreichbarkeit bleiben Pflichtprüfungen.
-  Erster Schritt 0.24.0 gebaut: begrenzte rein lesende Kandidatensuche. Noch keine
-  allgemein ausführbaren Pläne; Kandidaten und gemeinsame Vorschau live bestätigt.
-  0.25.0: freigegebener Entwicklungspilot implementiert und installiert; Live-Abnahme offen.
-- [ ] **WICHTIG:** Bauaufträge mit vollständiger Wegversperrung standardmäßig vor
-  Ausführung verweigern; Ursache, Konfliktzellen und betroffene Zugänge melden.
-  [Bauplatzsuche und Wegschutz: Featureplan](docs/building-site-search-plan.md).
-  Diagnose-Prototyp 0.23.0 in drei Vorschauen geprüft: Wiederherstellung bestätigt,
-  Sperrwirkung unter 0.23.1 im Kontrolltest bestätigt. 0.23.1 ergänzt Kontrollvorschauen und verbundene
-  Ausgangszugänge; installiert, begrenzter Kontrolltest bestanden. Keine Freigabe als fertiger Wegschutz.
-  0.23.2 bestätigt Wegpunkte und erfasst Baustellenpunkte; Schutz der
-  Bauarbeiter-Erreichbarkeit weiterhin offen.
-  [Live-Nachweise und derzeitige Bausperre](docs/road-protection.md).
+[Projektstand](PROJECT_STATE.md) · [Backlog](BACKLOG.md) · [Werkzeuge](docs/tools.md) ·
+[Ausführung in 0.25.0](docs/building-project-execution-proposal.md).
 
 ## Nachweise und Historie
 
-Das [Projektjournal](docs/project-journal.md) enthält datierte Ergebnisse.
-Die [ursprüngliche Mission einschließlich aller Meilensteine bis 0.17.2](docs/history/missionsplan-2026-09-20.md)
-bleibt als Historie erhalten. Dortige alte Verbote, Installationsstände und offene Kästchen
-beschreiben ihren damaligen Zeitpunkt und sind keine aktuelle Arbeitsanweisung.
-
-0.24.1: gemeinsame Gebäude-/Wegvorschau gebaut, Planänderungen vor Vorschau abweisen;
-Gemeinsame Vorschau live bestätigt. Kein Abschluss der Bauausführungs-Abnahme.
-
-## Freigegebener Entwicklungspilot 0.25.0
-
-- [x] Ein kleines Lager mit höchstens zwei ebenen Wegen, gemeinsamer Vorschau,
-  eindeutiger Auftrags-ID, Statusabfrage und realer Rückprüfung je Schritt umsetzen.
-- [x] 0.25.0 installieren; Sicherung, Paketdateien und Konfiguration geprüft.
-- [ ] Einen regulären Bauauftrag samt realem Bauarbeiterzugang bestätigen.
-- Bauphasen-Vorabnachweis nur im ausdrücklich gewählten Entwicklungsmodus offen;
-  bekannte Sperren weiterhin ablehnen. Normaler Baupfad bleibt unverändert.
-  [Vertrag und Stopkriterien](docs/building-project-execution-proposal.md).
+Vorprüfung, Auftrag, Fertigstellung und Wirkung sind unterschiedliche Nachweise.
+Historische Abnahmen bleiben im [Projektjournal](docs/project-journal.md), in den
+[Fachverträgen](docs/README.md) und der [Kompatibilitätsdoku](docs/compatibility/timberborn.md).
+Sie enthalten frühere Ingame-Vorgaben, die durch die heutige Testsystem-Direktive
+überholt sind. Keine Kolonie rekonstruieren, nur um einen alten Testablauf zu wiederholen.

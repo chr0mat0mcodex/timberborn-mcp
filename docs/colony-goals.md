@@ -1,8 +1,9 @@
-# Spielziele: 100 Biber und vollständiger Gebäudekatalog
+# Historische Spieltests: 100 Biber und Gebäudekatalog
 
-**Aktuelle Priorität beim Chatabschluss 2026-10-02:** MCP-Entwicklung und enger
-0.25.0-Baupilot. Die folgenden Spielziele bleiben offen; kein automatischer Langlauf
-beim Wiedereinstieg. [Übergabe](session-handoff.md). Fortschritt unten ist historisch.
+**Historisches Protokoll, keine aktuellen Arbeitsaufträge.** Seit der Nutzerentscheidung
+vom 2026-10-02 haben Testsystem und effiziente Entwicklung Vorrang. Die Kolonie braucht
+nicht erhalten, rekonstruiert oder fertiggespielt zu werden. Die folgende Checkliste
+kann bei Bedarf als Testszenario dienen. [Aktuelle Mission](../missionsplan.md).
 
 Beauftragt am 2026-09-21. Reguläres Spiel über die eigene MCP-Mod; keine Cheats,
 Save-Manipulation oder Screenshot-Steuerung. Dieser ausdrückliche Spielauftrag

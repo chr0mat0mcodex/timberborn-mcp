@@ -3,10 +3,17 @@
 Start: [Übergabe/Einstieg](../START_HERE.md) · [README](../README.md) · [Projektstand](../PROJECT_STATE.md) ·
 [Mission](../missionsplan.md) · [Backlog](../BACKLOG.md).
 
+## Arbeitsweise
+
+[Testsystem und effiziente Entwicklung](../AGENTS.md) sind maßgeblich. Historische
+Ingame-Freigaben, Kolonieziele und Bestandsgrenzen in Fachprotokollen begründen keine
+heutigen Schutz- oder Wiederherstellungspflichten. Technische Verträge bleiben
+Versionsbeschreibungen, bis ihre Implementierung tatsächlich geändert wird.
+
 ## Aktueller Einstieg
 
-- [Chatabschluss und nächster konkreter Baupilot](session-handoff.md)
-- [Bauprojekt-Ausführung 0.25.0: Freigabe und Grenzen](building-project-execution-proposal.md)
+- [Technischer Wiedereinstieg](session-handoff.md)
+- [Bauprojekt-Ausführung 0.25.0: aktueller Codevertrag](building-project-execution-proposal.md)
 
 - [Installation und Aktionsfreigaben](native-bridge-install.md)
 - [Alle nativen MCP-Werkzeuge](tools.md)

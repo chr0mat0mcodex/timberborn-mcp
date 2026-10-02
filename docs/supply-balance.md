@@ -1,5 +1,9 @@
 # Versorgungsbilanz: begrenzter Live-Pilot
 
+**Historische Testauswertung.** Die folgenden Bestands-/Abbruchgrenzen galten für
+diesen damaligen Versuch, nicht als heutige Schutzregeln für die Testkolonie.
+Aktuell: Testsystem und effiziente Entwicklung, siehe [AGENTS.md](../AGENTS.md).
+
 Stand 2026-09-20, Bridge 0.20.0, kleine Folktails-Entwicklungskolonie.
 Der Agent kann Bedarf und Bestandsentwicklung über mehrere Spieltage beobachten.
 Eine ausgeglichene Grundversorgung wurde in diesem Pilot **nicht** nachgewiesen.

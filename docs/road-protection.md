@@ -1,5 +1,9 @@
 # Wegschutz-Diagnose — experimentell in 0.23.x
 
+**Arbeitsweise:** Testsystem, schnelle und effiziente Entwicklung. Ältere Einzel-
+freigaben und Spielstandschutzvorgaben sind überholt; Versionsgrenzen unten
+beschreiben den Code. [Aktuelle Direktiven](../AGENTS.md).
+
 **Kein fertiger Wegschutz. Nicht als reguläre Bauversion verwenden.**
 Aktuell installiert: 0.25.0; gemeinsame Vorschau unter 0.24.1 begrenzt live bestätigt.
 0.25.0 ergänzt ausschließlich den ausdrücklich freigegebenen kleinen

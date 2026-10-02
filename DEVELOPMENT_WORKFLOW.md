@@ -4,6 +4,14 @@ Aktuelle Architektur und Nachweise: [Projektstand](PROJECT_STATE.md).
 Der Entwicklungsweg verwendet die eigene Agent Bridge. Frühere Read-only-POC-Stände
 stehen im Journal und sind keine aktuelle Beschreibung des Funktionsumfangs.
 
+## Arbeitsprinzip
+
+Das Spiel ist ein austauschbares Testsystem. Schnelle, effiziente Entwicklung hat
+Vorrang vor Koloniepflege. Testbauten, Abriss und Simulationsläufe sind normale
+Testmittel; kein Save-Schutz oder Wiederherstellen des Ausgangszustands erforderlich.
+Zusammenhängende Änderungen bündeln, zuerst einen aussagekräftigen Fall prüfen,
+bei Bedarf erweitern. Gesicherte Ergebnisse nur bei relevanten Änderungen erneut prüfen.
+
 ## Build und Tests
 
 Vor Änderungen `git status --short --branch` prüfen und vorhandene Nutzeränderungen erhalten.
@@ -34,7 +42,7 @@ Jeder Aufruf erzeugt ein neues Paket unter `.local/packages/`; das verteilbare Z
 nur eigene DLLs, Manifest, Lizenz und Installationshinweise. Die zusätzlich lokal erzeugte
 private Konfiguration gehört nicht ins ZIP oder Git.
 
-Updates erst nach Speichern/Beenden des Spiels. Installationsziel und Mod-ID prüfen,
+Für den Dateiaustausch muss das Spiel beendet sein; Speichern ist nicht nötig. Installationsziel und Mod-ID prüfen,
 vorhandenen Modordner vollständig sichern, fünf Paketdateien vergleichen und private
 Konfiguration/Identitätsdateien erhalten. Keine Spielbibliotheken oder Fremdmods mitkopieren.
 [Installation](docs/native-bridge-install.md).
@@ -49,14 +57,15 @@ pwsh -NoProfile -File ./scripts/verify.ps1 `
 
 Dieser Aufruf führt zuerst die normalen Prüfungen und danach den nativen Lesetest aus.
 Dessen Werkzeugkatalog und tatsächlich abgefragte Fälle stehen in `LiveNativeTests.cs`;
-Katalogprüfung nicht mit vollständiger funktionaler Abnahme jedes Werkzeugs gleichsetzen. Schreibtests sind separate, ausdrücklich freigegebene Piloten mit
-frischer Session, begrenzten Aktionen und Rückabfragen. Das Skript aktiviert sie nicht.
+Katalogprüfung nicht mit vollständiger funktionaler Abnahme jedes Werkzeugs gleichsetzen.
+Schreibtests im Testsystem sind grundsätzlich autorisiert; technische Aktionsschalter
+explizit setzen und frische Sessions verwenden. Das Leseskript aktiviert sie nicht.
 `-Live` bezeichnet aus Kompatibilitätsgründen weiterhin den **historischen More-HTTP-API-Lesetest**,
 nicht den nativen Test. [Legacy-Hinweise](docs/legacy-backend.md).
 
 Vorprüfung, Spielvalidierung, Auftrag, Fertigstellung und Wirkung getrennt nachweisen.
-Fehler oder unconfirmed nicht automatisch wiederholen. Spielende/Neustart bleibt beim
-Nutzer; die Kontrolle erfolgt über strukturierte MCP-/API-Abfragen, nicht über UI-Eingaben.
+Bei Fehlern oder unconfirmed tatsächliche Wirkung klären und Ursache bearbeiten,
+nicht blind wiederholen. Erforderliches Spielende/Neustart mit dem Nutzer koordinieren; die Kontrolle erfolgt über strukturierte MCP-/API-Abfragen, nicht über UI-Eingaben.
 
 ## Dokumentation
 

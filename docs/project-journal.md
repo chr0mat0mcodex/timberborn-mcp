@@ -2011,3 +2011,17 @@ Werkzeugzahlen und nächste Aufgaben in Mission, Backlog und Dokumentationsindex
 bereinigt. Architekturentscheidung zur eng begrenzten Ausnahme nachgetragen.
 Bestehende AGENTS.md unverändert. Keine Rohunterhaltung, Spiel-IDs oder Zugangsdaten
 übernommen. Dokumentationsprüfung statt unnötigem erneutem Build/Spieltest.
+
+## 2026-10-02 — Direktiven abstrahiert: Testsystem, effiziente Entwicklung
+
+Auf ausdrücklichen Nutzerauftrag AGENTS.md um zwei maßgebliche Kernanweisungen
+bereinigt: austauschbares Testsystem und schnelle, effiziente Entwicklung.
+Keine Kolonie-Erhaltung, Save-Pflicht oder Rückfrage nur wegen Ingame-Verlusten.
+Normale MCP-Entwicklungstests einschließlich Bau/Abriss sind grundsätzlich freigegeben.
+
+Mission, Backlog, Projektstand, Einstieg und Übergabe auf technische Entwicklungsarbeit
+verdichtet. Frühere 100-Biber-/Gebäudesammelziele und konkrete Testbestände sind nur
+noch historische Szenarien. Alte enge Freigaben als überholt markiert, aktuelle
+Codegrenzen von Arbeitsbefugnissen getrennt. Build-/Installationsablauf entsprechend
+angepasst; keine Code-, Spiel-, Konfigurations- oder Moddatei geändert. Datenschutz,
+Git-Checkpoints und technische Funktionsnachweise bleiben erhalten.
