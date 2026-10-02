@@ -1,6 +1,6 @@
 # Projektstand
 
-Stand: 2026-10-02. Das Projekt entwickelt eine native MCP-Steuerung für Timberborn.
+Stand: 2026-10-03. Das Projekt entwickelt eine native MCP-Steuerung für Timberborn.
 Das Spiel ist ausschließlich Testsystem; konkrete Spielstände gehören nicht zur
 Projektbeschreibung.
 
@@ -12,7 +12,7 @@ Projektbeschreibung.
 | Automatisch | 648 reguläre Tests: 635 Unit, 13 Integration |
 | Mod-Build | Timberborn 1.1.2.4 / Folktails, ohne Warnungen und Fehler |
 | Laufzeit | Bridge und Schreibfreigabe strukturiert erreichbar |
-| Bauprojekt | begrenzter Ausführungspfad vorhanden; vollständiger Live-Nachweis offen |
+| Bauprojekt | begrenzter Pilot live: Vorschau, Weg, Lagerauftrag und Zugang rückgelesen |
 
 Arbeitsbranch: `codex/road-protection-pilot`. Die eigene Mod nutzt keine
 Fremdmod-Pflichtbasis.
@@ -32,10 +32,9 @@ Vorschau, Wegschutzdiagnose und schrittweise Bestätigung gebunden.
 
 ## Offene Arbeit
 
-1. Einen repräsentativen Bauprojekt-Livefall erfolgreich abschließen.
-2. Den Baupfad anschließend datengetrieben auf weitere Vorlagen, längere Anschlüsse
+1. Den Baupfad datengetrieben auf weitere Vorlagen, längere Anschlüsse
    und größere Vorhaben erweitern.
-3. Wegkonflikte, Produktionsblockaden sowie Hunger-/Durst- und Versorgungsdiagnosen
+2. Wegkonflikte, Produktionsblockaden sowie Hunger-/Durst- und Versorgungsdiagnosen
    zu evidenzbasierten Befunden bündeln.
 
 Details: [Fachverträge](docs/README.md), [Backlog](BACKLOG.md) und

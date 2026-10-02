@@ -2,11 +2,9 @@
 
 ## Priorität
 
-1. Bauprojektausführung live bestätigen und konkrete Platzierungsfehler im
-   tatsächlichen Ablauf beheben.
-2. Bauen kontrolliert auf weitere Vorlagen, längere Wege und größere Vorhaben
+1. Bauen kontrolliert auf weitere Vorlagen, längere Wege und größere Vorhaben
    erweitern.
-3. Wegkonflikte, Produktionsblockaden sowie Hunger-/Durst- und Versorgungsrisiken
+2. Wegkonflikte, Produktionsblockaden sowie Hunger-/Durst- und Versorgungsrisiken
    als nachvollziehbare Diagnosebefunde zusammenführen.
 
 ## Technische Lücken

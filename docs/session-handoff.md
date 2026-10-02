@@ -3,17 +3,16 @@
 ## Stand
 
 Agent Bridge 0.25.0 ist installiert und über den nativen MCP-Pfad erreichbar.
-Der aktuelle Arbeitsbranch ist `codex/road-protection-pilot`. Die regulären Tests
-und der Mod-Build sind dokumentiert; der aktuelle Bauprojektpfad braucht noch einen
-erfolgreichen Live-Nachweis.
+Der aktuelle Arbeitsbranch ist `codex/road-protection-pilot`. Ein begrenzter
+Bauprojekt-Livefall hat Vorschau, Wegauftrag, Lagerauftrag und Zugang über denselben
+Projektstatus sowie Objekt-Rücklesung bestätigt.
 
 ## Nächster Ablauf
 
-1. Bridge-Version, Session und Simulationszustand lesen.
-2. Einen begrenzten, gültigen Bauprojektkandidaten suchen.
-3. Vorschau und Ausführung über dieselbe Session und neue Aktions-ID durchführen.
-4. Projektstatus sowie die erzeugten Objekte und Zugänge strukturiert nachlesen.
-5. Bei Fehlern Ursache beheben; keine unbestätigte Aktion blind wiederholen.
+1. Die nächste Bauvorlage oder einen längeren Anschluss gezielt erweitern.
+2. Kandidat, Vorschau, Ausführung und Rücklesung weiterhin an dieselbe Session
+   und eine neue Aktions-ID binden.
+3. Bei Fehlern Ursache beheben; keine unbestätigte Aktion blind wiederholen.
 
 ## Wichtige Grenzen
 
