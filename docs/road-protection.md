@@ -72,11 +72,18 @@ Bauzulässigkeit zu ändern. `connectedBefore` zählt tatsächlich verbundene
 Ausgangspaare; eine vollständig unverbundene Basis ergibt `unknown` mit
 `navigation_no_connected_baseline`. Der Native-Vertrag verlangt das Feld ab 0.23.1;
 0.23.0 bleibt ohne dieses Feld lesbar. Alle Bauaufträge bleiben gesperrt.
-Installation geprüft; Live-Nachweis dieser Korrektur steht aus.
+Installation und begrenzter Kontrolltest dieser Korrektur bestätigt.
 
-## Nächster Nachweis: begrenzte Kontrollvorschau
+## Kontrolltest 0.23.1: bestanden (2026-10-02)
 
-Nach Installation ausschließlich Validierung, keine realen Bau-/Abrissaktionen:
+Zwei Vorschauen, 13 MCP-Aufrufe: Der geometrisch ungültige Kontrollplatz meldete
+`blocked`, 57 verbundene Ausgangspaare von 430 Vergleichen und zwei verlorene
+Zugänge samt betroffenen Objekten. Der freie Wegplatz meldete keinen Verlust und
+weiterhin `unknown` wegen unvollständiger Abdeckung. Beide Vorschauen wurden
+wiederhergestellt; unabhängige Wegabfrage unverändert, 171 Gebäude/Wegobjekte
+erhalten und Spielzeit unverändert pausiert. Keine Bau-/Abrissaufträge.
+
+Der ursprüngliche begrenzte Prüfplan:
 
 1. Ein bekannt freier Platz: geometrisches Ergebnis und `unknown` wegen fehlender
    Vollabdeckung nachvollziehbar; Weltbestand unverändert.
@@ -90,3 +97,5 @@ wirkt, den Pilot beenden und den Vorschau-Lebenszyklus korrigieren. Keine weiter
 Dutzende Blindversuche. Erst danach Baustellen-/Wegknotenabdeckung implementieren
 und sichere Bauaufträge freigeben. Keine Entfernung der Sperre nur aufgrund eines
 positiven Einzelplatztests. Bauplatzsuche bleibt ein separates Folgefeature.
+
+Nächster Entwicklungsschritt: Baustellen- und reine Wegknotenabdeckung prüfen und ergänzen. Die bestätigte Vorschau-Sperrwirkung allein erlaubt noch keine sichere Baufreigabe.

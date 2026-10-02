@@ -1831,3 +1831,14 @@ Spielende geprüft, installierte 0.23.0 vollständig gesichert und Sicherung per
 verifiziert. Fünf Paketdateien ersetzt und gegen das Paket geprüft; private
 Konfiguration und sämtliche Zusatzdateien unverändert. Nutzer startet das Spiel
 für den begrenzten Kontrolltest. Noch kein Live-Nachweis der Sperrwirkung.
+
+## 2026-10-02 — 0.23.1 Kontrolltest live bestanden
+
+Zwei reine Vorschauen mit insgesamt 13 MCP-Aufrufen: besetzter Kontrollplatz
+geometrisch ungültig, roadProtection=blocked, 57 verbundene Ausgangspaare bei 430
+Vergleichen, zwei verlorene Zugänge mit betroffenen Objekten. Freier Wegplatz
+geometrisch gültig, kein Verlust, unknown wegen fehlender Vollabdeckung.
+Beide Male restored=true; unabhängige Wegverbindung unverändert, alle 171
+Gebäude/Wegobjekte erhalten, Spielzeit unverändert pausiert. Keine Bau-/Abrissaufträge.
+Damit ist native Vorschau-Sperrwirkung belegt, nicht vollständiger Wegschutz.
+Baustellen und reine Wegknoten bleiben offen; Bauaufträge bleiben gesperrt.

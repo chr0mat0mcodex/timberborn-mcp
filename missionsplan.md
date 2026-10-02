@@ -105,8 +105,8 @@ Detailaufgaben und spätere Ideen stehen im [Backlog](BACKLOG.md).
   Ausführung verweigern; Ursache, Konfliktzellen und betroffene Zugänge melden.
   [Bauplatzsuche und Wegschutz: Featureplan](docs/building-site-search-plan.md).
   Diagnose-Prototyp 0.23.0 in drei Vorschauen geprüft: Wiederherstellung bestätigt,
-  Sperrwirkung noch unbelegt. 0.23.1 ergänzt Kontrollvorschauen und verbundene
-  Ausgangszugänge; installiert, Live-Test offen. Keine Freigabe als fertiger Wegschutz.
+  Sperrwirkung unter 0.23.1 im Kontrolltest bestätigt. 0.23.1 ergänzt Kontrollvorschauen und verbundene
+  Ausgangszugänge; installiert, begrenzter Kontrolltest bestanden. Keine Freigabe als fertiger Wegschutz.
   [Offener Live-Pilot und derzeitige Bausperre](docs/road-protection.md).
 
 ## Nachweise und Historie

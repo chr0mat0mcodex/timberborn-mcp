@@ -75,8 +75,8 @@ Neue Funktionen werden entsprechend dem Projektauftrag vor ihrer Umsetzung konkr
   wenn sie die letzte nutzbare Verbindung oder Gebäudezugänge versperren; konkrete
   Konflikte und betroffene Ziele melden. Auch direkte Platzierungen absichern.
   [Gemeinsamer Featureplan und Abnahme](docs/building-site-search-plan.md).
-  0.23.0: drei Vorschauen geprüft, negative Sperrwirkung noch unbelegt.
-  0.23.1 ergänzt Kontrollvorschauen und verbundene Ausgangszugänge; installiert, Live-Test offen.
+  0.23.0: drei Vorschauen geprüft, negative Sperrwirkung unter 0.23.1 im Kontrolltest bestätigt.
+  0.23.1 ergänzt Kontrollvorschauen und verbundene Ausgangszugänge; installiert, begrenzter Kontrolltest bestanden.
   [Diagnose-Prototyp](docs/road-protection.md), alle Bauaufträge bis zum vollständigen Nachweis gesperrt.
   Nächster Schritt: begrenzter Live-Vorschautest; danach Baustellen-/Wegknotenabdeckung.
 

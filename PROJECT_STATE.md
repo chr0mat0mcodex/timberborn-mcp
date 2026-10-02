@@ -1,6 +1,6 @@
 # Projektstand
 
-Stand: 2026-10-02. Codeversion: **0.23.1**, experimentelle Wegschutz-Diagnose; installiert, Live-Test offen.
+Stand: 2026-10-02. Codeversion: **0.23.1**, experimentelle Wegschutz-Diagnose; installiert, begrenzter Kontrolltest bestanden.
 **Alle Bauaufträge in 0.23.x vorläufig gesperrt**, bis Baustellen und Wegknoten zuverlässig abgedeckt sind.
 [Diagnosevertrag und nächster Pilot](docs/road-protection.md). Kein fertiger Wegschutz.
 Ingame-Zeitläufe aus 0.22.0 gebaut und automatisch geprüft;
