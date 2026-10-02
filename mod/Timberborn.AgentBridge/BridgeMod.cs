@@ -66,11 +66,11 @@ public sealed class BridgeMod(ResourceCountingService resources, PopulationServi
             Debug.LogError($"[Timberborn Agent Bridge] Start failed at {stage}: {ex.GetType().Name}. No game changes performed.");
         }
     }
-    public void UpdateSingleton() => queue.Pump(Observe);
-    public void Unload() { server?.Dispose(); queue.Dispose(); }
+    public void UpdateSingleton() { simulation.Update(); queue.Pump(Observe); }
+    public void Unload() { simulation.Unload(); server?.Dispose(); queue.Dispose(); }
     private string Observe(BridgeRequest request)
     {
-        if ((request.Diagnostics is not null && request.Diagnostics.Route!="needs" || request.Logistics is not null && request.Logistics.Route!="good-history" || request.Research?.Write == true || request.Settings is not null || request.Route is "alert-targets" or "building-validation" or "building-placement" or "site-validation" or "path-placement" or "lodge-placement" or "building" or "simulation-speed" or "workplace-staffing" or "priority" or "set-priority" or "set-area" or "remove-object") && request.Session != sessionId) throw new BridgeRejectionException("stale_session");
+        if ((request.SimulationRun is not null || request.Diagnostics is not null && request.Diagnostics.Route!="needs" || request.Logistics is not null && request.Logistics.Route!="good-history" || request.Research?.Write == true || request.Settings is not null || request.Route is "alert-targets" or "building-validation" or "building-placement" or "site-validation" or "path-placement" or "lodge-placement" or "building" or "simulation-speed" or "workplace-staffing" or "priority" or "set-priority" or "set-area" or "remove-object") && request.Session != sessionId) throw new BridgeRejectionException("stale_session");
         object RecordActivity()
         {
             var a=request.Activity!;
@@ -88,6 +88,7 @@ public sealed class BridgeMod(ResourceCountingService resources, PopulationServi
             "activity-log" => new { capacity=ActivityLog.Capacity, items=activityLog.Snapshot().AsEnumerable().Reverse().Take(32).Select(ActivityLog.Payload).ToArray(), revision=activityLog.Revision, windowVisible=activityWindow.Visible, uiAttached=activityWindow.Attached },
             "building-settings" => settings.Read(request.Settings!),
             "set-building-paused" or "set-storage-good" or "set-storage-mode" or "set-farm-priority" or "set-farm-crop" => settings.Set(request.Settings!),
+            "simulation-run-for" or "simulation-run-until" or "simulation-run" or "simulation-run-cancel" => simulation.Run(request.SimulationRun!),
             "simulation" => simulation.Observe(), "simulation-speed" => simulation.Set(request),
             "snapshot" => Snapshot(), "map" => Map(request), "objects" => spatial.Objects(request),
             "building-catalog" => catalog.Observe(request), "building-precheck" => spatial.Precheck(request), "building-validation" => validation.Validate(request), "building-placement" => placement.Place(request), "catalog" => spatial.Catalog(), "site-precheck" => spatial.Precheck(request),
@@ -102,7 +103,7 @@ public sealed class BridgeMod(ResourceCountingService resources, PopulationServi
             _ => throw new ArgumentException("invalid_request")
         };
         return JsonConvert.SerializeObject(new { schemaVersion = 1, sessionId, observedAtUtc = DateTimeOffset.UtcNow,
-            bridgeVersion = "0.21.1", data });
+            bridgeVersion = "0.22.0", data });
     }
     private object Snapshot()
     {

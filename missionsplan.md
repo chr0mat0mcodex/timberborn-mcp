@@ -92,11 +92,13 @@ Detailaufgaben und spätere Ideen stehen im [Backlog](BACKLOG.md).
 
 ## Wichtige zukünftige Steuerfunktionen
 
-- [ ] **WICHTIG:** Simulation für eine vorgegebene Ingame-Dauer (Stunden, Tage, Wochen) oder bis
+- [x] **WICHTIG — Implementierung 0.22.0:** Simulation für eine vorgegebene Ingame-Dauer (Stunden, Tage, Wochen) oder bis
   zu einem konkreten Ingame-Zeitpunkt laufen lassen. Zielkontrolle, automatisches
-  Pausieren sowie Status/Abbruch sollen als MCP-Funktion bereitstehen, statt vom
+  Pausieren sowie Status/Abbruch stehen als MCP-Funktion bereit, statt vom
   Agenten aus Echtzeit-Wartebefehlen zusammengesetzt zu werden.
   [Featureplan und Abnahmekriterien](docs/simulation-runs-plan.md).
+- [ ] Live-Abnahme der Zeitläufe: kleiner Pilot auf 1/3/7, Tagesgrenze, Abbruch und Eingriff;
+  anschließend Zielzeit und Pause unabhängig zurücklesen. Keine langen Spielschleifen vor Pilotnachweis.
 - [ ] **WICHTIG:** Bauplatzsuche nach Gebäude und Suchbereich mit konkret geprüften
   Positionen/Drehungen, Zugängen und klar benannten nötigen Vorarbeiten.
 - [ ] **WICHTIG:** Bauaufträge mit vollständiger Wegversperrung standardmäßig vor

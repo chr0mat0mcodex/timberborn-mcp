@@ -4,9 +4,9 @@
 
 | Komponente | Belegter Stand |
 | --- | --- |
-| Eigene Mod | 0.21.1 mit allen 30 Lesern und Inventardiagnose an fünf Gebäuden live geprüft; zuvor 0.21.0 installiert, fünf Datei-Hashes geprüft und Konfiguration erhalten; alle 30 Leser sowie Produktionsgraph und Lebenszustandsfix im begrenzten Live-Pilot bestätigt; zuvor 0.20.0 mit bekanntem Bedürfniszählfehler nach Todesfällen; unter 0.19.2 alle 26 Leser und konkrete Farm-/Holzfällerreichweiten live bestätigt; Sofort-Wegsuche einschließlich Unterbrechung zuvor bestätigt |
+| Eigene Mod | 0.22.0 gebaut und automatisch geprüft, Live-Abnahme offen; 0.21.1 mit allen 30 Lesern und Inventardiagnose an fünf Gebäuden live geprüft; zuvor 0.21.0 installiert, fünf Datei-Hashes geprüft und Konfiguration erhalten; alle 30 Leser sowie Produktionsgraph und Lebenszustandsfix im begrenzten Live-Pilot bestätigt; zuvor 0.20.0 mit bekanntem Bedürfniszählfehler nach Todesfällen; unter 0.19.2 alle 26 Leser und konkrete Farm-/Holzfällerreichweiten live bestätigt; Sofort-Wegsuche einschließlich Unterbrechung zuvor bestätigt |
 | Spiel | Timberborn 1.1.2.4, Folktails, kleine Entwicklungskolonie |
-| Tests | 487 reguläre Tests; Live-Piloten getrennt |
+| Tests | 528 reguläre Tests; Live-Piloten getrennt |
 | Fremdmods | Keine Pflichtabhängigkeit der eigenen Mod |
 | MCP | Externer C#-Server, native Auswahl, stdio |
 
@@ -14,6 +14,12 @@ Aktuelle Funktionen und Grenzen: [Projektstand](../../PROJECT_STATE.md).
 Keine Zusage für sämtliche Spielversionen, Fraktionen, Vorlagen oder Modkombinationen.
 
 ## Historisches Nachweisprotokoll
+
+### 2026-10-02 — 0.22.0 Zeitläufe vorbereitet
+
+528 reguläre Tests (515 Unit, 13 Integration), Mod-Build ohne Warnungen/Fehler.
+0.22.0 bei beendetem Spiel installiert; vollständige Sicherung der Vorversion,
+fünf Paketdateien per Hash geprüft, private Konfiguration erhalten. Live-Pilot offen.
 
 Die folgenden datierten Einträge behalten ihren damaligen Versions-/Installationsstand.
 Ein altes „offen“ oder „installiert bleibt …“ ist kein aktueller Status.

@@ -16,6 +16,12 @@ Zustandskonflikt für einen Verbindungsfehler zu halten. Die MCP-Werkzeuge bleib
 | `unsupported_storage_good`, `not_storage` | Lagerkomponente und erlaubte Güter prüfen. |
 | `not_farm`, `not_crop_prioritizer`, `unavailable_crop` | Farmkomponente und erlaubte Pflanzen prüfen. |
 | `unsupported_setting` | Unterstützte Gebäudeeinstellungen prüfen. |
+| `run_not_found` | Lauf-ID fehlt in dieser Session; nicht blind neu starten. |
+| `run_id_used` | ID bereits verwendet; Laufstatus lesen. |
+| `invalid_time_target` | Ziel liegt zurück oder mehr als 28 Spieltage voraus. |
+
+Ab 0.22.0 umfasst `state_conflict` auch abweichende Geschwindigkeit, einen bereits
+aktiven Zeitlauf oder die Grenze von 128 gespeicherten Laufbelegen pro Sitzung.
 
 Diese Codes entstehen ausschließlich an expliziten Vorbedingungen vor dem jeweiligen
 Zugriff oder Eingriff. Mod und MainThreadQueue geben nur Codes aus einer festen Positivliste weiter.

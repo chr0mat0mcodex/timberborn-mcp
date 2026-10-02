@@ -24,7 +24,7 @@ Start: [README](../README.md) · [Projektstand](../PROJECT_STATE.md) ·
 | Bedürfnisse und Betriebsbelege | [Native Werte, Warnflags und Produktionsvoraussetzungen](needs-and-operation.md) |
 | Güter und Status | [Bestände, Warnungen und Ziele](economy-observations.md) |
 | Erreichbarkeit und Bilanz | [Wege, Reichweiten und Güterhistorie](logistics.md), [Mehrtagspilot](supply-balance.md) |
-| Zeit | [Pause und Geschwindigkeiten](simulation-control.md) |
+| Zeit | [Pause und Geschwindigkeiten](simulation-control.md), [Ingame-Zeitläufe](simulation-runs-plan.md) |
 | Produktionsgraph | [Rohstoffe, Rezepte, Gebäude und Quellen](production-dependency-graph.md), ab 0.21.0; begrenzter Live-Pilot bestanden |
 | Forschung | [Punkte und Freischaltungen](research.md) |
 | Transparenz | [Ingame-Log](activity-log.md), [fachliche Fehler](bridge-errors.md) |
@@ -35,7 +35,7 @@ Datierte frühere Abnahmen sind kein Beweis für jede spätere Kombination.
 
 ## Geplante Funktionen
 
-- **WICHTIG:** [Simulation nach Ingame-Dauer oder bis Zielzeitpunkt](simulation-runs-plan.md) — geplant, noch nicht implementiert.
+- **WICHTIG:** [Simulation nach Ingame-Dauer oder bis Zielzeitpunkt](simulation-runs-plan.md) — 0.22.0 implementiert; Live-Abnahme offen.
 - **WICHTIG:** [Bauplatzsuche und Schutz vor Wegversperrung](building-site-search-plan.md) — geplante Bereichssuche und standardmäßige Ablehnung schädlicher Platzierungen.
 - [Weitere Alert-Abdeckung](alerts-plan.md) — aktive Entity-Status implementiert; zusätzliche Fälle offen.
 - [Frage-Popup im Spiel](player-question-popup.md) — öffentlich untersucht, noch nicht implementiert.

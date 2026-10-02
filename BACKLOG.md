@@ -66,7 +66,8 @@ Neue Funktionen werden entsprechend dem Projektauftrag vor ihrer Umsetzung konkr
 - **WICHTIG — Ingame-Zeitläufe:** Simulation für X Spielstunden/-tage/-wochen oder bis zu einem
   konkreten Spielzeitpunkt laufen lassen und automatisch pausieren; Zeitmessung,
   Auftragsstatus und Abbruch übernimmt der MCP-/Mod-Pfad.
-  [Featureplan und Abnahme](docs/simulation-runs-plan.md), noch nicht implementiert.
+  [Vertrag und Abnahme](docs/simulation-runs-plan.md): in 0.22.0 implementiert und automatisch
+  geprüft. **Offen: begrenzter Live-Pilot mit Zielzeit und bestätigter Pause.**
 
 - **WICHTIG — Bauplatzsuche:** Gebäudevorlage und Suchbereich angeben; konkrete,
   geprüfte Plätze mit Drehung, Eingang, Anschluss und etwaigen Vorarbeiten erhalten.

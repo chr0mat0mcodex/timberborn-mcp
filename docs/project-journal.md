@@ -1749,3 +1749,22 @@ Strauch auf freien vorgeprüften Zellen errichtet und alle drei fertig zurückge
 Damit 26/157 reguläre Gebäudetypen bestätigt. Letzter Kontrollpunkt Tag 68 abends:
 40 lebende Biber (38 Erwachsene, zwei Kinder), 40 Betten, 141 Wasser, 220 Beeren,
 33 Karotten, 232 Holz, 56 Bretter, 25 Zahnräder. Simulation wieder pausiert.
+
+## 2026-10-02 — Begrenzte Ingame-Zeitläufe 0.22.0
+
+Vier neue MCP-Werkzeuge für Dauer, Zielzeit, Status und Abbruch; Hauptthread-Prüfung
+an der tatsächlichen Spieluhr, Erfolg erst nach bestätigter Pause. Ein aktiver Lauf,
+UUID-Deduplizierung, 28 Spieltage Höchstdauer, verpflichtende Echtzeitgrenze,
+Stillstandserkennung und verzögerte Geschwindigkeitsbestätigung. MCP-Disconnect
+lässt den begrenzten Modauftrag weiterlaufen; Szenenwechsel übernimmt keine Aufträge.
+Keine neuen Bibliotheken, Fremdmods, Spielstanddaten oder privaten Spiel-APIs.
+
+528 reguläre Tests bestanden (515 Unit, 13 Integration); Mod gegen lokale Spiel-DLLs
+gebaut, keine Warnungen/Fehler. Integration testet den aktuellen Versionsvertrag
+auch für bestehende Leser und Aktionslog. Drei alte lokale Projekt-MCP-Prozesse
+blockierten den Build; exakt identifiziert und beendet. Keine Spielprozesse beendet.
+
+0.22.0 bei bereits beendetem Spiel installiert, vollständige Sicherung der Vorversion,
+fünf Paketdateien per Hash geprüft, private Konfiguration unverändert. Live-Abnahme
+steht aus und beginnt mit einem kleinen Zeitlauf-Pilot. Mission/Backlog trennen
+Implementierung und Live-Nachweis. Bauplatzsuche/Wegschutz bleiben Folgearbeiten.

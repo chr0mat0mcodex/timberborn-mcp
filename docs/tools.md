@@ -1,9 +1,8 @@
 # Native MCP-Werkzeuge
 
-Stand: Agent Bridge 0.21.1 mit Inventaren in inspect_building_operation; installiert und mit allen 30 Lesern sowie konkreten Inventaren live geprüft. 0.21.0 mit allen 30 Lesern live bestätigt.
-0.21.1 ist installiert; der Lebenszustandsfix ist mit 11 lebenden und zwei ausgeschlossenen toten Bibern live bestätigt. Aus `NativeTools.Catalog` mit allen Freigaben abgeglichen:
-30 Leser und 19 Werkzeuge für Aktionen/Vorschauvalidierung. Nicht jede Kombination
-ist live geprüft; Nachweise und Grenzen stehen in den Fachdokumenten.
+Stand: Agent Bridge 0.22.0. 31 Leser und 22 Werkzeuge für Aktionen/Vorschauvalidierung.
+Neu: Ingame-Zeitläufe, automatisch geprüft; Live-Abnahme offen. Die 30 bisherigen Leser
+sind unter 0.21.1 live belegt. Nachweise und Grenzen stehen in den Fachdokumenten.
 
 ## Leser
 
@@ -25,6 +24,7 @@ ist live geprüft; Nachweise und Grenzen stehen in den Fachdokumenten.
 - `inspect_build_catalog`
 - `precheck_build_site`
 - `inspect_building`
+- `inspect_simulation_run` — Status eines Zeitlaufs
 - `inspect_simulation`
 - `inspect_workforce`
 - `inspect_building_priority`
@@ -41,6 +41,7 @@ ist live geprüft; Nachweise und Grenzen stehen in den Fachdokumenten.
 ## Freizugebende Werkzeuge
 
 - `set_workplace_staffing`
+- `run_simulation_for`, `run_simulation_until`, `cancel_simulation_run` — [Zeitläufe](simulation-runs-plan.md)
 - `set_simulation_speed`
 - `validate_build_site`
 - `place_path`

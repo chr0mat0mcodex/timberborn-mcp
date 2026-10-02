@@ -1,6 +1,7 @@
 # Eigene Agent Bridge installieren und MCP starten
 
-Aktueller Entwicklungsstand: **0.21.1**, gebaut gegen Timberborn 1.1.2.4.
+Aktueller Entwicklungsstand: **0.22.0**, gebaut gegen Timberborn 1.1.2.4.
+Neu: [Ingame-Zeitläufe](simulation-runs-plan.md), automatisch geprüft; Live-Abnahme offen.
 0.21.1 erweitert die Gebäudediagnose um Inventare; installiert und mit allen 30 Lesern sowie konkreten Inventaren live geprüft. Bereits unter 0.21.0 mit Produktionsgraph und Lebenszustandskorrektur alle 30 Leser und der gezielte Graph-/Lebenszustandspilot sind live bestanden. Zuvor 0.20.0
 mit bekanntem Fehler bei der Zählung verstorbener Biber in der Bedürfnisübersicht. Drei neue Diagnoseleser: Bedürfnisse der Kolonie,
 Details je Biber und Gebäudebetrieb; [Vertrag](needs-and-operation.md).
@@ -85,7 +86,7 @@ Neue Paketkonfigurationen und der Lesestarter deaktivieren alle Gruppen.
 | --- | --- | --- |
 | enableBuildingPlacement | TIMBERBORN_ENABLE_BUILDING_PLACEMENT | validate_building, place_building |
 | enableBuildingSettings | TIMBERBORN_ENABLE_BUILDING_SETTINGS | set_building_paused, set_storage_good, set_storage_mode, set_farm_priority, set_farm_crop |
-| enableSpeedControl | TIMBERBORN_ENABLE_SPEED_CONTROL | set_simulation_speed |
+| enableSpeedControl | TIMBERBORN_ENABLE_SPEED_CONTROL | set_simulation_speed, run_simulation_for, run_simulation_until, cancel_simulation_run |
 | enableStaffing | TIMBERBORN_ENABLE_STAFFING | set_workplace_staffing |
 | enablePriorities | TIMBERBORN_ENABLE_PRIORITIES | set_building_priority |
 | enableAreas | TIMBERBORN_ENABLE_AREAS | set_area |

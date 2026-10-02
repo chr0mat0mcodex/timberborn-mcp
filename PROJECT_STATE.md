@@ -1,7 +1,12 @@
 # Projektstand
 
-Stand: 2026-09-21. Codeversion: **0.21.1**, Gebäudeinventardiagnose gebaut, regulär getestet, installiert und mit allen 30 Lesern live geprüft. Zuvor 0.21.0 mit 30 Lesern live bestätigt.
-Installiert ist **0.21.1**, fünf Datei-Hashes geprüft und Konfiguration erhalten. Zuvor unter **0.20.0**: 29 Leser live geprüft, danach Fehler bei weiter registrierten
+Stand: 2026-10-02. Codeversion: **0.22.0**, Ingame-Zeitläufe gebaut und automatisch geprüft;
+Live-Abnahme offen. [Vertrag und Pilot](docs/simulation-runs-plan.md).
+Aktueller Schwerpunkt ist MCP-Entwicklung; kein autonomer Kolonieaufbau als Fortsetzung.
+0.21.1: Gebäudeinventardiagnose mit allen damaligen 30 Lesern live geprüft.
+Installiert ist **0.22.0**, Vorversion vollständig gesichert, fünf Datei-Hashes geprüft
+und private Konfiguration erhalten. Live-Abnahme der Zeitläufe steht aus.
+Zuvor unter **0.20.0**: 29 Leser live geprüft, danach Fehler bei weiter registrierten
 verstorbenen Bibern gefunden (Bedürfniszählung 13 statt 11 lebender Biber).
 Sofort-Wegsuche einschließlich Unterbrechung/Wiederherstellung unter **0.19.1** live bestätigt. Farm-/Holzfällerreichweiten unter 0.19.2 über den konkreten Terrainzugriff bestätigt.
 Die Version im [Manifest](mod/Timberborn.AgentBridge/manifest.json) ist die Codeversion;
@@ -66,7 +71,7 @@ Keine abschließende Nachhaltigkeits- oder 100-Biber-Abnahme.
 
 | Ebene | Beleg |
 | --- | --- |
-| Automatisch | 487 reguläre Tests: 474 Unit, 13 Integration; drei opt-in Live-Tests im Standardlauf übersprungen |
+| Automatisch | 528 reguläre Tests: 515 Unit, 13 Integration; drei opt-in Live-Tests im Standardlauf übersprungen |
 | Mod-Build | Gegen Timberborn 1.1.2.4, ohne Warnungen/Fehler |
 | Installation | Fünf Paketdateien per SHA-256 geprüft, private Konfiguration erhalten |
 | Live 0.21.1 | Alle 30 Leser; fünf Gebäudeinventare erklären exakt 138 Wasser: Tanks 60, Pumpen 30, Distriktzentrum 48; keine Kapazitätsreservierung für Wasser |

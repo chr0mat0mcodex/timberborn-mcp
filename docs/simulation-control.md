@@ -1,5 +1,9 @@
 # Simulation lesen und steuern — 0.11.0
 
+Ab 0.22.0 ergänzt: [begrenzte Ingame-Zeitläufe](simulation-runs-plan.md).
+Ein gültiger expliziter Geschwindigkeitsaufruf unterbricht einen aktiven Zeitlauf,
+auch wenn derselbe Geschwindigkeitswert angefordert wird.
+
 - [x] Pause und alle drei regulären Spielstufen implementiert: 0, 1, 3, 7.
 - [x] Ziel und expectedSpeed auf diese vier Werte begrenzt; Session-/Istwertschutz erhalten.
 - [x] In 0.11.0 eingeführt und live abgenommen; aktueller Gesamtstand: [Projektstand](../PROJECT_STATE.md).
