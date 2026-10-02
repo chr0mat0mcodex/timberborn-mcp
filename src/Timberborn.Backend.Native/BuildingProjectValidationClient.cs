@@ -17,7 +17,7 @@ public sealed partial class NativeClient
     public static void ValidateProjectEvidence(BridgeEnvelope<NativeProjectValidation> e,BuildingProjectValidationRequest r)
     {
         var d=e.Data;var p=r.Plan;
-        if(e.BridgeVersion!="0.24.1"||e.SessionId!=p.Session||d is null||d.Template!=p.Template||d.PlanKey!=r.PlanKey||
+        if(e.BridgeVersion is not ("0.24.1" or "0.25.0")||e.SessionId!=p.Session||d is null||d.Template!=p.Template||d.PlanKey!=r.PlanKey||
             d.OptionIndex!=r.OptionIndex||d.Option is null||d.Option.PlanKey!=r.PlanKey||d.Executable||
             d.RoadValid is null||d.RoadStepLostConnections is null||d.RoadValid.Length>8||
             d.RoadValid.Length!=d.Option.NewRoadCells?.Length||d.RoadStepLostConnections.Length!=d.RoadValid.Length||

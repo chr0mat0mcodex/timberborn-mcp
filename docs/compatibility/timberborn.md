@@ -4,9 +4,9 @@
 
 | Komponente | Belegter Stand |
 | --- | --- |
-| Eigene Mod | 0.22.0 automatisch geprüft, Zeitläufe/Abbruch/Eingriff im begrenzten MCP-Live-Pilot bestätigt; 0.21.1 mit allen 30 Lesern und Inventardiagnose an fünf Gebäuden live geprüft; zuvor 0.21.0 installiert, fünf Datei-Hashes geprüft und Konfiguration erhalten; alle 30 Leser sowie Produktionsgraph und Lebenszustandsfix im begrenzten Live-Pilot bestätigt; zuvor 0.20.0 mit bekanntem Bedürfniszählfehler nach Todesfällen; unter 0.19.2 alle 26 Leser und konkrete Farm-/Holzfällerreichweiten live bestätigt; Sofort-Wegsuche einschließlich Unterbrechung zuvor bestätigt |
+| Eigene Mod | 0.25.0 begrenzter Bauprojekt-Pilot gebaut/automatisch geprüft; Installation und Live-Test offen. Installiert 0.24.1, gemeinsame Vorschau begrenzt live bestätigt. Vorher: 0.22.0 automatisch geprüft, Zeitläufe/Abbruch/Eingriff im begrenzten MCP-Live-Pilot bestätigt; 0.21.1 mit allen 30 Lesern und Inventardiagnose an fünf Gebäuden live geprüft; zuvor 0.21.0 installiert, fünf Datei-Hashes geprüft und Konfiguration erhalten; alle 30 Leser sowie Produktionsgraph und Lebenszustandsfix im begrenzten Live-Pilot bestätigt; zuvor 0.20.0 mit bekanntem Bedürfniszählfehler nach Todesfällen; unter 0.19.2 alle 26 Leser und konkrete Farm-/Holzfällerreichweiten live bestätigt; Sofort-Wegsuche einschließlich Unterbrechung zuvor bestätigt |
 | Spiel | Timberborn 1.1.2.4, Folktails, kleine Entwicklungskolonie |
-| Tests | 614 reguläre Tests; Live-Piloten getrennt |
+| Tests | 648 reguläre Tests; Live-Piloten getrennt |
 | Fremdmods | Keine Pflichtabhängigkeit der eigenen Mod |
 | MCP | Externer C#-Server, native Auswahl, stdio |
 
@@ -329,3 +329,10 @@ von 0.17.2 abgeschlossen; übrige Fehlerbereiche bleiben wie dokumentiert offen.
 gezielter Abbruch und expliziter Pauseneingriff bestätigt. Vier erfolgreich abgeschlossene
 Zeitläufe mit Überschreitung 0; jeweils unabhängige Uhr-/Pausenrückabfrage. Schlusszustand
 pausiert. [Messwerte und verbleibende Grenzen](../simulation-runs-plan.md#live-pilot-2026-10-02).
+
+### 2026-10-02 — 0.25.0 Bauprojekt-Pilot vorbereitet
+
+648 reguläre Tests (635 Unit, 13 Integration), einschließlich realem MCP-stdio-
+Transport mit synthetischem Spielport. Mod gegen unveränderte 1.1.2.4-Referenzen
+gebaut. Keine neue Fremdmod. Installation/Live-Nachweis noch offen; kein realer
+Bauauftrag mit dieser Version ausgeführt. [Vertrag](../building-project-execution-proposal.md).

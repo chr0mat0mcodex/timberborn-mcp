@@ -4,9 +4,12 @@ Eine eigene Timberborn-Mod und ein lokaler C#-MCP-Server ermöglichen einem KI-A
 das Spiel strukturiert zu beobachten und über reguläre Spielaktionen zu steuern.
 Ziel ist ein Agent, der Wasser, Nahrung, Holz, Wege und Wohnraum aufbaut und betreibt.
 
-**Entwicklungsstand: Agent Bridge 0.24.1 (experimentelle Wegschutz-Diagnose)**,
-**MCP-Bauaufträge in dieser Version vorläufig gesperrt.** 0.24.1 ist für die gemeinsame Vorschau installiert; 0.24.0 wurde gesichert.
-Noch kein vollständiger Wegschutz; [Grenzen und Pilot](docs/road-protection.md).
+**Entwicklungsstand: Agent Bridge 0.25.0 (begrenzter Bauprojekt-Pilot)**.
+Ein expliziter Entwicklungsaufruf koppelt kleines Lager und bis zu zwei neue Wege:
+frische gemeinsame Vorschau, schrittweise Platzierung, Auftragsstatus und reale
+Zugangsprüfung. **Noch nicht installiert oder live abgenommen**; installiert ist 0.24.1.
+Normale Bauaufrufe bleiben gesperrt; vollständiger Wegschutz ist weiterhin offen.
+[Umfang, Ausnahme und Abnahme](docs/building-project-execution-proposal.md).
 Die Mod wird gebaut gegen Timberborn **1.1.2.4 / Folktails**.
 Neu: [begrenzte Ingame-Zeitläufe](docs/simulation-runs-plan.md) mit automatischer Pause,
 Status und Abbruch. Automatisch geprüft und im begrenzten MCP-Live-Pilot bestätigt.
@@ -20,7 +23,7 @@ und Lagerwarnungen mit betroffenen Zielen sind bestätigt. Weitere Warnungstypen
 Die Güterhistorie ist über einen Tageswechsel und die Sofort-Wegsuche einschließlich
 Unterbrechung/Wiederaufbau live bestätigt. Der direkte Terrainzugriff liefert im Live-Pilot
 485 Zellen für die Farm und 611 für den Holzfäller; erste und letzte Seite geprüft.
-614 reguläre Tests bestehen (601 Unit, 13 Integration).
+648 reguläre Tests bestehen (635 Unit, 13 Integration).
 Die Basisaktionen funktionieren; zuverlässiges autonomes Koloniemanagement ist noch in Entwicklung.
 
 **Keine zusätzliche Spielmod erforderlich.** Die eigene Mod hat `RequiredMods: []`.

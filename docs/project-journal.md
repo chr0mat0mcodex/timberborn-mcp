@@ -1968,3 +1968,20 @@ Separate Entscheidung nötig, ob ein eng begrenzter Entwicklungs-Baupilot den fe
 Vorabnachweis offen ausweisen darf; Normalmodus unverändert gesperrt. Kein Code-/
 Spiel-/Konfigurationswechsel und keine Aktivierung eines solchen Pilotmodus.
 [Entscheidungsvorlage](building-project-execution-proposal.md).
+
+## 2026-10-02 — 0.25.0 begrenzte Bauprojektausführung
+
+Konkreter Entwicklungspilot ausdrücklich freigegeben: ein kleines Lager plus maximal
+zwei ebene Wege; nur der unbekannte Bauphasen-Vorabnachweis darf offenbleiben.
+Separate MCP-Ausführung und Statusabfrage, strikte Plan-/Session-Bindung, ein Auftrag
+je Sitzung, Wiederholschutz und Rückprüfung über mehrere Hauptthread-Updates.
+Bestehende Zugänge und schon bestätigte Wege werden weiter kontrolliert. Wege müssen
+real verbunden sein; beim Lager sind Baustelle, Eingang und native Bauarbeiter-
+Erreichbarkeit Pflicht. Fünf Sekunden Bestätigungsfrist je Objekt, keine automatische
+Wiederholung oder Rücknahme. Normale Platzierungen behalten ihre bisherigen Sperren.
+
+648 reguläre Tests (635 Unit, 13 Integration), darunter Scope-/Wegschutzablehnungen,
+Navigationsverzögerung, Teilfehler, doppelte/abweichende IDs, Planbindung und echter
+MCP-stdio-Transport mit synthetischem Spielport. Mod-Build und Paket ohne neue
+Abhängigkeiten. 0.24.1 bleibt installiert; Nutzer muss vor Austausch speichern und
+beenden. Reale Bauabnahme von 0.25.0 ausdrücklich noch offen.

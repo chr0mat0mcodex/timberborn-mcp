@@ -1,9 +1,10 @@
 # Bauvorhaben mit Anschlussweg: Bauplatzsuche und Wegschutz
 
-Status: Gemeinsamer Bauplan am 2026-10-02 zur Umsetzung freigegeben. In **0.24.0** ist
-die rein lesende Kandidatensuche begrenzt live bestätigt; gemeinsame
-Spielvalidierung und Ausführung stehen aus. Wegschutz weiterhin experimentell,
-kein vollständiger Schutz. Priorität: **WICHTIG**.
+Status: Kandidatensuche und gemeinsame Vorschau in 0.24.1 begrenzt live bestätigt.
+0.25.0 implementiert den ausdrücklich freigegebenen Entwicklungs-Baupilot für ein
+kleines Lager plus höchstens zwei ebene Wege. Installation/Live-Abnahme stehen aus.
+Normale Bauaufrufe bleiben gesperrt; kein vollständiger Wegschutz. Priorität: **WICHTIG**.
+[Ausführungsvertrag](building-project-execution-proposal.md).
 [Aktueller Diagnosevertrag, Bausperre und Pilot](road-protection.md).
 Nutzerauftrag vom 2026-09-21. Ergänzt [generisches Bauen](generic-building.md)
 und die vorhandenen [Erreichbarkeitsabfragen](logistics.md).
@@ -180,7 +181,7 @@ Wegzellen separat vorgeprüft, ohne Konfliktgründe. Kein Ersatz für Spielvalid
 Alle Optionen nicht ausführbar; 172 Gebäude/Wegobjekte und pausierte Spielzeit
 unverändert. Kandidatensuche begrenzt bestätigt, gemeinsame Validierung noch offen.
 
-## Gemeinsame Vorschau (0.24.1, Live-Nachweis offen)
+## Gemeinsame Vorschau (0.24.1, begrenzter Live-Pilot bestanden)
 
 `validate_building_project` übernimmt dieselben Suchparameter wie der Planungsaufruf
 sowie `optionIndex` (0..3) und `planKey` aus dessen aktueller Antwort. Ab 0.24.1 enthält

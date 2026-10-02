@@ -107,7 +107,8 @@ Detailaufgaben und spätere Ideen stehen im [Backlog](BACKLOG.md).
   Gebäudeauftrag. Teilerfolge melden; kein automatischer Abriss-Rollback.
   Bestehende Zugänge und Bauarbeiter-Erreichbarkeit bleiben Pflichtprüfungen.
   Erster Schritt 0.24.0 gebaut: begrenzte rein lesende Kandidatensuche. Noch keine
-  ausführbaren Pläne; begrenzt live bestätigt; gemeinsame Validierung und Ausführung offen.
+  allgemein ausführbaren Pläne; Kandidaten und gemeinsame Vorschau live bestätigt.
+  0.25.0: freigegebener Entwicklungspilot implementiert; Installation/Live-Abnahme offen.
 - [ ] **WICHTIG:** Bauaufträge mit vollständiger Wegversperrung standardmäßig vor
   Ausführung verweigern; Ursache, Konfliktzellen und betroffene Zugänge melden.
   [Bauplatzsuche und Wegschutz: Featureplan](docs/building-site-search-plan.md).
@@ -126,4 +127,13 @@ bleibt als Historie erhalten. Dortige alte Verbote, Installationsstände und off
 beschreiben ihren damaligen Zeitpunkt und sind keine aktuelle Arbeitsanweisung.
 
 0.24.1: gemeinsame Gebäude-/Wegvorschau gebaut, Planänderungen vor Vorschau abweisen;
-Installation/Live-Nachweis offen. Kein Abschluss der Bauausführungs-Abnahme.
+Gemeinsame Vorschau live bestätigt. Kein Abschluss der Bauausführungs-Abnahme.
+
+## Freigegebener Entwicklungspilot 0.25.0
+
+- [x] Ein kleines Lager mit höchstens zwei ebenen Wegen, gemeinsamer Vorschau,
+  eindeutiger Auftrags-ID, Statusabfrage und realer Rückprüfung je Schritt umsetzen.
+- [ ] Installieren und einen regulären Bauauftrag samt realem Bauarbeiterzugang bestätigen.
+- Bauphasen-Vorabnachweis nur im ausdrücklich gewählten Entwicklungsmodus offen;
+  bekannte Sperren weiterhin ablehnen. Normaler Baupfad bleibt unverändert.
+  [Vertrag und Stopkriterien](docs/building-project-execution-proposal.md).

@@ -27,7 +27,7 @@ public sealed class BridgeConfigurator : Configurator
         Bind<WorkplaceStaffing>().AsSingleton();
         Bind<PriorityAndConstruction>().AsSingleton(); Bind<AreaManagement>().AsSingleton(); Bind<RemovalManagement>().AsSingleton();
         Bind<RoadProtection>().AsSingleton(); Bind<SiteValidation>().AsSingleton();
-        Bind<PilotPlacement>().AsSingleton();
+        Bind<BuildingProjectExecution>().AsSingleton(); Bind<PilotPlacement>().AsSingleton();
         Bind<SimulationControl>().AsSingleton();
         Bind<BridgeMod>().AsSingleton();
     }
@@ -35,7 +35,7 @@ public sealed class BridgeConfigurator : Configurator
 
 public sealed class BridgeMod(ResourceCountingService resources, PopulationService population,
     EntityRegistry entities, ITerrainService terrain, IThreadSafeWaterMap water, IGoodService goods,
-    ModRepository mods, SpatialObservations spatial, SiteValidation validation, PilotPlacement placement, BuildingObservations buildings, SimulationControl simulation, WorkforceObservations workforce, WorkplaceStaffing staffing, PriorityAndConstruction management, AreaManagement areas, RemovalManagement removal, BuildingCatalog catalog, BuildingSettings settings, ActivityLog activityLog, ActivityLogWindow activityWindow, Research research, EconomyObservations economy, LogisticsObservations logistics, DiagnosticsObservations diagnostics, ProductionGraph productionGraph, BuildingProjectPlanner projectPlanner)
+    ModRepository mods, SpatialObservations spatial, SiteValidation validation, PilotPlacement placement, BuildingObservations buildings, SimulationControl simulation, WorkforceObservations workforce, WorkplaceStaffing staffing, PriorityAndConstruction management, AreaManagement areas, RemovalManagement removal, BuildingCatalog catalog, BuildingSettings settings, ActivityLog activityLog, ActivityLogWindow activityWindow, Research research, EconomyObservations economy, LogisticsObservations logistics, DiagnosticsObservations diagnostics, ProductionGraph productionGraph, BuildingProjectPlanner projectPlanner, BuildingProjectExecution projectExecution)
     : ILoadableSingleton, IUnloadableSingleton, IUpdatableSingleton
 {
     private readonly MainThreadQueue queue = new();
@@ -66,11 +66,11 @@ public sealed class BridgeMod(ResourceCountingService resources, PopulationServi
             Debug.LogError($"[Timberborn Agent Bridge] Start failed at {stage}: {ex.GetType().Name}. No game changes performed.");
         }
     }
-    public void UpdateSingleton() { simulation.Update(); queue.Pump(Observe); }
+    public void UpdateSingleton() { simulation.Update(); projectExecution.Update(); queue.Pump(Observe); }
     public void Unload() { simulation.Unload(); server?.Dispose(); queue.Dispose(); }
     private string Observe(BridgeRequest request)
     {
-        if ((request.ProjectValidation is not null || request.BuildingPlan is not null || request.SimulationRun is not null || request.Diagnostics is not null && request.Diagnostics.Route!="needs" || request.Logistics is not null && request.Logistics.Route!="good-history" || request.Research?.Write == true || request.Settings is not null || request.Route is "alert-targets" or "building-validation" or "building-placement" or "site-validation" or "path-placement" or "lodge-placement" or "building" or "simulation-speed" or "workplace-staffing" or "priority" or "set-priority" or "set-area" or "remove-object") && request.Session != sessionId) throw new BridgeRejectionException("stale_session");
+        if ((request.ProjectExecution is not null || request.ProjectValidation is not null || request.BuildingPlan is not null || request.SimulationRun is not null || request.Diagnostics is not null && request.Diagnostics.Route!="needs" || request.Logistics is not null && request.Logistics.Route!="good-history" || request.Research?.Write == true || request.Settings is not null || request.Route is "alert-targets" or "building-validation" or "building-placement" or "site-validation" or "path-placement" or "lodge-placement" or "building" or "simulation-speed" or "workplace-staffing" or "priority" or "set-priority" or "set-area" or "remove-object") && request.Session != sessionId) throw new BridgeRejectionException("stale_session");
         object RecordActivity()
         {
             var a=request.Activity!;
@@ -91,6 +91,7 @@ public sealed class BridgeMod(ResourceCountingService resources, PopulationServi
             "simulation-run-for" or "simulation-run-until" or "simulation-run" or "simulation-run-cancel" => simulation.Run(request.SimulationRun!),
             "simulation" => simulation.Observe(), "simulation-speed" => simulation.Set(request),
             "snapshot" => Snapshot(), "map" => Map(request), "objects" => spatial.Objects(request),
+            "building-project-execution" => projectExecution.Handle(request.ProjectExecution!),
             "building-project-validation" => validation.ValidateProject(request.ProjectValidation!), "building-plan" => projectPlanner.Plan(request.BuildingPlan!), "building-catalog" => catalog.Observe(request), "building-precheck" => spatial.Precheck(request), "building-validation" => validation.Validate(request), "building-placement" => placement.Place(request), "catalog" => spatial.Catalog(), "site-precheck" => spatial.Precheck(request),
             "site-validation" => validation.Validate(request),
             "priority" or "set-priority" => management.Priority(request.Management!),
@@ -103,7 +104,7 @@ public sealed class BridgeMod(ResourceCountingService resources, PopulationServi
             _ => throw new ArgumentException("invalid_request")
         };
         return JsonConvert.SerializeObject(new { schemaVersion = 1, sessionId, observedAtUtc = DateTimeOffset.UtcNow,
-            bridgeVersion = "0.24.1", data });
+            bridgeVersion = "0.25.0", data });
     }
     private object Snapshot()
     {

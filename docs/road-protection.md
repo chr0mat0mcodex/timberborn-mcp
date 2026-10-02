@@ -1,7 +1,10 @@
 # Wegschutz-Diagnose — experimentell in 0.23.x
 
 **Kein fertiger Wegschutz. Nicht als reguläre Bauversion verwenden.**
-0.23.1 ist seit 2026-10-02 für die freigegebene Kontrollvorschau installiert; 0.23.0 vollständig gesichert.
+Aktuell installiert: 0.24.1, gemeinsame Vorschau begrenzt live bestätigt.
+0.25.0 ergänzt ausschließlich den ausdrücklich freigegebenen kleinen
+[Entwicklungs-Baupilot](building-project-execution-proposal.md); noch nicht installiert.
+Die hier beschriebene normale Unknown-Sperre bleibt unverändert.
 In 0.23.x sind sämtliche MCP-Bauaufträge vorläufig gesperrt, einschließlich Path/Lodge-
 Pilotpfaden. Der Grund ist die noch nicht belegte Abdeckung von Baustellen und reinen
 Wegknoten. Sonstige Werkzeuge behalten ihren bisherigen Umfang.

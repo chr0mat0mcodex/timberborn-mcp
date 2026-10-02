@@ -60,6 +60,14 @@ public sealed class NativeBridgeTests
                 : r.Route == "simulation-run-cancel" ? simulationRuns.Cancel(r.RunId, 24, currentSpeed, now, s => currentSpeed = s)
                 : simulationRuns.Inspect(r.RunId);
         }
+        var projectController = new BuildingProjectController(); int projectWrites = 0;
+        object Project(BuildingProjectExecutionRequest r) {
+            if(r.Session!=session)throw new BridgeRejectionException("stale_session");
+            if(r.Validation is null)return projectController.Inspect(r.ActionId);
+            return projectController.Start(r.ActionId,JsonSerializer.Serialize(r,NativeJson.Options),r.Validation.PlanKey,
+                [new() {EntityId=r.ActionId.ToString("D"),Template="SmallWarehouse.Folktails",X=0,Y=1,Z=1}],
+                ()=>true,_=>projectWrites++,_=>"confirmed"); // Synthetic game port, real controller and transport.
+        }
         using var pumpStop = CancellationTokenSource.CreateLinkedTokenSource(ct);
         var pump = Task.Run(async () =>
         {
@@ -67,6 +75,7 @@ public sealed class NativeBridgeTests
             {
                 while (!pumpStop.IsCancellationRequested)
                 {
+                    projectController.Tick(runWall.Elapsed.TotalSeconds);
                     queue.Pump(r =>
                     {
                         if(r.Route=="activity") {
@@ -79,6 +88,7 @@ public sealed class NativeBridgeTests
                         if((r.Route=="alert-targets" || r.Diagnostics is not null && r.Route!="needs") && r.Session!=session)throw new BridgeRejectionException("stale_session");
                         object data = r.Route switch
                         {
+                            "building-project-execution" => Project(r.ProjectExecution!),
                             "simulation-run-for" or "simulation-run-until" or "simulation-run" or "simulation-run-cancel" => RunSimulation(r.SimulationRun!),
                             "production-graph" => Timberborn.TestFixtures.ProductionGraphFixture.Create(),
                             "needs" => new NativeNeeds("living_beavers_with_need_manager",0,0,0,r.Diagnostics!.Offset,r.Diagnostics.Limit,0,[],false,[],0,0),
@@ -128,7 +138,7 @@ public sealed class NativeBridgeTests
                                 Guid.NewGuid(), "applied", r.Template == "Path", true, ["synthetic_test"])),
                             _ => throw new ArgumentException()
                         };
-                        return JsonSerializer.Serialize(new BridgeEnvelope<object>(1, session, DateTimeOffset.UtcNow, "0.22.0", data), NativeJson.Options);
+                        return JsonSerializer.Serialize(new BridgeEnvelope<object>(1, session, DateTimeOffset.UtcNow, r.ProjectExecution is not null ? "0.25.0" : "0.22.0", data), NativeJson.Options);
                     });
                     await Task.Delay(5, pumpStop.Token);
                 }
@@ -183,11 +193,11 @@ public sealed class NativeBridgeTests
                 }
             }), cancellationToken: ct);
             var tools = await client.ListToolsAsync(cancellationToken: ct);
-            var expected = new List<string> { "inspect_simulation_run", "inspect_production_graph", "inspect_needs", "inspect_beaver_needs", "inspect_building_operation", "inspect_building_access", "inspect_road_connection", "inspect_work_range", "inspect_good_history", "find_buildings", "inspect_alert_targets", "inspect_alerts", "inspect_goods", "inspect_research", "inspect_agent_log", "inspect_area_types", "inspect_areas", "inspect_build_catalog", "inspect_build_options", "plan_building_project", "precheck_building", "inspect_building", "inspect_building_priority", "inspect_building_settings", "inspect_colony", "inspect_construction", "inspect_map_region", "inspect_simulation", "inspect_workforce", "inspect_removal_targets", "precheck_build_site", "timberborn_status" };
+            var expected = new List<string> { "inspect_simulation_run", "inspect_production_graph", "inspect_needs", "inspect_beaver_needs", "inspect_building_operation", "inspect_building_access", "inspect_road_connection", "inspect_work_range", "inspect_good_history", "find_buildings", "inspect_alert_targets", "inspect_alerts", "inspect_goods", "inspect_research", "inspect_agent_log", "inspect_area_types", "inspect_areas", "inspect_build_catalog", "inspect_build_options", "plan_building_project", "inspect_building_project", "precheck_building", "inspect_building", "inspect_building_priority", "inspect_building_settings", "inspect_colony", "inspect_construction", "inspect_map_region", "inspect_simulation", "inspect_workforce", "inspect_removal_targets", "precheck_build_site", "timberborn_status" };
             if (enableValidation) { expected.AddRange(["set_building_paused","set_storage_good","set_storage_mode","set_farm_priority","set_farm_crop"]); expected.Add("validate_build_site"); expected.Add("set_workplace_staffing"); expected.AddRange(["demolish_building","remove_planted","remove_vegetation","remove_debris"]); }
-            if (enablePlacement) { expected.Add("unlock_building"); expected.Add("place_path"); expected.Add("set_building_priority"); } if (enableLodgePlacement) { expected.Add("place_building"); expected.Add("validate_building"); expected.Add("validate_building_project"); expected.Add("set_area"); expected.Add("place_lodge"); expected.Add("set_simulation_speed"); expected.AddRange(["run_simulation_for", "run_simulation_until", "cancel_simulation_run"]); }
+            if (enablePlacement) { expected.Add("unlock_building"); expected.Add("place_path"); expected.Add("set_building_priority"); } if (enableLodgePlacement) { expected.Add("place_building"); expected.Add("validate_building"); expected.Add("validate_building_project"); expected.Add("execute_building_project_pilot"); expected.Add("set_area"); expected.Add("place_lodge"); expected.Add("set_simulation_speed"); expected.AddRange(["run_simulation_for", "run_simulation_until", "cancel_simulation_run"]); }
             Assert.Equal(expected.Order(), tools.Select(t => t.Name).Order());
-            Assert.All(tools, t => { Assert.Equal(t.Name is not ("run_simulation_for" or "run_simulation_until" or "cancel_simulation_run" or "unlock_building" or "set_building_paused" or "set_storage_good" or "set_storage_mode" or "set_farm_priority" or "set_farm_crop" or "place_building" or "validate_building_project" or "validate_building" or "validate_build_site" or "place_path" or "place_lodge" or "set_simulation_speed" or "set_workplace_staffing" or "set_building_priority" or "set_area" or "demolish_building" or "remove_planted" or "remove_vegetation" or "remove_debris"), t.ProtocolTool.Annotations!.ReadOnlyHint); Assert.NotNull(t.ProtocolTool.OutputSchema); });
+            Assert.All(tools, t => { Assert.Equal(t.Name is not ("run_simulation_for" or "run_simulation_until" or "cancel_simulation_run" or "unlock_building" or "set_building_paused" or "set_storage_good" or "set_storage_mode" or "set_farm_priority" or "set_farm_crop" or "place_building" or "execute_building_project_pilot" or "validate_building_project" or "validate_building" or "validate_build_site" or "place_path" or "place_lodge" or "set_simulation_speed" or "set_workplace_staffing" or "set_building_priority" or "set_area" or "demolish_building" or "remove_planted" or "remove_vegetation" or "remove_debris"), t.ProtocolTool.Annotations!.ReadOnlyHint); Assert.NotNull(t.ProtocolTool.OutputSchema); });
             foreach(var name in new[]{"inspect_goods","inspect_alerts","inspect_alert_targets"}) {
                 var args=new Dictionary<string,object?>{["offset"]=0,["limit"]=32,["reasoning"]="Versorgung lesend prüfen."};
                 if(name=="inspect_alert_targets") {args["session"]=session;args["alertId"]=new string('0',64);}
@@ -398,6 +408,28 @@ public sealed class NativeBridgeTests
                 Assert.True(stale.IsError);Assert.Equal("",settingValues["good"]);
                 var resumed=await client.CallToolAsync("set_building_paused",new Dictionary<string,object?>{["id"]=settingsId,["session"]=session,["paused"]=false,["expectedPaused"]=true},cancellationToken:ct);
                 Assert.False(resumed.IsError);Assert.Equal("false",settingValues["paused"]);
+            }
+            if(enableLodgePlacement) {
+                var projectId=Guid.NewGuid().ToString("D");
+                var projectArgs=new Dictionary<string,object?> { ["session"]=session,["actionId"]=projectId,["mode"]="development_pilot",
+                    ["template"]="SmallWarehouse.Folktails",["districtId"]=Guid.NewGuid().ToString("D"),["x"]=0,["y"]=0,["z"]=1,
+                    ["width"]=3,["height"]=2,["rotation"]=0,["optionIndex"]=0,["planKey"]=new string('a',64) };
+                var started=await client.CallToolAsync("execute_building_project_pilot",projectArgs,cancellationToken:ct);
+                Assert.False(started.IsError);
+                var again=await client.CallToolAsync("execute_building_project_pilot",projectArgs,cancellationToken:ct);
+                Assert.False(again.IsError);
+                string? state=null;
+                for(int attempt=0;attempt<10&&state!="completed";attempt++) {
+                    var projectStatus=await client.CallToolAsync("inspect_building_project",new Dictionary<string,object?>{["session"]=session,["actionId"]=projectId},cancellationToken:ct);
+                    Assert.False(projectStatus.IsError);state=projectStatus.StructuredContent!.Value.GetProperty("data").GetProperty("state").GetString();
+                    if(state!="completed")await Task.Delay(20,ct);
+                }
+                Assert.Equal("completed",state);Assert.Equal(1,projectWrites);
+                projectArgs["planKey"]=new string('b',64);
+                Assert.True((await client.CallToolAsync("execute_building_project_pilot",projectArgs,cancellationToken:ct)).IsError);
+                projectArgs["session"]=Guid.NewGuid().ToString("D");
+                Assert.True((await client.CallToolAsync("execute_building_project_pilot",projectArgs,cancellationToken:ct)).IsError);
+                Assert.Equal(1,projectWrites);
             }
             var building = await client.CallToolAsync("inspect_building", new Dictionary<string, object?>
                 { ["id"] = Guid.NewGuid().ToString("D"), ["session"] = session }, cancellationToken: ct);

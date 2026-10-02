@@ -90,7 +90,7 @@ Neue Funktionen werden entsprechend dem Projektauftrag vor ihrer Umsetzung konkr
   [Beschlossener Ablauf und Abnahme](docs/building-site-search-plan.md).
   0.24.0: rein lesende Kandidatensuche implementiert (max. 8 × 8, vier Optionen),
   alle Vorschläge ausdrücklich nicht ausführbar. Begrenzter Live-Pilot bestanden;
-  gemeinsame Spielvalidierung, Planbindung und kontrollierte Ausführung folgen.
+  gemeinsame Vorschau in 0.24.1 live bestätigt; begrenzte Ausführung in 0.25.0 implementiert, Live-Abnahme offen.
 
 ## Später
 
@@ -102,9 +102,17 @@ Neue Funktionen werden entsprechend dem Projektauftrag vor ihrer Umsetzung konkr
 
 0.24.1: validate_building_project ergänzt gemeinsame Vorschau von höchstens acht
 Wegfeldern und einem Gebäude, mit frischer Plan-Kennung und Nachkontrolle. Gebaut,
-Installation/Live-Test offen; ausführbare Baupläne weiterhin nicht freigegeben.
+Live-Pilot bestanden; normaler Baupfad weiterhin gesperrt.
 
 0.24.1 Live-Pilot bestanden: Lager plus zwei Wege gemeinsam gültig, Vorschau-Eingang
 verbunden, keine Verbindungsverluste, Wiederherstellung und Cache-Wiederverwendung
 bestätigt. Falsche Plan-Kennung abgelehnt. Vor Ausführung bleiben Bauphase und
 Bauarbeiter-Erreichbarkeit offen; keine Freigabe allein aus diesem Vorschautest.
+
+## Nächste Abnahme: 0.25.0
+
+- [x] Explizit freigegebenen Entwicklungspilot für ein kleines Lager und ≤2 Wege
+  implementieren: Auftrags-ID, Status, Wiederholschutz, Rückprüfung je Schritt.
+- [ ] Nach Spielende installieren und begrenzten realen Baupilot abnehmen.
+- [ ] Vollständigen Bauphasen-/Wegschutz vor allgemeiner Freigabe nachweisen.
+  Die Ausnahme ist keine generelle Lockerung. [Vertrag](docs/building-project-execution-proposal.md).

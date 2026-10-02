@@ -1,9 +1,12 @@
 # Eigene Agent Bridge installieren und MCP starten
 
-Aktueller Entwicklungsstand: **0.24.1, experimentelle Wegschutz-Diagnose**,
-**Diese Diagnoseversion sperrt vorläufig sämtliche MCP-Bauaufträge.** Nur für den
-[begrenzten Vorschau-Pilot](road-protection.md) installieren; kein fertiger Wegschutz.
-0.24.1 ist für die gemeinsame Vorschau installiert; 0.24.0 wurde gesichert. Gebaut gegen Timberborn 1.1.2.4.
+Aktueller Entwicklungsstand: **0.25.0, begrenzter Bauprojekt-Pilot**.
+Normale Bauaufträge bleiben gesperrt. Der ausdrücklich aktivierte Entwicklungspilot
+setzt höchstens zwei ebene Wege und ein kleines Lager mit Rückprüfungen.
+[Vertrag und Grenzen](building-project-execution-proposal.md).
+Installiert ist weiterhin 0.24.1; Installation und Live-Abnahme von 0.25.0 stehen aus.
+Gebaut gegen Timberborn 1.1.2.4. Bestehende private Konfiguration unverändert erhalten;
+kein neuer Konfigurationsschlüssel, explizite Auswahl über `mode=development_pilot`.
 Neu: [Ingame-Zeitläufe](simulation-runs-plan.md), automatisch und im begrenzten MCP-Live-Pilot geprüft.
 0.21.1 erweitert die Gebäudediagnose um Inventare; installiert und mit allen 30 Lesern sowie konkreten Inventaren live geprüft. Bereits unter 0.21.0 mit Produktionsgraph und Lebenszustandskorrektur alle 30 Leser und der gezielte Graph-/Lebenszustandspilot sind live bestanden. Zuvor 0.20.0
 mit bekanntem Fehler bei der Zählung verstorbener Biber in der Bedürfnisübersicht. Drei neue Diagnoseleser: Bedürfnisse der Kolonie,

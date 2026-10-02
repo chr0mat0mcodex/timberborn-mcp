@@ -1,7 +1,7 @@
 # Native MCP-Werkzeuge
 
-Stand: Agent Bridge 0.24.1 (Diagnose-Prototyp; sämtliche Bauaufträge vorläufig gesperrt).
-[Grund, Ergebnisvertrag und nächster Pilot](road-protection.md). 32 Leser und 23 Werkzeuge für Aktionen/Vorschauvalidierung.
+Stand: Agent Bridge 0.25.0 (begrenzter Bauprojekt-Pilot; Live-Nachweis noch offen).
+[Grund, Ergebnisvertrag und nächster Pilot](road-protection.md). 33 Leser und 24 Werkzeuge für Aktionen/Vorschauvalidierung.
 Neu: Ingame-Zeitläufe, automatisch und im begrenzten MCP-Live-Pilot geprüft. Die 30 bisherigen Leser
 sind unter 0.21.1 live belegt. Nachweise und Grenzen stehen in den Fachdokumenten.
 
@@ -94,3 +94,17 @@ Ausführung. Suchabdeckung und Abbruchgrund ausdrücklich lesen.
 und planKey. Bau-Opt-in erforderlich, maximal acht neue Wege und 16 Prüfungen/Sitzung.
 Temporäre gemeinsame Vorschau, kein Bauauftrag; executable bleibt false. Ergebnisse
 und Grenzen stehen im [Bauplan-Vertrag](building-site-search-plan.md).
+
+## Expliziter Bauprojekt-Pilot (0.25.0)
+
+`execute_building_project_pilot` setzt ein SmallWarehouse.Folktails und höchstens zwei
+neue ebene Wege. Benötigt Suchparameter, optionIndex, planKey, session, actionId und
+`mode=development_pilot`. Bau-Opt-in und Pause sind Pflicht. Ein akzeptierter Auftrag
+je Sitzung; gleiche ID+Parameter lesen ihn erneut, abweichende Anfragen werden abgewiesen.
+`inspect_building_project` liest session/actionId ohne Schreibfreigabe.
+
+running/completed/stopped/unconfirmed und Schritt-IDs erlauben gezielten Abgleich.
+completed bestätigt regulären Auftrag, realen Eingang und Bauarbeiterzugang; keine
+Fertigstellung. Bekannte Wegverluste bleiben verboten; nur der unbelegte Bauphasen-
+Vorabnachweis darf im freigegebenen Pilot offenbleiben. Teilergebnisse bleiben stehen.
+[Vertrag, Grenzen und Live-Abnahme](building-project-execution-proposal.md).
