@@ -1993,3 +1993,21 @@ geprüft, vollständige Vorversion gesichert und Sicherungsdateien verglichen.
 Fünf Paketdateien ersetzt und alle fünf Hashes bestätigt. Private Konfiguration
 und sämtliche Zusatzdateien unverändert. Neustart/Spielstandladen durch Nutzer
 steht aus; kein Live-Bauauftrag und keine Live-Abnahme von 0.25.0 behauptet.
+
+## 2026-10-02 — Chatabschluss und Abgleich der Projektübergabe
+
+Auf Nutzerauftrag bisherigen Arbeitskontext gegen Quellcode, Projektdateien,
+Versionshistorie und installierte Paketdateien abgeglichen. 0.25.0 und Übereinstimmung
+aller fünf installierten Dateien erneut bestätigt; Sicherung vorhanden. Keine
+Spielabfrage, neue Bauaktion oder Hintergrundaufgabe für diesen Abschluss gestartet.
+
+START_HERE und technische Übergabe ergänzt: aktiver Entwicklungsbranch statt
+veraltetem master-Hinweis, installierter versus live bestätigter Stand, bestehende
+enge Pilotfreigabe, erforderlicher Neustart-/Ladenachweis, Status-/Teilfehlerbehandlung,
+lokale Paket-/Sicherungsfundstellen und noch anzupassender lokaler MCP-Testhelfer.
+Historischen Wirtschaftsnachweis von späterem Diagnosestand getrennt; Kolonieziele
+bleiben offen und nachrangig zur aktuellen MCP-Entwicklung. Veraltete Einstiegstexte,
+Werkzeugzahlen und nächste Aufgaben in Mission, Backlog und Dokumentationsindex
+bereinigt. Architekturentscheidung zur eng begrenzten Ausnahme nachgetragen.
+Bestehende AGENTS.md unverändert. Keine Rohunterhaltung, Spiel-IDs oder Zugangsdaten
+übernommen. Dokumentationsprüfung statt unnötigem erneutem Build/Spieltest.

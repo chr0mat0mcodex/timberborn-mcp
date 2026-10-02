@@ -19,7 +19,16 @@ Sofort-Wegsuche einschließlich Unterbrechung/Wiederherstellung unter **0.19.1**
 Die Version im [Manifest](mod/Timberborn.AgentBridge/manifest.json) ist die Codeversion;
 ältere datierte Einträge im Journal dokumentieren frühere Zustände.
 
-## Aktueller Spielauftrag
+## Wiedereinstieg nach Chatabschluss
+
+[Einstieg](START_HERE.md) und [konkrete Übergabe](docs/session-handoff.md).
+Nächster Nachweis ist der bereits freigegebene 0.25.0-Baupilot nach Start/Laden von
+„MCP“. Ein Neustart oder Laden nach Installation ist bislang nicht bestätigt.
+Arbeitsbranch `codex/road-protection-pilot`; zuletzt geprüftes `origin/master` auf 0.22.0.
+Implementierung `8349b80`, Installation `e92713c`, beide auf GitHub gesichert.
+Keine weiteren Spielaktionen beim Chatabschluss.
+
+## Weiterhin offene Spielziele
 
 Seit 2026-09-21: 100 lebende Biber und jede reguläre Gebäudevorlage mindestens einmal
 fertigstellen. Ausgangspunkt zehn Biber, 15/157 Folktails-Vorlagen bestätigt.
@@ -46,7 +55,11 @@ Einmal je Szene, geprüfte Verweise und SHA-256-Revision. Ruinenerträge und spe
 Betriebsbedingungen sind explizite Lücken; [Vertrag](docs/production-dependency-graph.md).
 Live bestätigt: 60 Güter (40 aktiv), 55 Rezepte, 162 Gebäude, 17 Quellen; 58.345 Byte MCP-Nutzdaten, stabile Revision. Zehn repräsentative Definitionen unabhängig mit offiziellen Blueprints verglichen.
 
-## Letzter Spielstand und Wirkungstest
+## Historischer Wirtschaftsnachweis (Tag 68)
+
+Neuere Diagnoseabfragen unter 0.24.1: Tag 74, pausiert, 172 Gebäude-/Wegobjekte;
+keine erneute vollständige Wirtschaftsbilanz. Folgende Bestände stammen von
+Tag 68 und sind keine aktuelle Momentaufnahme.
 
 Tag 68, abends: 40 lebende Biber (38 Erwachsene, zwei Kinder), 40 Betten und keine
 Obdachlosen. 26/157 reguläre Gebäudetypen fertig, zuletzt Bank, Strauch und 1x1-Dach.
@@ -97,7 +110,7 @@ Testlauf startet das Spiel oder prüft alle nativen Leser live.
 
 ## Umfang und Grenzen
 
-[29 Leser + 19 freizugebende Werkzeuge](docs/tools.md). Die Steuerungsbasis ist vorhanden.
+[Aktueller Werkzeugkatalog: 33 Leser + 24 Aktions-/Validierungswerkzeuge](docs/tools.md). Die Steuerungsbasis ist vorhanden.
 Neu in 0.20.0: Bedürfnisübersicht, Details je Biber und Gebäudebetriebsbelege;
 [Diagnosevertrag und Live-Nachweis](docs/needs-and-operation.md). 13 Biber/42 Bedürfnisse,
 Einzelbiber, Session-/Zielablehnungen, Erfinder/Farm/Pumpen live geprüft. warning ist
@@ -129,6 +142,7 @@ Wohnraum bestätigt, nachhaltige Gesamtversorgung noch offen. [Backlog](BACKLOG.
 - `tests/`: synthetische Tests und getrennte opt-in Live-Tests.
 - `scripts/`: reproduzierbarer Build, Lesestart, Prüfungen und Referenzabruf.
 - `.local/`: ignorierte lokale Pakete, Sicherungen und Testartefakte; keine Veröffentlichung.
-- GitHub: [chr0mat0mcodex/timberborn-mcp](https://github.com/chr0mat0mcodex/timberborn-mcp), Branch `master`.
+- GitHub: [chr0mat0mcodex/timberborn-mcp](https://github.com/chr0mat0mcodex/timberborn-mcp).
+  Aktiver Entwicklungsbranch: `codex/road-protection-pilot`; `master` ist der getrennte frühere Stand.
 - Keine GitHub-Releases vorhanden beim Abgleich am 2026-09-20; lokale Modpakete sind keine veröffentlichten Releases.
 - Private Konfiguration, Tokens, Saves und Spielbibliotheken gehören nicht ins Repository.

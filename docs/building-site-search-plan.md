@@ -33,7 +33,7 @@ Wegschutz fehlen noch. Keine gespeicherte Plan-ID oder ausführbare Zusage. Kein
 automatische Umsetzung über Einzelbauaufrufe. Treppen, neue Plattformen, Rodung,
 Wassersicherheit und Sonderfälle bleiben außerhalb dieses ersten Schrittes.
 
-Nächster Pilot: höchstens drei kleine Bereiche (Anschluss erreichbar, kein Anschluss,
+Damals vorgesehener Pilot der Kandidatensuche: höchstens drei kleine Bereiche (Anschluss erreichbar, kein Anschluss,
 Hindernis); Ergebnisgeometrie und unveränderten Spielbestand unabhängig rücklesen.
 Bei unplausibler Route oder zu hoher Laufzeit stoppen. Erst danach gemeinsame
 Spielvalidierung, Planbindung und kontrollierte Ausführung ergänzen.
@@ -203,7 +203,7 @@ previewEntranceConnected, roadProtection und Wiederherstellung. executable bleib
 false: weder Bauarbeiterzugang noch hypothetische Bauphase oder vollständiger
 Wegschutz sind dadurch bewiesen. Kein Bauauftrag und kein automatisches Wiederholen.
 
-Nächster Live-Pilot: höchstens zwei gemeinsame Vorschauen eines frisch gelesenen
+Damals vorgesehener Live-Pilot für 0.24.1: höchstens zwei gemeinsame Vorschauen eines frisch gelesenen
 kleinen Plans, plus Ablehnung einer geänderten Plan-Kennung. Vor/nachher Weltbestand,
 Navigation und Pause lesen. Bei Fehler/Wiederherstellungsabweichung stoppen; keine
 reale Platzierung als Ersatztest. Erst nach Nachweis Planbindung/Ausführung erweitern.

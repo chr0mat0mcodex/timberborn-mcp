@@ -1,6 +1,13 @@
 # Mission: Timberborn über MCP spielen
 
-## Aktuelle Spielziele seit 2026-09-21
+## Aktueller Schwerpunkt und Weiterführung
+
+Stand 2026-10-02: MCP-Entwicklung, anschließend ein begrenzter Live-Baupilot.
+0.25.0 ist installiert; der erste reale Bau samt Wegen steht noch aus.
+[Übergabe für den nächsten Chat](START_HERE.md). Kein autonomer Kolonieaufbau
+als unmittelbare Fortsetzung. Die folgenden Spielziele bleiben beauftragt und offen.
+
+## Weiterhin offene Spielziele seit 2026-09-21
 
 1. **100 gleichzeitig lebende Biber erreichen** (Erwachsene und Kinder, keine Bots).
 2. **Jedes reguläre Gebäude der aktuellen Fraktion mindestens einmal fertigstellen.**
@@ -8,21 +15,21 @@
 Der Nutzer hat tatsächlichen Kolonieausbau ausdrücklich zum Auftrag gemacht.
 Der bisherige Schwerpunkt einzelner Funktionstests wird damit um einen fortlaufenden,
 kontrollierten Spielablauf erweitert. Reguläre Kosten, Forschung und Bauzeiten gelten.
-Aktueller Ausgangspunkt: zehn Biber, zwölf Betten, 15 von 157 regulären Bauvorlagen
+Ursprünglicher Ausgangspunkt: zehn Biber, zwölf Betten, 15 von 157 regulären Bauvorlagen
 fertig vorhanden. Fünf Entwicklerwerkzeuge zählen nicht; andere Fraktionen separat.
 15 reguläre Vorlagen haben noch technische MCP-Baugrenzen und bleiben Teil des Ziels.
 
-Aktueller Nachweis Tag 68: 40 lebende Biber, 40 Betten, 26/157 Gebäudetypen.
+Historischer Nachweis Tag 68 (nicht frisch abgefragt): 40 lebende Biber, 40 Betten, 26/157 Gebäudetypen.
 63 Karottenfelder, zwei Farmen und drei Pumpen; begrenzter Erntepilot bestanden.
 
 [Abnahme, Etappen und vollständige Gebäudecheckliste](docs/colony-goals.md).
 ## Stand
 
-**0.21.1 ergänzt konkrete Gebäudeinventare; installiert und mit allen 30 Lesern sowie konkreten Inventaren live geprüft.**
-
-**0.21.0 liefert einen Produktionsgraphen und korrigiert die Bedürfniszählung bei Todesfällen; installiert, alle 30 Leser und begrenzter Graph-/Lebenszustandspilot live bestanden.
-Fünf Paketdateien geprüft, Konfiguration erhalten. Unter 0.19.2 sind
-Sofort-Wegsuche, historische Bilanz und Farm-/Holzfällerreichweiten sind live bestätigt.**
+**0.25.0: begrenzter Bauprojekt-Pilot gebaut und installiert, 648 reguläre Tests
+bestanden. Live-Abnahme noch offen.** Gemeinsame Vorschau in 0.24.1 live bestätigt;
+normale Bauaufträge bleiben mangels vollständigem Bauphasen-Nachweis gesperrt.
+0.22.0-Zeitläufe, 0.21.x-Produktionsgraph und Gebäudeinventare sowie frühere
+Basisfunktionen wurden in den jeweils dokumentierten Piloten live geprüft.
 [Projektstand](PROJECT_STATE.md), [Werkzeugkatalog](docs/tools.md), [offene Arbeiten](BACKLOG.md).
 Keine Fremdmod-Pflichtbasis; die frühere More-HTTP-API-Phase ist abgeschlossen.
 
@@ -34,10 +41,10 @@ Keine Fremdmod-Pflichtbasis; die frühere More-HTTP-API-Phase ist abgeschlossen.
 | Vollständige Güter, aktive Status und Ziele | 40 Güter und eine Lagerwarnung mit Ziel live bestätigt; Mehrfachziele und Verschwinden bestätigt; Biberwarnungen offen |
 | Karte, Gebäude und Baustellen | Live genutzt; Sofort-Wegsuche inklusive Unterbrechung live bestätigt; Farm-/Holzfällerreichweiten live bestätigt |
 | Produktion/Verbrauch über Zeit | Native Güterhistorie mit Produktion/Verbrauch und Fortschreibung über einen Tageswechsel live bestätigt |
-| Generische Bauaufträge | Mehrere Vorlagen live; Geometrien/Sonderformen begrenzt |
+| Generische Bauaufträge | Frühere Versionen mit mehreren Vorlagen live; aktueller Normalpfad gesperrt, enger 0.25.0-Pilot noch live zu prüfen |
 | Lager, Farm, Gebäudepause | Live bestätigt |
 | Personal, Prioritäten, Flächen, Entfernung | Gezielte Live-Piloten bestanden |
-| Simulation | Pause, 1×, 3×, 7× live bestätigt |
+| Simulation | Pause, 1×, 3×, 7× sowie begrenzte Ingame-Zeitläufe mit Zielpause/Abbruch live bestätigt |
 | Forschung | Erzeugung, Kostenabzug, Freischaltung und kostenfreie Wiederholung live bestätigt |
 | Ingame-MCP-Log | Fenster, Scrollen, Calls und Begründungen live bestätigt |
 | Fachliche Ablehnungen | Drei Fehlerfälle ohne Zustandsänderung live; noch nicht alle Bereiche spezifisch |
@@ -52,7 +59,7 @@ Keine Fremdmod-Pflichtbasis; die frühere More-HTTP-API-Phase ist abgeschlossen.
 5. Ergebnis separat lesen: Auftrag, Fertigstellung, Anschluss, Besetzung und Wirkung sind unterschiedliche Belege.
 6. Nur bei belegtem Nutzen fortsetzen; unbestätigte Aktionen nicht automatisch wiederholen.
 
-## Nächste Meilensteine
+## Weitere Meilensteine und bereits erbrachte Nachweise
 
 - [x] Güterübersicht und aktive Status mit konkretem Ziel im begrenzten Live-Pilot abnehmen.
 - [x] Mehrfachziele und tatsächliches Verschwinden einer Statusgruppe live prüfen.
@@ -108,7 +115,7 @@ Detailaufgaben und spätere Ideen stehen im [Backlog](BACKLOG.md).
   Bestehende Zugänge und Bauarbeiter-Erreichbarkeit bleiben Pflichtprüfungen.
   Erster Schritt 0.24.0 gebaut: begrenzte rein lesende Kandidatensuche. Noch keine
   allgemein ausführbaren Pläne; Kandidaten und gemeinsame Vorschau live bestätigt.
-  0.25.0: freigegebener Entwicklungspilot implementiert; Installiert; Live-Abnahme offen.
+  0.25.0: freigegebener Entwicklungspilot implementiert und installiert; Live-Abnahme offen.
 - [ ] **WICHTIG:** Bauaufträge mit vollständiger Wegversperrung standardmäßig vor
   Ausführung verweigern; Ursache, Konfliktzellen und betroffene Zugänge melden.
   [Bauplatzsuche und Wegschutz: Featureplan](docs/building-site-search-plan.md).

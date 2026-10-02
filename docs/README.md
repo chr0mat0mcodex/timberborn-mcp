@@ -1,9 +1,12 @@
 # Dokumentation
 
-Start: [README](../README.md) · [Projektstand](../PROJECT_STATE.md) ·
+Start: [Übergabe/Einstieg](../START_HERE.md) · [README](../README.md) · [Projektstand](../PROJECT_STATE.md) ·
 [Mission](../missionsplan.md) · [Backlog](../BACKLOG.md).
 
 ## Aktueller Einstieg
+
+- [Chatabschluss und nächster konkreter Baupilot](session-handoff.md)
+- [Bauprojekt-Ausführung 0.25.0: Freigabe und Grenzen](building-project-execution-proposal.md)
 
 - [Installation und Aktionsfreigaben](native-bridge-install.md)
 - [Alle nativen MCP-Werkzeuge](tools.md)
@@ -15,7 +18,8 @@ Start: [README](../README.md) · [Projektstand](../PROJECT_STATE.md) ·
 
 | Bereich | Dokument |
 | --- | --- |
-| Wegschutz-Diagnose | [0.23.0: experimenteller Prototyp, Bausperre und Pilot](road-protection.md) |
+| Wegschutz-Diagnose | [Unvollständiger Schutz und normaler gesperrter Baupfad](road-protection.md) |
+| Gebäude und Anschlussweg | [Kandidatensuche/Vorschau](building-site-search-plan.md), [enger Ausführungspilot 0.25.0](building-project-execution-proposal.md) |
 | Generischer Bau | [Vorprüfung, Validierung und Bauauftrag](generic-building.md) |
 | Gebäude/Baufortschritt | [Baustellen und Distrikt](building-observations.md), [Betrieb](building-operations.md) |
 | Lager/Farm/Pause | [Gebäudeeinstellungen](building-settings.md) |
@@ -37,7 +41,7 @@ Datierte frühere Abnahmen sind kein Beweis für jede spätere Kombination.
 ## Geplante Funktionen
 
 - **WICHTIG:** [Simulation nach Ingame-Dauer oder bis Zielzeitpunkt](simulation-runs-plan.md) — 0.22.0 implementiert und im begrenzten Live-Pilot bestätigt.
-- **WICHTIG:** [Bauplatzsuche und Schutz vor Wegversperrung](building-site-search-plan.md) — geplante Bereichssuche und standardmäßige Ablehnung schädlicher Platzierungen.
+- **WICHTIG:** [Bauplatzsuche und Schutz vor Wegversperrung](building-site-search-plan.md) — Bereichssuche und gemeinsame Vorschau live bestätigt; enger Ausführungspilot installiert, vollständiger Schutz offen.
 - [Weitere Alert-Abdeckung](alerts-plan.md) — aktive Entity-Status implementiert; zusätzliche Fälle offen.
 - [Frage-Popup im Spiel](player-question-popup.md) — öffentlich untersucht, noch nicht implementiert.
 - Weitere Lücken: [Backlog](../BACKLOG.md).

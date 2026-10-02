@@ -39,4 +39,4 @@ von Antworten mit späteren Fragen. Inhalte weder roh protokollieren noch commit
 
 Abnahme später: Agent stellt eine Frage; Nutzer beantwortet sie im Spiel; dieselbe
 Antwort wird über MCP zurückgelesen. Zusätzlich Abbruch und Szenenwechsel testen.
-Aktuell nur Zukunftsplanung; laufender Ausbau bleibt die Arbeitsplatzsteuerung.
+Weiterhin Zukunftsplanung; der aktuelle Ausbau steht im [Projektstand](../PROJECT_STATE.md).

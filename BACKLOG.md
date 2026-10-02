@@ -3,15 +3,26 @@
 Aktueller Fähigkeitsstand: [PROJECT_STATE.md](PROJECT_STATE.md).
 Hier stehen offene Aufgaben; datierte historische Kästchen sind kein aktueller Backlog.
 
-## Aktueller Spielauftrag
+## Nächste Abnahme: 0.25.0
+
+- [x] Explizit freigegebenen Entwicklungspilot für ein kleines Lager und ≤2 Wege
+  implementieren: Auftrags-ID, Status, Wiederholschutz, Rückprüfung je Schritt.
+- [x] 0.25.0 bei beendetem Spiel installieren, Sicherung und Dateivergleich prüfen.
+- [ ] Begrenzten realen Baupilot nach Neustart abnehmen.
+- [ ] Vollständigen Bauphasen-/Wegschutz vor allgemeiner Freigabe nachweisen.
+  Die Ausnahme ist keine generelle Lockerung. [Vertrag](docs/building-project-execution-proposal.md).
+
+[Konkreter Wiedereinstieg und Stopkriterien](docs/session-handoff.md).
+
+## Weiterhin offene Spielziele (nachrangig zur MCP-Entwicklung)
 
 100 lebende Biber erreichen und alle regulären Gebäudetypen mindestens einmal fertigstellen.
 [Abnahme, Fortschritt und vollständige Checkliste](docs/colony-goals.md).
-Aktuelle Schwerpunkte: Holznachschub, zusätzlicher Wohnraum, Forschung und Versorgung.
+Bei Wiederaufnahme des Kolonieausbaus: Holznachschub, zusätzlicher Wohnraum, Forschung und Versorgung.
 15 reguläre Gebäude sind noch durch den MCP-Baupfad begrenzt; Größen, Sonderlayouts,
 Geländeanschluss und Sitzungsbudgets vor der breiten Bauabnahme erweitern und prüfen.
 
-## Nächster sinnvoller Ausbau
+## Weitere Ausbau- und Abdeckungsaufgaben
 
 1. **Güterauswertung erweitern:** 40 registrierte Güter samt ResourceCount-Feldern in
    0.18.0 live bestätigt. Vollständige Baustellenbilanz und nachhaltige Versorgung bleiben offen; Tageshistorien sind bestätigt.
@@ -77,7 +88,8 @@ Neue Funktionen werden entsprechend dem Projektauftrag vor ihrer Umsetzung konkr
   [Gemeinsamer Featureplan und Abnahme](docs/building-site-search-plan.md).
   0.23.0: drei Vorschauen geprüft, negative Sperrwirkung unter 0.23.1 im Kontrolltest bestätigt.
   0.23.1 ergänzt Kontrollvorschauen und verbundene Ausgangszugänge; installiert, begrenzter Kontrolltest bestanden.
-  [Diagnose-Prototyp](docs/road-protection.md), alle Bauaufträge bis zum vollständigen Nachweis gesperrt.
+  [Diagnose-Prototyp](docs/road-protection.md), normaler Baupfad bis zum vollständigen Nachweis gesperrt; allein der
+  ausdrücklich freigegebene 0.25.0-Pilot besitzt die dokumentierte enge Ausnahme.
   0.23.2: Wegpunkte und Sperrwirkung live bestätigt; neun Baustellenpunkte erfasst,
   aber trotz buildersReachable=true keine Distriktweg-Verbindung. Bauarbeiter-/
   Geländenavigation unter Vorschau sowie hypothetische Bauphase bleiben offen.
@@ -108,12 +120,3 @@ Live-Pilot bestanden; normaler Baupfad weiterhin gesperrt.
 verbunden, keine Verbindungsverluste, Wiederherstellung und Cache-Wiederverwendung
 bestätigt. Falsche Plan-Kennung abgelehnt. Vor Ausführung bleiben Bauphase und
 Bauarbeiter-Erreichbarkeit offen; keine Freigabe allein aus diesem Vorschautest.
-
-## Nächste Abnahme: 0.25.0
-
-- [x] Explizit freigegebenen Entwicklungspilot für ein kleines Lager und ≤2 Wege
-  implementieren: Auftrags-ID, Status, Wiederholschutz, Rückprüfung je Schritt.
-- [x] 0.25.0 bei beendetem Spiel installieren, Sicherung und Dateivergleich prüfen.
-- [ ] Begrenzten realen Baupilot nach Neustart abnehmen.
-- [ ] Vollständigen Bauphasen-/Wegschutz vor allgemeiner Freigabe nachweisen.
-  Die Ausnahme ist keine generelle Lockerung. [Vertrag](docs/building-project-execution-proposal.md).

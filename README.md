@@ -1,5 +1,8 @@
 # Timberborn MCP
 
+Für die Fortsetzung in einem neuen Chat: [START_HERE.md](START_HERE.md) und
+[technische Übergabe](docs/session-handoff.md).
+
 Eine eigene Timberborn-Mod und ein lokaler C#-MCP-Server ermöglichen einem KI-Agenten,
 das Spiel strukturiert zu beobachten und über reguläre Spielaktionen zu steuern.
 Ziel ist ein Agent, der Wasser, Nahrung, Holz, Wege und Wohnraum aufbaut und betreibt.
@@ -39,7 +42,7 @@ Regression im Repository; [Referenzen und Legacy-Abgrenzung](docs/references/REA
 | Produktionsgraph (0.21.0) | Ein MCP-Abruf für Güter, Rezeptketten, Gebäude/Baukosten, Energie und Schnitt-/Sammelquellen; [Umfang und Grenzen](docs/production-dependency-graph.md), begrenzter Live-Pilot bestanden |
 | Zustand | Bevölkerung, Betten, vollständiger Güterleser, aktive Status mit Zielen, Karte, Gebäude, Baustellen, Arbeiterzuordnung |
 | Logistik | Gebäudezugang, Sofort-Wegsuche einschließlich Unterbrechung, Farm-/Holzfällerreichweiten und Güterhistorie über Tageswechsel live bestätigt |
-| Bauen | Vorlagenkatalog, Kosten/Freischaltung, räumliche Vorprüfung, Spielvalidierung, reguläre Bauaufträge |
+| Bauen | Katalog und Vorprüfungen; normale Bauaufträge aktuell gesperrt. 0.25.0: enger Pilot für Lager plus Wege installiert, Live-Abnahme offen |
 | Betrieb | Gebäudepause, Sollbesetzung, Arbeitsplatz-/Bauprioritäten, Lagerwahl und Lagermodi |
 | Flächen | Anbau und Baumfällmarkierungen, Pflanzmarkierungen, Kiefernschutz durch Entfernen von Fällmarkierungen |
 | Entfernen | Getrennte Gebäude-, Schutt- und Vegetationsaktionen mit begrenzten Einzelzielen |

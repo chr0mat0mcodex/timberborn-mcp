@@ -47,8 +47,9 @@ pwsh -NoProfile -File ./scripts/verify.ps1 `
   -NativeConfig '<installierte Mod>/bridge.local.json'
 ```
 
-Dieser Aufruf führt zuerst die normalen Prüfungen und danach den nativen Lesetest mit
-30 Werkzeugen aus. Schreibtests sind separate, ausdrücklich freigegebene Piloten mit
+Dieser Aufruf führt zuerst die normalen Prüfungen und danach den nativen Lesetest aus.
+Dessen Werkzeugkatalog und tatsächlich abgefragte Fälle stehen in `LiveNativeTests.cs`;
+Katalogprüfung nicht mit vollständiger funktionaler Abnahme jedes Werkzeugs gleichsetzen. Schreibtests sind separate, ausdrücklich freigegebene Piloten mit
 frischer Session, begrenzten Aktionen und Rückabfragen. Das Skript aktiviert sie nicht.
 `-Live` bezeichnet aus Kompatibilitätsgründen weiterhin den **historischen More-HTTP-API-Lesetest**,
 nicht den nativen Test. [Legacy-Hinweise](docs/legacy-backend.md).

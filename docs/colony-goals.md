@@ -1,5 +1,9 @@
 # Spielziele: 100 Biber und vollständiger Gebäudekatalog
 
+**Aktuelle Priorität beim Chatabschluss 2026-10-02:** MCP-Entwicklung und enger
+0.25.0-Baupilot. Die folgenden Spielziele bleiben offen; kein automatischer Langlauf
+beim Wiedereinstieg. [Übergabe](session-handoff.md). Fortschritt unten ist historisch.
+
 Beauftragt am 2026-09-21. Reguläres Spiel über die eigene MCP-Mod; keine Cheats,
 Save-Manipulation oder Screenshot-Steuerung. Dieser ausdrückliche Spielauftrag
 erweitert den bisherigen Schwerpunkt der begrenzten Funktionstests.
@@ -14,7 +18,7 @@ erweitert den bisherigen Schwerpunkt der begrenzten Funktionstests.
    Aktuell 26 von 157 regulären Vorlagen bestätigt; fünf Entwicklerwerkzeuge ausgeschlossen.
    Andere Fraktionen sind im aktuellen Katalog nicht enthalten und bleiben separat offen.
 
-## Fortschritt am Tag 68
+## Historischer Fortschritt am Tag 68
 
 - 40-Biber-Etappe erreicht; zuletzt 40 lebende Biber (38 Erwachsene und zwei Kinder).
 - 40 Betten; vier weitere Lodges und der Transportposten in einer überwachten Baucharge fertig. Plateau und Dachzugang über Treppen verbunden.

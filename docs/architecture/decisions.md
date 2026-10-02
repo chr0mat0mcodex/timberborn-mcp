@@ -47,4 +47,19 @@ Aktionen; MCP bietet Planwahl und Ausführung. Erste Stufe ausschließlich ebene
 Wege. Anschluss vor Gebäude setzen und unabhängig bestätigen; bestehenden
 Wegschutz und Bauarbeiterprüfung nicht dadurch ersetzen. Mehrere Aktionen sind
 nicht atomar: Teilerfolge melden, stoppen, keine automatische Abriss-Rücknahme.
-[Vertrag und Abnahme](../building-site-search-plan.md). Noch nicht implementiert.
+[Vertrag und Abnahme](../building-site-search-plan.md). Zum Entscheidungszeitpunkt noch nicht implementiert; Umsetzung und Ausnahme folgen im nächsten Eintrag.
+
+## 2026-10-02 — Eng begrenzte Bauausführung trotz offener Bauphasen-Vorhersage
+
+Nach erfolgreicher gemeinsamer Vorschau hat der Nutzer den konkreten Pilot ausdrücklich
+freigegeben: ein kleines Lager mit höchstens zwei neuen ebenen Wegen. 0.25.0 trennt
+`execute_building_project_pilot` vom unverändert gesperrten normalen Baupfad.
+`mode=development_pilot` benennt die Ausnahme; nur
+`construction_and_road_node_coverage_unproven` darf vorab offenbleiben. Bekannte Verluste,
+Geometriefehler oder andere unklare Voraussetzungen bleiben Ablehnungsgründe.
+
+Auftrags-ID und Status statt blindem Wiederholen. Schritte über mehrere Hauptthread-
+Updates; reale Wege zuerst bestätigen, danach regulären Lagerauftrag und tatsächlichen
+Bauarbeiterzugang prüfen. Teilerfolge bleiben stehen, kein automatischer Abriss.
+Keine neue Fremdmod oder private Zustandsmanipulation. Installiert, aber noch kein
+Live-Nachweis der realen Ausführung. [Vertrag](../building-project-execution-proposal.md).
