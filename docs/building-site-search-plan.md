@@ -1,7 +1,7 @@
 # Bauvorhaben mit Anschlussweg: Bauplatzsuche und Wegschutz
 
 Status: Gemeinsamer Bauplan am 2026-10-02 zur Umsetzung freigegeben. In **0.24.0** ist
-die rein lesende Kandidatensuche gebaut; Installation/Live-Nachweis, gemeinsame
+die rein lesende Kandidatensuche installiert; Live-Nachweis, gemeinsame
 Spielvalidierung und Ausführung stehen aus. Wegschutz weiterhin experimentell,
 kein vollständiger Schutz. Priorität: **WICHTIG**.
 [Aktueller Diagnosevertrag, Bausperre und Pilot](road-protection.md).

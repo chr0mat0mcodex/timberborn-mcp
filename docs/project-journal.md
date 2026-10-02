@@ -1904,3 +1904,9 @@ Rasterroute mit explizitem Vorbehalt. Keine Vorschauerzeugung oder Spieländerun
 Alle Vorschläge executable=false. Gemeinsame Spielvalidierung, Bauarbeiterzugang,
 Planbindung und Ausführung bleiben offen. Installation/Live-Pilot ausstehend.
 599 reguläre Tests bestanden (586 Unit, 13 Integration), drei opt-in Live-Tests übersprungen. Mod-Build und Paketierung ohne Warnungen/Fehler. Erwartete MCP-Werkzeuglisten um den neuen Leser ergänzt.
+
+## 2026-10-02 — 0.24.0 installiert
+
+Spielende geprüft, Vorversion 0.23.2 vollständig gesichert und Sicherung per Hash
+verifiziert. Fünf Paketdateien ersetzt und geprüft; private Konfiguration und
+Zusatzdateien unverändert. Begrenzter Bauplan-Live-Pilot nach Nutzerneustart offen.

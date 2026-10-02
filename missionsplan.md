@@ -107,7 +107,7 @@ Detailaufgaben und spätere Ideen stehen im [Backlog](BACKLOG.md).
   Gebäudeauftrag. Teilerfolge melden; kein automatischer Abriss-Rollback.
   Bestehende Zugänge und Bauarbeiter-Erreichbarkeit bleiben Pflichtprüfungen.
   Erster Schritt 0.24.0 gebaut: begrenzte rein lesende Kandidatensuche. Noch keine
-  ausführbaren Pläne; Installation/Live-Nachweis und gemeinsame Validierung offen.
+  ausführbaren Pläne; installiert; Live-Nachweis und gemeinsame Validierung offen.
 - [ ] **WICHTIG:** Bauaufträge mit vollständiger Wegversperrung standardmäßig vor
   Ausführung verweigern; Ursache, Konfliktzellen und betroffene Zugänge melden.
   [Bauplatzsuche und Wegschutz: Featureplan](docs/building-site-search-plan.md).

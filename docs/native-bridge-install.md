@@ -3,7 +3,7 @@
 Aktueller Entwicklungsstand: **0.24.0, experimentelle Wegschutz-Diagnose**,
 **Diese Diagnoseversion sperrt vorläufig sämtliche MCP-Bauaufträge.** Nur für den
 [begrenzten Vorschau-Pilot](road-protection.md) installieren; kein fertiger Wegschutz.
-0.23.2 ist für den Weg-/Baustellenpilot installiert; 0.23.1 wurde gesichert. Gebaut gegen Timberborn 1.1.2.4.
+0.24.0 ist für den Bauplan-Pilot installiert; 0.23.2 wurde gesichert. Gebaut gegen Timberborn 1.1.2.4.
 Neu: [Ingame-Zeitläufe](simulation-runs-plan.md), automatisch und im begrenzten MCP-Live-Pilot geprüft.
 0.21.1 erweitert die Gebäudediagnose um Inventare; installiert und mit allen 30 Lesern sowie konkreten Inventaren live geprüft. Bereits unter 0.21.0 mit Produktionsgraph und Lebenszustandskorrektur alle 30 Leser und der gezielte Graph-/Lebenszustandspilot sind live bestanden. Zuvor 0.20.0
 mit bekanntem Fehler bei der Zählung verstorbener Biber in der Bedürfnisübersicht. Drei neue Diagnoseleser: Bedürfnisse der Kolonie,

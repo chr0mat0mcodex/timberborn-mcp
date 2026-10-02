@@ -89,7 +89,7 @@ Neue Funktionen werden entsprechend dem Projektauftrag vor ihrer Umsetzung konkr
   Anschlussprüfung ersetzt weder Schutz bestehender Zugänge noch Bauarbeiterprüfung.
   [Beschlossener Ablauf und Abnahme](docs/building-site-search-plan.md).
   0.24.0: rein lesende Kandidatensuche implementiert (max. 8 × 8, vier Optionen),
-  alle Vorschläge ausdrücklich nicht ausführbar. Installation/Live-Pilot offen;
+  alle Vorschläge ausdrücklich nicht ausführbar. Installiert; Live-Pilot offen;
   gemeinsame Spielvalidierung, Planbindung und kontrollierte Ausführung folgen.
 
 ## Später
