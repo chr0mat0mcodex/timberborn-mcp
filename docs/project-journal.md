@@ -1871,3 +1871,18 @@ Spielzeit unverändert pausiert. Keine Bau-/Abrissaufträge.
 Baustellenübersicht vollständig leer: constructionProbeCount=0 korrekt, aber
 kein positiver Nachweis für Baustellenzugänge. Dafür wird ein regulärer offener
 Bauauftrag an einem bestehenden Weg benötigt. MCP-Platzierung bleibt gesperrt.
+
+## 2026-10-02 — vorhandene Baustelle im Vorschautest
+
+Nutzer legte ein mittleres Lager an. Vier vorbereitende und sieben kontrollierende
+MCP-Aufrufe, davon eine reine Vorschau. Neun Baustellenprüfpunkte erkannt; Vergleiche
+von 549 auf 558 erhöht, verbundene Ausgangspaare unverändert 170, 119 Wegprüfpunkte.
+Kein Verlust, restored=true; Baustelle unverändert ungestartet, 172 Gebäude/Wegobjekte,
+Spielzeit unverändert pausiert. Baustellenzugang vor/nachher buildersReachable=true.
+
+Entscheidende Grenze: Die neun zusätzlichen Punkte tragen keine verbundene
+Distriktweg-Basis bei, obwohl die Baustelle für Bauarbeiter erreichbar ist.
+Erfassung der Punkte ist belegt, Schutz der Bauarbeiter-Erreichbarkeit ausdrücklich
+nicht. Weitere gleichartige Vorschauen liefern dafür keinen Nachweis; nächster
+Entwicklungsschritt ist ein separater Vergleich der Bauarbeiter-/Geländenavigation
+unter Vorschau. Keine sichere Baufreigabe und keine Baustellen-Schutzabnahme.

@@ -95,3 +95,8 @@ mehrteilige Wegobjekte und distriktlose Netze bleiben Nachweislücken; Bauauftr�
 0.23.2 Live-Pilot: Wegpunkte einschließlich drei verlorener Wegzellen bestätigt;
 Baustellenfall offen, weil keine Baustelle existiert. Nächster Nachweis benötigt
 einen regulären offenen Bauauftrag mit Wegzugang. Vollständiger Wegschutz bleibt offen.
+
+Baustellen-Test ergänzt: neun Prüfpunkte eines Nutzer-Bauauftrags erkannt, aber
+keiner als Distriktweg verbunden trotz buildersReachable=true. Nächster Schritt:
+Bauarbeiter-/Geländenavigation unter Vorschau separat prüfen. Eine weitere Baustelle
+ist dafür derzeit nicht nötig; die vorhandene bleibt unverändert.

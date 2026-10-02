@@ -137,3 +137,14 @@ Wegverbindung und 171 Gebäude/Wegobjekte unverändert, Spiel pausiert. 14 MCP-A
 Keine offene Baustelle vorhanden; Baustellenzugänge bleiben ohne positiven
 Live-Nachweis. Nächster Test benötigt einen regulären unfertigen Bauauftrag an
 einem bestehenden Weg. Kein vollständiger Wegschutz und keine Baufreigabe.
+
+### Ergänzter Baustellentest
+
+Eine vom Nutzer angelegte Lagerbaustelle liefert neun construction-Prüfpunkte.
+558 Vergleiche, weiterhin 170 verbundene Ausgangspaare: Die zusätzlichen neun
+Punkte sind nicht als Distriktweg verbunden. Gleichzeitig meldet die native
+Zugangsabfrage buildersReachable=true, vor und nach der rückstandslos entfernten
+freien Vorschau. 172 Gebäude/Wegobjekte und pausierte Spielzeit unverändert.
+Erfassung bestätigt; kein Beleg für Schutz des Baustellenzugangs. Benötigt wird
+separat Bauarbeiter-/Geländenavigation unter Vorschau. Keine weiteren gleichartigen
+Blindtests und keine Gleichsetzung von Distriktweg- und Bauarbeiter-Erreichbarkeit.
