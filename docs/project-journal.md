@@ -1985,3 +1985,11 @@ Navigationsverzögerung, Teilfehler, doppelte/abweichende IDs, Planbindung und e
 MCP-stdio-Transport mit synthetischem Spielport. Mod-Build und Paket ohne neue
 Abhängigkeiten. 0.24.1 bleibt installiert; Nutzer muss vor Austausch speichern und
 beenden. Reale Bauabnahme von 0.25.0 ausdrücklich noch offen.
+
+## 2026-10-02 — 0.25.0 installiert
+
+Timberborn vor Sicherung und Austausch beendet vorgefunden. Installierte Mod-ID
+geprüft, vollständige Vorversion gesichert und Sicherungsdateien verglichen.
+Fünf Paketdateien ersetzt und alle fünf Hashes bestätigt. Private Konfiguration
+und sämtliche Zusatzdateien unverändert. Neustart/Spielstandladen durch Nutzer
+steht aus; kein Live-Bauauftrag und keine Live-Abnahme von 0.25.0 behauptet.

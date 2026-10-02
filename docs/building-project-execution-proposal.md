@@ -1,7 +1,7 @@
 # Größerer Entwicklungsschritt: Bauvorhaben Ende zu Ende
 
 Status: am 2026-10-02 ausdrücklich mit „go“ freigegeben. In 0.25.0 implementiert;
-Installation und Live-Abnahme stehen aus. Normaler Baupfad bleibt gesperrt, wenn
+Installation abgeschlossen; Live-Abnahme steht aus. Normaler Baupfad bleibt gesperrt, wenn
 Pflichtnachweise fehlen.
 
 ## Befund

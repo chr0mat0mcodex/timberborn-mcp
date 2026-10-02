@@ -7,7 +7,7 @@ Ziel ist ein Agent, der Wasser, Nahrung, Holz, Wege und Wohnraum aufbaut und bet
 **Entwicklungsstand: Agent Bridge 0.25.0 (begrenzter Bauprojekt-Pilot)**.
 Ein expliziter Entwicklungsaufruf koppelt kleines Lager und bis zu zwei neue Wege:
 frische gemeinsame Vorschau, schrittweise Platzierung, Auftragsstatus und reale
-Zugangsprüfung. **Noch nicht installiert oder live abgenommen**; installiert ist 0.24.1.
+Zugangsprüfung. **0.25.0 ist installiert und dateigeprüft; Live-Abnahme steht aus.**
 Normale Bauaufrufe bleiben gesperrt; vollständiger Wegschutz ist weiterhin offen.
 [Umfang, Ausnahme und Abnahme](docs/building-project-execution-proposal.md).
 Die Mod wird gebaut gegen Timberborn **1.1.2.4 / Folktails**.

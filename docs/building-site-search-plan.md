@@ -2,7 +2,7 @@
 
 Status: Kandidatensuche und gemeinsame Vorschau in 0.24.1 begrenzt live bestätigt.
 0.25.0 implementiert den ausdrücklich freigegebenen Entwicklungs-Baupilot für ein
-kleines Lager plus höchstens zwei ebene Wege. Installation/Live-Abnahme stehen aus.
+kleines Lager plus höchstens zwei ebene Wege. Installation abgeschlossen; Live-Abnahme steht aus.
 Normale Bauaufrufe bleiben gesperrt; kein vollständiger Wegschutz. Priorität: **WICHTIG**.
 [Ausführungsvertrag](building-project-execution-proposal.md).
 [Aktueller Diagnosevertrag, Bausperre und Pilot](road-protection.md).

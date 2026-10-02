@@ -4,14 +4,14 @@ Stand: 2026-10-02. Codeversion: **0.25.0**, begrenzte Bauprojektausführung impl
 Normaler Baupfad bleibt mangels vollständigem Bauphasen-Nachweis gesperrt.
 Explizit freigegebene Ausnahme: **ein kleines Lager plus höchstens zwei ebene Wege**,
 mit gemeinsamer Vorschau, Auftrags-ID, Status, regulären Einzelschritten und realer
-Zugangs-/Bauarbeiter-Nachprüfung. Installation und Live-Abnahme stehen aus.
+Zugangs-/Bauarbeiter-Nachprüfung. Installiert und dateigeprüft; Live-Abnahme steht aus.
 [Vertrag und Abnahme](docs/building-project-execution-proposal.md).
 Kandidatensuche und gemeinsame Vorschau sind unter 0.24.1 live bestätigt.
 Ingame-Zeitläufe aus 0.22.0 gebaut und automatisch geprüft;
 Begrenzte Live-Abnahme bestanden. [Vertrag und Pilot](docs/simulation-runs-plan.md).
 Aktueller Schwerpunkt ist MCP-Entwicklung; kein autonomer Kolonieaufbau als Fortsetzung.
 0.21.1: Gebäudeinventardiagnose mit allen damaligen 30 Lesern live geprüft.
-Installiert ist **0.24.1**, Vorversion vollständig gesichert, fünf Datei-Hashes geprüft
+Installiert ist **0.25.0**, Vorversion vollständig gesichert, fünf Datei-Hashes geprüft
 und private Konfiguration erhalten. Zeitläufe 1/3/7, absolutes Tagesziel, Abbruch und expliziter Eingriff live bestätigt.
 Zuvor unter **0.20.0**: 29 Leser live geprüft, danach Fehler bei weiter registrierten
 verstorbenen Bibern gefunden (Bedürfniszählung 13 statt 11 lebender Biber).

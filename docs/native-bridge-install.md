@@ -4,7 +4,8 @@ Aktueller Entwicklungsstand: **0.25.0, begrenzter Bauprojekt-Pilot**.
 Normale Bauaufträge bleiben gesperrt. Der ausdrücklich aktivierte Entwicklungspilot
 setzt höchstens zwei ebene Wege und ein kleines Lager mit Rückprüfungen.
 [Vertrag und Grenzen](building-project-execution-proposal.md).
-Installiert ist weiterhin 0.24.1; Installation und Live-Abnahme von 0.25.0 stehen aus.
+0.25.0 ist installiert; 0.24.1 vollständig gesichert, fünf Datei-Hashes geprüft.
+Private Konfiguration und Zusatzdateien unverändert; Live-Abnahme steht aus.
 Gebaut gegen Timberborn 1.1.2.4. Bestehende private Konfiguration unverändert erhalten;
 kein neuer Konfigurationsschlüssel, explizite Auswahl über `mode=development_pilot`.
 Neu: [Ingame-Zeitläufe](simulation-runs-plan.md), automatisch und im begrenzten MCP-Live-Pilot geprüft.

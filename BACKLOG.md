@@ -113,6 +113,7 @@ Bauarbeiter-Erreichbarkeit offen; keine Freigabe allein aus diesem Vorschautest.
 
 - [x] Explizit freigegebenen Entwicklungspilot für ein kleines Lager und ≤2 Wege
   implementieren: Auftrags-ID, Status, Wiederholschutz, Rückprüfung je Schritt.
-- [ ] Nach Spielende installieren und begrenzten realen Baupilot abnehmen.
+- [x] 0.25.0 bei beendetem Spiel installieren, Sicherung und Dateivergleich prüfen.
+- [ ] Begrenzten realen Baupilot nach Neustart abnehmen.
 - [ ] Vollständigen Bauphasen-/Wegschutz vor allgemeiner Freigabe nachweisen.
   Die Ausnahme ist keine generelle Lockerung. [Vertrag](docs/building-project-execution-proposal.md).

@@ -4,7 +4,7 @@
 
 | Komponente | Belegter Stand |
 | --- | --- |
-| Eigene Mod | 0.25.0 begrenzter Bauprojekt-Pilot gebaut/automatisch geprüft; Installation und Live-Test offen. Installiert 0.24.1, gemeinsame Vorschau begrenzt live bestätigt. Vorher: 0.22.0 automatisch geprüft, Zeitläufe/Abbruch/Eingriff im begrenzten MCP-Live-Pilot bestätigt; 0.21.1 mit allen 30 Lesern und Inventardiagnose an fünf Gebäuden live geprüft; zuvor 0.21.0 installiert, fünf Datei-Hashes geprüft und Konfiguration erhalten; alle 30 Leser sowie Produktionsgraph und Lebenszustandsfix im begrenzten Live-Pilot bestätigt; zuvor 0.20.0 mit bekanntem Bedürfniszählfehler nach Todesfällen; unter 0.19.2 alle 26 Leser und konkrete Farm-/Holzfällerreichweiten live bestätigt; Sofort-Wegsuche einschließlich Unterbrechung zuvor bestätigt |
+| Eigene Mod | 0.25.0 begrenzter Bauprojekt-Pilot gebaut/automatisch geprüft und installiert; Live-Test offen. Unter 0.24.1, gemeinsame Vorschau begrenzt live bestätigt. Vorher: 0.22.0 automatisch geprüft, Zeitläufe/Abbruch/Eingriff im begrenzten MCP-Live-Pilot bestätigt; 0.21.1 mit allen 30 Lesern und Inventardiagnose an fünf Gebäuden live geprüft; zuvor 0.21.0 installiert, fünf Datei-Hashes geprüft und Konfiguration erhalten; alle 30 Leser sowie Produktionsgraph und Lebenszustandsfix im begrenzten Live-Pilot bestätigt; zuvor 0.20.0 mit bekanntem Bedürfniszählfehler nach Todesfällen; unter 0.19.2 alle 26 Leser und konkrete Farm-/Holzfällerreichweiten live bestätigt; Sofort-Wegsuche einschließlich Unterbrechung zuvor bestätigt |
 | Spiel | Timberborn 1.1.2.4, Folktails, kleine Entwicklungskolonie |
 | Tests | 648 reguläre Tests; Live-Piloten getrennt |
 | Fremdmods | Keine Pflichtabhängigkeit der eigenen Mod |

@@ -108,7 +108,7 @@ Detailaufgaben und spätere Ideen stehen im [Backlog](BACKLOG.md).
   Bestehende Zugänge und Bauarbeiter-Erreichbarkeit bleiben Pflichtprüfungen.
   Erster Schritt 0.24.0 gebaut: begrenzte rein lesende Kandidatensuche. Noch keine
   allgemein ausführbaren Pläne; Kandidaten und gemeinsame Vorschau live bestätigt.
-  0.25.0: freigegebener Entwicklungspilot implementiert; Installation/Live-Abnahme offen.
+  0.25.0: freigegebener Entwicklungspilot implementiert; Installiert; Live-Abnahme offen.
 - [ ] **WICHTIG:** Bauaufträge mit vollständiger Wegversperrung standardmäßig vor
   Ausführung verweigern; Ursache, Konfliktzellen und betroffene Zugänge melden.
   [Bauplatzsuche und Wegschutz: Featureplan](docs/building-site-search-plan.md).
@@ -133,7 +133,8 @@ Gemeinsame Vorschau live bestätigt. Kein Abschluss der Bauausführungs-Abnahme.
 
 - [x] Ein kleines Lager mit höchstens zwei ebenen Wegen, gemeinsamer Vorschau,
   eindeutiger Auftrags-ID, Statusabfrage und realer Rückprüfung je Schritt umsetzen.
-- [ ] Installieren und einen regulären Bauauftrag samt realem Bauarbeiterzugang bestätigen.
+- [x] 0.25.0 installieren; Sicherung, Paketdateien und Konfiguration geprüft.
+- [ ] Einen regulären Bauauftrag samt realem Bauarbeiterzugang bestätigen.
 - Bauphasen-Vorabnachweis nur im ausdrücklich gewählten Entwicklungsmodus offen;
   bekannte Sperren weiterhin ablehnen. Normaler Baupfad bleibt unverändert.
   [Vertrag und Stopkriterien](docs/building-project-execution-proposal.md).
