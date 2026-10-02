@@ -1859,3 +1859,15 @@ Installation und Live-Nachweis offen; installiert bleibt 0.23.1.
 Spielende geprüft. Vorversion vollständig gesichert und Sicherung per Hash
 verifiziert. Fünf Paketdateien ersetzt und geprüft; private Konfiguration und
 Zusatzdateien unverändert. Live-Pilot nach Nutzerneustart ausstehend.
+
+## 2026-10-02 — 0.23.2 Wegpunkte live bestätigt
+
+Zwei reine Vorschauen, insgesamt 14 MCP-Aufrufe. 119 Wegprüfpunkte zusätzlich,
+549 Vergleiche, 170 zuvor verbundene Paare. Bekannte Sperrstelle meldet blocked
+mit drei road_cell- und zwei building_access-Treffern. Freier Wegplatz ohne
+Verlust, weiterhin unknown wegen fehlender Vollabdeckung. Beide Male restored,
+unabhängige Wegverbindung unverändert, 171 Gebäude/Wegobjekte erhalten,
+Spielzeit unverändert pausiert. Keine Bau-/Abrissaufträge.
+Baustellenübersicht vollständig leer: constructionProbeCount=0 korrekt, aber
+kein positiver Nachweis für Baustellenzugänge. Dafür wird ein regulärer offener
+Bauauftrag an einem bestehenden Weg benötigt. MCP-Platzierung bleibt gesperrt.

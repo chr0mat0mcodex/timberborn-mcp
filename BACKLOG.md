@@ -91,3 +91,7 @@ Neue Funktionen werden entsprechend dem Projektauftrag vor ihrer Umsetzung konkr
 0.23.2 ergänzt eigene Prüfpunkte für Wege und gültige Zugänge bestehender Baustellen.
 Installation und Live-Abnahme offen. Hypothetischer Bauzustand neuer Gebäude,
 mehrteilige Wegobjekte und distriktlose Netze bleiben Nachweislücken; Bauaufträge gesperrt.
+
+0.23.2 Live-Pilot: Wegpunkte einschließlich drei verlorener Wegzellen bestätigt;
+Baustellenfall offen, weil keine Baustelle existiert. Nächster Nachweis benötigt
+einen regulären offenen Bauauftrag mit Wegzugang. Vollständiger Wegschutz bleibt offen.

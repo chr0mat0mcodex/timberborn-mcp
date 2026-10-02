@@ -1,6 +1,6 @@
 # Projektstand
 
-Stand: 2026-10-02. Codeversion: **0.23.2**, Weg- und Baustellenprüfpunkte ergänzt; installiert, Live-Test offen.
+Stand: 2026-10-02. Codeversion: **0.23.2**, Wegprüfpunkte im begrenzten Live-Test bestätigt; Baustellenfall mangels offener Baustelle ausstehend.
 **Alle Bauaufträge in 0.23.x vorläufig gesperrt**, bis Baustellen und Wegknoten zuverlässig abgedeckt sind.
 [Diagnosevertrag und nächster Pilot](docs/road-protection.md). Kein fertiger Wegschutz.
 Ingame-Zeitläufe aus 0.22.0 gebaut und automatisch geprüft;

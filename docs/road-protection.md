@@ -127,3 +127,13 @@ Sperrplatz, freier Wegplatz, vorhandener Baustellenzugang sofern beobachtbar).
 Prüfpunktzahlen und betroffene Arten prüfen; Navigation, Weltbestand und Pause
 zurücklesen. Fehlt eine erwartete Punktart oder Wiederherstellung, stoppen und
 die Koordinaten-/Zugangsabbildung klären. Kein umfassender Wegschutz-Abnahmehaken.
+
+### Live-Pilot 0.23.2 (2026-10-02)
+
+119 Wegprüfpunkte, 549 Vergleiche und 170 verbundene Ausgangspaare bestätigt.
+Die bekannte Sperrvorschau meldet drei verlorene Wegzellen und zwei Gebäudezugänge;
+freie Gegenprobe ohne Verlust. Beide Vorschauen zurückgenommen, unabhängige
+Wegverbindung und 171 Gebäude/Wegobjekte unverändert, Spiel pausiert. 14 MCP-Aufrufe.
+Keine offene Baustelle vorhanden; Baustellenzugänge bleiben ohne positiven
+Live-Nachweis. Nächster Test benötigt einen regulären unfertigen Bauauftrag an
+einem bestehenden Weg. Kein vollständiger Wegschutz und keine Baufreigabe.
