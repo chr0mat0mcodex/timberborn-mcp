@@ -1894,3 +1894,13 @@ Nutzerentscheidung angepasst: gemeinsames Planen/Prüfen, ebener Anschlussweg
 zuerst, Gebäude nach bestätigtem Zugang. Teilfehler und Wiederholung explizit
 behandeln. Alte offene Installations-/Baustellentest-Angaben im Backlog bereinigt.
 Nur Dokumentation geändert, keine Spielaktion oder neue Implementierung.
+
+## 2026-10-02 — 0.24.0 rein lesende Bauplan-Kandidatensuche
+
+plan_building_project ergänzt einen begrenzten ersten Planungsschritt: maximal
+8 × 8 Felder, eine Höhe/Drehung, 64 Ursprünge und vier Kandidaten. Öffentliche
+Vorprüfungen und native Zugehörigkeit des Anschlussziels zum gewählten Distrikt;
+Rasterroute mit explizitem Vorbehalt. Keine Vorschauerzeugung oder Spieländerung.
+Alle Vorschläge executable=false. Gemeinsame Spielvalidierung, Bauarbeiterzugang,
+Planbindung und Ausführung bleiben offen. Installation/Live-Pilot ausstehend.
+599 reguläre Tests bestanden (586 Unit, 13 Integration), drei opt-in Live-Tests übersprungen. Mod-Build und Paketierung ohne Warnungen/Fehler. Erwartete MCP-Werkzeuglisten um den neuen Leser ergänzt.

@@ -1,10 +1,10 @@
 # Projektstand
 
-Stand: 2026-10-02. Codeversion: **0.23.2**, Wegprüfpunkte im begrenzten Live-Test bestätigt; Baustellenpunkte erfasst, Bauarbeiter-Erreichbarkeit durch Distriktwegprüfung nicht abgedeckt.
-**Alle Bauaufträge in 0.23.x vorläufig gesperrt**, bis Baustellen und Wegknoten zuverlässig abgedeckt sind.
+Stand: 2026-10-02. Codeversion: **0.24.0**, rein lesende Bauplan-Kandidatensuche gebaut; Installation/Live-Test offen.
+**Alle Bauaufträge auch in 0.24.0 vorläufig gesperrt**, bis Baustellen und Wegknoten zuverlässig abgedeckt sind.
 [Diagnosevertrag und nächster Pilot](docs/road-protection.md). Kein fertiger Wegschutz.
 Nächster freigegebener Ausbau: [gemeinsamer Bauplan für Gebäude und Anschlussweg](docs/building-site-search-plan.md),
-zunächst ebene Wege. Geplant, noch nicht implementiert; keine Aufhebung der Bausperre.
+zunächst ebene Wege. Kandidatensuche implementiert; gemeinsame Validierung und Ausführung offen. Keine Aufhebung der Bausperre.
 Ingame-Zeitläufe aus 0.22.0 gebaut und automatisch geprüft;
 Begrenzte Live-Abnahme bestanden. [Vertrag und Pilot](docs/simulation-runs-plan.md).
 Aktueller Schwerpunkt ist MCP-Entwicklung; kein autonomer Kolonieaufbau als Fortsetzung.
@@ -76,7 +76,7 @@ Keine abschließende Nachhaltigkeits- oder 100-Biber-Abnahme.
 
 | Ebene | Beleg |
 | --- | --- |
-| Automatisch | 577 reguläre Tests: 564 Unit, 13 Integration; drei opt-in Live-Tests im Standardlauf übersprungen |
+| Automatisch | 599 reguläre Tests: 586 Unit, 13 Integration; drei opt-in Live-Tests im Standardlauf übersprungen |
 | Mod-Build | Gegen Timberborn 1.1.2.4, ohne Warnungen/Fehler |
 | Installation | Fünf Paketdateien per SHA-256 geprüft, private Konfiguration erhalten |
 | Live 0.21.1 | Alle 30 Leser; fünf Gebäudeinventare erklären exakt 138 Wasser: Tanks 60, Pumpen 30, Distriktzentrum 48; keine Kapazitätsreservierung für Wasser |

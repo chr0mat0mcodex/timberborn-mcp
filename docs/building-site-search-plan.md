@@ -1,12 +1,43 @@
 # Bauvorhaben mit Anschlussweg: Bauplatzsuche und Wegschutz
 
-Status: Gemeinsamer Bauplan am 2026-10-02 zur Umsetzung freigegeben, noch nicht implementiert.
-Wegschutz als **experimentelle Diagnose 0.23.2** in Arbeit, kein vollständiger Schutz. Priorität: **WICHTIG**.
+Status: Gemeinsamer Bauplan am 2026-10-02 zur Umsetzung freigegeben. In **0.24.0** ist
+die rein lesende Kandidatensuche gebaut; Installation/Live-Nachweis, gemeinsame
+Spielvalidierung und Ausführung stehen aus. Wegschutz weiterhin experimentell,
+kein vollständiger Schutz. Priorität: **WICHTIG**.
 [Aktueller Diagnosevertrag, Bausperre und Pilot](road-protection.md).
 Nutzerauftrag vom 2026-09-21. Ergänzt [generisches Bauen](generic-building.md)
 und die vorhandenen [Erreichbarkeitsabfragen](logistics.md).
 
 ## Gemeinsames Bauvorhaben — beschlossener nächster Ausbau
+
+### Implementierter erster Schritt 0.24.0
+
+`plan_building_project(template, districtId, session, x, y, z, width, height, rotation)`:
+maximal 8 × 8 Zellen, eine Höhe und Drehung, maximal 64 geprüfte Ursprünge und vier
+Optionen. Grundriss in XY und gesamte Route müssen im Bereich liegen. Bestehende
+fertige Path-Zellen auf Boden werden verwendet; das Anschlussziel muss laut nativer
+Sofortabfrage zum gewählten fertigen Distriktzentrum gehören. Neue Wegzellen erhalten
+die vorhandene geometrische Vorprüfung. Der Gebäudegrundriss wird für die Rasterroute
+ausgeschlossen. Keine Änderung, Vorschauerzeugung oder reguläre Platzierung.
+
+Ausgabe: Ursprung, Eingang, Anschlussziel, `routeCells` und `newRoadCells` vom
+bestehenden Netz zum Eingang. `checkedCandidates`, `rejectedCandidates`,
+`totalCandidates`, `searchComplete` und `stopReason` legen die Suchabdeckung offen.
+Deterministische Suchreihenfolge, keine globale Rangoptimierung. Keine Option bedeutet
+keinen gefundenen Kandidaten in diesem Umfang, nicht Unbebaubarkeit der ganzen Karte.
+
+**Alle Optionen haben `executable=false`.** Die Rasterroute ist nur ein Vorschlag;
+eine native gemeinsame Vorschauprüfung, Bauarbeiter-Erreichbarkeit und vollständiger
+Wegschutz fehlen noch. Keine gespeicherte Plan-ID oder ausführbare Zusage. Keine
+automatische Umsetzung über Einzelbauaufrufe. Treppen, neue Plattformen, Rodung,
+Wassersicherheit und Sonderfälle bleiben außerhalb dieses ersten Schrittes.
+
+Nächster Pilot: höchstens drei kleine Bereiche (Anschluss erreichbar, kein Anschluss,
+Hindernis); Ergebnisgeometrie und unveränderten Spielbestand unabhängig rücklesen.
+Bei unplausibler Route oder zu hoher Laufzeit stoppen. Erst danach gemeinsame
+Spielvalidierung, Planbindung und kontrollierte Ausführung ergänzen.
+
+### Zielablauf nach vollständigem Nachweis
 
 Gebäude und nötigen Anschlussweg als einen Auftrag anbieten. Der Agent wählt
 Gebäude und Suchbereich beziehungsweise einen geprüften Vorschlag; die eigene Mod

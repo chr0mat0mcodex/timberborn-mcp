@@ -12,7 +12,7 @@ namespace Timberborn.McpServer;
 public static class BuildingTools
 {
     private static readonly Dictionary<string,string> Routes = new() {
-        ["inspect_build_options"]="building-catalog", ["precheck_building"]="building-precheck",
+        ["plan_building_project"]="building-plan", ["inspect_build_options"]="building-catalog", ["precheck_building"]="building-precheck",
         ["validate_building"]="building-validation", ["place_building"]="building-placement" };
     public static bool Handles(string name) => Routes.ContainsKey(name);
     public static bool Writes(string name) => name is "validate_building" or "place_building";
@@ -21,7 +21,7 @@ public static class BuildingTools
         var options = new JsonSerializerOptions(NativeJson.Options) { TypeInfoResolver = new DefaultJsonTypeInfoResolver() };
         foreach (var name in Routes.Keys.Where(n => enabled || !Writes(n)))
         {
-            bool catalog = name == "inspect_build_options", write = Writes(name), place = name == "place_building";
+            bool plan = name == "plan_building_project", catalog = name == "inspect_build_options", write = Writes(name), place = name == "place_building";
             var props = new JsonObject();
             void Num(string key, int min, int max) => props[key] = new JsonObject { ["type"]="integer", ["minimum"]=min, ["maximum"]=max };
             if (catalog) { Num("offset",0,65535); Num("limit",1,32); }
@@ -29,14 +29,16 @@ public static class BuildingTools
                 props["template"] = new JsonObject { ["type"]="string", ["minLength"]=1, ["maxLength"]=160, ["pattern"]="^[A-Za-z0-9._-]+$" };
                 foreach (var k in new[] { "x","y","z" }) Num(k,0,4095);
                 Num("rotation",0,3);
-                if (write) props["session"] = new JsonObject { ["type"]="string", ["format"]="uuid" };
+                if(plan) { Num("width",1,8);Num("height",1,8);props["districtId"]=new JsonObject {["type"]="string",["format"]="uuid"}; }
+                if (write || plan) props["session"] = new JsonObject { ["type"]="string", ["format"]="uuid" };
                 if (place) props["actionId"] = new JsonObject { ["type"]="string", ["format"]="uuid" };
             }
             string description = catalog ? "Vollständiger seitenweiser Gebäudekatalog der aktiven Spiel-Template-Sammlungen: IDs, Baukosten, Freischaltung, Geometrie, supported und unsupportedReasons. Alle Seiten lesen. supported beschreibt den Baupfad, keinen Live-Nachweis oder funktionierenden Betrieb. Gebäudekonfiguration nach Bau separat."
                 : place ? "Erteilt einen regulären Bauauftrag für eine unterstützte Katalogvorlage. Frische Spielvalidierung inklusive. x/y/z ist BlockObject-Ursprung, rotation 0/1/2/3=Cw0/90/180/270, ungespiegelt. Frische session und NEUE actionId (UUID) nötig; diese wird Entity-ID. Jede ID ist pro Sitzung nur einmal ausführbar, auch bei Fehlern. Maximal 256 Versuche/Sitzung. Keine automatische Wiederholung; bei Unsicherheit inspect_building mit actionId lesen. applied bedeutet platziert, finished bedeutet fertig; Materialien, Bauzeit und Betrieb bleiben Spielaufgabe. Keine Überschreibung vorhandener Objekte."
                 : write ? "Prüft eine unterstützte Katalogvorlage über eigene Spielvorschau und beide Spielvalidatoren, ohne Bauauftrag. Frische session erforderlich. Maximal 256 generische Prüfungen (inklusive Platzierungen) und 64 gecachte Vorlagen je Sitzung. Keine Erreichbarkeits-/Liefergarantie. Fehler nicht automatisch wiederholen."
                 : "Liest Hindernisse, Gelände, Eingang und Kosten für eine unterstützte Katalogvorlage. x/y/z ist BlockObject-Ursprung; rotation 0/1/2/3=Cw0/90/180/270, ungespiegelt. Keine vollständige Spielvalidierung oder Erreichbarkeitsgarantie. Sonderlayouts laut Katalog nicht unterstützt.";
-            Type result = catalog ? typeof(NativeResult<NativeBuildingCatalog>) : place ? typeof(NativeResult<NativePlacement>)
+            if(plan) description="Liest bis zu vier NICHT AUSFÜHRBARE Kandidaten für Gebäude und ebenen Anschlussweg. x/y/z plus width/height (1..8) begrenzen Grundriss UND komplette Route, eine rotation (0..3). districtId muss fertiges Distriktzentrum sein; aktuelle session erforderlich. Maximal 64 Ursprünge, deterministische Reihenfolge, keine globale Optimierung. Nur Bodenwege, keine Treppen/Rodung/Plattformen. routeCells und newRoadCells laufen vom bestehenden Distriktweg zum Eingang. Vorprüfungen und Rasterroute sind keine gemeinsame Spielvalidierung, Baustellen-Erreichbarkeit oder Wegschutzgarantie. executable ist immer false. Kein Bauauftrag, keine Vorschau, kein gespeicherter Ausführungsplan; keine automatische Umsetzung über Einzelplatzierungen. searchComplete/stopReason lesen. Ab Bridge 0.24.0.";
+            Type result = plan ? typeof(NativeResult<NativeBuildingPlan>) : catalog ? typeof(NativeResult<NativeBuildingCatalog>) : place ? typeof(NativeResult<NativePlacement>)
                 : write ? typeof(NativeResult<NativeValidation>) : typeof(NativeResult<NativeSite>);
             if (write) description += " Ab Bridge 0.23.0 experimentelle Wegschutz-Diagnose: roadProtection getrennt prüfen; valid ist nur geometrische Spielvalidierung. Nur roadProtection.status=safe erlaubt Platzierung. Diese Diagnoseversion liefert mangels belegter Baustellen-/Wegknotenabdeckung noch keine safe-Freigaben und verweigert deshalb sämtliche Bauaufträge. blocked benennt verlorene Distriktzugänge, unknown eine Nachweislücke. Keine ungeprüfte Umgehung über Pilotplatzierungen.";
             yield return new Tool { Name=name, Description=description,
@@ -51,7 +53,7 @@ public static class BuildingTools
         if (Writes(name) && !enabled) throw new ArgumentException();
         var q = new NameValueCollection();
         foreach (var p in args.EnumerateObject()) {
-            if (p.Name is "template" or "session" or "actionId") {
+            if (p.Name is "template" or "session" or "actionId" or "districtId") {
                 if (p.Value.ValueKind != JsonValueKind.String) throw new ArgumentException();
                 q.Add(p.Name,p.Value.GetString());
             } else {
@@ -59,9 +61,10 @@ public static class BuildingTools
                 q.Add(p.Name,n.ToString(System.Globalization.CultureInfo.InvariantCulture));
             }
         }
-        var r = BridgeRequest.Parse("/agent-api/v1/"+Routes[name],q);
         JsonObject Wrap<T>(BridgeEnvelope<T> e) => (JsonObject)JsonSerializer.SerializeToNode(
             new NativeResult<T>(1,"ok",e.Data,new("native",false,e.SessionId,e.ObservedAtUtc),null),NativeJson.Options)!;
+        if(name=="plan_building_project")return Wrap(await client.BuildingPlan(BuildingPlanRequest.Parse(q),ct));
+        var r = BridgeRequest.Parse("/agent-api/v1/"+Routes[name],q);
         return name switch {
             "inspect_build_options" => Wrap(await client.BuildingCatalog(r,ct)),
             "precheck_building" => Wrap(await client.Precheck(r,ct)),

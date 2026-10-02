@@ -1,7 +1,7 @@
 # Native MCP-Werkzeuge
 
-Stand: Agent Bridge 0.23.2 (Diagnose-Prototyp; sämtliche Bauaufträge vorläufig gesperrt).
-[Grund, Ergebnisvertrag und nächster Pilot](road-protection.md). 31 Leser und 22 Werkzeuge für Aktionen/Vorschauvalidierung.
+Stand: Agent Bridge 0.24.0 (Diagnose-Prototyp; sämtliche Bauaufträge vorläufig gesperrt).
+[Grund, Ergebnisvertrag und nächster Pilot](road-protection.md). 32 Leser und 22 Werkzeuge für Aktionen/Vorschauvalidierung.
 Neu: Ingame-Zeitläufe, automatisch und im begrenzten MCP-Live-Pilot geprüft. Die 30 bisherigen Leser
 sind unter 0.21.1 live belegt. Nachweise und Grenzen stehen in den Fachdokumenten.
 
@@ -80,3 +80,12 @@ Neue Güter-/Statusverträge: [Details und Grenzen](economy-observations.md).
 
 [Wege, Reichweiten und Güterhistorie](logistics.md).
 `roadProtection` ergänzt ab 0.23.2 Weg-/Baustellen-Prüfpunktzahlen und `affected.kind`; bei `road_cell` bezeichnet `entrance` die Wegkoordinate. Diese Diagnose erweitert keine Baufreigabe.
+
+## Bauplan-Kandidatensuche (0.24.0)
+
+`plan_building_project` ist ein zusätzlicher Leser. Eingaben: template, districtId,
+session, x/y/z, width/height (1..8), rotation (0..3). Bis zu vier Vorschläge mit
+Gebäudeursprung, Eingang, Anschlussziel und Wegzellen in Anschlussreihenfolge.
+Alle Optionen executable=false; noch keine gemeinsame Spielvalidierung oder
+Ausführung. Suchabdeckung und Abbruchgrund ausdrücklich lesen.
+[Umfang, Grenzen und Pilot](building-site-search-plan.md).
