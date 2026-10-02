@@ -16,7 +16,7 @@ public sealed partial class NativeClient
 {
     private static void DiagnosticsEnvelope<T>(BridgeEnvelope<T> e,DiagnosticsRequest r,string[]? limits)
     {
-        if(e.BridgeVersion is not ("0.20.1" or "0.21.0" or "0.21.1" or "0.22.0")||r.Session.Length>0&&e.SessionId!=r.Session||limits is null||limits.Any(s=>s is null))throw new InvalidDataException("Invalid diagnostics envelope");
+        if(e.BridgeVersion is not ("0.20.1" or "0.21.0" or "0.21.1" or "0.22.0" or "0.23.0")||r.Session.Length>0&&e.SessionId!=r.Session||limits is null||limits.Any(s=>s is null))throw new InvalidDataException("Invalid diagnostics envelope");
     }
     private static bool DiagnosticPage(DiagnosticsRequest r,int offset,int limit,int total,int count,bool more)=>offset==r.Offset&&limit==r.Limit&&total>=0&&count==Math.Min(limit,Math.Max(0,total-offset))&&more==((long)offset+count<total);
     private static bool SortedNeedIds(IEnumerable<string> ids)=>ids.All(BuildingPolicy.ValidTemplate)&&ids.SequenceEqual(ids.Distinct().Order(StringComparer.Ordinal));
@@ -50,7 +50,7 @@ public sealed partial class NativeClient
         if(d.Workplace is {} w&&(w.Assigned<0||w.Desired<0||w.Maximum<0||w.Desired>w.Maximum||w.Assigned==0&&w.AnyJobRunning))throw new InvalidDataException("Invalid workplace observation");
         if(d.Manufacturing is {} m&&(!float.IsFinite(m.ProductionProgress)||m.ProductionProgress<0||m.HasRecipe!=(m.Recipe is not null)||m.HasRecipe&&!BuildingPolicy.ValidTemplate(m.Recipe!)||
             m.HasRecipe!=(m.HasIngredients is not null)||m.HasRecipe!=(m.HasFuel is not null)||m.HasRecipe!=(m.ConsumesFuel is not null)||m.HasRecipe!=(m.OutputSpace is not null)))throw new InvalidDataException("Invalid manufacturing observation");
-        if(e.BridgeVersion is ("0.21.1" or "0.22.0")&&d.Finished&&d.Inventories is null||!d.Finished&&d.Inventories is not null)throw new InvalidDataException("Missing inventory observation");
+        if(e.BridgeVersion is ("0.21.1" or "0.22.0" or "0.23.0")&&d.Finished&&d.Inventories is null||!d.Finished&&d.Inventories is not null)throw new InvalidDataException("Missing inventory observation");
         if(d.Inventories is {} inventories){
             if(inventories.Length>8)throw new InvalidDataException("Inventory limit");
             foreach(var i in inventories){

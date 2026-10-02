@@ -71,10 +71,12 @@ Neue Funktionen werden entsprechend dem Projektauftrag vor ihrer Umsetzung konkr
 
 - **WICHTIG — Bauplatzsuche:** Gebäudevorlage und Suchbereich angeben; konkrete,
   geprüfte Plätze mit Drehung, Eingang, Anschluss und etwaigen Vorarbeiten erhalten.
-- **WICHTIG — Schutz vor Wegversperrung:** Bauaufträge standardmäßig verweigern,
+- **WICHTIG — Schutz vor Wegversperrung (in Arbeit):** Bauaufträge standardmäßig verweigern,
   wenn sie die letzte nutzbare Verbindung oder Gebäudezugänge versperren; konkrete
   Konflikte und betroffene Ziele melden. Auch direkte Platzierungen absichern.
-  [Gemeinsamer Featureplan und Abnahme](docs/building-site-search-plan.md), noch nicht implementiert.
+  [Gemeinsamer Featureplan und Abnahme](docs/building-site-search-plan.md).
+  0.23.0: [Diagnose-Prototyp](docs/road-protection.md), alle Bauaufträge bis zum vollständigen Nachweis gesperrt.
+  Nächster Schritt: begrenzter Live-Vorschautest; danach Baustellen-/Wegknotenabdeckung.
 
 ## Später
 

@@ -1,6 +1,9 @@
 # Projektstand
 
-Stand: 2026-10-02. Codeversion: **0.22.0**, Ingame-Zeitläufe gebaut und automatisch geprüft;
+Stand: 2026-10-02. Codeversion: **0.23.0**, experimentelle Wegschutz-Diagnose; noch nicht installiert.
+**Alle Bauaufträge in 0.23.0 vorläufig gesperrt**, bis Baustellen und Wegknoten zuverlässig abgedeckt sind.
+[Diagnosevertrag und nächster Pilot](docs/road-protection.md). Kein fertiger Wegschutz.
+Ingame-Zeitläufe aus 0.22.0 gebaut und automatisch geprüft;
 Begrenzte Live-Abnahme bestanden. [Vertrag und Pilot](docs/simulation-runs-plan.md).
 Aktueller Schwerpunkt ist MCP-Entwicklung; kein autonomer Kolonieaufbau als Fortsetzung.
 0.21.1: Gebäudeinventardiagnose mit allen damaligen 30 Lesern live geprüft.
@@ -71,7 +74,7 @@ Keine abschließende Nachhaltigkeits- oder 100-Biber-Abnahme.
 
 | Ebene | Beleg |
 | --- | --- |
-| Automatisch | 528 reguläre Tests: 515 Unit, 13 Integration; drei opt-in Live-Tests im Standardlauf übersprungen |
+| Automatisch | 553 reguläre Tests: 540 Unit, 13 Integration; drei opt-in Live-Tests im Standardlauf übersprungen |
 | Mod-Build | Gegen Timberborn 1.1.2.4, ohne Warnungen/Fehler |
 | Installation | Fünf Paketdateien per SHA-256 geprüft, private Konfiguration erhalten |
 | Live 0.21.1 | Alle 30 Leser; fünf Gebäudeinventare erklären exakt 138 Wasser: Tanks 60, Pumpen 30, Distriktzentrum 48; keine Kapazitätsreservierung für Wasser |

@@ -1,6 +1,7 @@
 # Wichtige Future-Features: Bauplatzsuche und Schutz der Wegverbindungen
 
-Status: **geplant, nicht implementiert**. Priorität: **WICHTIG**.
+Status: Bauplatzsuche weiterhin geplant; Wegschutz als **experimentelle Diagnose 0.23.0** in Arbeit, kein vollständiger Schutz. Priorität: **WICHTIG**.
+[Aktueller Diagnosevertrag, Bausperre und Pilot](road-protection.md).
 Nutzerauftrag vom 2026-09-21. Ergänzt [generisches Bauen](generic-building.md)
 und die vorhandenen [Erreichbarkeitsabfragen](logistics.md).
 

@@ -19,7 +19,7 @@ namespace Timberborn.AgentBridge;
 // Bound hidden previews owned by the game scene; never use entity deletion for previews.
 public sealed class SiteValidation(PreviewFactory factory, BlockObjectValidationService validators,
     TemplateNameMapper templates, FactionService faction, BuildingUnlockingService unlocks,
-    EntityRegistry entities, ResourceCountingService resources, IGoodService goods, ITerrainService terrain, BuildingCatalog catalog)
+    EntityRegistry entities, ResourceCountingService resources, IGoodService goods, ITerrainService terrain, BuildingCatalog catalog, RoadProtection roads)
 {
     private readonly Dictionary<string, Preview> previews = new();
     private bool faulted;
@@ -29,8 +29,12 @@ public sealed class SiteValidation(PreviewFactory factory, BlockObjectValidation
     public object Validate(BridgeRequest request) => Validate(request, out _);
 
     public object Validate(BridgeRequest request, out bool allowed)
+        => Validate(request, out allowed, out _);
+
+    public object Validate(BridgeRequest request, out bool allowed, out RoadProtection.Report safety)
     {
         allowed = false;
+        safety = new RoadProtection.Report { reasons = new[] { "game_validation_not_passed" } };
         if (faulted || (request.GenericBuilding ? buildingAttempts >= 256 : attempts >= 8) ||
             (!previews.ContainsKey(request.Template) && previews.Count >= 64)) throw new InvalidOperationException("validation_session_locked");
         if (!request.GenericBuilding && (request.Template is not ("Lodge.Folktails" or "Path") ||
@@ -51,6 +55,8 @@ public sealed class SiteValidation(PreviewFactory factory, BlockObjectValidation
         var beforeStock = Stocks();
         Preview? preview = null;
         bool valid = false;
+        RoadProtection.Sample? sample = null;
+        bool[]? previewConnections = null;
         if (request.GenericBuilding) buildingAttempts++; else attempts++;
         try
         {
@@ -68,6 +74,17 @@ public sealed class SiteValidation(PreviewFactory factory, BlockObjectValidation
             bool objectValid = preview.BlockObject.IsValid();
             bool serviceValid = validators.IsValid(preview.BlockObject);
             valid = objectValid && serviceValid;
+            if (valid)
+            {
+                // Baseline must be free of this preview. All effects stay in preview services.
+                preview.RemoveFromPreviewServices();
+                sample = roads.Capture();
+                if (sample.Complete)
+                {
+                    preview.AddToPreviewServices();
+                    previewConnections = roads.Read(sample, true);
+                }
+            }
         }
         catch { faulted = true; throw; }
         finally
@@ -80,9 +97,12 @@ public sealed class SiteValidation(PreviewFactory factory, BlockObjectValidation
         }
         bool unchanged = beforeIds.SetEquals(RegisteredIds()) && beforeStock.SequenceEqual(Stocks());
         if (!unchanged) faulted = true;
-        allowed = unchanged && valid;
+        if (sample is not null) safety = roads.Finish(sample, previewConnections, cells);
+        if (sample?.Complete == true && !safety.restored) faulted = true;
+        unchanged = unchanged && !faulted;
+        allowed = unchanged && valid && safety.status == "safe" && !faulted;
         return new { template = request.Template, origin = new { x = request.X, y = request.Y, z = request.Z },
-            rotation = request.Rotation, gameValidated = true, valid = unchanged ? (bool?)valid : null,
+            rotation = request.Rotation, gameValidated = true, valid = unchanged ? (bool?)valid : null, roadProtection = safety,
             noPersistentChangeObserved = unchanged, sessionLocked = faulted, attemptsRemaining = request.GenericBuilding ? 256 - buildingAttempts : 8 - attempts,
             limitations = new[] { "preview_validation_not_placement", "no_build_order_created", "no_material_delivery_or_completion_guarantee",
                 "registered_entity_ids_and_global_stock_checked_not_all_game_state", "hidden_preview_cached_until_scene_unload" } };

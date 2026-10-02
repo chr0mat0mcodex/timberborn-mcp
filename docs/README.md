@@ -15,6 +15,7 @@ Start: [README](../README.md) · [Projektstand](../PROJECT_STATE.md) ·
 
 | Bereich | Dokument |
 | --- | --- |
+| Wegschutz-Diagnose | [0.23.0: experimenteller Prototyp, Bausperre und Pilot](road-protection.md) |
 | Generischer Bau | [Vorprüfung, Validierung und Bauauftrag](generic-building.md) |
 | Gebäude/Baufortschritt | [Baustellen und Distrikt](building-observations.md), [Betrieb](building-operations.md) |
 | Lager/Farm/Pause | [Gebäudeeinstellungen](building-settings.md) |

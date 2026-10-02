@@ -50,9 +50,13 @@ public sealed record SiteCell(Position Position, bool InsideMap, bool Undergroun
 public sealed record NativeSite(string Template, Position Origin, int Rotation, string Assessment, bool GameValidated,
     string[] Reasons, SiteCell[] Cells, Position? Entrance, bool? PathAtEntrance, NativeCost[] Costs, string[] Limitations, string[]? EntranceOccupants = null);
 public sealed record NativeValidation(string Template, Position Origin, int Rotation, bool GameValidated, bool? Valid,
-    bool NoPersistentChangeObserved, bool SessionLocked, int AttemptsRemaining, string[] Limitations);
+    bool NoPersistentChangeObserved, bool SessionLocked, int AttemptsRemaining, string[] Limitations, NativeRoadProtection? RoadProtection = null);
 public sealed record NativePlacement(string Template, Position Origin, int Rotation, Guid EntityId,
-    string Outcome, bool? Finished, bool SessionLocked, string[] Limitations);
+    string Outcome, bool? Finished, bool SessionLocked, string[] Limitations, NativeRoadProtection? RoadProtection = null);
+public sealed record NativeRoadAffected(Guid Id, Position Entrance, Position DistrictCenter);
+public sealed record NativeRoadProtection(string Status, string[] Reasons, int CheckedConnections, int LostConnections,
+    bool Restored, bool ConstructionCovered, NativeRoadAffected[] Affected, bool AffectedTruncated,
+    Position[] CandidateCells, string[] Limitations);
 public sealed record NativeGoodAmount(string Id, int Amount);
 public sealed record NativeConstructionMaterials(NativeGoodAmount[] BuildingCosts, bool InventoryAvailable, NativeGoodAmount[]? SiteStock);
 public sealed record NativeConstruction(bool WasStarted, bool IsOn, bool ReadyToBuild, float MaterialProgress,

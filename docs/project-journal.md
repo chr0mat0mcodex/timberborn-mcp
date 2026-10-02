@@ -1783,3 +1783,22 @@ null Überschreitung, UI-Eingriffe, tatsächlichen Disconnect oder Zwei-Wochen-L
 Testhelfer isoliert mit vorhandenen Projektartefakten gebaut (BuildProjectReferences=false),
 weil neu gestartete MCP-Server den normalen Ausgabepfad sperrten. Kein Spiel beendet,
 keine installierten Dateien verändert; Rohbelege und Hilfsprogramm bleiben lokal ignoriert.
+
+## 2026-10-02 — Wegschutz als begrenzter Diagnose-Prototyp 0.23.0
+
+Öffentliche Metadaten belegen native Instant-/Preview-Distriktabfragen und einen
+separaten Vorschau-Lebenszyklus. Offizielle Path-/Lodge-Blueprints zeigen unterschiedliche
+Navigationsregeln. Keine belastbare Zusage für hypothetische Baustellen oder sämtliche
+Wegknoten gefunden. Keine private Reflection/Patches oder neue Bibliotheken eingesetzt.
+
+Vorhandene Zugänge werden vor/während/nach einer eigenen Vorschau verglichen;
+verlorene Verbindungen und betroffene Objekte werden strukturiert gemeldet.
+Unvollständige Abdeckung ergibt unknown. **Noch kein sicherer Freigabepfad:**
+0.23.0 verweigert vorläufig sämtliche MCP-Bauaufträge, auch über Pilotpfade.
+Installiert bleibt 0.22.0. Dieser Entwicklungsstand ist ausdrücklich Diagnose,
+kein fertiger Wegschutz. Nächster Nachweis: höchstens drei gezielte Vorschau-Fälle;
+bei fehlender Sperrwirkung oder fehlender Wiederherstellung stoppen und korrigieren.
+
+553 reguläre Tests bestanden (540 Unit, 13 Integration); Mod-Build ohne Warnungen.
+Geometrisches valid und roadProtection getrennt; neue Native-Verträge verweigern
+behauptete erfolgreiche Platzierungen ohne sicheren Beleg. Rohmetadaten bleiben lokal.

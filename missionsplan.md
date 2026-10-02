@@ -104,6 +104,8 @@ Detailaufgaben und spätere Ideen stehen im [Backlog](BACKLOG.md).
 - [ ] **WICHTIG:** Bauaufträge mit vollständiger Wegversperrung standardmäßig vor
   Ausführung verweigern; Ursache, Konfliktzellen und betroffene Zugänge melden.
   [Bauplatzsuche und Wegschutz: Featureplan](docs/building-site-search-plan.md).
+  Diagnose-Prototyp 0.23.0 gebaut; keine Freigabe als fertiger Wegschutz.
+  [Offener Live-Pilot und derzeitige Bausperre](docs/road-protection.md).
 
 ## Nachweise und Historie
 

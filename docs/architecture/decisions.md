@@ -29,3 +29,12 @@
   pro Aufruf frisch erhoben, keine Entity-Daten über Aufrufe gecacht. Capabilities sind nur kurze
   Hinweise (30 Sekunden) und kein Beweis für die nächste Abfrage.
 - Benutzeroberflächenvergleich bleibt Teil der Live-Abnahme; automatische Tests ändern keine Spielwerte.
+
+## 2026-10-02 — Vorschau-Navigation vor eigener Graphrekonstruktion
+
+Für Wegschutz zunächst öffentliche Preview-/Distrikt-Services verwenden. Keine
+XY-Nachbarschaftsannahmen, realen Probeabrisse oder privaten Navigationsgraphen.
+Ein Vorschauvergleich ersetzt keinen Nachweis der Baustellen-/Wegknotenabdeckung.
+Der experimentelle Stand 0.23.0 hält den Baupfad deshalb geschlossen; Live-Pilot
+muss die Semantik vor einer Erweiterung belegen. Aktueller Umfang und Grenzen:
+[Wegschutz-Diagnose](../road-protection.md).

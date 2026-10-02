@@ -38,6 +38,7 @@ public static class BuildingTools
                 : "Liest Hindernisse, Gelände, Eingang und Kosten für eine unterstützte Katalogvorlage. x/y/z ist BlockObject-Ursprung; rotation 0/1/2/3=Cw0/90/180/270, ungespiegelt. Keine vollständige Spielvalidierung oder Erreichbarkeitsgarantie. Sonderlayouts laut Katalog nicht unterstützt.";
             Type result = catalog ? typeof(NativeResult<NativeBuildingCatalog>) : place ? typeof(NativeResult<NativePlacement>)
                 : write ? typeof(NativeResult<NativeValidation>) : typeof(NativeResult<NativeSite>);
+            if (write) description += " Ab Bridge 0.23.0 experimentelle Wegschutz-Diagnose: roadProtection getrennt prüfen; valid ist nur geometrische Spielvalidierung. Nur roadProtection.status=safe erlaubt Platzierung. Diese Diagnoseversion liefert mangels belegter Baustellen-/Wegknotenabdeckung noch keine safe-Freigaben und verweigert deshalb sämtliche Bauaufträge. blocked benennt verlorene Distriktzugänge, unknown eine Nachweislücke. Keine ungeprüfte Umgehung über Pilotplatzierungen.";
             yield return new Tool { Name=name, Description=description,
                 InputSchema=JsonSerializer.SerializeToElement(new JsonObject { ["type"]="object", ["properties"]=props,
                     ["required"]=new JsonArray(props.Select(p=>(JsonNode?)JsonValue.Create(p.Key)).ToArray()), ["additionalProperties"]=false }),

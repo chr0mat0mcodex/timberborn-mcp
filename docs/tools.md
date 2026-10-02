@@ -1,6 +1,7 @@
 # Native MCP-Werkzeuge
 
-Stand: Agent Bridge 0.22.0. 31 Leser und 22 Werkzeuge für Aktionen/Vorschauvalidierung.
+Stand: Agent Bridge 0.23.0 (Diagnose-Prototyp; sämtliche Bauaufträge vorläufig gesperrt).
+[Grund, Ergebnisvertrag und nächster Pilot](road-protection.md). 31 Leser und 22 Werkzeuge für Aktionen/Vorschauvalidierung.
 Neu: Ingame-Zeitläufe, automatisch und im begrenzten MCP-Live-Pilot geprüft. Die 30 bisherigen Leser
 sind unter 0.21.1 live belegt. Nachweise und Grenzen stehen in den Fachdokumenten.
 

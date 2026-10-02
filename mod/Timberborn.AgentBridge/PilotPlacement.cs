@@ -24,11 +24,12 @@ public sealed class PilotPlacement(SiteValidation validation, TemplateNameMapper
         if (!request.GenericBuilding && request.Template is not ("Path" or "Lodge.Folktails")) throw new ArgumentException("invalid_template");
         var position = new Vector3Int(request.X, request.Y, request.Z);
         var id = request.GenericBuilding ? Guid.Parse(request.EntityId) : Guid.NewGuid();
+        RoadProtection.Report safety = new() { reasons = new[] { "placement_preconditions_not_passed" } };
         if (entities.Entities.Any(e => e.EntityId == id)) throw new ArgumentException("entity_id_exists");
         object Result(string outcome, bool? finished = null) => new
         {
             template = request.Template, origin = new { x = request.X, y = request.Y, z = request.Z },
-            rotation = request.Rotation, entityId = id, outcome, finished, sessionLocked = !request.GenericBuilding,
+            rotation = request.Rotation, entityId = id, outcome, finished, sessionLocked = !request.GenericBuilding, roadProtection = safety,
             limitations = new[] { request.GenericBuilding ? "action_id_consumed_256_attempts_per_session" : "one_attempt_per_session", "no_automatic_retry", "no_district_reachability_guarantee",
                 "entity_id_correlation_requires_live_verification", "read_find_buildings_to_reconcile" }
         };
@@ -43,7 +44,7 @@ public sealed class PilotPlacement(SiteValidation validation, TemplateNameMapper
         if ((request.GenericBuilding ? footprint.Length is < 1 or > 64 : footprint.Length != (request.Template == "Path" ? 1 : 4)) ||
             footprint.Any(cell => !blocks.Contains(cell.Coordinates) || blocks.GetObjectsAt(cell.Coordinates).Any(b => !b.IsPreview && (!request.GenericBuilding || b.IsIntersecting(cell)))))
             return Result("rejected");
-        validation.Validate(request, out var allowed);
+        validation.Validate(request, out var allowed, out safety);
         if (!allowed) return Result("rejected");
         var placer = placers.GetMatchingPlacer(spec);
         var setup = new EntitySetup.Builder(template.Blueprint).SetId(id);

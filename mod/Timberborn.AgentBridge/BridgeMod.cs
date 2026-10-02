@@ -26,7 +26,7 @@ public sealed class BridgeConfigurator : Configurator
         Bind<WorkforceObservations>().AsSingleton();
         Bind<WorkplaceStaffing>().AsSingleton();
         Bind<PriorityAndConstruction>().AsSingleton(); Bind<AreaManagement>().AsSingleton(); Bind<RemovalManagement>().AsSingleton();
-        Bind<SiteValidation>().AsSingleton();
+        Bind<RoadProtection>().AsSingleton(); Bind<SiteValidation>().AsSingleton();
         Bind<PilotPlacement>().AsSingleton();
         Bind<SimulationControl>().AsSingleton();
         Bind<BridgeMod>().AsSingleton();
@@ -103,7 +103,7 @@ public sealed class BridgeMod(ResourceCountingService resources, PopulationServi
             _ => throw new ArgumentException("invalid_request")
         };
         return JsonConvert.SerializeObject(new { schemaVersion = 1, sessionId, observedAtUtc = DateTimeOffset.UtcNow,
-            bridgeVersion = "0.22.0", data });
+            bridgeVersion = "0.23.0", data });
     }
     private object Snapshot()
     {
