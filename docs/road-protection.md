@@ -1,7 +1,7 @@
 # Wegschutz-Diagnose — experimentell in 0.23.0
 
 **Kein fertiger Wegschutz. Nicht als reguläre Bauversion verwenden.**
-0.22.0 bleibt installiert, bis die Diagnoseversion ausdrücklich für den Pilot getauscht wird.
+0.23.0 ist seit 2026-10-02 für den freigegebenen Diagnose-Pilot installiert; 0.22.0 vollständig gesichert.
 In 0.23.0 sind sämtliche MCP-Bauaufträge vorläufig gesperrt, einschließlich Path/Lodge-
 Pilotpfaden. Der Grund ist die noch nicht belegte Abdeckung von Baustellen und reinen
 Wegknoten. Sonstige Werkzeuge behalten ihren bisherigen Umfang.

@@ -1802,3 +1802,10 @@ bei fehlender Sperrwirkung oder fehlender Wiederherstellung stoppen und korrigie
 553 reguläre Tests bestanden (540 Unit, 13 Integration); Mod-Build ohne Warnungen.
 Geometrisches valid und roadProtection getrennt; neue Native-Verträge verweigern
 behauptete erfolgreiche Platzierungen ohne sicheren Beleg. Rohmetadaten bleiben lokal.
+
+## 2026-10-02 — Diagnoseversion 0.23.0 installiert
+
+Spielende vor Sicherung und Austausch geprüft. Vorversion 0.22.0 vollständig gesichert,
+alle fünf Paketdateien per Hash bestätigt und private Zusatzdateien unverändert.
+Noch kein Live-Nachweis: Nutzer startet/lädt den Entwicklungsspielstand für den
+begrenzten Vorschau-Pilot. Sämtliche MCP-Bauaufträge bleiben in dieser Version gesperrt.
