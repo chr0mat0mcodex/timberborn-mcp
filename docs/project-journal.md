@@ -1936,3 +1936,9 @@ anschließend entfernen. Geteilte Fehlersperre mit Einzelvalidierung; kein Bauau
 übersprungen. Mod-Build/Paketierung ohne Warnungen/Fehler. Installation und begrenzter
 Live-Pilot offen; installiert bleibt 0.24.0. executable bleibt false, Bauphase und
 Bauarbeiter-Erreichbarkeit weiterhin nicht als bewiesen behandeln.
+
+## 2026-10-02 — 0.24.1 installiert
+
+Spielende geprüft, Vorversion 0.24.0 vollständig gesichert und Sicherung per Hash
+verifiziert. Fünf Paketdateien ersetzt und geprüft; private Konfiguration und
+Zusatzdateien unverändert. Gemeinsamer Vorschau-Live-Pilot nach Nutzerneustart offen.

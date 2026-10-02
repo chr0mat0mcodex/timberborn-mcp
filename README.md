@@ -5,7 +5,7 @@ das Spiel strukturiert zu beobachten und über reguläre Spielaktionen zu steuer
 Ziel ist ein Agent, der Wasser, Nahrung, Holz, Wege und Wohnraum aufbaut und betreibt.
 
 **Entwicklungsstand: Agent Bridge 0.24.1 (experimentelle Wegschutz-Diagnose)**,
-**MCP-Bauaufträge in dieser Version vorläufig gesperrt.** 0.24.0 ist für den Bauplan-Pilot installiert; 0.23.2 wurde gesichert.
+**MCP-Bauaufträge in dieser Version vorläufig gesperrt.** 0.24.1 ist für die gemeinsame Vorschau installiert; 0.24.0 wurde gesichert.
 Noch kein vollständiger Wegschutz; [Grenzen und Pilot](docs/road-protection.md).
 Die Mod wird gebaut gegen Timberborn **1.1.2.4 / Folktails**.
 Neu: [begrenzte Ingame-Zeitläufe](docs/simulation-runs-plan.md) mit automatischer Pause,
