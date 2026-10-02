@@ -1853,3 +1853,9 @@ Keine private Reflection und keine neue Abhängigkeit. Neuer hypothetischer
 Bauzustand weiterhin unbelegt; constructionCovered=false, Bauaufträge gesperrt.
 Installation und Live-Nachweis offen; installiert bleibt 0.23.1.
 577 reguläre Tests bestanden (564 Unit, 13 Integration); Mod-Build ohne Warnungen/Fehler.
+
+## 2026-10-02 — 0.23.2 installiert
+
+Spielende geprüft. Vorversion vollständig gesichert und Sicherung per Hash
+verifiziert. Fünf Paketdateien ersetzt und geprüft; private Konfiguration und
+Zusatzdateien unverändert. Live-Pilot nach Nutzerneustart ausstehend.
