@@ -4,7 +4,7 @@
 
 | Komponente | Belegter Stand |
 | --- | --- |
-| Eigene Mod | 0.22.0 gebaut und automatisch geprüft, Live-Abnahme offen; 0.21.1 mit allen 30 Lesern und Inventardiagnose an fünf Gebäuden live geprüft; zuvor 0.21.0 installiert, fünf Datei-Hashes geprüft und Konfiguration erhalten; alle 30 Leser sowie Produktionsgraph und Lebenszustandsfix im begrenzten Live-Pilot bestätigt; zuvor 0.20.0 mit bekanntem Bedürfniszählfehler nach Todesfällen; unter 0.19.2 alle 26 Leser und konkrete Farm-/Holzfällerreichweiten live bestätigt; Sofort-Wegsuche einschließlich Unterbrechung zuvor bestätigt |
+| Eigene Mod | 0.22.0 automatisch geprüft, Zeitläufe/Abbruch/Eingriff im begrenzten MCP-Live-Pilot bestätigt; 0.21.1 mit allen 30 Lesern und Inventardiagnose an fünf Gebäuden live geprüft; zuvor 0.21.0 installiert, fünf Datei-Hashes geprüft und Konfiguration erhalten; alle 30 Leser sowie Produktionsgraph und Lebenszustandsfix im begrenzten Live-Pilot bestätigt; zuvor 0.20.0 mit bekanntem Bedürfniszählfehler nach Todesfällen; unter 0.19.2 alle 26 Leser und konkrete Farm-/Holzfällerreichweiten live bestätigt; Sofort-Wegsuche einschließlich Unterbrechung zuvor bestätigt |
 | Spiel | Timberborn 1.1.2.4, Folktails, kleine Entwicklungskolonie |
 | Tests | 528 reguläre Tests; Live-Piloten getrennt |
 | Fremdmods | Keine Pflichtabhängigkeit der eigenen Mod |
@@ -322,3 +322,10 @@ Separate Rückabfragen bestätigen unveränderten Gebäude-Pausenwert, Forschung
 und vollständige Simulationsbeobachtung. Ingame-Log enthält alle drei als rejected.
 Keine Aktion wiederholt, keine Zustandsänderung durch die Tests. Gezielte Live-Abnahme
 von 0.17.2 abgeschlossen; übrige Fehlerbereiche bleiben wie dokumentiert offen.
+
+## Live-Abnahme 0.22.0 — 2026-10-02
+
+26 fachliche MCP-Aufrufe: zwei Spielstunden bei 1/3/7, absolutes Tagesziel,
+gezielter Abbruch und expliziter Pauseneingriff bestätigt. Vier erfolgreich abgeschlossene
+Zeitläufe mit Überschreitung 0; jeweils unabhängige Uhr-/Pausenrückabfrage. Schlusszustand
+pausiert. [Messwerte und verbleibende Grenzen](../simulation-runs-plan.md#live-pilot-2026-10-02).

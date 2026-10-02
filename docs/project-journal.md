@@ -1768,3 +1768,18 @@ blockierten den Build; exakt identifiziert und beendet. Keine Spielprozesse been
 fünf Paketdateien per Hash geprüft, private Konfiguration unverändert. Live-Abnahme
 steht aus und beginnt mit einem kleinen Zeitlauf-Pilot. Mission/Backlog trennen
 Implementierung und Live-Nachweis. Bauplatzsuche/Wegschutz bleiben Folgearbeiten.
+
+## 2026-10-02 — Zeitläufe 0.22.0 live bestanden
+
+26 fachliche MCP-Aufrufe in zwei begrenzten Abschnitten. Je zwei Spielstunden auf
+1/3/7: Ziel exakt erreicht, Überschreitung jeweils 0, Endgeschwindigkeit 0;
+Bestätigung durch Laufstatus und unabhängige Spieluhr. Erster Lauf über Tagesgrenze.
+Absolutes Ziel am Folgetag 00:15 ebenfalls exakt erreicht (20,0625 Spielstunden).
+Gezielter Abbruch: cancelled und bestätigte Pause. Expliziter MCP-Pausenbefehl:
+interrupted/explicit_speed_change, aktuelle Pause separat bestätigt.
+Schlusszustand pausiert; keine Bau-/Wirtschaftsaktionen. Keine Aussage über dauerhaft
+null Überschreitung, UI-Eingriffe, tatsächlichen Disconnect oder Zwei-Wochen-Langläufe.
+
+Testhelfer isoliert mit vorhandenen Projektartefakten gebaut (BuildProjectReferences=false),
+weil neu gestartete MCP-Server den normalen Ausgabepfad sperrten. Kein Spiel beendet,
+keine installierten Dateien verändert; Rohbelege und Hilfsprogramm bleiben lokal ignoriert.

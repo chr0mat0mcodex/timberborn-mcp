@@ -1,7 +1,7 @@
 # Native MCP-Werkzeuge
 
 Stand: Agent Bridge 0.22.0. 31 Leser und 22 Werkzeuge für Aktionen/Vorschauvalidierung.
-Neu: Ingame-Zeitläufe, automatisch geprüft; Live-Abnahme offen. Die 30 bisherigen Leser
+Neu: Ingame-Zeitläufe, automatisch und im begrenzten MCP-Live-Pilot geprüft. Die 30 bisherigen Leser
 sind unter 0.21.1 live belegt. Nachweise und Grenzen stehen in den Fachdokumenten.
 
 ## Leser

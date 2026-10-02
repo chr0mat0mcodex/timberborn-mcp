@@ -6,7 +6,7 @@ Ziel ist ein Agent, der Wasser, Nahrung, Holz, Wege und Wohnraum aufbaut und bet
 
 **Entwicklungsstand: Agent Bridge 0.22.0**, gebaut gegen Timberborn **1.1.2.4 / Folktails**.
 Neu: [begrenzte Ingame-Zeitläufe](docs/simulation-runs-plan.md) mit automatischer Pause,
-Status und Abbruch. Automatisch geprüft; Live-Abnahme noch offen.
+Status und Abbruch. Automatisch geprüft und im begrenzten MCP-Live-Pilot bestätigt.
 **0.21.1 ergänzt konkrete Gebäudeinventare; installiert und mit allen 30 Lesern sowie konkreten Inventaren live geprüft.**
 **0.21.0 enthält den Produktionsgraphen und die Lebenszustandskorrektur aus 0.20.1; installiert und mit allen 30 Lesern live geprüft.**
 Zuvor waren unter 0.20.0 alle 29 Leser live geprüft. Ein Folgepilot zeigte,

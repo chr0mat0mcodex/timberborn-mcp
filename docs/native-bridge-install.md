@@ -1,7 +1,7 @@
 # Eigene Agent Bridge installieren und MCP starten
 
 Aktueller Entwicklungsstand: **0.22.0**, gebaut gegen Timberborn 1.1.2.4.
-Neu: [Ingame-Zeitläufe](simulation-runs-plan.md), automatisch geprüft; Live-Abnahme offen.
+Neu: [Ingame-Zeitläufe](simulation-runs-plan.md), automatisch und im begrenzten MCP-Live-Pilot geprüft.
 0.21.1 erweitert die Gebäudediagnose um Inventare; installiert und mit allen 30 Lesern sowie konkreten Inventaren live geprüft. Bereits unter 0.21.0 mit Produktionsgraph und Lebenszustandskorrektur alle 30 Leser und der gezielte Graph-/Lebenszustandspilot sind live bestanden. Zuvor 0.20.0
 mit bekanntem Fehler bei der Zählung verstorbener Biber in der Bedürfnisübersicht. Drei neue Diagnoseleser: Bedürfnisse der Kolonie,
 Details je Biber und Gebäudebetrieb; [Vertrag](needs-and-operation.md).

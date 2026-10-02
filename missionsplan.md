@@ -97,7 +97,7 @@ Detailaufgaben und spätere Ideen stehen im [Backlog](BACKLOG.md).
   Pausieren sowie Status/Abbruch stehen als MCP-Funktion bereit, statt vom
   Agenten aus Echtzeit-Wartebefehlen zusammengesetzt zu werden.
   [Featureplan und Abnahmekriterien](docs/simulation-runs-plan.md).
-- [ ] Live-Abnahme der Zeitläufe: kleiner Pilot auf 1/3/7, Tagesgrenze, Abbruch und Eingriff;
+- [x] Live-Abnahme der Zeitläufe (2026-10-02): kleiner Pilot auf 1/3/7, Tagesgrenze, Abbruch und Eingriff;
   anschließend Zielzeit und Pause unabhängig zurücklesen. Keine langen Spielschleifen vor Pilotnachweis.
 - [ ] **WICHTIG:** Bauplatzsuche nach Gebäude und Suchbereich mit konkret geprüften
   Positionen/Drehungen, Zugängen und klar benannten nötigen Vorarbeiten.

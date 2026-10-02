@@ -1,11 +1,11 @@
 # Projektstand
 
 Stand: 2026-10-02. Codeversion: **0.22.0**, Ingame-Zeitläufe gebaut und automatisch geprüft;
-Live-Abnahme offen. [Vertrag und Pilot](docs/simulation-runs-plan.md).
+Begrenzte Live-Abnahme bestanden. [Vertrag und Pilot](docs/simulation-runs-plan.md).
 Aktueller Schwerpunkt ist MCP-Entwicklung; kein autonomer Kolonieaufbau als Fortsetzung.
 0.21.1: Gebäudeinventardiagnose mit allen damaligen 30 Lesern live geprüft.
 Installiert ist **0.22.0**, Vorversion vollständig gesichert, fünf Datei-Hashes geprüft
-und private Konfiguration erhalten. Live-Abnahme der Zeitläufe steht aus.
+und private Konfiguration erhalten. Zeitläufe 1/3/7, absolutes Tagesziel, Abbruch und expliziter Eingriff live bestätigt.
 Zuvor unter **0.20.0**: 29 Leser live geprüft, danach Fehler bei weiter registrierten
 verstorbenen Bibern gefunden (Bedürfniszählung 13 statt 11 lebender Biber).
 Sofort-Wegsuche einschließlich Unterbrechung/Wiederherstellung unter **0.19.1** live bestätigt. Farm-/Holzfällerreichweiten unter 0.19.2 über den konkreten Terrainzugriff bestätigt.

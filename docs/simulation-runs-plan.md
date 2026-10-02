@@ -1,6 +1,6 @@
 # Simulation nach Spielzeit laufen lassen — 0.22.0
 
-Priorität: **WICHTIG**. Implementiert und automatisch geprüft. **Live-Abnahme offen.**
+Priorität: **WICHTIG**. Implementiert, automatisch geprüft und **im begrenzten Live-Pilot bestätigt**.
 Ergänzt [Pause und Geschwindigkeit](simulation-control.md).
 
 ## MCP-Vertrag
@@ -73,7 +73,7 @@ Parallelauftrag, Eingriff, Abbruch, Stillstand, Start-/Pausensperre, Timeout,
 Szenenende sowie Parameter- und Antwortprüfung. Transportprüfung über echten
 MCP-stdio-Prozess und authentifizierte Bridge mit synthetischem Spielzustand.
 
-Offen im geladenen Entwicklungsspielstand:
+Abnahmeplan (Punkte 1/2 am 2026-10-02 bestanden; Eingriff per explizitem MCP-Pausenbefehl):
 
 1. Kleiner Pilot: zwei Stunden auf 1×, 3× und 7×; Uhr und Pause unabhängig nachlesen.
    Laufabschluss ohne dauerndes Polling nachweisen.
@@ -84,3 +84,31 @@ Offen im geladenen Entwicklungsspielstand:
 Erfolg: Ziel erreicht, Pause bestätigt, nachvollziehbare Überschreitung, keine
 unbeabsichtigte Wiederaufnahme. Bei ausbleibender Pause oder Sessionabweichung
 stoppen und Ursache klären. Bauplatzsuche und Wegschutz bleiben Folgefeatures.
+
+## Live-Pilot 2026-10-02
+
+Geladene Entwicklungskolonie, Bridge 0.22.0; ausschließlich MCP-Aufrufe.
+Drei relative Läufe ohne Zwischen-Polling bis zur ersten Ergebnisabfrage:
+
+| Spielstufe | Angeforderte Spielzeit | Beobachtet | Überschreitung | Endgeschwindigkeit |
+| --- | --- | --- | --- | --- |
+| 1× | 2 Stunden | 2 Stunden | 0 | 0 |
+| 3× | 2 Stunden | 2 Stunden | 0 | 0 |
+| 7× | 2 Stunden | 2 Stunden | 0 | 0 |
+
+Laufstatus und unabhängige Spieluhr-Rückabfrage bestätigen die Pause. Der erste
+Lauf überschritt eine Tagesgrenze. Gemessene Laufzeiten ungefähr 37,9 / 13,7 / 6,0
+Echtzeitsekunden; keine Zusage konstanter Tickleistung oder dauerhaft exakter Zieltreffer.
+Ein angeforderter Zwei-Tage-Lauf wurde gezielt nach 0,0625 Spielstunden abgebrochen:
+`cancelled`, Pause unabhängig bestätigt. Keine langen Zwei-Wochen-Livetests.
+
+Absolutes Ziel am Folgetag 00:15 Uhr: 20,0625 Spielstunden vergangen,
+`completed`, Ziel exakt erreicht und Pause unabhängig bestätigt. Ein weiterer
+Zwei-Tage-Auftrag wurde durch `set_simulation_speed(0)` unterbrochen:
+`interrupted` / `explicit_speed_change`; aktuelle Pause separat bestätigt.
+Insgesamt 26 fachliche MCP-Aufrufe in zwei begrenzten Testabschnitten.
+Schlusszustand: pausiert. Keine Bau-/Wirtschaftsaktionen.
+
+Noch nicht separat live geprüft: UI-Eingriff, Client-Disconnect, eingefrorene
+Anwendung, reale Langläufe über zwei Wochen. Diese Grenzen nicht mit dem bestandenen
+begrenzten Pilot gleichsetzen; synthetische Tests belegen die übrigen Zustandsübergänge.

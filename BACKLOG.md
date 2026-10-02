@@ -67,7 +67,7 @@ Neue Funktionen werden entsprechend dem Projektauftrag vor ihrer Umsetzung konkr
   konkreten Spielzeitpunkt laufen lassen und automatisch pausieren; Zeitmessung,
   Auftragsstatus und Abbruch übernimmt der MCP-/Mod-Pfad.
   [Vertrag und Abnahme](docs/simulation-runs-plan.md): in 0.22.0 implementiert und automatisch
-  geprüft. **Offen: begrenzter Live-Pilot mit Zielzeit und bestätigter Pause.**
+  geprüft. **Live-Pilot bestanden:** 1/3/7, absolute Tagesgrenze, Abbruch und expliziter Eingriff; Zielzeit und Pause unabhängig bestätigt.
 
 - **WICHTIG — Bauplatzsuche:** Gebäudevorlage und Suchbereich angeben; konkrete,
   geprüfte Plätze mit Drehung, Eingang, Anschluss und etwaigen Vorarbeiten erhalten.
