@@ -76,7 +76,7 @@ Neue Funktionen werden entsprechend dem Projektauftrag vor ihrer Umsetzung konkr
   Konflikte und betroffene Ziele melden. Auch direkte Platzierungen absichern.
   [Gemeinsamer Featureplan und Abnahme](docs/building-site-search-plan.md).
   0.23.0: drei Vorschauen geprüft, negative Sperrwirkung noch unbelegt.
-  0.23.1 ergänzt Kontrollvorschauen und verbundene Ausgangszugänge; Installation/Live-Test offen.
+  0.23.1 ergänzt Kontrollvorschauen und verbundene Ausgangszugänge; installiert, Live-Test offen.
   [Diagnose-Prototyp](docs/road-protection.md), alle Bauaufträge bis zum vollständigen Nachweis gesperrt.
   Nächster Schritt: begrenzter Live-Vorschautest; danach Baustellen-/Wegknotenabdeckung.
 

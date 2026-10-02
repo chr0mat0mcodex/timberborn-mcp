@@ -1824,3 +1824,10 @@ vollständige Wegschutzfreigabe bleiben getrennt; sämtliche Bauaufträge weiter
 564 reguläre Tests bestanden (551 Unit, 13 Integration), drei opt-in Tests übersprungen.
 Installation und Live-Nachweis der Korrektur ausstehend; installiert bleibt 0.23.0.
 Mod-Build und Paketierung ohne Warnungen/Fehler abgeschlossen.
+
+## 2026-10-02 — Kontrollvorschau 0.23.1 installiert
+
+Spielende geprüft, installierte 0.23.0 vollständig gesichert und Sicherung per Hash
+verifiziert. Fünf Paketdateien ersetzt und gegen das Paket geprüft; private
+Konfiguration und sämtliche Zusatzdateien unverändert. Nutzer startet das Spiel
+für den begrenzten Kontrolltest. Noch kein Live-Nachweis der Sperrwirkung.

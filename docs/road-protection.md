@@ -1,7 +1,7 @@
 # Wegschutz-Diagnose — experimentell in 0.23.x
 
 **Kein fertiger Wegschutz. Nicht als reguläre Bauversion verwenden.**
-0.23.0 ist seit 2026-10-02 für den freigegebenen Diagnose-Pilot installiert; 0.22.0 vollständig gesichert.
+0.23.1 ist seit 2026-10-02 für die freigegebene Kontrollvorschau installiert; 0.23.0 vollständig gesichert.
 In 0.23.x sind sämtliche MCP-Bauaufträge vorläufig gesperrt, einschließlich Path/Lodge-
 Pilotpfaden. Der Grund ist die noch nicht belegte Abdeckung von Baustellen und reinen
 Wegknoten. Sonstige Werkzeuge behalten ihren bisherigen Umfang.
@@ -72,7 +72,7 @@ Bauzulässigkeit zu ändern. `connectedBefore` zählt tatsächlich verbundene
 Ausgangspaare; eine vollständig unverbundene Basis ergibt `unknown` mit
 `navigation_no_connected_baseline`. Der Native-Vertrag verlangt das Feld ab 0.23.1;
 0.23.0 bleibt ohne dieses Feld lesbar. Alle Bauaufträge bleiben gesperrt.
-Installation und Live-Nachweis dieser Korrektur stehen aus.
+Installation geprüft; Live-Nachweis dieser Korrektur steht aus.
 
 ## Nächster Nachweis: begrenzte Kontrollvorschau
 
