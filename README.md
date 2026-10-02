@@ -19,20 +19,13 @@ Normale Bauaufrufe sind im aktuellen Code gesperrt; vollständiger Wegschutz ist
 Diese Implementierungsgrenze ist keine dauerhafte Arbeitsfreigabegrenze.
 [Umfang, Ausnahme und Abnahme](docs/building-project-execution-proposal.md).
 Die Mod wird gebaut gegen Timberborn **1.1.2.4 / Folktails**.
-Neu: [begrenzte Ingame-Zeitläufe](docs/simulation-runs-plan.md) mit automatischer Pause,
-Status und Abbruch. Automatisch geprüft und im begrenzten MCP-Live-Pilot bestätigt.
-**0.21.1 ergänzt konkrete Gebäudeinventare; installiert und mit allen 30 Lesern sowie konkreten Inventaren live geprüft.**
-**0.21.0 enthält den Produktionsgraphen und die Lebenszustandskorrektur aus 0.20.1; installiert und mit allen 30 Lesern live geprüft.**
-Zuvor waren unter 0.20.0 alle 29 Leser live geprüft. Ein Folgepilot zeigte,
-dass registrierte verstorbene Biber bislang mitgezählt wurden.
-Neu: Bedürfnisübersicht, Biber-Bedürfnisdetails und Gebäudebetriebsdiagnose.
-Bedürfnis- und Betriebsbelege sind an konkreten Bibern, Erfinder, Farm und Pumpen bestätigt. 40 registrierte Güter
-und Lagerwarnungen mit betroffenen Zielen sind bestätigt. Weitere Warnungstypen bleiben zu prüfen.
-Die Güterhistorie ist über einen Tageswechsel und die Sofort-Wegsuche einschließlich
-Unterbrechung/Wiederaufbau live bestätigt. Der direkte Terrainzugriff liefert im Live-Pilot
-485 Zellen für die Farm und 611 für den Holzfäller; erste und letzte Seite geprüft.
-648 reguläre Tests bestehen (635 Unit, 13 Integration).
-Die Basisaktionen funktionieren; zuverlässiges autonomes Koloniemanagement ist noch in Entwicklung.
+Bereits live geprüft wurden unter anderem Ingame-Zeitläufe mit automatischer Pause,
+Produktionsgraph, Gebäudeinventare, Güter-/Statusabfragen und konkrete Weg-/Arbeitsreichweiten.
+Die jeweiligen Versionen, Fälle und offenen Grenzen stehen in der
+[Nachweisdokumentation](docs/compatibility/timberborn.md).
+648 reguläre Tests bestehen (635 Unit, 13 Integration). Die neue Bauprojektausführung
+von 0.25.0 ist noch nicht live abgenommen; frühere erfolgreiche Bauaktionen ersetzen
+diesen Nachweis nicht.
 
 **Keine zusätzliche Spielmod erforderlich.** Die eigene Mod hat `RequiredMods: []`.
 More HTTP API, ModdableTimberborn, TimberUi, Mod Settings und Harmony sind keine
@@ -56,8 +49,9 @@ Regression im Repository; [Referenzen und Legacy-Abgrenzung](docs/references/REA
 | Nachvollziehbarkeit | Ingame-MCP-Log, optionale kurze Aktionsbegründung, feste fachliche Fehlercodes |
 
 33 Lesewerkzeuge und 24 technisch separat aktivierbare Werkzeuge für Aktionen/Vorschauvalidierung
-sind im nativen Katalog implementiert. Die beiden frühen Baupiloten sind weiterhin
-vorhanden; für neue Bauaufgaben dienen die generischen Werkzeuge.
+sind im nativen Katalog implementiert. Frühe Baupiloten bleiben aus Kompatibilitätsgründen
+vorhanden. Für den nächsten realen Bautest ist die Bauprojektausführung aus 0.25.0
+vorgesehen; normale generische Platzierungen sind im aktuellen Code noch gesperrt.
 [Werkzeugübersicht und Freigaben](docs/tools.md).
 
 Live nachgewiesen sind unter anderem regulärer Gebäudebau, Wasserlagerung, ein

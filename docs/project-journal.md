@@ -2025,3 +2025,13 @@ noch historische Szenarien. Alte enge Freigaben als überholt markiert, aktuelle
 Codegrenzen von Arbeitsbefugnissen getrennt. Build-/Installationsablauf entsprechend
 angepasst; keine Code-, Spiel-, Konfigurations- oder Moddatei geändert. Datenschutz,
 Git-Checkpoints und technische Funktionsnachweise bleiben erhalten.
+
+## 2026-10-02 — Abschließender Kontextabgleich
+
+Aktuelle Anweisungen, technischer Haltepunkt, Arbeitsmittel, Funktionsverträge und
+Backlog erneut mit dem Arbeitskontext abgeglichen. Kein weiterer relevanter
+Übergabepunkt fehlte. Veraltete Installationsformulierungen und Bau-Einstiegshinweise
+in der README bereinigt. Lokale Verweise aller 52 versionierten Markdown-Dateien
+geprüft, keine fehlenden Ziele. Testsystem/effiziente Entwicklung sind maßgeblich;
+0.25.0 installiert, reale neue Bauausführung weiterhin nicht live bestätigt.
+Keine Codeänderungen, Spielaktionen oder erneuten Build-/Spieltests.
