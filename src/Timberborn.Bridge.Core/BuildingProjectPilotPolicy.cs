@@ -2,9 +2,10 @@ namespace Timberborn.Bridge.Core;
 
 public static class BuildingProjectPilotPolicy
 {
-    // Deliberately bounded flat projects. Vertical pilots keep their own fixed scope.
+    // Syntax only: the game catalogue and fresh native geometry decide support.
+    // Path is infrastructure, not the terminal building of a flat project.
     public static bool SupportsTemplate(string? template) =>
-        template is "SmallWarehouse.Folktails" or "MediumWarehouse.Folktails" or "Lodge.Folktails";
+        BuildingPolicy.ValidTemplate(template) && template != "Path";
 
     public static bool Allows(int roadCount, bool buildingValid, bool entranceConnected, bool unchanged,
         bool locked, bool[] validRoads, int[] prefixLosses, string status, bool restored, int lost, string[] reasons) =>

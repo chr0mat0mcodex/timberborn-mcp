@@ -43,10 +43,11 @@ public sealed class BuildingProjectPlanner(EntityRegistry entities, SpatialObser
             Vector3Int Pos(JToken v)=>new((int)v["x"]!,(int)v["y"]!,(int)v["z"]!);
             var entry=Pos(entrance);var occupied=site["cells"]!.Select(c=>Pos(c["position"]!)).ToArray();
             if(entry.z!=r.Z||!Inside(entry)||occupied.Any(c=>!Inside(c))) { rejectedCandidates++;continue; }
-            var allowed=(bool[])passable.Clone();
-            foreach(var c in occupied)if(c.z==r.Z)allowed[(c.y-r.Y)*r.Width+c.x-r.X]=false;
             int start=(entry.y-r.Y)*r.Width+entry.x-r.X;
-            var route=FlatRoadSearch.Find(r.Width,r.Height,start,allowed,goals);
+            // Public BlockObjectSpec currently exposes one entrance. Keep routing
+            // independent of that API cardinality; never synthesize other doors.
+            var footprint=occupied.Where(c=>c.z==r.Z).Select(c=>(c.y-r.Y)*r.Width+c.x-r.X).Distinct().ToArray();
+            var route=FlatRoadSearch.FindForBuilding(r.Width,r.Height,new[]{start},footprint,passable,goals);
             if(route is null) { rejectedCandidates++;continue; }
             var option=new { origin=Vec(p),rotation=r.Rotation,entrance=Vec(entry),
                 connection=Vec(Cell(route[0])),newRoadCells=route.Where(n=>!road[n]).Select(n=>Vec(Cell(n))).ToArray(),
@@ -61,7 +62,7 @@ public sealed class BuildingProjectPlanner(EntityRegistry entities, SpatialObser
             checkedCandidates,rejectedCandidates,totalCandidates=count,searchComplete=checkedCandidates==count,
             stopReason=checkedCandidates==count?"area_exhausted":"option_limit",options=options.ToArray(),
             limitations=new[]{"candidate_plan_only_not_executable","one_height_one_rotation_ground_paths_only","route_and_footprint_inside_search_area",
-                "grid_route_not_native_navigation_proof","no_preview_or_build_order","no_persisted_plan_or_execution_token","not_globally_optimal","no_water_or_hazard_safety_verdict"} };
+                "public_block_object_spec_single_entrance_only","grid_route_not_native_navigation_proof","no_preview_or_build_order","no_persisted_plan_or_execution_token","not_globally_optimal","no_water_or_hazard_safety_verdict"} };
     }
     private static object Vec(Vector3Int p)=>new{x=p.x,y=p.y,z=p.z};
 }

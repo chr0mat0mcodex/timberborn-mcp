@@ -4,7 +4,23 @@ Stand: 2026-10-03. Das Projekt entwickelt eine native MCP-Steuerung für Timberb
 Das Spiel ist ausschließlich Testsystem; konkrete Spielstände gehören nicht zur
 Projektbeschreibung.
 
-## Aktueller Abschluss — 0.34.0 live bestanden
+## Aktueller Abschluss — 0.35.0 generischer ebener Baupilot live bestanden
+
+Gebäudenamensliste durch aktiven Katalog und vollständige gedrehte Spielgeometrie
+ersetzt. Routenbaustein für mehrere Zugangskandidaten vorbereitet; öffentliche
+Spiel-API liefert derzeit nur einen Wegzugang. Schutzprüfungen und feste
+Vertikalpiloten unverändert. Lodge-Historie Drehung 3 im neuen Profil nachgetragen.
+Nach menschlichem Gate Bank (ein Feld, zwei neue Wege) und großes Freiluftlager
+(3x3 Grundfläche, ein neuer Weg), beide Drehung 1, fertig gebaut; Bau-/Fertigzugang
+bestätigt. Einzelnes belegtes äußeres Eckfeld des großen Grundrisses nativ
+abgelehnt. Blockierter Hauptweg hätte 24 erfasste Anschlüsse
+verloren und wurde in der nativen Vorschau abgelehnt. Höhenkontrolle,
+Bestandszugänge auf beiden Ebenen und Replay beider Projekte bestanden. Begrenzte Läufe exakt,
+Abschluss pausiert. Direkt-fertig-Distriktzentrum und Spiel-Multi-Eingang nicht
+live belegt; Bank-/LargePile-Historie im MCP-Profil beim nächsten ohnehin nötigen Gate ergänzen.
+[Umsetzung und Nachweis](docs/generic-building-project.md).
+
+## Letzter Abschluss — 0.34.0 live bestanden
 
 Ebener Projektpilot um Lodge.Folktails erweitert; vorhandene Spielgeometrie und
 Zugangsprüfungen unverändert genutzt. MCP-Nachweise je Gebäudevorlage getrennt,

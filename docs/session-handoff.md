@@ -2,6 +2,20 @@
 
 ## Stand
 
+Bridge 0.35.0 nach menschlichem Gate live bestanden: generischer ebener Pilot
+über Katalog/Geometrie. Bank (ein Feld, zwei Wege) und großes Freiluftlager
+(neun Felder, ein Weg), jeweils Drehung 1, fertig und erreichbar. Einzelne
+Kollision am gegenüberliegenden Eckfeld des großen Grundrisses nativ abgelehnt;
+Hauptweg-Negativkontrolle meldete 24 verlorene Vorschauverbindungen, restauriert.
+Bestandszugänge einschließlich oberem Lager erhalten, beide Projekt-Replays
+unverändert, 192 Gebäude/Wege am Ende, Simulation pausiert. Zehn exakt bestimmte
+Testbüsche regulär entfernt. Installierte DLLs entsprechen den gebauten Dateien.
+Öffentliche API liefert einen Gebäude-Eingang; mehrere Bauzugangszellen nicht
+damit verwechseln. Direkt-fertig-Distriktzentrum und Umwegfall hier nicht live
+geprüft. Bank-/LargePile-Historie beim nächsten ohnehin nötigen MCP-Gate ergänzen;
+das ausgelieferte Profil enthält den Stand vor Abnahme.
+[Nachweis und Grenzen](generic-building-project.md).
+
 Bridge 0.34.0 nach menschlichem Gate live bestanden: Lodge.Folktails im ebenen
 Projektpilot, Belege versionsgebunden und MCP-Historie je Vorlage getrennt.
 Rotation 3 mit zwei tatsächlich neuen Bodenwegen vollständig gebaut; korrekter

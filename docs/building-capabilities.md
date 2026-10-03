@@ -1,5 +1,21 @@
 # Strukturierter Projektumfang — Live-Nachweis
 
+## 0.35.0 — Profil live gelesen, zwei generische Bauabläufe bestanden
+
+Ebener Modus ohne Namensliste: `templateSelection` benennt den dynamischen
+Katalog-/Geometrieumfang; `objectTemplates` ist deshalb leer, kein Ausschluss
+aller Vorlagen. `entranceModel` benennt den einzigen öffentlich gemeldeten
+Wegzugang. Historische `templateEvidence` sind keine generische Livenachweis-
+oder Standortfreigabe; Lodge-Drehung 3 aus vorheriger Abnahme nachgetragen.
+0.34.0-Profil unverändert kompatibel. IronTeeth bekommt in 0.35.0 nur den
+generischen ebenen Modus, keine Folktails-Belege oder festen Vertikalpiloten.
+Profil live bestätigt; Bank und großes 3x3-Freiluftlager, jeweils Drehung 1,
+anschließend vollständig gebaut und erreichbar, mit erhaltenen Bestandsanschlüssen,
+vollständiger Grundriss-Negativkontrolle und Replay. Das ausgelieferte
+Profil enthält weiterhin den Historienstand vor diesem Test. Nachträge erst
+beim nächsten ohnehin nötigen MCP-Gate bündeln.
+[Umfang und Nachweis](generic-building-project.md).
+
 ## Erweiterung 0.34.0 — Profil live gelesen
 
 Ebener Pilot erhält Lodge.Folktails; TemplateEvidence im ebenen Modus trennt

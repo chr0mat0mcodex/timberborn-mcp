@@ -70,8 +70,14 @@ public sealed class MediumWarehouseProjectTests
     [Theory]
     [InlineData("LargeWarehouse.Folktails")] [InlineData("DoubleLodge.Folktails")]
     [InlineData("MediumWarehouse.IronTeeth")] [InlineData("Path")]
-    public void OtherTemplatesRemainOutsideFlatExecutionScope(string template) =>
-        Assert.Throws<ArgumentException>(() => Request(template));
+    public void TemplateSyntaxDoesNotGrantLegacyExecutionSupport(string template)
+    {
+        if (template == "Path") Assert.Throws<ArgumentException>(() => Request(template));
+        else {
+            Assert.Equal(template, Request(template).Validation!.Plan.Template);
+            Assert.Throws<InvalidDataException>(() => NativeClient.ValidateProjectExecution(Receipt(template), Request(template)));
+        }
+    }
 
     [Fact]
     public void MediumProjectKeepsOrderedPathsAndIdempotentLedger()

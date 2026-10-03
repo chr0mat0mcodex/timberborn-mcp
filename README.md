@@ -5,6 +5,14 @@ Beobachtung und kontrollierte Eingriffe über reguläre Spielservices.
 
 ## Status
 
+0.35.0 macht den ebenen Bauprojektpiloten generisch über den aktiven Spielkatalog,
+volle Geometrie und anschließbaren Eingang. Bank sowie großes 3x3-Freiluftlager
+mit Anschlusswegen, Bau-/Fertigzugang, vollständiger Grundrisskontrolle,
+gefährdeter Bestandsverbindung, Höhenkontrolle und Replay nach menschlichem
+Gate live geprüft. Derzeit ein öffentlich gemeldeter Wegzugang;
+kein vollständiger Bauphasen-Vorabnachweis oder pauschaler Katalognachweis.
+[Umfang und Nachweis](docs/generic-building-project.md).
+
 Agent Bridge 0.34.0 ergänzt das ebene Folktails-Wohnhausprojekt. Gedrehter
 Vier-Zellen-Grundriss, zwei neue Anschlusswege, tatsächlicher Bau-/Fertigzugang,
 Grundriss-Ablehnung, Bestandsanschlüsse und Replay live geprüft.

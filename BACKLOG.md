@@ -2,6 +2,23 @@
 
 ## Priorität
 
+Generischer ebener Projektpilot 0.35.0 nach menschlichem Gate live bestanden:
+Bank mit zwei neuen Wegen und großes 3x3-Freiluftlager mit einem Weg, beide
+Drehung 1, mit realem Bau-/Fertigzugang, erhaltenen Bestandsanschlüssen und Replay.
+Einzelne Kollision am äußeren Eckfeld des großen Grundrisses nativ abgelehnt.
+Höhen-/Blockadekontrolle bestanden. Gefährliche Vorschau
+erkannte 24 verlorene Verbindungen und wurde restauriert. Keine Vorlage mehr
+einzeln freischalten. [Nachweis](docs/generic-building-project.md).
+
+Offen: Direkt-fertig-Distriktzentrum mit eigenem Distrikt-Lebenszyklus nicht
+live geprüft; Mehrfacheingänge spielseitig nicht öffentlich beobachtet. Keine
+pauschale Katalogabnahme. Neue Bank-/LargePile-Historie beim nächsten ohnehin nötigen
+MCP-Gate im Profil aufnehmen; ausgeliefertes Profil enthält Stand vor Abnahme.
+Weitere Arbeit nach Missionsplan auf konkrete Lücken bei Weg-/Bauzugangsschutz
+ausrichten, einschließlich Umwegfall; keine Drehungs-/Vorlagenserie ohne Bedarf.
+
+### Ausgangspunkt vor 0.35.0
+
 E-Schritt 0.34.0 live abgeschlossen, Lodge.Folktails im ebenen Bauprojekt.
 Gedrehter Wohnhausablauf mit zwei neuen Wegen, Grundriss-Negativkontrolle,
 realem Bau-/Fertigzugang, Bestandsanschlüssen und Replay bestanden.

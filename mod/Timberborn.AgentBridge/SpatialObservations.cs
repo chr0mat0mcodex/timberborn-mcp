@@ -108,7 +108,7 @@ public sealed class SpatialObservations(EntityRegistry entities, TemplateNameMap
             reasons = reasons.OrderBy(r => r).ToArray(), cells, entrance = entrance.HasValue ? Vec(entrance.Value) : null,
             pathAtEntrance, entranceOccupants, costs,
             limitations = new[] { "not_full_game_validator", "no_preview_or_entity_created", "no_district_or_builder_reachability",
-                "path_at_entrance_means_finished_Path_template_only", "entrance_occupants_are_not_traversability", "stairs_and_special_paths_not_classified_as_Path",
+                "public_block_object_spec_single_entrance_only", "path_at_entrance_means_finished_Path_template_only", "entrance_occupants_are_not_traversability", "stairs_and_special_paths_not_classified_as_Path",
                 "stackable_support_not_validated", "no_water_or_hazard_safety_verdict", "global_stock_not_local_delivery" } };
     }
 

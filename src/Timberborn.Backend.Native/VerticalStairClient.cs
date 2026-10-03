@@ -15,7 +15,7 @@ public sealed partial class NativeClient
     public static void ValidateVerticalReceipt(BridgeEnvelope<NativeProjectExecution> e, VerticalStairRequest r)
     {
         var d = e.Data;
-        if (e.BridgeVersion is not ("0.28.1" or "0.29.0" or "0.29.1" or "0.29.2" or "0.29.3" or "0.30.0" or "0.31.0" or "0.31.1" or "0.31.2" or "0.31.3" or "0.31.4" or "0.32.0" or "0.32.1" or "0.33.0" or "0.33.1" or "0.34.0") || e.SessionId != r.Session || d is null || d.ActionId != r.ActionId.ToString("D") ||
+        if (e.BridgeVersion is not ("0.28.1" or "0.29.0" or "0.29.1" or "0.29.2" or "0.29.3" or "0.30.0" or "0.31.0" or "0.31.1" or "0.31.2" or "0.31.3" or "0.31.4" or "0.32.0" or "0.32.1" or "0.33.0" or "0.33.1" or "0.34.0" or "0.35.0") || e.SessionId != r.Session || d is null || d.ActionId != r.ActionId.ToString("D") ||
             d.Steps is null || d.Steps.Length is < 1 or > 7 || d.Steps.Any(s => s is null) ||
             d.Steps[0].Template != "Stairs.Folktails" || d.Steps[0].EntityId != d.ActionId ||
             d.State is not ("running" or "waiting" or "completed" or "stopped" or "unconfirmed")) throw new InvalidDataException("Invalid vertical stair receipt");
@@ -24,8 +24,8 @@ public sealed partial class NativeClient
         bool warehouse = d.Steps.Length == 7;
         bool platform = legacyPlatform || twoPlatforms || warehouse;
         if (legacyPlatform && (e.BridgeVersion != "0.29.0" || !d.Steps.Select(s => s.Template).SequenceEqual(new[] { "Stairs.Folktails", "Path", "Platform.Folktails", "Path" })) ||
-            twoPlatforms && (e.BridgeVersion is not ("0.29.1" or "0.29.2" or "0.29.3" or "0.30.0" or "0.31.0" or "0.31.1" or "0.31.2" or "0.31.3" or "0.31.4" or "0.32.0" or "0.32.1" or "0.33.0" or "0.33.1" or "0.34.0") || !d.Steps.Select(s => s.Template).SequenceEqual(new[] { "Stairs.Folktails", "Platform.Folktails", "Path", "Platform.Folktails", "Path" })) ||
-            warehouse && (e.BridgeVersion is not ("0.32.0" or "0.32.1" or "0.33.0" or "0.33.1" or "0.34.0") || !d.Steps.Select(s => s.Template).SequenceEqual(new[] { "Stairs.Folktails", "Platform.Folktails", "Path", "Platform.Folktails", "Path", "Platform.Folktails", "SmallWarehouse.Folktails" })) ||
+            twoPlatforms && (e.BridgeVersion is not ("0.29.1" or "0.29.2" or "0.29.3" or "0.30.0" or "0.31.0" or "0.31.1" or "0.31.2" or "0.31.3" or "0.31.4" or "0.32.0" or "0.32.1" or "0.33.0" or "0.33.1" or "0.34.0" or "0.35.0") || !d.Steps.Select(s => s.Template).SequenceEqual(new[] { "Stairs.Folktails", "Platform.Folktails", "Path", "Platform.Folktails", "Path" })) ||
+            warehouse && (e.BridgeVersion is not ("0.32.0" or "0.32.1" or "0.33.0" or "0.33.1" or "0.34.0" or "0.35.0") || !d.Steps.Select(s => s.Template).SequenceEqual(new[] { "Stairs.Folktails", "Platform.Folktails", "Path", "Platform.Folktails", "Path", "Platform.Folktails", "SmallWarehouse.Folktails" })) ||
             !platform && (d.Steps.Length > 3 || d.Steps.Skip(1).Any(s => s.Template != "Path")) ||
             r.Start && (warehouse != r.WithWarehouse || platform != r.WithPlatform || d.Steps.Length != (r.WithWarehouse ? 7 : 1 + r.UpperPathCount + (r.WithPlatform ? (twoPlatforms ? 2 : 1) : 0)))) throw new InvalidDataException("Invalid vertical project scope");
         var stair = d.Steps[0];
@@ -40,7 +40,7 @@ public sealed partial class NativeClient
         if (d.Steps.Any(s => !Guid.TryParseExact(s.EntityId,"D",out var id) || id == Guid.Empty || s.State is not ("pending" or "unconfirmed" or "confirmed")) ||
             d.Steps.Select(s => s.EntityId).Distinct().Count() != d.Steps.Length ||
             d.State == "completed" && d.Steps.Any(s => s.State != "confirmed")) throw new InvalidDataException("Invalid vertical confirmation");
-        if (d.State == "waiting" && (e.BridgeVersion is not ("0.29.2" or "0.29.3" or "0.30.0" or "0.31.0" or "0.31.1" or "0.31.2" or "0.31.3" or "0.31.4" or "0.32.0" or "0.32.1" or "0.33.0" or "0.33.1" or "0.34.0") || !(twoPlatforms || warehouse || e.BridgeVersion is ("0.32.1" or "0.33.0" or "0.33.1" or "0.34.0")) ||
+        if (d.State == "waiting" && (e.BridgeVersion is not ("0.29.2" or "0.29.3" or "0.30.0" or "0.31.0" or "0.31.1" or "0.31.2" or "0.31.3" or "0.31.4" or "0.32.0" or "0.32.1" or "0.33.0" or "0.33.1" or "0.34.0" or "0.35.0") || !(twoPlatforms || warehouse || e.BridgeVersion is ("0.32.1" or "0.33.0" or "0.33.1" or "0.34.0" or "0.35.0")) ||
             d.Reason is not ("awaiting_construction_finished" or "awaiting_pause") ||
             d.Steps.All(s => s.State == "confirmed") || d.Steps.Any(s => s.State == "unconfirmed") ||
             d.Steps.SkipWhile(s => s.State == "confirmed").Any(s => s.State != "pending")))

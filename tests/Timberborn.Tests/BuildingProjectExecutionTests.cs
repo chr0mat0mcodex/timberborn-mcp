@@ -31,7 +31,7 @@ public sealed class BuildingProjectExecutionTests
             [defect=="other_unknown"?"navigation_coverage_unknown":"construction_and_road_node_coverage_unproven"]));
     }
     [Theory]
-    [InlineData("mode","normal")] [InlineData("template","LargeWarehouse.Folktails")] [InlineData("actionId","")]
+    [InlineData("mode","normal")] [InlineData("template","Path")] [InlineData("actionId","")]
     [InlineData("optionIndex","5")] [InlineData("session","bad")]
     public void ScopeAndExplicitModeRequired(string key,string value)
     { var q=Query();q[key]=value;Assert.Throws<ArgumentException>(()=>BuildingProjectExecutionRequest.Parse(true,q)); }

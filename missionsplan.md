@@ -2,6 +2,17 @@
 
 ## Ziel
 
+Aktueller E-Auftrag: ebene Gebäudeprojekte direkt generisch über volle tatsächliche
+Geometrie und anschließbaren Wegzugang, keine weiteren Einzelgebäude-Freischaltungen.
+0.35.0 nach menschlichem Test-/Installationsgate live bestanden: Bank mit zwei
+neuen Wegen und großes 3x3-Freiluftlager mit einem neuen Weg. Vollständiger
+Grundriss einschließlich äußerem Eckfeld, Bau-/Fertigzugang, gefährdete
+Bestandsverbindung, Höhenkontrolle und Replay geprüft.
+Öffentliche Spiel-API liefert nur einen Eingang; Mehrfachzugänge im
+Routenbaustein vorbereitet, spielseitig nicht behauptet. Feste Vertikalprojekte
+und bestehende Schutzprüfungen bleiben unverändert.
+[Umsetzung/Nachweis](docs/generic-building-project.md).
+
 Abgeschlossener E-Schritt: 0.34.0 erweitert den ebenen Pilot um ein
 Folktails-Wohnhaus mit vier Grundrisszellen und versetztem Eingang.
 Ein vollständiger gedrehter Bauablauf mit zwei neuen Wegen und Grundriss-

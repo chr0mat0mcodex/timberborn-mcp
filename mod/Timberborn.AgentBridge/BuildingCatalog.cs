@@ -48,7 +48,7 @@ public sealed class BuildingCatalog(TemplateService service, FactionService fact
         return new { faction = faction.Current.Id, offset = r.Offset, limit = r.Limit, total = all.Length, items,
             hasMore = r.Offset + items.Length < all.Length,
             limitations = new[] { "active_scene_template_collections", "supported_is_not_live_tested", "single_unflipped_placement_only",
-                "configuration_after_construction_separate", "global_stock_not_local_delivery" } };
+                "public_block_object_spec_single_entrance_only", "configuration_after_construction_separate", "global_stock_not_local_delivery" } };
     }
     private static object Vec(Vector3Int p) => new { x = p.x, y = p.y, z = p.z };
 }

@@ -8,7 +8,13 @@ historischer Bauplan ist Voraussetzung.
 
 ## Technischer Stand
 
-- Aktuell installiert und live bestanden, 0.34.0: ebenes Folktails-Wohnhaus im bestehenden
+- Aktuell installiert und begrenzt live bestanden, 0.35.0: generischer ebener
+  Gebäudeprojektpilot. Bank und großes 3x3-Freiluftlager mit neuen Wegen,
+  Bau-/Fertigzugang, Randfeld-/Bestandswegkontrolle und Replay bestanden.
+  Öffentliche API liefert einen Gebäude-Eingang; allgemeiner Bauphasen-
+  Vorabnachweis bleibt offen. [Nachweis](docs/generic-building-project.md).
+
+- Vorheriger Abschluss, 0.34.0: ebenes Folktails-Wohnhaus im bestehenden
   Pilot; historisches MCP-Profil mit vorlagenspezifischer Abdeckung.
   Gedrehter vollständiger Wohnhaus-Livefall mit zwei neuen Wegen, Bau-/Fertigzugang,
   Bestandskontrolle, Grundriss-Ablehnung und Replay bestanden.

@@ -94,9 +94,13 @@ public sealed class BuildingProjectExecution(SiteValidation validation, RoadProt
             block.Orientation != Rotation(step) || !entity.TryGetComponent<TemplateSpec>(out var actual) || actual.TemplateName != step.Template)
             return "mismatch";
         if (step.Template == "Path") return block.IsFinished && district.IsOnInstantDistrictRoad(NavigationCoordinateSystem.GridToWorld(Position(step))) ? "confirmed" : "pending";
-        if (!block.IsUnfinished) return "mismatch";
-        return block.HasEntrance && district.IsOnInstantDistrictRoad(NavigationCoordinateSystem.GridToWorld(block.PositionedEntrance.Coordinates)) &&
-            entity.TryGetComponent<ReachableConstructionSite>(out var site) && site.IsReachableByBuilders() ? "confirmed" : "pending";
+        if (!block.HasEntrance || !district.IsOnInstantDistrictRoad(NavigationCoordinateSystem.GridToWorld(block.PositionedEntrance.Coordinates)))
+            return "pending";
+        // Some catalogue objects are legitimately placed finished. Never demand
+        // a construction-site component for those, or mark construction finished.
+        if (block.IsFinished) return "confirmed";
+        return block.IsUnfinished && entity.TryGetComponent<ReachableConstructionSite>(out var site) &&
+            site.IsReachableByBuilders() ? "confirmed" : "pending";
     }
     private static Vector3Int Position(BuildingProjectController.Step s) => new(s.X, s.Y, s.Z);
     private static Orientation Rotation(BuildingProjectController.Step s) => new[] { Orientation.Cw0, Orientation.Cw90, Orientation.Cw180, Orientation.Cw270 }[s.Rotation];

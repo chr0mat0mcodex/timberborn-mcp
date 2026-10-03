@@ -15,6 +15,8 @@ public sealed record ProjectModeCapability(string Mode, string Tool, string[] Ob
     int? MaxWaitRealSeconds, int[] LiveRotations, string EvidenceSource, string EvidenceReference)
 {
     public TemplateLiveEvidence[] TemplateEvidence { get; init; } = [];
+    public string TemplateSelection { get; init; } = "fixed_template_list";
+    public string EntranceModel { get; init; } = "public_block_object_spec_single_entrance";
 }
 
 public sealed record TemplateLiveEvidence(string Template, int[] LiveRotations, string EvidenceSource, string EvidenceReference);
@@ -54,17 +56,20 @@ public static class BuildingCapabilityTools
     public static BuildingCapabilityReport Describe(string bridgeVersion, string faction, bool serverEnabled)
     {
         // Exact profile binding: new deployments require explicit review, never a >= version guess.
-        bool known = bridgeVersion is ("0.33.0" or "0.33.1" or "0.34.0") && faction == "Folktails";
-        bool lodge = bridgeVersion == "0.34.0";
-        int verticalCapacity = bridgeVersion is ("0.33.1" or "0.34.0") ? VerticalStairRequest.MaxProjectsPerSession : 1;
+        bool generic = bridgeVersion == "0.35.0";
+        bool known = bridgeVersion is ("0.33.0" or "0.33.1" or "0.34.0") && faction == "Folktails" ||
+            generic && faction is ("Folktails" or "IronTeeth");
+        bool lodge = bridgeVersion == "0.34.0" || generic;
+        int verticalCapacity = bridgeVersion is ("0.33.1" or "0.34.0" or "0.35.0") ? VerticalStairRequest.MaxProjectsPerSession : 1;
         ProjectModeCapability[] modes = known ? [
             new("development_pilot", "execute_building_project_pilot",
-                lodge ? ["Path", "SmallWarehouse.Folktails", "MediumWarehouse.Folktails", "Lodge.Folktails"] :
+                generic ? [] : lodge ? ["Path", "SmallWarehouse.Folktails", "MediumWarehouse.Folktails", "Lodge.Folktails"] :
                     ["Path", "SmallWarehouse.Folktails", "MediumWarehouse.Folktails"],
                 [0, 1, 2, 3], [], 1, 5, 4, 8, 8, 4, null, lodge ? [] : [0, 1, 2, 3],
-                lodge ? "mixed_template_coverage_see_template_evidence" : "documented_bounded_live_cases_not_current_site_validation",
+                generic ? "generic_geometry_scope_not_live_proven" : lodge ? "mixed_template_coverage_see_template_evidence" : "documented_bounded_live_cases_not_current_site_validation",
                 "docs/medium-warehouse-pilot.md;docs/building-rotation-pilot.md") {
-                    TemplateEvidence = FlatEvidence(lodge)
+                    TemplateEvidence = faction == "Folktails" ? FlatEvidence(lodge, generic) : [],
+                    TemplateSelection = generic ? "native_catalog_supported_geometry_with_road_entrance" : "fixed_template_list"
                 },
             new("single_stair_pilot", "execute_vertical_stair_pilot", ["Stairs.Folktails"],
                 [0, 1, 2, 3], [0], 1, 1, 0, null, null, verticalCapacity, 300, [],
@@ -80,6 +85,7 @@ public static class BuildingCapabilityTools
                 [0, 1, 2, 3], [2], 7, 7, 0, null, null, verticalCapacity, 300, [0, 1, 2, 3],
                 "documented_bounded_live_cases_not_current_site_validation", "docs/vertical-warehouse-pilot.md")
         ] : [];
+        if (faction != "Folktails") modes = modes.Where(m => m.Tool != "execute_vertical_stair_pilot").ToArray();
         return new(bridgeVersion, faction, known ? "known" : "unknown", known ? 64 : null, serverEnabled, "not_observed",
             false, false, false, modes,
             ["fresh_session_and_action_identity", "template_unlock_and_costs_from_build_catalog",
@@ -90,6 +96,8 @@ public static class BuildingCapabilityTools
             ["profile_is_server_knowledge_bound_to_observed_bridge_and_faction",
                 "mode_rotations_are_request_rotation_stair_rotation_for_vertical_modes",
                 "supported_templates_are_not_currently_unlocked_or_affordable_guarantees",
+                "generic_flat_templates_require_catalog_geometry_and_entrance_not_historical_live_evidence",
+                "only_public_single_entrance_observed_no_multiple_entrance_coverage_claim",
                 "server_switch_is_not_bridge_write_gate_or_user_authorization",
                 "max_projects_shared_across_vertical_modes_not_per_mode",
                 "historical_live_coverage_is_not_all_rotations_in_all_geometries",
@@ -99,13 +107,14 @@ public static class BuildingCapabilityTools
                 "completed_receipt_is_not_finished_construction", "no_delivery_staffing_or_operation_guarantee"]);
     }
 
-    private static TemplateLiveEvidence[] FlatEvidence(bool lodge)
+    private static TemplateLiveEvidence[] FlatEvidence(bool lodge, bool lodgeProven)
     {
         var evidence = new List<TemplateLiveEvidence> {
             new("SmallWarehouse.Folktails", [0, 1, 2, 3], "documented_bounded_live_cases_not_current_site_validation", "docs/building-rotation-pilot.md"),
             new("MediumWarehouse.Folktails", [0, 1, 2, 3], "documented_bounded_live_cases_not_current_site_validation", "docs/medium-warehouse-pilot.md")
         };
-        if (lodge) evidence.Add(new("Lodge.Folktails", [], "not_live_proven", "docs/lodge-project-pilot.md"));
+        if (lodge) evidence.Add(new("Lodge.Folktails", lodgeProven ? [3] : [],
+            lodgeProven ? "documented_bounded_live_cases_not_current_site_validation" : "not_live_proven", "docs/lodge-project-pilot.md"));
         return evidence.ToArray();
     }
 
