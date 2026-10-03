@@ -1,6 +1,26 @@
 # Mission: Timberborn über MCP steuerbar machen
 
-## Ziel
+## Abschluss Phase E
+
+Phase E ist am 2026-10-03 mit Bridge 0.35.1 im vereinbarten begrenzten Umfang
+abgeschlossen: generische ebene Gebäude anhand voller Geometrie und Eingang,
+repräsentative kleine und große Grundrisse, geprüfte Drehungen und feste
+vertikale Anschlüsse, sequenzielle Projekte sowie budgetgerechte Wegsuche.
+Bau-/Fertigzugang und Bestandskontrollen sind in den dokumentierten Fällen
+live belegt; der isolierte Fünf-/Vier-Wege-Vergleich ist bestanden.
+
+Nachweise: [generische Gebäude](docs/generic-building-project.md),
+[Drehungen](docs/building-rotation-pilot.md),
+[vertikale Anschlüsse](docs/vertical-warehouse-pilot.md),
+[sequenzielle Projekte](docs/vertical-sequential-pilot.md),
+[Wegbudget](docs/road-budget-planner.md).
+
+Offene Grenzen und Erweiterungen werden als eigenständige Folgearbeiten
+[F01–F05 im Backlog](BACKLOG.md#offene-folgearbeiten-nach-phase-e) geführt.
+Der Abschluss behauptet weder vollständigen Bauphasenschutz noch freie
+3D-Planung oder eine pauschale Katalogabnahme; technische Schutzgrenzen bleiben.
+
+## Ziel und bisherige Umsetzung
 
 Neuester E-Abschluss: 0.35.1 budgetgerechte ebene Routensuche live bestanden:
 isolierter Fünf-/Vier-Wege-Vergleich samt Weitersuchen und reproduzierbaren
@@ -8,7 +28,7 @@ Schlüsseln, realer Anschluss um ein Hindernis und erhaltene Bestandszugänge im
 Baupilot. Aktionslimits und allgemeine Nachweislücken unverändert.
 [Nachweis](docs/road-budget-planner.md).
 
-Aktueller E-Auftrag: ebene Gebäudeprojekte direkt generisch über volle tatsächliche
+Abgeschlossener E-Auftrag: ebene Gebäudeprojekte direkt generisch über volle tatsächliche
 Geometrie und anschließbaren Wegzugang, keine weiteren Einzelgebäude-Freischaltungen.
 0.35.0 nach menschlichem Test-/Installationsgate live bestanden: Bank mit zwei
 neuen Wegen und großes 3x3-Freiluftlager mit einem neuen Weg. Vollständiger
@@ -72,7 +92,7 @@ Das Spiel dient als austauschbare Entwicklungsumgebung.
 - Kontrollierte Aktionen für Bau, Betrieb, Forschung, Flächen, Entfernung und Zeit.
 - Sitzungsbindung, Aktions-IDs, technische Freigaben, Fehlercodes und Rücklesungen.
 
-## Nächste Etappen
+## Etappenplan und Abschlusskriterien
 
 Maßgeblich seit 2026-10-03, vom Nutzer freigegeben. Zwei Bauziele:
 Bestehende Wege und Zugänge nicht verschlechtern; neue Gebäude während Bau und
@@ -85,7 +105,7 @@ Ausführung sind gleichwertige Fortschritte, wenn sie fachlich korrekt sind.
 | B | Öffentliche API für Bauphasen-/Bauarbeiterprüfung klären und begrenzt testen | Freie und blockierte Kontrollen korrekt; Abdeckung und Grenzen belegt; bei fehlender API keine Sperre stillschweigend lockern |
 | C | Kleinen Lagerbau vollständig durchführen | Vorschau, nutzbare Anschlusswege, erreichbare Baustelle, fertiges Gebäude mit geprüftem Zugang; Bestandsverbindungen erhalten |
 | D | Höhen in denselben Gebäudeablauf integrieren | Neues Gebäude mit Treppe/Plattformanschluss, Bau- und Fertigzugang sowie Bestandswege geprüft |
-| E | Weitere Vorlagen, Drehungen, Projektgrößen | Erweiterung nur auf explizit unterstützte und geprüfte Eigenschaften |
+| E — abgeschlossen (0.35.1) | Weitere Vorlagen, Drehungen, Projektgrößen | Begrenzter Ausbau live belegt; [Abschluss](#abschluss-phase-e), weitere Grenzen als [Folgearbeiten im Backlog](BACKLOG.md#offene-folgearbeiten-nach-phase-e) |
 
 Versorgung und Betrieb erst als separate Folgestufe ausbauen. Keine freie 3-D-
 Planung und kein weiterer Weglängenpilot als Ersatz für A–C. Ein neuer Umweg muss

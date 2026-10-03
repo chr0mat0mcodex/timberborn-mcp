@@ -4,7 +4,16 @@ Stand: 2026-10-03. Das Projekt entwickelt eine native MCP-Steuerung für Timberb
 Das Spiel ist ausschließlich Testsystem; konkrete Spielstände gehören nicht zur
 Projektbeschreibung.
 
-## Aktueller Abschluss — 0.35.1 budgetgerechte ebene Routensuche
+## Phase E abgeschlossen
+
+Mit 0.35.1 ist Phase E im vereinbarten begrenzten Umfang abgeschlossen.
+[Abschluss und Nachweise](missionsplan.md#abschluss-phase-e).
+Vollständiger Bauphasenschutz, Umweg-Schutzfolge, freie Höhen-/größere
+Projektplanung und besondere Gebäude-/Kompatibilitätsfälle bleiben als
+[F01–F05 im Backlog](BACKLOG.md#offene-folgearbeiten-nach-phase-e) offen.
+Sie sind Folgearbeiten, keine ausstehende E-Abnahme; keine Schutzgrenze gelockert.
+
+## Letzter technischer Abschluss — 0.35.1 budgetgerechte ebene Routensuche
 
 Nach menschlichem Gate als 0.35.1 geladen. Bauablauf und isolierte
 Fünf-Wege-Ablehnung mit anschließender Vier-Wege-Kandidatensuche live bestanden. Der Planer

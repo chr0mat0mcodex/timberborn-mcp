@@ -1,6 +1,25 @@
 # Backlog
 
-## Priorität
+## Offene Folgearbeiten nach Phase E
+
+Phase E ist mit 0.35.1 im vereinbarten begrenzten Umfang abgeschlossen.
+Die folgenden Punkte sind eigenständige Folgearbeiten, keine offenen
+Abschlussbedingungen von E und keine pauschale Baufreigabe.
+
+| ID | Offener Punkt | Erforderlicher Nachweis / Grenze |
+| --- | --- | --- |
+| F01 | Vollständiger Weg- und Bauphasenschutz | Bestehende Baustellenzugänge unter geplanten Änderungen und Zugang neuer Baustellen vorab belastbar prüfen; positive und negative Kontrollen. Bis dahin unabhängige offene Baustellen ausschließen und `unknown` nicht als sicher behandeln. |
+| F02 | Umweg als Schutz für eine spätere Bestandsänderung | Neuen Umweg zuerst real fertigstellen und seine Nutzbarkeit prüfen, dann die davon abhängige Änderung einschließlich betroffener Bestandszugänge testen. Der bestandene Anschluss um einen Baum ersetzt diesen Nachweis nicht. |
+| F03 | Freie Höhenplanung und größere Bauprojekte | Bedarfsgerecht über feste Treppen-/Plattformfolgen, 8x8-Suche und vier neue Bodenwege hinausgehen; Abhängigkeiten, Bauphasen und Bestandszugänge für den erweiterten Umfang prüfen. Keine automatische Erhöhung der aktuellen Limits. |
+| F04 | Besondere Gebäude- und Eingangsfälle | Direkt-fertig-Distriktzentrum mit eigenem Distrikt-Lebenszyklus gezielt live prüfen. Mehrere echte Gebäude-Eingänge erst bei belegter Spiel-API unterstützen; Bauzugangszellen sind keine Türen. |
+| F05 | Breitere Kompatibilitäts- und Katalogabdeckung | Weitere relevante Geometrien, Fraktionen, Karten und Spielversionen mit repräsentativen Fällen prüfen. Generische Unterstützung ist keine pauschale Live-Abnahme aller Kataloggebäude; keine vollständige Vorlagen-/Drehungsserie ohne konkreten Bedarf. |
+
+Weitere bereits erfasste Projektaufgaben stehen unter „Technische Lücken“;
+Versorgung und Betrieb bleiben eine separate Folgestufe. Priorisierung des
+nächsten Arbeitspakets erfolgt eigenständig, nicht als Fortsetzung einer offenen
+Phase E. Abschlussumfang und Nachweise: [Missionsplan](missionsplan.md#abschluss-phase-e).
+
+## Abgeschlossene Schritte und historische Priorisierung
 
 Abgeschlossen: 0.35.1, Bauablauf und isolierte Überbudgetkontrolle live bestanden.
 Vier Vorschläge nicht mit überlangen Anschlussprojekten füllen; vorhandene Wege

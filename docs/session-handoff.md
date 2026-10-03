@@ -2,6 +2,11 @@
 
 ## Stand
 
+Phase E ist mit 0.35.1 im vereinbarten begrenzten Umfang abgeschlossen.
+[Abschluss](../missionsplan.md#abschluss-phase-e), offene eigenständige
+[Folgearbeiten F01–F05](../BACKLOG.md#offene-folgearbeiten-nach-phase-e).
+Keine erneute E-Abnahme oder zusätzliche Vorlagenserie ohne konkreten Bedarf.
+
 0.35.1 nach menschlichem Gate geladen, Bauablauf und gezielte
 Überbudgetkontrolle live bestanden. Neue Wege zuerst minimieren, dann Gesamtlänge; maximal vier
 neue Wege bereits bei Kandidatensuche. Gemeinsame Grenze mit Ausführungspolicy.
@@ -12,7 +17,7 @@ Optionen mit 4/3/2/1 Wegen; genau fünf Kandidaten geprüft, einer verworfen,
 Wiederholung identisch. Sechs Wege dafür regulär entfernt; Streifen bleibt offen.
 Vorher zwei Banken mit Bau-/Fertigzugang nachgewiesen, Testzweig nach zwischenzeitlicher
 Trennung wieder angeschlossen. Spiel pausiert. Keine Wiederholung dieser Abnahme
-nötig. Nächsten tatsächlichen Weg-/Bauzugangsschutz-Fall aus Missionsplan wählen.
+nötig. Nächstes eigenständiges Arbeitspaket aus dem Backlog priorisieren.
 [Nachweis und Grenzen](road-budget-planner.md). Historischer Stand unten.
 
 Bridge 0.35.0 nach menschlichem Gate live bestanden: generischer ebener Pilot

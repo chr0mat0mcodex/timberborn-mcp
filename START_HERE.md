@@ -8,6 +8,10 @@ historischer Bauplan ist Voraussetzung.
 
 ## Technischer Stand
 
+Phase E ist mit 0.35.1 abgeschlossen.
+[Umfang und Nachweise](missionsplan.md#abschluss-phase-e),
+[offene eigenständige Folgearbeiten](BACKLOG.md#offene-folgearbeiten-nach-phase-e).
+
 Praktische Werkzeugfolge für Spielaufgaben:
 [Spielanleitung für Agenten](docs/agent-playing-guide.md).
 

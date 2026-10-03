@@ -5,6 +5,10 @@ Beobachtung und kontrollierte Eingriffe über reguläre Spielservices.
 
 ## Status
 
+**Phase E abgeschlossen** mit 0.35.1 im begrenzten, live geprüften Umfang.
+[Abschlussnachweise](missionsplan.md#abschluss-phase-e),
+[offene Folgearbeiten](BACKLOG.md#offene-folgearbeiten-nach-phase-e).
+
 0.35.1: budgetgerechte Routensuche live bestanden. Fünf neue Wege werden bereits
 bei der Kandidatensuche verworfen, vier akzeptiert; passende spätere Vorschläge
 bleiben erhalten. Bau um ein Hindernis, Bau-/Fertigzugang und Bestandskontrolle
