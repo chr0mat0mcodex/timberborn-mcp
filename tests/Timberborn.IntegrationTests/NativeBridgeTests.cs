@@ -201,12 +201,12 @@ public sealed class NativeBridgeTests
             foreach(var name in new[]{"inspect_goods","inspect_alerts","inspect_alert_targets"}) {
                 var args=new Dictionary<string,object?>{["offset"]=0,["limit"]=32,["reasoning"]="Versorgung lesend prüfen."};
                 if(name=="inspect_alert_targets") {args["session"]=session;args["alertId"]=new string('0',64);}
-                var result=await client.CallToolAsync(name,args,cancellationToken:ct);
+                var result=await client.CallToolWithReasonAsync(name,args,cancellationToken:ct);
                 Assert.False(result.IsError);Assert.Equal(0,result.StructuredContent!.Value.GetProperty("data").GetProperty("total").GetInt32());
                 Assert.Contains(activityLog.Snapshot(),e=>e.Tool==name&&e.State=="ok"&&e.Reasoning=="Versorgung lesend prüfen.");
                 if(name=="inspect_alert_targets") {
                     args["session"]=Guid.NewGuid().ToString();
-                    var rejected=await client.CallToolAsync(name,args,cancellationToken:ct);
+                    var rejected=await client.CallToolWithReasonAsync(name,args,cancellationToken:ct);
                     Assert.True(rejected.IsError);Assert.Equal("stale_session",rejected.StructuredContent!.Value.GetProperty("error").GetProperty("code").GetString());
                 }
             }
@@ -215,39 +215,39 @@ public sealed class NativeBridgeTests
                 if(name=="inspect_good_history")a["good"]="Water";else{a["id"]=Guid.NewGuid().ToString();a["session"]=session;}
                 if(name=="inspect_road_connection")a["toId"]=Guid.NewGuid().ToString();
                 if(name is "inspect_work_range" or "inspect_good_history"){a["offset"]=0;a["limit"]=32;}
-                Assert.False((await client.CallToolAsync(name,a,cancellationToken:ct)).IsError);
+                Assert.False((await client.CallToolWithReasonAsync(name,a,cancellationToken:ct)).IsError);
                 Assert.Contains(activityLog.Snapshot(),e=>e.Tool==name&&e.State=="ok");
             }
             foreach(var name in new[]{"inspect_needs","inspect_beaver_needs","inspect_building_operation"}) {
                 var a=new Dictionary<string,object?>();
                 if(name!="inspect_needs"){a["id"]=Guid.NewGuid().ToString();a["session"]=session;}
                 if(name!="inspect_building_operation"){a["offset"]=0;a["limit"]=32;}
-                Assert.False((await client.CallToolAsync(name,a,cancellationToken:ct)).IsError);
+                Assert.False((await client.CallToolWithReasonAsync(name,a,cancellationToken:ct)).IsError);
                 Assert.Contains(activityLog.Snapshot(),e=>e.Tool==name&&e.State=="ok");
             }
-            Assert.False((await client.CallToolAsync("inspect_production_graph",cancellationToken:ct)).IsError);
+            Assert.False((await client.CallToolWithReasonAsync("inspect_production_graph",cancellationToken:ct)).IsError);
             Assert.Contains(activityLog.Snapshot(),e=>e.Tool=="inspect_production_graph"&&e.State=="ok");
-            var researchResult=await client.CallToolAsync("inspect_research",new Dictionary<string,object?>{["offset"]=0,["limit"]=32},cancellationToken:ct);
+            var researchResult=await client.CallToolWithReasonAsync("inspect_research",new Dictionary<string,object?>{["offset"]=0,["limit"]=32},cancellationToken:ct);
             Assert.False(researchResult.IsError);
             Assert.Equal(20,researchResult.StructuredContent!.Value.GetProperty("data").GetProperty("sciencePoints").GetInt32());
             var unlockArgs=new Dictionary<string,object?>{["template"]="SyntheticResearch",["session"]=session,["expectedCost"]=10};
             if(enablePlacement) {
                 unlockArgs["session"]=Guid.NewGuid().ToString("D");
-                var rejected=await client.CallToolAsync("unlock_building",unlockArgs,cancellationToken:ct);
+                var rejected=await client.CallToolWithReasonAsync("unlock_building",unlockArgs,cancellationToken:ct);
                 Assert.True(rejected.IsError);
                 Assert.Equal("stale_session",rejected.StructuredContent!.Value.GetProperty("error").GetProperty("code").GetString());
                 Assert.False(rejected.StructuredContent.Value.GetProperty("error").GetProperty("retryable").GetBoolean());
                 Assert.Contains(activityLog.Snapshot(),e=>e.Tool=="unlock_building"&&e.State=="rejected");
                 Assert.Equal(20,sciencePoints);
                 unlockArgs["session"]=session;
-                var unlocked=await client.CallToolAsync("unlock_building",unlockArgs,cancellationToken:ct);
+                var unlocked=await client.CallToolWithReasonAsync("unlock_building",unlockArgs,cancellationToken:ct);
                 Assert.False(unlocked.IsError);Assert.Equal("applied",unlocked.StructuredContent!.Value.GetProperty("data").GetProperty("outcome").GetString());
-                var repeated=await client.CallToolAsync("unlock_building",unlockArgs,cancellationToken:ct);
+                var repeated=await client.CallToolWithReasonAsync("unlock_building",unlockArgs,cancellationToken:ct);
                 Assert.Equal("already_unlocked",repeated.StructuredContent!.Value.GetProperty("data").GetProperty("outcome").GetString());Assert.Equal(10,sciencePoints);
-            } else { Assert.True((await client.CallToolAsync("unlock_building",unlockArgs,cancellationToken:ct)).IsError);Assert.Equal(20,sciencePoints); }
-            var optionsResult=await client.CallToolAsync("inspect_build_options",new Dictionary<string,object?>{["offset"]=0,["limit"]=32,["reasoning"]="Bauoptionen für den nächsten regulären Auftrag prüfen."},cancellationToken:ct);
+            } else { Assert.True((await client.CallToolWithReasonAsync("unlock_building",unlockArgs,cancellationToken:ct)).IsError);Assert.Equal(20,sciencePoints); }
+            var optionsResult=await client.CallToolWithReasonAsync("inspect_build_options",new Dictionary<string,object?>{["offset"]=0,["limit"]=32,["reasoning"]="Bauoptionen für den nächsten regulären Auftrag prüfen."},cancellationToken:ct);
             Assert.False(optionsResult.IsError);
-            var logResult=await client.CallToolAsync("inspect_agent_log",cancellationToken:ct);
+            var logResult=await client.CallToolWithReasonAsync("inspect_agent_log",cancellationToken:ct);
             Assert.False(logResult.IsError);
             var entry=logResult.StructuredContent!.Value.GetProperty("data").GetProperty("items").EnumerateArray().Single(e=>e.GetProperty("tool").GetString()=="inspect_build_options");
             Assert.Equal("ok",entry.GetProperty("state").GetString());
@@ -255,35 +255,35 @@ public sealed class NativeBridgeTests
             Assert.DoesNotContain(token,logResult.StructuredContent.Value.GetRawText());
             Assert.Equal("WaterPump.Folktails",optionsResult.StructuredContent!.Value.GetProperty("data").GetProperty("items")[0].GetProperty("template").GetString());
             var buildArgs=new Dictionary<string,object?>{["template"]="WaterPump.Folktails",["x"]=1,["y"]=2,["z"]=3,["rotation"]=0};
-            Assert.False((await client.CallToolAsync("precheck_building",buildArgs,cancellationToken:ct)).IsError);
+            Assert.False((await client.CallToolWithReasonAsync("precheck_building",buildArgs,cancellationToken:ct)).IsError);
             if(enableLodgePlacement){
                 buildArgs["session"]=session;
-                Assert.False((await client.CallToolAsync("validate_building",buildArgs,cancellationToken:ct)).IsError);
+                Assert.False((await client.CallToolWithReasonAsync("validate_building",buildArgs,cancellationToken:ct)).IsError);
                 buildArgs["actionId"]=Guid.NewGuid().ToString("D");
-                Assert.False((await client.CallToolAsync("place_building",buildArgs,cancellationToken:ct)).IsError);
-                Assert.True((await client.CallToolAsync("place_building",buildArgs,cancellationToken:ct)).IsError);
+                Assert.False((await client.CallToolWithReasonAsync("place_building",buildArgs,cancellationToken:ct)).IsError);
+                Assert.True((await client.CallToolWithReasonAsync("place_building",buildArgs,cancellationToken:ct)).IsError);
                 buildArgs["actionId"]=Guid.NewGuid().ToString("D");buildArgs["x"]=4;
-                Assert.False((await client.CallToolAsync("place_building",buildArgs,cancellationToken:ct)).IsError);
+                Assert.False((await client.CallToolWithReasonAsync("place_building",buildArgs,cancellationToken:ct)).IsError);
             }
-            var colony = await client.CallToolAsync("inspect_colony", cancellationToken: ct);
+            var colony = await client.CallToolWithReasonAsync("inspect_colony", cancellationToken: ct);
             Assert.False(colony.IsError);
             var json = colony.StructuredContent!.Value;
             Assert.Equal(6, json.GetProperty("data").GetProperty("housing").GetProperty("totalBeds").GetInt32());
             Assert.Equal(session, json.GetProperty("meta").GetProperty("sessionId").GetString());
             Assert.Equal("native", json.GetProperty("meta").GetProperty("backend").GetString());
-            var map = await client.CallToolAsync("inspect_map_region", new Dictionary<string, object?>
+            var map = await client.CallToolWithReasonAsync("inspect_map_region", new Dictionary<string, object?>
                 { ["x"] = 1, ["y"] = 2, ["z"] = 3, ["width"] = 1, ["height"] = 1, ["depth"] = 1 }, cancellationToken: ct);
             Assert.False(map.IsError);
             Assert.Equal(0.5f, map.StructuredContent!.Value.GetProperty("data").GetProperty("cells")[0].GetProperty("waterDepth").GetSingle());
-            var status = await client.CallToolAsync("timberborn_status", cancellationToken: ct);
+            var status = await client.CallToolWithReasonAsync("timberborn_status", cancellationToken: ct);
             Assert.Equal(enablePlacement || enableLodgePlacement || enableValidation, status.StructuredContent!.Value.GetProperty("data").GetProperty("writesEnabled").GetBoolean());
-            var objects = await client.CallToolAsync("find_buildings", new Dictionary<string, object?> { ["offset"] = 0, ["limit"] = 32 }, cancellationToken: ct);
+            var objects = await client.CallToolWithReasonAsync("find_buildings", new Dictionary<string, object?> { ["offset"] = 0, ["limit"] = 32 }, cancellationToken: ct);
             Assert.False(objects.IsError);
             Assert.Equal(0, objects.StructuredContent!.Value.GetProperty("data").GetProperty("total").GetInt32());
-            var catalog = await client.CallToolAsync("inspect_build_catalog", cancellationToken: ct);
+            var catalog = await client.CallToolWithReasonAsync("inspect_build_catalog", cancellationToken: ct);
             Assert.False(catalog.IsError);
             Assert.Equal(12, catalog.StructuredContent!.Value.GetProperty("data").GetProperty("items")[0].GetProperty("costs")[0].GetProperty("required").GetInt32());
-            var site = await client.CallToolAsync("precheck_build_site", new Dictionary<string, object?>
+            var site = await client.CallToolWithReasonAsync("precheck_build_site", new Dictionary<string, object?>
                 { ["template"] = "Path", ["x"] = 1, ["y"] = 2, ["z"] = 3, ["rotation"] = 0 }, cancellationToken: ct);
             Assert.False(site.IsError);
             Assert.False(site.StructuredContent!.Value.GetProperty("data").GetProperty("gameValidated").GetBoolean());
@@ -291,7 +291,7 @@ public sealed class NativeBridgeTests
             Assert.Equal((enableLodgePlacement ? 12 : 8) + (enablePlacement ? 4 : 1) + 12, Volatile.Read(ref observations));
             if (enableValidation)
             {
-                var validation = await client.CallToolAsync("validate_build_site", new Dictionary<string, object?>
+                var validation = await client.CallToolWithReasonAsync("validate_build_site", new Dictionary<string, object?>
                     { ["template"] = "Path", ["x"] = 1, ["y"] = 2, ["z"] = 3, ["rotation"] = 0, ["session"] = session }, cancellationToken: ct);
                 Assert.False(validation.IsError);
                 Assert.True(validation.StructuredContent!.Value.GetProperty("data").GetProperty("noPersistentChangeObserved").GetBoolean());
@@ -300,76 +300,76 @@ public sealed class NativeBridgeTests
             if (enablePlacement)
             {
                 var args = new Dictionary<string, object?> { ["template"] = "Path", ["x"] = 1, ["y"] = 2, ["z"] = 3, ["rotation"] = 0, ["session"] = session };
-                var placed = await client.CallToolAsync("place_path", args, cancellationToken: ct);
+                var placed = await client.CallToolWithReasonAsync("place_path", args, cancellationToken: ct);
                 Assert.False(placed.IsError);
                 Assert.Equal("applied", placed.StructuredContent!.Value.GetProperty("data").GetProperty("outcome").GetString());
                 // Synthetic transport retry cannot cause a second mutation through the one-shot gate.
-                var repeated = await client.CallToolAsync("place_path", args, cancellationToken: ct);
+                var repeated = await client.CallToolWithReasonAsync("place_path", args, cancellationToken: ct);
                 Assert.True(repeated.IsError);
                 Assert.False(repeated.StructuredContent!.Value.GetProperty("error").GetProperty("retryable").GetBoolean());
             }
             if (enableLodgePlacement)
             {
                 var args = new Dictionary<string, object?> { ["template"] = "Lodge.Folktails", ["x"] = 1, ["y"] = 2, ["z"] = 3, ["rotation"] = 0, ["session"] = session };
-                var lodge = await client.CallToolAsync("place_lodge", args, cancellationToken: ct);
+                var lodge = await client.CallToolWithReasonAsync("place_lodge", args, cancellationToken: ct);
                 Assert.Equal(enablePlacement, lodge.IsError == true);
                 if (!enablePlacement) {
                     Assert.Equal("Lodge.Folktails", lodge.StructuredContent!.Value.GetProperty("data").GetProperty("template").GetString());
                     Assert.False(lodge.StructuredContent!.Value.GetProperty("data").GetProperty("finished").GetBoolean());
                 }
-                var repeated = await client.CallToolAsync("place_lodge", args, cancellationToken: ct);
+                var repeated = await client.CallToolWithReasonAsync("place_lodge", args, cancellationToken: ct);
                 Assert.True(repeated.IsError);
                 Assert.False(repeated.StructuredContent!.Value.GetProperty("error").GetProperty("retryable").GetBoolean());
             }
             if (enableValidation) {
                 var id = Guid.NewGuid().ToString("D");
                 foreach (var target in new[] { 3, 2 }) {
-                    var staffed = await client.CallToolAsync("set_workplace_staffing", new Dictionary<string, object?> { ["id"] = id, ["session"] = session, ["desiredWorkers"] = target, ["expectedDesiredWorkers"] = desiredWorkers }, cancellationToken: ct);
+                    var staffed = await client.CallToolWithReasonAsync("set_workplace_staffing", new Dictionary<string, object?> { ["id"] = id, ["session"] = session, ["desiredWorkers"] = target, ["expectedDesiredWorkers"] = desiredWorkers }, cancellationToken: ct);
                     Assert.False(staffed.IsError);
                     Assert.Equal(target, staffed.StructuredContent!.Value.GetProperty("data").GetProperty("observedDesiredWorkers").GetInt32());
                 }
-                var stale = await client.CallToolAsync("set_workplace_staffing", new Dictionary<string, object?> { ["id"] = id, ["session"] = session, ["desiredWorkers"] = 0, ["expectedDesiredWorkers"] = 3 }, cancellationToken: ct);
+                var stale = await client.CallToolWithReasonAsync("set_workplace_staffing", new Dictionary<string, object?> { ["id"] = id, ["session"] = session, ["desiredWorkers"] = 0, ["expectedDesiredWorkers"] = 3 }, cancellationToken: ct);
                 Assert.True(stale.IsError); Assert.Equal(2, desiredWorkers);
                 Assert.False(stale.StructuredContent!.Value.GetProperty("error").GetProperty("retryable").GetBoolean());
             }
-            var removalRead=await client.CallToolAsync("inspect_removal_targets",new Dictionary<string,object?>{["kind"]="all",["x"]=0,["y"]=0,["z"]=0,["width"]=1,["height"]=1,["depth"]=1,["offset"]=0,["limit"]=32},cancellationToken:ct);
+            var removalRead=await client.CallToolWithReasonAsync("inspect_removal_targets",new Dictionary<string,object?>{["kind"]="all",["x"]=0,["y"]=0,["z"]=0,["width"]=1,["height"]=1,["depth"]=1,["offset"]=0,["limit"]=32},cancellationToken:ct);
             Assert.False(removalRead.IsError);
             if(enableValidation) foreach(var name in new[]{"demolish_building","remove_planted","remove_vegetation","remove_debris"}) {
                 bool delete=name is "demolish_building" or "remove_debris";
                 var a=new Dictionary<string,object?>{["id"]=Guid.NewGuid().ToString(),["session"]=session,["template"]="Synthetic",["x"]=1,["y"]=2,["z"]=3,["operation"]=delete?"delete":"mark",["expectedMarked"]=false};
-                Assert.False((await client.CallToolAsync(name,a,cancellationToken:ct)).IsError);
+                Assert.False((await client.CallToolWithReasonAsync(name,a,cancellationToken:ct)).IsError);
             }
-            var readPriority = await client.CallToolAsync("inspect_building_priority", new Dictionary<string, object?> { ["id"] = Guid.NewGuid().ToString("D"), ["session"] = session, ["kind"] = "workplace" }, cancellationToken: ct);
+            var readPriority = await client.CallToolWithReasonAsync("inspect_building_priority", new Dictionary<string, object?> { ["id"] = Guid.NewGuid().ToString("D"), ["session"] = session, ["kind"] = "workplace" }, cancellationToken: ct);
             Assert.False(readPriority.IsError);
             foreach(var read in new[]{"inspect_construction","inspect_areas"}) {
                 var a=new Dictionary<string,object?>{["offset"]=0,["limit"]=32}; if(read=="inspect_areas")a["kind"]="tree_cutting";
-                Assert.False((await client.CallToolAsync(read,a,cancellationToken:ct)).IsError);
+                Assert.False((await client.CallToolWithReasonAsync(read,a,cancellationToken:ct)).IsError);
             }
-            Assert.False((await client.CallToolAsync("inspect_area_types",cancellationToken:ct)).IsError);
+            Assert.False((await client.CallToolWithReasonAsync("inspect_area_types",cancellationToken:ct)).IsError);
             if(enablePlacement) foreach(var kind in new[]{"workplace","construction"}) foreach(var p in new[]{"High","Normal"}) {
                 var a=new Dictionary<string,object?>{["id"]=Guid.NewGuid().ToString("D"),["session"]=session,["kind"]=kind,["priority"]=p,["expectedPriority"]=priority};
-                Assert.False((await client.CallToolAsync("set_building_priority",a,cancellationToken:ct)).IsError);
+                Assert.False((await client.CallToolWithReasonAsync("set_building_priority",a,cancellationToken:ct)).IsError);
             }
             if(enableLodgePlacement) foreach(var op in new[]{"mark","remove"}) {
                 var a=new Dictionary<string,object?>{["kind"]="tree_cutting",["operation"]=op,["resource"]="",["expectedResource"]=areaState,["x"]=1,["y"]=2,["z"]=3,["width"]=1,["height"]=1,["session"]=session};
-                Assert.False((await client.CallToolAsync("set_area",a,cancellationToken:ct)).IsError);
+                Assert.False((await client.CallToolWithReasonAsync("set_area",a,cancellationToken:ct)).IsError);
             }
-            var workforce = await client.CallToolAsync("inspect_workforce", new Dictionary<string, object?> { ["offset"] = 0, ["limit"] = 32 }, cancellationToken: ct);
+            var workforce = await client.CallToolWithReasonAsync("inspect_workforce", new Dictionary<string, object?> { ["offset"] = 0, ["limit"] = 32 }, cancellationToken: ct);
             Assert.False(workforce.IsError);
             Assert.Equal(0, workforce.StructuredContent!.Value.GetProperty("data").GetProperty("total").GetInt32());
-            var simulation = await client.CallToolAsync("inspect_simulation", cancellationToken: ct);
+            var simulation = await client.CallToolWithReasonAsync("inspect_simulation", cancellationToken: ct);
             Assert.Equal(1, simulation.StructuredContent!.Value.GetProperty("data").GetProperty("currentSpeed").GetSingle());
             if (enableLodgePlacement)
             {
                 int expectedSpeed = 1;
                 foreach (int speed in new[] { 0, 1, 3, 7, 1 }) {
-                    var result = await client.CallToolAsync("set_simulation_speed", new Dictionary<string, object?> { ["speed"] = speed, ["expectedSpeed"] = expectedSpeed, ["session"] = session }, cancellationToken: ct);
+                    var result = await client.CallToolWithReasonAsync("set_simulation_speed", new Dictionary<string, object?> { ["speed"] = speed, ["expectedSpeed"] = expectedSpeed, ["session"] = session }, cancellationToken: ct);
                     Assert.False(result.IsError);
-                    var readback = await client.CallToolAsync("inspect_simulation", cancellationToken: ct);
+                    var readback = await client.CallToolWithReasonAsync("inspect_simulation", cancellationToken: ct);
                     Assert.Equal(speed, readback.StructuredContent!.Value.GetProperty("data").GetProperty("currentSpeed").GetSingle());
                     expectedSpeed = speed;
                 }
-                var stale = await client.CallToolAsync("set_simulation_speed", new Dictionary<string, object?> { ["speed"] = 0, ["expectedSpeed"] = 0, ["session"] = session }, cancellationToken: ct);
+                var stale = await client.CallToolWithReasonAsync("set_simulation_speed", new Dictionary<string, object?> { ["speed"] = 0, ["expectedSpeed"] = 0, ["session"] = session }, cancellationToken: ct);
                 Assert.True(stale.IsError);
                 Assert.Equal(1, currentSpeed);
             }
@@ -377,36 +377,36 @@ public sealed class NativeBridgeTests
             if (enableLodgePlacement) {
                 string runId = Guid.NewGuid().ToString("D");
                 var startArgs = new Dictionary<string,object?> { ["runId"]=runId, ["session"]=session, ["duration"]=2, ["unit"]="hours", ["speed"]=1, ["expectedSpeed"]=1, ["maxRealSeconds"]=7200 };
-                var started = await client.CallToolAsync("run_simulation_for", startArgs, cancellationToken:ct);
+                var started = await client.CallToolWithReasonAsync("run_simulation_for", startArgs, cancellationToken:ct);
                 Assert.False(started.IsError);
                 var query = new Dictionary<string,object?> { ["runId"]=runId, ["session"]=session };
-                var observed = await client.CallToolAsync("inspect_simulation_run", query, cancellationToken:ct);
+                var observed = await client.CallToolWithReasonAsync("inspect_simulation_run", query, cancellationToken:ct);
                 Assert.Equal("running", observed.StructuredContent!.Value.GetProperty("data").GetProperty("state").GetString());
-                var duplicate = await client.CallToolAsync("run_simulation_for", startArgs, cancellationToken:ct);
+                var duplicate = await client.CallToolWithReasonAsync("run_simulation_for", startArgs, cancellationToken:ct);
                 Assert.Equal("run_id_used", duplicate.StructuredContent!.Value.GetProperty("error").GetProperty("code").GetString());
                 query["session"]=Guid.NewGuid().ToString("D");
-                var staleRun = await client.CallToolAsync("cancel_simulation_run", query, cancellationToken:ct);
+                var staleRun = await client.CallToolWithReasonAsync("cancel_simulation_run", query, cancellationToken:ct);
                 Assert.Equal("stale_session", staleRun.StructuredContent!.Value.GetProperty("error").GetProperty("code").GetString());
                 query["session"]=session;
-                Assert.False((await client.CallToolAsync("cancel_simulation_run", query, cancellationToken:ct)).IsError);
-                observed = await client.CallToolAsync("inspect_simulation_run", query, cancellationToken:ct);
+                Assert.False((await client.CallToolWithReasonAsync("cancel_simulation_run", query, cancellationToken:ct)).IsError);
+                observed = await client.CallToolWithReasonAsync("inspect_simulation_run", query, cancellationToken:ct);
                 Assert.Equal("cancelled", observed.StructuredContent!.Value.GetProperty("data").GetProperty("state").GetString());
                 Assert.Equal(0, currentSpeed);
             }
-            var settingsRead=await client.CallToolAsync("inspect_building_settings",new Dictionary<string,object?>{["id"]=settingsId,["session"]=session},cancellationToken:ct);
+            var settingsRead=await client.CallToolWithReasonAsync("inspect_building_settings",new Dictionary<string,object?>{["id"]=settingsId,["session"]=session},cancellationToken:ct);
             Assert.False(settingsRead.IsError);
             if(enableValidation){
                 foreach(var (tool,key,before,after) in new[]{("set_building_paused","paused","false","true"),("set_storage_good","good","","Berries"),
                     ("set_storage_mode","mode","accept","obtain"),("set_storage_mode","mode","obtain","supply"),("set_storage_mode","mode","supply","empty"),("set_storage_mode","mode","empty","accept"),
                     ("set_farm_priority","priority","harvesting","planting"),("set_farm_crop","resource","","Carrot"),("set_storage_good","good","Berries","")}){
                     var settingArgs=new Dictionary<string,object?>{["id"]=settingsId,["session"]=session,[key]=key=="paused"?true:after,["expected"+char.ToUpperInvariant(key[0])+key[1..]]=key=="paused"?false:before};
-                    var change=await client.CallToolAsync(tool,settingArgs,cancellationToken:ct);Assert.False(change.IsError);
+                    var change=await client.CallToolWithReasonAsync(tool,settingArgs,cancellationToken:ct);Assert.False(change.IsError);
                     Assert.Equal(after,change.StructuredContent!.Value.GetProperty("data").GetProperty("observedValue").GetString());
-                    Assert.False((await client.CallToolAsync("inspect_building_settings",new Dictionary<string,object?>{["id"]=settingsId,["session"]=session},cancellationToken:ct)).IsError);
+                    Assert.False((await client.CallToolWithReasonAsync("inspect_building_settings",new Dictionary<string,object?>{["id"]=settingsId,["session"]=session},cancellationToken:ct)).IsError);
                 }
-                var stale=await client.CallToolAsync("set_storage_good",new Dictionary<string,object?>{["id"]=settingsId,["session"]=session,["good"]="Carrot",["expectedGood"]="Berries"},cancellationToken:ct);
+                var stale=await client.CallToolWithReasonAsync("set_storage_good",new Dictionary<string,object?>{["id"]=settingsId,["session"]=session,["good"]="Carrot",["expectedGood"]="Berries"},cancellationToken:ct);
                 Assert.True(stale.IsError);Assert.Equal("",settingValues["good"]);
-                var resumed=await client.CallToolAsync("set_building_paused",new Dictionary<string,object?>{["id"]=settingsId,["session"]=session,["paused"]=false,["expectedPaused"]=true},cancellationToken:ct);
+                var resumed=await client.CallToolWithReasonAsync("set_building_paused",new Dictionary<string,object?>{["id"]=settingsId,["session"]=session,["paused"]=false,["expectedPaused"]=true},cancellationToken:ct);
                 Assert.False(resumed.IsError);Assert.Equal("false",settingValues["paused"]);
             }
             if(enableLodgePlacement) {
@@ -414,24 +414,24 @@ public sealed class NativeBridgeTests
                 var projectArgs=new Dictionary<string,object?> { ["session"]=session,["actionId"]=projectId,["mode"]="development_pilot",
                     ["template"]="SmallWarehouse.Folktails",["districtId"]=Guid.NewGuid().ToString("D"),["x"]=0,["y"]=0,["z"]=1,
                     ["width"]=3,["height"]=2,["rotation"]=0,["optionIndex"]=0,["planKey"]=new string('a',64) };
-                var started=await client.CallToolAsync("execute_building_project_pilot",projectArgs,cancellationToken:ct);
+                var started=await client.CallToolWithReasonAsync("execute_building_project_pilot",projectArgs,cancellationToken:ct);
                 Assert.False(started.IsError);
-                var again=await client.CallToolAsync("execute_building_project_pilot",projectArgs,cancellationToken:ct);
+                var again=await client.CallToolWithReasonAsync("execute_building_project_pilot",projectArgs,cancellationToken:ct);
                 Assert.False(again.IsError);
                 string? state=null;
                 for(int attempt=0;attempt<10&&state!="completed";attempt++) {
-                    var projectStatus=await client.CallToolAsync("inspect_building_project",new Dictionary<string,object?>{["session"]=session,["actionId"]=projectId},cancellationToken:ct);
+                    var projectStatus=await client.CallToolWithReasonAsync("inspect_building_project",new Dictionary<string,object?>{["session"]=session,["actionId"]=projectId},cancellationToken:ct);
                     Assert.False(projectStatus.IsError);state=projectStatus.StructuredContent!.Value.GetProperty("data").GetProperty("state").GetString();
                     if(state!="completed")await Task.Delay(20,ct);
                 }
                 Assert.Equal("completed",state);Assert.Equal(1,projectWrites);
                 projectArgs["planKey"]=new string('b',64);
-                Assert.True((await client.CallToolAsync("execute_building_project_pilot",projectArgs,cancellationToken:ct)).IsError);
+                Assert.True((await client.CallToolWithReasonAsync("execute_building_project_pilot",projectArgs,cancellationToken:ct)).IsError);
                 projectArgs["session"]=Guid.NewGuid().ToString("D");
-                Assert.True((await client.CallToolAsync("execute_building_project_pilot",projectArgs,cancellationToken:ct)).IsError);
+                Assert.True((await client.CallToolWithReasonAsync("execute_building_project_pilot",projectArgs,cancellationToken:ct)).IsError);
                 Assert.Equal(1,projectWrites);
             }
-            var building = await client.CallToolAsync("inspect_building", new Dictionary<string, object?>
+            var building = await client.CallToolWithReasonAsync("inspect_building", new Dictionary<string, object?>
                 { ["id"] = Guid.NewGuid().ToString("D"), ["session"] = session }, cancellationToken: ct);
             Assert.False(building.IsError);
             Assert.False(building.StructuredContent!.Value.GetProperty("data").GetProperty("found").GetBoolean());

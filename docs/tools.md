@@ -73,8 +73,11 @@ sind unter 0.21.1 live belegt. Nachweise und Grenzen stehen in den Fachdokumente
   validate_build_site/place_path/place_lodge sind erhaltene, begrenzte frühe Pilotwerkzeuge.
 - Validierung mit Vorschau zählt nicht als rein lesend und benötigt eine eigene Freigabe.
 - Aktionsfreigaben werden in Mod und MCP-Prozess geprüft; [vollständige Tabelle](native-bridge-install.md).
-- reasoning ist optional für alle nativen Werkzeuge: kurze für den Spieler lesbare
-  Absicht, keine internen Gedankengänge.
+- reasoning ist Pflicht für alle MCP-Werkzeugaufrufe, einschließlich Leseabfragen,
+  Fake und Legacy: kurze für den Spieler lesbare Absicht, keine internen
+  Gedankengänge. String mit 1–600 Zeichen, nicht nur Leerraum. Fehlende oder
+  ungültige Begründung wird vor Backend-/Logzugriff als InvalidParams abgewiesen.
+  Der bestehende Feldname bleibt reasoning; kein neues reason-Alias.
 - Eingabeschemata, verlangte Session-/Erwartungswerte und Grenzen liefert MCP tools/list.
   Kein generischer HTTP-Aufruf und kein automatischer Backendwechsel.
 - Ergebnis separat prüfen; applied ist kein Beleg für abgeschlossenen Bau oder Versorgung.

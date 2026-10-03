@@ -108,7 +108,7 @@ Der interne Modtransport verwendet `http://localhost:<port>/agent-api/v1/` (Pake
 Token erhalten 401; es gibt keinen öffentlichen Ping. Das ist kein Fehler im MCP-Setup.
 Der Zugriff erfolgt über den MCP-Server und dessen private Konfigurationsdatei.
 
-Im Spiel rechts unten **MCP-Log** öffnen. reasoning ist eine optionale kurze Absicht
+Im Spiel rechts unten **MCP-Log** öffnen. reasoning ist eine verpflichtende kurze Absicht
 für den Spieler; das Fenster und die Aufzeichnung benötigen keinen neuen Aktionsschalter.
 [Log-Vertrag](activity-log.md), [Fehlercodes](bridge-errors.md).
 

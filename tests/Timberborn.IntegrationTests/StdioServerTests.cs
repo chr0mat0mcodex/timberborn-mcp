@@ -1,4 +1,5 @@
 using ModelContextProtocol.Client;
+using ModelContextProtocol;
 using System.Text.Json;
 using System.Diagnostics;
 using ModelContextProtocol.Protocol;
@@ -28,7 +29,11 @@ public sealed class StdioServerTests
         }), cancellationToken: TestContext.Current.CancellationToken);
         var tools = await client.ListToolsAsync(cancellationToken: TestContext.Current.CancellationToken);
         Assert.Equal(5, tools.Count);
-        var result = await client.CallToolAsync("inspect_population", cancellationToken: TestContext.Current.CancellationToken);
+        foreach (var args in new Dictionary<string,object?>[] { new(), new() { ["reasoning"]="" },
+            new() { ["reasoning"]=" \t " }, new() { ["reasoning"]=null }, new() { ["reasoning"]=123 } })
+            await Assert.ThrowsAsync<McpProtocolException>(() => client.CallToolAsync("inspect_population",args,
+                cancellationToken:TestContext.Current.CancellationToken).AsTask());
+        var result = await client.CallToolWithReasonAsync("inspect_population", cancellationToken: TestContext.Current.CancellationToken);
         Assert.False(result.IsError);
         var json = JsonSerializer.SerializeToElement(result.StructuredContent);
         Assert.Equal(17, json.GetProperty("data").GetProperty("counts").GetProperty("totalEntities").GetInt32());
@@ -39,9 +44,10 @@ public sealed class StdioServerTests
         {
             Assert.NotNull(tool.ProtocolTool.OutputSchema);
             Assert.False(tool.ProtocolTool.InputSchema.GetProperty("additionalProperties").GetBoolean());
+            Assert.Contains(tool.ProtocolTool.InputSchema.GetProperty("required").EnumerateArray(), p => p.GetString()=="reasoning");
             Assert.True(tool.ProtocolTool.Annotations!.ReadOnlyHint);
         }
-        var invalid = await client.CallToolAsync("inspect_population", new Dictionary<string, object?> { ["limit"] = 3 }, cancellationToken: TestContext.Current.CancellationToken);
+        var invalid = await client.CallToolWithReasonAsync("inspect_population", new Dictionary<string, object?> { ["limit"] = 3 }, cancellationToken: TestContext.Current.CancellationToken);
         Assert.True(invalid.IsError);
         Assert.Equal("invalid_argument", invalid.StructuredContent!.Value.GetProperty("error").GetProperty("code").GetString());
     }

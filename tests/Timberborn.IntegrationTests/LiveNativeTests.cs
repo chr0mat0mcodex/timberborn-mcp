@@ -31,7 +31,7 @@ public sealed class LiveNativeTests(ITestOutputHelper output)
         string? session = null;
         async Task<JsonElement> Call(string name, Dictionary<string, object?>? args = null)
         {
-            var result = await client.CallToolAsync(name, args, cancellationToken: ct);
+            var result = await client.CallToolWithReasonAsync(name, args, cancellationToken: ct);
             Assert.False(result.IsError);
             var root = result.StructuredContent!.Value;
             Assert.Equal("ok", root.GetProperty("status").GetString());

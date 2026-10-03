@@ -14,7 +14,7 @@ Mod oder Bibliothek.
   nach ID sortiert und dedupliziert. Veraltete Session: `stale_session`.
   Unbekannte oder verschwundene Gruppe: `found=false`, total=0, leere Items.
 
-Alle Leser sind ohne Aktionsfreigaben verfügbar und unterstützen optional `reasoning`
+Alle Leser sind ohne Aktionsfreigaben verfügbar und verlangen `reasoning`
 für eine kurze sichtbare Absicht im Ingame-Log. Kein Auswählen, Kamerabewegen, Quittieren
 oder Verändern der Simulation. Datenabfrage über die bestehende Spielthread-Queue.
 

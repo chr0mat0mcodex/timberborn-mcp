@@ -22,7 +22,7 @@ public sealed class LivePauseTests(ITestOutputHelper output)
         }), cancellationToken: ct);
         async Task<JsonElement> Read(string name, Dictionary<string, object?> args)
         {
-            var result = await client.CallToolAsync(name, args, cancellationToken: ct);
+            var result = await client.CallToolWithReasonAsync(name, args, cancellationToken: ct);
             Assert.False(result.IsError);
             Assert.False(result.StructuredContent!.Value.GetProperty("meta").GetProperty("simulated").GetBoolean());
             return result.StructuredContent.Value.GetProperty("data");
@@ -35,7 +35,7 @@ public sealed class LivePauseTests(ITestOutputHelper output)
         bool original = before.GetProperty("paused").GetBoolean();
         foreach (bool target in new[] { !original, original })
         {
-            var response = await client.CallToolAsync("set_building_paused", new Dictionary<string, object?>
+            var response = await client.CallToolWithReasonAsync("set_building_paused", new Dictionary<string, object?>
                 { ["id"] = id, ["paused"] = target, ["expectedPaused"] = !target }, cancellationToken: ct);
             // A failed or uncertain first action must not trigger an automatic second write.
             Assert.False(response.IsError, "Schreibpilot gestoppt. Zustand nur lesend klären; nicht automatisch wiederholen.");

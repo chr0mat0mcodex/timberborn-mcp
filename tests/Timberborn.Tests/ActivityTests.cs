@@ -37,7 +37,7 @@ public sealed class ActivityTests
         q[key]=value;Assert.Throws<ArgumentException>(()=>ActivityRequest.Parse(q));
     }
     [Fact]
-    public void ReasoningIsOptionalBoundedAndNeverAnActionArgument()
+    public void ReasoningIsRequiredBoundedAndNeverAnActionArgument()
     {
         var args=JsonSerializer.SerializeToElement(new {speed=1,reasoning="Weiterlaufen für Baufortschritt."});
         Assert.False(ActivityTools.WithoutReasoning(args).TryGetProperty("reasoning",out _));
@@ -46,10 +46,32 @@ public sealed class ActivityTests
         Assert.Throws<ArgumentException>(()=>ActivityTools.WithoutReasoning(JsonSerializer.SerializeToElement(new{reasoning=new string('x',601)})));
         using var duplicate=JsonDocument.Parse("{\"reasoning\":\"a\",\"reasoning\":\"b\"}");
         Assert.Throws<ArgumentException>(()=>ActivityTools.WithoutReasoning(duplicate.RootElement));
-        Assert.All(NativeTools.Catalog(),t=>{
+        Assert.All(NativeTools.Catalog().Concat(NativeTools.Catalog(true,true,true,true,true,true,true,true,true,true,true))
+            .Concat(ToolCatalog.Create()).Concat(ToolCatalog.Create(true)),t=>{
             Assert.Equal(600,t.InputSchema.GetProperty("properties").GetProperty("reasoning").GetProperty("maxLength").GetInt32());
-            if(t.InputSchema.TryGetProperty("required",out var required))Assert.DoesNotContain(required.EnumerateArray(),e=>e.GetString()=="reasoning");
+            Assert.Contains(t.InputSchema.GetProperty("required").EnumerateArray(),e=>e.GetString()=="reasoning");
+            Assert.Equal(1,t.InputSchema.GetProperty("properties").GetProperty("reasoning").GetProperty("minLength").GetInt32());
         });
+    }
+    [Theory]
+    [InlineData("{}")] [InlineData("{\"reasoning\":\"\"}")] [InlineData("{\"reasoning\":\" \\t\\n\"}")]
+    [InlineData("{\"reasoning\":null}")] [InlineData("{\"reasoning\":2}")]
+    [InlineData("{\"reasoning\":\"a\",\"reasoning\":\"b\"}")]
+    public async Task MissingOrInvalidReasoningNeverAccessesBackend(string json)
+    {
+        using var doc=JsonDocument.Parse(json);
+        Assert.Throws<ArgumentException>(()=>ActivityTools.RequireReasoning(doc.RootElement));
+        var handler=new ActivityHandler();using var tools=new NativeTools(new NativeClient(new(8081,new string('a',64)),handler));
+        await Assert.ThrowsAsync<ArgumentException>(()=>tools.InvokeLogged("timberborn_status",doc.RootElement,TestContext.Current.CancellationToken));
+        Assert.Empty(handler.States); Assert.Equal(0,handler.ActionCalls);
+    }
+    [Fact]
+    public void ValidReasoningIsStrippedAndLengthIsStrict()
+    {
+        var args=JsonSerializer.SerializeToElement(new {speed=1,reasoning=new string('x',600)});
+        var clean=ActivityTools.RequireReasoning(args);
+        Assert.False(clean.TryGetProperty("reasoning",out _));Assert.Equal(1,clean.GetProperty("speed").GetInt32());
+        Assert.Throws<ArgumentException>(()=>ActivityTools.RequireReasoning(JsonSerializer.SerializeToElement(new{reasoning=new string('x',601)})));
     }
     [Fact]
     public void MetadataDoesNotIncludeAuthenticationOrSessionAndUtf8IsStrict()

@@ -172,6 +172,7 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
     }
     public async Task<JsonObject> InvokeLogged(string name,JsonElement args,CancellationToken ct)
     {
+        ActivityTools.RequireReasoning(args);
         var id=Guid.NewGuid().ToString("D");var detail=ActivityTools.Describe(args);
         // Unknown names are never allowed to inject arbitrary text into the game log.
         var displayName=name.Length is >0 and <=80 && name.All(c=>c is >= 'a' and <= 'z' or >= '0' and <= '9' or '_')?name:"unknown_tool";

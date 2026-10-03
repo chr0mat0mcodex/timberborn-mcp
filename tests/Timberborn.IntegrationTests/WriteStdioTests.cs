@@ -23,17 +23,17 @@ public sealed class WriteStdioTests
         var args = new Dictionary<string, object?> { ["id"] = FakeTimberbornBackend.BuildingId.ToString(), ["paused"] = true, ["expectedPaused"] = false };
         if (!enabled)
         {
-            await Assert.ThrowsAsync<McpProtocolException>(() => client.CallToolAsync("set_building_paused", args, cancellationToken: TestContext.Current.CancellationToken).AsTask());
+            await Assert.ThrowsAsync<McpProtocolException>(() => client.CallToolWithReasonAsync("set_building_paused", args, cancellationToken: TestContext.Current.CancellationToken).AsTask());
             return;
         }
         var tool = tools.Single(t => t.Name == "set_building_paused").ProtocolTool;
         Assert.False(tool.Annotations!.ReadOnlyHint); Assert.True(tool.Annotations.DestructiveHint);
         Assert.False(tool.Annotations.IdempotentHint);
-        Assert.NotNull(tool.OutputSchema); Assert.Equal(3, tool.InputSchema.GetProperty("required").GetArrayLength());
+        Assert.NotNull(tool.OutputSchema); Assert.Equal(4, tool.InputSchema.GetProperty("required").GetArrayLength());
         foreach (bool target in new[] { true, false })
         {
             args["paused"] = target; args["expectedPaused"] = !target;
-            var result = await client.CallToolAsync("set_building_paused", args, cancellationToken: TestContext.Current.CancellationToken);
+            var result = await client.CallToolWithReasonAsync("set_building_paused", args, cancellationToken: TestContext.Current.CancellationToken);
             Assert.False(result.IsError);
             Assert.Equal("applied", result.StructuredContent!.Value.GetProperty("data").GetProperty("outcome").GetString());
             Assert.True(result.StructuredContent.Value.GetProperty("meta").GetProperty("simulated").GetBoolean());

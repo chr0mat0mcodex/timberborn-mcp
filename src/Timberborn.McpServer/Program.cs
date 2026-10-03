@@ -56,10 +56,13 @@ builder.Services.AddMcpServer().WithStdioServerTransport()
         if (native is null && !tools.Any(t => t.Name == request.Name))
             throw new McpProtocolException("Unknown tool", McpErrorCode.InvalidParams);
         var arguments = JsonSerializer.SerializeToElement(request.Arguments ?? new Dictionary<string, JsonElement>());
+        JsonElement backendArguments;
+        try { backendArguments = ActivityTools.RequireReasoning(arguments); }
+        catch (ArgumentException) { throw new McpProtocolException("reasoning ist erforderlich: nicht leere Begründung, maximal 600 Zeichen.", McpErrorCode.InvalidParams); }
         var result = native is not null ? await native.InvokeLogged(request.Name, arguments, ct)
             : request.Name == "set_building_paused"
-                ? await actions!.InvokeAsync(arguments, ct)
-                : await service!.InvokeAsync(request.Name, arguments, ct);
+                ? await actions!.InvokeAsync(backendArguments, ct)
+                : await service!.InvokeAsync(request.Name, backendArguments, ct);
         return new CallToolResult
         {
             StructuredContent = JsonSerializer.SerializeToElement(result),

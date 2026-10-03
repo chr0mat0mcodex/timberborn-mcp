@@ -53,6 +53,6 @@ public static class ToolCatalog
             return new Tool { Name = pair.Key, Description = Description(pair.Key),
                 InputSchema = JsonSerializer.SerializeToElement(input), OutputSchema = JsonSerializer.SerializeToElement(output),
                 Annotations = new() { ReadOnlyHint = !write, DestructiveHint = write, IdempotentHint = !write, OpenWorldHint = false } };
-        }).ToArray();
+        }).Select(ActivityTools.WithReasoning).ToArray();
     }
 }

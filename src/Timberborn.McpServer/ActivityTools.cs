@@ -20,9 +20,20 @@ public static class ActivityTools
     public static Tool WithReasoning(Tool tool)
     {
         var schema=JsonNode.Parse(tool.InputSchema.GetRawText())!.AsObject();
-        schema["properties"]!.AsObject()["reasoning"]=new JsonObject { ["type"]="string",["maxLength"]=600,
-            ["description"]="Optional: kurze, für den Spieler lesbare Begründung dieser konkreten Aktion/Abfrage. Ziel und relevanter Zustand, keine internen Gedankengänge oder Zugangsdaten. Erscheint im Ingame-MCP-Log." };
+        schema["properties"]!.AsObject()["reasoning"]=new JsonObject { ["type"]="string",["minLength"]=1,["maxLength"]=600,["pattern"]="\\S",
+            ["description"]="Pflicht: kurze, für den Spieler lesbare Begründung dieser konkreten Aktion/Abfrage. Nicht leer oder nur Leerraum. Ziel und relevanter Zustand, keine internen Gedankengänge oder Zugangsdaten. Erscheint beim nativen Backend im Ingame-MCP-Log." };
+        var required = schema["required"] as JsonArray;
+        if (required is null) schema["required"] = required = new JsonArray();
+        if (!required.Any(n => n?.GetValue<string>() == "reasoning")) required.Add("reasoning");
         tool.InputSchema=JsonSerializer.SerializeToElement(schema);return tool;
+    }
+    public static JsonElement RequireReasoning(JsonElement args)
+    {
+        // Before any backend access, including best-effort activity telemetry.
+        var stripped = WithoutReasoning(args);
+        if (!args.TryGetProperty("reasoning", out var reason) || string.IsNullOrWhiteSpace(reason.GetString()))
+            throw new ArgumentException("reasoning_required");
+        return stripped;
     }
     public static JsonElement WithoutReasoning(JsonElement args)
     {
@@ -53,7 +64,7 @@ public static class ActivityTools
     {
         if(args.EnumerateObject().Any())throw new ArgumentException();
         var e=await client.Activity(ct);var d=e.Data;
-        if(e.BridgeVersion is not ("0.16.0" or "0.17.0" or "0.17.1" or "0.17.2" or "0.18.0" or "0.19.0" or "0.19.1" or "0.19.2" or "0.20.0" or "0.20.1" or "0.21.0" or "0.21.1" or "0.22.0" or "0.23.0" or "0.23.1" or "0.23.2" or "0.24.0" or "0.24.1" or "0.25.0" or "0.26.0" or "0.27.0") || d.Capacity!=128 || d.Items is null || d.Items.Length>32 || d.Revision<0 ||
+        if(e.BridgeVersion is not ("0.16.0" or "0.17.0" or "0.17.1" or "0.17.2" or "0.18.0" or "0.19.0" or "0.19.1" or "0.19.2" or "0.20.0" or "0.20.1" or "0.21.0" or "0.21.1" or "0.22.0" or "0.23.0" or "0.23.1" or "0.23.2" or "0.24.0" or "0.24.1" or "0.25.0" or "0.26.0" or "0.27.0" or "0.28.0" or "0.28.1" or "0.29.0" or "0.29.1" or "0.29.2" or "0.29.3" or "0.30.0" or "0.31.0") || d.Capacity!=128 || d.Items is null || d.Items.Length>32 || d.Revision<0 ||
             d.Items.Any(i=>i is null || !ActivityRequest.IsState(i.State) || i.Reasoning is null || i.Summary is null || i.Reasoning.Length>600 || i.Summary.Length>400))throw new InvalidDataException("Invalid activity log");
         return (JsonObject)JsonSerializer.SerializeToNode(new NativeResult<NativeActivityLog>(1,"ok",d,new("native",false,e.SessionId,e.ObservedAtUtc),null),NativeJson.Options)!;
     }

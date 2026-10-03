@@ -19,7 +19,7 @@ public sealed class LiveSmokeTests(ITestOutputHelper output)
         }), cancellationToken: TestContext.Current.CancellationToken);
         async Task<JsonElement> Call(string name, Dictionary<string, object?>? args = null)
         {
-            var result = await client.CallToolAsync(name, args, cancellationToken: TestContext.Current.CancellationToken);
+            var result = await client.CallToolWithReasonAsync(name, args, cancellationToken: TestContext.Current.CancellationToken);
             Assert.False(result.IsError);
             var root = result.StructuredContent!.Value;
             Assert.Equal("ok", root.GetProperty("status").GetString());
