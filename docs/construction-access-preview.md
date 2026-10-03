@@ -2,10 +2,11 @@
 
 ## Stand
 
-Agent Bridge 0.31.0: menschliches Skript-Gate durch Bereitmeldung bestätigt,
-installierte Version live geprüft. Positivkontrolle bestanden, negative
-Baustellenkontrolle nicht nachgewiesen; Etappe B nicht abgeschlossen. Keine allgemeine Baufreigabe;
-`constructionCovered` bleibt false.
+Agent Bridge 0.31.4: menschliches Skript-Gate und feature-spezifischer Livetest
+bestanden. Untersuchung jetzt mit echter positiver und negativer Builderkontrolle
+abgeschlossen; Vorschau-Schutzabnahme nicht bestanden. Keine allgemeine Baufreigabe,
+constructionCovered bleibt false. Die folgenden Versionsabschnitte sind historische
+Versuchsergebnisse; abschließende Begrenzung steht im Abschnitt 0.31.4.
 
 ## Öffentliche API und begrenzter Versuch
 
@@ -341,3 +342,44 @@ erkenntnisarmen Negativpilot einen neuen konkreten Ansatz und erneutes go.
 Empfehlung: minimaler eigener Testaufbau außerhalb dieser vernetzten Umgebung,
 mit zuerst real belegter positiver und negativer Baustellenbaseline; alternativ
 gezielte Herkunftsdiagnose der vier Spill-Zugänge statt weiterer Trennversuche.
+
+## 0.31.4 — echte Negativbaseline und Abschluss der begrenzten Untersuchung
+
+Nach Nutzerfreigabe genau einen Plateauaufbau geprüft. Ein bekannter unterbrochener
+Bodenweg zuerst regulär wieder angeschlossen, ein konkreter freier Lagerplatz mit
+sechs tatsächlichen Zugangszellen auf gleicher Plateauhöhe gewählt. Positive
+Baseline: unfertig, buildersReachable=true, Distriktdistanz vorhanden.
+
+Eine Sperrvorschau am oberen Wegeengpass: valid=false (bestehende Wegbelegung),
+30 verlorene Bezirksverbindungen inklusive Baustellenproben, Baseline/Rücknahme
+bestanden. constructionAccessPreview meldet jedoch lostSites=0 und weiterhin
+Reichweite für alle drei Baustellen. Das allein ist wegen ungültiger Geometrie und
+anderer Eingriffsgeometrie kein bewiesener Fehler eines gültigen Baukandidaten.
+
+Genau eine frisch geprüfte obere Treppe tatsächlich entfernt. Plateau-Baustelle
+danach buildersReachable=false, Distriktdistanz unbekannt. Alle sechs Zugangszellen
+weiter separat lesbar. Damit erstmals echte positive UND negative Builderbaseline,
+nicht nur Weg-Mitgliedschaft getrennt. Freie gültige Vorschau im getrennten Zustand:
+Plateauzugang before/previewBefore/during/after/previewAfter=false; tatsächlicher
+Builderwert vor/nach false. Zwei andere Baustellen durchgehend true; Gesamtbaseline
+und Vorschau-Rücknahme bestätigt. Ist-Reichweite kann diese reale Trennung abbilden.
+
+Treppenabrissrest entfernt und genau dieselbe Treppe über regulären Single-Stair-
+Piloten neu gebaut. Ein begrenzter Lauf beendet den Wiederaufbau und alle drei
+Lager. Fertiger Plateau-Eingang frei, native Straßenverbindung positiv. Am fertigen
+Gebäude ist der Builderwert null; keine nachträgliche true-Builderabfrage behaupten.
+
+**Entscheidung:** begrenzte API-/Machbarkeitsuntersuchung beenden, keine weitere
+Blockadesuchserie. Aktuelle Range-Diagnose bleibt Beobachtung, nicht vollständige
+hypothetische Baustellensicherheit. Ein direkter gleichwertiger Builder-Preview-
+Aufruf wurde in der bisherigen öffentlichen API-Recherche nicht gefunden; das
+ist kein Beweis, dass eine solche API grundsätzlich nicht existiert. B-Schutzabnahme
+bleibt offen, Sperre unverändert. Für einen späteren Schutzansatz sind gleiche
+Eingriffsgeometrie, gültige Negativkontrolle und Baustellen-/Fertigzustandsabdeckung
+Pflicht; tatsächliche Rückabfragen ersetzen diesen Vorabnachweis nicht.
+
+Feature 0.31.4 selbst live bestanden: Zugangszellen trotz mehrerer Baustellen
+separat abfragbar, tatsächlicher true/false-Befund erhalten, fertige Objekte liefern
+not_construction. Drei sequenzielle Lageraufträge, alte Belege erhalten, identische
+erste Anfrage liefert nur gespeicherten Beleg. Grenzen vier Aufträge/64 Zugangszellen
+und Fehlersperren durch synthetische Tests im menschlichen Gate, nicht live ausgereizt.

@@ -106,8 +106,11 @@ und Grenzen stehen im [Bauplan-Vertrag](building-site-search-plan.md).
 
 `execute_building_project_pilot` setzt ein SmallWarehouse.Folktails und höchstens vier
 neue ebene Wege. Benötigt Suchparameter, optionIndex, planKey, session, actionId und
-`mode=development_pilot`. Bau-Opt-in und Pause sind Pflicht. Ein akzeptierter Auftrag
-je Sitzung; gleiche ID+Parameter lesen ihn erneut, abweichende Anfragen werden abgewiesen.
+`mode=development_pilot`. Bau-Opt-in und Pause sind Pflicht. Bis 0.31.3 ein Auftrag
+je Sitzung; ab 0.31.4 höchstens vier Aufträge nacheinander, neue ID nur nach
+completed. stopped/unconfirmed sperren weitere Projekte. Alte ID+Parameter lesen
+nur das gespeicherte Ergebnis, geänderte Parameter werden abgewiesen. completed
+ist keine Fertigstellung; vor weiteren Bauvorhaben reale Objekte neu prüfen.
 `inspect_building_project` liest session/actionId ohne Schreibfreigabe.
 
 running/completed/stopped/unconfirmed und Schritt-IDs erlauben gezielten Abgleich.
@@ -115,3 +118,10 @@ completed bestätigt regulären Auftrag, realen Eingang und Bauarbeiterzugang; k
 Fertigstellung. Bekannte Wegverluste bleiben verboten; nur der unbelegte Bauphasen-
 Vorabnachweis darf im freigegebenen Pilot offenbleiben. Teilergebnisse bleiben stehen.
 [Vertrag, Grenzen und Live-Abnahme](building-project-execution-proposal.md).
+
+Ab 0.31.4 ergänzt `inspect_building_access` die tatsächlichen Baustellen-Zugangszellen:
+constructionAccess.state=observed/unavailable/not_construction, cells (maximal 64),
+expanded. unavailable liefert keine Teilmenge als vollständige Liste; erweiterte
+Baustellen sind nicht unterstützt. Unabhängig von anderen Baustellen abfragbar.
+Zellen sind aktuelle gecachte Spielzugänge, kein Preview- oder Einzelpunkt-
+Erreichbarkeitsnachweis. buildersReachable bleibt die getrennte tatsächliche Abfrage.

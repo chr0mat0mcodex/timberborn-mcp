@@ -16,7 +16,7 @@ public sealed partial class NativeClient
     public static void ValidateSelection(BridgeEnvelope<NativeSelection> e, string session)
     {
         var d = e.Data;
-        if (e.BridgeVersion is not ("0.30.0" or "0.31.0" or "0.31.1" or "0.31.2" or "0.31.3") || e.SessionId != session || d is null ||
+        if (e.BridgeVersion is not ("0.30.0" or "0.31.0" or "0.31.1" or "0.31.2" or "0.31.3" or "0.31.4") || e.SessionId != session || d is null ||
             d.State is not ("none" or "selected" or "unsupported") ||
             (d.State == "selected") != (d.Target is not null) ||
             d.Limitations is null || d.Limitations.Length > 16 || d.Limitations.Any(s => string.IsNullOrEmpty(s) || s.Length > 160))

@@ -8,11 +8,17 @@ historischer Bauplan ist Voraussetzung.
 
 ## Technischer Stand
 
-- Agent Bridge 0.31.3 installiert und begrenzte Nachbar-/Pfad-/Spill-Diagnose live geprüft;
+- 0.31.4 nach menschlichem Test-Gate live geprüft: drei sequenzielle Lagerpiloten,
+  tatsächliche Baustellenzugangszellen, neue Wege und fertige Lager. C im begrenzten
+  Umfang bestanden. B-Untersuchung mit echter Builder-Negativbaseline abgeschlossen;
+  Vorschau-Schutzabnahme bleibt offen. Details im Projektstand.
+
+- Agent Bridge 0.31.4 installiert und begrenzte Nachbar-/Pfad-/Spill-Diagnose live geprüft;
   vorherige Auswahlabfrage, Plattformpilot und obere Anschlüsse bleiben vorhanden.
 - Beide ursprünglichen Bauziele sind nur teilweise erreicht. Allgemeine sichere
   Baufreigabe fehlt; Baustellenabdeckung ist weiterhin offen.
-- Etappe A bestanden; in B fachlich gültige Baustellen-Blockadekontrolle finden.
+- Etappe A bestanden; B nicht durch weitere Bestandsabrisse verfolgen. Echte
+  Builder-Trennung ist belegt, gleichwertige Vorschau-Schutzwirkung nicht.
   Details und Grenzen in docs/construction-access-preview.md, keine längeren Wege.
   Zurückgestellter Vier-Wege-Entwurf ist separat lokal gesichert, siehe BACKLOG.md.
 - Aktueller Arbeitsbranch: `codex/road-protection-pilot`.

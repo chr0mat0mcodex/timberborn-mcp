@@ -25,7 +25,8 @@ public sealed class BuildingProjectController
         public string[] Limitations { get; set; } = new[] { "development_pilot_only", "construction_preflight_unproven", "no_automatic_retry_or_rollback", "placed_objects_retained", "ledger_lost_on_session_end", "completed_means_order_and_access_confirmed_not_construction_finished" };
     }
     private Receipt? receipt;
-    private string fingerprint = "";
+    private readonly Dictionary<Guid, (string Fingerprint, Receipt Receipt)> ledger = new();
+    private readonly int capacity;
     private int index;
     private double deadline;
     private Func<bool>? guard;
@@ -33,15 +34,26 @@ public sealed class BuildingProjectController
     private Func<Step, string>? confirm;
     private Func<Step, string>? readiness;
     private double? waitDeadline;
+    public BuildingProjectController(int capacity = 1)
+    {
+        if (capacity is < 1 or > 4) throw new ArgumentOutOfRangeException(nameof(capacity));
+        this.capacity = capacity;
+    }
     public Receipt? Existing(Guid id, string requestFingerprint)
     {
-        if (receipt is null) return null;
-        if (receipt.ActionId != id.ToString("D") || fingerprint != requestFingerprint)
+        if (ledger.TryGetValue(id, out var entry))
+        {
+            if (entry.Fingerprint != requestFingerprint) throw new BridgeRejectionException("state_conflict");
+            return entry.Receipt;
+        }
+        // A failed or unconfirmed project must be diagnosed, never bypassed with
+        // another ID. completed confirms orders/access, not construction finish.
+        if (ledger.Count >= capacity || receipt is not null && receipt.State != "completed")
             throw new BridgeRejectionException("state_conflict");
-        return receipt;
+        return null;
     }
-    public Receipt Inspect(Guid id) => receipt is not null && receipt.ActionId == id.ToString("D")
-        ? receipt : throw new BridgeRejectionException("state_conflict");
+    public Receipt Inspect(Guid id) => ledger.TryGetValue(id, out var entry)
+        ? entry.Receipt : throw new BridgeRejectionException("state_conflict");
     public Receipt Start(Guid id, string requestFingerprint, string planKey, Step[] steps,
         Func<bool> check, Action<Step> placement, Func<Step, string> confirmation,
         Func<Step, string>? beforePlacement = null)
@@ -54,8 +66,11 @@ public sealed class BuildingProjectController
             steps.Take(steps.Length - 1).All(s => s.Template == "Path");
         bool platformProject = steps.Select(s => s.Template).SequenceEqual(new[] { "Stairs.Folktails", "Platform.Folktails", "Path", "Platform.Folktails", "Path" });
         if (steps.Length is < 1 or > 5 || (!singleStair && !stairWithUpperPaths && !warehouseProject && !platformProject)) throw new ArgumentException();
-        fingerprint = requestFingerprint; guard = check; place = placement; confirm = confirmation; readiness = beforePlacement;
-        return receipt = new Receipt { ActionId = id.ToString("D"), PlanKey = planKey, Steps = steps };
+        guard = check; place = placement; confirm = confirmation; readiness = beforePlacement;
+        index = 0; deadline = 0; waitDeadline = null;
+        receipt = new Receipt { ActionId = id.ToString("D"), PlanKey = planKey, Steps = steps };
+        ledger.Add(id, (requestFingerprint, receipt));
+        return receipt;
     }
     public void Tick(double now)
     {

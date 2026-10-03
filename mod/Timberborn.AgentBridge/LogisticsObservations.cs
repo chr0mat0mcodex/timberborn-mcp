@@ -28,9 +28,22 @@ public sealed class LogisticsObservations(EntityRegistry entities,IGoodService g
         if(blockers.Length>0)unconnectedBlocked=blockers.Any(b=>b.IsUnconnectedBlocked);
         if(b.IsUnfinished&&e.TryGetComponent<ReachableConstructionSite>(out var site))buildersReachable=site.IsReachableByBuilders();
         var access=e.GetComponentsAllocating<Accessible>();
+        string constructionState = b.IsFinished ? "not_construction" : "unavailable";
+        var constructionCells = Array.Empty<UnityEngine.Vector3Int>();
+        bool expandedConstruction = b.IsUnfinished && e.AllComponents.OfType<IExpandedConstructionSiteReachability>().Any();
+        if (b.IsUnfinished && !expandedConstruction &&
+            e.TryGetComponent<ConstructionSiteAccessible>(out var constructionAccess) &&
+            constructionAccess.Accessible is { ValidAccessible: true } actualAccess)
+        {
+            var cells = actualAccess.Accesses.Select(p => NavigationCoordinateSystem.WorldToGridInt(p)).Distinct().Take(65).ToArray();
+            if (cells.Length is >= 1 and <= 64)
+            { constructionCells = cells; constructionState = "observed"; }
+        }
         return new {id=r.Id,finished=b.IsFinished,position=Vec(b.Coordinates),entranceBlocked,entranceInaccessible,unconnectedBlocked,buildersReachable,distanceToDistrict=distance,
             accessibleCount=access.Count,validAccessibleCount=access.Count(a=>a.ValidAccessible),
-            limitations=new[]{"null_means_component_or_value_unavailable","game_navigation_may_update_after_ticks","distance_is_native_metric_not_travel_time","connection_not_staffing_or_delivery_guarantee"}};
+            constructionAccess = new { state = constructionState, cells = constructionCells.Select(Vec).ToArray(), expanded = expandedConstruction },
+            limitations=new[]{"null_means_component_or_value_unavailable","game_navigation_may_update_after_ticks","distance_is_native_metric_not_travel_time","connection_not_staffing_or_delivery_guarantee",
+                "construction_cells_are_actual_cached_accesses_not_preview", "construction_cells_not_per_cell_reachability", "maximum_64_construction_cells_expanded_sites_unsupported"}};
     }
     public object Road(LogisticsRequest r)
     {

@@ -2,9 +2,15 @@
 
 ## Priorität
 
+Kombinierter B/C-Pilot nach Skript-Gate in 0.31.4 live abgeschlossen: drei
+sequenzielle Aufträge und separat lesbare tatsächliche Baustellenzugangszellen.
+C mit zwei neuen Wegen und fertigen Lagern bestanden. B-Untersuchung erstmals
+mit echter Builder-Positiv-/Negativbaseline; Vorschau-Schutzabnahme weiter offen.
+Keine weitere Suchserie: aktuelle Reichweitendiagnose nicht zur Baufreigabe verwenden.
+
 1. Etappe A bestanden: gemeinsamer Bericht, freie/gesperrte Vorschau und
    Vorschau-Eingang separat von tatsächlichen Zugängen live geprüft.
-2. Etappe B offen, zugunsten des vom Nutzer priorisierten C zurückgestellt:
+2. Etappe B: Untersuchung abgeschlossen mit technischer Grenze; Schutzabnahme offen.
    Baustellen-Erreichbarkeit unter geplanten Änderungen prüfen.
    0.31.0 live: Baseline/freie Kontrolle bestanden; negative Baustellenkontrolle
    nicht belegt. Begrenzte Detaildiagnose erneut freigegeben und in 0.31.1
@@ -39,8 +45,9 @@
 3. Aktuell Etappe C: kleiner Lagerpilot mit bestehendem Weganschluss bis zur
    tatsächlichen Fertigstellung live bestanden. Baustellenzugang und fertiger
    Straßenanschluss positiv; Nachbarlager weiterhin erreichbar, Distanz 10→11.
-   Kein pauschaler Bestandsschutz. Nächster begrenzter C-Nachweis: neu gebauten
-   Anschlussweg nutzbar machen, dann Lager bauen und fertigen Zugang prüfen.
+   Ergänzung 0.31.4: zwei neue fertige Anschlusswege, drei fertige Lager mit freien
+   Eingängen/positiven Straßenverbindungen; Bestandskontrolle diesmal Distanz 11→11.
+   C im begrenzten Lagerumfang bestanden, kein pauschaler Bestandsschutz.
    [Nachweis und Grenzen](docs/building-completion-pilot.md).
 4. Etappe D: Gebäude mit vertikalem Anschluss; danach E: Breitenausbau.
    Abnahmekriterien: [Etappenplan](missionsplan.md).

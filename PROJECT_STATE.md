@@ -17,8 +17,8 @@ Tests abgedeckt, aber nicht separat live belegt. Auswahl allein ist kein
 
 | Ebene | Stand |
 | --- | --- |
-| Bridge | Agent Bridge 0.31.3 installiert; Nachbar-/Pfad-/Spill-Diagnose live belegt, Baustellen-Vorschauabdeckung weiterhin offen |
-| Automatisch | Menschliche Bereitmeldung nach Skript-Gate für 0.31.3; neue Testanzahl nicht übermittelt. Letzter Zahlenstand 0.29.3: 667 erfolgreich, 0 fehlgeschlagen, 3 übersprungen |
+| Bridge | Agent Bridge 0.31.4 installiert; sequenzielles Ledger und Baustellenzugangszellen live belegt, C mit neuen Wegen bestanden; B-Schutzabnahme offen |
+| Automatisch | Menschliche Bereitmeldung nach Skript-Gate für 0.31.4; neue Testanzahl nicht übermittelt. Letzter Zahlenstand 0.29.3: 667 erfolgreich, 0 fehlgeschlagen, 3 übersprungen |
 | Mod-Build | Timberborn 1.1.2.4 / Folktails, ohne Warnungen und Fehler |
 | Laufzeit | Bridge und Schreibfreigabe strukturiert erreichbar |
 | Bauprojekt | 0.29.2 live: Treppe, zwei Plattformen, zwei obere Wege; Bauphasen, completed und alle fünf fertigen Objekte rückgelesen |
@@ -41,8 +41,25 @@ Vorschau, Wegschutzdiagnose und schrittweise Bestätigung gebunden.
 
 ## Offene Arbeit
 
+0.31.4 nach menschlichem Skript-Gate installiert und live geprüft. Drei Lageraufträge
+in derselben Sitzung, zwei neue Wege; alte Belege nach neuen Aufträgen lesbar,
+identische erste Anfrage liefert nur ihren ursprünglichen Beleg. Höchstzahl vier,
+Fehlersperren und Sonderfälle synthetisch geprüft im menschlichen Gate, nicht
+zusätzlich live ausgereizt. Tatsächliche Zugangszellen für drei parallele Baustellen
+separat gelesen (acht/sechs/sechs); an fertigen Objekten not_construction.
+Ein Plateauzugang erstmals real getrennt: Builder true→false, alle sechs Zugänge
+auf gleicher Geländehöhe. Freie Vorschau im getrennten Zustand bestätigt negative
+Baseline und Rücknahme. Regulärer Treppenwiederaufbau; danach drei Lager, zwei Wege
+und Treppe fertig, drei Eingänge und Straßenverbindungen positiv. Ein begrenzter
+Lauf: 14 Spielstunden, etwa 41,4 Echtzeitsekunden, Pause bestätigt, kein Überschuss.
+Kontrollierte Bestandsverbindung verbunden, Distanz 11→11. C im begrenzten Umfang
+bestanden. B-Untersuchung mit belegter API-Grenze abgeschlossen, B-Schutzabnahme
+nicht bestanden: Engpassvorschau geometrisch ungültig, Bezirksverluste 30, aber
+lostSites=0; reale Treppentrennung ist kein identischer Vorschau-Eingriff.
+Keine allgemeine Vorschau-/Bauphasensicherheit daraus ableiten.
+
 Aktiver Auftrag seit 2026-10-03: Etappen A–E aus missionsplan.md. Nutzer priorisiert
-jetzt C; B bleibt offen und wird nicht durch weitere Blockadesuche fortgesetzt.
+jetzt C samt begrenztem B-Abschluss; keine weitere Blockadesuchserie.
 Ein vollständiger Gebäudeablauf mit bestehendem Anschluss ist live nachgewiesen.
 Beide Kernziele sind teilweise,
 nicht allgemein erreicht. `RoadProtection.constructionCovered=false` verhindert
@@ -52,13 +69,13 @@ Bauarbeiter-Erreichbarkeit. C-Pilot bestätigt Vorschau, Auftrag, Baustellenzuga
 tatsächliche Fertigstellung und fertigen Eingang samt Straßenverbindung.
 Keine neuen Wege erforderlich; Nachbarverbindung erhalten, Distanz jedoch von
 10 auf 11 gestiegen. Kein Nachweis unveränderter Wegqualität oder vollständigen
-Bestandsschutzes. Nächster C-Schritt: neu gebauter Anschlussweg im selben Ablauf.
+Bestandsschutzes. Neuer Anschlussweg im selben Ablauf inzwischen live bestanden.
 Details: [Phase-C-Nachweis](docs/building-completion-pilot.md).
 
 Der ungeprüfte Vier-Wege-Entwurf (vorgesehene 0.30.1) ist zurückgestellt, lokal als
 benannter Git-Stash erhalten und nicht im aktiven Quellstand. Wiederaufnahme siehe
 BACKLOG.md. Etappe A ändert nur die MCP-Auswertung vorhandener
-Validierungsergebnisse, keine Baufreigabe. Aktuell installierte Bridge 0.31.3.
+Validierungsergebnisse, keine Baufreigabe. Aktuell installierte Bridge 0.31.4.
 
 Etappe B: Bridge 0.31.0 installiert und begrenzt live geprüft nach menschlicher
 Bereitmeldung. Road-Spill-Baseline passt zur tatsächlichen Builder-Abfrage;

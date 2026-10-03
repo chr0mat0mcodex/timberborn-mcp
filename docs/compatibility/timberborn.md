@@ -5,10 +5,10 @@
 | Bereich | Stand |
 | --- | --- |
 | Timberborn | 1.1.2.4 / Folktails |
-| Bridge | Agent Bridge 0.30.0; Auswahl, begrenzter Lagerbau und Plattformpilot mit oberen Distriktanschlüssen live belegt |
+| Bridge | Agent Bridge 0.31.4; Auswahl, Plattformpilot, sequenzielle Lageraufträge, tatsächliche Baustellenzugänge und fertige Lager mit neuen Wegen live belegt; Vorschau-Bauphasenschutz nicht belegt |
 | Transport | stdio-MCP und authentifiziertes Loopback-HTTP |
 | Abhängigkeiten | keine Fremdmod-Pflichtbasis |
-| Automatische Prüfung | Letzter übermittelter Zahlenstand 0.29.3: 667 erfolgreich, 3 übersprungen; Bereitmeldung für 0.30.0 ohne neue Zählung |
+| Automatische Prüfung | Letzter übermittelter Zahlenstand 0.29.3: 667 erfolgreich, 3 übersprungen; Bereitmeldung für 0.31.4 ohne neue Zählung |
 
 ## Nachweisniveau
 

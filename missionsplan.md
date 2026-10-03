@@ -39,6 +39,12 @@ Lagerablauf mit bestehendem Weganschluss bestanden; neu gebauter Anschluss noch
 separat nachzuweisen. Bestandsverbindung blieb erhalten, ihre Distanz änderte sich.
 [Konkreter Nachweis](docs/building-completion-pilot.md).
 
+Ergänzung 0.31.4: C mit zwei neuen fertigen Anschlusswegen, drei fertigen Lagern
+und rückgelesenem Zugang bestanden. B-Untersuchung beendet mit echter positiver
+und negativer Builderkontrolle sowie dokumentierter Vorschaugrenze; **kein**
+bestandener Vorschau-Schutztest. Diese Sicherheitslücke bleibt technische Arbeit,
+nicht Freigabe durch Etappenabschluss. Keine weitere Kandidaten-/Abrisssuchserie.
+
 Teststrategie: kleiner repräsentativer Pilot, insgesamt etwa zehn fachliche Fälle
 über die Etappen verteilt. Kontrollen: freier/ungültiger Platz, verbundener/getrennter
 Eingang, Engpass/Umweg, erreichbare/gefährdete Baustelle, Höhen und Zustandsänderung.

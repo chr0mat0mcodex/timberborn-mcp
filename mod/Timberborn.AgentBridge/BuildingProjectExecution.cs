@@ -19,7 +19,7 @@ public sealed class BuildingProjectExecution(SiteValidation validation, RoadProt
     BuildingCatalog catalog, BlockObjectPlacerService placers, EntityRegistry entities,
     IBlockService blocks, SpeedManager speed)
 {
-    private readonly BuildingProjectController controller = new();
+    private readonly BuildingProjectController controller = new(capacity: 4);
     private readonly System.Diagnostics.Stopwatch clock = System.Diagnostics.Stopwatch.StartNew();
     public void Update() => controller.Tick(clock.Elapsed.TotalSeconds);
     private static JObject Payload(BuildingProjectController.Receipt receipt) => JObject.FromObject(receipt,

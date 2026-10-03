@@ -78,6 +78,46 @@ public sealed class BuildingProjectExecutionTests
         Assert.All(receipt.Steps,s=>Assert.Equal("confirmed",s.State));
     }
     [Fact]
+    public void BoundedSequentialLedgerRetainsOldReceiptsAndNeverReplaysThem()
+    {
+        var c = new BuildingProjectController(capacity: 4);
+        int writes = 0;
+        var ids = Enumerable.Range(1, 5).Select(i => Guid.Parse($"00000000-0000-0000-0000-{i:D12}")).ToArray();
+        BuildingProjectController.Receipt Start(int i) => c.Start(ids[i], $"f{i}", "key",
+            [new() { EntityId = ids[i].ToString("D"), Template = "SmallWarehouse.Folktails" }],
+            () => true, _ => writes++, _ => "confirmed");
+        var first = Start(0);
+        Assert.Throws<BridgeRejectionException>(() => Start(1));
+        for (int i = 0; i < 4; i++)
+        {
+            var current = i == 0 ? first : Start(i);
+            c.Tick(i * 2); c.Tick(i * 2 + 1);
+            Assert.Equal("completed", current.State);
+            Assert.Equal(i + 1, writes);
+            Assert.Same(first, c.Inspect(ids[0]));
+            Assert.Same(first, Start(0));
+            Assert.Throws<BridgeRejectionException>(() => c.Existing(ids[0], "changed"));
+        }
+        Assert.Throws<BridgeRejectionException>(() => Start(4));
+        c.Tick(100); Assert.Equal(4, writes);
+    }
+    [Theory]
+    [InlineData(false)] [InlineData(true)]
+    public void FailedProjectBlocksAnotherIdEvenWithSpareCapacity(bool uncertain)
+    {
+        var c = new BuildingProjectController(capacity: 4);
+        var r = c.Start(Id, "f", "k", Steps(), () => uncertain,
+            _ => throw new InvalidOperationException(), _ => "confirmed");
+        c.Tick(0);
+        Assert.Equal(uncertain ? "unconfirmed" : "stopped", r.State);
+        Assert.Throws<BridgeRejectionException>(() => c.Existing(Guid.NewGuid(), "new"));
+        Assert.Same(r, c.Inspect(Id));
+    }
+    [Theory]
+    [InlineData(0)] [InlineData(5)]
+    public void LedgerCapacityIsExplicitlyBounded(int capacity) =>
+        Assert.Throws<ArgumentOutOfRangeException>(() => new BuildingProjectController(capacity));
+    [Fact]
     public void TimeoutRetainsUnconfirmedPathAndNeverStartsBuilding()
     {
         var c=new BuildingProjectController();int writes=0;
