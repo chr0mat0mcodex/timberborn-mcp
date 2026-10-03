@@ -66,9 +66,33 @@ Ausschluss aus der festen vertikalen Sequenz. Neue Testzählung nicht übermitte
 - Identische Aktions-ID liefert denselben completed-Beleg mit einem Objekt;
   globale Objektzahl beim Replay unverändert. Kein Doppelauftrag.
 
-Dieser E-Schritt ist bestanden, E insgesamt nicht abgeschlossen. Nächster kleiner
-Schritt: mittleres Lager mit tatsächlich neuem Bodenanschluss abnehmen. Die
-übrigen Drehungen dieser Vorlage und vertikale Mehrzellengebäude bleiben offen.
+## Ergänzung: tatsächlich neuer Bodenanschluss
+
+Auf unveränderter, bereits menschlich installierter 0.33.0 live bestanden;
+keine Codeänderung oder neue Installationsrunde.
+
+- Exakte Testfläche regulär vorbereitet: eine Sägerei und fünf Birken entfernt.
+  Wasserrad und ursprüngliche Wege nicht abgerissen. Die Vorbereitung ist kein
+  Nachweis für Schutz bei Abriss; Zugangsbaseline danach erfasst.
+- Begrenzter Plan mit mittlerem Lager Rotation 1 (Cw90), sechs gedrehten
+  Grundrisszellen und genau drei neuen Bodenwegen.
+- Gemeinsame Vorschau: alle drei Wegpräfixe und Lager gültig, kein Verlust
+  geprüfter Verbindungen, Eingang verbunden, Wiederherstellung bestätigt.
+  Allgemeine Bewertung bleibt unknown, constructionPreflightProven=false.
+- Auftrag bestätigt alle vier Objekte. Jeder der drei neuen Wege separat als
+  fertig und auf dem gewünschten Distriktnetz rückgelesen. Vor Lagerplatzierung
+  verlangt der bestehende Ablauf fertige, verbundene Wegvorgänger.
+- Tatsächliche Lagerbaustelle builder-erreichbar mit freiem Eingang und
+  Distriktdistanz 36; danach Lager fertig und Distrikt zugeordnet, Eingang
+  weiterhin frei, Distanz weiterhin 36.
+- Ursprünglicher Anschlussweg und alle drei neuen Wege nach Fertigstellung
+  verbunden. Zwei Vergleichslager unverändert erreichbar bei Distanz 19 und 25.
+- Identische Aktions-ID liefert denselben Vier-Objekt-Beleg; globale Objektzahl
+  beim Replay unverändert. Simulationsläufe abgeschlossen und Pause bestätigt.
+
+Dieser E-Schritt ist bestanden, E insgesamt nicht abgeschlossen. Rotation 1 und
+3 des mittleren Lagers sind jetzt in begrenzten Livefällen belegt; nächster kleiner
+Schritt sind die fehlenden ebenen Drehungen 0/2. Vertikale Mehrzellengebäude bleiben offen.
 
 Keine Zusage für alle Drehungen live, andere Vorlagen, freie Höhenplanung,
 allgemeinen Weg-/Builder-Vorschau-Schutz, Warenversorgung oder Lagerbetrieb.

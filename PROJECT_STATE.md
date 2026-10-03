@@ -15,6 +15,13 @@ korrekt ausgeschlossen. Zwei Bestandswege verbunden, Vergleichslager unveränder
 bei Distanz 19, Aktions-ID-Replay ohne neue Objekte.
 [Nachweis und Grenzen](docs/medium-warehouse-pilot.md).
 
+Ergänzend auf unveränderter 0.33.0 live bestanden: mittleres Lager Rotation 1
+mit drei tatsächlich neuen, einzeln fertig und distriktverbunden rückgelesenen
+Bodenwegen. Baustellenzugang vorhanden; fertiger Eingang frei, Distanz 36.
+Ursprünglicher Anschlussweg erhalten, Vergleichslager unverändert bei Distanz
+19/25; Vier-Objekt-Beleg wiederabfragbar ohne Doppelbauten. Nächster E-Schritt:
+fehlende ebene Drehungen 0/2 dieser Vorlage, keine freie Höhenplanung.
+
 0.32.1 nach menschlichem Skript-Gate installiert und live bestanden: konservative
 Baustellensperre B. Neue Bauaktionen benötigen vollständige Bestandsinventur
 ohne offene unabhängige Baustellen. Eigene Baustellen dürfen während Bestätigung
@@ -31,8 +38,8 @@ mit Rotation 0 und 2 als Baustelle builder-erreichbar und anschließend fertig,
 freie Eingänge und Distriktdistanz jeweils 32. Gemeinsamer Bestandsweg verbunden;
 Vergleichslager unverändert bei Distanz 19. Zusammen mit früheren C-Fällen sind
 alle vier ebenen Lagerdrehungen begrenzt live belegt. E nicht insgesamt beendet;
-nächster Schritt nach der 0.33.0-Vorlagenerweiterung ein mittleres Lager mit
-neuem Bodenanschluss, kein freier 3-D-Ausbau. [Nachweis](docs/building-rotation-pilot.md).
+nächster Schritt nach den 0.33.0-Vorlagen-/Anschlussfällen fehlende mittlere
+Lagerdrehungen, kein freier 3-D-Ausbau. [Nachweis](docs/building-rotation-pilot.md).
 
 0.32.0 nach menschlichem Skript-Gate installiert und live geprüft: Etappe D
 mit `stair_platform_warehouse_pilot`: Treppe, drei Plattformen, zwei obere Wege

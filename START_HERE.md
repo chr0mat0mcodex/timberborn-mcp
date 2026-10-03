@@ -10,8 +10,10 @@ historischer Bauplan ist Voraussetzung.
 
 - 0.33.0 nach menschlichem Gate live bestanden: mittleres ebenes Lager mit sechs
   gedrehten Grundrisszellen, Bau-/Fertigzugang und erhaltenen Bestandsanschlüssen.
-  Negativkontrollen und Aktions-ID-Replay bestanden. Nächster kleiner E-Schritt:
-  mittleres Lager mit neuem Bodenanschluss. [Nachweis](docs/medium-warehouse-pilot.md).
+  Negativkontrollen und Aktions-ID-Replay bestanden. Ergänzend Rotation 1 mit
+  drei neuen fertigen Bodenwegen und fertigem Lager live bestanden; ursprüngliche
+  Anschlüsse erhalten. Nächster E-Schritt: fehlende ebene Drehungen 0/2 dieser
+  Vorlage. [Nachweis](docs/medium-warehouse-pilot.md).
 
 - 0.32.1 konservative Baustellensperre B nach menschlichem Gate live bestanden.
   B im Ausschlussumfang geschlossen; allgemeiner Vorschau-Schutz weiter offen.

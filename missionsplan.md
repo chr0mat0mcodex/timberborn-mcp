@@ -12,7 +12,9 @@ B-Minimalumfang geschlossen. Erster E-Schritt live bestanden: bislang fehlende
 ebene Lagerdrehungen 0/2, Baustellen-/Fertigzugang und Bestandsanschluss geprüft.
 0.33.0 ergänzt das mittlere ebene Lager mit gedrehtem Sechs-Felder-Grundriss,
 Bau-/Fertigzugang und erhaltenen ausgewählten Bestandsanschlüssen, live bestanden.
-Nächster kleiner E-Schritt: mittleres Lager mit neuem Bodenanschluss,
+Ergänzend auf unveränderter 0.33.0 mittleres Lager Rotation 1 mit drei neuen
+fertigen Bodenwegen, Bau-/Fertigzugang und erhaltenen Vergleichsanschlüssen bestanden.
+Nächster kleiner E-Schritt: fehlende ebene mittlere Lagerdrehungen 0/2,
 nicht freie Höhenplanung oder breiter Vorlagenbau.
 [Mehrzellen-Nachweis](docs/medium-warehouse-pilot.md).
 [Nachweis](docs/building-rotation-pilot.md).

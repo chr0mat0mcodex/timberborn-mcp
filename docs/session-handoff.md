@@ -20,9 +20,12 @@ Details und Grenzen in building-rotation-pilot.md; E nicht insgesamt abgeschloss
 Grundrisszellen, tatsächlicher Baustellen-/Fertigzugang, erhaltene Bestandswege,
 negative Grundrisskontrollen und Replay ohne neue Objekte. Keine neue
 Vertikalfreigabe. Details in medium-warehouse-pilot.md.
+Ergänzend auf unveränderter Installation: Rotation 1 mit drei neuen fertigen,
+distriktverbundenen Bodenwegen, erreichbarer Baustelle und fertigem Lager bestanden.
+Bestandsweg und Vergleichszugänge erhalten, Vier-Objekt-Replay ohne neue Objekte.
 
 1. Etappe E aus ../missionsplan.md nur in explizit unterstützten Eigenschaften
-   erweitern; nächster kleiner Nachweis mittleres Lager mit neuem Bodenanschluss,
+   erweitern; nächster kleiner Nachweis fehlende ebene mittlere Lagerdrehungen 0/2,
    keine freie Höhenplanung
    oder Vollschutzbehauptung. Allgemeine B-Vorschaulücke bleibt.
 2. Kandidat, Vorschau, Ausführung und Rücklesung weiterhin an dieselbe Session
