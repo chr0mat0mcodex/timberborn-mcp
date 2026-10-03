@@ -21,8 +21,9 @@ Projektumfang inzwischen strukturiert im MCP ausweisbar und lesend live geprüft
 Zusätzlich vertikales Lager mit Treppendrehung 0 / Lagerdrehung 2 auf unveränderter
 0.33.0 live bestanden: sieben fertige Objekte, Bau-/Fertigzugang, erhaltene
 Bestandsanschlüsse und Replay. Auch Treppendrehung 2 / Lagerdrehung 0 mit denselben
-getrennten Nachweisen auf unveränderter 0.33.0 live bestanden. Nur vertikale
-Treppendrehung 1 noch offen, keine freie
+getrennten Nachweisen auf unveränderter 0.33.0 live bestanden. Auch Treppendrehung
+1 / Lagerdrehung 3 bestanden; alle vier festen Treppendrehungen begrenzt belegt.
+Keine freie
 Höhenplanung oder allgemeine Schutzfreigabe.
 [Mehrzellen-Nachweis](docs/medium-warehouse-pilot.md).
 [Nachweis](docs/building-rotation-pilot.md).

@@ -104,3 +104,29 @@ Fünf Bauzeitläufe à acht Spielstunden jeweils abgeschlossen, pausiert und ohn
 Treppendrehungen 0/2/3 damit begrenzt dokumentiert, nur 1 noch offen.
 Deploytes MCP-Nachweisprofil weiterhin unverändert mit 3. Keine allgemeine
 Bauphasen-Sicherheit, keine Aussage über Lieferung, Personal oder Betrieb.
+
+## Ergänzung E: Treppendrehung 1 auf unveränderter 0.33.0
+
+Frische Sitzung nach Nutzerbereitstellung: Treppendrehung 1, Lagerdrehung 3.
+Erster untersuchter Grundriss lag über einer Geländestufe und wurde ohne Bau
+verworfen. Ebener Ersatz im selben begrenzten Gebiet: eine Testhütte samt zwei
+rückgelesenen Schuttstapeln regulär entfernt, keine Wege oder Vergleichslager.
+Plattform regulär für 100 Forschungspunkte freigeschaltet. Gültige Treppenvorschau
+ohne verlorene erfasste Verbindungen; Gesamturteil weiter unknown.
+
+Sieben Objekte einzeln tatsächlich fertig und positionskorrekt rückgelesen.
+Vorgänger-Wartefolge beobachtet, beide oberen Wege vor Lagerauftrag fertig und
+distriktverbunden. Lagerbaustelle builder-erreichbar, Eingang frei, Distriktdistanz
+50. Danach tatsächliches fertiges Lager mit Distriktzuweisung und weiterhin
+freiem Eingang bei Distanz 50. Unterer Bestandsweg und beide oberen Wege
+verbunden, Vergleichslager frei bei unveränderter Distanz 15.
+Replay derselben actionId liefert den alten completed-Beleg; exakt sieben Objekte
+vor/nach. Fünf Bauzeitläufe à acht Spielstunden abgeschlossen, pausiert und ohne
+Überschreitung. Testhüttenabriss ist Fixturebereitung, kein Bestandsschutznachweis.
+
+Alle vier Treppendrehungen des festen vertikalen kleinen Lagerprojekts damit
+begrenzt live belegt: 0→Lager 2, 1→Lager 3, 2→Lager 0, 3→Lager 1.
+Keine freie Höhenplanung oder allgemeine Bauphasen-Schutzgarantie.
+Aktueller Controller weiterhin ein Projekt pro Sitzung; deploytes
+Fähigkeitsprofil katalogisiert weiterhin nur Drehung 3. Diese Codegrenzen
+nicht durch zusätzliche dokumentierte Livefälle als geändert darstellen.

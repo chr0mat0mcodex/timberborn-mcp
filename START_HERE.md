@@ -12,7 +12,8 @@ historischer Bauplan ist Voraussetzung.
   live bestanden: alle sieben Objekte fertig, Baustellen-/Fertigzugang und
   Bestandsanschlüsse erhalten. Treppendrehung 2 ebenfalls mit sieben fertigen
   Objekten, Bau-/Fertigzugang und Bestandsanschlüssen live bestanden.
-  Historische Drehungen 0/2/3 dokumentiert; nur 1 noch offen.
+  Treppendrehung 1 ebenfalls mit sieben fertigen Objekten, Bau-/Fertigzugang,
+  Bestandsanschlüssen und Replay bestanden. Alle vier Drehungen begrenzt dokumentiert.
   MCP-Nachweiskatalog unverändert mit 3. [Nachweis](docs/vertical-warehouse-pilot.md).
 
 - MCP-only-Abfrage `inspect_building_capabilities` nach menschlichem Gate live

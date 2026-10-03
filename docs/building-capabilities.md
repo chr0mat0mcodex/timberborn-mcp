@@ -57,3 +57,8 @@ Spiel erneut live bereit; anschließende feature-spezifische Abnahme bestanden.
 
 Kein neuer Bau-/Sicherheitsnachweis: Diese Abnahme betrifft die lesende Auskunft
 und ihre Grenzen. Allgemeiner Weg-/Builder-Vorabnachweis bleibt offen.
+
+Nachfolgende Livefälle des unveränderten Vertikalcodes haben inzwischen alle vier
+Treppendrehungen des festen kleinen Lagerprojekts begrenzt belegt, siehe
+vertical-warehouse-pilot.md. Das deployte MCP-Profil bleibt bewusst der getestete
+Code-Snapshot mit liveRotations=[3]; Aktualisierung erst mit neuem MCP-Gate.

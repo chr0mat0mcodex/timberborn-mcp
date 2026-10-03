@@ -13,7 +13,10 @@ unterer Bestandsweg verbunden, Vergleichslager unverändert bei Distanz 25.
 Replay ohne Doppelbauten. Ergänzend Treppendrehung 2 / Lagerdrehung 0 live
 bestanden: sieben fertige Objekte, Bau-/Fertigzugang und Distanz 36, Bestandsweg
 verbunden, Vergleichslager unverändert bei Distanz 15, Replay ohne Doppelbauten.
-Dokumentierte vertikale Drehungen jetzt 0/2/3; nur 1 noch offen.
+Treppendrehung 1 / Lagerdrehung 3 ebenfalls live bestanden: sieben fertige
+Objekte, Bau-/Fertigzugang und Distanz 50; Bestandsweg verbunden,
+Vergleichslager unverändert bei Distanz 15, Replay ohne Doppelbauten.
+Alle vier Treppendrehungen des festen vertikalen Lagerprojekts begrenzt dokumentiert.
 MCP-Nachweiskatalog noch unverändert mit 3. [Nachweis](docs/vertical-warehouse-pilot.md).
 
 MCP-only-Abfrage `inspect_building_capabilities` nach korrigiertem menschlichem

@@ -6,11 +6,15 @@ Vertikales Lagerprojekt zusätzlich in Treppendrehung 0 / Lagerdrehung 2 live
 bestanden auf unveränderter 0.33.0. Sieben fertige Objekte, Bau-/Fertigzugang,
 Bestandsanschlüsse und Replay geprüft. Drehung 2 / Lagerdrehung 0 ebenfalls
 mit sieben fertigen Objekten, Bau-/Fertigzugang, Bestandsanschlüssen und Replay
-live bestanden. Nur Drehung 1 offen; derzeitiges
+live bestanden. Drehung 1 / Lagerdrehung 3 ebenfalls bestanden; damit alle vier
+Treppendrehungen des festen Lagerprojekts begrenzt belegt. Derzeitiges
 MCP-Profil enthält weiter nur historischen Nachweis 3. Profilaktualisierung
 als MCP-only-Änderung mit eigenem Gate bündeln, keine Modneuinstallation nur
 für weitere Tests unveränderten Codes. Pro Sitzung nur ein Vertikalprojekt;
-weiterer Start braucht eine frische Sitzung. [Nachweis](docs/vertical-warehouse-pilot.md).
+weiterer Start braucht eine frische Sitzung. Nächster sinnvoller Code-Schritt:
+begrenzte sequenzielle Vertikalprojekte bei erhaltenem Replay-/Sitzungsschutz und
+frischen Zugangsprüfungen, dazu aktualisiertes Nachweisprofil. Kein paralleler
+Bau oder Lockerung der Baustellensperre. [Nachweis](docs/vertical-warehouse-pilot.md).
 
 Strukturierte Projektumfangsabfrage nach menschlichem Gate live bestanden:
 fünf Modi, Grenzen und historische Nachweise; keine Modversionsänderung oder

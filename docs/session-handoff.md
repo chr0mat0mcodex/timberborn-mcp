@@ -26,8 +26,14 @@ Distanz 36. Bestandsweg verbunden, Vergleichslager bei Distanz 15 erhalten,
 Replay unverändert sieben Objekte. Fünf begrenzte Bauzeitläufe jeweils pausiert
 und ohne Überschreitung; eine tote Birke entfernt, Plattform regulär freigeschaltet.
 Ein Vertikalprojekt im aktuellen Controller pro Sitzung; weitere Drehung braucht
-neue Sitzung. Nur Drehung 1 offen. MCP-Nachweiskatalog unverändert mit nur 3;
-späteres Profilupdate getrennt gaten. Details in vertical-warehouse-pilot.md.
+neue Sitzung. Drehung 1 / Lagerdrehung 3 ebenfalls live bestanden: alle sieben
+Objekte fertig, Lagerbaustelle erreichbar, freier Fertigeingang bei Distanz 50.
+Bestandsweg und obere Wege verbunden, Vergleichslager unverändert bei Distanz 15;
+Replay ohne Doppelbauten. Alle vier festen Treppendrehungen begrenzt dokumentiert.
+MCP-Nachweiskatalog unverändert mit nur 3;
+Späteres Profilupdate zusammen mit begrenzten sequenziellen Vertikalprojekten
+als nächste Codefähigkeit prüfen und am menschlichen Gate halten. Keine parallelen
+Baustellen oder allgemeine Schutzfreigabe. Details in vertical-warehouse-pilot.md.
 
 MCP-only-Abfrage `inspect_building_capabilities` nach korrigiertem menschlichem
 Gate live bestanden. Fünf erwartete Modi, Grenzen und Nachweise korrekt;
