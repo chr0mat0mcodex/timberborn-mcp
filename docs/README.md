@@ -8,6 +8,7 @@ Start: [Einstieg](../START_HERE.md) · [Projektstand](../PROJECT_STATE.md) ·
 - [Technische Übergabe](session-handoff.md)
 - [Installation und Aktionsfreigaben](native-bridge-install.md)
 - [Werkzeugkatalog](tools.md)
+- [Spielanleitung für Agenten](agent-playing-guide.md)
 - [Bauprojektvertrag](building-project-execution-proposal.md)
 - [Gemeinsamer Bauprüfbericht — Etappe A](build-assessment.md)
 - [Wegschutz](road-protection.md)

@@ -1,11 +1,14 @@
 # Native MCP-Werkzeuge
 
-Verifizierte Bridge: 0.30.0. Historische Versionsabschnitte unten sind keine
-allgemeine Baufreigabe; aktueller Auftrag folgt ../missionsplan.md.
+Verifizierte Bridge: 0.35.0, generischer ebener Projektpilot begrenzt live geprüft.
+Praktischer Ablauf: [Spielanleitung für Agenten](agent-playing-guide.md).
+Historische Versionsabschnitte unten sind keine allgemeine Baufreigabe;
+aktueller Auftrag folgt ../missionsplan.md.
 Etappe A ergänzt `assessment` in bestehenden Einzel-/Projekt-Validierungen;
 freie/gesperrte Vorschau und Vorschauzugang live geprüft, keine neue Baufreigabe.
 [Bericht und Grenzen](build-assessment.md).
-[Grund, Ergebnisvertrag und nächster Pilot](road-protection.md). 33 Leser und 24 Werkzeuge für Aktionen/Vorschauvalidierung.
+[Grund und Ergebnisvertrag](road-protection.md). Der verfügbare Werkzeugumfang
+ergibt sich aus `tools/list` und den aktiven technischen Aktionsschaltern.
 Neu: Ingame-Zeitläufe, automatisch und im begrenzten MCP-Live-Pilot geprüft. Die 30 bisherigen Leser
 sind unter 0.21.1 live belegt. Nachweise und Grenzen stehen in den Fachdokumenten.
 
@@ -38,6 +41,11 @@ sind unter 0.21.1 live belegt. Nachweise und Grenzen stehen in den Fachdokumente
 - `inspect_areas`
 - `inspect_removal_targets`
 - `inspect_build_options`
+- `inspect_building_capabilities`
+- `plan_building_project`
+- `inspect_building_project`
+- `inspect_vertical_stair_pilot`
+- `inspect_path_district`
 - `precheck_building`
 - `inspect_building_settings`
 - `inspect_research`
@@ -58,6 +66,9 @@ sind unter 0.21.1 live belegt. Nachweise und Grenzen stehen in den Fachdokumente
 - `remove_vegetation`
 - `remove_debris`
 - `validate_building`
+- `validate_building_project`
+- `execute_building_project_pilot`
+- `execute_vertical_stair_pilot`
 - `place_building`
 - `set_building_paused`
 - `set_storage_good`
@@ -68,9 +79,13 @@ sind unter 0.21.1 live belegt. Nachweise und Grenzen stehen in den Fachdokumente
 
 ## Auswahl und Ausführung
 
-- Für reguläre neue Bauaufgaben: inspect_build_options, precheck_building,
-  validate_building und place_building. inspect_build_catalog/precheck_build_site sowie
-  validate_build_site/place_path/place_lodge sind erhaltene, begrenzte frühe Pilotwerkzeuge.
+- Für neue Gebäude mit Anschlussweg: inspect_building_capabilities,
+  inspect_build_options, precheck_building/plan_building_project,
+  validate_building_project und execute_building_project_pilot. Den vollständigen
+  Ablauf einschließlich tatsächlichem Bau-/Fertigzugang beschreibt die Spielanleitung.
+  validate_building prüft einzelne Objekte; place_building bleibt ohne safe-Wegschutz
+  gesperrt. inspect_build_catalog/precheck_build_site sowie validate_build_site/
+  place_path/place_lodge sind erhaltene, begrenzte frühe Pilotwerkzeuge.
 - Validierung mit Vorschau zählt nicht als rein lesend und benötigt eine eigene Freigabe.
 - Aktionsfreigaben werden in Mod und MCP-Prozess geprüft; [vollständige Tabelle](native-bridge-install.md).
 - reasoning ist Pflicht für alle MCP-Werkzeugaufrufe, einschließlich Leseabfragen,
@@ -102,13 +117,17 @@ und planKey. Bau-Opt-in erforderlich, maximal acht neue Wege und 16 Prüfungen/S
 Temporäre gemeinsame Vorschau, kein Bauauftrag; executable bleibt false. Ergebnisse
 und Grenzen stehen im [Bauplan-Vertrag](building-site-search-plan.md).
 
-## Expliziter Bauprojekt-Pilot (0.26.0)
+## Generischer ebener Bauprojekt-Pilot (0.35.0)
 
-`execute_building_project_pilot` setzt ein SmallWarehouse.Folktails und höchstens vier
-neue ebene Wege. Benötigt Suchparameter, optionIndex, planKey, session, actionId und
+`execute_building_project_pilot` setzt ein geeignetes Gebäude aus dem aktiven
+Spielkatalog und höchstens vier neue ebene Wege. Vollständige Spielgeometrie und
+anschließbarer öffentlicher Eingang entscheiden, keine Gebäudenamensliste.
+Ältere Bridges behalten ihren versionierten festen Pilotumfang.
+Benötigt Suchparameter, optionIndex, planKey, session, actionId und
 `mode=development_pilot`. Bau-Opt-in und Pause sind Pflicht. Bis 0.31.3 ein Auftrag
 je Sitzung; ab 0.31.4 höchstens vier Aufträge nacheinander, neue ID nur nach
-completed. stopped/unconfirmed sperren weitere Projekte. Alte ID+Parameter lesen
+completed und tatsächlicher Fertigstellung bisheriger Baustellen. Unabhängige
+offene Baustellen verhindern den Start. stopped/unconfirmed sperren weitere Projekte. Alte ID+Parameter lesen
 nur das gespeicherte Ergebnis, geänderte Parameter werden abgewiesen. completed
 ist keine Fertigstellung; vor weiteren Bauvorhaben reale Objekte neu prüfen.
 `inspect_building_project` liest session/actionId ohne Schreibfreigabe.
@@ -117,7 +136,7 @@ running/completed/stopped/unconfirmed und Schritt-IDs erlauben gezielten Abgleic
 completed bestätigt regulären Auftrag, realen Eingang und Bauarbeiterzugang; keine
 Fertigstellung. Bekannte Wegverluste bleiben verboten; nur der unbelegte Bauphasen-
 Vorabnachweis darf im freigegebenen Pilot offenbleiben. Teilergebnisse bleiben stehen.
-[Vertrag, Grenzen und Live-Abnahme](building-project-execution-proposal.md).
+[Aktueller Umfang und Live-Abnahme](generic-building-project.md).
 
 Ab 0.31.4 ergänzt `inspect_building_access` die tatsächlichen Baustellen-Zugangszellen:
 constructionAccess.state=observed/unavailable/not_construction, cells (maximal 64),

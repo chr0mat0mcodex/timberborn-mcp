@@ -8,6 +8,9 @@ historischer Bauplan ist Voraussetzung.
 
 ## Technischer Stand
 
+Praktische Werkzeugfolge für Spielaufgaben:
+[Spielanleitung für Agenten](docs/agent-playing-guide.md).
+
 - Aktuell installiert und begrenzt live bestanden, 0.35.0: generischer ebener
   Gebäudeprojektpilot. Bank und großes 3x3-Freiluftlager mit neuen Wegen,
   Bau-/Fertigzugang, Randfeld-/Bestandswegkontrolle und Replay bestanden.
