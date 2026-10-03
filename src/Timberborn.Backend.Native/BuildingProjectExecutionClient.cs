@@ -16,7 +16,7 @@ public sealed partial class NativeClient
     public static void ValidateProjectExecution(BridgeEnvelope<NativeProjectExecution> e,BuildingProjectExecutionRequest r)
     {
         var d=e.Data;
-        if(e.BridgeVersion!="0.26.0"||e.SessionId!=r.Session||d is null||d.ActionId!=r.ActionId.ToString("D")||
+        if(e.BridgeVersion is not ("0.26.0" or "0.27.0")||e.SessionId!=r.Session||d is null||d.ActionId!=r.ActionId.ToString("D")||
             !ValidPlanKey(d.PlanKey)||r.Validation is not null&&d.PlanKey!=r.Validation.PlanKey||d.ConstructionPreflightProven||
             d.State is not ("running" or "completed" or "stopped" or "unconfirmed")||d.Reason is null||d.Reason.Length>100||
             d.Steps is not {Length:>=1 and <=5}||d.Steps.Any(s=>s is null||!Guid.TryParse(s.EntityId,out var id)||id==Guid.Empty||

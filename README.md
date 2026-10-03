@@ -5,8 +5,8 @@ Beobachtung und kontrollierte Eingriffe über reguläre Spielservices.
 
 ## Status
 
-Agent Bridge 0.26.0 ist gebaut, installiert und mit einem Bauprojekt über drei neue
-Anschlusswege live belegt.
+Agent Bridge 0.27.0 ergänzt einen begrenzten Einzeltreppen-Pilot. Die reguläre
+Spielvorschau, Auftragsbestätigung und Objekt-Rücklesung sind live belegt.
 
 ## Umfang
 

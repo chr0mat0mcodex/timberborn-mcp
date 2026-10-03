@@ -2,10 +2,11 @@
 
 ## Stand
 
-Agent Bridge 0.26.0 ist installiert und über den nativen MCP-Pfad erreichbar.
+Agent Bridge 0.27.0 ist installiert und über den nativen MCP-Pfad erreichbar.
 Der aktuelle Arbeitsbranch ist `codex/road-protection-pilot`. Ein begrenzter
 Bauprojekt-Livefall hat Vorschau, drei Wegaufträge, Lagerauftrag und Zugang über
-denselben Projektstatus sowie Objekt-Rücklesung bestätigt.
+denselben Projektstatus sowie Objekt-Rücklesung bestätigt. Ein Einzeltreppen-Pilot
+ist zusätzlich mit regulärer Vorschau, bestätigtem Auftrag und Objekt-Rücklesung live belegt.
 
 ## Nächster Ablauf
 

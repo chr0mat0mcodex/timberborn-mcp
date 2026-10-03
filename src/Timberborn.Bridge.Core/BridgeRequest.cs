@@ -9,6 +9,7 @@ public sealed class BridgeRequest
     public BuildingProjectExecutionRequest? ProjectExecution { get; private set; }
     public BuildingPlanRequest? BuildingPlan { get; private set; }
     public BuildingProjectValidationRequest? ProjectValidation { get; private set; }
+    public VerticalStairRequest? VerticalStair { get; private set; }
     public SimulationRunRequest? SimulationRun { get; private set; }
     public DiagnosticsRequest? Diagnostics { get; private set; }
     public LogisticsRequest? Logistics { get; private set; }
@@ -43,6 +44,7 @@ public sealed class BridgeRequest
     public static BridgeRequest Parse(string path, NameValueCollection query)
     {
         if(path is "/agent-api/v1/building-project-execute" or "/agent-api/v1/building-project-status") { var r=BuildingProjectExecutionRequest.Parse(path.EndsWith("execute"),query);return new BridgeRequest("building-project-execution",session:r.Session) { ProjectExecution=r }; }
+        if(path is "/agent-api/v1/vertical-stair-execute" or "/agent-api/v1/vertical-stair-status") { var r=VerticalStairRequest.Parse(path.EndsWith("execute"),query);return new BridgeRequest("vertical-stair-execution",session:r.Session) { VerticalStair=r }; }
         if(path=="/agent-api/v1/building-project-validation") { var v=BuildingProjectValidationRequest.Parse(query);return new BridgeRequest("building-project-validation",session:v.Plan.Session) { ProjectValidation=v }; }
         if(path == "/agent-api/v1/building-plan") { var p=BuildingPlanRequest.Parse(query); return new BridgeRequest("building-plan",session:p.Session) { BuildingPlan=p }; }
         if (SimulationRunRequest.Handles(path)) { var r = SimulationRunRequest.Parse(path, query); return new BridgeRequest(r.Route, session:r.Session) { SimulationRun=r }; }

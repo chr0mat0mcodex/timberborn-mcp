@@ -33,7 +33,8 @@ function Stop-LocalMcpServers([string]$WorkspaceRoot) {
     }
     $matches = @($processes | Where-Object {
         $commandLine = [string]$_.CommandLine
-        $commandLine.IndexOf($serverDll, [System.StringComparison]::OrdinalIgnoreCase) -ge 0
+        $commandLine.IndexOf($serverDll, [System.StringComparison]::OrdinalIgnoreCase) -ge 0 -or
+        $commandLine -match '(?i)(^|[\\/\s])Timberborn\.McpServer\.dll(?:\s|$)'
     })
     if ($matches.Count -eq 0) { return }
     $ids = @($matches | ForEach-Object ProcessId)
@@ -41,7 +42,7 @@ function Stop-LocalMcpServers([string]$WorkspaceRoot) {
     foreach ($id in $ids) { Stop-Process -Id $id -ErrorAction Stop }
     foreach ($id in $ids) {
         try { Wait-Process -Id $id -Timeout 5 -ErrorAction Stop }
-        catch [System.ArgumentException] { }
+        catch { if ($_.Exception.Message -notmatch 'Cannot find a process') { throw } }
     }
     $remaining = @(Get-Process -Id $ids -ErrorAction SilentlyContinue)
     if ($remaining.Count -gt 0) { throw 'Lokaler MCP-Prozess konnte nicht vollständig beendet werden.' }
