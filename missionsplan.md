@@ -32,6 +32,13 @@ Versorgung und Betrieb erst als separate Folgestufe ausbauen. Keine freie 3-D-
 Planung und kein weiterer Weglängenpilot als Ersatz für A–C. Ein neuer Umweg muss
 real nutzbar sein, bevor ein Folgeschritt auf dessen Schutzwirkung angewiesen ist.
 
+Aktuelle Priorisierung durch Nutzer am 2026-10-03: C vor weiterer B-Diagnose.
+B bleibt offen; C verwendet den vorhandenen Entwicklungspiloten mit sichtbarer
+Vorabnachweislücke, keine allgemeine sichere Baufreigabe. Erster vollständiger
+Lagerablauf mit bestehendem Weganschluss bestanden; neu gebauter Anschluss noch
+separat nachzuweisen. Bestandsverbindung blieb erhalten, ihre Distanz änderte sich.
+[Konkreter Nachweis](docs/building-completion-pilot.md).
+
 Teststrategie: kleiner repräsentativer Pilot, insgesamt etwa zehn fachliche Fälle
 über die Etappen verteilt. Kontrollen: freier/ungültiger Platz, verbundener/getrennter
 Eingang, Engpass/Umweg, erreichbare/gefährdete Baustelle, Höhen und Zustandsänderung.

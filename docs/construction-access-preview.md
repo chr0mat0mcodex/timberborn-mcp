@@ -281,3 +281,63 @@ sämtliche NavMesh-Methoden. Diagnosescope abgeschlossen und sicherbar, Etappe B
 weiter offen. Keine weitere Suchserie. Nächster fachlicher Schritt: gültige
 Blockadekontrolle mit belegter tatsächlicher Negativbaseline; keine weiteren
 überlappenden Zentralen als Ersatz für den Baustellen-Schutznachweis.
+
+### Gültige Einzelpunktkontrolle
+
+Nach Nutzerauftrag eine einzige kleine Lager-Vorschau auf dem freien, erreichbaren
+Zugangspunkt geprüft. valid=true, kein Bezirksverlust, Baseline und Rücknahme
+bestanden. Kandidat belegt einen der vier erreichbaren Punkte; dessen Preview-
+Reichweitenwert bleibt true. Die drei weiteren erreichbaren Punkte sind nicht
+belegt. lostSites=0 ist deshalb kein widerlegter Gesamtzugangsschutz und kein
+Negativnachweis. Echter Builderzugang bleibt true, Pause/Spielzeit unverändert;
+kein Bauauftrag oder Abriss.
+
+Weitere Varianten in dieser Fixture gestoppt: sie besitzt mehrere Alternativen
+und liefert keine belegte Blockade. Empfohlener nächster Pilot nach erneutem go:
+isolierte Baustelle mit einem einzigen Zugang, tatsächliche Trennung als
+unabhängige Negativkontrolle, anschließend passende Vorschau prüfen. Keine
+Sicherheit allein aus Kandidatenbelegung ableiten; Etappe B bleibt offen.
+
+### Erhöhte Fixture: tatsächliche Treppentrennung
+
+Nutzer bereitete erhöhte Lagerbaustelle vor. Träger, Wege und Treppe waren anfangs
+noch Bauaufträge, deshalb keine reale Einzelverbindung. Zwei begrenzte Laufaufträge
+(erster nach fehlendem lokalen Settings-Schalter abgebrochen, zweiter abgeschlossen)
+stellten die Träger fertig; Lager blieb unfertig, seine temporäre Baupause wurde
+danach aufgehoben. Lokaler Testaufruf benötigt BUILDING_SETTINGS-Opt-in für Pause;
+Ablehnung vor Backend wurde lesend geklärt, nicht blind wiederholt.
+
+Frisch geprüfte fertige Treppe einzeln über regulären Abriss entfernt. Vorher
+Builderzugang true und Bezirksdistanz vorhanden, danach Distanz unbekannt und
+Builderzugang weiterhin true. Rückabfrage nach weiteren Updates bestätigt dies.
+Fünf echte Zugangspunkte: oberer Wegpunkt nun ohne Pfad/Spill/Reichweite, vier
+Punkte eine Ebene tiefer auf Nachbargelände weiterhin mit tatsächlicher
+Erreichbarkeit/Spill/Reichweite. Kein tatsächlicher negativer Builderbefund.
+Freie Diagnosevorschau danach mit passender Baseline/Rücknahme, kein Verlust.
+
+Wichtige Grenze: Plattformhöhe über eigenem Boden und einzelne Treppe beweisen
+keine Isolation von höherem Nachbargelände. Geometrie aller tatsächlichen
+ConstructionSiteAccessible-Punkte prüfen. Fixture-Pilot gestoppt; für Fortsetzung
+neu freigegebenen Ansatz verwenden, keine weitere Suchserie. Eine Testtreppe
+bleibt entfernt; kein automatischer Wiederaufbau, keine Träger gelöscht. Spiel
+pausiert, Lager unfertig und aktiv. Etappe B weiterhin offen.
+
+### Ein begrenzter Bodenzugangs-Engpasspilot nach erneutem go
+
+Nahes Wegenetz strukturiert inventarisiert. Ein frisch gelesenes fertiges Path-
+Objekt mit CanDelete=true einzeln entfernt; zuvor war der zugehörige Ast nativ
+mit dem Bezirk verbunden, danach IsOnInstantDistrictRoad=false. Echte
+Bezirkswegtrennung damit belegt. Builderzugang der erhöhten Lagerbaustelle bleibt
+jedoch true, auch nach weiteren Updates. Alle vier niedrigeren Zugangspunkte
+weiter mit Reichweite, tatsächlicher Erreichbarkeit und Spill; oberer Zugang
+weiter false. Freie Diagnosebaseline und Rücknahme passen.
+
+Dies belegt getrennte Aussagen, keinen Fehler: Bezirksweg-Mitgliedschaft und
+Builderzugang sind nicht austauschbar. Keine negative Baustellenkontrolle und
+kein Abschluss B. Pilot nach genau einem Wegabriss gestoppt; zusätzlich zur
+vorher entfernten Testtreppe bleibt ein Wegpunkt entfernt. Keine weiteren
+Abrisse oder automatischer Wiederaufbau. Fortsetzung benötigt nach diesem
+erkenntnisarmen Negativpilot einen neuen konkreten Ansatz und erneutes go.
+Empfehlung: minimaler eigener Testaufbau außerhalb dieser vernetzten Umgebung,
+mit zuerst real belegter positiver und negativer Baustellenbaseline; alternativ
+gezielte Herkunftsdiagnose der vier Spill-Zugänge statt weiterer Trennversuche.

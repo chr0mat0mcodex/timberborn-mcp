@@ -4,7 +4,8 @@
 
 1. Etappe A bestanden: gemeinsamer Bericht, freie/gesperrte Vorschau und
    Vorschau-Eingang separat von tatsächlichen Zugängen live geprüft.
-2. Aktuell Etappe B: Baustellen-Erreichbarkeit unter geplanten Änderungen prüfen.
+2. Etappe B offen, zugunsten des vom Nutzer priorisierten C zurückgestellt:
+   Baustellen-Erreichbarkeit unter geplanten Änderungen prüfen.
    0.31.0 live: Baseline/freie Kontrolle bestanden; negative Baustellenkontrolle
    nicht belegt. Begrenzte Detaildiagnose erneut freigegeben und in 0.31.1
    live geprüft. Acht Einzelbefunde und Rücknahme passen; Verbindung vom
@@ -24,8 +25,23 @@
    Sperrvorschau ungültig, sieben Bezirksverluste, kein Baustellen-Reichweitenverlust.
    Diagnose bestanden, negative Baustellenkontrolle offen. Nächster Schritt:
    gültige Blockadekontrolle; Ist-Daten ausdrücklich kein Preview-Nachweis.
-   Keine vollständige Bauzustandssimulation und noch kein Start von C.
-3. Etappe C: kleines Lager bis Fertigstellung und Zugang nachweisen.
+   Eine gültige Einzelpunkt-Lagervorschau belegt nur einen von vier Zugängen,
+   ohne Verlust; kein Negativfall. Weitere Suche in dieser Fixture gestoppt.
+   Nach erneutem go isolierten Einzelzugang mit echter Negativbaseline prüfen.
+   Erhöhte Fixture tatsächlich getestet: Treppe entfernt, oberer Zugang getrennt,
+   vier niedrigere Geländezugänge bleiben erreichbar. Kein Builder-Negativfall.
+   Pilot gestoppt; nach erneutem go Isolation gegen sämtliche native Accesses
+   und höchstes Nachbargelände herstellen, nicht nur gegen Treppenanschluss.
+   Einzelner weiterer Wegabriss trennt Bezirkswegast nachweislich, nicht die vier
+   Builder-Spill-Zugänge. Pilot gestoppt. Vor erneuter Fortsetzung konkreten Ansatz
+   wählen: separate minimale Fixture oder Herkunftsdiagnose des Spill-Zugangs.
+   Keine vollständige Bauzustandssimulation; allgemeine Baufreigabe bleibt gesperrt.
+3. Aktuell Etappe C: kleiner Lagerpilot mit bestehendem Weganschluss bis zur
+   tatsächlichen Fertigstellung live bestanden. Baustellenzugang und fertiger
+   Straßenanschluss positiv; Nachbarlager weiterhin erreichbar, Distanz 10→11.
+   Kein pauschaler Bestandsschutz. Nächster begrenzter C-Nachweis: neu gebauten
+   Anschlussweg nutzbar machen, dann Lager bauen und fertigen Zugang prüfen.
+   [Nachweis und Grenzen](docs/building-completion-pilot.md).
 4. Etappe D: Gebäude mit vertikalem Anschluss; danach E: Breitenausbau.
    Abnahmekriterien: [Etappenplan](missionsplan.md).
 

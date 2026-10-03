@@ -41,14 +41,19 @@ Vorschau, Wegschutzdiagnose und schrittweise Bestätigung gebunden.
 
 ## Offene Arbeit
 
-Aktiver Auftrag seit 2026-10-03: Etappen A–E aus missionsplan.md. Zuerst Bericht
-über Wegschutz und neuen Zugang vereinheitlichen, dann Baustellenlücke schließen
-und einen vollständigen Gebäudeablauf nachweisen. Beide Kernziele sind teilweise,
+Aktiver Auftrag seit 2026-10-03: Etappen A–E aus missionsplan.md. Nutzer priorisiert
+jetzt C; B bleibt offen und wird nicht durch weitere Blockadesuche fortgesetzt.
+Ein vollständiger Gebäudeablauf mit bestehendem Anschluss ist live nachgewiesen.
+Beide Kernziele sind teilweise,
 nicht allgemein erreicht. `RoadProtection.constructionCovered=false` verhindert
 allgemeine sichere Baufreigaben; Entwicklungspiloten erlauben ausschließlich die
 ausgewiesene Vorabnachweislücke. Distriktweg-Zugehörigkeit ersetzt keine
-Bauarbeiter-Erreichbarkeit. Lagerpilot bestätigt Auftrag und Baustellenzugang,
-nicht fertiggestelltes Gebäude mit anschließend geprüftem Zugang.
+Bauarbeiter-Erreichbarkeit. C-Pilot bestätigt Vorschau, Auftrag, Baustellenzugang,
+tatsächliche Fertigstellung und fertigen Eingang samt Straßenverbindung.
+Keine neuen Wege erforderlich; Nachbarverbindung erhalten, Distanz jedoch von
+10 auf 11 gestiegen. Kein Nachweis unveränderter Wegqualität oder vollständigen
+Bestandsschutzes. Nächster C-Schritt: neu gebauter Anschlussweg im selben Ablauf.
+Details: [Phase-C-Nachweis](docs/building-completion-pilot.md).
 
 Der ungeprüfte Vier-Wege-Entwurf (vorgesehene 0.30.1) ist zurückgestellt, lokal als
 benannter Git-Stash erhalten und nicht im aktiven Quellstand. Wiederaufnahme siehe
@@ -98,6 +103,26 @@ Builderzugang danach true, Pause/Spielzeit unverändert. Diagnosescope bestanden
 keine negative Baustellenkontrolle und kein Abschluss B. Nächster Schritt:
 fachlich gültige Blockadekontrolle statt weiterer überlappender Bezirkszentralen;
 keine Suchserie. Allgemeine Baufreigabe bleibt gesperrt.
+
+Zusätzliche gültige Einzelpunkt-Vorschau: kleines Lager belegt einen von vier
+erreichbaren Zugangspunkten, übrige drei offen; kein Reichweiten-/Bezirksverlust,
+Rücknahme und echter Builderzugang unverändert. Kein Negativfall. Diese Fixture
+für weitere Blockadesuche gestoppt. Nächster Vorschlag nach erneutem go: isolierter
+Einzelzugang mit tatsächlicher Negativkontrolle, dann passende Vorschau.
+
+Erhöhte Nutzer-Fixture nach begrenztem Trägerbau praktisch getrennt: eine fertige
+Treppe entfernt, oberer Wegzugang ohne Reichweite, aber vier niedrigere
+Geländezugänge weiterhin erreichbar. Builderzugang bleibt true; keine negative
+Baustellenkontrolle. Pilot gestoppt, kein automatischer Wiederaufbau. Lager bleibt
+unfertig/aktiv, Spiel pausiert. Isolation muss gegen alle tatsächlichen Zugänge
+und höheres Nachbargelände geprüft werden, nicht nur gegen die Treppe.
+
+Nach erneutem go genau ein naher Wegpunkt entfernt: Bezirksanbindung des Asts
+wechselt true→false, Builderzugang und vier niedrigere Spill-/Reichweitenpunkte
+bleiben true. Baseline/Rücknahme der freien Diagnose passen. Negativpilot erneut
+gestoppt, keine weitere Abrissserie. Entfernt bleiben Testtreppe und ein Wegpunkt.
+Nächste Entscheidung: minimaler separater Testaufbau oder Herkunftsdiagnose der
+Spill-Zugänge, statt weiterer Trennversuche im vernetzten Bestand. B bleibt offen.
 
 Zusätzlicher Nutzerauftrag: `reasoning` für sämtliche MCP-Werkzeugaufrufe
 verpflichtend (auch Fake/Legacy und Leser). Zentrale Schema-/Eingangsprüfung vor
