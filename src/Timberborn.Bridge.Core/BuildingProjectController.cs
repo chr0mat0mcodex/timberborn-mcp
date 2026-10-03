@@ -45,9 +45,11 @@ public sealed class BuildingProjectController
     {
         var existing = Existing(id, requestFingerprint); if (existing is not null) return existing;
         bool singleStair = steps.Length == 1 && steps[0].Template == "Stairs.Folktails";
+        bool stairWithUpperPaths = steps.Length is >= 2 and <= 3 && steps[0].Template == "Stairs.Folktails" &&
+            steps.Skip(1).All(s => s.Template == "Path");
         bool warehouseProject = steps.LastOrDefault()?.Template == "SmallWarehouse.Folktails" &&
             steps.Take(steps.Length - 1).All(s => s.Template == "Path");
-        if (steps.Length is < 1 or > 5 || (!singleStair && !warehouseProject)) throw new ArgumentException();
+        if (steps.Length is < 1 or > 5 || (!singleStair && !stairWithUpperPaths && !warehouseProject)) throw new ArgumentException();
         fingerprint = requestFingerprint; guard = check; place = placement; confirm = confirmation;
         return receipt = new Receipt { ActionId = id.ToString("D"), PlanKey = planKey, Steps = steps };
     }

@@ -120,6 +120,16 @@ public sealed class BuildingProjectExecutionTests
         var c=new BuildingProjectController();Assert.Throws<BridgeRejectionException>(()=>c.Inspect(Id));
         c.Tick(0);Assert.Null(c.Existing(Id,"f"));
     }
+    [Fact]
+    public void VerticalComboRequiresOneOrTwoUpperPathsAndKeepsTheirOrder()
+    {
+        var q=new NameValueCollection { ["session"]="11111111-1111-1111-1111-111111111111",["districtId"]="22222222-2222-2222-2222-222222222222",["actionId"]=Id.ToString("D"),["mode"]="stair_with_upper_paths_pilot",["x"]="3",["y"]="4",["z"]="5",["rotation"]="1",["upperPathCount"]="2" };
+        var request=VerticalStairRequest.Parse(true,q);Assert.Equal(2,request.UpperPathCount);
+        var steps=new[] { new BuildingProjectController.Step { EntityId=Id.ToString("D"),Template="Stairs.Folktails" },new BuildingProjectController.Step { EntityId=Guid.NewGuid().ToString("D"),Template="Path" },new BuildingProjectController.Step { EntityId=Guid.NewGuid().ToString("D"),Template="Path" } };
+        var c=new BuildingProjectController();int writes=0;var receipt=c.Start(Id,"vertical","key",steps,()=>true,_=>writes++,_=>"confirmed");
+        for(int tick=0;tick<6;tick++)c.Tick(tick);Assert.Equal("completed",receipt.State);Assert.Equal(3,writes);
+        q["upperPathCount"]="0";Assert.Throws<ArgumentException>(()=>VerticalStairRequest.Parse(true,q));
+    }
     private static BridgeEnvelope<NativeProjectExecution> Receipt() => new(1,Query()["session"]!,DateTimeOffset.UtcNow,"0.26.0",
         new(Id.ToString("D"),new string('a',64),"completed","order_and_access_confirmed",
             [new(Id.ToString("D"),"SmallWarehouse.Folktails",0,1,1,0,"confirmed")],false,["synthetic_test"]));

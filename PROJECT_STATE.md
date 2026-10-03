@@ -8,11 +8,11 @@ Projektbeschreibung.
 
 | Ebene | Stand |
 | --- | --- |
-| Bridge | Agent Bridge 0.27.0 gebaut, installiert und mit Einzeltreppen-Pilot live belegt |
+| Bridge | Agent Bridge 0.28.1 gebaut, installiert und mit Treppe-plus-oberem-Weg-Pilot live belegt |
 | Automatisch | 650 reguläre Tests (3 Live-Tests übersprungen) |
 | Mod-Build | Timberborn 1.1.2.4 / Folktails, ohne Warnungen und Fehler |
 | Laufzeit | Bridge und Schreibfreigabe strukturiert erreichbar |
-| Bauprojekt | 0.26.0 live: drei neue Wege, Lagerauftrag und Zugang rückgelesen; 0.27.0 live: Einzeltreppe, Auftragsstatus und Objekt rückgelesen |
+| Bauprojekt | 0.26.0 live: drei neue Wege, Lagerauftrag und Zugang rückgelesen; 0.28.1 live: Treppe, oberer Weg, Schrittstatus und beide Objekte rückgelesen |
 
 Arbeitsbranch: `codex/road-protection-pilot`. Die eigene Mod nutzt keine
 Fremdmod-Pflichtbasis.
@@ -32,8 +32,8 @@ Vorschau, Wegschutzdiagnose und schrittweise Bestätigung gebunden.
 
 ## Offene Arbeit
 
-1. Den Einzeltreppen-Pilot live prüfen; danach den Baupfad datengetrieben auf
-   weitere Vorlagen, längere Anschlüsse und größere Vorhaben erweitern.
+1. Den Baupfad datengetrieben auf weitere Vorlagen, längere Anschlüsse und größere
+   Vorhaben erweitern.
 2. Wegkonflikte, Produktionsblockaden sowie Hunger-/Durst- und Versorgungsdiagnosen
    zu evidenzbasierten Befunden bündeln.
 

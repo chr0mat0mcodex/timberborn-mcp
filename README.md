@@ -5,8 +5,8 @@ Beobachtung und kontrollierte Eingriffe über reguläre Spielservices.
 
 ## Status
 
-Agent Bridge 0.27.0 ergänzt einen begrenzten Einzeltreppen-Pilot. Die reguläre
-Spielvorschau, Auftragsbestätigung und Objekt-Rücklesung sind live belegt.
+Agent Bridge 0.28.1 ergänzt einen begrenzten Kombi-Pilot: eine Treppe und bis zu
+zwei obere Wege. Spielvorschau, Schrittbestätigung und Objekt-Rücklesung sind live belegt.
 
 ## Umfang
 

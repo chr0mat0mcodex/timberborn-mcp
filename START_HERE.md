@@ -8,9 +8,10 @@ historischer Bauplan ist Voraussetzung.
 
 ## Technischer Stand
 
-- Agent Bridge 0.25.0 ist gebaut, paketiert und installiert.
-- Die regulären automatischen Prüfungen bestehen; die Bauprojektausführung dieser
-  Version braucht noch einen erfolgreichen Live-Nachweis.
+- Agent Bridge 0.28.1 ist gebaut, paketiert, installiert und mit einem Kombi-
+  Treppenpilot live belegt.
+- Die regulären automatischen Prüfungen bestehen; der nächste Schritt erweitert
+  den Baupfad auf weitere Vorlagen oder längere Anschlüsse.
 - Aktueller Arbeitsbranch: `codex/road-protection-pilot`.
 - Nächster Schritt: eine Fähigkeit umsetzen und am menschlichen Test-Gate anhalten:
   `scripts/prepare-human-live-test.ps1` übergeben, auf `live bereit` warten und
