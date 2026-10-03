@@ -11,6 +11,11 @@ setzt erst bei Pause weiter. Alle fünf Objekte wurden fertig zurückgelesen;
 die vertikale Distriktanbindung beider oberer Wege ist mit der direkten
 Wegzellenabfrage ebenfalls live belegt.
 
+Agent Bridge 0.30.0 ergänzt `inspect_selection` für die aktuelle UI-Objektauswahl.
+Zwei Gebäude, der Auswahlwechsel und keine Auswahl sind live verifiziert.
+Damit lässt sich „das markierte Objekt“ strukturiert zuordnen; Auswahl allein
+erteilt keinen Änderungsauftrag. Details und Grenzen im [Projektstand](PROJECT_STATE.md).
+
 ## Umfang
 
 - Zustands-, Güter-, Personal-, Bau-, Forschungs- und Flächenabfragen

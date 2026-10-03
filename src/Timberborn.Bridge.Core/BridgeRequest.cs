@@ -43,6 +43,14 @@ public sealed class BridgeRequest
 
     public static BridgeRequest Parse(string path, NameValueCollection query)
     {
+        if (path == "/agent-api/v1/selection")
+        {
+            var sessions = query.GetValues("session");
+            if (query.Count != 1 || sessions is null || sessions.Length != 1 ||
+                !Guid.TryParseExact(sessions[0], "D", out var id) || id == Guid.Empty)
+                throw new ArgumentException("invalid_session");
+            return new("selection", session: id.ToString("D"));
+        }
         if(path is "/agent-api/v1/building-project-execute" or "/agent-api/v1/building-project-status") { var r=BuildingProjectExecutionRequest.Parse(path.EndsWith("execute"),query);return new BridgeRequest("building-project-execution",session:r.Session) { ProjectExecution=r }; }
         if(path is "/agent-api/v1/vertical-stair-execute" or "/agent-api/v1/vertical-stair-status") { var r=VerticalStairRequest.Parse(path.EndsWith("execute"),query);return new BridgeRequest("vertical-stair-execution",session:r.Session) { VerticalStair=r }; }
         if(path=="/agent-api/v1/building-project-validation") { var v=BuildingProjectValidationRequest.Parse(query);return new BridgeRequest("building-project-validation",session:v.Plan.Session) { ProjectValidation=v }; }

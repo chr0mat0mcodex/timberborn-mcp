@@ -6,10 +6,19 @@ Projektbeschreibung.
 
 ## Verifizierter Stand
 
+0.30.0: `inspect_selection` über den öffentlichen `EntitySelectionService`
+installiert und live geprüft. Distriktzentrale und Erfinderwerkstatt korrekt
+erkannt; Auswahlwechsel liefert die neue ID, Vorlage und Rasterposition, jeweils
+über `inspect_building` gegengeprüft. Aufgehobene Auswahl liefert `state=none`
+und `target=null`. Keine Auswahl-/Kameraänderung, Sitzungspflicht.
+`unsupported` und allgemeine Entity-/Weltpositionsfälle sind durch synthetische
+Tests abgedeckt, aber nicht separat live belegt. Auswahl allein ist kein
+Änderungsauftrag; vor späteren Aktionen frisch lesen und das Ziel prüfen.
+
 | Ebene | Stand |
 | --- | --- |
-| Bridge | Agent Bridge 0.29.3 installiert; Plattformpilot und direkte vertikale Distriktanbindung live belegt |
-| Automatisch | 667 erfolgreich, 0 fehlgeschlagen, 3 Live-Tests übersprungen (menschlicher Skriptlauf) |
+| Bridge | Agent Bridge 0.30.0 installiert; UI-Auswahl, Plattformpilot und direkte vertikale Distriktanbindung live belegt |
+| Automatisch | Menschliche Bereitmeldung nach Skript-Gate für 0.30.0; neue Testanzahl nicht übermittelt. Letzter Zahlenstand 0.29.3: 667 erfolgreich, 0 fehlgeschlagen, 3 übersprungen |
 | Mod-Build | Timberborn 1.1.2.4 / Folktails, ohne Warnungen und Fehler |
 | Laufzeit | Bridge und Schreibfreigabe strukturiert erreichbar |
 | Bauprojekt | 0.29.2 live: Treppe, zwei Plattformen, zwei obere Wege; Bauphasen, completed und alle fünf fertigen Objekte rückgelesen |

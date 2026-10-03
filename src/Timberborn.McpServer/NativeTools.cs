@@ -79,7 +79,7 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
                     : "Prüft die eigene lesende Spielmod. Kein Fallback auf Fremdmods, keine Schreibfunktionen.",
                 InputSchema = JsonSerializer.SerializeToElement(input), OutputSchema = JsonSerializer.SerializeToElement(options.GetJsonSchemaAsNode(result)),
                 Annotations = new() { ReadOnlyHint = !action, DestructiveHint = action, IdempotentHint = !action, OpenWorldHint = false } };
-        }).Concat(SimulationRunTools.Catalog(enableSpeedControl)).Concat(ManagementTools.Catalog(enablePriorities, enableAreas)).Concat(RemovalTools.Catalog(enableRemoval)).Concat(BuildingTools.Catalog(enableBuildingPlacement)).Concat(BuildingSettingsTools.Catalog(enableBuildingSettings)).Concat(ResearchTools.Catalog(enableResearch)).Concat(EconomyTools.Catalog()).Concat(LogisticsTools.Catalog()).Concat(DiagnosticsTools.Catalog()).Append(ActivityTools.Reader()).Append(ProductionGraphTools.Reader()).Select(ActivityTools.WithReasoning).ToArray();
+        }).Concat(SimulationRunTools.Catalog(enableSpeedControl)).Concat(ManagementTools.Catalog(enablePriorities, enableAreas)).Concat(RemovalTools.Catalog(enableRemoval)).Concat(BuildingTools.Catalog(enableBuildingPlacement)).Concat(BuildingSettingsTools.Catalog(enableBuildingSettings)).Concat(ResearchTools.Catalog(enableResearch)).Concat(EconomyTools.Catalog()).Concat(LogisticsTools.Catalog()).Concat(DiagnosticsTools.Catalog()).Append(ActivityTools.Reader()).Append(ProductionGraphTools.Reader()).Append(SelectionTools.Reader()).Select(ActivityTools.WithReasoning).ToArray();
     }
     public async Task<JsonObject> Invoke(string name, JsonElement args, CancellationToken ct)
     {
@@ -92,6 +92,7 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
             if(name=="inspect_production_graph") return await ProductionGraphTools.Invoke(client,args,ct);
             if(name=="inspect_agent_log") return await ActivityTools.Read(client,args,ct);
             if (DiagnosticsTools.Handles(name)) return await DiagnosticsTools.Invoke(client,name,args,ct);
+            if (name == "inspect_selection") return await SelectionTools.Invoke(client,args,ct);
             if (LogisticsTools.Handles(name)) return await LogisticsTools.Invoke(client,name,args,ct);
             if (EconomyTools.Handles(name)) return await EconomyTools.Invoke(client,name,args,ct);
             if (ResearchTools.Handles(name)) return await ResearchTools.Invoke(client,name,args,enableResearch,ct);

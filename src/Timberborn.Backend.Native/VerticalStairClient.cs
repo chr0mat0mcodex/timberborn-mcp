@@ -15,7 +15,7 @@ public sealed partial class NativeClient
     public static void ValidateVerticalReceipt(BridgeEnvelope<NativeProjectExecution> e, VerticalStairRequest r)
     {
         var d = e.Data;
-        if (e.BridgeVersion is not ("0.28.1" or "0.29.0" or "0.29.1" or "0.29.2" or "0.29.3") || e.SessionId != r.Session || d is null || d.ActionId != r.ActionId.ToString("D") ||
+        if (e.BridgeVersion is not ("0.28.1" or "0.29.0" or "0.29.1" or "0.29.2" or "0.29.3" or "0.30.0") || e.SessionId != r.Session || d is null || d.ActionId != r.ActionId.ToString("D") ||
             d.Steps is null || d.Steps.Length is < 1 or > 5 || d.Steps.Any(s => s is null) ||
             d.Steps[0].Template != "Stairs.Folktails" || d.Steps[0].EntityId != d.ActionId ||
             d.State is not ("running" or "waiting" or "completed" or "stopped" or "unconfirmed")) throw new InvalidDataException("Invalid vertical stair receipt");
@@ -23,7 +23,7 @@ public sealed partial class NativeClient
         bool twoPlatforms = d.Steps.Length == 5;
         bool platform = legacyPlatform || twoPlatforms;
         if (legacyPlatform && (e.BridgeVersion != "0.29.0" || !d.Steps.Select(s => s.Template).SequenceEqual(new[] { "Stairs.Folktails", "Path", "Platform.Folktails", "Path" })) ||
-            twoPlatforms && (e.BridgeVersion is not ("0.29.1" or "0.29.2" or "0.29.3") || !d.Steps.Select(s => s.Template).SequenceEqual(new[] { "Stairs.Folktails", "Platform.Folktails", "Path", "Platform.Folktails", "Path" })) ||
+            twoPlatforms && (e.BridgeVersion is not ("0.29.1" or "0.29.2" or "0.29.3" or "0.30.0") || !d.Steps.Select(s => s.Template).SequenceEqual(new[] { "Stairs.Folktails", "Platform.Folktails", "Path", "Platform.Folktails", "Path" })) ||
             !platform && d.Steps.Skip(1).Any(s => s.Template != "Path") ||
             r.Start && (platform != r.WithPlatform || d.Steps.Length != 1 + r.UpperPathCount + (r.WithPlatform ? (twoPlatforms ? 2 : 1) : 0))) throw new InvalidDataException("Invalid vertical project scope");
         var stair = d.Steps[0];
@@ -38,7 +38,7 @@ public sealed partial class NativeClient
         if (d.Steps.Any(s => !Guid.TryParseExact(s.EntityId,"D",out var id) || id == Guid.Empty || s.State is not ("pending" or "unconfirmed" or "confirmed")) ||
             d.Steps.Select(s => s.EntityId).Distinct().Count() != d.Steps.Length ||
             d.State == "completed" && d.Steps.Any(s => s.State != "confirmed")) throw new InvalidDataException("Invalid vertical confirmation");
-        if (d.State == "waiting" && (e.BridgeVersion is not ("0.29.2" or "0.29.3") || !twoPlatforms ||
+        if (d.State == "waiting" && (e.BridgeVersion is not ("0.29.2" or "0.29.3" or "0.30.0") || !twoPlatforms ||
             d.Reason is not ("awaiting_construction_finished" or "awaiting_pause") ||
             d.Steps.All(s => s.State == "confirmed") || d.Steps.Any(s => s.State == "unconfirmed") ||
             d.Steps.SkipWhile(s => s.State == "confirmed").Any(s => s.State != "pending")))
