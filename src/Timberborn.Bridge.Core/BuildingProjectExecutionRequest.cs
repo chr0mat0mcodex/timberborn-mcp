@@ -18,7 +18,7 @@ public sealed class BuildingProjectExecutionRequest
             if (One("mode") != "development_pilot") throw new ArgumentException();
             var copy = new NameValueCollection(query); copy.Remove("actionId"); copy.Remove("mode");
             result.Validation = BuildingProjectValidationRequest.Parse(copy);
-            if (result.Validation.Plan.Template != "SmallWarehouse.Folktails") throw new ArgumentException();
+            if (!BuildingProjectPilotPolicy.SupportsTemplate(result.Validation.Plan.Template)) throw new ArgumentException();
         }
         return result;
     }

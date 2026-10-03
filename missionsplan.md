@@ -10,8 +10,11 @@ Vorschauvertrag; bestehende unknown-Sperren nicht lockern.
 
 B-Minimalumfang geschlossen. Erster E-Schritt live bestanden: bislang fehlende
 ebene Lagerdrehungen 0/2, Baustellen-/Fertigzugang und Bestandsanschluss geprüft.
-Nächster kleiner E-Schritt: eine zusätzliche ebene Vorlage mit mehrzelliger
-Grundfläche, nicht freie Höhenplanung oder breiter Vorlagenbau.
+0.33.0 ergänzt das mittlere ebene Lager mit gedrehtem Sechs-Felder-Grundriss,
+Bau-/Fertigzugang und erhaltenen ausgewählten Bestandsanschlüssen, live bestanden.
+Nächster kleiner E-Schritt: mittleres Lager mit neuem Bodenanschluss,
+nicht freie Höhenplanung oder breiter Vorlagenbau.
+[Mehrzellen-Nachweis](docs/medium-warehouse-pilot.md).
 [Nachweis](docs/building-rotation-pilot.md).
 
 Etappe D / 0.32.0 nach menschlichem Skript-Gate live bestanden: kleines Lager

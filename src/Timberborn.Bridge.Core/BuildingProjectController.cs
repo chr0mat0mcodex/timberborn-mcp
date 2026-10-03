@@ -62,7 +62,7 @@ public sealed class BuildingProjectController
         bool singleStair = steps.Length == 1 && steps[0].Template == "Stairs.Folktails";
         bool stairWithUpperPaths = steps.Length is >= 2 and <= 3 && steps[0].Template == "Stairs.Folktails" &&
             steps.Skip(1).All(s => s.Template == "Path");
-        bool warehouseProject = steps.Length <= 5 && steps.LastOrDefault()?.Template == "SmallWarehouse.Folktails" &&
+        bool warehouseProject = steps.Length <= 5 && BuildingProjectPilotPolicy.SupportsTemplate(steps.LastOrDefault()?.Template) &&
             steps.Take(steps.Length - 1).All(s => s.Template == "Path");
         bool platformProject = steps.Select(s => s.Template).SequenceEqual(new[] { "Stairs.Folktails", "Platform.Folktails", "Path", "Platform.Folktails", "Path" });
         bool verticalWarehouseProject = steps.Select(s => s.Template).SequenceEqual(new[] { "Stairs.Folktails", "Platform.Folktails", "Path", "Platform.Folktails", "Path", "Platform.Folktails", "SmallWarehouse.Folktails" });

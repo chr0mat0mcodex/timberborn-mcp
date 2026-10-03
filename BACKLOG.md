@@ -9,7 +9,11 @@ B im freigegebenen Ausschlussumfang geschlossen, allgemeiner Vorschau-Schutz
 weiter ungelöst. Erster E-Schritt auf unveränderter 0.32.1 live bestanden:
 Rotation 0/2 des kleinen ebenen Lagers, Baustellen- und Fertigzugang sowie
 gemeinsamer Bestandsweg geprüft. [Nachweis](docs/building-rotation-pilot.md).
-Nächster E-Schritt: eine zusätzliche ebene Vorlage mit mehrzelliger Grundfläche.
+0.33.0 nach menschlichem Gate live bestanden: mittleres ebenes Folktails-Lager
+mit Rotation 3 und sechs Grundrisszellen, Bau-/Fertigzugang und Bestandsanschlüsse.
+[Nachweis](docs/medium-warehouse-pilot.md). Nächster kleiner E-Schritt: mittleres
+Lager mit tatsächlich neuem Bodenanschluss; andere Drehungen separat, kein freier
+Vorlagen-/Höhenausbau.
 
 Etappe D / 0.32.0 nach menschlichem Gate live bestanden: festes Lagerprojekt über
 neue Treppe, drei Plattformen und zwei obere Wege, alle sieben Objekte fertig.

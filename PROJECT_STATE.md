@@ -6,6 +6,15 @@ Projektbeschreibung.
 
 ## Verifizierter Stand
 
+0.33.0 nach menschlichem Skript-Gate installiert und live bestanden: mittleres
+ebenes Folktails-Lager im bestehenden Entwicklungspilot, zusätzliche Vorlagenbindung
+der Belege; keine Lockerung der B-Sperren. Rotation 3 mit sechs Zellen (gedreht
+2×3), tatsächlicher Bauarbeiterzugang und anschließend fertig mit freiem Eingang,
+Distriktdistanz 25. Blockierte entfernte Grundrisszellen und zu kleine Suchregion
+korrekt ausgeschlossen. Zwei Bestandswege verbunden, Vergleichslager unverändert
+bei Distanz 19, Aktions-ID-Replay ohne neue Objekte.
+[Nachweis und Grenzen](docs/medium-warehouse-pilot.md).
+
 0.32.1 nach menschlichem Skript-Gate installiert und live bestanden: konservative
 Baustellensperre B. Neue Bauaktionen benötigen vollständige Bestandsinventur
 ohne offene unabhängige Baustellen. Eigene Baustellen dürfen während Bestätigung
@@ -22,8 +31,8 @@ mit Rotation 0 und 2 als Baustelle builder-erreichbar und anschließend fertig,
 freie Eingänge und Distriktdistanz jeweils 32. Gemeinsamer Bestandsweg verbunden;
 Vergleichslager unverändert bei Distanz 19. Zusammen mit früheren C-Fällen sind
 alle vier ebenen Lagerdrehungen begrenzt live belegt. E nicht insgesamt beendet;
-nächster Schritt eine zusätzliche ebene Vorlage mit mehrzelliger Grundfläche,
-kein freier 3-D-Ausbau. [Nachweis](docs/building-rotation-pilot.md).
+nächster Schritt nach der 0.33.0-Vorlagenerweiterung ein mittleres Lager mit
+neuem Bodenanschluss, kein freier 3-D-Ausbau. [Nachweis](docs/building-rotation-pilot.md).
 
 0.32.0 nach menschlichem Skript-Gate installiert und live geprüft: Etappe D
 mit `stair_platform_warehouse_pilot`: Treppe, drei Plattformen, zwei obere Wege
@@ -48,8 +57,8 @@ Tests abgedeckt, aber nicht separat live belegt. Auswahl allein ist kein
 
 | Ebene | Stand |
 | --- | --- |
-| Bridge | Agent Bridge 0.32.1 installiert; B als konservative Ausschlussregel sowie begrenztes C/D live bestanden; allgemeiner Vorschau-Schutz offen |
-| Automatisch | Menschliche Bereitmeldung nach Skript-Gate für 0.32.1; neue Testanzahl nicht übermittelt. Letzter Zahlenstand 0.29.3: 667 erfolgreich, 0 fehlgeschlagen, 3 übersprungen |
+| Bridge | Agent Bridge 0.33.0 installiert; zusätzlich mittleres ebenes Lager begrenzt live bestanden; allgemeiner Vorschau-Schutz offen |
+| Automatisch | Menschliche Bereitmeldung nach Skript-Gate für 0.33.0; neue Testanzahl nicht übermittelt. Letzter Zahlenstand 0.29.3: 667 erfolgreich, 0 fehlgeschlagen, 3 übersprungen |
 | Mod-Build | Timberborn 1.1.2.4 / Folktails, ohne Warnungen und Fehler |
 | Laufzeit | Bridge und Schreibfreigabe strukturiert erreichbar |
 | Bauprojekt | 0.32.0 live: Treppe, drei Plattformen, zwei obere Wege und kleines Lager; Bauphasen, Baustellen- und fertiger Zugang separat geprüft |

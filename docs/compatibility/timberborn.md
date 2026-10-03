@@ -5,10 +5,10 @@
 | Bereich | Stand |
 | --- | --- |
 | Timberborn | 1.1.2.4 / Folktails |
-| Bridge | Agent Bridge 0.32.1; zusätzlich konservative Baustellensperre mit Ablehnung und erlaubtem eigenem Ablauf live belegt; allgemeiner Vorschau-Bauphasenschutz nicht belegt |
+| Bridge | Agent Bridge 0.33.0; zusätzlich mittleres ebenes Folktails-Lager mit Bau-/Fertigzugang begrenzt live belegt; allgemeiner Vorschau-Bauphasenschutz nicht belegt |
 | Transport | stdio-MCP und authentifiziertes Loopback-HTTP |
 | Abhängigkeiten | keine Fremdmod-Pflichtbasis |
-| Automatische Prüfung | Letzter übermittelter Zahlenstand 0.29.3: 667 erfolgreich, 3 übersprungen; Bereitmeldung für 0.32.1 ohne neue Zählung |
+| Automatische Prüfung | Letzter übermittelter Zahlenstand 0.29.3: 667 erfolgreich, 3 übersprungen; Bereitmeldung für 0.33.0 ohne neue Zählung |
 
 ## Nachweisniveau
 

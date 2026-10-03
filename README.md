@@ -5,6 +5,11 @@ Beobachtung und kontrollierte Eingriffe über reguläre Spielservices.
 
 ## Status
 
+Agent Bridge 0.33.0 erweitert den ebenen Entwicklungspilot um das mittlere
+Folktails-Lager. Gedrehter Sechs-Felder-Grundriss, erreichbare Baustelle, fertiger
+freier Eingang und ausgewählte Bestandswege live geprüft. Kein allgemeiner
+Vorlagen-/Wegschutz. [Nachweis und Grenzen](docs/medium-warehouse-pilot.md).
+
 Agent Bridge 0.32.1 schließt B im konservativen Minimalumfang: Bauanfragen bei
 unabhängigen offenen Baustellen werden abgelehnt; eigene Folgeplatzierungen
 benötigen fertige Vorgänger. Ablehnung ohne neue Objekte und erlaubter eigener
