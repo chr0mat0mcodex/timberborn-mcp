@@ -49,36 +49,39 @@ public static class BuildingCapabilityTools
     public static BuildingCapabilityReport Describe(string bridgeVersion, string faction, bool serverEnabled)
     {
         // Exact profile binding: new deployments require explicit review, never a >= version guess.
-        bool known = bridgeVersion == "0.33.0" && faction == "Folktails";
+        bool known = bridgeVersion is ("0.33.0" or "0.33.1") && faction == "Folktails";
+        int verticalCapacity = bridgeVersion == "0.33.1" ? VerticalStairRequest.MaxProjectsPerSession : 1;
         ProjectModeCapability[] modes = known ? [
             new("development_pilot", "execute_building_project_pilot",
                 ["Path", "SmallWarehouse.Folktails", "MediumWarehouse.Folktails"],
                 [0, 1, 2, 3], [], 1, 5, 4, 8, 8, 4, null, [0, 1, 2, 3],
                 "documented_bounded_live_cases_not_current_site_validation", "docs/medium-warehouse-pilot.md;docs/building-rotation-pilot.md"),
             new("single_stair_pilot", "execute_vertical_stair_pilot", ["Stairs.Folktails"],
-                [0, 1, 2, 3], [0], 1, 1, 0, null, null, 1, 300, [],
+                [0, 1, 2, 3], [0], 1, 1, 0, null, null, verticalCapacity, 300, [],
                 "live_rotation_coverage_not_catalogued", ""),
             new("stair_with_upper_paths_pilot", "execute_vertical_stair_pilot", ["Stairs.Folktails", "Path"],
-                [0, 1, 2, 3], [1, 2], 2, 3, 0, null, null, 1, 300, [],
+                [0, 1, 2, 3], [1, 2], 2, 3, 0, null, null, verticalCapacity, 300, [],
                 "live_rotation_coverage_not_catalogued", ""),
             new("stair_platform_pilot", "execute_vertical_stair_pilot", ["Stairs.Folktails", "Platform.Folktails", "Path"],
-                [0, 1, 2, 3], [2], 5, 5, 0, null, null, 1, 300, [3],
+                [0, 1, 2, 3], [2], 5, 5, 0, null, null, verticalCapacity, 300, [3],
                 "documented_bounded_live_cases_not_current_site_validation", "docs/vertical-platform-pilot.md;docs/construction-isolation.md"),
             new("stair_platform_warehouse_pilot", "execute_vertical_stair_pilot",
                 ["Stairs.Folktails", "Platform.Folktails", "Path", "SmallWarehouse.Folktails"],
-                [0, 1, 2, 3], [2], 7, 7, 0, null, null, 1, 300, [3],
+                [0, 1, 2, 3], [2], 7, 7, 0, null, null, verticalCapacity, 300, [0, 1, 2, 3],
                 "documented_bounded_live_cases_not_current_site_validation", "docs/vertical-warehouse-pilot.md")
         ] : [];
         return new(bridgeVersion, faction, known ? "known" : "unknown", known ? 64 : null, serverEnabled, "not_observed",
             false, false, false, modes,
             ["fresh_session_and_action_identity", "template_unlock_and_costs_from_build_catalog",
                 "native_geometry_and_joint_preview", "preserve_sampled_existing_connections",
-                "no_independent_open_construction_sites", "finished_connected_predecessors_before_next_placement",
+                "no_independent_open_construction_sites", "previous_project_completed_and_all_construction_finished",
+                "finished_connected_predecessors_before_next_placement",
                 "pause_before_placement", "actual_builder_access_after_order", "actual_finished_entrance_after_construction"],
             ["profile_is_server_knowledge_bound_to_observed_bridge_and_faction",
                 "mode_rotations_are_request_rotation_stair_rotation_for_vertical_modes",
                 "supported_templates_are_not_currently_unlocked_or_affordable_guarantees",
                 "server_switch_is_not_bridge_write_gate_or_user_authorization",
+                "max_projects_shared_across_vertical_modes_not_per_mode",
                 "historical_live_coverage_is_not_all_rotations_in_all_geometries",
                 "empty_live_rotations_with_not_catalogued_does_not_mean_never_tested",
                 "no_site_validation_preview_or_build_order", "no_general_road_or_builder_preflight_safety",

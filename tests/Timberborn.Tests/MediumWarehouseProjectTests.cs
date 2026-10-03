@@ -7,6 +7,9 @@ namespace Timberborn.Tests;
 
 public sealed class MediumWarehouseProjectTests
 {
+    [Fact]
+    public void SequentialVerticalVersionKeepsExistingMediumWarehouseContract() =>
+        NativeClient.ValidateProjectExecution(Receipt("MediumWarehouse.Folktails") with { BridgeVersion = "0.33.1" }, Request());
     private const string Action = "33333333-3333-3333-3333-333333333333";
     private static BuildingProjectExecutionRequest Request(string template = "MediumWarehouse.Folktails", int rotation = 0) =>
         BuildingProjectExecutionRequest.Parse(true, new NameValueCollection {

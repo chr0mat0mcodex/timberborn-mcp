@@ -1,5 +1,17 @@
 # Strukturierter Projektumfang — Live-Nachweis
 
+## Aktualisierung in 0.33.1, live bestanden
+
+0.33.1-Profil mit vier gemeinsam gezählten Vertikalprojekt-IDs live gelesen;
+0.33.0 bleibt bei einer. Historische Live-Drehungen des siebenstufigen Lagerpilots
+werden für beide Profile auf 0..3 korrigiert. Andere Vertikalmodi behalten ihre
+eigenen bisherigen Nachweisgrenzen. Allgemeine Schutzfreigaben bleiben false.
+Sequenzbetrieb und Log-Kompatibilität ebenfalls live bestanden; der folgende
+Abschnitt beschreibt die vorherige bestandene Abnahme.
+[Neue Abnahme](vertical-sequential-pilot.md).
+
+## Bisherige Abnahme
+
 Stand: 2026-10-03. MCP-only-Erweiterung nach korrigiertem menschlichem Skript-Gate
 live abgenommen. Agent Bridge bleibt unverändert 0.33.0; keine neue Bauaktion.
 

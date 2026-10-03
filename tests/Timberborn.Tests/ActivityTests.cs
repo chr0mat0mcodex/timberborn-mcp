@@ -119,6 +119,27 @@ public sealed class ActivityTests
         var read=JsonSerializer.Deserialize<ActivityEntry>(wire,NativeJson.Options)!;
         Assert.Equal(entry.Id,read.Id);Assert.Equal(entry.Reasoning,read.Reasoning);Assert.Equal(now,read.StartedAtUtc);
     }
+    [Theory]
+    [InlineData("0.33.0")] [InlineData("0.33.1")]
+    public async Task CurrentBridgeVersionsKeepActivityReaderCompatible(string version)
+    {
+        using var client = new NativeClient(new(8081, new string('a',64)), new ActivityReadHandler(version));
+        var result = await ActivityTools.Read(client, JsonSerializer.SerializeToElement(new {}), TestContext.Current.CancellationToken);
+        Assert.Equal("ok", result["status"]!.GetValue<string>());
+        Assert.Empty(result["data"]!["items"]!.AsArray());
+    }
+    private sealed class ActivityReadHandler(string version):HttpMessageHandler
+    {
+        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,CancellationToken ct)
+        {
+            Assert.Equal(HttpMethod.Get, request.Method);
+            Assert.Equal("/agent-api/v1/activity-log", request.RequestUri!.AbsolutePath);
+            var data = new NativeActivityLog(128, [], 0, false, false);
+            var envelope = new BridgeEnvelope<NativeActivityLog>(1,"11111111-1111-1111-1111-111111111111",DateTimeOffset.UtcNow,version,data);
+            return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK) {
+                Content = new StringContent(JsonSerializer.Serialize(envelope,NativeJson.Options)) });
+        }
+    }
     private sealed class ActivityHandler:HttpMessageHandler
     {
         public string Session=Guid.NewGuid().ToString();public Guid Id=Guid.NewGuid();public List<string> States=new();public int ActionCalls;public bool FailCompletion;

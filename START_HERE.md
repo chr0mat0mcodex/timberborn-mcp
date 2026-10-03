@@ -8,13 +8,20 @@ historischer Bauplan ist Voraussetzung.
 
 ## Technischer Stand
 
+- Aktuell installiert und live bestanden: Bridge 0.33.1 mit bis zu vier
+  sequenziellen Vertikalprojekten pro Sitzung und aktualisiertem historischem
+  MCP-Nachweisprofil. Zwei Projekte ohne Neuladen fertig, Baustellensperre und
+  Replay während/nach dem Folgeprojekt bestanden, Zugänge und Vergleichswege geprüft.
+  [Nachweis](docs/vertical-sequential-pilot.md).
+
 - Vertikaler Lagerpilot auf unveränderter 0.33.0 zusätzlich mit Treppendrehung 0
   live bestanden: alle sieben Objekte fertig, Baustellen-/Fertigzugang und
   Bestandsanschlüsse erhalten. Treppendrehung 2 ebenfalls mit sieben fertigen
   Objekten, Bau-/Fertigzugang und Bestandsanschlüssen live bestanden.
   Treppendrehung 1 ebenfalls mit sieben fertigen Objekten, Bau-/Fertigzugang,
   Bestandsanschlüssen und Replay bestanden. Alle vier Drehungen begrenzt dokumentiert.
-  MCP-Nachweiskatalog unverändert mit 3. [Nachweis](docs/vertical-warehouse-pilot.md).
+  Historisches MCP-Profil in 0.33.1 auf 0..3 aktualisiert.
+  [Nachweis](docs/vertical-warehouse-pilot.md).
 
 - MCP-only-Abfrage `inspect_building_capabilities` nach menschlichem Gate live
   bestanden: fünf Modi, strukturierter Umfang und getrennte historische Nachweise.

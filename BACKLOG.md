@@ -2,6 +2,15 @@
 
 ## Priorität
 
+Aktiver Schritt abgeschlossen: 0.33.1 mit vier gemeinsamen
+sequenziellen Vertikalprojektplätzen und aktualisiertem MCP-Nachweisprofil.
+Nach menschlichem Gate zwei Projekte in derselben Sitzung fertiggebaut,
+Baustellensperre und Replay bestanden. Nächsten E-Ausbau an einer konkreten
+Fähigkeitslücke ausrichten; keine weiteren identischen Drehungstests nötig.
+[Nachweis](docs/vertical-sequential-pilot.md).
+
+### Ausgangspunkt vor 0.33.1
+
 Vertikales Lagerprojekt zusätzlich in Treppendrehung 0 / Lagerdrehung 2 live
 bestanden auf unveränderter 0.33.0. Sieben fertige Objekte, Bau-/Fertigzugang,
 Bestandsanschlüsse und Replay geprüft. Drehung 2 / Lagerdrehung 0 ebenfalls

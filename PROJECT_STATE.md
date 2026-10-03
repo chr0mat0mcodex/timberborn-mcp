@@ -4,6 +4,17 @@ Stand: 2026-10-03. Das Projekt entwickelt eine native MCP-Steuerung für Timberb
 Das Spiel ist ausschließlich Testsystem; konkrete Spielstände gehören nicht zur
 Projektbeschreibung.
 
+## Aktueller Abschluss — 0.33.1 live bestanden
+
+0.33.1 ist installiert und live geprüft: bis zu vier sequenzielle Vertikalprojekte pro Sitzung,
+gemeinsames Budget aller Modi, erhaltene Replay-/Baustellensperren. MCP-Profil
+aktualisiert auf die vier historisch belegten Lager-Treppendrehungen.
+Eine Treppe und anschließend ein siebenstufiges Lagerprojekt ohne Neuladen
+fertiggebaut. Startsperre bei unfertigem Vorgänger/Schlusslager und Replay
+während/nach dem Folgeprojekt bestanden; acht Objekte ohne Doppelbau.
+Bau-/Fertigzugang, obere/untere Wege und Vergleichslagerzugang geprüft.
+[Umfang und Nachweis](docs/vertical-sequential-pilot.md).
+
 ## Verifizierter Stand
 
 Zusätzlicher E-Livefall auf unveränderter 0.33.0: vertikales Lagerprojekt mit
@@ -17,7 +28,8 @@ Treppendrehung 1 / Lagerdrehung 3 ebenfalls live bestanden: sieben fertige
 Objekte, Bau-/Fertigzugang und Distanz 50; Bestandsweg verbunden,
 Vergleichslager unverändert bei Distanz 15, Replay ohne Doppelbauten.
 Alle vier Treppendrehungen des festen vertikalen Lagerprojekts begrenzt dokumentiert.
-MCP-Nachweiskatalog noch unverändert mit 3. [Nachweis](docs/vertical-warehouse-pilot.md).
+Der damalige MCP-Nachweiskatalog enthielt noch 3; Aktualisierung in 0.33.1 bestanden.
+[Nachweis](docs/vertical-warehouse-pilot.md).
 
 MCP-only-Abfrage `inspect_building_capabilities` nach korrigiertem menschlichem
 Gate live bestanden: Profil 0.33.0/Folktails, fünf Modi mit erwarteten Grenzen,
@@ -90,8 +102,8 @@ Tests abgedeckt, aber nicht separat live belegt. Auswahl allein ist kein
 
 | Ebene | Stand |
 | --- | --- |
-| Bridge | Agent Bridge 0.33.0 installiert; zusätzlich mittleres ebenes Lager begrenzt live bestanden; allgemeiner Vorschau-Schutz offen |
-| Automatisch | Menschliche Bereitmeldung nach Skript-Gate für 0.33.0; neue Testanzahl nicht übermittelt. Letzter Zahlenstand 0.29.3: 667 erfolgreich, 0 fehlgeschlagen, 3 übersprungen |
+| Bridge | Agent Bridge 0.33.1 installiert; sequenzielle Vertikalprojekte begrenzt live bestanden; allgemeiner Vorschau-Schutz offen |
+| Automatisch | Menschliche Bereitmeldung nach Skript-Gate für 0.33.1; neue Testanzahl nicht übermittelt. Letzter Zahlenstand 0.29.3: 667 erfolgreich, 0 fehlgeschlagen, 3 übersprungen |
 | Mod-Build | Timberborn 1.1.2.4 / Folktails, ohne Warnungen und Fehler |
 | Laufzeit | Bridge und Schreibfreigabe strukturiert erreichbar |
 | Bauprojekt | 0.32.0 live: Treppe, drei Plattformen, zwei obere Wege und kleines Lager; Bauphasen, Baustellen- und fertiger Zugang separat geprüft |

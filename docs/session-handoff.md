@@ -2,7 +2,15 @@
 
 ## Stand
 
-Agent Bridge 0.33.0 ist zuletzt nach menschlichem Skript-Gate installiert und live geprüft.
+Bridge 0.33.1 nach menschlichem Gate live bestanden: vier gemeinsame sequenzielle
+Vertikalprojektplätze und aktualisiertes MCP-Profil. Eine Treppe und ein
+siebenstufiges Lagerprojekt in derselben Sitzung fertig, Startsperre bei
+unfertigen Vorgängern/Schlusslager und altes Replay bestanden. Bau-/Fertigzugang
+und ausgewählte Bestandsanschlüsse erhalten. Acht tatsächliche Projektobjekte,
+sechs exakte Achtstundenläufe, Simulation abschließend pausiert.
+[Details](vertical-sequential-pilot.md).
+
+Historischer Ausgangspunkt vor 0.33.1: Agent Bridge 0.33.0 war installiert und live geprüft.
 Der aktuelle Arbeitsbranch ist `codex/road-protection-pilot`. Ein begrenzter
 Bauprojekt-Livefall D hat eine neue Treppe, drei Plattformen, zwei obere Wege und
 ein kleines Lager vollständig gebaut. Wartephasen, tatsächlicher Baustellenzugang,

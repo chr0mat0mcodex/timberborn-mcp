@@ -2,6 +2,11 @@
 
 ## Ziel
 
+Abgeschlossener E-Schritt: sequenzielle Vertikalprojekte und historisches MCP-Profil
+in 0.33.1 live bestanden. Zwei Projekte ohne Neuladen fertiggebaut;
+laufende/unbestätigte Aufträge und offene Baustellen bleiben gesperrt.
+[Nachweis](docs/vertical-sequential-pilot.md).
+
 Aktueller Nutzerauftrag: zuerst B im freigegebenen Minimalumfang, dann E.
 0.32.1 nach menschlichem Gate live bestanden: konservative Ablehnung bei
 unabhängigen offenen Baustellen und eigener Ablauf mit fertigen Vorgängern.

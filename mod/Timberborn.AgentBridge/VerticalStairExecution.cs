@@ -19,7 +19,7 @@ namespace Timberborn.AgentBridge;
 public sealed class VerticalStairExecution(SiteValidation validation, BuildingCatalog catalog, BlockObjectPlacerService placers,
     EntityRegistry entities, IBlockService blocks, SpeedManager speed, RoadProtection roads)
 {
-    private readonly BuildingProjectController controller = new();
+    private readonly BuildingProjectController controller = new(capacity: VerticalStairRequest.MaxProjectsPerSession);
     private readonly System.Diagnostics.Stopwatch clock = System.Diagnostics.Stopwatch.StartNew();
     private static object Payload(BuildingProjectController.Receipt receipt) => JObject.FromObject(receipt,
         JsonSerializer.Create(new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() }));

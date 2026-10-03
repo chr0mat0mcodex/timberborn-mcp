@@ -5,6 +5,7 @@ namespace Timberborn.Bridge.Core;
 
 public sealed class VerticalStairRequest
 {
+    public const int MaxProjectsPerSession = 4;
     public string Session { get; private set; } = "";
     public string DistrictId { get; private set; } = "";
     public Guid ActionId { get; private set; }

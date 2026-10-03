@@ -5,6 +5,12 @@ Beobachtung und kontrollierte Eingriffe über reguläre Spielservices.
 
 ## Status
 
+Agent Bridge 0.33.1 ermöglicht bis zu vier Vertikalprojekte nacheinander pro
+Sitzung. Zwei Projekte ohne Neuladen fertiggebaut, Startsperren und Replay
+live geprüft; Bau-/Fertigzugang und ausgewählte Bestandsanschlüsse erhalten.
+Kein paralleler Bau oder allgemeiner Vorschau-Schutz.
+[Nachweis](docs/vertical-sequential-pilot.md).
+
 `inspect_building_capabilities` weist den versions-/fraktionsgebundenen
 Projektumfang, technische Grenzen und historische Live-Nachweise strukturiert aus.
 Lesend live geprüft, keine allgemeine Baufreigabe.

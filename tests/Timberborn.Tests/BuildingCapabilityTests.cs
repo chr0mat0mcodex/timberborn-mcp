@@ -11,10 +11,12 @@ public sealed class BuildingCapabilityTests
 {
     private const string Session = "11111111-1111-1111-1111-111111111111";
 
-    [Fact]
-    public void KnownProfileSeparatesFlatAndFixedVerticalScope()
+    [Theory]
+    [InlineData("0.33.0", 1)]
+    [InlineData("0.33.1", 4)]
+    public void KnownProfileSeparatesFlatAndFixedVerticalScope(string version, int verticalCapacity)
     {
-        var report = BuildingCapabilityTools.Describe("0.33.0", "Folktails", true);
+        var report = BuildingCapabilityTools.Describe(version, "Folktails", true);
         Assert.Equal("known", report.ProfileState);
         Assert.Equal(64, report.MaxObjectFootprintCells);
         Assert.Equal(5, report.Modes.Length);
@@ -29,10 +31,15 @@ public sealed class BuildingCapabilityTests
         var vertical = Assert.Single(report.Modes, m => m.Mode == "stair_platform_warehouse_pilot");
         Assert.Equal(7, vertical.MaxSteps);
         Assert.Equal(7, vertical.MinSteps);
-        Assert.Equal(1, vertical.MaxProjectsPerSession);
+        Assert.Equal(verticalCapacity, vertical.MaxProjectsPerSession);
+        Assert.All(report.Modes.Where(m => m.Tool == "execute_vertical_stair_pilot"),
+            m => Assert.Equal(verticalCapacity, m.MaxProjectsPerSession));
+        Assert.Equal(4, VerticalStairRequest.MaxProjectsPerSession);
         Assert.Equal(300, vertical.MaxWaitRealSeconds);
         Assert.Equal(new[] { 2 }, vertical.UpperPathCounts);
-        Assert.Equal(new[] { 3 }, vertical.LiveRotations);
+        Assert.Equal(new[] { 0, 1, 2, 3 }, vertical.LiveRotations);
+        Assert.Equal(new[] { 3 }, Assert.Single(report.Modes, m => m.Mode == "stair_platform_pilot").LiveRotations);
+        Assert.Contains("max_projects_shared_across_vertical_modes_not_per_mode", report.Limitations);
         Assert.DoesNotContain("MediumWarehouse.Folktails", vertical.ObjectTemplates);
     }
 
@@ -88,10 +95,11 @@ public sealed class BuildingCapabilityTests
     }
 
     [Theory]
-    [InlineData(false)] [InlineData(true)]
-    public async Task NativeRoutingUsesOnlyReadOnlyCatalogHeaderAndBindsSession(bool stale)
+    [InlineData("0.33.0", false)] [InlineData("0.33.0", true)]
+    [InlineData("0.33.1", false)] [InlineData("0.33.1", true)]
+    public async Task NativeRoutingUsesOnlyReadOnlyCatalogHeaderAndBindsSession(string version, bool stale)
     {
-        var handler = new CatalogHeaderHandler();
+        var handler = new CatalogHeaderHandler(version);
         using var native = new NativeTools(new NativeClient(new(8081, new string('a', 64)), handler));
         var args = JsonSerializer.SerializeToElement(new { session = stale ? "22222222-2222-2222-2222-222222222222" : Session,
             reasoning = "Synthetic capability query" });
@@ -106,7 +114,7 @@ public sealed class BuildingCapabilityTests
         }
     }
 
-    private sealed class CatalogHeaderHandler : HttpMessageHandler
+    private sealed class CatalogHeaderHandler(string version) : HttpMessageHandler
     {
         public int Reads { get; private set; }
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken ct)
@@ -118,7 +126,7 @@ public sealed class BuildingCapabilityTests
             var data = new NativeBuildingCatalog("Folktails", 0, 1, 1,
                 [new("SyntheticBuilding", true, true, true, [], "Single", "Square", "Synthetic", new(1, 1, 1), null, false, [])],
                 false, ["synthetic_test"]);
-            var envelope = new BridgeEnvelope<NativeBuildingCatalog>(1, Session, DateTimeOffset.UtcNow, "0.33.0", data);
+            var envelope = new BridgeEnvelope<NativeBuildingCatalog>(1, Session, DateTimeOffset.UtcNow, version, data);
             return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK) {
                 Content = new StringContent(JsonSerializer.Serialize(envelope, NativeJson.Options)) });
         }
