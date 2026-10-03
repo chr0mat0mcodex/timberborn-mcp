@@ -8,12 +8,18 @@ historischer Bauplan ist Voraussetzung.
 
 ## Technischer Stand
 
+- 0.32.0 nach menschlichem Gate für Etappe D live bestanden:
+  festes Lagerprojekt über neue Treppe, drei Plattformen und zwei obere Wege.
+  Alle sieben Objekte fertig, Bauarbeiter-/fertiger Lagerzugang und beide oberen
+  Wege geprüft; ausgewählte Bestandsanschlüsse erhalten, keine Doppelplatzierung.
+  Nachweise und Grenzen: [Vertikaler Lagerpilot](docs/vertical-warehouse-pilot.md).
+
 - 0.31.4 nach menschlichem Test-Gate live geprüft: drei sequenzielle Lagerpiloten,
   tatsächliche Baustellenzugangszellen, neue Wege und fertige Lager. C im begrenzten
   Umfang bestanden. B-Untersuchung mit echter Builder-Negativbaseline abgeschlossen;
   Vorschau-Schutzabnahme bleibt offen. Details im Projektstand.
 
-- Agent Bridge 0.31.4 installiert und begrenzte Nachbar-/Pfad-/Spill-Diagnose live geprüft;
+- Agent Bridge 0.32.0 installiert; begrenzte Nachbar-/Pfad-/Spill-Diagnose zuvor live geprüft;
   vorherige Auswahlabfrage, Plattformpilot und obere Anschlüsse bleiben vorhanden.
 - Beide ursprünglichen Bauziele sind nur teilweise erreicht. Allgemeine sichere
   Baufreigabe fehlt; Baustellenabdeckung ist weiterhin offen.

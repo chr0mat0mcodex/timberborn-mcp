@@ -15,9 +15,9 @@ using UnityEngine;
 
 namespace Timberborn.AgentBridge;
 
-// A deliberately narrow vertical project: one stair, then at most two upper path cells.
+// Fixed vertical projects; the warehouse mode adds a third support and an inward-facing entrance.
 public sealed class VerticalStairExecution(SiteValidation validation, BuildingCatalog catalog, BlockObjectPlacerService placers,
-    EntityRegistry entities, IBlockService blocks, SpeedManager speed)
+    EntityRegistry entities, IBlockService blocks, SpeedManager speed, RoadProtection roads)
 {
     private readonly BuildingProjectController controller = new();
     private readonly System.Diagnostics.Stopwatch clock = System.Diagnostics.Stopwatch.StartNew();
@@ -27,7 +27,7 @@ public sealed class VerticalStairExecution(SiteValidation validation, BuildingCa
     public object Handle(VerticalStairRequest request)
     {
         if (!request.Start) return Payload(controller.Inspect(request.ActionId));
-        string fingerprint = string.Join("|", request.Session, request.DistrictId, request.X, request.Y, request.Z, request.Rotation, request.UpperPathCount, request.WithPlatform);
+        string fingerprint = string.Join("|", request.Session, request.DistrictId, request.X, request.Y, request.Z, request.Rotation, request.UpperPathCount, request.WithPlatform, request.WithWarehouse);
         var existing = controller.Existing(request.ActionId, fingerprint); if (existing is not null) return Payload(existing);
         if (speed.CurrentSpeed != 0 || entities.Entities.Any(e => e.EntityId == request.ActionId)) throw new BridgeRejectionException("state_conflict");
         var districtEntity = entities.Entities.SingleOrDefault(e => !e.Deleted && e.EntityId.ToString("D") == request.DistrictId)
@@ -41,6 +41,13 @@ public sealed class VerticalStairExecution(SiteValidation validation, BuildingCa
                 steps.Add(new BuildingProjectController.Step { EntityId = DerivedId(request.ActionId, 3 + i).ToString("D"), Template = "Platform.Folktails", X = upper.x + upper.dx * i, Y = upper.y + upper.dy * i, Z = upper.z - 1, Rotation = 0 });
             steps.Add(new BuildingProjectController.Step { EntityId = DerivedId(request.ActionId, i + 1).ToString("D"), Template = "Path", X = upper.x + upper.dx * i, Y = upper.y + upper.dy * i, Z = upper.z, Rotation = 0 });
         }
+        if (request.WithWarehouse)
+        {
+            steps.Add(new BuildingProjectController.Step { EntityId = DerivedId(request.ActionId, 5).ToString("D"), Template = "Platform.Folktails", X = upper.x + upper.dx * 2, Y = upper.y + upper.dy * 2, Z = upper.z - 1, Rotation = 0 });
+            steps.Add(new BuildingProjectController.Step { EntityId = DerivedId(request.ActionId, 6).ToString("D"), Template = "SmallWarehouse.Folktails", X = upper.x + upper.dx * 2, Y = upper.y + upper.dy * 2, Z = upper.z, Rotation = (request.Rotation + 2) % 4 });
+        }
+        var baseline = request.WithWarehouse ? roads.Capture() : null;
+        if (baseline is not null && !baseline.Complete) throw new BridgeRejectionException("state_conflict");
         if (steps.Any(s => s.X is < 0 or > 4095 || s.Y is < 0 or > 4095 || s.Z is < 0 or > 4095 || entities.Entities.Any(e => e.EntityId.ToString("D") == s.EntityId)))
             throw new BridgeRejectionException("state_conflict");
         // Check every target against current real objects before consuming the pilot.
@@ -70,6 +77,8 @@ public sealed class VerticalStairExecution(SiteValidation validation, BuildingCa
             var entity = entities.Entities.SingleOrDefault(e => !e.Deleted && e.EntityId.ToString("D") == s.EntityId);
             if (entity is null || !entity.Initialized) return "pending";
             if (!entity.TryGetComponent<BlockObject>(out var block) || block.IsPreview || block.Coordinates != new Vector3Int(s.X,s.Y,s.Z) || block.Orientation != Rotation(s) || !entity.TryGetComponent<TemplateSpec>(out var t) || t.TemplateName != s.Template) return "mismatch";
+            if (s.Template == "SmallWarehouse.Folktails" && (!block.HasEntrance ||
+                !district.IsOnInstantDistrictRoad(NavigationCoordinateSystem.GridToWorld(block.PositionedEntrance.Coordinates)))) return "pending";
             if (block.IsFinished) return "confirmed";
             return block.IsUnfinished && entity.TryGetComponent<ReachableConstructionSite>(out var site) && site.IsReachableByBuilders() ? "confirmed" : "pending";
         }
@@ -93,10 +102,13 @@ public sealed class VerticalStairExecution(SiteValidation validation, BuildingCa
                 }
             }
             if (unfinished) return "construction";
+            if (current.Template == "SmallWarehouse.Folktails" && steps.Where(s => s.Template == "Path").Any(s =>
+                !district.IsOnInstantDistrictRoad(NavigationCoordinateSystem.GridToWorld(new Vector3Int(s.X, s.Y, s.Z))))) return "mismatch";
             return speed.CurrentSpeed == 0 ? "ready" : "pause";
         }
         return Payload(controller.Start(request.ActionId, fingerprint, Hash(fingerprint), steps.ToArray(), () =>
             (request.WithPlatform || speed.CurrentSpeed == 0) && !districtEntity.Deleted &&
+            (baseline is null || RoadProtectionPolicy.LostConnections(baseline.Before, roads.Read(baseline, false)).Length == 0) &&
             district.IsOnInstantDistrictRoad(NavigationCoordinateSystem.GridToWorld(lowerConnection)), Place, Confirm,
             request.WithPlatform ? Ready : null));
     }

@@ -6,6 +6,18 @@ Projektbeschreibung.
 
 ## Verifizierter Stand
 
+0.32.0 nach menschlichem Skript-Gate installiert und live geprüft: Etappe D
+mit `stair_platform_warehouse_pilot`: Treppe, drei Plattformen, zwei obere Wege
+und ein kleines Lager mit rückwärtsgerichtetem Eingang. Folgeschritte warten auf
+fertige Vorgänger; vor dem Lager müssen beide oberen Wege distriktverbunden sein.
+Erfasste ursprüngliche Distriktverbindungen werden während des Auftrags geprüft.
+Dies ersetzt keinen vollständigen Bauphasen-Vorabnachweis (B bleibt offen).
+Sieben Objekte fertig rückgelesen; Lagerbaustelle builder-erreichbar, fertiger
+Eingang frei und native Distriktdistanz 22. Beide oberen Wege verbunden; unterer
+Bestandsweg bleibt verbunden, Vergleichslager unverändert bei Distanz 11.
+Identische Aktions-ID liefert alten Beleg und weiterhin genau sieben Objekte.
+Vier Drehungen synthetisch geprüft, eine davon live; keine allgemeine 3-D-Planung.
+
 0.30.0: `inspect_selection` über den öffentlichen `EntitySelectionService`
 installiert und live geprüft. Distriktzentrale und Erfinderwerkstatt korrekt
 erkannt; Auswahlwechsel liefert die neue ID, Vorlage und Rasterposition, jeweils
@@ -17,11 +29,11 @@ Tests abgedeckt, aber nicht separat live belegt. Auswahl allein ist kein
 
 | Ebene | Stand |
 | --- | --- |
-| Bridge | Agent Bridge 0.31.4 installiert; sequenzielles Ledger und Baustellenzugangszellen live belegt, C mit neuen Wegen bestanden; B-Schutzabnahme offen |
-| Automatisch | Menschliche Bereitmeldung nach Skript-Gate für 0.31.4; neue Testanzahl nicht übermittelt. Letzter Zahlenstand 0.29.3: 667 erfolgreich, 0 fehlgeschlagen, 3 übersprungen |
+| Bridge | Agent Bridge 0.32.0 installiert; C und begrenzter vertikaler Lagerablauf D live bestanden; B-Schutzabnahme offen |
+| Automatisch | Menschliche Bereitmeldung nach Skript-Gate für 0.32.0; neue Testanzahl nicht übermittelt. Letzter Zahlenstand 0.29.3: 667 erfolgreich, 0 fehlgeschlagen, 3 übersprungen |
 | Mod-Build | Timberborn 1.1.2.4 / Folktails, ohne Warnungen und Fehler |
 | Laufzeit | Bridge und Schreibfreigabe strukturiert erreichbar |
-| Bauprojekt | 0.29.2 live: Treppe, zwei Plattformen, zwei obere Wege; Bauphasen, completed und alle fünf fertigen Objekte rückgelesen |
+| Bauprojekt | 0.32.0 live: Treppe, drei Plattformen, zwei obere Wege und kleines Lager; Bauphasen, Baustellen- und fertiger Zugang separat geprüft |
 
 Arbeitsbranch: `codex/road-protection-pilot`. Die eigene Mod nutzt keine
 Fremdmod-Pflichtbasis.

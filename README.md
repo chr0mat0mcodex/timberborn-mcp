@@ -5,6 +5,12 @@ Beobachtung und kontrollierte Eingriffe über reguläre Spielservices.
 
 ## Status
 
+Agent Bridge 0.32.0 ergänzt einen live belegten vertikalen Lagerablauf: neue
+Treppe, drei Plattformen, zwei obere Wege und kleines Lager. Bauarbeiterzugang
+und fertiger Lageranschluss wurden getrennt geprüft; ausgewählte Bestands-
+anschlüsse blieben erhalten. Begrenzter Entwicklungspilot, kein vollständiger
+Bauphasen-Vorabnachweis. [Nachweis und Grenzen](docs/vertical-warehouse-pilot.md).
+
 Agent Bridge 0.29.3 ergänzt einen live belegten Plattformpilot: eine Treppe,
 zwei Plattformen und zwei obere Wege. Der Ablauf wartet auf fertige Träger und
 setzt erst bei Pause weiter. Alle fünf Objekte wurden fertig zurückgelesen;

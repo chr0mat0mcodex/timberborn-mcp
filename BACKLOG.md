@@ -2,6 +2,13 @@
 
 ## Priorität
 
+Etappe D / 0.32.0 nach menschlichem Gate live bestanden: festes Lagerprojekt über
+neue Treppe, drei Plattformen und zwei obere Wege, alle sieben Objekte fertig.
+Tatsächlicher Baustellen-/fertiger Lagerzugang, beide oberen Wege, ausgewählte
+Bestandsanschlüsse und gleiche Aktions-ID ohne neue Objekte geprüft.
+Nächster Umfang E nur begrenzt: weitere explizite Eigenschaften statt freier
+Höhenplanung. B-Schutzabnahme bleibt offen; D ist keine allgemeine Baufreigabe.
+
 Kombinierter B/C-Pilot nach Skript-Gate in 0.31.4 live abgeschlossen: drei
 sequenzielle Aufträge und separat lesbare tatsächliche Baustellenzugangszellen.
 C mit zwei neuen Wegen und fertigen Lagern bestanden. B-Untersuchung erstmals

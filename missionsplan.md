@@ -2,6 +2,11 @@
 
 ## Ziel
 
+Etappe D / 0.32.0 nach menschlichem Skript-Gate live bestanden: kleines Lager
+über neue Treppe und Plattformstrecke, Bau- und Fertigzugang separat geprüft.
+Nächste Etappe E bleibt auf explizite Eigenschaften begrenzt; B-Schutzabnahme
+bleibt offen. Siehe [Pilot](docs/vertical-warehouse-pilot.md).
+
 Ein Agent soll Timberborn über eine eigene Mod und einen lokalen MCP-Server
 strukturiert beobachten, entscheiden und über reguläre Spielservices steuern können.
 Das Spiel dient als austauschbare Entwicklungsumgebung.

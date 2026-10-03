@@ -62,10 +62,11 @@ public sealed class BuildingProjectController
         bool singleStair = steps.Length == 1 && steps[0].Template == "Stairs.Folktails";
         bool stairWithUpperPaths = steps.Length is >= 2 and <= 3 && steps[0].Template == "Stairs.Folktails" &&
             steps.Skip(1).All(s => s.Template == "Path");
-        bool warehouseProject = steps.LastOrDefault()?.Template == "SmallWarehouse.Folktails" &&
+        bool warehouseProject = steps.Length <= 5 && steps.LastOrDefault()?.Template == "SmallWarehouse.Folktails" &&
             steps.Take(steps.Length - 1).All(s => s.Template == "Path");
         bool platformProject = steps.Select(s => s.Template).SequenceEqual(new[] { "Stairs.Folktails", "Platform.Folktails", "Path", "Platform.Folktails", "Path" });
-        if (steps.Length is < 1 or > 5 || (!singleStair && !stairWithUpperPaths && !warehouseProject && !platformProject)) throw new ArgumentException();
+        bool verticalWarehouseProject = steps.Select(s => s.Template).SequenceEqual(new[] { "Stairs.Folktails", "Platform.Folktails", "Path", "Platform.Folktails", "Path", "Platform.Folktails", "SmallWarehouse.Folktails" });
+        if (steps.Length is < 1 or > 7 || (!singleStair && !stairWithUpperPaths && !warehouseProject && !platformProject && !verticalWarehouseProject)) throw new ArgumentException();
         guard = check; place = placement; confirm = confirmation; readiness = beforePlacement;
         index = 0; deadline = 0; waitDeadline = null;
         receipt = new Receipt { ActionId = id.ToString("D"), PlanKey = planKey, Steps = steps };
