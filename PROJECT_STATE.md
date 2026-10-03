@@ -8,11 +8,11 @@ Projektbeschreibung.
 
 | Ebene | Stand |
 | --- | --- |
-| Bridge | Agent Bridge 0.28.1 gebaut, installiert und mit Treppe-plus-oberem-Weg-Pilot live belegt |
-| Automatisch | 650 reguläre Tests (3 Live-Tests übersprungen) |
+| Bridge | Agent Bridge 0.29.2 installiert und mit fünfteiligen Plattformpilot live belegt |
+| Automatisch | Menschlicher Test-/Deploy-Ablauf durchgeführt; letzte explizit dokumentierte Zählung: 650 reguläre Tests plus 3 übersprungene Live-Tests (0.28.1) |
 | Mod-Build | Timberborn 1.1.2.4 / Folktails, ohne Warnungen und Fehler |
 | Laufzeit | Bridge und Schreibfreigabe strukturiert erreichbar |
-| Bauprojekt | 0.26.0 live: drei neue Wege, Lagerauftrag und Zugang rückgelesen; 0.28.1 live: Treppe, oberer Weg, Schrittstatus und beide Objekte rückgelesen |
+| Bauprojekt | 0.29.2 live: Treppe, zwei Plattformen, zwei obere Wege; Bauphasen, completed und alle fünf fertigen Objekte rückgelesen |
 
 Arbeitsbranch: `codex/road-protection-pilot`. Die eigene Mod nutzt keine
 Fremdmod-Pflichtbasis.
@@ -31,6 +31,12 @@ frische Sessions, fachliche Fehlercodes und Rücklesungen. Bauaufträge bleiben 
 Vorschau, Wegschutzdiagnose und schrittweise Bestätigung gebunden.
 
 ## Offene Arbeit
+
+Plattformpilot 0.29.2 abgeschlossen: Der begrenzte Wartezustand behandelt
+Baustellen mit unverändertem Wegschutz und Bau nur bei Pause. Nach drei getrennten
+begrenzten Bauphasen sind alle fünf Objekte fertig und der Auftrag abgeschlossen.
+Vertikale Distriktanbindung und vollständiger generischer Wegschutz sind nicht
+bewiesen. Details: [Plattformpilot](docs/vertical-platform-pilot.md).
 
 1. Den Baupfad datengetrieben auf weitere Vorlagen, längere Anschlüsse und größere
    Vorhaben erweitern.

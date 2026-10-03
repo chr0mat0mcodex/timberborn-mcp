@@ -31,6 +31,8 @@ public sealed class BuildingProjectController
     private Func<bool>? guard;
     private Action<Step>? place;
     private Func<Step, string>? confirm;
+    private Func<Step, string>? readiness;
+    private double? waitDeadline;
     public Receipt? Existing(Guid id, string requestFingerprint)
     {
         if (receipt is null) return null;
@@ -41,7 +43,8 @@ public sealed class BuildingProjectController
     public Receipt Inspect(Guid id) => receipt is not null && receipt.ActionId == id.ToString("D")
         ? receipt : throw new BridgeRejectionException("state_conflict");
     public Receipt Start(Guid id, string requestFingerprint, string planKey, Step[] steps,
-        Func<bool> check, Action<Step> placement, Func<Step, string> confirmation)
+        Func<bool> check, Action<Step> placement, Func<Step, string> confirmation,
+        Func<Step, string>? beforePlacement = null)
     {
         var existing = Existing(id, requestFingerprint); if (existing is not null) return existing;
         bool singleStair = steps.Length == 1 && steps[0].Template == "Stairs.Folktails";
@@ -49,19 +52,36 @@ public sealed class BuildingProjectController
             steps.Skip(1).All(s => s.Template == "Path");
         bool warehouseProject = steps.LastOrDefault()?.Template == "SmallWarehouse.Folktails" &&
             steps.Take(steps.Length - 1).All(s => s.Template == "Path");
-        if (steps.Length is < 1 or > 5 || (!singleStair && !stairWithUpperPaths && !warehouseProject)) throw new ArgumentException();
-        fingerprint = requestFingerprint; guard = check; place = placement; confirm = confirmation;
+        bool platformProject = steps.Select(s => s.Template).SequenceEqual(new[] { "Stairs.Folktails", "Platform.Folktails", "Path", "Platform.Folktails", "Path" });
+        if (steps.Length is < 1 or > 5 || (!singleStair && !stairWithUpperPaths && !warehouseProject && !platformProject)) throw new ArgumentException();
+        fingerprint = requestFingerprint; guard = check; place = placement; confirm = confirmation; readiness = beforePlacement;
         return receipt = new Receipt { ActionId = id.ToString("D"), PlanKey = planKey, Steps = steps };
     }
     public void Tick(double now)
     {
-        if (receipt is null || receipt.State != "running") return;
+        if (receipt is null || receipt.State is not ("running" or "waiting")) return;
         var step = receipt.Steps[index];
         try
         {
             if (!guard!()) { Stop("guard_changed"); return; }
             if (step.State == "pending")
             {
+                if (readiness is not null)
+                {
+                    if (waitDeadline.HasValue && now >= waitDeadline.Value) { Stop("construction_phase_timeout"); return; }
+                    string ready = readiness(step);
+                    if (ready is "construction" or "pause")
+                    {
+                        waitDeadline ??= now + 300;
+                        receipt.State = "waiting";
+                        receipt.Reason = ready == "construction" ? "awaiting_construction_finished" : "awaiting_pause";
+                        return;
+                    }
+                    if (ready != "ready") { Stop("dependency_mismatch"); return; }
+                    waitDeadline = null;
+                    receipt.State = "running";
+                    receipt.Reason = "";
+                }
                 step.State = "unconfirmed"; // Commit before crossing the game mutation boundary.
                 deadline = now + 5;
                 place!(step);

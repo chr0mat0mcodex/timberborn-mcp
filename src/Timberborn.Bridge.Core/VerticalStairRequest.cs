@@ -13,6 +13,7 @@ public sealed class VerticalStairRequest
     public int Z { get; private set; }
     public int Rotation { get; private set; }
     public int UpperPathCount { get; private set; }
+    public bool WithPlatform { get; private set; }
     public bool Start { get; private set; }
 
     public static VerticalStairRequest Parse(bool start, NameValueCollection q)
@@ -24,7 +25,8 @@ public sealed class VerticalStairRequest
         var r = new VerticalStairRequest { Session = Id("session"), ActionId = Guid.Parse(Id("actionId")), Start = start };
         if (!start) return r;
         string mode = One("mode");
-        if (mode is not ("single_stair_pilot" or "stair_with_upper_paths_pilot")) throw new ArgumentException();
+        if (mode is not ("single_stair_pilot" or "stair_with_upper_paths_pilot" or "stair_platform_pilot")) throw new ArgumentException();
+        r.WithPlatform = mode == "stair_platform_pilot";
         r.DistrictId = Id("districtId"); r.X = Number("x"); r.Y = Number("y"); r.Z = Number("z");
         r.Rotation = Number("rotation"); if (r.Rotation > 3) throw new ArgumentException();
         if (mode == "single_stair_pilot")
@@ -33,6 +35,7 @@ public sealed class VerticalStairRequest
             if (q.Count is not (8 or 9)) throw new ArgumentException();
         }
         else { r.UpperPathCount = Number("upperPathCount"); if (r.UpperPathCount is < 1 or > 2 || q.Count != 9) throw new ArgumentException(); }
+        if (r.WithPlatform && r.UpperPathCount != 2) throw new ArgumentException();
         return r;
     }
 }

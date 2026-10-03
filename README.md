@@ -5,8 +5,10 @@ Beobachtung und kontrollierte Eingriffe über reguläre Spielservices.
 
 ## Status
 
-Agent Bridge 0.28.1 ergänzt einen begrenzten Kombi-Pilot: eine Treppe und bis zu
-zwei obere Wege. Spielvorschau, Schrittbestätigung und Objekt-Rücklesung sind live belegt.
+Agent Bridge 0.29.2 ergänzt einen live belegten Plattformpilot: eine Treppe,
+zwei Plattformen und zwei obere Wege. Der Ablauf wartet auf fertige Träger und
+setzt erst bei Pause weiter. Alle fünf Objekte wurden fertig zurückgelesen;
+vertikale Distriktanbindung ist ein separater Nachweis.
 
 ## Umfang
 
