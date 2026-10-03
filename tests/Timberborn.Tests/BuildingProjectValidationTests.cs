@@ -37,6 +37,24 @@ public sealed class BuildingProjectValidationTests
     }
     [Fact]
     public void JointEvidenceStillNotExecutable()=>NativeClient.ValidateProjectEvidence(Evidence(),BuildingProjectValidationRequest.Parse(Query()));
+    [Fact]
+    public async Task JointClientAddsAssessmentWithoutChangingExecutableOrNativeEvidence()
+    {
+        var e=Evidence();
+        using var client=new NativeClient(new(8081,new string('a',64)),new PreviewHandler(
+            System.Text.Json.JsonSerializer.Serialize(e,NativeJson.Options)));
+        var result=await client.ValidateProject(BuildingProjectValidationRequest.Parse(Query()),TestContext.Current.CancellationToken);
+        Assert.False(result.Data.Executable);
+        Assert.False(result.Data.Assessment!.RegularExecutionAllowed);
+        Assert.Equal("unknown",result.Data.Assessment.Decision);
+        Assert.Equal("passed",result.Data.Assessment.Checks.Single(c=>c.Name=="candidateEntrance").Status);
+        Assert.Equal("unknown",result.Data.Assessment.Checks.Single(c=>c.Name=="newConstructionAccess").Status);
+    }
+    private sealed class PreviewHandler(string json):HttpMessageHandler
+    {
+        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage r,CancellationToken ct) =>
+            Task.FromResult(new HttpResponseMessage(System.Net.HttpStatusCode.OK){Content=new StringContent(json)});
+    }
     [Theory]
     [InlineData("executable")] [InlineData("key")] [InlineData("count")] [InlineData("restoration")]
     [InlineData("lock")] [InlineData("budget")] [InlineData("session")]

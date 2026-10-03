@@ -18,6 +18,11 @@ erteilt keinen Änderungsauftrag. Details und Grenzen im [Projektstand](PROJECT_
 
 ## Umfang
 
+Aktueller Schwerpunkt: Gebäude bauen, ohne bestehende Wege/Zugänge zu verlieren,
+und den neuen Zugang während Bau und nach Fertigstellung nachweisen. Beides ist
+teilweise, noch nicht allgemein gelöst. Der freigegebene [Etappenplan](missionsplan.md)
+beginnt mit einheitlicher Bauprüfung und Baustellenzugang, nicht größerem Bauumfang.
+
 - Zustands-, Güter-, Personal-, Bau-, Forschungs- und Flächenabfragen
 - Produktions-, Zugangs- und Versorgungsdiagnosen
 - Kontrollierte Aktionen für Bau, Betrieb, Forschung, Entfernung und Simulation

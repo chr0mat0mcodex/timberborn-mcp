@@ -2,10 +2,12 @@
 
 ## Priorität
 
-1. Bauen kontrolliert auf weitere Vorlagen, längere Wege und größere Vorhaben
-   erweitern.
-2. Wegkonflikte, Produktionsblockaden sowie Hunger-/Durst- und Versorgungsrisiken
-   als nachvollziehbare Diagnosebefunde zusammenführen.
+1. Etappe A bestanden: gemeinsamer Bericht, freie/gesperrte Vorschau und
+   Vorschau-Eingang separat von tatsächlichen Zugängen live geprüft.
+2. Aktuell Etappe B: Baustellen-Erreichbarkeit unter geplanten Änderungen prüfen.
+3. Etappe C: kleines Lager bis Fertigstellung und Zugang nachweisen.
+4. Etappe D: Gebäude mit vertikalem Anschluss; danach E: Breitenausbau.
+   Abnahmekriterien: [Etappenplan](missionsplan.md).
 
 ## Technische Lücken
 
@@ -13,6 +15,15 @@
 - Diagnose der tatsächlichen Ursachen von Produktionsstillstand.
 - Belastbarkeit auf unterschiedlichen Fraktionen, Karten und Spielversionen.
 - Persistenz oder Wiederaufnahme von Bauprojekten nach Sessionwechseln.
+
+## Zurückgestellt
+
+- Vier-Wege-Entwurf (vorgesehene 0.30.1): implementiert, nicht gebaut/live geprüft.
+  Lokal wiederherstellbar als benannter Git-Stash
+  `deferred-four-path-pilot-before-build-safety-stages`. Nicht Teil von Etappe A;
+  erst nach C/D Nutzen prüfen und Konflikte vor Wiederaufnahme gezielt abgleichen.
+- Größere Bauprojekte, freie 3-D-Suche und weitere Versorgungsdiagnosen erst nach
+  belastbarem Wegschutz und Gebäudezugang.
 
 Historische Baupläne, Kolonieziele und Spielstände sind bewusst kein Backlog mehr.
 

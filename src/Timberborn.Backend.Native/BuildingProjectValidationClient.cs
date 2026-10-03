@@ -4,7 +4,7 @@ namespace Timberborn.Backend.Native;
 public sealed record NativeProjectValidation(string Template,string PlanKey,int OptionIndex,BuildingPlanOption Option,
     bool BuildingValid,bool[] RoadValid,int[] RoadStepLostConnections,bool PreviewEntranceConnected,
     NativeRoadProtection RoadProtection,bool NoPersistentChangeObserved,bool SessionLocked,int AttemptsRemaining,
-    bool Executable,string[] Limitations);
+    bool Executable,string[] Limitations,BuildAssessment? Assessment = null);
 
 public sealed partial class NativeClient
 {
@@ -12,7 +12,8 @@ public sealed partial class NativeClient
     {
         var p=r.Plan;
         var e=await Get<NativeProjectValidation>($"building-project-validation?template={Uri.EscapeDataString(p.Template)}&districtId={p.DistrictId}&session={p.Session}&x={p.X}&y={p.Y}&z={p.Z}&width={p.Width}&height={p.Height}&rotation={p.Rotation}&optionIndex={r.OptionIndex}&planKey={r.PlanKey}",ct,HttpMethod.Post);
-        ValidateProjectEvidence(e,r);return e;
+        ValidateProjectEvidence(e,r);
+        return e with { Data = e.Data with { Assessment = BuildAssessment.FromProject(e.Data) } };
     }
     public static void ValidateProjectEvidence(BridgeEnvelope<NativeProjectValidation> e,BuildingProjectValidationRequest r)
     {

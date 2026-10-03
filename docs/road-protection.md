@@ -4,10 +4,12 @@
 freigaben und Spielstandschutzvorgaben sind überholt; Versionsgrenzen unten
 beschreiben den Code. [Aktuelle Direktiven](../AGENTS.md).
 
-**Kein fertiger Wegschutz. Nicht als reguläre Bauversion verwenden.**
-Aktuell installiert: 0.25.0; gemeinsame Vorschau unter 0.24.1 begrenzt live bestätigt.
-0.25.0 ergänzt ausschließlich den ausdrücklich freigegebenen kleinen
-[Entwicklungs-Baupilot](building-project-execution-proposal.md); installiert, Live-Abnahme offen.
+**Kein fertiger Wegschutz. Keine allgemeine sichere Baufreigabe.**
+Aktueller Stand: Agent Bridge 0.30.0, siehe PROJECT_STATE.md. Vorschau-Sperrwirkung,
+begrenzter Lagerbau sowie vertikaler Plattformpilot sind konkret live belegt,
+aber kein vollständiger Bauphasen-/Bauarbeiter-Wegschutz. Folgende Versionsabschnitte
+sind historische Nachweise; insbesondere alte Freigabe-/Installationsstände sind
+keine aktuelle Arbeitsanweisung. Weiterarbeit folgt missionsplan.md (A–E).
 Die hier beschriebene normale Unknown-Sperre bleibt unverändert.
 In 0.23.x sind sämtliche MCP-Bauaufträge vorläufig gesperrt, einschließlich Path/Lodge-
 Pilotpfaden. Der Grund ist die noch nicht belegte Abdeckung von Baustellen und reinen

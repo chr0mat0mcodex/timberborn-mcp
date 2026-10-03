@@ -41,6 +41,20 @@ Vorschau, Wegschutzdiagnose und schrittweise Bestätigung gebunden.
 
 ## Offene Arbeit
 
+Aktiver Auftrag seit 2026-10-03: Etappen A–E aus missionsplan.md. Zuerst Bericht
+über Wegschutz und neuen Zugang vereinheitlichen, dann Baustellenlücke schließen
+und einen vollständigen Gebäudeablauf nachweisen. Beide Kernziele sind teilweise,
+nicht allgemein erreicht. `RoadProtection.constructionCovered=false` verhindert
+allgemeine sichere Baufreigaben; Entwicklungspiloten erlauben ausschließlich die
+ausgewiesene Vorabnachweislücke. Distriktweg-Zugehörigkeit ersetzt keine
+Bauarbeiter-Erreichbarkeit. Lagerpilot bestätigt Auftrag und Baustellenzugang,
+nicht fertiggestelltes Gebäude mit anschließend geprüftem Zugang.
+
+Der ungeprüfte Vier-Wege-Entwurf (vorgesehene 0.30.1) ist zurückgestellt, lokal als
+benannter Git-Stash erhalten und nicht im aktiven Quellstand. Wiederaufnahme siehe
+BACKLOG.md. Verifizierte Bridge bleibt 0.30.0; Etappe A ändert vorerst nur die
+MCP-Auswertung vorhandener Validierungsergebnisse, keine Spiel-API/Baufreigabe.
+
 Plattformpilot 0.29.2 abgeschlossen: Der begrenzte Wartezustand behandelt
 Baustellen mit unverändertem Wegschutz und Bau nur bei Pause. Nach drei getrennten
 begrenzten Bauphasen sind alle fünf Objekte fertig und der Auftrag abgeschlossen.
@@ -52,10 +66,16 @@ konkretes Distriktnetz ab, ohne den Gebäude-Eingangsfilter. Beide oberen Testwe
 verbunden; Lager und unfertige Treppe korrekt als unbekannt gemeldet.
 [Nachweis](docs/path-district-observation.md).
 
-1. Den Baupfad datengetrieben auf weitere Vorlagen, längere Anschlüsse und größere
-   Vorhaben erweitern.
-2. Wegkonflikte, Produktionsblockaden sowie Hunger-/Durst- und Versorgungsdiagnosen
-   zu evidenzbasierten Befunden bündeln.
+Etappe A live bestanden am 2026-10-03: zusätzliche `assessment` in
+Einzel-/Projektvalidierung, aus bereits geprüften nativen Belegen abgeleitet.
+Sieben getrennte Befunde, Gesamtergebnis blocked/unknown; reguläre Baufreigabe
+bleibt false. Keine neue Spielabfrage oder Modänderung. Tests für fehlende Basis,
+Verluste, Vorschauzugang versus tatsächlichen Zugang und Antwortprüfung ergänzt.
+Menschliche Bereitmeldung nach Skript-Gate. Freie Wegkontrolle, Sperrvorschau mit
+zwei verlorenen oberen Wegen und gemeinsame Lager-/Wegvorschau korrekt gemeldet;
+beide Wege nach Vorschau unabhängig wieder verbunden, Spielzeit unverändert.
+Baustellen- und tatsächlich fertiger Zielzugang bleiben unknown. [Nachweis](docs/build-assessment.md).
+Nächster Schritt Etappe B: öffentlicher Bauphasen-/Bauarbeiter-Vorabnachweis.
 
 Details: [Fachverträge](docs/README.md), [Backlog](BACKLOG.md) und
 [Entwicklungsablauf](DEVELOPMENT_WORKFLOW.md).

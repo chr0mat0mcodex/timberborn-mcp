@@ -50,7 +50,7 @@ public sealed record SiteCell(Position Position, bool InsideMap, bool Undergroun
 public sealed record NativeSite(string Template, Position Origin, int Rotation, string Assessment, bool GameValidated,
     string[] Reasons, SiteCell[] Cells, Position? Entrance, bool? PathAtEntrance, NativeCost[] Costs, string[] Limitations, string[]? EntranceOccupants = null);
 public sealed record NativeValidation(string Template, Position Origin, int Rotation, bool GameValidated, bool? Valid,
-    bool NoPersistentChangeObserved, bool SessionLocked, int AttemptsRemaining, string[] Limitations, NativeRoadProtection? RoadProtection = null);
+    bool NoPersistentChangeObserved, bool SessionLocked, int AttemptsRemaining, string[] Limitations, NativeRoadProtection? RoadProtection = null, BuildAssessment? Assessment = null);
 public sealed record NativePlacement(string Template, Position Origin, int Rotation, Guid EntityId,
     string Outcome, bool? Finished, bool SessionLocked, string[] Limitations, NativeRoadProtection? RoadProtection = null);
 public sealed record NativeRoadAffected(Guid Id, Position Entrance, Position DistrictCenter, string? Kind = null);

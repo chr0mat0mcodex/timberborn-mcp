@@ -8,10 +8,12 @@ historischer Bauplan ist Voraussetzung.
 
 ## Technischer Stand
 
-- Agent Bridge 0.29.3 ist installiert; fünfteiliger Plattformpilot samt Bauphasen
-  und direkte Distriktanbindung beider oberer Wege sind live belegt.
-- Die regulären automatischen Prüfungen bestehen; der nächste Schritt erweitert
-  den Baupfad auf weitere Vorlagen oder längere Anschlüsse.
+- Agent Bridge 0.30.0 zuletzt installiert und live geprüft: Auswahlabfrage,
+  fünfteiliger Plattformpilot und obere Distriktanschlüsse.
+- Beide ursprünglichen Bauziele sind nur teilweise erreicht. Allgemeine sichere
+  Baufreigabe fehlt; Baustellenabdeckung ist weiterhin offen.
+- Nächster Schritt ist Etappe A aus missionsplan.md, nicht längere Wege.
+  Zurückgestellter Vier-Wege-Entwurf ist separat lokal gesichert, siehe BACKLOG.md.
 - Aktueller Arbeitsbranch: `codex/road-protection-pilot`.
 - Nächster Schritt: eine Fähigkeit umsetzen und am menschlichen Test-Gate anhalten:
   `scripts/prepare-human-live-test.ps1` übergeben, auf `live bereit` warten und

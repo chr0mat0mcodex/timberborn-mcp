@@ -8,6 +8,13 @@ Livetest vor; er führt keine Vollkette und keine Mod-Installation selbst aus.
 
 ## Ablauf pro Feature
 
+Bauentwicklung folgt missionsplan.md (A–E). Bericht/Diagnose erweitert keine
+Baufreigabe. Vor dem Gate aktive Änderungen von zurückgestellten Entwürfen trennen;
+ungeprüfte Erweiterungen nicht beiläufig mitdeployen. Für MCP-only-Auswertungen
+kann die Spiel-Bridge unverändert bleiben; trotzdem menschliches Test-Gate und
+gezielter MCP-Livetest. Erfolgsnachweis nennt fachliche Aussage und deren Grenze,
+nicht nur Werkzeugaufruf oder erfolgreiche Paketierung.
+
 1. **Agent: Umsetzung.** Klar abgegrenzte Änderung implementieren und nur
    kostengünstige Quellcode-/Diff-Prüfungen durchführen.
 2. **Agent: Testübergabe.** Erwarteten fachlichen Nachweis, bekannte Grenzen und

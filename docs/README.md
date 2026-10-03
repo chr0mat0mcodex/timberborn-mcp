@@ -9,6 +9,7 @@ Start: [Einstieg](../START_HERE.md) · [Projektstand](../PROJECT_STATE.md) ·
 - [Installation und Aktionsfreigaben](native-bridge-install.md)
 - [Werkzeugkatalog](tools.md)
 - [Bauprojektvertrag](building-project-execution-proposal.md)
+- [Gemeinsamer Bauprüfbericht — Etappe A](build-assessment.md)
 - [Wegschutz](road-protection.md)
 - [Architektur](architecture/native-game-api.md)
 - [Kompatibilität und Nachweise](compatibility/timberborn.md)

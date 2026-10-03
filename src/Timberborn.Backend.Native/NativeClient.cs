@@ -127,7 +127,7 @@ public sealed partial class NativeClient : IDisposable
             d.Rotation != r.Rotation || !d.GameValidated || (d.AttemptsRemaining < 0 || d.AttemptsRemaining > (r.GenericBuilding ? 255 : 7)) || d.Limitations is null ||
             (d.NoPersistentChangeObserved ? d.Valid is null || d.SessionLocked : d.Valid is not null || !d.SessionLocked))
             throw new InvalidDataException("Invalid validation result");
-        return result;
+        return result with { Data = d with { Assessment = BuildAssessment.FromValidation(d) } };
     }
     public Task<BridgeEnvelope<NativePlacement>> PlacePath(BridgeRequest r, CancellationToken ct) { if (r.Route != "path-placement") throw new ArgumentException(); return Place(r, ct); }
     public Task<BridgeEnvelope<NativePlacement>> PlaceLodge(BridgeRequest r, CancellationToken ct) { if (r.Route != "lodge-placement") throw new ArgumentException(); return Place(r, ct); }

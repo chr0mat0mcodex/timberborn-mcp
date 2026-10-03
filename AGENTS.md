@@ -48,6 +48,22 @@ Schutz anderer Projekte/Systemdateien und nachvollziehbare Git-Checkpoints bleib
 
 ## Aktueller Missionsschwerpunkt
 
+- Maßgeblicher Etappenplan seit 2026-10-03: [missionsplan.md](missionsplan.md).
+  Zuerst bestehende Wege/Gebäude-/Baustellenzugänge erhalten und Zugang neuer
+  Gebäude während Bau und nach Fertigstellung nachweisen; erst danach Umfang
+  (Vorlagen, Weglängen, freie Höhenplanung) erweitern.
+- Reihenfolge A–E einhalten: gemeinsamer Bauprüfbericht, Baustellenlücke,
+  vollständiger kleiner Gebäudeablauf, vertikaler Gebäudeanschluss, Breitenausbau.
+  Mehr Werkzeuge oder längere Wege ersetzen keinen Nachweis der beiden Bauziele.
+- Geometrie, Distriktanschluss, Bauarbeiterzugang und fertiger Gebäudezugang
+  getrennt bewerten. unknown ist weder sicher noch unerreichbar. Pflichtprüfungen
+  mit unbekanntem Ergebnis blockieren reguläre Ausführung; Entwicklungspiloten
+  mit ausdrücklich ausgewiesenen Lücken sind kein allgemeiner Sicherheitsnachweis.
+- `completed` eines Pilots nicht als fertiges, erreichbar geprüftes Gebäude
+  darstellen. Lieferung, Besetzung und Betrieb sind separate Aussagen.
+- Ungeprüfter Vier-Wege-Ausbau ist zurückgestellt und lokal separat gesichert.
+  Nicht beiläufig in Etappe A deployen oder seine Version als verifiziert nennen.
+
 - Ziel ist eine funktionierende MCP-Steuerung für Timberborn: Zustandsdaten, Entscheidungsgrundlagen und programmierte Eingriffe implementieren und praktisch prüfen. Analyse nur so weit betreiben, wie sie die nächste sinnvolle Umsetzung oder Fehlerklärung unterstützt.
 - Tatsächliches Spielen ist derzeit nachrangig. Prototypen und Live-Tests dienen gezielt dem Nachweis einer konkreten Fähigkeit oder der Klärung einer Lücke; keinen autonomen Kolonieaufbau als Standard-Fortsetzung betreiben.
 - Ergebnisse knapp festhalten: Funktion, geprüfter Nachweis, relevante Grenze und nächster Schritt. Vorprüfung, Spielvalidierung, Auftrag und Wirkung nicht verwechseln; keine Dokumentation ohne praktischen Nutzen erzeugen.
@@ -70,6 +86,9 @@ Schutz anderer Projekte/Systemdateien und nachvollziehbare Git-Checkpoints bleib
 - Keine Zugangsdaten, Auth-Dateien, Rohlogs, Chats, persönlichen Erinnerungen, Screenshots, Anhänge, SQLite-Zustände, Spielstände, Spiel-/Mod-Binärdateien oder Laufzeitcaches committen.
 - Synthetische Testdaten verwenden. Keine persönlichen Namen, lokalen Benutzerpfade oder Spiel-IDs in Fixtures aufnehmen.
 - Relevante Ergebnisse und Fallstricke knapp im Projektjournal bzw. passenden Fachdokument festhalten, ohne Rohdaten abzulegen.
+- Bauprüfungen mit wenigen gezielten Positiv-/Negativfällen abnehmen, inklusive
+  Umweg, gefährdetem Bestandszugang und Höhenunterschied. Erfolg und Stoppkriterium
+  vor dem Pilot nennen; bei fehlerhaftem Kontrollfall nicht auf weitere Fälle skalieren.
 
 ## GitHub-Sicherung
 

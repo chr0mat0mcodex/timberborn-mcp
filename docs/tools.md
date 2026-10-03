@@ -1,6 +1,10 @@
 # Native MCP-Werkzeuge
 
-Stand: Agent Bridge 0.26.0 (Bauprojekt-Pilot mit bis zu vier Wegen; dreifacher Anschluss live belegt).
+Verifizierte Bridge: 0.30.0. Historische Versionsabschnitte unten sind keine
+allgemeine Baufreigabe; aktueller Auftrag folgt ../missionsplan.md.
+Etappe A ergänzt `assessment` in bestehenden Einzel-/Projekt-Validierungen;
+freie/gesperrte Vorschau und Vorschauzugang live geprüft, keine neue Baufreigabe.
+[Bericht und Grenzen](build-assessment.md).
 [Grund, Ergebnisvertrag und nächster Pilot](road-protection.md). 33 Leser und 24 Werkzeuge für Aktionen/Vorschauvalidierung.
 Neu: Ingame-Zeitläufe, automatisch und im begrenzten MCP-Live-Pilot geprüft. Die 30 bisherigen Leser
 sind unter 0.21.1 live belegt. Nachweise und Grenzen stehen in den Fachdokumenten.
