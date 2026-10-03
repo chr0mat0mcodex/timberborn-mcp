@@ -18,7 +18,7 @@ public sealed partial class NativeClient
     public static void ValidateProjectEvidence(BridgeEnvelope<NativeProjectValidation> e,BuildingProjectValidationRequest r)
     {
         var d=e.Data;var p=r.Plan;
-        if(e.BridgeVersion is not ("0.24.1" or "0.25.0" or "0.26.0" or "0.27.0" or "0.28.0" or "0.28.1" or "0.29.0" or "0.29.1" or "0.29.2" or "0.29.3" or "0.30.0" or "0.31.0" or "0.31.1" or "0.31.2" or "0.31.3" or "0.31.4" or "0.32.0" or "0.32.1" or "0.33.0" or "0.33.1" or "0.34.0" or "0.35.0")||e.SessionId!=p.Session||d is null||d.Template!=p.Template||d.PlanKey!=r.PlanKey||
+        if(e.BridgeVersion is not ("0.24.1" or "0.25.0" or "0.26.0" or "0.27.0" or "0.28.0" or "0.28.1" or "0.29.0" or "0.29.1" or "0.29.2" or "0.29.3" or "0.30.0" or "0.31.0" or "0.31.1" or "0.31.2" or "0.31.3" or "0.31.4" or "0.32.0" or "0.32.1" or "0.33.0" or "0.33.1" or "0.34.0" or "0.35.0" or "0.35.1")||e.SessionId!=p.Session||d is null||d.Template!=p.Template||d.PlanKey!=r.PlanKey||
             d.OptionIndex!=r.OptionIndex||d.Option is null||d.Option.PlanKey!=r.PlanKey||d.Executable||
             d.RoadValid is null||d.RoadStepLostConnections is null||d.RoadValid.Length>8||
             d.RoadValid.Length!=d.Option.NewRoadCells?.Length||d.RoadStepLostConnections.Length!=d.RoadValid.Length||
@@ -30,7 +30,7 @@ public sealed partial class NativeClient
         int count=p.Width*p.Height;
         ValidateBuildingPlan(new(e.SchemaVersion,e.SessionId,e.ObservedAtUtc,e.BridgeVersion,
             new(p.Template,p.DistrictId,new(p.X,p.Y,p.Z),p.Width,p.Height,p.Rotation,count,count-1,count,true,"area_exhausted",[d.Option],[])),p);
-        RoadProtectionContract.Validate(d.RoadProtection,false,true,true,e.BridgeVersion is ("0.31.0" or "0.31.1" or "0.31.2" or "0.31.3" or "0.31.4" or "0.32.0" or "0.32.1" or "0.33.0" or "0.33.1" or "0.34.0" or "0.35.0"),e.BridgeVersion is ("0.31.1" or "0.31.2" or "0.31.3" or "0.31.4" or "0.32.0" or "0.32.1" or "0.33.0" or "0.33.1" or "0.34.0" or "0.35.0"),e.BridgeVersion is ("0.31.2" or "0.31.3" or "0.31.4" or "0.32.0" or "0.32.1" or "0.33.0" or "0.33.1" or "0.34.0" or "0.35.0"), e.BridgeVersion is ("0.31.3" or "0.31.4" or "0.32.0" or "0.32.1" or "0.33.0" or "0.33.1" or "0.34.0" or "0.35.0"));
+        RoadProtectionContract.Validate(d.RoadProtection,false,true,true,e.BridgeVersion is ("0.31.0" or "0.31.1" or "0.31.2" or "0.31.3" or "0.31.4" or "0.32.0" or "0.32.1" or "0.33.0" or "0.33.1" or "0.34.0" or "0.35.0" or "0.35.1"),e.BridgeVersion is ("0.31.1" or "0.31.2" or "0.31.3" or "0.31.4" or "0.32.0" or "0.32.1" or "0.33.0" or "0.33.1" or "0.34.0" or "0.35.0" or "0.35.1"),e.BridgeVersion is ("0.31.2" or "0.31.3" or "0.31.4" or "0.32.0" or "0.32.1" or "0.33.0" or "0.33.1" or "0.34.0" or "0.35.0" or "0.35.1"), e.BridgeVersion is ("0.31.3" or "0.31.4" or "0.32.0" or "0.32.1" or "0.33.0" or "0.33.1" or "0.34.0" or "0.35.0" or "0.35.1"));
         if(d.NoPersistentChangeObserved&&!d.RoadProtection.Restored)throw new InvalidDataException("Unrestored project preview");
     }
 }

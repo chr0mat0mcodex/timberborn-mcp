@@ -99,6 +99,7 @@ public sealed class BuildingCapabilityTests
     [InlineData("0.33.1", false)] [InlineData("0.33.1", true)]
     [InlineData("0.34.0", false)] [InlineData("0.34.0", true)]
     [InlineData("0.35.0", false)] [InlineData("0.35.0", true)]
+    [InlineData("0.35.1", false)] [InlineData("0.35.1", true)]
     public async Task NativeRoutingUsesOnlyReadOnlyCatalogHeaderAndBindsSession(string version, bool stale)
     {
         var handler = new CatalogHeaderHandler(version);

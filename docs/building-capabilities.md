@@ -1,5 +1,13 @@
 # Strukturierter Projektumfang — Live-Nachweis
 
+## 0.35.1 — Budgetsuche und aktualisierte Historie live bestanden
+
+Profil enthält Bank und LargePile mit historischer Drehung 1; dynamischer
+Katalogumfang und unveränderte Grenzen bleiben getrennt von diesen Belegen.
+Isolierte Fünf-/Vier-Wege-Kontrolle samt weiterlaufender Suche bestanden,
+Anschluss um ein Hindernis mit realem Bau-/Fertigzugang separat nachgewiesen.
+Keine allgemeine Bauphasen-Vorabfreigabe. [Nachweis](road-budget-planner.md).
+
 ## 0.35.0 — Profil live gelesen, zwei generische Bauabläufe bestanden
 
 Ebener Modus ohne Namensliste: `templateSelection` benennt den dynamischen
@@ -12,8 +20,8 @@ generischen ebenen Modus, keine Folktails-Belege oder festen Vertikalpiloten.
 Profil live bestätigt; Bank und großes 3x3-Freiluftlager, jeweils Drehung 1,
 anschließend vollständig gebaut und erreichbar, mit erhaltenen Bestandsanschlüssen,
 vollständiger Grundriss-Negativkontrolle und Replay. Das ausgelieferte
-Profil enthält weiterhin den Historienstand vor diesem Test. Nachträge erst
-beim nächsten ohnehin nötigen MCP-Gate bündeln.
+Profil enthielt damals den Historienstand vor diesem Test; Nachträge sind mit
+0.35.1 ausgeliefert und live bestätigt.
 [Umfang und Nachweis](generic-building-project.md).
 
 ## Erweiterung 0.34.0 — Profil live gelesen

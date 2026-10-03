@@ -2,6 +2,19 @@
 
 ## Stand
 
+0.35.1 nach menschlichem Gate geladen, Bauablauf und gezielte
+Überbudgetkontrolle live bestanden. Neue Wege zuerst minimieren, dann Gesamtlänge; maximal vier
+neue Wege bereits bei Kandidatensuche. Gemeinsame Grenze mit Ausführungspolicy.
+Native Prüfungen unverändert. Tests für Grenze, Bestandsweg-Umweg, Grundrisssperre,
+Null-Wege-Anschluss und Versionsbindung ergänzt; nicht vom Agenten ausgeführt.
+Kontrollierter 1x7-Streifen: erster Fünf-Wege-Standort verworfen, danach vier
+Optionen mit 4/3/2/1 Wegen; genau fünf Kandidaten geprüft, einer verworfen,
+Wiederholung identisch. Sechs Wege dafür regulär entfernt; Streifen bleibt offen.
+Vorher zwei Banken mit Bau-/Fertigzugang nachgewiesen, Testzweig nach zwischenzeitlicher
+Trennung wieder angeschlossen. Spiel pausiert. Keine Wiederholung dieser Abnahme
+nötig. Nächsten tatsächlichen Weg-/Bauzugangsschutz-Fall aus Missionsplan wählen.
+[Nachweis und Grenzen](road-budget-planner.md). Historischer Stand unten.
+
 Bridge 0.35.0 nach menschlichem Gate live bestanden: generischer ebener Pilot
 über Katalog/Geometrie. Bank (ein Feld, zwei Wege) und großes Freiluftlager
 (neun Felder, ein Weg), jeweils Drehung 1, fertig und erreichbar. Einzelne

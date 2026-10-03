@@ -65,6 +65,21 @@ public sealed class BuildingProjectTests
             BuildingPlanRequest.Parse(Query()));
     }
     [Fact]
+    public void BudgetContractRejectsFiveNewRoadsOnlyForBudgetAwareBridge()
+    {
+        var e = Envelope();
+        Position[] route = [new(2, 0, 1), new(1, 0, 1), new(0, 0, 1),
+            new(0, 1, 1), new(1, 1, 1), new(2, 1, 1)];
+        var option = e.Data.Options[0] with { PlanKey = new string('a', 64),
+            Entrance = route[^1], RouteCells = route, NewRoadCells = route.Skip(1).ToArray() };
+        e = e with { BridgeVersion = "0.35.0", Data = e.Data with { Options = [option] } };
+        var request = BuildingPlanRequest.Parse(Query());
+        NativeClient.ValidateBuildingPlan(e, request);
+        Assert.Throws<InvalidDataException>(() => NativeClient.ValidateBuildingPlan(e with { BridgeVersion = "0.35.1" }, request));
+        NativeClient.ValidateBuildingPlan(e with { BridgeVersion = "0.35.1",
+            Data = e.Data with { Options = [option with { NewRoadCells = route.Skip(2).ToArray() }] } }, request);
+    }
+    [Fact]
     public async Task PlanToolUsesReadOnlyRouteAndPreservesNonExecutableEvidence()
     {
         using var client=new NativeClient(new(8081,new string('a',64)),new PlanHandler());

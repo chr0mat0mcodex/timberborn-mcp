@@ -31,6 +31,7 @@ public sealed class GenericBuildingProjectTests
             [new(Action, template, 1, 1, 1, rotation, "confirmed")], false, ["synthetic_test"]);
         var e = new BridgeEnvelope<NativeProjectExecution>(1, Session, DateTimeOffset.UtcNow, "0.35.0", data);
         NativeClient.ValidateProjectExecution(e, r);
+        NativeClient.ValidateProjectExecution(e with { BridgeVersion = "0.35.1" }, r);
         var status = BuildingProjectExecutionRequest.Parse(false, new() { ["session"] = Session, ["actionId"] = Action });
         NativeClient.ValidateProjectExecution(e, status);
         Assert.Throws<InvalidDataException>(() => NativeClient.ValidateProjectExecution(e with { BridgeVersion = "0.34.0" }, status));
@@ -89,10 +90,11 @@ public sealed class GenericBuildingProjectTests
     }
 
     [Theory]
-    [InlineData("Folktails", 5)] [InlineData("IronTeeth", 1)]
-    public void ProfileUsesCatalogueScopeNotAnExhaustiveOrProvenTemplateList(string faction, int modes)
+    [InlineData("0.35.0", "Folktails", 5)] [InlineData("0.35.0", "IronTeeth", 1)]
+    [InlineData("0.35.1", "Folktails", 5)] [InlineData("0.35.1", "IronTeeth", 1)]
+    public void ProfileUsesCatalogueScopeNotAnExhaustiveOrProvenTemplateList(string version, string faction, int modes)
     {
-        var report = BuildingCapabilityTools.Describe("0.35.0", faction, true);
+        var report = BuildingCapabilityTools.Describe(version, faction, true);
         Assert.Equal("known", report.ProfileState);
         Assert.Equal(modes, report.Modes.Length);
         var flat = Assert.Single(report.Modes, m => m.Mode == "development_pilot");
@@ -106,6 +108,8 @@ public sealed class GenericBuildingProjectTests
         if (faction == "Folktails") {
             Assert.Equal(new[] { 3 }, Assert.Single(flat.TemplateEvidence, e => e.Template == "Lodge.Folktails").LiveRotations);
             Assert.DoesNotContain(flat.TemplateEvidence, e => e.Template == "LargeWarehouse.Folktails");
+            Assert.Equal(new[] { 1 }, Assert.Single(flat.TemplateEvidence, e => e.Template == "Bench.Folktails").LiveRotations);
+            Assert.Equal(new[] { 1 }, Assert.Single(flat.TemplateEvidence, e => e.Template == "LargePile.Folktails").LiveRotations);
         } else Assert.Empty(flat.TemplateEvidence);
     }
 }

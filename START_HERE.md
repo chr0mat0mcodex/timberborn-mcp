@@ -11,7 +11,13 @@ historischer Bauplan ist Voraussetzung.
 Praktische Werkzeugfolge für Spielaufgaben:
 [Spielanleitung für Agenten](docs/agent-playing-guide.md).
 
-- Aktuell installiert und begrenzt live bestanden, 0.35.0: generischer ebener
+- Aktuell installiert und begrenzt live bestanden, 0.35.1: Wegbudget bereits
+  bei Kandidatensuche berücksichtigt. Fünf-Wege-Kandidat abgelehnt, spätere
+  Vier-Wege-Option gefunden; Bau-/Fertigzugang im Hindernisfall bestanden.
+  Sechs Wege für isolierten Planungstest entfernt, Teststreifen bleibt offen.
+  [Nachweis](docs/road-budget-planner.md).
+
+- Vorheriger Abschluss, 0.35.0: generischer ebener
   Gebäudeprojektpilot. Bank und großes 3x3-Freiluftlager mit neuen Wegen,
   Bau-/Fertigzugang, Randfeld-/Bestandswegkontrolle und Replay bestanden.
   Öffentliche API liefert einen Gebäude-Eingang; allgemeiner Bauphasen-

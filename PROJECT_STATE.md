@@ -4,7 +4,21 @@ Stand: 2026-10-03. Das Projekt entwickelt eine native MCP-Steuerung für Timberb
 Das Spiel ist ausschließlich Testsystem; konkrete Spielstände gehören nicht zur
 Projektbeschreibung.
 
-## Aktueller Abschluss — 0.35.0 generischer ebener Baupilot live bestanden
+## Aktueller Abschluss — 0.35.1 budgetgerechte ebene Routensuche
+
+Nach menschlichem Gate als 0.35.1 geladen. Bauablauf und isolierte
+Fünf-Wege-Ablehnung mit anschließender Vier-Wege-Kandidatensuche live bestanden. Der Planer
+minimiert neue Wegfelder, bei Gleichstand die Routenlänge, und verwirft Standorte
+über dem unveränderten Vier-Wege-Limit vor Belegung der vier Vorschlagsplätze.
+Volle Grundfläche bleibt gesperrt; native Gemeinschaftsvorschau und Zugangsnachweise
+bleiben erforderlich. Bank-/LargePile-Livehistorie im MCP-Profil ergänzt.
+Fünf Kandidaten geprüft, einer verworfen, vier Vorschläge mit 4/3/2/1 Wegen;
+Wiederholung identisch. Zwei Banken um Hindernis fertig und erreichbar,
+gefährliche Hauptwegvorschau wegen 28 Anschlussverlusten abgelehnt. Sechs Wege
+für den abschließenden reinen Planungstest entfernt, Teststreifen bleibt offen.
+[Nachweis und Grenzen](docs/road-budget-planner.md). Simulation pausiert.
+
+## Vorheriger Abschluss — 0.35.0 generischer ebener Baupilot live bestanden
 
 Gebäudenamensliste durch aktiven Katalog und vollständige gedrehte Spielgeometrie
 ersetzt. Routenbaustein für mehrere Zugangskandidaten vorbereitet; öffentliche
@@ -17,7 +31,7 @@ abgelehnt. Blockierter Hauptweg hätte 24 erfasste Anschlüsse
 verloren und wurde in der nativen Vorschau abgelehnt. Höhenkontrolle,
 Bestandszugänge auf beiden Ebenen und Replay beider Projekte bestanden. Begrenzte Läufe exakt,
 Abschluss pausiert. Direkt-fertig-Distriktzentrum und Spiel-Multi-Eingang nicht
-live belegt; Bank-/LargePile-Historie im MCP-Profil beim nächsten ohnehin nötigen Gate ergänzen.
+live belegt; Bank-/LargePile-Historie seit 0.35.1 im MCP-Profil ergänzt.
 [Umsetzung und Nachweis](docs/generic-building-project.md).
 
 ## Letzter Abschluss — 0.34.0 live bestanden

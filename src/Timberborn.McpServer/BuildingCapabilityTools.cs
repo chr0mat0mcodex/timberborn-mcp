@@ -56,18 +56,18 @@ public static class BuildingCapabilityTools
     public static BuildingCapabilityReport Describe(string bridgeVersion, string faction, bool serverEnabled)
     {
         // Exact profile binding: new deployments require explicit review, never a >= version guess.
-        bool generic = bridgeVersion == "0.35.0";
+        bool generic = bridgeVersion is ("0.35.0" or "0.35.1");
         bool known = bridgeVersion is ("0.33.0" or "0.33.1" or "0.34.0") && faction == "Folktails" ||
             generic && faction is ("Folktails" or "IronTeeth");
         bool lodge = bridgeVersion == "0.34.0" || generic;
-        int verticalCapacity = bridgeVersion is ("0.33.1" or "0.34.0" or "0.35.0") ? VerticalStairRequest.MaxProjectsPerSession : 1;
+        int verticalCapacity = bridgeVersion is ("0.33.1" or "0.34.0" or "0.35.0" or "0.35.1") ? VerticalStairRequest.MaxProjectsPerSession : 1;
         ProjectModeCapability[] modes = known ? [
             new("development_pilot", "execute_building_project_pilot",
                 generic ? [] : lodge ? ["Path", "SmallWarehouse.Folktails", "MediumWarehouse.Folktails", "Lodge.Folktails"] :
                     ["Path", "SmallWarehouse.Folktails", "MediumWarehouse.Folktails"],
-                [0, 1, 2, 3], [], 1, 5, 4, 8, 8, 4, null, lodge ? [] : [0, 1, 2, 3],
-                generic ? "generic_geometry_scope_not_live_proven" : lodge ? "mixed_template_coverage_see_template_evidence" : "documented_bounded_live_cases_not_current_site_validation",
-                "docs/medium-warehouse-pilot.md;docs/building-rotation-pilot.md") {
+                [0, 1, 2, 3], [], 1, 5, BuildingProjectPilotPolicy.MaxNewRoads, 8, 8, 4, null, lodge ? [] : [0, 1, 2, 3],
+                generic || lodge ? "mixed_template_coverage_see_template_evidence" : "documented_bounded_live_cases_not_current_site_validation",
+                generic ? "docs/generic-building-project.md" : "docs/medium-warehouse-pilot.md;docs/building-rotation-pilot.md") {
                     TemplateEvidence = faction == "Folktails" ? FlatEvidence(lodge, generic) : [],
                     TemplateSelection = generic ? "native_catalog_supported_geometry_with_road_entrance" : "fixed_template_list"
                 },
@@ -115,6 +115,10 @@ public static class BuildingCapabilityTools
         };
         if (lodge) evidence.Add(new("Lodge.Folktails", lodgeProven ? [3] : [],
             lodgeProven ? "documented_bounded_live_cases_not_current_site_validation" : "not_live_proven", "docs/lodge-project-pilot.md"));
+        if (lodgeProven) {
+            evidence.Add(new("Bench.Folktails", [1], "documented_bounded_live_cases_not_current_site_validation", "docs/generic-building-project.md"));
+            evidence.Add(new("LargePile.Folktails", [1], "documented_bounded_live_cases_not_current_site_validation", "docs/generic-building-project.md"));
+        }
         return evidence.ToArray();
     }
 

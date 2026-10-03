@@ -2,6 +2,12 @@
 
 ## Ziel
 
+Neuester E-Abschluss: 0.35.1 budgetgerechte ebene Routensuche live bestanden:
+isolierter Fünf-/Vier-Wege-Vergleich samt Weitersuchen und reproduzierbaren
+Schlüsseln, realer Anschluss um ein Hindernis und erhaltene Bestandszugänge im
+Baupilot. Aktionslimits und allgemeine Nachweislücken unverändert.
+[Nachweis](docs/road-budget-planner.md).
+
 Aktueller E-Auftrag: ebene Gebäudeprojekte direkt generisch über volle tatsächliche
 Geometrie und anschließbaren Wegzugang, keine weiteren Einzelgebäude-Freischaltungen.
 0.35.0 nach menschlichem Test-/Installationsgate live bestanden: Bank mit zwei

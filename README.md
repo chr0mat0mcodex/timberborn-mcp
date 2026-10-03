@@ -5,6 +5,11 @@ Beobachtung und kontrollierte Eingriffe über reguläre Spielservices.
 
 ## Status
 
+0.35.1: budgetgerechte Routensuche live bestanden. Fünf neue Wege werden bereits
+bei der Kandidatensuche verworfen, vier akzeptiert; passende spätere Vorschläge
+bleiben erhalten. Bau um ein Hindernis, Bau-/Fertigzugang und Bestandskontrolle
+geprüft. [Nachweis](docs/road-budget-planner.md).
+
 0.35.0 macht den ebenen Bauprojektpiloten generisch über den aktiven Spielkatalog,
 volle Geometrie und anschließbaren Eingang. Bank sowie großes 3x3-Freiluftlager
 mit Anschlusswegen, Bau-/Fertigzugang, vollständiger Grundrisskontrolle,

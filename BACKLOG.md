@@ -2,6 +2,14 @@
 
 ## Priorität
 
+Abgeschlossen: 0.35.1, Bauablauf und isolierte Überbudgetkontrolle live bestanden.
+Vier Vorschläge nicht mit überlangen Anschlussprojekten füllen; vorhandene Wege
+bevorzugt verwenden. [Abnahmekriterien](docs/road-budget-planner.md).
+Historische Bank-/LargePile-Nachweise im geladenen MCP-Profil live bestätigt.
+Fünf-Wege-Kandidat verworfen, spätere 4/3/2/1-Wege-Kandidaten gefunden;
+keine weitere Grenzfallserie nötig. Sechs Wege für den reinen Planungstest
+entfernt; Teststreifen bleibt offen, Simulation pausiert.
+
 Generischer ebener Projektpilot 0.35.0 nach menschlichem Gate live bestanden:
 Bank mit zwei neuen Wegen und großes 3x3-Freiluftlager mit einem Weg, beide
 Drehung 1, mit realem Bau-/Fertigzugang, erhaltenen Bestandsanschlüssen und Replay.
@@ -12,8 +20,7 @@ einzeln freischalten. [Nachweis](docs/generic-building-project.md).
 
 Offen: Direkt-fertig-Distriktzentrum mit eigenem Distrikt-Lebenszyklus nicht
 live geprüft; Mehrfacheingänge spielseitig nicht öffentlich beobachtet. Keine
-pauschale Katalogabnahme. Neue Bank-/LargePile-Historie beim nächsten ohnehin nötigen
-MCP-Gate im Profil aufnehmen; ausgeliefertes Profil enthält Stand vor Abnahme.
+pauschale Katalogabnahme. Bank-/LargePile-Historie ist seit 0.35.1 im Profil.
 Weitere Arbeit nach Missionsplan auf konkrete Lücken bei Weg-/Bauzugangsschutz
 ausrichten, einschließlich Umwegfall; keine Drehungs-/Vorlagenserie ohne Bedarf.
 

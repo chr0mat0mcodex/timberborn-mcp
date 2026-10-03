@@ -1,6 +1,6 @@
 # Spielanleitung für Agenten
 
-Stand: Bridge 0.35.0, nach den Live-Abnahmen von Bank und großem Freiluftlager.
+Stand: Bridge 0.35.1, nach generischem Bauablauf und Wegbudget-Grenzkontrolle.
 Diese Anleitung beschreibt die vorhandenen MCP-Fähigkeiten. Aktueller Auftrag
 und Projektregeln stehen in [AGENTS.md](../AGENTS.md) und
 [missionsplan.md](../missionsplan.md); das lokale Spiel ist das freigegebene
@@ -41,6 +41,10 @@ zulässige Vorlagen werden im tatsächlichen Spielkatalog ermittelt.
    eine kleine Suchfläche verwenden. Der vollständige gedrehte Grundriss zählt,
    einschließlich äußerer und höher liegender belegter Zellen. Ein freier
    Ursprung oder ein Weg neben dem Gebäude genügt nicht.
+   Seit 0.35.1 berücksichtigt die Suche bereits das Limit von vier neuen Wegen:
+   Überlange Kandidaten werden übersprungen, die Suche läuft danach weiter.
+   Vorhandene Wege werden bevorzugt; bei gleichem Neubedarf die kürzere Route.
+   Das ist keine globale Standortoptimierung und kein nativer Sicherheitsnachweis.
 4. Ein Plan enthält Ursprung, Drehung, Eingang, Anschlussziel, Wegzellen und
    `planKey`. Suchparameter unverändert mit `optionIndex` und `planKey` an
    `validate_building_project` geben. Planoptionen sind noch keine Bauaufträge.
@@ -101,9 +105,10 @@ Kollision am äußeren Eckfeld verhinderte den großen Bau korrekt. Eine gefähr
 Kontrollvorschau erkannte 24 verlorene Verbindungen, einschließlich eines Zugangs
 auf der oberen Ebene. [Details](generic-building-project.md).
 
-Das ausgelieferte Fähigkeitsprofil enthält noch die Historie vor diesen beiden
-Abnahmen; `generic_geometry_scope_not_live_proven` ist daher dieser historische
-Stand. Nachträge beim nächsten ohnehin nötigen MCP-Gate bündeln. Historische
-Nachweise ersetzen keine frische Standortprüfung. Spiel-Multi-Eingänge,
+Seit 0.35.1 enthält das Fähigkeitsprofil auch diese beiden historischen Abnahmen.
+Die Fünf-/Vier-Wege-Grenze und das Weitersuchen nach einem zu langen Kandidaten
+sind in einem kontrollierten ebenen Streifen live geprüft; Anschluss um einen
+Baum samt Bau-/Fertigzugang separat bestanden. [Details](road-budget-planner.md).
+Historische Nachweise ersetzen keine frische Standortprüfung. Spiel-Multi-Eingänge,
 Direkt-fertig-Distriktzentrum und beliebige Katalogobjekte sind nicht pauschal
 live abgenommen. Lagergut, Personal, Produktion und Versorgung separat prüfen.
