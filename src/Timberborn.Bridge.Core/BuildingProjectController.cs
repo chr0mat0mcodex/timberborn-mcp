@@ -44,7 +44,7 @@ public sealed class BuildingProjectController
         Func<bool> check, Action<Step> placement, Func<Step, string> confirmation)
     {
         var existing = Existing(id, requestFingerprint); if (existing is not null) return existing;
-        if (steps.Length is < 1 or > 3 || steps.Last().Template != "SmallWarehouse.Folktails" ||
+        if (steps.Length is < 1 or > 5 || steps.Last().Template != "SmallWarehouse.Folktails" ||
             steps.Take(steps.Length - 1).Any(s => s.Template != "Path")) throw new ArgumentException();
         fingerprint = requestFingerprint; guard = check; place = placement; confirm = confirmation;
         return receipt = new Receipt { ActionId = id.ToString("D"), PlanKey = planKey, Steps = steps };

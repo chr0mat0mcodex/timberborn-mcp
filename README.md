@@ -5,9 +5,8 @@ Beobachtung und kontrollierte Eingriffe über reguläre Spielservices.
 
 ## Status
 
-Agent Bridge 0.25.0 ist gebaut, installiert und über MCP erreichbar. Die regulären
-automatischen Prüfungen bestehen. Die aktuelle Bauprojektausführung benötigt noch
-einen vollständigen Live-Nachweis.
+Agent Bridge 0.26.0 ist gebaut, installiert und mit einem Bauprojekt über drei neue
+Anschlusswege live belegt.
 
 ## Umfang
 

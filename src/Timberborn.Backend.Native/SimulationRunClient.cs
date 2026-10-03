@@ -18,7 +18,7 @@ public sealed partial class NativeClient
         var e = await Get<NativeSimulationRun>(r.Route + "?" + suffix, ct, r.Writes ? HttpMethod.Post : HttpMethod.Get);
         var d = e.Data;
         bool terminal = d.State is "completed" or "cancelled" or "interrupted" or "failed";
-        if (e.BridgeVersion is not ("0.22.0" or "0.23.0" or "0.23.1" or "0.23.2" or "0.24.0" or "0.24.1" or "0.25.0") || e.SessionId != r.Session || d.RunId != r.RunId ||
+        if (e.BridgeVersion is not ("0.22.0" or "0.23.0" or "0.23.1" or "0.23.2" or "0.24.0" or "0.24.1" or "0.25.0" or "0.26.0") || e.SessionId != r.Session || d.RunId != r.RunId ||
             d.State is not ("starting" or "running" or "pausing" or "completed" or "cancelled" or "interrupted" or "failed") ||
             d.Reason is not ("awaiting_speed" or "advancing" or "target_reached" or "speed_changed" or "pause_unconfirmed" or "speed_unconfirmed" or "clock_reversed" or "real_time_limit" or "simulation_stalled" or "cancel_requested" or "explicit_speed_change" or "session_ended_pause_unconfirmed" or "speed_command_failed") ||
             new[] { d.StartGameHours, d.TargetGameHours, d.ObservedGameHours, d.ElapsedGameHours, d.OvershootHours, d.ElapsedRealSeconds }.Any(n => !double.IsFinite(n) || n < 0) ||

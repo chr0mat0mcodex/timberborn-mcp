@@ -8,11 +8,11 @@ Projektbeschreibung.
 
 | Ebene | Stand |
 | --- | --- |
-| Bridge | Agent Bridge 0.25.0 gebaut, paketiert und installiert |
+| Bridge | Agent Bridge 0.26.0 gebaut, paketiert und installiert |
 | Automatisch | 648 reguläre Tests: 635 Unit, 13 Integration |
 | Mod-Build | Timberborn 1.1.2.4 / Folktails, ohne Warnungen und Fehler |
 | Laufzeit | Bridge und Schreibfreigabe strukturiert erreichbar |
-| Bauprojekt | begrenzter Pilot live: Vorschau, Weg, Lagerauftrag und Zugang rückgelesen |
+| Bauprojekt | 0.26.0 live: drei neue Wege, Lagerauftrag und Zugang rückgelesen |
 
 Arbeitsbranch: `codex/road-protection-pilot`. Die eigene Mod nutzt keine
 Fremdmod-Pflichtbasis.

@@ -5,7 +5,7 @@
 | Bereich | Stand |
 | --- | --- |
 | Timberborn | 1.1.2.4 / Folktails |
-| Bridge | Agent Bridge 0.25.0 |
+| Bridge | Agent Bridge 0.26.0 mit dreifachem Anschluss live belegt |
 | Transport | stdio-MCP und authentifiziertes Loopback-HTTP |
 | Abhängigkeiten | keine Fremdmod-Pflichtbasis |
 | Automatische Prüfung | 648 reguläre Tests |

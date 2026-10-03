@@ -1,6 +1,6 @@
 # Native MCP-Werkzeuge
 
-Stand: Agent Bridge 0.25.0 (begrenzter Bauprojekt-Pilot; Live-Nachweis noch offen).
+Stand: Agent Bridge 0.26.0 (Bauprojekt-Pilot mit bis zu vier Wegen; dreifacher Anschluss live belegt).
 [Grund, Ergebnisvertrag und nächster Pilot](road-protection.md). 33 Leser und 24 Werkzeuge für Aktionen/Vorschauvalidierung.
 Neu: Ingame-Zeitläufe, automatisch und im begrenzten MCP-Live-Pilot geprüft. Die 30 bisherigen Leser
 sind unter 0.21.1 live belegt. Nachweise und Grenzen stehen in den Fachdokumenten.
@@ -95,9 +95,9 @@ und planKey. Bau-Opt-in erforderlich, maximal acht neue Wege und 16 Prüfungen/S
 Temporäre gemeinsame Vorschau, kein Bauauftrag; executable bleibt false. Ergebnisse
 und Grenzen stehen im [Bauplan-Vertrag](building-site-search-plan.md).
 
-## Expliziter Bauprojekt-Pilot (0.25.0)
+## Expliziter Bauprojekt-Pilot (0.26.0)
 
-`execute_building_project_pilot` setzt ein SmallWarehouse.Folktails und höchstens zwei
+`execute_building_project_pilot` setzt ein SmallWarehouse.Folktails und höchstens vier
 neue ebene Wege. Benötigt Suchparameter, optionIndex, planKey, session, actionId und
 `mode=development_pilot`. Bau-Opt-in und Pause sind Pflicht. Ein akzeptierter Auftrag
 je Sitzung; gleiche ID+Parameter lesen ihn erneut, abweichende Anfragen werden abgewiesen.

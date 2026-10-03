@@ -15,6 +15,8 @@ die erzeugten Objekte und ihre Zugänglichkeit strukturiert nachgelesen wurden.
 - Teilstände werden ausgewiesen; es gibt keinen automatischen Retry oder Rollback.
 - Auftragsannahme, Fertigstellung, Materiallieferung und Betrieb sind getrennte
   Aussagen.
+- Der Entwicklungspilot beschränkt `SmallWarehouse.Folktails` auf höchstens vier
+  neue ebene Wege; jeder Weg wird einzeln vor der nächsten Platzierung bestätigt.
 
 ## Ausbau
 

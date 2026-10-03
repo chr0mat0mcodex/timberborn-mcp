@@ -16,16 +16,17 @@ public sealed class BuildingProjectExecutionTests
         ["x"]="0",["y"]="0",["z"]="1",["width"]="3",["height"]="2",["rotation"]="0",
         ["optionIndex"]="0",["planKey"]=new string('a',64),["actionId"]=Id.ToString("D"),["mode"]="development_pilot" };
     [Theory]
-    [InlineData("valid",true)] [InlineData("three_roads",false)] [InlineData("geometry",false)]
+    [InlineData("valid",true)] [InlineData("three_roads",true)] [InlineData("five_roads",false)] [InlineData("geometry",false)]
     [InlineData("entrance",false)] [InlineData("world_changed",false)] [InlineData("locked",false)]
     [InlineData("road_invalid",false)] [InlineData("prefix_loss",false)] [InlineData("blocked",false)]
     [InlineData("not_restored",false)] [InlineData("loss",false)] [InlineData("other_unknown",false)]
     [InlineData("missing_road_evidence",false)]
     public void PilotWaivesOnlyTheExplicitlyApprovedEvidenceGap(string defect,bool expected)
     {
-        Assert.Equal(expected,BuildingProjectPilotPolicy.Allows(defect=="three_roads"?3:2,
+        int count=defect=="three_roads"?3:defect=="five_roads"?5:2;
+        Assert.Equal(expected,BuildingProjectPilotPolicy.Allows(count,
             defect!="geometry",defect!="entrance",defect!="world_changed",defect=="locked",
-            defect=="missing_road_evidence"?[]:[true,defect!="road_invalid"],[0,defect=="prefix_loss"?1:0],
+            defect=="missing_road_evidence"?[]:Enumerable.Range(0,count).Select(i=>i!=1||defect!="road_invalid").ToArray(),Enumerable.Range(0,count).Select(i=>i==1&&defect=="prefix_loss"?1:0).ToArray(),
             defect=="blocked"?"blocked":"unknown",defect!="not_restored",defect=="loss"?1:0,
             [defect=="other_unknown"?"navigation_coverage_unknown":"construction_and_road_node_coverage_unproven"]));
     }
@@ -63,6 +64,18 @@ public sealed class BuildingProjectExecutionTests
         Assert.Throws<BridgeRejectionException>(()=>c.Existing(Guid.NewGuid(),"fingerprint"));
         ready=true;c.Tick(2);Assert.Equal(1,writes);c.Tick(3);Assert.Equal(2,writes);
         c.Tick(4);Assert.Equal("completed",result.State);c.Tick(100);Assert.Equal(2,writes);
+    }
+    [Fact]
+    public void FourRoadProjectCompletesEachConfirmedStepInOrder()
+    {
+        var steps=Enumerable.Range(0,4).Select(_=>new BuildingProjectController.Step {
+            EntityId=Guid.NewGuid().ToString("D"),Template="Path" }).Append(new BuildingProjectController.Step {
+                EntityId=Id.ToString("D"),Template="SmallWarehouse.Folktails" }).ToArray();
+        var c=new BuildingProjectController();int writes=0;
+        var receipt=c.Start(Id,"f","k",steps,()=>true,_=>writes++,_=>"confirmed");
+        for(int tick=0;tick<10;tick++)c.Tick(tick);
+        Assert.Equal("completed",receipt.State);Assert.Equal(5,writes);
+        Assert.All(receipt.Steps,s=>Assert.Equal("confirmed",s.State));
     }
     [Fact]
     public void TimeoutRetainsUnconfirmedPathAndNeverStartsBuilding()
@@ -107,7 +120,7 @@ public sealed class BuildingProjectExecutionTests
         var c=new BuildingProjectController();Assert.Throws<BridgeRejectionException>(()=>c.Inspect(Id));
         c.Tick(0);Assert.Null(c.Existing(Id,"f"));
     }
-    private static BridgeEnvelope<NativeProjectExecution> Receipt() => new(1,Query()["session"]!,DateTimeOffset.UtcNow,"0.25.0",
+    private static BridgeEnvelope<NativeProjectExecution> Receipt() => new(1,Query()["session"]!,DateTimeOffset.UtcNow,"0.26.0",
         new(Id.ToString("D"),new string('a',64),"completed","order_and_access_confirmed",
             [new(Id.ToString("D"),"SmallWarehouse.Folktails",0,1,1,0,"confirmed")],false,["synthetic_test"]));
     [Fact]

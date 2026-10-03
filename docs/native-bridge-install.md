@@ -1,8 +1,8 @@
 # Eigene Agent Bridge installieren und MCP starten
 
-Aktueller Entwicklungsstand: **0.25.0 mit begrenzter Bauprojektausführung**.
+Aktueller Entwicklungsstand: **0.26.0 mit bis zu vier neuen Wegen im Bauprojekt-Pilot**.
 Der aktuelle Vertrag beschreibt Planung, Vorschau, schrittweise Ausführung und
-Rückprüfung; der vollständige Live-Nachweis steht noch aus.
+Rückprüfung; ein dreifacher Anschluss ist live belegt.
 [Vertrag und Grenzen](building-project-execution-proposal.md).
 Die Bridge wird gegen Timberborn 1.1.2.4 gebaut. Private Konfiguration bleibt bei
 Updates erhalten. Zeit-, Diagnose- und Bauwerkzeuge sind im Werkzeugkatalog beschrieben.

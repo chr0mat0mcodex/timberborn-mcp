@@ -24,12 +24,36 @@ function Assert-SameFile([string]$Expected, [string]$Actual) {
     }
 }
 
+function Stop-LocalMcpServers([string]$WorkspaceRoot) {
+    $serverDll = [System.IO.Path]::GetFullPath((Join-Path $WorkspaceRoot 'src\Timberborn.McpServer\bin\Release\net10.0\Timberborn.McpServer.dll'))
+    try {
+        $processes = @(Get-CimInstance Win32_Process -Filter "Name = 'dotnet.exe'" -ErrorAction Stop)
+    } catch {
+        throw "Laufende MCP-Prozesse konnten nicht sicher ermittelt werden: $($_.Exception.Message)"
+    }
+    $matches = @($processes | Where-Object {
+        $commandLine = [string]$_.CommandLine
+        $commandLine.IndexOf($serverDll, [System.StringComparison]::OrdinalIgnoreCase) -ge 0
+    })
+    if ($matches.Count -eq 0) { return }
+    $ids = @($matches | ForEach-Object ProcessId)
+    Write-Output "Vorbereitung: $($ids.Count) lokaler MCP-Prozess(e) beenden ..."
+    foreach ($id in $ids) { Stop-Process -Id $id -ErrorAction Stop }
+    foreach ($id in $ids) {
+        try { Wait-Process -Id $id -Timeout 5 -ErrorAction Stop }
+        catch [System.ArgumentException] { }
+    }
+    $remaining = @(Get-Process -Id $ids -ErrorAction SilentlyContinue)
+    if ($remaining.Count -gt 0) { throw 'Lokaler MCP-Prozess konnte nicht vollständig beendet werden.' }
+}
+
 . "$PSScriptRoot/environment.ps1"
 Push-Location $taskRoot
 try {
     if (@(Get-Process -Name 'Timberborn*' -ErrorAction SilentlyContinue).Count -gt 0) {
         throw 'Timberborn läuft noch. Spiel vollständig beenden und dieses Skript erneut starten.'
     }
+    Stop-LocalMcpServers $taskRoot
     $managedDir = Get-NormalizedPath $TimberbornManagedDir 'Timberborn Managed-Verzeichnis'
     $modsDir = Get-NormalizedPath $ModsRoot 'Mods-Verzeichnis'
     $targetDir = Join-Path $modsDir 'TimberbornAgentBridge'
