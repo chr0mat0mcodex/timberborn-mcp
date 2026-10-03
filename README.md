@@ -8,7 +8,8 @@ Beobachtung und kontrollierte Eingriffe über reguläre Spielservices.
 Agent Bridge 0.33.0 erweitert den ebenen Entwicklungspilot um das mittlere
 Folktails-Lager. Gedrehter Sechs-Felder-Grundriss, erreichbare Baustelle, fertiger
 freier Eingang und ausgewählte Bestandswege live geprüft; zusätzlich ein fertiger
-Lagerablauf mit drei tatsächlich neuen Bodenwegen. Kein allgemeiner
+Lagerablauf mit drei tatsächlich neuen Bodenwegen. Alle vier ebenen Drehungen
+dieser Vorlage sind in begrenzten Livefällen belegt. Kein allgemeiner
 Vorlagen-/Wegschutz. [Nachweis und Grenzen](docs/medium-warehouse-pilot.md).
 
 Agent Bridge 0.32.1 schließt B im konservativen Minimalumfang: Bauanfragen bei

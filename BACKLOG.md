@@ -13,8 +13,11 @@ gemeinsamer Bestandsweg geprüft. [Nachweis](docs/building-rotation-pilot.md).
 mit Rotation 3 und sechs Grundrisszellen, Bau-/Fertigzugang und Bestandsanschlüsse.
 [Nachweis](docs/medium-warehouse-pilot.md). Ergänzung auf unveränderter 0.33.0:
 Rotation 1 mit drei tatsächlich neuen Bodenwegen, fertigem Lager, Baustellen-/
-Fertigzugang und erhaltenen Vergleichsanschlüssen live bestanden. Nächster kleiner
-E-Schritt: fehlende ebene Drehungen 0/2; kein freier Vorlagen-/Höhenausbau.
+Fertigzugang und erhaltenen Vergleichsanschlüssen live bestanden. Drehungen 0/2
+ebenfalls fertig und erreichbar mit erhaltenen Bestandsanschlüssen; alle vier
+ebenen Drehungen dieser Vorlage begrenzt live belegt. Nächster Vorschlag:
+Projektvorlagen, Modi, Grenzen und Nachweisniveau strukturiert im MCP ausweisen;
+kein freier Vorlagen-/Höhenausbau.
 
 Etappe D / 0.32.0 nach menschlichem Gate live bestanden: festes Lagerprojekt über
 neue Treppe, drei Plattformen und zwei obere Wege, alle sieben Objekte fertig.

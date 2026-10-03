@@ -12,8 +12,10 @@ historischer Bauplan ist Voraussetzung.
   gedrehten Grundrisszellen, Bau-/Fertigzugang und erhaltenen Bestandsanschlüssen.
   Negativkontrollen und Aktions-ID-Replay bestanden. Ergänzend Rotation 1 mit
   drei neuen fertigen Bodenwegen und fertigem Lager live bestanden; ursprüngliche
-  Anschlüsse erhalten. Nächster E-Schritt: fehlende ebene Drehungen 0/2 dieser
-  Vorlage. [Nachweis](docs/medium-warehouse-pilot.md).
+  Anschlüsse erhalten. Drehungen 0/2 ebenfalls fertig und erreichbar; alle vier
+  ebenen Drehungen dieser Vorlage begrenzt live belegt. Nächster Vorschlag:
+  unterstützten Projektumfang im MCP strukturiert ausweisen.
+  [Nachweis](docs/medium-warehouse-pilot.md).
 
 - 0.32.1 konservative Baustellensperre B nach menschlichem Gate live bestanden.
   B im Ausschlussumfang geschlossen; allgemeiner Vorschau-Schutz weiter offen.

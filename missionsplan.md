@@ -14,7 +14,10 @@ ebene Lagerdrehungen 0/2, Baustellen-/Fertigzugang und Bestandsanschluss geprüf
 Bau-/Fertigzugang und erhaltenen ausgewählten Bestandsanschlüssen, live bestanden.
 Ergänzend auf unveränderter 0.33.0 mittleres Lager Rotation 1 mit drei neuen
 fertigen Bodenwegen, Bau-/Fertigzugang und erhaltenen Vergleichsanschlüssen bestanden.
-Nächster kleiner E-Schritt: fehlende ebene mittlere Lagerdrehungen 0/2,
+Drehungen 0/2 ebenfalls fertig und erreichbar bei erhaltenen Bestandsanschlüssen.
+Damit begrenzter E-Ausbau um eine zusätzliche Vorlage mit allen vier ebenen
+Drehungen belegt, keine allgemeine Freigabe für beliebige Vorlagen/Projektgrößen.
+Nächster Vorschlag: unterstützten Projektumfang strukturiert im MCP ausweisen,
 nicht freie Höhenplanung oder breiter Vorlagenbau.
 [Mehrzellen-Nachweis](docs/medium-warehouse-pilot.md).
 [Nachweis](docs/building-rotation-pilot.md).

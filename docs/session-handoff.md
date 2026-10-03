@@ -23,9 +23,12 @@ Vertikalfreigabe. Details in medium-warehouse-pilot.md.
 Ergänzend auf unveränderter Installation: Rotation 1 mit drei neuen fertigen,
 distriktverbundenen Bodenwegen, erreichbarer Baustelle und fertigem Lager bestanden.
 Bestandsweg und Vergleichszugänge erhalten, Vier-Objekt-Replay ohne neue Objekte.
+Auch Drehungen 0/2 sequenziell fertig gebaut, sechs korrekte Grundrissfelder,
+Baustellen-/Fertigzugang und ursprüngliche Anschlüsse geprüft. Alle vier ebenen
+Drehungen des mittleren Lagers begrenzt live belegt.
 
 1. Etappe E aus ../missionsplan.md nur in explizit unterstützten Eigenschaften
-   erweitern; nächster kleiner Nachweis fehlende ebene mittlere Lagerdrehungen 0/2,
+   erweitern; nächster Vorschlag unterstützten Projektumfang strukturiert im MCP ausweisen,
    keine freie Höhenplanung
    oder Vollschutzbehauptung. Allgemeine B-Vorschaulücke bleibt.
 2. Kandidat, Vorschau, Ausführung und Rücklesung weiterhin an dieselbe Session

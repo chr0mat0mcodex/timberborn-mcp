@@ -90,9 +90,40 @@ keine Codeänderung oder neue Installationsrunde.
 - Identische Aktions-ID liefert denselben Vier-Objekt-Beleg; globale Objektzahl
   beim Replay unverändert. Simulationsläufe abgeschlossen und Pause bestätigt.
 
-Dieser E-Schritt ist bestanden, E insgesamt nicht abgeschlossen. Rotation 1 und
-3 des mittleren Lagers sind jetzt in begrenzten Livefällen belegt; nächster kleiner
-Schritt sind die fehlenden ebenen Drehungen 0/2. Vertikale Mehrzellengebäude bleiben offen.
+## Ergänzung: verbleibende Drehungen 0 und 2
+
+Auf derselben unveränderten 0.33.0 zwei sequenzielle Livefälle bestanden:
+
+- Zwei frühere kleine Testlager und sieben Birken regulär aus den exakten
+  Grundrissen entfernt. Bestandswege und benachbarte Produktionsgebäude erhalten.
+  Zugangsbaseline nach Vorbereitung erfasst, kein Abriss-Schutznachweis.
+- Jeweils ein Plan mit vorhandenem Weganschluss, keine neuen Wege.
+  Beide Aufträge über den bestehenden Ablauf mit obligatorischer frischer
+  gemeinsamer Spielvorschau gestartet; keine Einzelplatzierungsumgehung.
+- Reale Objekte: jeweils sechs korrekte Grundrissfelder, Drehung 0 / Cw0 bzw.
+  Drehung 2 / Cw180 und korrekt transformierter Eingang.
+- Beide Baustellen builder-erreichbar, Eingänge frei. Zweiter Auftrag erst nach
+  rückgelesener tatsächlicher Fertigstellung des ersten, nicht allein completed.
+- Beide Lager fertig und Distrikt zugeordnet; freie Eingänge und unveränderte
+  native Distriktdistanzen 31 bzw. 33. Begrenzte Simulationsläufe abgeschlossen,
+  Pause bestätigt.
+- Beide ursprünglichen Anschlusswege weiterhin distriktverbunden, Vergleichslager
+  unverändert frei erreichbar mit Distriktdistanz 19.
+
+Damit sind alle vier ebenen Drehungen dieser Vorlage begrenzt live belegt:
+
+| Rotation | Neue Bodenwege | Baustellenzugang | Fertiger Eingang | Distriktdistanz |
+| --- | --- | --- | --- | --- |
+| 0 | 0 | vorhanden | frei | 31 |
+| 1 | 3 | vorhanden | frei | 36 |
+| 2 | 0 | vorhanden | frei | 33 |
+| 3 | 0 | vorhanden | frei | 25 |
+
+Der begrenzte E-Ausbau für diese zusätzliche Vorlage und ihre Drehungen ist
+bestanden; kein Abschluss beliebiger Vorlagen oder Projektgrößen. Nächster
+Vorschlag: unterstützte Projektvorlagen, Modi, Grenzen und Nachweisniveau
+strukturiert im MCP ausweisen, statt sie nur in Werkzeugtexten zu beschreiben.
+Vertikale Mehrzellengebäude bleiben offen.
 
 Keine Zusage für alle Drehungen live, andere Vorlagen, freie Höhenplanung,
 allgemeinen Weg-/Builder-Vorschau-Schutz, Warenversorgung oder Lagerbetrieb.

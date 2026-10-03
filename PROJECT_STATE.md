@@ -19,8 +19,15 @@ Ergänzend auf unveränderter 0.33.0 live bestanden: mittleres Lager Rotation 1
 mit drei tatsächlich neuen, einzeln fertig und distriktverbunden rückgelesenen
 Bodenwegen. Baustellenzugang vorhanden; fertiger Eingang frei, Distanz 36.
 Ursprünglicher Anschlussweg erhalten, Vergleichslager unverändert bei Distanz
-19/25; Vier-Objekt-Beleg wiederabfragbar ohne Doppelbauten. Nächster E-Schritt:
-fehlende ebene Drehungen 0/2 dieser Vorlage, keine freie Höhenplanung.
+19/25; Vier-Objekt-Beleg wiederabfragbar ohne Doppelbauten.
+
+Ebene Drehungen 0/2 des mittleren Lagers ebenfalls auf unveränderter 0.33.0 live
+bestanden: jeweils sechs korrekte Grundrissfelder, tatsächlicher Bauarbeiterzugang,
+fertige Lager mit freiem Eingang und Distanz 31/33. Beide Anschlusswege erhalten,
+Vergleichslager unverändert bei Distanz 19. Aufträge sequenziell nach tatsächlicher
+Fertigstellung. Alle vier ebenen Drehungen der zusätzlichen Vorlage damit begrenzt
+belegt. Nächster Vorschlag: unterstützten Projektumfang und Nachweisniveau im MCP
+strukturiert ausweisen; keine freie Höhenplanung oder allgemeine Schutzbehauptung.
 
 0.32.1 nach menschlichem Skript-Gate installiert und live bestanden: konservative
 Baustellensperre B. Neue Bauaktionen benötigen vollständige Bestandsinventur
@@ -38,8 +45,8 @@ mit Rotation 0 und 2 als Baustelle builder-erreichbar und anschließend fertig,
 freie Eingänge und Distriktdistanz jeweils 32. Gemeinsamer Bestandsweg verbunden;
 Vergleichslager unverändert bei Distanz 19. Zusammen mit früheren C-Fällen sind
 alle vier ebenen Lagerdrehungen begrenzt live belegt. E nicht insgesamt beendet;
-nächster Schritt nach den 0.33.0-Vorlagen-/Anschlussfällen fehlende mittlere
-Lagerdrehungen, kein freier 3-D-Ausbau. [Nachweis](docs/building-rotation-pilot.md).
+der begrenzte 0.33.0-Vorlagen-/Drehungsausbau ist ebenfalls belegt, kein freier
+3-D-Ausbau. [Nachweis](docs/building-rotation-pilot.md).
 
 0.32.0 nach menschlichem Skript-Gate installiert und live geprüft: Etappe D
 mit `stair_platform_warehouse_pilot`: Treppe, drei Plattformen, zwei obere Wege
