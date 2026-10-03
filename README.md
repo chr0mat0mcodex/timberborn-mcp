@@ -11,6 +11,11 @@ benötigen fertige Vorgänger. Ablehnung ohne neue Objekte und erlaubter eigener
 Ablauf live geprüft. Kein allgemeiner Builder-Vorabnachweis.
 [Nachweis und Grenzen](docs/construction-isolation.md).
 
+Erster E-Schritt auf 0.32.1: fehlende Drehungen des kleinen ebenen Lagers live
+geprüft, mit erreichbarer Baustelle, freiem fertigem Eingang und erhaltenem
+Bestandsweg. Weitere Vorlagen und Projektgrößen bleiben offen.
+[Nachweis und Grenzen](docs/building-rotation-pilot.md).
+
 Agent Bridge 0.32.0 ergänzt einen live belegten vertikalen Lagerablauf: neue
 Treppe, drei Plattformen, zwei obere Wege und kleines Lager. Bauarbeiterzugang
 und fertiger Lageranschluss wurden getrennt geprüft; ausgewählte Bestands-

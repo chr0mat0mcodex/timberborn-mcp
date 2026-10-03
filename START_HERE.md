@@ -11,7 +11,10 @@ historischer Bauplan ist Voraussetzung.
 - 0.32.1 konservative Baustellensperre B nach menschlichem Gate live bestanden.
   B im Ausschlussumfang geschlossen; allgemeiner Vorschau-Schutz weiter offen.
   Neue Projekte nur ohne unabhängige Baustellen; eigene Vorgänger vor weiteren
-  Platzierungen fertig. Nächster E-Schritt: fehlende Lagerdrehungen prüfen.
+  Platzierungen fertig. E-Rotation 0/2 des kleinen ebenen Lagers live bestanden:
+  Baustellen-/Fertigzugang frei und gemeinsamer Bestandsweg verbunden.
+  Nächster E-Schritt: eine zusätzliche ebene Vorlage mit mehrzelliger Grundfläche.
+  [Nachweis und Grenzen](docs/building-rotation-pilot.md).
 
 - 0.32.0 nach menschlichem Gate für Etappe D live bestanden:
   festes Lagerprojekt über neue Treppe, drei Plattformen und zwei obere Wege.

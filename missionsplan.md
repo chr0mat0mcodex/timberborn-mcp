@@ -8,8 +8,11 @@ unabhängigen offenen Baustellen und eigener Ablauf mit fertigen Vorgängern.
 B-Abschluss bedeutet hier belegte Ausschlussregel, keinen allgemeinen Builder-
 Vorschauvertrag; bestehende unknown-Sperren nicht lockern.
 
-B-Minimalumfang geschlossen. E beginnt mit gezielter Abnahme bislang fehlender
-ebener Lagerdrehungen, nicht mit freier Höhenplanung oder breitem Vorlagenbau.
+B-Minimalumfang geschlossen. Erster E-Schritt live bestanden: bislang fehlende
+ebene Lagerdrehungen 0/2, Baustellen-/Fertigzugang und Bestandsanschluss geprüft.
+Nächster kleiner E-Schritt: eine zusätzliche ebene Vorlage mit mehrzelliger
+Grundfläche, nicht freie Höhenplanung oder breiter Vorlagenbau.
+[Nachweis](docs/building-rotation-pilot.md).
 
 Etappe D / 0.32.0 nach menschlichem Skript-Gate live bestanden: kleines Lager
 über neue Treppe und Plattformstrecke, Bau- und Fertigzugang separat geprüft.

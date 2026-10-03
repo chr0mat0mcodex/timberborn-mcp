@@ -6,7 +6,10 @@ Nutzerpriorität: B minimal vor E. 0.32.1 nach menschlichem Gate live bestanden:
 neues Projekt/Einzelplatzierung bei unabhängiger Baustelle ohne neue Objekte
 abgelehnt; nach deren Fertigstellung eigener Plattformablauf vollständig gebaut.
 B im freigegebenen Ausschlussumfang geschlossen, allgemeiner Vorschau-Schutz
-weiter ungelöst. Nächster E-Schritt: fehlende ebene Lagerdrehungen gezielt prüfen.
+weiter ungelöst. Erster E-Schritt auf unveränderter 0.32.1 live bestanden:
+Rotation 0/2 des kleinen ebenen Lagers, Baustellen- und Fertigzugang sowie
+gemeinsamer Bestandsweg geprüft. [Nachweis](docs/building-rotation-pilot.md).
+Nächster E-Schritt: eine zusätzliche ebene Vorlage mit mehrzelliger Grundfläche.
 
 Etappe D / 0.32.0 nach menschlichem Gate live bestanden: festes Lagerprojekt über
 neue Treppe, drei Plattformen und zwei obere Wege, alle sieben Objekte fertig.

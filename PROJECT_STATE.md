@@ -15,8 +15,15 @@ verwenden jetzt die Wartefolge. Vorschau bleibt unknown, constructionCovered=fal
 Lager-/Treppenprojekt und Einzelplatzierung mit unabhängiger Baustelle abgelehnt;
 Objektzahl unverändert, bestehender Builderzugang erhalten. Nach deren Fertigstellung
 eigener Plattformablauf mit allen fünf fertigen Objekten und beiden verbundenen
-oberen Wegen bestanden. B im freigegebenen Ausschlussumfang geschlossen; als
-nächster E-Schritt fehlende ebene Lagerdrehungen prüfen, kein freier 3-D-Ausbau.
+oberen Wegen bestanden. B im freigegebenen Ausschlussumfang geschlossen.
+
+Erster E-Schritt auf unveränderter 0.32.1 live bestanden: ebene kleine Lager
+mit Rotation 0 und 2 als Baustelle builder-erreichbar und anschließend fertig,
+freie Eingänge und Distriktdistanz jeweils 32. Gemeinsamer Bestandsweg verbunden;
+Vergleichslager unverändert bei Distanz 19. Zusammen mit früheren C-Fällen sind
+alle vier ebenen Lagerdrehungen begrenzt live belegt. E nicht insgesamt beendet;
+nächster Schritt eine zusätzliche ebene Vorlage mit mehrzelliger Grundfläche,
+kein freier 3-D-Ausbau. [Nachweis](docs/building-rotation-pilot.md).
 
 0.32.0 nach menschlichem Skript-Gate installiert und live geprüft: Etappe D
 mit `stair_platform_warehouse_pilot`: Treppe, drei Plattformen, zwei obere Wege

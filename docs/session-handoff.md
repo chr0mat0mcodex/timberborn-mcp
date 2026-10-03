@@ -10,11 +10,15 @@ fertiger Lagerzugang, ausgewählte Bestandsanschlüsse und Idempotenz sind getre
 live belegt. A und begrenztes C bestanden; B-Untersuchung abgeschlossen, aber
 B jetzt im freigegebenen konservativen Ausschlussumfang geschlossen, allgemeiner
 Vorschau-Schutz weiter offen. Details in construction-isolation.md und vertical-warehouse-pilot.md.
+Erster E-Schritt auf unveränderter 0.32.1 bestanden: fehlende ebene Lagerdrehungen
+0/2 mit tatsächlichem Baustellen-/Fertigzugang und erhaltenem gemeinsamem Weg.
+Details und Grenzen in building-rotation-pilot.md; E nicht insgesamt abgeschlossen.
 
 ## Nächster Ablauf
 
 1. Etappe E aus ../missionsplan.md nur in explizit unterstützten Eigenschaften
-   erweitern; zuerst fehlende ebene Lagerdrehungen prüfen, keine freie Höhenplanung
+   erweitern; nächste kleine Erweiterung eine ebene Vorlage mit mehrzelliger
+   Grundfläche, keine freie Höhenplanung
    oder Vollschutzbehauptung. Allgemeine B-Vorschaulücke bleibt.
 2. Kandidat, Vorschau, Ausführung und Rücklesung weiterhin an dieselbe Session
    und eine neue Aktions-ID binden.
@@ -27,5 +31,5 @@ Vorschau-Schutz weiter offen. Details in construction-isolation.md und vertical-
 - Private Konfiguration bleibt lokal und wird nicht ausgegeben oder eingecheckt.
 - Konkrete Spielstände und historische Baupläne sind nicht Teil der Übergabe.
 - Allgemeiner Wegschutz ist nicht bewiesen; fertiger Lagerzugang nur in begrenzten
-  C/D-Fällen, nicht für beliebige Vorlagen und Geometrien.
+  C/D/E-Fällen, nicht für beliebige Vorlagen und Geometrien.
   Vier-Wege-Entwurf zurückgestellt und lokal separat erhalten, siehe BACKLOG.md.
