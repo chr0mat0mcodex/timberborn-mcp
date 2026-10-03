@@ -45,7 +45,7 @@ public sealed class BuildingCapabilityTests
 
     [Theory]
     [InlineData("0.32.1", "Folktails")]
-    [InlineData("0.34.0", "Folktails")]
+    [InlineData("0.35.0", "Folktails")]
     [InlineData("0.33.0", "IronTeeth")]
     public void UnknownProfileNeverInventsCapabilities(string version, string faction)
     {
@@ -97,6 +97,7 @@ public sealed class BuildingCapabilityTests
     [Theory]
     [InlineData("0.33.0", false)] [InlineData("0.33.0", true)]
     [InlineData("0.33.1", false)] [InlineData("0.33.1", true)]
+    [InlineData("0.34.0", false)] [InlineData("0.34.0", true)]
     public async Task NativeRoutingUsesOnlyReadOnlyCatalogHeaderAndBindsSession(string version, bool stale)
     {
         var handler = new CatalogHeaderHandler(version);
@@ -112,6 +113,29 @@ public sealed class BuildingCapabilityTests
             Assert.False(result["data"]!["serverBuildingPlacementEnabled"]!.GetValue<bool>());
             Assert.Equal("known", result["data"]!["profileState"]!.GetValue<string>());
         }
+    }
+
+    [Fact]
+    public void LodgeProfileDoesNotInheritWarehouseLiveEvidence()
+    {
+        var report = BuildingCapabilityTools.Describe("0.34.0", "Folktails", true);
+        Assert.Equal("known", report.ProfileState);
+        Assert.Equal(5, report.Modes.Length);
+        var flat = Assert.Single(report.Modes, m => m.Mode == "development_pilot");
+        Assert.Contains("Lodge.Folktails", flat.ObjectTemplates);
+        Assert.Empty(flat.LiveRotations);
+        var lodge = Assert.Single(flat.TemplateEvidence, e => e.Template == "Lodge.Folktails");
+        Assert.Empty(lodge.LiveRotations);
+        Assert.Equal("not_live_proven", lodge.EvidenceSource);
+        Assert.All(flat.TemplateEvidence.Where(e => e.Template != "Lodge.Folktails"),
+            e => Assert.Equal(new[] { 0, 1, 2, 3 }, e.LiveRotations));
+        Assert.All(report.Modes, m => Assert.Equal(4, m.MaxProjectsPerSession));
+        Assert.All(report.Modes.Where(m => m.Tool == "execute_vertical_stair_pilot"),
+            m => Assert.DoesNotContain("Lodge.Folktails", m.ObjectTemplates));
+        Assert.False(report.RegularExecutionAllowed);
+        Assert.False(report.ConstructionPreflightProven);
+        Assert.DoesNotContain("Lodge.Folktails", BuildingCapabilityTools.Describe("0.33.1", "Folktails", true).Modes[0].ObjectTemplates);
+        Assert.Empty(BuildingCapabilityTools.Describe("0.34.0", "IronTeeth", true).Modes);
     }
 
     private sealed class CatalogHeaderHandler(string version) : HttpMessageHandler

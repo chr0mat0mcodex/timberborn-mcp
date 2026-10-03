@@ -4,7 +4,18 @@ Stand: 2026-10-03. Das Projekt entwickelt eine native MCP-Steuerung für Timberb
 Das Spiel ist ausschließlich Testsystem; konkrete Spielstände gehören nicht zur
 Projektbeschreibung.
 
-## Aktueller Abschluss — 0.33.1 live bestanden
+## Aktueller Abschluss — 0.34.0 live bestanden
+
+Ebener Projektpilot um Lodge.Folktails erweitert; vorhandene Spielgeometrie und
+Zugangsprüfungen unverändert genutzt. MCP-Nachweise je Gebäudevorlage getrennt,
+keine Lagerabdeckung auf Wohnhäuser übertragen. Gedrehtes Wohnhaus in Rotation 3
+mit zwei neuen fertigen Anschlusswegen, tatsächlichem Bau-/Fertigzugang und
+erhaltenen Vergleichsanschlüssen live bestanden. Grundriss-Negativkontrollen
+und Replay ohne neue Objekte bestanden. Profil-Historie noch vor Abnahme;
+neuen Wohnhausnachweis bei nächstem ohnehin nötigen MCP-Gate aufnehmen.
+[Nachweis](docs/lodge-project-pilot.md).
+
+## Letzter Abschluss — 0.33.1 live bestanden
 
 0.33.1 ist installiert und live geprüft: bis zu vier sequenzielle Vertikalprojekte pro Sitzung,
 gemeinsames Budget aller Modi, erhaltene Replay-/Baustellensperren. MCP-Profil
@@ -102,8 +113,8 @@ Tests abgedeckt, aber nicht separat live belegt. Auswahl allein ist kein
 
 | Ebene | Stand |
 | --- | --- |
-| Bridge | Agent Bridge 0.33.1 installiert; sequenzielle Vertikalprojekte begrenzt live bestanden; allgemeiner Vorschau-Schutz offen |
-| Automatisch | Menschliche Bereitmeldung nach Skript-Gate für 0.33.1; neue Testanzahl nicht übermittelt. Letzter Zahlenstand 0.29.3: 667 erfolgreich, 0 fehlgeschlagen, 3 übersprungen |
+| Bridge | Agent Bridge 0.34.0 installiert; ebenes Wohnhausprojekt mit Bau-/Fertigzugang begrenzt live bestanden; allgemeiner Vorschau-Schutz offen |
+| Automatisch | Menschliche Bereitmeldung nach Skript-Gate für 0.34.0; neue Testanzahl nicht übermittelt. Letzter Zahlenstand 0.29.3: 667 erfolgreich, 0 fehlgeschlagen, 3 übersprungen |
 | Mod-Build | Timberborn 1.1.2.4 / Folktails, ohne Warnungen und Fehler |
 | Laufzeit | Bridge und Schreibfreigabe strukturiert erreichbar |
 | Bauprojekt | 0.32.0 live: Treppe, drei Plattformen, zwei obere Wege und kleines Lager; Bauphasen, Baustellen- und fertiger Zugang separat geprüft |

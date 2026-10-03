@@ -8,7 +8,13 @@ historischer Bauplan ist Voraussetzung.
 
 ## Technischer Stand
 
-- Aktuell installiert und live bestanden: Bridge 0.33.1 mit bis zu vier
+- Aktuell installiert und live bestanden, 0.34.0: ebenes Folktails-Wohnhaus im bestehenden
+  Pilot; historisches MCP-Profil mit vorlagenspezifischer Abdeckung.
+  Gedrehter vollständiger Wohnhaus-Livefall mit zwei neuen Wegen, Bau-/Fertigzugang,
+  Bestandskontrolle, Grundriss-Ablehnung und Replay bestanden.
+  [Umfang und Nachweis](docs/lodge-project-pilot.md).
+
+- Vorheriger Schritt live bestanden: Bridge 0.33.1 mit bis zu vier
   sequenziellen Vertikalprojekten pro Sitzung und aktualisiertem historischem
   MCP-Nachweisprofil. Zwei Projekte ohne Neuladen fertig, Baustellensperre und
   Replay während/nach dem Folgeprojekt bestanden, Zugänge und Vergleichswege geprüft.

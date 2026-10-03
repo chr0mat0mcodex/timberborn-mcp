@@ -2,6 +2,12 @@
 
 ## Ziel
 
+Abgeschlossener E-Schritt: 0.34.0 erweitert den ebenen Pilot um ein
+Folktails-Wohnhaus mit vier Grundrisszellen und versetztem Eingang.
+Ein vollständiger gedrehter Bauablauf mit zwei neuen Wegen und Grundriss-
+Negativkontrolle nach menschlichem Gate live bestanden. Bau-/Fertigzugang und
+ausgewählte Bestandsanschlüsse erhalten. [Nachweis](docs/lodge-project-pilot.md).
+
 Abgeschlossener E-Schritt: sequenzielle Vertikalprojekte und historisches MCP-Profil
 in 0.33.1 live bestanden. Zwei Projekte ohne Neuladen fertiggebaut;
 laufende/unbestätigte Aufträge und offene Baustellen bleiben gesperrt.

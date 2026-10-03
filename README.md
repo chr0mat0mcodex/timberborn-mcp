@@ -5,6 +5,11 @@ Beobachtung und kontrollierte Eingriffe über reguläre Spielservices.
 
 ## Status
 
+Agent Bridge 0.34.0 ergänzt das ebene Folktails-Wohnhausprojekt. Gedrehter
+Vier-Zellen-Grundriss, zwei neue Anschlusswege, tatsächlicher Bau-/Fertigzugang,
+Grundriss-Ablehnung, Bestandsanschlüsse und Replay live geprüft.
+[Nachweis und Grenzen](docs/lodge-project-pilot.md).
+
 Agent Bridge 0.33.1 ermöglicht bis zu vier Vertikalprojekte nacheinander pro
 Sitzung. Zwei Projekte ohne Neuladen fertiggebaut, Startsperren und Replay
 live geprüft; Bau-/Fertigzugang und ausgewählte Bestandsanschlüsse erhalten.

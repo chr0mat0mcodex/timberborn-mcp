@@ -57,6 +57,14 @@ public sealed class BuildingProjectTests
     [Fact]
     public void CandidateContractAcceptsOnlyNonExecutableBoundedRoute()=>NativeClient.ValidateBuildingPlan(Envelope(),BuildingPlanRequest.Parse(Query()));
     [Fact]
+    public void LodgeCandidateContractRemainsCompatibleOnNewBridge()
+    {
+        var e = Envelope();
+        var option = e.Data.Options[0] with { PlanKey = new string('a', 64) };
+        NativeClient.ValidateBuildingPlan(e with { BridgeVersion = "0.34.0", Data = e.Data with { Options = [option] } },
+            BuildingPlanRequest.Parse(Query()));
+    }
+    [Fact]
     public async Task PlanToolUsesReadOnlyRouteAndPreservesNonExecutableEvidence()
     {
         using var client=new NativeClient(new(8081,new string('a',64)),new PlanHandler());

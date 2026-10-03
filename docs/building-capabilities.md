@@ -1,5 +1,16 @@
 # Strukturierter Projektumfang — Live-Nachweis
 
+## Erweiterung 0.34.0 — Profil live gelesen
+
+Ebener Pilot erhält Lodge.Folktails; TemplateEvidence im ebenen Modus trennt
+historische Drehungen je Gebäudevorlage. Lager behalten ihre Nachweise, Wohnhaus
+ist not_live_proven. LiveRotations des gesamten ebenen Modus bleiben bei dieser
+gemischten Abdeckung leer; keine Sicherheitsbehauptung oder vertikale Erweiterung.
+Der neue Profilstand ist live gelesen und trennt die Nachweise korrekt.
+Anschließender Wohnhaus-Livefall in Drehung 3 bestanden, aber noch nicht in
+diesem ausgelieferten Historienprofil enthalten; bei nächstem Gate aufnehmen.
+[Abnahme](lodge-project-pilot.md).
+
 ## Aktualisierung in 0.33.1, live bestanden
 
 0.33.1-Profil mit vier gemeinsam gezählten Vertikalprojekt-IDs live gelesen;

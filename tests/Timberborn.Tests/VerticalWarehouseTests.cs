@@ -34,6 +34,7 @@ public sealed class VerticalWarehouseTests
             new(r.ActionId.ToString("D"), new string('a', 64), "completed", "order_and_access_confirmed", steps, false, ["synthetic_test"]));
         NativeClient.ValidateVerticalReceipt(e, r);
         NativeClient.ValidateVerticalReceipt(e with { BridgeVersion = "0.33.1" }, r);
+        NativeClient.ValidateVerticalReceipt(e with { BridgeVersion = "0.34.0" }, r);
         Assert.Throws<InvalidDataException>(() => NativeClient.ValidateVerticalReceipt(
             e with { BridgeVersion = "0.33.1", SessionId = "44444444-4444-4444-4444-444444444444" }, r));
         var status = VerticalStairRequest.Parse(false, new NameValueCollection { ["session"] = r.Session, ["actionId"] = r.ActionId.ToString("D") });

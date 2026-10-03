@@ -120,7 +120,7 @@ public sealed class ActivityTests
         Assert.Equal(entry.Id,read.Id);Assert.Equal(entry.Reasoning,read.Reasoning);Assert.Equal(now,read.StartedAtUtc);
     }
     [Theory]
-    [InlineData("0.33.0")] [InlineData("0.33.1")]
+    [InlineData("0.33.0")] [InlineData("0.33.1")] [InlineData("0.34.0")]
     public async Task CurrentBridgeVersionsKeepActivityReaderCompatible(string version)
     {
         using var client = new NativeClient(new(8081, new string('a',64)), new ActivityReadHandler(version));

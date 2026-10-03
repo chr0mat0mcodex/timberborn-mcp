@@ -2,6 +2,15 @@
 
 ## Priorität
 
+E-Schritt 0.34.0 live abgeschlossen, Lodge.Folktails im ebenen Bauprojekt.
+Gedrehter Wohnhausablauf mit zwei neuen Wegen, Grundriss-Negativkontrolle,
+realem Bau-/Fertigzugang, Bestandsanschlüssen und Replay bestanden.
+Keine neue Vier-Drehungs-Serie und keine Lockerung der Schutzgrenzen.
+[Nachweis](docs/lodge-project-pilot.md).
+Bei nächstem ohnehin nötigen MCP-Gate Wohnhaus-Drehung 3 in TemplateEvidence
+aufnehmen; aktuelles ausgeliefertes Profil beschreibt den Historienstand vor
+dieser Abnahme. Keine Neuinstallation allein für diese Metadaten.
+
 Aktiver Schritt abgeschlossen: 0.33.1 mit vier gemeinsamen
 sequenziellen Vertikalprojektplätzen und aktualisiertem MCP-Nachweisprofil.
 Nach menschlichem Gate zwei Projekte in derselben Sitzung fertiggebaut,

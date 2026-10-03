@@ -2,6 +2,15 @@
 
 ## Stand
 
+Bridge 0.34.0 nach menschlichem Gate live bestanden: Lodge.Folktails im ebenen
+Projektpilot, Belege versionsgebunden und MCP-Historie je Vorlage getrennt.
+Rotation 3 mit zwei tatsächlich neuen Bodenwegen vollständig gebaut; korrekter
+Vier-Zellen-Grundriss, Bauarbeiterzugang und freier fertiger Eingang, Distanz 50.
+Vergleichslager frei/Distanz 53 erhalten, Wege verbunden, Replay unverändert.
+Ein exakter Achtstundenlauf, Simulation am Ende pausiert. Kein Abriss nötig.
+MCP-Historie enthält noch Stand vor Abnahme; Drehung 3 beim nächsten ohnehin
+nötigen Gate aufnehmen. [Details](lodge-project-pilot.md).
+
 Bridge 0.33.1 nach menschlichem Gate live bestanden: vier gemeinsame sequenzielle
 Vertikalprojektplätze und aktualisiertes MCP-Profil. Eine Treppe und ein
 siebenstufiges Lagerprojekt in derselben Sitzung fertig, Startsperre bei

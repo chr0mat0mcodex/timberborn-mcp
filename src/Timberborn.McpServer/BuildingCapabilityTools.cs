@@ -12,7 +12,12 @@ namespace Timberborn.McpServer;
 public sealed record ProjectModeCapability(string Mode, string Tool, string[] ObjectTemplates,
     int[] Rotations, int[] UpperPathCounts, int MinSteps, int MaxSteps, int MaxNewGroundRoads,
     int? MaxSearchWidth, int? MaxSearchHeight, int MaxProjectsPerSession,
-    int? MaxWaitRealSeconds, int[] LiveRotations, string EvidenceSource, string EvidenceReference);
+    int? MaxWaitRealSeconds, int[] LiveRotations, string EvidenceSource, string EvidenceReference)
+{
+    public TemplateLiveEvidence[] TemplateEvidence { get; init; } = [];
+}
+
+public sealed record TemplateLiveEvidence(string Template, int[] LiveRotations, string EvidenceSource, string EvidenceReference);
 
 public sealed record BuildingCapabilityReport(string BridgeVersion, string Faction, string ProfileState,
     int? MaxObjectFootprintCells,
@@ -49,13 +54,18 @@ public static class BuildingCapabilityTools
     public static BuildingCapabilityReport Describe(string bridgeVersion, string faction, bool serverEnabled)
     {
         // Exact profile binding: new deployments require explicit review, never a >= version guess.
-        bool known = bridgeVersion is ("0.33.0" or "0.33.1") && faction == "Folktails";
-        int verticalCapacity = bridgeVersion == "0.33.1" ? VerticalStairRequest.MaxProjectsPerSession : 1;
+        bool known = bridgeVersion is ("0.33.0" or "0.33.1" or "0.34.0") && faction == "Folktails";
+        bool lodge = bridgeVersion == "0.34.0";
+        int verticalCapacity = bridgeVersion is ("0.33.1" or "0.34.0") ? VerticalStairRequest.MaxProjectsPerSession : 1;
         ProjectModeCapability[] modes = known ? [
             new("development_pilot", "execute_building_project_pilot",
-                ["Path", "SmallWarehouse.Folktails", "MediumWarehouse.Folktails"],
-                [0, 1, 2, 3], [], 1, 5, 4, 8, 8, 4, null, [0, 1, 2, 3],
-                "documented_bounded_live_cases_not_current_site_validation", "docs/medium-warehouse-pilot.md;docs/building-rotation-pilot.md"),
+                lodge ? ["Path", "SmallWarehouse.Folktails", "MediumWarehouse.Folktails", "Lodge.Folktails"] :
+                    ["Path", "SmallWarehouse.Folktails", "MediumWarehouse.Folktails"],
+                [0, 1, 2, 3], [], 1, 5, 4, 8, 8, 4, null, lodge ? [] : [0, 1, 2, 3],
+                lodge ? "mixed_template_coverage_see_template_evidence" : "documented_bounded_live_cases_not_current_site_validation",
+                "docs/medium-warehouse-pilot.md;docs/building-rotation-pilot.md") {
+                    TemplateEvidence = FlatEvidence(lodge)
+                },
             new("single_stair_pilot", "execute_vertical_stair_pilot", ["Stairs.Folktails"],
                 [0, 1, 2, 3], [0], 1, 1, 0, null, null, verticalCapacity, 300, [],
                 "live_rotation_coverage_not_catalogued", ""),
@@ -83,9 +93,20 @@ public static class BuildingCapabilityTools
                 "server_switch_is_not_bridge_write_gate_or_user_authorization",
                 "max_projects_shared_across_vertical_modes_not_per_mode",
                 "historical_live_coverage_is_not_all_rotations_in_all_geometries",
+                "flat_mode_live_rotations_cover_all_building_templates_use_template_evidence_for_individual_coverage",
                 "empty_live_rotations_with_not_catalogued_does_not_mean_never_tested",
                 "no_site_validation_preview_or_build_order", "no_general_road_or_builder_preflight_safety",
                 "completed_receipt_is_not_finished_construction", "no_delivery_staffing_or_operation_guarantee"]);
+    }
+
+    private static TemplateLiveEvidence[] FlatEvidence(bool lodge)
+    {
+        var evidence = new List<TemplateLiveEvidence> {
+            new("SmallWarehouse.Folktails", [0, 1, 2, 3], "documented_bounded_live_cases_not_current_site_validation", "docs/building-rotation-pilot.md"),
+            new("MediumWarehouse.Folktails", [0, 1, 2, 3], "documented_bounded_live_cases_not_current_site_validation", "docs/medium-warehouse-pilot.md")
+        };
+        if (lodge) evidence.Add(new("Lodge.Folktails", [], "not_live_proven", "docs/lodge-project-pilot.md"));
+        return evidence.ToArray();
     }
 
     public static async Task<JsonObject> Invoke(NativeClient client, JsonElement args, bool serverEnabled, CancellationToken ct)
