@@ -10,7 +10,10 @@ Zusätzlicher E-Livefall auf unveränderter 0.33.0: vertikales Lagerprojekt mit
 Treppendrehung 0 / Lagerdrehung 2, alle sieben Objekte fertig. Lagerbaustelle
 builder-erreichbar, fertiger Eingang frei, Distanz 34; beide oberen Wege und
 unterer Bestandsweg verbunden, Vergleichslager unverändert bei Distanz 25.
-Replay ohne Doppelbauten. Dokumentierte vertikale Drehungen jetzt 0/3;
+Replay ohne Doppelbauten. Ergänzend Treppendrehung 2 / Lagerdrehung 0 live
+bestanden: sieben fertige Objekte, Bau-/Fertigzugang und Distanz 36, Bestandsweg
+verbunden, Vergleichslager unverändert bei Distanz 15, Replay ohne Doppelbauten.
+Dokumentierte vertikale Drehungen jetzt 0/2/3; nur 1 noch offen.
 MCP-Nachweiskatalog noch unverändert mit 3. [Nachweis](docs/vertical-warehouse-pilot.md).
 
 MCP-only-Abfrage `inspect_building_capabilities` nach korrigiertem menschlichem

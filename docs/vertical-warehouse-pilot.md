@@ -82,3 +82,25 @@ Bauphasen-Vorabnachweis offen. B-Minimalabschluss ist die konservative
 Baustellensperre, nicht eine allgemeine Vorschau-Schutzgarantie.
 Das derzeit deployte Fähigkeitsprofil katalogisiert weiterhin nur Drehung 3;
 eine Erweiterung der strukturierten Nachweise braucht einen neuen MCP-Test-Gate.
+
+## Ergänzung E: Treppendrehung 2 auf unveränderter 0.33.0
+
+Frische Sitzung nach Nutzerbereitstellung: Treppendrehung 2, Lagerdrehung 0.
+Einzige nötige Räumung war eine tote Birke am Treppenursprung; kein Gebäude oder
+Weg abgerissen. Plattform regulär für 100 Forschungspunkte freigeschaltet.
+Treppenvorschau gültig, keine verlorenen erfassten Bestandsverbindungen,
+Vorschau zurückgenommen; Sicherheitsgesamturteil bleibt unknown.
+
+Sieben Objekte einzeln mit tatsächlichem Fertigstatus und korrekter Position
+rückgelesen. Vorgänger-Wartefolge beobachtet; beide oberen Wege vor Lagerauftrag
+fertig und distriktverbunden. Lagerbaustelle builder-erreichbar, freier Eingang
+mit Distriktdistanz 36. Danach tatsächliches fertiges Lager im angegebenen Distrikt,
+Eingang weiterhin frei, Distanz 36. Unterer Bestandsweg und beide oberen Wege
+verbunden, entferntes Vergleichslager frei mit unveränderter Distanz 15.
+Identische actionId liefert completed-Beleg und unverändert exakt sieben Objekte.
+Fünf Bauzeitläufe à acht Spielstunden jeweils abgeschlossen, pausiert und ohne
+Überschreitung; kein neuer Code oder Modbuild.
+
+Treppendrehungen 0/2/3 damit begrenzt dokumentiert, nur 1 noch offen.
+Deploytes MCP-Nachweisprofil weiterhin unverändert mit 3. Keine allgemeine
+Bauphasen-Sicherheit, keine Aussage über Lieferung, Personal oder Betrieb.

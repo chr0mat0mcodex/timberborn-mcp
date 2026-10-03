@@ -10,7 +10,9 @@ historischer Bauplan ist Voraussetzung.
 
 - Vertikaler Lagerpilot auf unveränderter 0.33.0 zusätzlich mit Treppendrehung 0
   live bestanden: alle sieben Objekte fertig, Baustellen-/Fertigzugang und
-  Bestandsanschlüsse erhalten. Historische Drehungen 0/3 dokumentiert;
+  Bestandsanschlüsse erhalten. Treppendrehung 2 ebenfalls mit sieben fertigen
+  Objekten, Bau-/Fertigzugang und Bestandsanschlüssen live bestanden.
+  Historische Drehungen 0/2/3 dokumentiert; nur 1 noch offen.
   MCP-Nachweiskatalog unverändert mit 3. [Nachweis](docs/vertical-warehouse-pilot.md).
 
 - MCP-only-Abfrage `inspect_building_capabilities` nach menschlichem Gate live

@@ -20,8 +20,13 @@ Zusätzliche vertikale Treppendrehung 0 auf unveränderter 0.33.0 live bestanden
 sieben fertige Objekte, Lagerbaustelle erreichbar, fertiger Eingang frei mit
 Distanz 34; unterer Bestandsweg und obere Wege verbunden, Vergleichslager bei
 Distanz 25 erhalten. Replay ohne weitere Objekte. Spiel nach Zeitläufen pausiert.
-Ein Vertikalprojekt pro Sitzung verbraucht; weitere Drehung braucht neue Sitzung.
-Drehungen 1/2 offen. Strukturierter MCP-Nachweiskatalog unverändert mit nur 3;
+Anschließend frische Sitzung: Treppendrehung 2 / Lagerdrehung 0 ebenfalls live
+bestanden, sieben fertige Objekte, Baustellenzugang und freier Fertigeingang mit
+Distanz 36. Bestandsweg verbunden, Vergleichslager bei Distanz 15 erhalten,
+Replay unverändert sieben Objekte. Fünf begrenzte Bauzeitläufe jeweils pausiert
+und ohne Überschreitung; eine tote Birke entfernt, Plattform regulär freigeschaltet.
+Ein Vertikalprojekt im aktuellen Controller pro Sitzung; weitere Drehung braucht
+neue Sitzung. Nur Drehung 1 offen. MCP-Nachweiskatalog unverändert mit nur 3;
 späteres Profilupdate getrennt gaten. Details in vertical-warehouse-pilot.md.
 
 MCP-only-Abfrage `inspect_building_capabilities` nach korrigiertem menschlichem
