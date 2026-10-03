@@ -17,8 +17,11 @@ fertigen Bodenwegen, Bau-/Fertigzugang und erhaltenen Vergleichsanschlüssen bes
 Drehungen 0/2 ebenfalls fertig und erreichbar bei erhaltenen Bestandsanschlüssen.
 Damit begrenzter E-Ausbau um eine zusätzliche Vorlage mit allen vier ebenen
 Drehungen belegt, keine allgemeine Freigabe für beliebige Vorlagen/Projektgrößen.
-Nächster Vorschlag: unterstützten Projektumfang strukturiert im MCP ausweisen,
-nicht freie Höhenplanung oder breiter Vorlagenbau.
+Projektumfang inzwischen strukturiert im MCP ausweisbar und lesend live geprüft.
+Zusätzlich vertikales Lager mit Treppendrehung 0 / Lagerdrehung 2 auf unveränderter
+0.33.0 live bestanden: sieben fertige Objekte, Bau-/Fertigzugang, erhaltene
+Bestandsanschlüsse und Replay. Vertikale Drehungen 1/2 offen, keine freie
+Höhenplanung oder allgemeine Schutzfreigabe.
 [Mehrzellen-Nachweis](docs/medium-warehouse-pilot.md).
 [Nachweis](docs/building-rotation-pilot.md).
 

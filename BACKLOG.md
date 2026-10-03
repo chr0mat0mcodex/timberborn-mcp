@@ -2,6 +2,14 @@
 
 ## Priorität
 
+Vertikales Lagerprojekt zusätzlich in Treppendrehung 0 / Lagerdrehung 2 live
+bestanden auf unveränderter 0.33.0. Sieben fertige Objekte, Bau-/Fertigzugang,
+Bestandsanschlüsse und Replay geprüft. Drehungen 1/2 offen; derzeitiges
+MCP-Profil enthält weiter nur historischen Nachweis 3. Profilaktualisierung
+als MCP-only-Änderung mit eigenem Gate bündeln, keine Modneuinstallation nur
+für weitere Tests unveränderten Codes. Pro Sitzung nur ein Vertikalprojekt;
+weiterer Start braucht eine frische Sitzung. [Nachweis](docs/vertical-warehouse-pilot.md).
+
 Strukturierte Projektumfangsabfrage nach menschlichem Gate live bestanden:
 fünf Modi, Grenzen und historische Nachweise; keine Modversionsänderung oder
 allgemeine Baufreigabe. [Nachweis](docs/building-capabilities.md).

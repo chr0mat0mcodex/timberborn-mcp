@@ -8,6 +8,11 @@ historischer Bauplan ist Voraussetzung.
 
 ## Technischer Stand
 
+- Vertikaler Lagerpilot auf unveränderter 0.33.0 zusätzlich mit Treppendrehung 0
+  live bestanden: alle sieben Objekte fertig, Baustellen-/Fertigzugang und
+  Bestandsanschlüsse erhalten. Historische Drehungen 0/3 dokumentiert;
+  MCP-Nachweiskatalog unverändert mit 3. [Nachweis](docs/vertical-warehouse-pilot.md).
+
 - MCP-only-Abfrage `inspect_building_capabilities` nach menschlichem Gate live
   bestanden: fünf Modi, strukturierter Umfang und getrennte historische Nachweise.
   Sitzungs-/Parameter-Negativkontrollen bestanden, Spielzustand unverändert.

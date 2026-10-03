@@ -16,6 +16,14 @@ Details und Grenzen in building-rotation-pilot.md; E nicht insgesamt abgeschloss
 
 ## Nächster Ablauf
 
+Zusätzliche vertikale Treppendrehung 0 auf unveränderter 0.33.0 live bestanden:
+sieben fertige Objekte, Lagerbaustelle erreichbar, fertiger Eingang frei mit
+Distanz 34; unterer Bestandsweg und obere Wege verbunden, Vergleichslager bei
+Distanz 25 erhalten. Replay ohne weitere Objekte. Spiel nach Zeitläufen pausiert.
+Ein Vertikalprojekt pro Sitzung verbraucht; weitere Drehung braucht neue Sitzung.
+Drehungen 1/2 offen. Strukturierter MCP-Nachweiskatalog unverändert mit nur 3;
+späteres Profilupdate getrennt gaten. Details in vertical-warehouse-pilot.md.
+
 MCP-only-Abfrage `inspect_building_capabilities` nach korrigiertem menschlichem
 Gate live bestanden. Fünf erwartete Modi, Grenzen und Nachweise korrekt;
 state_conflict bei falscher Sitzung, invalid_argument bei Zusatzparameter.
@@ -35,7 +43,7 @@ Baustellen-/Fertigzugang und ursprüngliche Anschlüsse geprüft. Alle vier eben
 Drehungen des mittleren Lagers begrenzt live belegt.
 
 1. Etappe E aus ../missionsplan.md nur in explizit unterstützten Eigenschaften
-   erweitern; nächster Vorschlag unterstützten Projektumfang strukturiert im MCP ausweisen,
+   erweitern; Projektumfang ist inzwischen strukturiert ausweisbar,
    keine freie Höhenplanung
    oder Vollschutzbehauptung. Allgemeine B-Vorschaulücke bleibt.
 2. Kandidat, Vorschau, Ausführung und Rücklesung weiterhin an dieselbe Session

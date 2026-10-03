@@ -6,6 +6,13 @@ Projektbeschreibung.
 
 ## Verifizierter Stand
 
+Zusätzlicher E-Livefall auf unveränderter 0.33.0: vertikales Lagerprojekt mit
+Treppendrehung 0 / Lagerdrehung 2, alle sieben Objekte fertig. Lagerbaustelle
+builder-erreichbar, fertiger Eingang frei, Distanz 34; beide oberen Wege und
+unterer Bestandsweg verbunden, Vergleichslager unverändert bei Distanz 25.
+Replay ohne Doppelbauten. Dokumentierte vertikale Drehungen jetzt 0/3;
+MCP-Nachweiskatalog noch unverändert mit 3. [Nachweis](docs/vertical-warehouse-pilot.md).
+
 MCP-only-Abfrage `inspect_building_capabilities` nach korrigiertem menschlichem
 Gate live bestanden: Profil 0.33.0/Folktails, fünf Modi mit erwarteten Grenzen,
 historische Live-Abdeckung und Server-Schalter getrennt. Falsche Sitzung und

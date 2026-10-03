@@ -51,6 +51,34 @@ im Projektbereich rückgelesen. Alle begrenzten Simulationsläufe endeten pausie
 ohne Spielzeitüberschreitung. Zwei tote Testflächen-Bäume regulär entfernt und
 Plattform für 100 Forschungspunkte regulär freigeschaltet; kein Bestandsbau abgerissen.
 
-Nicht live belegt: übrige Drehungen, Guard-Negativfall, vollständiger Schutz
+Nicht live belegt im ursprünglichen Fall: übrige Drehungen, Guard-Negativfall, vollständiger Schutz
 aller Baustellen und unverbundener Wegnetze, Lieferung/Betrieb. Keine Aussage
 über allgemeine sichere Baufreigabe; B bleibt offen.
+
+## Ergänzung E: Treppendrehung 0 auf unveränderter 0.33.0
+
+Nach dem bereits bestandenen menschlichen Gate zusätzlich live geprüft:
+Treppendrehung 0, daraus Lagerdrehung 2. Sieben Objekte einzeln mit
+`details.finished=true` und korrekter Position rückgelesen. Wartefolge vor
+unfertigen Vorgängern beobachtet; beide oberen Wege vor dem Lagerauftrag fertig
+und am angegebenen Distrikt. Keine verlorene Vergleichsverbindung im Projektguard.
+
+Lagerbaustelle `buildersReachable=true`, Eingang frei, Distriktdistanz 34.
+Anschließend tatsächliches fertiges Lager, zugewiesener Distrikt und freier
+Eingang mit Distanz weiterhin 34. Unterer Bestandsweg und beide oberen Wege
+verbunden; entferntes Vergleichslager weiterhin frei mit Distanz 25.
+Identische actionId liefert denselben completed-Beleg: exakt sieben Projektobjekte
+vor/nach dem Replay. Fünf Bauzeitläufe à acht Spielstunden endeten jeweils
+pausiert und ohne Überschreitung; kein neuer Code oder Modbuild erforderlich.
+
+Fixture begrenzt hergestellt: zwei tote Birken entfernt; die zunächst markierte
+junge Eiche nach ungeeigneter Höhenkontrolle wieder unmarkiert. Am Ersatzgrundriss
+ein Wasserrad und eine Getriebewerkstatt samt drei rückgelesenen Schuttstapeln
+regulär entfernt, keine Wege oder Vergleichslager. Diese Abrisse sind
+Testvorbereitung, kein Beleg für Bestandsschutz durch den anschließenden Bau.
+
+Damit Treppendrehungen 0 und 3 begrenzt belegt; 1/2 und allgemeiner
+Bauphasen-Vorabnachweis offen. B-Minimalabschluss ist die konservative
+Baustellensperre, nicht eine allgemeine Vorschau-Schutzgarantie.
+Das derzeit deployte Fähigkeitsprofil katalogisiert weiterhin nur Drehung 3;
+eine Erweiterung der strukturierten Nachweise braucht einen neuen MCP-Test-Gate.
