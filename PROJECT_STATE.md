@@ -8,8 +8,8 @@ Projektbeschreibung.
 
 | Ebene | Stand |
 | --- | --- |
-| Bridge | Agent Bridge 0.29.2 installiert und mit fünfteiligen Plattformpilot live belegt |
-| Automatisch | Menschlicher Test-/Deploy-Ablauf durchgeführt; letzte explizit dokumentierte Zählung: 650 reguläre Tests plus 3 übersprungene Live-Tests (0.28.1) |
+| Bridge | Agent Bridge 0.29.3 installiert; Plattformpilot und direkte vertikale Distriktanbindung live belegt |
+| Automatisch | 667 erfolgreich, 0 fehlgeschlagen, 3 Live-Tests übersprungen (menschlicher Skriptlauf) |
 | Mod-Build | Timberborn 1.1.2.4 / Folktails, ohne Warnungen und Fehler |
 | Laufzeit | Bridge und Schreibfreigabe strukturiert erreichbar |
 | Bauprojekt | 0.29.2 live: Treppe, zwei Plattformen, zwei obere Wege; Bauphasen, completed und alle fünf fertigen Objekte rückgelesen |
@@ -35,8 +35,13 @@ Vorschau, Wegschutzdiagnose und schrittweise Bestätigung gebunden.
 Plattformpilot 0.29.2 abgeschlossen: Der begrenzte Wartezustand behandelt
 Baustellen mit unverändertem Wegschutz und Bau nur bei Pause. Nach drei getrennten
 begrenzten Bauphasen sind alle fünf Objekte fertig und der Auftrag abgeschlossen.
-Vertikale Distriktanbindung und vollständiger generischer Wegschutz sind nicht
-bewiesen. Details: [Plattformpilot](docs/vertical-platform-pilot.md).
+Die vertikale Distriktanbindung beider oberer Wege ist mit 0.29.3 direkt belegt;
+vollständiger generischer Wegschutz bleibt offen. Details: [Plattformpilot](docs/vertical-platform-pilot.md).
+
+0.29.3 live: `inspect_path_district` fragt die reale Hauptwegzelle gegen ein
+konkretes Distriktnetz ab, ohne den Gebäude-Eingangsfilter. Beide oberen Testwege
+verbunden; Lager und unfertige Treppe korrekt als unbekannt gemeldet.
+[Nachweis](docs/path-district-observation.md).
 
 1. Den Baupfad datengetrieben auf weitere Vorlagen, längere Anschlüsse und größere
    Vorhaben erweitern.

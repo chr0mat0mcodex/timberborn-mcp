@@ -44,6 +44,10 @@ Kein pauschales Lockern des Wegschutzes, kein Nachweis vollständiger vertikaler
 Distriktanbindung. Timeout und Abhängigkeitverlust sind synthetisch abgedeckt,
 aber nicht zusätzlich als destruktiver Livefall getestet.
 
+Ergänzung 0.29.3: Direkte native Wegzellenabfrage bestätigt inzwischen die
+Distriktanbindung beider oberen Wege im neu aufgebauten Pilot.
+[Separater Nachweis](path-district-observation.md).
+
 Liveversuch mit 0.29.0: Treppe bestätigt, erster oberer Weg nicht platziert;
 eine tote Kiefer belegte dessen Zelle. Plattform und zweiter Weg wurden nicht
 versucht. Die anschließende Spielvorschau meldete `valid=false`, der Vorcheck

@@ -5,10 +5,11 @@ Beobachtung und kontrollierte Eingriffe über reguläre Spielservices.
 
 ## Status
 
-Agent Bridge 0.29.2 ergänzt einen live belegten Plattformpilot: eine Treppe,
+Agent Bridge 0.29.3 ergänzt einen live belegten Plattformpilot: eine Treppe,
 zwei Plattformen und zwei obere Wege. Der Ablauf wartet auf fertige Träger und
 setzt erst bei Pause weiter. Alle fünf Objekte wurden fertig zurückgelesen;
-vertikale Distriktanbindung ist ein separater Nachweis.
+die vertikale Distriktanbindung beider oberer Wege ist mit der direkten
+Wegzellenabfrage ebenfalls live belegt.
 
 ## Umfang
 

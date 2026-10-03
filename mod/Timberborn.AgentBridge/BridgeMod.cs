@@ -80,7 +80,7 @@ public sealed class BridgeMod(ResourceCountingService resources, PopulationServi
         object data = request.Route switch
         {
             "needs" => diagnostics.Needs(request.Diagnostics!), "beaver-needs" => diagnostics.BeaverNeeds(request.Diagnostics!), "building-operation" => diagnostics.Operation(request.Diagnostics!),
-            "building-access" => logistics.Access(request.Logistics!), "road-connection" => logistics.Road(request.Logistics!), "work-range" => logistics.Range(request.Logistics!), "good-history" => logistics.History(request.Logistics!),
+            "building-access" => logistics.Access(request.Logistics!), "road-connection" => logistics.Road(request.Logistics!), "path-district" => logistics.PathDistrict(request.Logistics!), "work-range" => logistics.Range(request.Logistics!), "good-history" => logistics.History(request.Logistics!),
             "goods" => economy.Goods(request.Economy!), "alerts" => economy.Alerts(request.Economy!,sessionId), "alert-targets" => economy.Targets(request.Economy!),
             "research" => research.Read(request.Research!), "unlock-building" => research.Unlock(request.Research!),
             "activity" => RecordActivity(),
@@ -105,7 +105,7 @@ public sealed class BridgeMod(ResourceCountingService resources, PopulationServi
             _ => throw new ArgumentException("invalid_request")
         };
         return JsonConvert.SerializeObject(new { schemaVersion = 1, sessionId, observedAtUtc = DateTimeOffset.UtcNow,
-            bridgeVersion = "0.29.2", data });
+            bridgeVersion = "0.29.3", data });
     }
     private object Snapshot()
     {

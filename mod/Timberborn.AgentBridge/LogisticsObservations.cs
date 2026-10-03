@@ -8,6 +8,8 @@ using Timberborn.GameDistricts;
 using Timberborn.Goods;
 using Timberborn.GoodsSampling;
 using Timberborn.Navigation;
+using Timberborn.PathSystem;
+using Timberborn.TemplateSystem;
 namespace Timberborn.AgentBridge;
 
 public sealed class LogisticsObservations(EntityRegistry entities,IGoodService goods,GlobalGoodSamplingRegistry samples)
@@ -40,6 +42,34 @@ public sealed class LogisticsObservations(EntityRegistry entities,IGoodService g
         if(supported){connected=a[0].FindInstantRoadPath(b[0],out float value);if(connected==true)distance=value;}
         return new {id=r.Id,toId=r.ToId,supported,sourceAccessCount=a.Length,targetAccessCount=b.Length,connected,distance,
             limitations=new[]{"instant_game_road_path_query","requires_finished_objects_and_one_valid_accessible_each","direction_is_source_to_target","no_terrain_shortcuts","native_distance_not_travel_time","navigation_may_lag","no_worker_or_delivery_guarantee"}};
+    }
+    public object PathDistrict(LogisticsRequest r)
+    {
+        var entity = Find(r.Id);
+        var block = entity.GetComponent<BlockObject>();
+        var districtEntity = Find(r.DistrictId);
+        if (!districtEntity.GetComponent<BlockObject>().IsFinished ||
+            !districtEntity.TryGetComponent<DistrictCenter>(out var district))
+            throw new BridgeRejectionException("state_conflict");
+        bool hasPath = entity.TryGetComponent<PathSpec>(out var path);
+        bool supported = block.IsFinished && hasPath;
+        UnityEngine.Vector3Int? cell = null;
+        bool? connected = null;
+        if (supported)
+        {
+            // Match the existing road-protection flow: resolve the overload before
+            // assigning to a nullable cell, avoiding target-typed int3 conversions.
+            var pathCell = block.TransformCoordinates(path.MainPathCoordinates);
+            cell = pathCell;
+            connected = district.IsOnInstantDistrictRoad(NavigationCoordinateSystem.GridToWorld(pathCell));
+        }
+        return new { id = r.Id, districtId = r.DistrictId,
+            template = entity.GetComponent<TemplateSpec>().TemplateName, finished = block.IsFinished,
+            supported, pathCell = cell.HasValue ? Vec(cell.Value) : null, connected,
+            reason = !hasPath ? "not_path_object" : !block.IsFinished ? "unfinished_path" : "observed",
+            limitations = new[] { "native_instant_district_road_membership", "transformed_main_path_cell_not_building_entrance",
+                "false_means_not_on_requested_district_network", "unsupported_means_unknown", "navigation_may_lag",
+                "no_worker_trip_or_delivery_guarantee" } };
     }
     private static IEnumerable<UnityEngine.Vector3Int> TerrainCells(BuildingTerrainRange range)
     { foreach(var cell in range.GetRange())yield return cell; }

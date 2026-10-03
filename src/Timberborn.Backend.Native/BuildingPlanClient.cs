@@ -23,14 +23,14 @@ public sealed partial class NativeClient
             o.NewRoadCells.Distinct().Count()==o.NewRoadCells.Length&&o.NewRoadCells.All(o.RouteCells.Contains)&&
             o.RouteCells[0]==o.Connection&&o.RouteCells[^1]==o.Entrance&&
             o.RouteCells.Zip(o.RouteCells.Skip(1),(a,b)=>Math.Abs(a.X-b.X)+Math.Abs(a.Y-b.Y)==1).All(v=>v);
-        if(e.BridgeVersion is not ("0.24.0" or "0.24.1" or "0.25.0" or "0.26.0" or "0.27.0" or "0.28.0" or "0.28.1" or "0.29.0" or "0.29.1" or "0.29.2")||e.SessionId!=r.Session||d is null||d.Template!=r.Template||d.DistrictId!=r.DistrictId||
+        if(e.BridgeVersion is not ("0.24.0" or "0.24.1" or "0.25.0" or "0.26.0" or "0.27.0" or "0.28.0" or "0.28.1" or "0.29.0" or "0.29.1" or "0.29.2" or "0.29.3")||e.SessionId!=r.Session||d is null||d.Template!=r.Template||d.DistrictId!=r.DistrictId||
             d.Origin!=new Position(r.X,r.Y,r.Z)||d.Width!=r.Width||d.Height!=r.Height||d.Rotation!=r.Rotation||
             d.TotalCandidates!=r.Width*r.Height||d.CheckedCandidates<1||d.CheckedCandidates>d.TotalCandidates||
             d.Options is null||d.Options.Length>4||d.RejectedCandidates!=d.CheckedCandidates-d.Options.Length||
             d.SearchComplete!=(d.CheckedCandidates==d.TotalCandidates)||d.StopReason!=(d.SearchComplete?"area_exhausted":"option_limit")||
             !d.SearchComplete&&d.Options.Length!=4||d.Limitations is null||d.Limitations.Length>16||d.Limitations.Any(s=>string.IsNullOrEmpty(s)||s.Length>160)||
             d.Options.Any(o=>o is null||o.Executable||o.Rotation!=r.Rotation||!Inside(o.Origin)||!Inside(o.Entrance)||!Inside(o.Connection)||
-                e.BridgeVersion is ("0.24.1" or "0.25.0" or "0.26.0" or "0.27.0" or "0.28.0" or "0.28.1" or "0.29.0" or "0.29.1" or "0.29.2")&&!ValidPlanKey(o.PlanKey)||
+                e.BridgeVersion is ("0.24.1" or "0.25.0" or "0.26.0" or "0.27.0" or "0.28.0" or "0.28.1" or "0.29.0" or "0.29.1" or "0.29.2" or "0.29.3")&&!ValidPlanKey(o.PlanKey)||
                 o.Reasons is null||!o.Reasons.SequenceEqual(new[]{"joint_game_validation_pending","construction_reachability_unproven","road_protection_incomplete"})||!Route(o)))
             throw new InvalidDataException("Invalid building plan");
     }

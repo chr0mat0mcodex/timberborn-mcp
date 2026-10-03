@@ -8,8 +8,8 @@ historischer Bauplan ist Voraussetzung.
 
 ## Technischer Stand
 
-- Agent Bridge 0.29.2 ist installiert und mit einem fünfteiligen Plattformpilot
-  samt Bauphasen und Rücklesung aller fertigen Objekte live belegt.
+- Agent Bridge 0.29.3 ist installiert; fünfteiliger Plattformpilot samt Bauphasen
+  und direkte Distriktanbindung beider oberer Wege sind live belegt.
 - Die regulären automatischen Prüfungen bestehen; der nächste Schritt erweitert
   den Baupfad auf weitere Vorlagen oder längere Anschlüsse.
 - Aktueller Arbeitsbranch: `codex/road-protection-pilot`.
