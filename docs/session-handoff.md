@@ -16,6 +16,13 @@ Details und Grenzen in building-rotation-pilot.md; E nicht insgesamt abgeschloss
 
 ## Nächster Ablauf
 
+MCP-only-Abfrage `inspect_building_capabilities` nach korrigiertem menschlichem
+Gate live bestanden. Fünf erwartete Modi, Grenzen und Nachweise korrekt;
+state_conflict bei falscher Sitzung, invalid_argument bei Zusatzparameter.
+Objektzahl und pausierte Simulation unverändert. Bridge bleibt 0.33.0.
+Details in building-capabilities.md. Allgemeiner Weg-/Builder-Vorabnachweis offen;
+neue Umfänge erst als abgegrenzte Fähigkeit implementieren und live abnehmen.
+
 0.33.0-Abschluss-Livetest bestanden: mittleres ebenes Lager mit sechs gedrehten
 Grundrisszellen, tatsächlicher Baustellen-/Fertigzugang, erhaltene Bestandswege,
 negative Grundrisskontrollen und Replay ohne neue Objekte. Keine neue

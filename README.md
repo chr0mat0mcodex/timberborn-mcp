@@ -5,6 +5,11 @@ Beobachtung und kontrollierte Eingriffe über reguläre Spielservices.
 
 ## Status
 
+`inspect_building_capabilities` weist den versions-/fraktionsgebundenen
+Projektumfang, technische Grenzen und historische Live-Nachweise strukturiert aus.
+Lesend live geprüft, keine allgemeine Baufreigabe.
+[Nachweis](docs/building-capabilities.md).
+
 Agent Bridge 0.33.0 erweitert den ebenen Entwicklungspilot um das mittlere
 Folktails-Lager. Gedrehter Sechs-Felder-Grundriss, erreichbare Baustelle, fertiger
 freier Eingang und ausgewählte Bestandswege live geprüft; zusätzlich ein fertiger

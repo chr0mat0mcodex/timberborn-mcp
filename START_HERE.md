@@ -8,6 +8,12 @@ historischer Bauplan ist Voraussetzung.
 
 ## Technischer Stand
 
+- MCP-only-Abfrage `inspect_building_capabilities` nach menschlichem Gate live
+  bestanden: fünf Modi, strukturierter Umfang und getrennte historische Nachweise.
+  Sitzungs-/Parameter-Negativkontrollen bestanden, Spielzustand unverändert.
+  Keine neue Baufreigabe; Bridge unverändert 0.33.0.
+  [Abnahme](docs/building-capabilities.md).
+
 - 0.33.0 nach menschlichem Gate live bestanden: mittleres ebenes Lager mit sechs
   gedrehten Grundrisszellen, Bau-/Fertigzugang und erhaltenen Bestandsanschlüssen.
   Negativkontrollen und Aktions-ID-Replay bestanden. Ergänzend Rotation 1 mit

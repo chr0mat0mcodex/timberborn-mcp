@@ -6,6 +6,12 @@ Projektbeschreibung.
 
 ## Verifizierter Stand
 
+MCP-only-Abfrage `inspect_building_capabilities` nach korrigiertem menschlichem
+Gate live bestanden: Profil 0.33.0/Folktails, fünf Modi mit erwarteten Grenzen,
+historische Live-Abdeckung und Server-Schalter getrennt. Falsche Sitzung und
+Zusatzparameter abgewiesen; Objektzahl, Pause und Spielzeit unverändert.
+Keine Baufreigabe, Bridge bleibt 0.33.0. [Nachweis](docs/building-capabilities.md).
+
 0.33.0 nach menschlichem Skript-Gate installiert und live bestanden: mittleres
 ebenes Folktails-Lager im bestehenden Entwicklungspilot, zusätzliche Vorlagenbindung
 der Belege; keine Lockerung der B-Sperren. Rotation 3 mit sechs Zellen (gedreht

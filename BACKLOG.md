@@ -2,6 +2,10 @@
 
 ## Priorität
 
+Strukturierte Projektumfangsabfrage nach menschlichem Gate live bestanden:
+fünf Modi, Grenzen und historische Nachweise; keine Modversionsänderung oder
+allgemeine Baufreigabe. [Nachweis](docs/building-capabilities.md).
+
 Nutzerpriorität: B minimal vor E. 0.32.1 nach menschlichem Gate live bestanden:
 neues Projekt/Einzelplatzierung bei unabhängiger Baustelle ohne neue Objekte
 abgelehnt; nach deren Fertigstellung eigener Plattformablauf vollständig gebaut.
