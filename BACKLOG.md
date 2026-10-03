@@ -7,9 +7,23 @@
 2. Aktuell Etappe B: Baustellen-Erreichbarkeit unter geplanten Änderungen prüfen.
    0.31.0 live: Baseline/freie Kontrolle bestanden; negative Baustellenkontrolle
    nicht belegt. Begrenzte Detaildiagnose erneut freigegeben und in 0.31.1
-   in 0.31.1 live geprüft. Acht Einzelbefunde und Rücknahme passen; Verbindung vom
+   live geprüft. Acht Einzelbefunde und Rücknahme passen; Verbindung vom
    Zentralenursprung bereits in der erreichbaren Baseline überall false. Nächster
    Schritt: Start-/Zielgültigkeit und positiven Verbindungsbezug klären.
+   0.31.2 installiert: Zentraleingang und alle acht Ziele auf tatsächlichem
+   NavMesh, Start auch auf Bezirksweg. Dennoch alle Verbindungen false bei
+   realem Builderzugang true. Positive Kontrolle gescheitert, Pilot gestoppt.
+   Nach erneutem go öffentliche Signaturen geprüft: AreConnected vermutlich
+   direkte Kante, echte Accessible-Pfadsuche an fertigem Lager positiv.
+   Nächster Vorschlag: Nachbar-/Fernkontrolle und tatsächlichen Road-Spill mit
+   Builderzugang vergleichen, danach erst gezielte Preview-Engpasskontrolle.
+   Keine explizite öffentliche Preview-Pfadsuche gefunden, keine neue Suchserie
+   0.31.2 wurde nicht separat committed.
+   0.31.3 nach Skript-Gate live belegt: drei Nachbarkanten/echte Straßenpfade,
+   vier erreichbare Spill-Ziele, Fern-Kantenwerte weiterhin false. Einzige
+   Sperrvorschau ungültig, sieben Bezirksverluste, kein Baustellen-Reichweitenverlust.
+   Diagnose bestanden, negative Baustellenkontrolle offen. Nächster Schritt:
+   gültige Blockadekontrolle; Ist-Daten ausdrücklich kein Preview-Nachweis.
    Keine vollständige Bauzustandssimulation und noch kein Start von C.
 3. Etappe C: kleines Lager bis Fertigstellung und Zugang nachweisen.
 4. Etappe D: Gebäude mit vertikalem Anschluss; danach E: Breitenausbau.

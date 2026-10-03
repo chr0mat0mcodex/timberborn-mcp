@@ -17,8 +17,8 @@ Tests abgedeckt, aber nicht separat live belegt. Auswahl allein ist kein
 
 | Ebene | Stand |
 | --- | --- |
-| Bridge | Agent Bridge 0.31.1 installiert; begrenzte Baustellen-Detaildiagnose live geprüft, kein vollständiger Wegschutz |
-| Automatisch | Menschliche Bereitmeldung nach Skript-Gate für 0.31.1; neue Testanzahl nicht übermittelt. Letzter Zahlenstand 0.29.3: 667 erfolgreich, 0 fehlgeschlagen, 3 übersprungen |
+| Bridge | Agent Bridge 0.31.3 installiert; Nachbar-/Pfad-/Spill-Diagnose live belegt, Baustellen-Vorschauabdeckung weiterhin offen |
+| Automatisch | Menschliche Bereitmeldung nach Skript-Gate für 0.31.3; neue Testanzahl nicht übermittelt. Letzter Zahlenstand 0.29.3: 667 erfolgreich, 0 fehlgeschlagen, 3 übersprungen |
 | Mod-Build | Timberborn 1.1.2.4 / Folktails, ohne Warnungen und Fehler |
 | Laufzeit | Bridge und Schreibfreigabe strukturiert erreichbar |
 | Bauprojekt | 0.29.2 live: Treppe, zwei Plattformen, zwei obere Wege; Bauphasen, completed und alle fünf fertigen Objekte rückgelesen |
@@ -53,7 +53,7 @@ nicht fertiggestelltes Gebäude mit anschließend geprüftem Zugang.
 Der ungeprüfte Vier-Wege-Entwurf (vorgesehene 0.30.1) ist zurückgestellt, lokal als
 benannter Git-Stash erhalten und nicht im aktiven Quellstand. Wiederaufnahme siehe
 BACKLOG.md. Etappe A ändert nur die MCP-Auswertung vorhandener
-Validierungsergebnisse, keine Baufreigabe. Aktuell installierte Bridge 0.31.1.
+Validierungsergebnisse, keine Baufreigabe. Aktuell installierte Bridge 0.31.3.
 
 Etappe B: Bridge 0.31.0 installiert und begrenzt live geprüft nach menschlicher
 Bereitmeldung. Road-Spill-Baseline passt zur tatsächlichen Builder-Abfrage;
@@ -71,6 +71,33 @@ Verbindungswerte vom Zentralenursprung bereits vorher false bei realem
 Builderzugang true: kein geeigneter Verbindungsnachweis. Sechs Zugänge bleiben
 trotz Kandidatenbelegung im Reichweitenfeld. Nächster Schritt native Start-/
 Zielgültigkeit klären, keine Suchserie. Etappe B und allgemeine Baufreigabe offen.
+
+0.31.2 ist nach menschlicher Bereitmeldung installiert. Nutzer hat eine kleine
+Lagerbaustelle bereitgestellt und markiert; Auswahl und realer Builderzugang
+wurden strukturiert gelesen. Zentraleingang auf tatsächlichem NavMesh und
+Bezirksweg, alle acht Ziele auf tatsächlichem NavMesh. Trotzdem connected und
+roadConnected an allen acht Zielen in allen fünf Zuständen false, realer
+Builderzugang vor/nach Vorschau true. Vier Ziele im Reichweitenfeld; Baseline
+und Rücknahme bestanden, Pause/Spielzeit unverändert. Startpunktwechsel allein
+löst die Lücke nicht. Positive Kontrolle gescheitert, keine Sperrvorschau,
+kein Commit. Nach erneutem go öffentliche Signaturen geprüft: AreConnected
+vermutlich direkte Kante, nicht ganze Route; noch kein abschließender Beweis.
+Vorhandene Accessible-Pfadsuche Zentrale zu fertigem Lager live positiv.
+Öffentliche tatsächliche Road-Spill-/Pfadsuche vorhanden, keine explizite
+Preview-Pfadsuche gefunden. Vorschlag: begrenzte Nachbar-/Fernkontrolle und
+tatsächliche Spill-Baseline, danach erst Preview-Engpass. Keine weitere Suchserie.
+Etappe B bleibt offen; Details im Fachdokument.
+
+0.31.3 nach menschlichem Skript-Gate live geprüft: drei positive Nachbarkanten,
+drei echte Straßenpfade, vier erreichbare/Spill-Ziele bei acht negativen Fern-
+Kantenwerten. Freie Vorschau und Ist-Builderzugang passen; Baseline/Rücknahme
+bestanden. Genau eine ungültige Sperrvorschau deckt alle vier erreichbaren
+Zugangspunkte ab und verliert sieben Bezirksverbindungen, aber keinen
+diagnostizierten Baustellenzugang. Ist-Abfragen bleiben unverändert; tatsächlicher
+Builderzugang danach true, Pause/Spielzeit unverändert. Diagnosescope bestanden,
+keine negative Baustellenkontrolle und kein Abschluss B. Nächster Schritt:
+fachlich gültige Blockadekontrolle statt weiterer überlappender Bezirkszentralen;
+keine Suchserie. Allgemeine Baufreigabe bleibt gesperrt.
 
 Zusätzlicher Nutzerauftrag: `reasoning` für sämtliche MCP-Werkzeugaufrufe
 verpflichtend (auch Fake/Legacy und Leser). Zentrale Schema-/Eingangsprüfung vor

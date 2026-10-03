@@ -2,9 +2,14 @@ namespace Timberborn.Backend.Native;
 
 public static class RoadProtectionContract
 {
-    public static void Validate(NativeRoadProtection? d, bool applied, bool requireBaseline = false, bool requireProbeKinds = false, bool requireConstructionPreview = false, bool requireConstructionDetails = false)
+    public static void Validate(NativeRoadProtection? d, bool applied, bool requireBaseline = false, bool requireProbeKinds = false, bool requireConstructionPreview = false, bool requireConstructionDetails = false, bool requireConstructionEndpoints = false, bool requireConstructionQueryControls = false)
     {
         if (d?.ConstructionAccessPreview is { } construction) ConstructionPreviewContract.Validate(construction);
+        if (requireConstructionEndpoints || requireConstructionQueryControls)
+        {
+            if (d?.ConstructionAccessPreview?.Details is not { } detail) throw new InvalidDataException("Missing endpoint diagnostic");
+            ConstructionPreviewContract.ValidateDetails(detail,true,requireConstructionQueryControls);
+        }
         if (requireConstructionPreview && d?.ConstructionAccessPreview is null ||
             requireConstructionDetails && d?.ConstructionAccessPreview?.Details is null ||
             d is { Restored: true, ConstructionAccessPreview.Restored: false } ||

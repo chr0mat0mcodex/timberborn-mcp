@@ -8,11 +8,11 @@ historischer Bauplan ist Voraussetzung.
 
 ## Technischer Stand
 
-- Agent Bridge 0.31.1 installiert und begrenzte Baustellen-Detailausgabe live geprüft;
+- Agent Bridge 0.31.3 installiert und begrenzte Nachbar-/Pfad-/Spill-Diagnose live geprüft;
   vorherige Auswahlabfrage, Plattformpilot und obere Anschlüsse bleiben vorhanden.
 - Beide ursprünglichen Bauziele sind nur teilweise erreicht. Allgemeine sichere
   Baufreigabe fehlt; Baustellenabdeckung ist weiterhin offen.
-- Etappe A bestanden; in B Start-/Zielgültigkeit der Verbindungsabfrage klären.
+- Etappe A bestanden; in B fachlich gültige Baustellen-Blockadekontrolle finden.
   Details und Grenzen in docs/construction-access-preview.md, keine längeren Wege.
   Zurückgestellter Vier-Wege-Entwurf ist separat lokal gesichert, siehe BACKLOG.md.
 - Aktueller Arbeitsbranch: `codex/road-protection-pilot`.
