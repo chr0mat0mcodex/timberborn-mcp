@@ -2,18 +2,20 @@
 
 ## Stand
 
-Agent Bridge 0.32.0 ist zuletzt nach menschlichem Skript-Gate installiert und live geprüft.
+Agent Bridge 0.32.1 ist zuletzt nach menschlichem Skript-Gate installiert und live geprüft.
 Der aktuelle Arbeitsbranch ist `codex/road-protection-pilot`. Ein begrenzter
 Bauprojekt-Livefall D hat eine neue Treppe, drei Plattformen, zwei obere Wege und
 ein kleines Lager vollständig gebaut. Wartephasen, tatsächlicher Baustellenzugang,
 fertiger Lagerzugang, ausgewählte Bestandsanschlüsse und Idempotenz sind getrennt
 live belegt. A und begrenztes C bestanden; B-Untersuchung abgeschlossen, aber
-B-Schutzabnahme weiter offen. Details in vertical-warehouse-pilot.md.
+B jetzt im freigegebenen konservativen Ausschlussumfang geschlossen, allgemeiner
+Vorschau-Schutz weiter offen. Details in construction-isolation.md und vertical-warehouse-pilot.md.
 
 ## Nächster Ablauf
 
 1. Etappe E aus ../missionsplan.md nur in explizit unterstützten Eigenschaften
-   erweitern; keine freie Höhenplanung oder Vollschutzbehauptung. B-Lücke bleibt.
+   erweitern; zuerst fehlende ebene Lagerdrehungen prüfen, keine freie Höhenplanung
+   oder Vollschutzbehauptung. Allgemeine B-Vorschaulücke bleibt.
 2. Kandidat, Vorschau, Ausführung und Rücklesung weiterhin an dieselbe Session
    und eine neue Aktions-ID binden.
 3. Bei Fehlern Ursache beheben; keine unbestätigte Aktion blind wiederholen.

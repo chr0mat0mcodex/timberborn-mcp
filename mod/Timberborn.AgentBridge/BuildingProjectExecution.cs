@@ -32,7 +32,7 @@ public sealed class BuildingProjectExecution(SiteValidation validation, RoadProt
             p.Width, p.Height, p.Rotation, r.OptionIndex, r.PlanKey);
         var existing = controller.Existing(request.ActionId, fingerprint);
         if (existing is not null) return Payload(existing);
-        if (speed.CurrentSpeed != 0 || entities.Entities.Any(e => e.EntityId == request.ActionId))
+        if (speed.CurrentSpeed != 0 || !ConstructionIsolation.Allows(entities) || entities.Entities.Any(e => e.EntityId == request.ActionId))
             throw new BridgeRejectionException("state_conflict");
         // Fresh joint game preview is mandatory. Only this one explicitly authorized
         // construction-phase evidence gap is waived, never geometry or known losses.
@@ -55,13 +55,18 @@ public sealed class BuildingProjectExecution(SiteValidation validation, RoadProt
             EntityId = id.ToString("D"), Template = template, X = (int)cell["x"]!, Y = (int)cell["y"]!, Z = (int)cell["z"]!, Rotation = rotation };
         var steps = cells.Select(c => Step(c, "Path", Guid.NewGuid(), 0)).Concat(new[] {
             Step(option["origin"]!, p.Template, request.ActionId, p.Rotation) }).ToArray();
-        bool Guard() => speed.CurrentSpeed == 0 && RoadProtectionPolicy.LostConnections(baseline.Before, roads.Read(baseline, false)).Length == 0 &&
+        bool Guard() => speed.CurrentSpeed == 0 &&
+            ConstructionIsolation.Allows(entities, steps.Where(s => s.State != "pending").Select(s => s.EntityId)) &&
+            RoadProtectionPolicy.LostConnections(baseline.Before, roads.Read(baseline, false)).Length == 0 &&
             steps.Where(s => s.State == "confirmed").All(s => Confirm(s, district) == "confirmed");
         return Payload(controller.Start(request.ActionId, fingerprint, r.PlanKey, steps, Guard, step => Place(step, request.Session),
             step => Confirm(step, district)));
     }
     private void Place(BuildingProjectController.Step step, string session)
     {
+        // Confirmed paths are already finished; no independent or prior open site
+        // may exist at the next mutation boundary, even when preview says unknown.
+        if (!ConstructionIsolation.Allows(entities)) throw new InvalidOperationException();
         // Recheck the current game geometry and known road losses immediately before
         // each mutation; user edits between frames must not bypass validation.
         var query = new System.Collections.Specialized.NameValueCollection {

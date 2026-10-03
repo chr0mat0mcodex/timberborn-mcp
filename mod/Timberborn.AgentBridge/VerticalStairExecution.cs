@@ -29,7 +29,7 @@ public sealed class VerticalStairExecution(SiteValidation validation, BuildingCa
         if (!request.Start) return Payload(controller.Inspect(request.ActionId));
         string fingerprint = string.Join("|", request.Session, request.DistrictId, request.X, request.Y, request.Z, request.Rotation, request.UpperPathCount, request.WithPlatform, request.WithWarehouse);
         var existing = controller.Existing(request.ActionId, fingerprint); if (existing is not null) return Payload(existing);
-        if (speed.CurrentSpeed != 0 || entities.Entities.Any(e => e.EntityId == request.ActionId)) throw new BridgeRejectionException("state_conflict");
+        if (speed.CurrentSpeed != 0 || !ConstructionIsolation.Allows(entities) || entities.Entities.Any(e => e.EntityId == request.ActionId)) throw new BridgeRejectionException("state_conflict");
         var districtEntity = entities.Entities.SingleOrDefault(e => !e.Deleted && e.EntityId.ToString("D") == request.DistrictId)
             ?? throw new BridgeRejectionException("state_conflict");
         var district = districtEntity.GetComponent<DistrictCenter>() ?? throw new BridgeRejectionException("state_conflict");
@@ -63,6 +63,7 @@ public sealed class VerticalStairExecution(SiteValidation validation, BuildingCa
         }
         void Place(BuildingProjectController.Step s)
         {
+            if (!ConstructionIsolation.Allows(entities)) throw new InvalidOperationException();
             var query = new System.Collections.Specialized.NameValueCollection { ["template"] = s.Template, ["x"] = s.X.ToString(), ["y"] = s.Y.ToString(), ["z"] = s.Z.ToString(), ["rotation"] = s.Rotation.ToString(), ["session"] = request.Session };
             var evidence = JObject.FromObject(validation.Validate(BridgeRequest.Parse("/agent-api/v1/building-validation", query), out _, out var safety));
             if ((bool?)evidence["valid"] != true || safety.status != "unknown" || !safety.restored || safety.lostConnections != 0 || safety.constructionAccessPreview.HasKnownFailure() || !safety.reasons.SequenceEqual(new[] { "construction_and_road_node_coverage_unproven" })) throw new InvalidOperationException();
@@ -107,10 +108,10 @@ public sealed class VerticalStairExecution(SiteValidation validation, BuildingCa
             return speed.CurrentSpeed == 0 ? "ready" : "pause";
         }
         return Payload(controller.Start(request.ActionId, fingerprint, Hash(fingerprint), steps.ToArray(), () =>
-            (request.WithPlatform || speed.CurrentSpeed == 0) && !districtEntity.Deleted &&
+            ConstructionIsolation.Allows(entities, steps.Where(s => s.State != "pending").Select(s => s.EntityId)) && !districtEntity.Deleted &&
             (baseline is null || RoadProtectionPolicy.LostConnections(baseline.Before, roads.Read(baseline, false)).Length == 0) &&
             district.IsOnInstantDistrictRoad(NavigationCoordinateSystem.GridToWorld(lowerConnection)), Place, Confirm,
-            request.WithPlatform ? Ready : null));
+            Ready));
     }
     private static string Hash(string text)
     {

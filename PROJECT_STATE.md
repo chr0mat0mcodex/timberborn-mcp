@@ -6,6 +6,18 @@ Projektbeschreibung.
 
 ## Verifizierter Stand
 
+0.32.1 nach menschlichem Skript-Gate installiert und live bestanden: konservative
+Baustellensperre B. Neue Bauaktionen benötigen vollständige Bestandsinventur
+ohne offene unabhängige Baustellen. Eigene Baustellen dürfen während Bestätigung
+und Warten bestehen, aber vor jeder Folgeschritt-Platzierung müssen sie fertig
+sein. Neue unabhängige Baustellen stoppen laufende Projekte. Alle Treppenmodi
+verwenden jetzt die Wartefolge. Vorschau bleibt unknown, constructionCovered=false.
+Lager-/Treppenprojekt und Einzelplatzierung mit unabhängiger Baustelle abgelehnt;
+Objektzahl unverändert, bestehender Builderzugang erhalten. Nach deren Fertigstellung
+eigener Plattformablauf mit allen fünf fertigen Objekten und beiden verbundenen
+oberen Wegen bestanden. B im freigegebenen Ausschlussumfang geschlossen; als
+nächster E-Schritt fehlende ebene Lagerdrehungen prüfen, kein freier 3-D-Ausbau.
+
 0.32.0 nach menschlichem Skript-Gate installiert und live geprüft: Etappe D
 mit `stair_platform_warehouse_pilot`: Treppe, drei Plattformen, zwei obere Wege
 und ein kleines Lager mit rückwärtsgerichtetem Eingang. Folgeschritte warten auf
@@ -29,8 +41,8 @@ Tests abgedeckt, aber nicht separat live belegt. Auswahl allein ist kein
 
 | Ebene | Stand |
 | --- | --- |
-| Bridge | Agent Bridge 0.32.0 installiert; C und begrenzter vertikaler Lagerablauf D live bestanden; B-Schutzabnahme offen |
-| Automatisch | Menschliche Bereitmeldung nach Skript-Gate für 0.32.0; neue Testanzahl nicht übermittelt. Letzter Zahlenstand 0.29.3: 667 erfolgreich, 0 fehlgeschlagen, 3 übersprungen |
+| Bridge | Agent Bridge 0.32.1 installiert; B als konservative Ausschlussregel sowie begrenztes C/D live bestanden; allgemeiner Vorschau-Schutz offen |
+| Automatisch | Menschliche Bereitmeldung nach Skript-Gate für 0.32.1; neue Testanzahl nicht übermittelt. Letzter Zahlenstand 0.29.3: 667 erfolgreich, 0 fehlgeschlagen, 3 übersprungen |
 | Mod-Build | Timberborn 1.1.2.4 / Folktails, ohne Warnungen und Fehler |
 | Laufzeit | Bridge und Schreibfreigabe strukturiert erreichbar |
 | Bauprojekt | 0.32.0 live: Treppe, drei Plattformen, zwei obere Wege und kleines Lager; Bauphasen, Baustellen- und fertiger Zugang separat geprüft |

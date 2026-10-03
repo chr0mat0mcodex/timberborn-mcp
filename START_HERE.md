@@ -8,6 +8,11 @@ historischer Bauplan ist Voraussetzung.
 
 ## Technischer Stand
 
+- 0.32.1 konservative Baustellensperre B nach menschlichem Gate live bestanden.
+  B im Ausschlussumfang geschlossen; allgemeiner Vorschau-Schutz weiter offen.
+  Neue Projekte nur ohne unabhängige Baustellen; eigene Vorgänger vor weiteren
+  Platzierungen fertig. Nächster E-Schritt: fehlende Lagerdrehungen prüfen.
+
 - 0.32.0 nach menschlichem Gate für Etappe D live bestanden:
   festes Lagerprojekt über neue Treppe, drei Plattformen und zwei obere Wege.
   Alle sieben Objekte fertig, Bauarbeiter-/fertiger Lagerzugang und beide oberen
@@ -19,7 +24,7 @@ historischer Bauplan ist Voraussetzung.
   Umfang bestanden. B-Untersuchung mit echter Builder-Negativbaseline abgeschlossen;
   Vorschau-Schutzabnahme bleibt offen. Details im Projektstand.
 
-- Agent Bridge 0.32.0 installiert; begrenzte Nachbar-/Pfad-/Spill-Diagnose zuvor live geprüft;
+- Agent Bridge 0.32.1 installiert; begrenzte Nachbar-/Pfad-/Spill-Diagnose zuvor live geprüft;
   vorherige Auswahlabfrage, Plattformpilot und obere Anschlüsse bleiben vorhanden.
 - Beide ursprünglichen Bauziele sind nur teilweise erreicht. Allgemeine sichere
   Baufreigabe fehlt; Baustellenabdeckung ist weiterhin offen.

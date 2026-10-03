@@ -2,6 +2,12 @@
 
 ## Priorität
 
+Nutzerpriorität: B minimal vor E. 0.32.1 nach menschlichem Gate live bestanden:
+neues Projekt/Einzelplatzierung bei unabhängiger Baustelle ohne neue Objekte
+abgelehnt; nach deren Fertigstellung eigener Plattformablauf vollständig gebaut.
+B im freigegebenen Ausschlussumfang geschlossen, allgemeiner Vorschau-Schutz
+weiter ungelöst. Nächster E-Schritt: fehlende ebene Lagerdrehungen gezielt prüfen.
+
 Etappe D / 0.32.0 nach menschlichem Gate live bestanden: festes Lagerprojekt über
 neue Treppe, drei Plattformen und zwei obere Wege, alle sieben Objekte fertig.
 Tatsächlicher Baustellen-/fertiger Lagerzugang, beide oberen Wege, ausgewählte

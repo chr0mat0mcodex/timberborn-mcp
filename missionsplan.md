@@ -2,6 +2,15 @@
 
 ## Ziel
 
+Aktueller Nutzerauftrag: zuerst B im freigegebenen Minimalumfang, dann E.
+0.32.1 nach menschlichem Gate live bestanden: konservative Ablehnung bei
+unabhängigen offenen Baustellen und eigener Ablauf mit fertigen Vorgängern.
+B-Abschluss bedeutet hier belegte Ausschlussregel, keinen allgemeinen Builder-
+Vorschauvertrag; bestehende unknown-Sperren nicht lockern.
+
+B-Minimalumfang geschlossen. E beginnt mit gezielter Abnahme bislang fehlender
+ebener Lagerdrehungen, nicht mit freier Höhenplanung oder breitem Vorlagenbau.
+
 Etappe D / 0.32.0 nach menschlichem Skript-Gate live bestanden: kleines Lager
 über neue Treppe und Plattformstrecke, Bau- und Fertigzugang separat geprüft.
 Nächste Etappe E bleibt auf explizite Eigenschaften begrenzt; B-Schutzabnahme

@@ -64,7 +64,7 @@ public static class ActivityTools
     {
         if(args.EnumerateObject().Any())throw new ArgumentException();
         var e=await client.Activity(ct);var d=e.Data;
-        if(e.BridgeVersion is not ("0.16.0" or "0.17.0" or "0.17.1" or "0.17.2" or "0.18.0" or "0.19.0" or "0.19.1" or "0.19.2" or "0.20.0" or "0.20.1" or "0.21.0" or "0.21.1" or "0.22.0" or "0.23.0" or "0.23.1" or "0.23.2" or "0.24.0" or "0.24.1" or "0.25.0" or "0.26.0" or "0.27.0" or "0.28.0" or "0.28.1" or "0.29.0" or "0.29.1" or "0.29.2" or "0.29.3" or "0.30.0" or "0.31.0" or "0.31.1" or "0.31.2" or "0.31.3" or "0.31.4" or "0.32.0") || d.Capacity!=128 || d.Items is null || d.Items.Length>32 || d.Revision<0 ||
+        if(e.BridgeVersion is not ("0.16.0" or "0.17.0" or "0.17.1" or "0.17.2" or "0.18.0" or "0.19.0" or "0.19.1" or "0.19.2" or "0.20.0" or "0.20.1" or "0.21.0" or "0.21.1" or "0.22.0" or "0.23.0" or "0.23.1" or "0.23.2" or "0.24.0" or "0.24.1" or "0.25.0" or "0.26.0" or "0.27.0" or "0.28.0" or "0.28.1" or "0.29.0" or "0.29.1" or "0.29.2" or "0.29.3" or "0.30.0" or "0.31.0" or "0.31.1" or "0.31.2" or "0.31.3" or "0.31.4" or "0.32.0" or "0.32.1") || d.Capacity!=128 || d.Items is null || d.Items.Length>32 || d.Revision<0 ||
             d.Items.Any(i=>i is null || !ActivityRequest.IsState(i.State) || i.Reasoning is null || i.Summary is null || i.Reasoning.Length>600 || i.Summary.Length>400))throw new InvalidDataException("Invalid activity log");
         return (JsonObject)JsonSerializer.SerializeToNode(new NativeResult<NativeActivityLog>(1,"ok",d,new("native",false,e.SessionId,e.ObservedAtUtc),null),NativeJson.Options)!;
     }

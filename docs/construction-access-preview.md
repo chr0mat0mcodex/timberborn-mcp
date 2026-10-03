@@ -2,6 +2,12 @@
 
 ## Stand
 
+Freigegebene Minimalvariante 0.32.1 nach menschlichem Gate live bestanden:
+statt neuer Preview-Recherche werden unabhängige offene Baustellen aus dem
+Ausführungsumfang ausgeschlossen. B für diesen eingeschränkten Umfang geschlossen;
+allgemeiner Vorschau-Schutz bleibt offen.
+Details: [Konservative Baustellensperre](construction-isolation.md).
+
 Agent Bridge 0.31.4: menschliches Skript-Gate und feature-spezifischer Livetest
 bestanden. Untersuchung jetzt mit echter positiver und negativer Builderkontrolle
 abgeschlossen; Vorschau-Schutzabnahme nicht bestanden. Keine allgemeine Baufreigabe,

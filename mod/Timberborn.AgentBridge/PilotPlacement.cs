@@ -21,6 +21,7 @@ public sealed class PilotPlacement(SiteValidation validation, TemplateNameMapper
 
     private object PlaceOnce(BridgeRequest request)
     {
+        if (!ConstructionIsolation.Allows(entities)) throw new BridgeRejectionException("state_conflict");
         if (!request.GenericBuilding && request.Template is not ("Path" or "Lodge.Folktails")) throw new ArgumentException("invalid_template");
         var position = new Vector3Int(request.X, request.Y, request.Z);
         var id = request.GenericBuilding ? Guid.Parse(request.EntityId) : Guid.NewGuid();

@@ -5,6 +5,12 @@ Beobachtung und kontrollierte Eingriffe über reguläre Spielservices.
 
 ## Status
 
+Agent Bridge 0.32.1 schließt B im konservativen Minimalumfang: Bauanfragen bei
+unabhängigen offenen Baustellen werden abgelehnt; eigene Folgeplatzierungen
+benötigen fertige Vorgänger. Ablehnung ohne neue Objekte und erlaubter eigener
+Ablauf live geprüft. Kein allgemeiner Builder-Vorabnachweis.
+[Nachweis und Grenzen](docs/construction-isolation.md).
+
 Agent Bridge 0.32.0 ergänzt einen live belegten vertikalen Lagerablauf: neue
 Treppe, drei Plattformen, zwei obere Wege und kleines Lager. Bauarbeiterzugang
 und fertiger Lageranschluss wurden getrennt geprüft; ausgewählte Bestands-
