@@ -38,6 +38,8 @@ public sealed class BuildingProjectExecution(SiteValidation validation, RoadProt
         // construction-phase evidence gap is waived, never geometry or known losses.
         var evidence = JObject.FromObject(validation.ValidateProject(r));
         var protection = evidence["roadProtection"]!;
+        var construction = protection["constructionAccessPreview"]!.ToObject<ConstructionAccessPreview.Report>()!;
+        if (construction.HasKnownFailure()) throw new BridgeRejectionException("state_conflict");
         var option = evidence["option"]!;
         var cells = (JArray)option["newRoadCells"]!;
         if (!BuildingProjectPilotPolicy.Allows(cells.Count, (bool)evidence["buildingValid"]!,
@@ -67,7 +69,8 @@ public sealed class BuildingProjectExecution(SiteValidation validation, RoadProt
             ["rotation"] = step.Rotation.ToString(), ["session"] = session };
         var check = JObject.FromObject(validation.Validate(BridgeRequest.Parse("/agent-api/v1/building-validation", query), out _, out var protection));
         if ((bool?)check["valid"] != true || protection.status != "unknown" || !protection.restored ||
-            protection.lostConnections != 0 || !protection.reasons.SequenceEqual(new[] { "construction_and_road_node_coverage_unproven" }))
+            protection.lostConnections != 0 || protection.constructionAccessPreview.HasKnownFailure() ||
+            !protection.reasons.SequenceEqual(new[] { "construction_and_road_node_coverage_unproven" }))
             throw new InvalidOperationException();
         var template = catalog.Resolve(step.Template);
         var spec = template.GetSpec<BlockObjectSpec>();

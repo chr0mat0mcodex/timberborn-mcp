@@ -81,6 +81,7 @@ public sealed class SiteValidation(PreviewFactory factory, BlockObjectValidation
             for(int i=0;i<pathCells.Length;i++)roadValid[i]=roadValid[i]&&active[i].BlockObject.IsValid()&&validators.IsValid(active[i].BlockObject);
             connection=district.IsOnPreviewDistrictRoad(NavigationCoordinateSystem.GridToWorld(Pos(option["entrance"]!)));
             withPreview=roads.Read(sample,true);
+            roads.ObserveConstructionPreview(sample, active.SelectMany(p => p.BlockObject.PositionedBlocks.GetAllBlocks()));
         }
         catch {faulted=true;throw;}
         finally {
@@ -162,6 +163,7 @@ public sealed class SiteValidation(PreviewFactory factory, BlockObjectValidation
             {
                 preview.AddToPreviewServices();
                 previewConnections = roads.Read(sample, true);
+                roads.ObserveConstructionPreview(sample, cells);
             }
         }
         catch { faulted = true; throw; }

@@ -47,3 +47,8 @@ keine Platzierungsgarantie. Für die freie Einzelkontrolle wurde die bereits in
 der gemeinsamen Vorschau gültige Wegzelle benutzt, keine blinde Suchschleife.
 552 Distriktvergleiche, 173 verbundene Ausgangspaare, 122 Wegprüfpunkte; keine
 offenen Baustellen im Test. Keine Vollabdeckung von Bauphasen oder Builderzugang.
+
+Etappe B ergänzt eine separate Baustellen-Reichweitendiagnose. Ein beobachteter
+Verlust macht existingConstructionAccess=failed und den Entscheid blocked;
+kein Verlust bleibt unknown, da keine vollständige Bauphasenabdeckung besteht.
+Quelle, Grenzen und offenes Gate: [Baustellendiagnose](construction-access-preview.md).

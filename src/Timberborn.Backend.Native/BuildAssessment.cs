@@ -20,6 +20,7 @@ public sealed record BuildAssessment(string Decision, bool RegularExecutionAllow
             (roads.Status == "safe" || roads.Status == "unknown" &&
                 roads.Reasons.SequenceEqual(new[] { "construction_and_road_node_coverage_unproven" }));
         bool lost = prefixLoss || roads is { LostConnections: > 0 };
+        bool constructionLoss = roads?.ConstructionAccessPreview is { Status: "observed", LostSites: > 0 };
         var checks = new[] {
             new BuildCheck("placement", Result(geometry), "preview", "native_object_and_service_validation",
                 geometry.HasValue ? geometry.Value ? "placement_valid_in_preview" : "placement_invalid_in_preview" : "placement_evidence_unavailable"),
@@ -27,8 +28,9 @@ public sealed record BuildAssessment(string Decision, bool RegularExecutionAllow
                 "finished_preview_and_road_prefixes", "native_district_membership_comparison",
                 prefixLoss ? "existing_connection_lost_in_road_prefix" : lost ? "existing_district_connection_lost" :
                     baseline ? "no_loss_in_sampled_district_connections" : "baseline_or_preview_evidence_unavailable"),
-            new BuildCheck("existingConstructionAccess", "unknown", "construction", "not_proven",
-                "district_membership_does_not_prove_builder_access_preserved"),
+            new BuildCheck("existingConstructionAccess", constructionLoss ? "failed" : "unknown",
+                "existing_sites_under_finished_preview", roads?.ConstructionAccessPreview is null ? "not_proven" : "native_construction_range_diagnostic",
+                constructionLoss ? "existing_site_range_access_lost_in_preview" : "full_builder_access_preservation_not_proven"),
             new BuildCheck("candidateEntrance", Result(entrance), "finished_preview", entrance.HasValue ? "native_joint_project_preview" : "not_observed",
                 entrance.HasValue ? entrance.Value ? "entrance_connected_in_preview" : "entrance_not_connected_in_preview" : "single_object_validation_has_no_entrance_connection_evidence"),
             new BuildCheck("newConstructionAccess", "unknown", "construction", "not_observed",

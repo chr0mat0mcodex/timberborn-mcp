@@ -2,8 +2,14 @@ namespace Timberborn.Backend.Native;
 
 public static class RoadProtectionContract
 {
-    public static void Validate(NativeRoadProtection? d, bool applied, bool requireBaseline = false, bool requireProbeKinds = false)
+    public static void Validate(NativeRoadProtection? d, bool applied, bool requireBaseline = false, bool requireProbeKinds = false, bool requireConstructionPreview = false, bool requireConstructionDetails = false)
     {
+        if (d?.ConstructionAccessPreview is { } construction) ConstructionPreviewContract.Validate(construction);
+        if (requireConstructionPreview && d?.ConstructionAccessPreview is null ||
+            requireConstructionDetails && d?.ConstructionAccessPreview?.Details is null ||
+            d is { Restored: true, ConstructionAccessPreview.Restored: false } ||
+            d is { ConstructionAccessPreview: { Status: "observed", LostSites: > 0 } } && (applied || d.Status == "safe"))
+            throw new InvalidDataException("Inconsistent construction preview evidence");
         if (d is null || d.Status is not ("safe" or "blocked" or "unknown") || d.Reasons is null || d.Reasons.Length > 8 ||
             d.Reasons.Any(s => string.IsNullOrEmpty(s) || s.Length > 100) || d.Limitations is null || d.Limitations.Length > 16 ||
             d.Limitations.Any(s => string.IsNullOrEmpty(s) || s.Length > 160) || d.CheckedConnections is < 0 or > 16384 ||

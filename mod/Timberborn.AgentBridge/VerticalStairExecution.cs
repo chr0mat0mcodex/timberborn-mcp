@@ -58,7 +58,7 @@ public sealed class VerticalStairExecution(SiteValidation validation, BuildingCa
         {
             var query = new System.Collections.Specialized.NameValueCollection { ["template"] = s.Template, ["x"] = s.X.ToString(), ["y"] = s.Y.ToString(), ["z"] = s.Z.ToString(), ["rotation"] = s.Rotation.ToString(), ["session"] = request.Session };
             var evidence = JObject.FromObject(validation.Validate(BridgeRequest.Parse("/agent-api/v1/building-validation", query), out _, out var safety));
-            if ((bool?)evidence["valid"] != true || safety.status != "unknown" || !safety.restored || safety.lostConnections != 0 || !safety.reasons.SequenceEqual(new[] { "construction_and_road_node_coverage_unproven" })) throw new InvalidOperationException();
+            if ((bool?)evidence["valid"] != true || safety.status != "unknown" || !safety.restored || safety.lostConnections != 0 || safety.constructionAccessPreview.HasKnownFailure() || !safety.reasons.SequenceEqual(new[] { "construction_and_road_node_coverage_unproven" })) throw new InvalidOperationException();
             var spec = catalog.Resolve(s.Template).GetSpec<BlockObjectSpec>(); var placement = new Placement(new(s.X, s.Y, s.Z), Rotation(s), FlipMode.Unflipped);
             var footprint = spec.GetBlocks(placement).Take(65).ToArray();
             int expectedBlocks = s.Template == "Stairs.Folktails" ? 2 : 1;

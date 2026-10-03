@@ -5,6 +5,12 @@
 1. Etappe A bestanden: gemeinsamer Bericht, freie/gesperrte Vorschau und
    Vorschau-Eingang separat von tatsächlichen Zugängen live geprüft.
 2. Aktuell Etappe B: Baustellen-Erreichbarkeit unter geplanten Änderungen prüfen.
+   0.31.0 live: Baseline/freie Kontrolle bestanden; negative Baustellenkontrolle
+   nicht belegt. Begrenzte Detaildiagnose erneut freigegeben und in 0.31.1
+   in 0.31.1 live geprüft. Acht Einzelbefunde und Rücknahme passen; Verbindung vom
+   Zentralenursprung bereits in der erreichbaren Baseline überall false. Nächster
+   Schritt: Start-/Zielgültigkeit und positiven Verbindungsbezug klären.
+   Keine vollständige Bauzustandssimulation und noch kein Start von C.
 3. Etappe C: kleines Lager bis Fertigstellung und Zugang nachweisen.
 4. Etappe D: Gebäude mit vertikalem Anschluss; danach E: Breitenausbau.
    Abnahmekriterien: [Etappenplan](missionsplan.md).

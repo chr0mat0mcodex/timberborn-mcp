@@ -22,7 +22,7 @@ public sealed class BridgeConfigurator : Configurator
     {
         Bind<SelectionObservations>().AsSingleton(); Bind<ProductionGraph>().AsSingleton(); Bind<DiagnosticsObservations>().AsSingleton(); Bind<LogisticsObservations>().AsSingleton(); Bind<EconomyObservations>().AsSingleton(); Bind<Research>().AsSingleton(); Bind<ActivityLog>().AsSingleton(); Bind<ActivityLogWindow>().AsSingleton();
         Bind<BuildingSettings>().AsSingleton(); Bind<BuildingProjectPlanner>().AsSingleton(); Bind<BuildingCatalog>().AsSingleton(); Bind<SpatialObservations>().AsSingleton();
-        Bind<BuildingObservations>().AsSingleton();
+        Bind<BuildingObservations>().AsSingleton(); Bind<ConstructionAccessPreview>().AsSingleton();
         Bind<WorkforceObservations>().AsSingleton();
         Bind<WorkplaceStaffing>().AsSingleton();
         Bind<PriorityAndConstruction>().AsSingleton(); Bind<AreaManagement>().AsSingleton(); Bind<RemovalManagement>().AsSingleton();
@@ -105,7 +105,7 @@ public sealed class BridgeMod(ResourceCountingService resources, PopulationServi
             _ => throw new ArgumentException("invalid_request")
         };
         return JsonConvert.SerializeObject(new { schemaVersion = 1, sessionId, observedAtUtc = DateTimeOffset.UtcNow,
-            bridgeVersion = "0.30.0", data });
+            bridgeVersion = "0.31.1", data });
     }
     private object Snapshot()
     {

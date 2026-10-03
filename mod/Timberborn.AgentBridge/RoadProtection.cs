@@ -10,7 +10,7 @@ namespace Timberborn.AgentBridge;
 
 // Conservative pilot: native preview is evidence, not proof of construction-state parity.
 // Never modify the real navmesh, remove entities or override the game's locks.
-public sealed class RoadProtection(EntityRegistry entities)
+public sealed class RoadProtection(EntityRegistry entities, ConstructionAccessPreview construction)
 {
     public sealed class Report
     {
@@ -23,6 +23,7 @@ public sealed class RoadProtection(EntityRegistry entities)
         public int lostConnections;
         public bool restored;
         public bool constructionCovered;
+        public ConstructionAccessPreview.Report constructionAccessPreview = new();
         public object[] affected = Array.Empty<object>();
         public bool affectedTruncated;
         public object[] candidateCells = Array.Empty<object>();
@@ -36,6 +37,7 @@ public sealed class RoadProtection(EntityRegistry entities)
         public bool[] PreviewBefore = Array.Empty<bool>();
         public bool Complete;
         public string Reason = "navigation_coverage_unknown";
+        public ConstructionAccessPreview.Sample Construction = new();
     }
 
     public Sample Capture()
@@ -45,6 +47,7 @@ public sealed class RoadProtection(EntityRegistry entities)
         if (all.Length > 4096) { sample.Reason = "navigation_object_limit"; return sample; }
         sample.Districts = all.Where(e => e.GetComponent<BlockObject>().IsFinished && e.HasComponent<DistrictCenter>()).Select(e => e.GetComponent<DistrictCenter>()).ToArray();
         if (sample.Districts.Length is < 1 or > 16) { sample.Reason = "navigation_district_coverage_unknown"; return sample; }
+        sample.Construction = construction.Capture(all, sample.Districts);
         var probes = new List<(Guid, Vector3Int, Vector3, string)>();
         foreach (var e in all)
         {
@@ -79,16 +82,19 @@ public sealed class RoadProtection(EntityRegistry entities)
 
     public bool[] Read(Sample sample, bool preview) => sample.Districts.SelectMany(d => sample.Probes.Select(p =>
         preview ? d.IsOnPreviewDistrictRoad(p.Access) : d.IsOnInstantDistrictRoad(p.Access))).ToArray();
+    public void ObserveConstructionPreview(Sample sample, IEnumerable<Block> candidate) => construction.ObservePreview(sample.Construction, candidate);
 
     public Report Finish(Sample sample, bool[]? withPreview, IEnumerable<Block> candidate)
     {
-        var report = new Report { candidateCells = candidate.Select(c => Vec(c.Coordinates)).ToArray(),
+        var report = new Report { constructionAccessPreview = construction.Finish(sample.Construction),
+            candidateCells = candidate.Select(c => Vec(c.Coordinates)).ToArray(),
             checkedConnections = sample.Before.Length, connectedBefore = sample.Before.Count(connected => connected),
             roadProbeCount = sample.Probes.Count(p => p.Kind == "road_cell"),
             constructionProbeCount = sample.Probes.Count(p => p.Kind == "construction_access") };
         if (!sample.Complete || withPreview is null) { report.reasons = new[] { sample.Reason.Length > 0 ? sample.Reason : "preview_navigation_unavailable" }; return report; }
         report.checkedConnections = sample.Before.Length;
-        report.restored = sample.Before.SequenceEqual(Read(sample, false)) && sample.PreviewBefore.SequenceEqual(Read(sample, true));
+        report.restored = sample.Before.SequenceEqual(Read(sample, false)) && sample.PreviewBefore.SequenceEqual(Read(sample, true)) &&
+            report.constructionAccessPreview.restored != false;
         int[] lost = RoadProtectionPolicy.LostConnections(sample.Before, withPreview);
         report.lostConnections = lost.Length;
         // Finished preview, construction occupancy, unconnected roads and arbitrary nav adders

@@ -17,8 +17,8 @@ Tests abgedeckt, aber nicht separat live belegt. Auswahl allein ist kein
 
 | Ebene | Stand |
 | --- | --- |
-| Bridge | Agent Bridge 0.30.0 installiert; UI-Auswahl, Plattformpilot und direkte vertikale Distriktanbindung live belegt |
-| Automatisch | Menschliche Bereitmeldung nach Skript-Gate für 0.30.0; neue Testanzahl nicht übermittelt. Letzter Zahlenstand 0.29.3: 667 erfolgreich, 0 fehlgeschlagen, 3 übersprungen |
+| Bridge | Agent Bridge 0.31.1 installiert; begrenzte Baustellen-Detaildiagnose live geprüft, kein vollständiger Wegschutz |
+| Automatisch | Menschliche Bereitmeldung nach Skript-Gate für 0.31.1; neue Testanzahl nicht übermittelt. Letzter Zahlenstand 0.29.3: 667 erfolgreich, 0 fehlgeschlagen, 3 übersprungen |
 | Mod-Build | Timberborn 1.1.2.4 / Folktails, ohne Warnungen und Fehler |
 | Laufzeit | Bridge und Schreibfreigabe strukturiert erreichbar |
 | Bauprojekt | 0.29.2 live: Treppe, zwei Plattformen, zwei obere Wege; Bauphasen, completed und alle fünf fertigen Objekte rückgelesen |
@@ -52,8 +52,32 @@ nicht fertiggestelltes Gebäude mit anschließend geprüftem Zugang.
 
 Der ungeprüfte Vier-Wege-Entwurf (vorgesehene 0.30.1) ist zurückgestellt, lokal als
 benannter Git-Stash erhalten und nicht im aktiven Quellstand. Wiederaufnahme siehe
-BACKLOG.md. Verifizierte Bridge bleibt 0.30.0; Etappe A ändert vorerst nur die
-MCP-Auswertung vorhandener Validierungsergebnisse, keine Spiel-API/Baufreigabe.
+BACKLOG.md. Etappe A ändert nur die MCP-Auswertung vorhandener
+Validierungsergebnisse, keine Baufreigabe. Aktuell installierte Bridge 0.31.1.
+
+Etappe B: Bridge 0.31.0 installiert und begrenzt live geprüft nach menschlicher
+Bereitmeldung. Road-Spill-Baseline passt zur tatsächlichen Builder-Abfrage;
+freie Kontrolle und Vorschau-Rücknahme bestanden. Negative Baustellenkontrolle
+nicht belegt: zwei Sperrvorschauen verlieren elf Distriktverbindungen, aber
+keinen diagnostizierten Baustellenzugang. Kein Abschluss von B, keine Baufreigabe.
+Testserie gestoppt; Nutzer hat die begrenzte Detaildiagnose anschließend freigegeben.
+Eine echte Lagerbaustelle mit Anschlussweg ist als Testfixture angelegt.
+Details und Stopkriterien: [Baustellendiagnose](docs/construction-access-preview.md).
+
+0.31.1: Detailvergleich für eine Baustelle mit maximal acht Zugängen live geprüft.
+Freie Vorschau und breite Sperrkontrolle zeigen getrennte Reichweiten-,
+Verbindungs- und Belegungswerte; Baseline und Rücknahme bestanden. Alle acht
+Verbindungswerte vom Zentralenursprung bereits vorher false bei realem
+Builderzugang true: kein geeigneter Verbindungsnachweis. Sechs Zugänge bleiben
+trotz Kandidatenbelegung im Reichweitenfeld. Nächster Schritt native Start-/
+Zielgültigkeit klären, keine Suchserie. Etappe B und allgemeine Baufreigabe offen.
+
+Zusätzlicher Nutzerauftrag: `reasoning` für sämtliche MCP-Werkzeugaufrufe
+verpflichtend (auch Fake/Legacy und Leser). Zentrale Schema-/Eingangsprüfung vor
+Backend und Log implementiert; Negativtests und angepasste Integrationstests
+im menschlichen Skript-Gate. Live bestanden: gueltige Begruendung akzeptiert,
+fehlend/blank als InvalidParams ohne Logeintrag abgewiesen. Feldname und
+Ingame-Logformat bleiben unverändert; reine MCP-Anforderung, keine neue Spiel-API.
 
 Plattformpilot 0.29.2 abgeschlossen: Der begrenzte Wartezustand behandelt
 Baustellen mit unverändertem Wegschutz und Bau nur bei Pause. Nach drei getrennten
