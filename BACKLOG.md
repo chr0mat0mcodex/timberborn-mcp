@@ -1,5 +1,20 @@
 # Backlog
 
+## Priorität: regionale Flächensuche — Vorschlag nach Ausbaupilot
+
+Rund 40 MCP-Aufrufe für zwei Wohnhäuser, eine Transportstation und sieben
+Feldzellen. Regionale Suche soll Gelände, Bestandszugänge und geeignete Bau- und
+Anbauflächen gebündelt ausweisen, statt blindes Räumen oder einzelne 8x8-Suchen
+zu skalieren. Kandidaten bleiben Vorschläge; native Bau-/Zugangsprüfung bleibt
+verbindlich. Keine Gebäudefertigstellung, Pflanzung oder Ernte aus Planung ableiten.
+Nach ausdrücklichem Go implementiert und nach menschlichem Gate begrenzt live
+abgenommen: 32 native Leseaufrufe, vier Kandidaten, Bestands-/Feldkontrollen
+korrekt; laufendes Spiel abgelehnt. Keine allgemeine Bau-/Anbaufreigabe.
+Umfang und Grenzen: [regionale Flächensuche](docs/regional-survey.md).
+Chargenantworten weiter kürzen: unveränderte Suchdetails/alte completion-Werte
+nur bei Bedarf; wartender Status braucht nächsten sinnvollen Abfragezeitpunkt.
+
+
 ## Live bestanden — temporäre Spielsperren in Zeitläufen (2026-10-04)
 
 Menschliches Test-/Installationsgate abgeschlossen; alle fünf installierten

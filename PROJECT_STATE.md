@@ -1,5 +1,59 @@
 # Projektstand
 
+## Live bestanden — regionale Flächensuche (2026-10-04)
+
+Menschliches Gate abgeschlossen, fünf installierte Paketdateien mit Paket
+0.35.3-20261004-234748-393364c9 abgeglichen. 16×16-Pilot: 32 native Leseaufrufe,
+darunter zwölf Planungen, in etwa 2,6 Sekunden. Vier Baukandidaten und vier
+Bodenrechtecke in einer kompakten Antwort. Richtwert etwa 30 Aufrufe knapp
+überschritten; feste Obergrenze 82 eingehalten. Kein zusätzlicher Scan nötig.
+
+Alle 30 Feldmarkierungen als belegt, sechs unabhängig abgefragte tiefere
+Wasserzellen als andere Bodenhöhe ausgeschlossen. Stichprobe von 17 vorhandenen
+Gebäuden/Wegen: belegte Grundrisszellen und Eingänge nicht frei. Größtes freies
+Bodenrechteck unabhängig ohne überlappende Objekte. Erster Kandidat nativ
+validiert: Geometrie gültig, Eingang angeschlossen, keine verlorenen Verbindungen
+in den geprüften Bestandsproben, Vorschau wiederhergestellt. Baustellenzugang
+und tatsächlicher Fertigzugang bleiben unknown; keine allgemeine Baufreigabe.
+
+Negativkontrolle bei bestätigtem Tempo 1 liefert state_conflict ohne Bericht.
+Kontrolllauf danach abgebrochen, Pause separat bestätigt. Feature im begrenzten
+Umfang abgenommen; keine Behauptung vollständiger Regionssuche, Bewirtschaftung
+oder neuer Gebäude durch diese lesende Abfrage. Nächster Schritt: Kandidaten für
+den weiteren Gesamtausbau verwenden. Letzter Ausbaucheckpoint: 31 Biber, 24/157.
+
+## Gesamtziel — Ausbaucheckpoint 2026-10-04 nach Zeitlauf-Reparatur
+
+Verifiziert: 31 lebende Biber (22 Erwachsene, 9 Kinder), 33 Betten, zwei frei,
+keine Obdachlosen und keine kritischen Bedürfnisflags. Wasser 90, Beeren 70,
+verfügbares Holz 18; Übersicht liefert keinen gesamten Nahrungsbestand.
+Zwei weitere Lodge-Wohnhäuser und eine HaulingPost fertig und laut Charge
+finished_accessible; Fertigstatus aller drei unabhängig zurückgelesen.
+Transportstation mit fünf von fünf gewünschten Arbeitern, laufender Job.
+Vorlagenabdeckung jetzt 24/157: HaulingPost neu, 133 noch ohne Baunachweis.
+
+Erste Charge: ein von drei Häusern fertig, dann kein weiterer Kandidat im
+kleinen Südostfenster. Zweite Charge: größeres 8x8-Fenster, 28 Vegetationsziele
+geräumt, Wohnhaus und Transportstation nacheinander fertig; zwei neue Wege.
+Keine blinde Wiederholung des gestoppten Auftrags. Vier begrenzte Zeitfenster
+(48 + 24 + 24 + 24 Stunden) abgeschlossen; aktuelles Tempo separat 0 bestätigt.
+
+Karottenfläche von 23 auf 30 Zellen erweitert; sieben neue Pflanzen unabhängig
+lebend/wachsend und ohne Wasserstress beobachtet. Vier Bäume gezielt entfernt.
+Farm tatsächlich mit drei von drei Arbeitern besetzt. Westliche vermeintliche
+Freifläche liegt tiefer im Wasser, östliche Reserve höher: daher dort kein
+Feldauftrag. Markierung und tatsächliche Pflanzung getrennt nachgewiesen.
+
+Effizienz: rund 40 fachliche MCP-Aufrufe für drei fertige Gebäude (nur eine neue
+Vorlage) und sieben Feldzellen. Bauchargen helfen, regionale Platzwahl und
+Versorgungsaufbau bleiben manuell. Grobe lineare Warnprojektion bei diesem Mix:
+133 übrige Vorlagen etwa 5.000 Aufrufe; keine verlässliche Gesamtprognose.
+Aufwandsalarm gestellt, neue ausdrückliche Entscheidung gemäß AGENTS.md erbeten.
+Nutzer entschied anschließend ausdrücklich: regionale Flächensuche entwickeln.
+Gesamtziel nicht erreicht.
+
+
+
 ## Live bestanden — temporäre Spielsperren in Zeitläufen (2026-10-04)
 
 Menschliches Test-/Installationsgate abgeschlossen; alle fünf installierten
