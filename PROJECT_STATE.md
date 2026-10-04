@@ -1,5 +1,22 @@
 # Projektstand
 
+## Live bestanden — gebündelte Kolonieübersicht und Bauprüfdetails
+
+Nach menschlichem Gate und gezieltem Livevergleich abgenommen. Neues lesendes `inspect_colony_overview`
+bündelt Snapshot und höchstens vier Bedürfnis-Seiten in einem MCP-Aufruf.
+Vollständigkeit, Fortsetzungsposition, fehlende Beobachtungen und schwankende
+Bevölkerungszähler bleiben explizit; keine atomare Beobachtung, kein Gesamtfutter-
+oder Zufriedenheitsnachweis. Sitzungs-/Versionswechsel und wechselnder Katalog
+werden abgelehnt, ohne Wiederholung. Bridge bleibt unverändert bei 0.35.3.
+Bauprüfung compact kürzt Zell-/Quellenangaben; unabhängige Diagnosezustände,
+Grenzen, Verluste und Wiederherstellung bleiben. Live: Bauprüfung 3922 → 3304
+Zeichen (16 %), projizierte Daten gleich außer laufendem Versuchszähler.
+Kolonieübersicht 5732 statt zusammen 14363 Zeichen (60 %), ein statt drei
+MCP-Aufrufen; alle 42 Bedürfnisse und Zustandswerte gegen Einzelabfragen geprüft.
+Spiel pausiert, complete/countsStable=true, atomic=false. Fünf installierte
+Paketdateien stimmen mit dem neuen menschlich erzeugten Paket überein.
+Keine neue Baufreigabe und kein Gesamt-Zufriedenheitsnachweis.
+
 ## Live bestanden — kompakte MCP-Antworten, erster Pilot
 
 Nutzer-Go für effizientere MCP-Abläufe nach Aufwandsalarm. MCP-Präsentationsschicht

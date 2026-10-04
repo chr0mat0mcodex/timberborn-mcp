@@ -13,7 +13,7 @@ public static class ResponsePresentation
     private static string[] OptionalFields(string name) => name switch {
         "inspect_building_settings" => ["limitations", "allowedGoods", "allowedPlants"],
         "set_storage_good" or "set_storage_mode" => ["limitations", "observation"],
-        "validate_building" => ["limitations", "candidateCells"],
+        "validate_building" => ["limitations", "candidateCells", "origin", "accesses", "rangeOrigin", "originSource", "accessCells", "source"],
         _ => []
     };
 
@@ -91,6 +91,18 @@ public static class ResponsePresentation
                 // Nested limitations describe actual proof boundaries and remain intact.
                 data.Remove("limitations");
                 (data["roadProtection"] as JsonObject)?.Remove("candidateCells");
+                if (data["roadProtection"]?["constructionAccessPreview"] is JsonObject construction) {
+                    // Aggregate status/reason, losses, restoration and per-site results stay.
+                    // Per-cell navigation diagnostics are available with detail=full.
+                    if (construction["details"] is JsonObject details) {
+                        details.Remove("origin"); details.Remove("accesses");
+                        details.Remove("rangeOrigin"); details.Remove("originSource");
+                    }
+                    if (construction["items"] is JsonArray sites)
+                        foreach (var site in sites.OfType<JsonObject>()) site.Remove("accessCells");
+                }
+                if (data["assessment"]?["checks"] is JsonArray checks)
+                    foreach (var check in checks.OfType<JsonObject>()) check.Remove("source");
                 break;
         }
         return copy;

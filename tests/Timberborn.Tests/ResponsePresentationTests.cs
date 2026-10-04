@@ -97,6 +97,37 @@ public sealed class ResponsePresentationTests
     }
 
     [Fact]
+    public void NestedValidationRetainsIndependentUnknownsAndLosses()
+    {
+        var source = Envelope(JsonNode.Parse("""
+            {"roadProtection":{"restored":false,"lostConnections":1,"affected":[{"id":"sample"}],
+              "constructionAccessPreview":{"status":"observed","lostSites":1,"restored":false,
+                "items":[{"id":"site","before":true,"during":false,"after":false,"accessCells":[{"x":1}]}],
+                "details":{"status":"unknown","reason":"diagnostic_limit","baselineMatches":null,
+                  "restored":null,"originOnDistrictRoad":null,"limitations":["not_builder_proof"],
+                  "origin":null,"rangeOrigin":null,"originSource":null,"accesses":[]}}},
+             "assessment":{"checks":[{"name":"access","status":"unknown","phase":"construction",
+               "reason":"unproven","source":"native_diagnostic"}]}}
+            """)!.AsObject());
+        var before = source.ToJsonString();
+        var compact = ResponsePresentation.Present("validate_building", source, false);
+        var road = compact["data"]!["roadProtection"]!;
+        Assert.Equal(1, road["lostConnections"]!.GetValue<int>());
+        Assert.Equal(source["data"]!["roadProtection"]!["affected"]!.ToJsonString(), road["affected"]!.ToJsonString());
+        var preview = road["constructionAccessPreview"]!;
+        Assert.Equal(1, preview["lostSites"]!.GetValue<int>());
+        Assert.False(preview["items"]![0]!["during"]!.GetValue<bool>());
+        Assert.Null(preview["items"]![0]!["accessCells"]);
+        Assert.Equal("unknown", preview["details"]!["status"]!.GetValue<string>());
+        Assert.True(preview["details"]!.AsObject().ContainsKey("restored"));
+        Assert.Null(preview["details"]!["restored"]);
+        Assert.NotNull(preview["details"]!["limitations"]);
+        Assert.Null(preview["details"]!["accesses"]);
+        Assert.Equal(before, source.ToJsonString());
+        Assert.Equal(before, ResponsePresentation.Present("validate_building", source, true).ToJsonString());
+    }
+
+    [Fact]
     public void CatalogAdvertisesOptionalDetailAndOptionalOmittedFields()
     {
         var tool = ResponsePresentation.Describe(BuildingSettingsTools.Catalog(true).Single(t => t.Name == "set_storage_good"));

@@ -17,6 +17,15 @@
 
 ## Kurzfristig priorisiert — kompakte MCP-Antworten (P1)
 
+Folgeschritt live bestanden: `inspect_colony_overview` ersetzt mehrere
+MCP-Abfragen durch eine begrenzte lesende Zusammenführung, ohne weniger interne
+Bridge-Abfragen oder Atomizität zu behaupten. Bauprüfung entfernt weitere
+Zell-/Quellenangaben, erhält separate Unknowns und Nachweisgrenzen.
+Nutzen im pausierten Spiel belegt: ein statt drei MCP-Aufrufen, 60 % weniger
+Antwortzeichen bei gleichen relevanten Daten und allen 42 Bedürfnissen.
+Bauprüfung 16 % kürzer, vollständige Projektion fachlich gleich.
+Allgemeine Ausbauabläufe und weitere Werkzeuggruppen bleiben offen.
+
 Nutzerauftrag vom 2026-10-04: zeitnah umsetzen, direkt nach dem laufenden
 0.35.3-Test-Gate. Standardantworten sollen nur das für die konkrete Aktion oder
 Entscheidung Nötige enthalten. Im Playtest wiederholen sich lange `limitations`,
