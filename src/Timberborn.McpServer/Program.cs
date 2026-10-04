@@ -43,7 +43,7 @@ using var native = backendName == "native" ? new NativeTools(new NativeClient(Na
     Environment.GetEnvironmentVariable("TIMBERBORN_NATIVE_CONFIG") ?? throw new InvalidOperationException("TIMBERBORN_NATIVE_CONFIG fehlt."))), validationEnabled, placementEnabled, lodgePlacementEnabled, speedControlEnabled, staffingEnabled, prioritiesEnabled, areasEnabled, removalEnabled, buildingPlacementEnabled, buildingSettingsEnabled, researchEnabled) : null;
 var service = backend is null ? null : new ObservationService(backend);
 var actions = backend is null ? null : new BuildingActionService(backend, (ITimberbornWriteBackend)backend);
-var tools = native is null ? ToolCatalog.Create(writesEnabled) : NativeTools.Catalog(validationEnabled, placementEnabled, lodgePlacementEnabled, speedControlEnabled, staffingEnabled, prioritiesEnabled, areasEnabled, removalEnabled, buildingPlacementEnabled, buildingSettingsEnabled, researchEnabled);
+var tools = native is null ? ToolCatalog.Create(writesEnabled) : NativeTools.Catalog(validationEnabled, placementEnabled, lodgePlacementEnabled, speedControlEnabled, staffingEnabled, prioritiesEnabled, areasEnabled, removalEnabled, buildingPlacementEnabled, buildingSettingsEnabled, researchEnabled).Select(ResponsePresentation.Describe).ToArray();
 var builder = Host.CreateApplicationBuilder(new HostApplicationBuilderSettings { Args = [], DisableDefaults = true });
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole(o => o.LogToStandardErrorThreshold = LogLevel.Trace);
@@ -56,6 +56,11 @@ builder.Services.AddMcpServer().WithStdioServerTransport()
         if (native is null && !tools.Any(t => t.Name == request.Name))
             throw new McpProtocolException("Unknown tool", McpErrorCode.InvalidParams);
         var arguments = JsonSerializer.SerializeToElement(request.Arguments ?? new Dictionary<string, JsonElement>());
+        bool full = false;
+        if (native is not null) {
+            try { (arguments, full) = ResponsePresentation.ReadRequest(request.Name, arguments); }
+            catch (ArgumentException) { throw new McpProtocolException("detail muss compact oder full sein und vom Werkzeug unterstützt werden.", McpErrorCode.InvalidParams); }
+        }
         JsonElement backendArguments;
         try { backendArguments = ActivityTools.RequireReasoning(arguments); }
         catch (ArgumentException) { throw new McpProtocolException("reasoning ist erforderlich: nicht leere Begründung, maximal 600 Zeichen.", McpErrorCode.InvalidParams); }
@@ -63,12 +68,7 @@ builder.Services.AddMcpServer().WithStdioServerTransport()
             : request.Name == "set_building_paused"
                 ? await actions!.InvokeAsync(backendArguments, ct)
                 : await service!.InvokeAsync(request.Name, backendArguments, ct);
-        return new CallToolResult
-        {
-            StructuredContent = JsonSerializer.SerializeToElement(result),
-            Content = [new TextContentBlock { Text = result.ToJsonString() }],
-            IsError = result["status"]!.GetValue<string>() == "error"
-        };
+        return ResponsePresentation.ToToolResult(native is null ? result : ResponsePresentation.Present(request.Name, result, full));
     });
 try { await builder.Build().RunAsync(); }
 finally { (backend as IDisposable)?.Dispose(); }

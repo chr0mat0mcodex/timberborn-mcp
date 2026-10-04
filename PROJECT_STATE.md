@@ -1,5 +1,20 @@
 # Projektstand
 
+## Live bestanden — kompakte MCP-Antworten, erster Pilot
+
+Nutzer-Go für effizientere MCP-Abläufe nach Aufwandsalarm. MCP-Präsentationsschicht
+für Status, Lagereinstellungen und generische Bauvalidierung: Standard compact,
+optionales `detail=full`. Bestehende native Validierung vor der Projektion;
+Fehler/unbestätigte Einstellungsänderungen vollständig, Unknown-/Zugangsbelege
+bleiben sichtbar. Keine Spielmod- oder Versionsänderung (Bridge 0.35.3).
+Menschliches Gate und Livevergleich bestanden: Lagerlesen 1258 → 593 Zeichen
+(53 % weniger), identische Zustandswerte. Einmalige Modusänderung separat bestätigt,
+veralteter Erwartungswert abgelehnt, ungültiges detail als -32602 abgelehnt.
+Bauprüfung 3922 → 3647 Zeichen (7 % weniger), semantisch gleich bis auf den
+Versuchszähler; valid=false, Wiederherstellung und Unknowns erhalten.
+Kein breiter Effizienzgewinn für Bauprüfung behauptet; dafür gezielt weiterarbeiten.
+Nachweise in docs/playtest-2026-10-04.md.
+
 ## Live bestanden — 0.35.3 Lagerkonfiguration im Bauauftrag
 
 Auf Nutzerwunsch optionale initialStorageGood/initialStorageMode am ebenen

@@ -1,5 +1,20 @@
 # Backlog
 
+## Weitere Live-Lücken beim Kolonieausbau
+
+- Flächenvorprüfung mit konkreten blockierten Zellen und Gründen: `set_area`
+  meldet bei besetzter Pflanzfläche nur `invalid_argument` und einen pauschalen
+  Hinweis auf möglicherweise unbestätigte Wirkung. Live: Kiefern vor der Farm,
+  keine Markierungen verändert. Validierungsfehler vor Mutation von tatsächlich
+  unbestätigten Änderungen unterscheiden; `precheck_area` vorsehen.
+- Bauplanung ohne Kandidaten: Ablehnungsgründe aggregieren (Gelände, Objekte,
+  Anschluss, Wegbudget), damit kein Suchraster durchprobiert werden muss.
+- Räumliche Filter für Fäll-/Pflanzmarkierungen und Reichweiten: zwanzig lokale
+  Fällfelder erfordern derzeit den Abgleich von 190 kolonieweiten Markierungen.
+- Fortschrittsbericht: lebende Bevölkerung, beobachtete Grundbedürfnisse und
+  echte Wohlbefindenspunkte sowie gebaute/fehlende Katalogvorlagen gemeinsam.
+  Vorhandener Fertigbestand ist kein vollständiges historisches Bauregister.
+
 ## Kurzfristig priorisiert — kompakte MCP-Antworten (P1)
 
 Nutzerauftrag vom 2026-10-04: zeitnah umsetzen, direkt nach dem laufenden
@@ -22,8 +37,15 @@ Objektzustände auch bei einfachen Status- und Einstellungsabfragen.
   Fehler-, Konflikt- und Unknown-Fälle sowie abrufbare Details mitprüfen;
   erst danach auf weitere Werkzeuge ausweiten.
 
-Status: priorisiert, noch nicht implementiert. Kein Aufschub hinter den
-vollständigen Gebäudekatalogausbau.
+Status: erster Pilot nach menschlichem Gate live abgenommen:
+Status, Lagerlesen/-änderungen und generische Bauprüfung mit optionalem
+`detail=full`. MCP-Text bleibt aus Kompatibilitätsgründen inhaltlich gleich zur
+strukturierten Antwort; beide tragen dieselbe gekürzte Projektion. Gebündelte
+Ausbauabläufe und weitere Werkzeuggruppen folgen nach gemessenem Pilotnutzen.
+Lagerlesen live 53 % kürzer; Bauprüfung nur 7 % kürzer. Dort bleibt der Großteil
+in verschachtelten Diagnosebelegen: nächster Schritt ist eine kompakte fachliche
+Zusammenfassung mit vollständigen Belegen auf Abruf, keine pauschale Feldlöschung.
+Kein Aufschub hinter den vollständigen Gebäudekatalogausbau.
 
 ## Offene Folgearbeiten nach Phase E
 
