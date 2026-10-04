@@ -197,8 +197,21 @@ public sealed class NativeBridgeTests
             if (enableValidation) { expected.AddRange(["set_building_paused","set_storage_good","set_storage_mode","set_farm_priority","set_farm_crop"]); expected.Add("validate_build_site"); expected.Add("set_workplace_staffing"); expected.AddRange(["demolish_building","remove_planted","remove_vegetation","remove_debris"]); }
             if (enablePlacement) { expected.Add("unlock_building"); expected.Add("place_path"); expected.Add("set_building_priority"); } if (enableLodgePlacement) { expected.Add("place_building"); expected.Add("validate_building"); expected.Add("validate_building_project"); expected.Add("execute_building_project_pilot"); expected.Add("execute_vertical_stair_pilot"); expected.Add("set_area"); expected.Add("place_lodge"); expected.Add("set_simulation_speed"); expected.AddRange(["run_simulation_for", "run_simulation_until", "cancel_simulation_run"]); }
             expected.Add("inspect_building_capabilities");
+            if (enableValidation) expected.Add("remove_vegetation_batch");
+            if (enableLodgePlacement) expected.Add("start_building_project");
             Assert.Equal(expected.Order(), tools.Select(t => t.Name).Order());
-            Assert.All(tools, t => { Assert.Equal(t.Name is not ("run_simulation_for" or "run_simulation_until" or "cancel_simulation_run" or "unlock_building" or "set_building_paused" or "set_storage_good" or "set_storage_mode" or "set_farm_priority" or "set_farm_crop" or "place_building" or "execute_building_project_pilot" or "execute_vertical_stair_pilot" or "validate_building_project" or "validate_building" or "validate_build_site" or "place_path" or "place_lodge" or "set_simulation_speed" or "set_workplace_staffing" or "set_building_priority" or "set_area" or "demolish_building" or "remove_planted" or "remove_vegetation" or "remove_debris"), t.ProtocolTool.Annotations!.ReadOnlyHint); Assert.NotNull(t.ProtocolTool.OutputSchema); });
+            if (enableValidation) {
+                var batch = await client.CallToolWithReasonAsync("remove_vegetation_batch", new Dictionary<string, object?> {
+                    ["session"] = session, ["operation"] = "mark",
+                    ["targets"] = new[] {
+                        new { id = Guid.NewGuid().ToString("D"), template = "Synthetic", x = 1, y = 2, z = 3, expectedMarked = false },
+                        new { id = Guid.NewGuid().ToString("D"), template = "Synthetic", x = 2, y = 2, z = 3, expectedMarked = false } }
+                }, cancellationToken: ct);
+                Assert.False(batch.IsError);
+                Assert.Equal(2, batch.StructuredContent!.Value.GetProperty("data").GetProperty("applied").GetInt32());
+                Assert.Equal(2, batch.StructuredContent.Value.GetProperty("data").GetProperty("pendingWorkerOrders").GetInt32());
+            }
+            Assert.All(tools, t => { Assert.Equal(t.Name is not ("remove_vegetation_batch" or "start_building_project" or "run_simulation_for" or "run_simulation_until" or "cancel_simulation_run" or "unlock_building" or "set_building_paused" or "set_storage_good" or "set_storage_mode" or "set_farm_priority" or "set_farm_crop" or "place_building" or "execute_building_project_pilot" or "execute_vertical_stair_pilot" or "validate_building_project" or "validate_building" or "validate_build_site" or "place_path" or "place_lodge" or "set_simulation_speed" or "set_workplace_staffing" or "set_building_priority" or "set_area" or "demolish_building" or "remove_planted" or "remove_vegetation" or "remove_debris"), t.ProtocolTool.Annotations!.ReadOnlyHint); Assert.NotNull(t.ProtocolTool.OutputSchema); });
             foreach(var name in new[]{"inspect_goods","inspect_alerts","inspect_alert_targets"}) {
                 var args=new Dictionary<string,object?>{["offset"]=0,["limit"]=32,["reasoning"]="Versorgung lesend prüfen."};
                 if(name=="inspect_alert_targets") {args["session"]=session;args["alertId"]=new string('0',64);}
@@ -289,14 +302,14 @@ public sealed class NativeBridgeTests
             Assert.False(site.IsError);
             Assert.False(site.StructuredContent!.Value.GetProperty("data").GetProperty("gameValidated").GetBoolean());
             Assert.Equal("requires_game_validation", site.StructuredContent!.Value.GetProperty("data").GetProperty("assessment").GetString());
-            Assert.Equal((enableLodgePlacement ? 12 : 8) + (enablePlacement ? 4 : 1) + 12, Volatile.Read(ref observations));
+            Assert.Equal((enableLodgePlacement ? 12 : 8) + (enablePlacement ? 4 : 1) + 12 + (enableValidation ? 2 : 0), Volatile.Read(ref observations));
             if (enableValidation)
             {
                 var validation = await client.CallToolWithReasonAsync("validate_build_site", new Dictionary<string, object?>
                     { ["template"] = "Path", ["x"] = 1, ["y"] = 2, ["z"] = 3, ["rotation"] = 0, ["session"] = session }, cancellationToken: ct);
                 Assert.False(validation.IsError);
                 Assert.True(validation.StructuredContent!.Value.GetProperty("data").GetProperty("noPersistentChangeObserved").GetBoolean());
-                Assert.Equal((enableLodgePlacement ? 13 : 9) + (enablePlacement ? 4 : 1) + 12, Volatile.Read(ref observations));
+                Assert.Equal((enableLodgePlacement ? 13 : 9) + (enablePlacement ? 4 : 1) + 12 + (enableValidation ? 2 : 0), Volatile.Read(ref observations));
             }
             if (enablePlacement)
             {

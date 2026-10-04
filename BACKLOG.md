@@ -1,5 +1,20 @@
 # Backlog
 
+## Live bestanden — gebündelte Bau- und Räumaufträge
+
+Nach ausdrücklichem Nutzer-Go: zwei MCP-Werkzeuge über bestehenden nativen
+Services, ohne neue Abhängigkeit. Räumstapel bis 16
+Vegetationsziele mit Einzelbelegen/Stopp beim ersten Fehler; Baustart bündelt
+Planung und native Pilot-Ausführung des ersten Kandidaten. Bestehende Rechte,
+Zugangsprüfungen und initiale Lagerkonfiguration bleiben wirksam.
+Sammelräumung und korrigierter Konfliktstopp live bestanden; explizites
+state_conflict und unverändertes Folgeziel bestätigt. Gebündelter Baustart
+live bis zum fertigen erreichbaren Lager samt erhaltener Konfiguration geprüft.
+Drei Ziele in einem Aufruf und Baustart ohne manuelles Kopieren von
+planKey/optionIndex. Mehrere Gebäude
+in einer Bauwarteschlange, automatische Simulation und Sammelräumung anderer
+Objektarten bleiben Folgearbeit; keine allgemeine autonome Ausbaupipeline behauptet.
+
 ## Weitere Live-Lücken beim Kolonieausbau
 
 - Flächenvorprüfung mit konkreten blockierten Zellen und Gründen: `set_area`
@@ -9,6 +24,13 @@
   unbestätigten Änderungen unterscheiden; `precheck_area` vorsehen.
 - Bauplanung ohne Kandidaten: Ablehnungsgründe aggregieren (Gelände, Objekte,
   Anschluss, Wegbudget), damit kein Suchraster durchprobiert werden muss.
+  Erneut live: zwei 8x8-Suchen für Lagerfeuer mit je 64 Ablehnungen ohne
+  Ursachenaufteilung. Gezielte Gelände-/Objektabfrage zeigte neun tote Kiefern
+  auf ebener 3x3-Fläche; nach Räumung genau ein Kandidat ohne neue Wege.
+- Begrenzte Vegetations-Sammelaufträge mit Einzelbelegen und Konfliktprüfung:
+  neun tote Bäume erforderten neun serielle MCP-Aufrufe. `operation=mark`
+  lieferte hier unmittelbar `removed=true, marked=null`; Antwort und Beschreibung
+  sollten direkte Entfernung klar von einem noch offenen Arbeiterauftrag trennen.
 - Räumliche Filter für Fäll-/Pflanzmarkierungen und Reichweiten: zwanzig lokale
   Fällfelder erfordern derzeit den Abgleich von 190 kolonieweiten Markierungen.
 - Fortschrittsbericht: lebende Bevölkerung, beobachtete Grundbedürfnisse und

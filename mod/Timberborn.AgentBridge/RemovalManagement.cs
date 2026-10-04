@@ -39,14 +39,15 @@ public sealed class RemovalManagement(EntityRegistry entities, EntityService ser
     }
     public object Remove(RemovalRequest r)
     {
+        // These checks run before any lifecycle call: explicit rejection, not uncertain mutation.
         var e=entities.Entities.SingleOrDefault(e=>Candidate(e)&&e.EntityId.ToString("D")==r.Id);
-        if(e is null||Kind(e)!=r.Kind||!e.TryGetComponent<TemplateSpec>(out var t)||t.TemplateName!=r.Template)throw new ArgumentException("target_changed");
+        if(e is null||Kind(e)!=r.Kind||!e.TryGetComponent<TemplateSpec>(out var t)||t.TemplateName!=r.Template)throw new BridgeRejectionException("state_conflict");
         var b=e.GetComponent<BlockObject>();var p=b.Coordinates;
-        if(p!=new Vector3Int(r.X,r.Y,r.Z))throw new ArgumentException("position_changed");
+        if(p!=new Vector3Int(r.X,r.Y,r.Z))throw new BridgeRejectionException("state_conflict");
         bool demo=e.TryGetComponent<Demolishable>(out var d);
-        if((demo&&d.IsMarked)!=r.ExpectedMarked)throw new ArgumentException("demolition_changed");
-        if(r.Operation!="unmark"&&!b.CanDelete())throw new ArgumentException("deletion_blocked");
-        if(r.Operation!="delete"&&!demo)throw new ArgumentException("demolition_unavailable");
+        if((demo&&d.IsMarked)!=r.ExpectedMarked)throw new BridgeRejectionException("state_conflict");
+        if(r.Operation!="unmark"&&!b.CanDelete())throw new BridgeRejectionException("state_conflict");
+        if(r.Operation!="delete"&&!demo)throw new BridgeRejectionException("state_conflict");
         string outcome="unconfirmed";
         try {
             if(r.Kind=="debris")e.GetComponent<RecoveredGoodStack>().Delete();

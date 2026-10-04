@@ -80,9 +80,27 @@ public sealed class RemovalTests
         if(!valid)Assert.False(result["error"]!["retryable"]!.GetValue<bool>());
     }
     private static NameValueCollection Query()=>new(){{"kind","buildings"},{"operation","delete"},{"template","Synthetic"},{"expectedMarked","false"},{"session",Guid.NewGuid().ToString()},{"id",Guid.NewGuid().ToString()},{"x","1"},{"y","2"},{"z","3"}};
-    private sealed class Handler(string json):HttpMessageHandler
+    [Theory]
+    [InlineData(HttpStatusCode.Conflict, "state_conflict", "rejected")]
+    [InlineData(HttpStatusCode.BadRequest, "invalid_request", "unconfirmed")]
+    public async Task BatchDistinguishesExplicitConflictFromUncertainTransport(HttpStatusCode status, string code, string outcome)
+    {
+        var h = new Handler(JsonSerializer.Serialize(new { error = code }), status);
+        using var tools = new NativeTools(new NativeClient(new(8081, new string('a', 64)), h), enableRemoval: true);
+        var result = await tools.Invoke("remove_vegetation_batch", JsonSerializer.SerializeToElement(new {
+            session = Guid.NewGuid().ToString("D"), operation = "mark", targets = new[] {
+                new { id = Guid.NewGuid().ToString("D"), template = "Pine", x = 1, y = 2, z = 3, expectedMarked = true },
+                new { id = Guid.NewGuid().ToString("D"), template = "Pine", x = 2, y = 2, z = 3, expectedMarked = false } }
+        }), TestContext.Current.CancellationToken);
+        Assert.Equal(1, h.Calls);
+        Assert.Equal("error", result["status"]!.GetValue<string>());
+        Assert.Equal(outcome, result["data"]!["items"]![0]!["outcome"]!.GetValue<string>());
+        Assert.Equal("not_attempted", result["data"]!["items"]![1]!["outcome"]!.GetValue<string>());
+        Assert.False(result["error"]!["retryable"]!.GetValue<bool>());
+    }
+    private sealed class Handler(string json, HttpStatusCode status = HttpStatusCode.OK):HttpMessageHandler
     {
         public int Calls;
-        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage r,CancellationToken ct){Calls++;Assert.Equal(HttpMethod.Post,r.Method);Assert.Null(r.Content);return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK){Content=new StringContent(json)});}
+        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage r,CancellationToken ct){Calls++;Assert.Equal(HttpMethod.Post,r.Method);Assert.Null(r.Content);return Task.FromResult(new HttpResponseMessage(status){Content=new StringContent(json)});}
     }
 }

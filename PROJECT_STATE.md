@@ -1,5 +1,23 @@
 # Projektstand
 
+## Live bestanden — gebündelte Räumung und Baustart
+
+Nach menschlichem Gate und Reparatur-Livetest auf Bridge 0.35.3 abgenommen.
+`remove_vegetation_batch`: 1–16 konkrete Ziele seriell, Einzelbelege und Stopp
+beim ersten Konflikt/unbestätigten Ergebnis. Drei Ziele in einem Aufruf entfernt,
+separat bestätigt. Konfliktkontrolle nach Mod-Korrektur: state_conflict,
+Folgeziel not_attempted, beide Pflanzen unverändert. Fünf Räum-Vorbedingungen
+vor dem Lifecycle liefern jetzt explizite Konflikte statt HTTP-400-Unsicherheit.
+Unsichere tatsächliche Änderungen bleiben unconfirmed; kein Retry/Rollback.
+`start_building_project`: Planung und nativer Pilotstart in einem Aufruf,
+explizit first_candidate/development_pilot, bestehende Zugangsprüfungen erhalten.
+Belegtes Feld not_started/requestSubmitted=false. Positivfall: Lagerstart samt
+Carrot/obtain an unfertiger Baustelle bestätigt, Bauarbeiterzugang nachgewiesen.
+Nach einem Spieltag fertig und erreichbar, Einstellungen erhalten, Lauf exakt
+24 Stunden mit bestätigter Pause. Fünf installierte Paketdateien verifiziert.
+Drei Räumaktionen bzw. bisher Plan/Validierung/Start je in einem MCP-Aufruf;
+Bauzeit und Abschlussprüfung bleiben separat. Kein allgemeiner Mehrgebäudebatch.
+
 ## Live bestanden — gebündelte Kolonieübersicht und Bauprüfdetails
 
 Nach menschlichem Gate und gezieltem Livevergleich abgenommen. Neues lesendes `inspect_colony_overview`
