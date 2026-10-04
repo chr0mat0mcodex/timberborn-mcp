@@ -32,6 +32,21 @@ public sealed class ConstructionAccessObservationTests
     public void LegacyBridgeDoesNotRequireNewField() =>
         NativeClient.ValidateBuildingAccess(Envelope(false, null) with { BridgeVersion = "0.31.3" }, Request());
     [Theory]
+    [InlineData(null, null, true)]
+    [InlineData(0, null, true)]
+    [InlineData(1, false, true)]
+    [InlineData(1, true, true)]
+    [InlineData(-1, null, false)]
+    [InlineData(0, false, false)]
+    [InlineData(1, null, false)]
+    public void OptionalConnectionComponentEvidenceIsConsistent(int? count, bool? blocked, bool valid)
+    {
+        var e = Envelope(true, new("not_construction", [], false));
+        e = e with { Data = e.Data with { UnconnectedBlockerCount = count, UnconnectedBlocked = blocked } };
+        if (valid) NativeClient.ValidateBuildingAccess(e, Request());
+        else Assert.Throws<InvalidDataException>(() => NativeClient.ValidateBuildingAccess(e, Request()));
+    }
+    [Theory]
     [InlineData("missing")] [InlineData("empty_observed")] [InlineData("hidden_cells")]
     [InlineData("duplicate")] [InlineData("too_many")] [InlineData("finished")]
     [InlineData("expanded_observed")] [InlineData("unknown_state")]

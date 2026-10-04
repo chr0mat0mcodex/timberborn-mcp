@@ -2,7 +2,7 @@ using Timberborn.Bridge.Core;
 namespace Timberborn.Backend.Native;
 
 public sealed record NativeConstructionAccess(string State,Position[] Cells,bool Expanded);
-public sealed record NativeAccess(string Id,bool Finished,Position Position,bool? EntranceBlocked,bool? EntranceInaccessible,bool? UnconnectedBlocked,bool? BuildersReachable,int? DistanceToDistrict,int AccessibleCount,int ValidAccessibleCount,string[] Limitations,NativeConstructionAccess? ConstructionAccess=null);
+public sealed record NativeAccess(string Id,bool Finished,Position Position,bool? EntranceBlocked,bool? EntranceInaccessible,bool? UnconnectedBlocked,bool? BuildersReachable,int? DistanceToDistrict,int AccessibleCount,int ValidAccessibleCount,string[] Limitations,NativeConstructionAccess? ConstructionAccess=null,int? UnconnectedBlockerCount=null);
 public sealed record NativeRoad(string Id,string ToId,bool Supported,int SourceAccessCount,int TargetAccessCount,bool? Connected,float? Distance,string[] Limitations);
 public sealed record NativeRange(string Id,bool Supported,string[] RangeNames,int Offset,int Limit,int Total,Position[] Items,bool HasMore,string[] Limitations,string Source);
 public sealed record GoodHistorySample(int Index,int Cycle,int Day,int Stock,int Capacity,int Production,int Consumption,long NetProduction);
@@ -26,6 +26,8 @@ public sealed partial class NativeClient
         var d=e.Data;
         LogisticsEnvelope(e,r,d.Limitations);
         if(d.Id!=r.Id||d.Position is null||d.DistanceToDistrict<0||d.AccessibleCount<0||d.ValidAccessibleCount<0||d.ValidAccessibleCount>d.AccessibleCount||d.Finished&&d.BuildersReachable is not null)throw new InvalidDataException("Invalid building access");
+        if(d.UnconnectedBlockerCount<0 || d.UnconnectedBlockerCount==0 && d.UnconnectedBlocked is not null ||
+            d.UnconnectedBlockerCount>0 && d.UnconnectedBlocked is null)throw new InvalidDataException("Invalid connection blocker evidence");
         var a=d.ConstructionAccess;
         if(e.BridgeVersion is ("0.31.4" or "0.32.0" or "0.32.1" or "0.33.0" or "0.33.1" or "0.34.0" or "0.35.0" or "0.35.1" or "0.35.2" or "0.35.3") && a is null)throw new InvalidDataException("Missing construction accesses");
         if(a is not null && (a.State is not ("not_construction" or "observed" or "unavailable") ||

@@ -1,5 +1,19 @@
 # Backlog
 
+## Live bestanden — vollständiger einzelner Bauablauf
+
+Reparatur nach menschlichem Gate bestanden: Lager plus zwei Wege fertig,
+Zugang und Konfiguration bestätigt, Zeitbudget exakt und Replay ohne neue Zeit.
+Explizite Komponentenabwesenheit wird korrekt von unknown unterschieden.
+
+Erneutes Nutzer-Go nach Aufwandsalarm erhalten. Gesamtaufruf für Planung,
+Baustart, begrenzte Simulation und gebündelte Abschlussprüfung implementiert;
+Wiederaufnahme über vorhandene native IDs, keine automatische Budgetverlängerung.
+Suchursprungdiagnose bei fehlendem Kandidaten. Menschliches Gate und gezielter
+Livetest bestanden. Mehrgebäude-Warteschlange, automatische
+Räumplanung und vollständige Ursachenaufteilung der Suchregion bleiben offen.
+[Abnahmeplan](docs/building-completion-workflow.md).
+
 ## Live bestanden — gebündelte Bau- und Räumaufträge
 
 Nach ausdrücklichem Nutzer-Go: zwei MCP-Werkzeuge über bestehenden nativen
@@ -36,6 +50,14 @@ Objektarten bleiben Folgearbeit; keine allgemeine autonome Ausbaupipeline behaup
 - Fortschrittsbericht: lebende Bevölkerung, beobachtete Grundbedürfnisse und
   echte Wohlbefindenspunkte sowie gebaute/fehlende Katalogvorlagen gemeinsam.
   Vorhandener Fertigbestand ist kein vollständiges historisches Bauregister.
+- Kompakte Bevölkerungsdiagnose: Altersgruppen, Geburten/Todesfälle im Intervall,
+  belegte Familienwohnungen und tatsächliche Wohlbefindensboni. Einzelne
+  Bestandsänderungen (11 → 10 → 11) erklären weder Ursache noch Wachstumsrate;
+  keine Todesursache oder allgemeine Zufriedenheit aus Bedürfnisflags ableiten.
+- Energieplanung: tatsächliche Anschlusspunkte, Netzzugehörigkeit, Erzeugung und
+  Bedarf strukturiert anbieten. Sägewerk/Laufrad liefern live Bretter, aber die
+  Verbindung ist bisher erst über Produktion und verschwundene Statusmeldung
+  nachgewiesen; Vorabplanung kennt nur Gebäudegeometrie und Wegeingänge.
 
 ## Kurzfristig priorisiert — kompakte MCP-Antworten (P1)
 

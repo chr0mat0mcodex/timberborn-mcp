@@ -195,4 +195,25 @@ public sealed class WorkflowTests
         await Assert.ThrowsAsync<ArgumentException>(() => WorkflowTools.Invoke(null!, WorkflowTools.Build,
             Build(), false, false, true, TestContext.Current.CancellationToken));
     }
+
+    [Fact]
+    public async Task NoCandidateAddsOriginEvidenceWithoutMutation()
+    {
+        int writes = 0, reads = 0;
+        var result = await WorkflowTools.Start(WorkflowTools.ParseBuild(Build(), true),
+            (r, ct) => Task.FromResult(Plan(r, true)),
+            (r, ct) => { writes++; throw new InvalidOperationException(); },
+            TestContext.Current.CancellationToken,
+            (r, ct) => {
+                reads++;
+                return Task.FromResult(Envelope(new NativeSite(r.Template, new(r.X, r.Y, r.Z), r.Rotation,
+                    "blocked", false, ["occupied"], [new(new(0, 0, 3), true, false, true, true, "ground")],
+                    new(0, 1, 3), false, [], [], ["Pine"])));
+            });
+        Assert.Equal(0, writes); Assert.Equal(1, reads);
+        Assert.Equal("not_started", result["data"]!["outcome"]!.GetValue<string>());
+        Assert.False(result["data"]!["requestSubmitted"]!.GetValue<bool>());
+        Assert.Equal("search_origin_only_not_whole_region", result["data"]!["originDiagnosis"]!["scope"]!.GetValue<string>());
+        Assert.Single(result["data"]!["originDiagnosis"]!["blockedCells"]!.AsArray());
+    }
 }

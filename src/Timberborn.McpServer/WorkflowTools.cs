@@ -16,7 +16,13 @@ public sealed record RemovalBatchResult(string Outcome, int Requested, int Attem
     int PendingWorkerOrders, RemovalBatchItem[] Items, string[] Limitations);
 public sealed record BuildingStartResult(string ActionId, string Outcome, bool RequestSubmitted,
     int? CheckedCandidates, string? SearchStopReason, BuildingPlanOption? SelectedOption,
-    NativeProjectExecution? Execution, string[] Limitations);
+    NativeProjectExecution? Execution, string[] Limitations)
+{
+    public OriginDiagnosis? OriginDiagnosis { get; init; }
+}
+public sealed record OriginDiagnosis(Position Origin, string Assessment, string[] Reasons,
+    SiteCell[] BlockedCells, Position? Entrance, bool? PathAtEntrance, string[]? EntranceOccupants,
+    string Scope = "search_origin_only_not_whole_region");
 
 // Bounded orchestration of the existing validated native clients, never a second placement path.
 public static class WorkflowTools
@@ -115,7 +121,7 @@ public static class WorkflowTools
         bool removalEnabled, bool buildingEnabled, bool settingsEnabled, CancellationToken ct)
     {
         if (name == Removal && removalEnabled) return Remove(ParseRemoval(args), client.RemoveObject, ct);
-        if (name == Build && buildingEnabled) return Start(ParseBuild(args, settingsEnabled), client.BuildingPlan, client.BuildingProjectExecution, ct);
+        if (name == Build && buildingEnabled) return Start(ParseBuild(args, settingsEnabled), client.BuildingPlan, client.BuildingProjectExecution, ct, client.Precheck);
         throw new ArgumentException();
     }
 
@@ -150,7 +156,8 @@ public static class WorkflowTools
 
     public static async Task<JsonObject> Start(NameValueCollection q,
         Func<BuildingPlanRequest, CancellationToken, Task<BridgeEnvelope<NativeBuildingPlan>>> plan,
-        Func<BuildingProjectExecutionRequest, CancellationToken, Task<BridgeEnvelope<NativeProjectExecution>>> execute, CancellationToken ct)
+        Func<BuildingProjectExecutionRequest, CancellationToken, Task<BridgeEnvelope<NativeProjectExecution>>> execute, CancellationToken ct,
+        Func<BridgeRequest, CancellationToken, Task<BridgeEnvelope<NativeSite>>>? precheck = null)
     {
         var validated = BuildingProjectExecutionRequest.Parse(true, q);
         var p = validated.Validation!.Plan;
@@ -158,8 +165,20 @@ public static class WorkflowTools
         var selected = planned.Data.Options.FirstOrDefault();
         var limits = new[] { "one_first_candidate_only", "native_execution_guards_unchanged", "construction_preflight_unproven",
             "not_construction_completion", "no_retry_use_inspect_building_project" };
-        if (selected is null) return Wrap(new BuildingStartResult(validated.ActionId.ToString("D"), "not_started", false,
-            planned.Data.CheckedCandidates, planned.Data.StopReason, null, null, limits), p.Session, planned.ObservedAtUtc, null);
+        if (selected is null) {
+            OriginDiagnosis? diagnosis = null;
+            if (precheck is not null) {
+                var siteQuery = new NameValueCollection();
+                foreach (var key in new[] { "template", "x", "y", "z", "rotation" }) siteQuery[key] = q[key];
+                var site = await precheck(BridgeRequest.Parse("/agent-api/v1/building-precheck", siteQuery), ct);
+                if (site.SessionId != planned.SessionId || site.BridgeVersion != planned.BridgeVersion) throw new InvalidDataException("Site observation changed session/version");
+                var d = site.Data;
+                diagnosis = new(d.Origin, d.Assessment, d.Reasons, d.Cells.Where(c => !c.InsideMap || c.Underground || c.IntersectsObject).ToArray(),
+                    d.Entrance, d.PathAtEntrance, d.EntranceOccupants);
+            }
+            return Wrap(new BuildingStartResult(validated.ActionId.ToString("D"), "not_started", false,
+                planned.Data.CheckedCandidates, planned.Data.StopReason, null, null, limits) { OriginDiagnosis = diagnosis }, p.Session, planned.ObservedAtUtc, null);
+        }
         var executionQuery = new NameValueCollection(q); executionQuery["planKey"] = selected.PlanKey;
         var request = BuildingProjectExecutionRequest.Parse(true, executionQuery);
         ct.ThrowIfCancellationRequested();

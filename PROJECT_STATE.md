@@ -1,5 +1,34 @@
 # Projektstand
 
+## Live bestanden — wiederaufnehmbare Bauabläufe
+
+Reparatur nach erneutem menschlichem Gate abgenommen: neues Lager und zwei Wege
+fertig, Eingang frei/zugänglich, Carrot/obtain erhalten. Komponentenanzahl 0
+belegt fehlenden optionalen Anschlussblocker; Aggregat finished_accessible stimmt
+mit Einzelabfragen überein. Exakt 24 Stunden, kein Überschwingen, aktuelle Pause.
+Wiederaufnahme nach Abschluss erhält Lauf-ID/Ziel/Zeit; geändertes Budget wird
+abgelehnt. Fünf Paketdateien identisch zur Installation. Vier Ablaufaufrufe bis
+zum Abschluss, zusätzliche Kontrollen separat. Neue Mod-/MCP-Fähigkeit begrenzt
+live bestanden; kein autonomer Gesamtausbau oder Zufriedenheitsbeleg.
+
+Historischer Erstversuch: menschlicher Skriptlauf erfolgreich; Paketdateien verifiziert.
+Live: Standortablehnung, Baustart, Bauzugang, Lagerkonfiguration, Wiederaufnahme,
+Budgetkonflikt und exakt begrenzte Simulation bestanden. Lager fertig/erreichbar,
+aber Aggregat fälschlich budget_exhausted wegen fehlendem optionalem Anschluss-
+blocker. Reparatur ergänzt dessen Komponentenanzahl, unterscheidet nachgewiesene
+Abwesenheit von unknown und meldet fehlenden Zugang separat. Reparatur inzwischen
+nach erneutem menschlichem Gate live bestätigt.
+
+Nach erneutem Nutzer-Go zur Ausbauautomatisierung: `develop_building_project`
+bündelt Planung/Start und begrenzte Bauzeitbegleitung; `advance_building_project`
+und `inspect_building_completion` setzen anhand vorhandener nativer Auftrags-
+und Lauf-IDs fort. Ein unveränderliches Zeitfenster pro Bauprojekt; Abschluss
+prüft alle Bauobjekte, Gebäudezugang, Anfangskonfiguration und aktuelle Pause.
+Erfolglose Suche ergänzt eine Diagnose am Suchursprung. Keine neue Abhängigkeit
+oder Bridge-Version; additiver Komponentenbeleg in der Mod, Zugangsgrenzen erhalten.
+Synthetische Regressionen und Katalogintegration ergänzt; menschlicher Skriptlauf bestanden.
+[Ablauf, Grenzen und Abnahme](docs/building-completion-workflow.md).
+
 ## Live bestanden — gebündelte Räumung und Baustart
 
 Nach menschlichem Gate und Reparatur-Livetest auf Bridge 0.35.3 abgenommen.

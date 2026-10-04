@@ -39,7 +39,7 @@ public sealed class LogisticsObservations(EntityRegistry entities,IGoodService g
             if (cells.Length is >= 1 and <= 64)
             { constructionCells = cells; constructionState = "observed"; }
         }
-        return new {id=r.Id,finished=b.IsFinished,position=Vec(b.Coordinates),entranceBlocked,entranceInaccessible,unconnectedBlocked,buildersReachable,distanceToDistrict=distance,
+        return new {id=r.Id,finished=b.IsFinished,position=Vec(b.Coordinates),entranceBlocked,entranceInaccessible,unconnectedBlocked,unconnectedBlockerCount=blockers.Length,buildersReachable,distanceToDistrict=distance,
             accessibleCount=access.Count,validAccessibleCount=access.Count(a=>a.ValidAccessible),
             constructionAccess = new { state = constructionState, cells = constructionCells.Select(Vec).ToArray(), expanded = expandedConstruction },
             limitations=new[]{"null_means_component_or_value_unavailable","game_navigation_may_update_after_ticks","distance_is_native_metric_not_travel_time","connection_not_staffing_or_delivery_guarantee",
