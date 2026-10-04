@@ -56,12 +56,12 @@ public static class BuildingCapabilityTools
     public static BuildingCapabilityReport Describe(string bridgeVersion, string faction, bool serverEnabled)
     {
         // Exact profile binding: new deployments require explicit review, never a >= version guess.
-        bool generic = bridgeVersion is ("0.35.0" or "0.35.1" or "0.35.2");
+        bool generic = bridgeVersion is ("0.35.0" or "0.35.1" or "0.35.2" or "0.35.3");
         bool known = bridgeVersion is ("0.33.0" or "0.33.1" or "0.34.0") && faction == "Folktails" ||
             generic && faction is ("Folktails" or "IronTeeth");
         bool lodge = bridgeVersion == "0.34.0" || generic;
-        int flatCapacity = bridgeVersion == "0.35.2" ? BuildingProjectController.MaxProjectsPerSession : 4;
-        int verticalCapacity = bridgeVersion == "0.35.2" ? VerticalStairRequest.MaxProjectsPerSession :
+        int flatCapacity = bridgeVersion is ("0.35.2" or "0.35.3") ? BuildingProjectController.MaxProjectsPerSession : 4;
+        int verticalCapacity = bridgeVersion is ("0.35.2" or "0.35.3") ? VerticalStairRequest.MaxProjectsPerSession :
             bridgeVersion is ("0.33.1" or "0.34.0" or "0.35.0" or "0.35.1") ? 4 : 1;
         ProjectModeCapability[] modes = known ? [
             new("development_pilot", "execute_building_project_pilot",

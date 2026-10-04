@@ -14,6 +14,7 @@ public sealed class BuildingCapabilityTests
     [Theory]
     [InlineData("0.35.1", 4)]
     [InlineData("0.35.2", 1024)]
+    [InlineData("0.35.3", 1024)]
     public void ExpandedProjectBudgetIsBoundToInstalledVersion(string version, int capacity)
     {
         var report = BuildingCapabilityTools.Describe(version, "Folktails", true);

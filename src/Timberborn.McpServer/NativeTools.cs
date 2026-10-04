@@ -98,7 +98,7 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
             if (EconomyTools.Handles(name)) return await EconomyTools.Invoke(client,name,args,ct);
             if (ResearchTools.Handles(name)) return await ResearchTools.Invoke(client,name,args,enableResearch,ct);
             if (BuildingSettingsTools.Handles(name)) return await BuildingSettingsTools.Invoke(client,name,args,enableBuildingSettings,ct);
-            if (BuildingTools.Handles(name)) return await BuildingTools.Invoke(client,name,args,enableBuildingPlacement,ct);
+            if (BuildingTools.Handles(name)) return await BuildingTools.Invoke(client,name,args,enableBuildingPlacement,ct,enableBuildingSettings);
             if (RemovalTools.Handles(name)) return await RemovalTools.Invoke(client,name,args,enableRemoval,ct);
             if (ManagementTools.Handles(name)) return await ManagementTools.Invoke(client,name,args,enablePriorities,enableAreas,ct);
             if (name == "inspect_building")

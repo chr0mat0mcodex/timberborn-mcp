@@ -1,5 +1,20 @@
 # Projektstand
 
+## Live bestanden — 0.35.3 Lagerkonfiguration im Bauauftrag
+
+Auf Nutzerwunsch optionale initialStorageGood/initialStorageMode am ebenen
+Bauprojekt. Direkt an der bestätigten, initialisierten Baustelle anwenden;
+ausdrücklich kein Warten auf Bauabschluss. Getrennter Konfigurationsbeleg mit
+Rücklesung auf späterem Frame, unveränderte Bauzugangsprüfungen. Settings-Opt-in
+zusätzlich auf MCP- und Bridge-Seite. Unpassende Lagergüter vor Bau ablehnen,
+Konfiguration in Replay-Identität aufnehmen, keine Wiederholung bei Unsicherheit.
+Menschliches Gate abgeschlossen, fünf installierte Paketdateien stimmen per
+SHA-256 überein. Feature-Livetest bestanden: Carrot/obtain an der unfertigen
+Baustelle bestätigt, ungültiges Gut ohne Bau abgelehnt, Replay ohne Doppelbau,
+verändertes Replay abgelehnt. Nach zwölf Spielstunden Lager fertig, Eingang frei,
+Konfiguration erhalten, Simulation automatisch pausiert.
+Farm/Personal/Prioritäten und große/Sondergebäude bleiben Folgearbeit.
+
 ## Abschluss am 2026-10-04 — 0.35.2 Projektbudget
 
 Menschliches Gate und gezielter Live-Test bestanden: fünf sequenzielle ebene

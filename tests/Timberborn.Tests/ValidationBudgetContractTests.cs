@@ -12,6 +12,7 @@ public sealed class ValidationBudgetContractTests
     [InlineData("0.35.2", 7)]
     [InlineData("0.35.2", 15)]
     [InlineData("0.35.2", 255)]
+    [InlineData("0.35.3", 255)]
     public void ExpandedBudgetAcceptsFirstAndLastReceiptButRejectsInvalidCounters(string version, int legacyMaximum)
     {
         Assert.True(ValidationBudgetContract.Accepts(version, 999_999, legacyMaximum));

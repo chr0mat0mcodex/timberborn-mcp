@@ -54,6 +54,9 @@ public sealed class BridgeHttpServer : IDisposable
             deadline.CancelAfter(TimeSpan.FromSeconds(5));
             try {
                 var query=request.QueryString;
+                if (request.Url!.AbsolutePath == "/agent-api/v1/building-project-execute" && !enableBuildingSettings &&
+                    (query.GetValues("initialStorageGood") is not null || query.GetValues("initialStorageMode") is not null))
+                    throw new BridgeRejectionException("state_conflict");
                 if(request.Url!.AbsolutePath=="/agent-api/v1/activity") {
                     if(query.AllKeys.Any(k=>k is "reasoning" or "summary"))throw new ArgumentException();
                     query.Add("reasoning",ActivityRequest.Decode(request.Headers["X-Agent-Reasoning"],600));

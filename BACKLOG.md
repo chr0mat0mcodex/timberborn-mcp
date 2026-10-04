@@ -1,5 +1,30 @@
 # Backlog
 
+## Kurzfristig priorisiert — kompakte MCP-Antworten (P1)
+
+Nutzerauftrag vom 2026-10-04: zeitnah umsetzen, direkt nach dem laufenden
+0.35.3-Test-Gate. Standardantworten sollen nur das für die konkrete Aktion oder
+Entscheidung Nötige enthalten. Im Playtest wiederholen sich lange `limitations`,
+verschachtelte Prüfberichte, Katalog-/Fähigkeitsbeschreibungen und vollständige
+Objektzustände auch bei einfachen Status- und Einstellungsabfragen.
+
+- Kompakte Standardansicht: Ergebnis, relevante Werte/Änderungen, notwendige IDs,
+  konkrete Fehler oder Blockierungsgründe. Unbekannt/unbestätigt und wesentliche
+  Nachweisgrenzen müssen eindeutig bleiben.
+- Statische Erläuterungen einmal über Fähigkeiten/Dokumentation bereitstellen;
+  ausführliche Geometrie, Prüfbelege und vollständige Objektdetails gezielt abrufbar
+  machen. Keine wiederholten vollständigen Zustände bei kleinen Änderungen.
+- MCP-Text und `structuredContent` auf unnötige Doppelübertragung prüfen;
+  Protokoll- und Client-Kompatibilität erhalten. Lange Werkzeugbeschreibungen
+  ebenfalls auf Wiederholungen und veraltete Aussagen prüfen.
+- Kleiner Pilot mit Status, Lagereinstellung und Bauprüfung: Antwortgröße vorher/
+  nachher messen, deutlich reduzieren und dieselben Entscheidungen ermöglichen.
+  Fehler-, Konflikt- und Unknown-Fälle sowie abrufbare Details mitprüfen;
+  erst danach auf weitere Werkzeuge ausweiten.
+
+Status: priorisiert, noch nicht implementiert. Kein Aufschub hinter den
+vollständigen Gebäudekatalogausbau.
+
 ## Offene Folgearbeiten nach Phase E
 
 Phase E ist mit 0.35.1 im vereinbarten begrenzten Umfang abgeschlossen.

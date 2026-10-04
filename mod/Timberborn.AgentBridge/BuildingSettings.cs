@@ -71,7 +71,24 @@ public sealed class BuildingSettings(EntityRegistry entities, IGoodService goods
                 "crop_priority_clear_not_exposed", "stock_may_include_previously_selected_goods" } };
     }
 
-    public object Set(BuildingSettingsRequest r)
+    public void ValidateInitialStorage(TemplateSpec template, string? good, string? mode)
+    {
+        if (!template.HasSpec<StockpileSpec>() || template.HasSpec<FixedStockpileSpec>() ||
+            good is not null && !goods.GetGoodsForType(template.GetSpec<StockpileSpec>().WhitelistedGoodType).Contains(good) ||
+            mode is not null && !BuildingSettingsRequest.IsStorageMode(mode))
+            throw new BridgeRejectionException("unsupported_storage_good");
+    }
+
+    public (bool Finished, string Good, string Mode) ReadInitialStorage(BuildingSettingsRequest r)
+    {
+        var e = Find(r);
+        if (!e.Initialized || !e.HasComponent<Stockpile>() || e.HasComponent<FixedStockpile>() ||
+            !e.TryGetComponent<SingleGoodAllower>(out var good) || !e.TryGetComponent<StockpilePriority>(out var mode))
+            throw new BridgeRejectionException("not_storage");
+        return (e.GetComponent<BlockObject>().IsFinished, Good(good), Mode(mode));
+    }
+
+    public object Set(BuildingSettingsRequest r, bool allowConstructionStorage = false)
     {
         var e=Find(r); var b=e.GetComponent<BlockObject>();
         Func<string> read; Action set;
@@ -80,11 +97,13 @@ public sealed class BuildingSettings(EntityRegistry entities, IGoodService goods
             read=()=>p.Paused?"true":"false";
             set=()=>{ if(r.Value=="true") p.Pause(); else p.Resume(); };
         } else {
-            if(!b.IsFinished) throw new BridgeRejectionException("finished_building_required");
+            if(!b.IsFinished && !(allowConstructionStorage && r.Route is ("set-storage-good" or "set-storage-mode")))
+                throw new BridgeRejectionException("finished_building_required");
             switch(r.Route) {
                 case "set-storage-good":
                     if(!e.TryGetComponent<Stockpile>(out var s) || !e.TryGetComponent<SingleGoodAllower>(out var a) ||
-                        e.HasComponent<FixedStockpile>() || (r.Value!="" && !AllowedGoods(s).Contains(r.Value)))
+                        e.HasComponent<FixedStockpile>() || (r.Value!="" && !goods.GetGoodsForType(
+                            e.GetComponent<TemplateSpec>().GetSpec<StockpileSpec>().WhitelistedGoodType).Contains(r.Value)))
                         throw new BridgeRejectionException("unsupported_storage_good");
                     read=()=>Good(a); set=()=>{ if(r.Value=="") a.Disallow(); else a.Allow(r.Value); }; break;
                 case "set-storage-mode":

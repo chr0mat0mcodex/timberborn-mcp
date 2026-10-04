@@ -3,20 +3,38 @@ namespace Timberborn.Backend.Native;
 
 public sealed record NativeProjectStep(string EntityId,string Template,int X,int Y,int Z,int Rotation,string State);
 public sealed record NativeProjectExecution(string ActionId,string PlanKey,string State,string Reason,
-    NativeProjectStep[] Steps,bool ConstructionPreflightProven,string[] Limitations);
+    NativeProjectStep[] Steps,bool ConstructionPreflightProven,string[] Limitations)
+{
+    public InitialStorageConfiguration? InitialConfiguration { get; init; }
+}
 public sealed partial class NativeClient
 {
     public async Task<BridgeEnvelope<NativeProjectExecution>> BuildingProjectExecution(BuildingProjectExecutionRequest r,CancellationToken ct)
     {
         string query=$"session={r.Session}&actionId={r.ActionId:D}";
         if(r.Validation is { } v) { var p=v.Plan; query += $"&mode=development_pilot&template={Uri.EscapeDataString(p.Template)}&districtId={p.DistrictId}&x={p.X}&y={p.Y}&z={p.Z}&width={p.Width}&height={p.Height}&rotation={p.Rotation}&optionIndex={v.OptionIndex}&planKey={v.PlanKey}"; }
+        if(r.InitialStorageGood is { } good) query += "&initialStorageGood=" + Uri.EscapeDataString(good);
+        if(r.InitialStorageMode is { } mode) query += "&initialStorageMode=" + Uri.EscapeDataString(mode);
         var e=await Get<NativeProjectExecution>((r.Validation is null?"building-project-status":"building-project-execute")+"?"+query,ct,r.Validation is null?HttpMethod.Get:HttpMethod.Post);
         ValidateProjectExecution(e,r);return e;
     }
     public static void ValidateProjectExecution(BridgeEnvelope<NativeProjectExecution> e,BuildingProjectExecutionRequest r)
     {
         var d=e.Data;
-        if(e.BridgeVersion is not ("0.26.0" or "0.27.0" or "0.28.0" or "0.28.1" or "0.29.0" or "0.29.1" or "0.29.2" or "0.29.3" or "0.30.0" or "0.31.0" or "0.31.1" or "0.31.2" or "0.31.3" or "0.31.4" or "0.32.0" or "0.32.1" or "0.33.0" or "0.33.1" or "0.34.0" or "0.35.0" or "0.35.1" or "0.35.2")||e.SessionId!=r.Session||d is null||d.ActionId!=r.ActionId.ToString("D")||
+        if (d?.InitialConfiguration is { } config) {
+            if (e.BridgeVersion != "0.35.3" || config.Good is null && config.Mode is null ||
+                config.Good is not null && !BuildingPolicy.ValidTemplate(config.Good) ||
+                config.Mode is not null && !BuildingSettingsRequest.IsStorageMode(config.Mode) ||
+                config.State is not ("waiting_order" or "applying" or "confirmed" or "conflict" or "unconfirmed" or "stopped") ||
+                config.Reason is null || config.Reason.Length > 100 ||
+                config.ObservedGood is { Length: > 0 } && !BuildingPolicy.ValidTemplate(config.ObservedGood) ||
+                config.ObservedMode is not null && !BuildingSettingsRequest.IsStorageMode(config.ObservedMode) ||
+                config.State == "confirmed" && (d.State != "completed" || config.ObservedGood is null || config.ObservedMode is null ||
+                    config.Good is not null && config.Good != config.ObservedGood || config.Mode is not null && config.Mode != config.ObservedMode) ||
+                r.Validation is not null && (config.Good != r.InitialStorageGood || config.Mode != r.InitialStorageMode))
+                throw new InvalidDataException("Invalid initial configuration receipt");
+        } else if (r.HasInitialConfiguration) throw new InvalidDataException("Missing initial configuration receipt");
+        if(e.BridgeVersion is not ("0.26.0" or "0.27.0" or "0.28.0" or "0.28.1" or "0.29.0" or "0.29.1" or "0.29.2" or "0.29.3" or "0.30.0" or "0.31.0" or "0.31.1" or "0.31.2" or "0.31.3" or "0.31.4" or "0.32.0" or "0.32.1" or "0.33.0" or "0.33.1" or "0.34.0" or "0.35.0" or "0.35.1" or "0.35.2" or "0.35.3")||e.SessionId!=r.Session||d is null||d.ActionId!=r.ActionId.ToString("D")||
             !ValidPlanKey(d.PlanKey)||r.Validation is not null&&d.PlanKey!=r.Validation.PlanKey||d.ConstructionPreflightProven||
             d.State is not ("running" or "completed" or "stopped" or "unconfirmed")||d.Reason is null||d.Reason.Length>100||
             d.Steps is not {Length:>=1 and <=5}||d.Steps.Any(s=>s is null||!Guid.TryParse(s.EntityId,out var id)||id==Guid.Empty||
@@ -38,7 +56,7 @@ public sealed partial class NativeClient
                 throw new InvalidDataException("Project receipt outside selected region");
         }
     }
-    private static bool FlatTemplateForVersion(string version,string template) => version is ("0.35.0" or "0.35.1" or "0.35.2")
+    private static bool FlatTemplateForVersion(string version,string template) => version is ("0.35.0" or "0.35.1" or "0.35.2" or "0.35.3")
         ? BuildingProjectPilotPolicy.SupportsTemplate(template)
         : template == "SmallWarehouse.Folktails" ||
           template == "MediumWarehouse.Folktails" && version is ("0.33.0" or "0.33.1" or "0.34.0") ||

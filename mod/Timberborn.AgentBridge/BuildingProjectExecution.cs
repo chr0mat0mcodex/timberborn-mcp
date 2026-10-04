@@ -17,11 +17,30 @@ namespace Timberborn.AgentBridge;
 
 public sealed class BuildingProjectExecution(SiteValidation validation, RoadProtection roads,
     BuildingCatalog catalog, BlockObjectPlacerService placers, EntityRegistry entities,
-    IBlockService blocks, SpeedManager speed)
+    IBlockService blocks, SpeedManager speed, BuildingSettings settings)
 {
     private readonly BuildingProjectController controller = new(capacity: BuildingProjectController.MaxProjectsPerSession);
     private readonly System.Diagnostics.Stopwatch clock = System.Diagnostics.Stopwatch.StartNew();
-    public void Update() => controller.Tick(clock.Elapsed.TotalSeconds);
+    private readonly List<(BuildingProjectController.Receipt Receipt, string Session)> configurations = new();
+    public void Update()
+    {
+        controller.Tick(clock.Elapsed.TotalSeconds);
+        foreach (var item in configurations.ToArray())
+        {
+            var configuration = item.Receipt.InitialConfiguration!;
+            var query = new System.Collections.Specialized.NameValueCollection {
+                ["id"] = item.Receipt.ActionId, ["session"] = item.Session };
+            configuration.Tick(item.Receipt.State,
+                () => settings.ReadInitialStorage(BuildingSettingsRequest.Parse("/agent-api/v1/building-settings", query)),
+                (key, expected, value) => {
+                    var q = new System.Collections.Specialized.NameValueCollection(query);
+                    q.Add(key, value); q.Add(key == "good" ? "expectedGood" : "expectedMode", expected);
+                    var result = JObject.FromObject(settings.Set(BuildingSettingsRequest.Parse("/agent-api/v1/set-storage-" + key, q), true));
+                    if ((string?)result["outcome"] != "applied") throw new InvalidOperationException();
+                });
+            if (configuration.Terminal) configurations.Remove(item);
+        }
+    }
     private static JObject Payload(BuildingProjectController.Receipt receipt) => JObject.FromObject(receipt,
         JsonSerializer.Create(new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() }));
     public object Handle(BuildingProjectExecutionRequest request)
@@ -29,9 +48,12 @@ public sealed class BuildingProjectExecution(SiteValidation validation, RoadProt
         if (request.Validation is null) return Payload(controller.Inspect(request.ActionId));
         var r = request.Validation; var p = r.Plan;
         string fingerprint = string.Join("|", p.Session, p.Template, p.DistrictId, p.X, p.Y, p.Z,
-            p.Width, p.Height, p.Rotation, r.OptionIndex, r.PlanKey);
+            p.Width, p.Height, p.Rotation, r.OptionIndex, r.PlanKey,
+            request.InitialStorageGood ?? "<absent>", request.InitialStorageMode ?? "<absent>");
         var existing = controller.Existing(request.ActionId, fingerprint);
         if (existing is not null) return Payload(existing);
+        if (request.HasInitialConfiguration)
+            settings.ValidateInitialStorage(catalog.Resolve(p.Template), request.InitialStorageGood, request.InitialStorageMode);
         if (speed.CurrentSpeed != 0 || !ConstructionIsolation.Allows(entities) || entities.Entities.Any(e => e.EntityId == request.ActionId))
             throw new BridgeRejectionException("state_conflict");
         // Fresh joint game preview is mandatory. Only this one explicitly authorized
@@ -59,8 +81,13 @@ public sealed class BuildingProjectExecution(SiteValidation validation, RoadProt
             ConstructionIsolation.Allows(entities, steps.Where(s => s.State != "pending").Select(s => s.EntityId)) &&
             RoadProtectionPolicy.LostConnections(baseline.Before, roads.Read(baseline, false)).Length == 0 &&
             steps.Where(s => s.State == "confirmed").All(s => Confirm(s, district) == "confirmed");
-        return Payload(controller.Start(request.ActionId, fingerprint, r.PlanKey, steps, Guard, step => Place(step, request.Session),
-            step => Confirm(step, district)));
+        var receipt = controller.Start(request.ActionId, fingerprint, r.PlanKey, steps, Guard, step => Place(step, request.Session),
+            step => Confirm(step, district));
+        if (request.HasInitialConfiguration) {
+            receipt.InitialConfiguration = new InitialStorageConfiguration { Good = request.InitialStorageGood, Mode = request.InitialStorageMode };
+            configurations.Add((receipt, request.Session));
+        }
+        return Payload(receipt);
     }
     private void Place(BuildingProjectController.Step step, string session)
     {

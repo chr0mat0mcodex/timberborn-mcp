@@ -23,6 +23,7 @@ public sealed class BuildingProjectController
         public string Reason { get; set; } = "";
         public Step[] Steps { get; set; } = Array.Empty<Step>();
         public bool ConstructionPreflightProven { get; set; }
+        public InitialStorageConfiguration? InitialConfiguration { get; set; }
         public string[] Limitations { get; set; } = new[] { "development_pilot_only", "construction_preflight_unproven", "no_automatic_retry_or_rollback", "placed_objects_retained", "ledger_lost_on_session_end", "completed_means_order_and_access_confirmed_not_construction_finished" };
     }
     private Receipt? receipt;
