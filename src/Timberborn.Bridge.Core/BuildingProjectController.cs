@@ -4,6 +4,7 @@ namespace Timberborn.Bridge.Core;
 // including a throwing placement whose effects are unknown.
 public sealed class BuildingProjectController
 {
+    public const int MaxProjectsPerSession = 1024;
     public sealed class Step
     {
         public string EntityId { get; set; } = "";
@@ -36,7 +37,7 @@ public sealed class BuildingProjectController
     private double? waitDeadline;
     public BuildingProjectController(int capacity = 1)
     {
-        if (capacity is < 1 or > 4) throw new ArgumentOutOfRangeException(nameof(capacity));
+        if (capacity is < 1 or > MaxProjectsPerSession) throw new ArgumentOutOfRangeException(nameof(capacity));
         this.capacity = capacity;
     }
     public Receipt? Existing(Guid id, string requestFingerprint)

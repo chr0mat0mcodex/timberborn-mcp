@@ -6,16 +6,19 @@ namespace Timberborn.Tests;
 public sealed class ValidationBudgetContractTests
 {
     [Theory]
-    [InlineData(7)]
-    [InlineData(15)]
-    [InlineData(255)]
-    public void ExpandedBudgetAcceptsFirstAndLastReceiptButRejectsInvalidCounters(int legacyMaximum)
+    [InlineData("0.35.1", 7)]
+    [InlineData("0.35.1", 15)]
+    [InlineData("0.35.1", 255)]
+    [InlineData("0.35.2", 7)]
+    [InlineData("0.35.2", 15)]
+    [InlineData("0.35.2", 255)]
+    public void ExpandedBudgetAcceptsFirstAndLastReceiptButRejectsInvalidCounters(string version, int legacyMaximum)
     {
-        Assert.True(ValidationBudgetContract.Accepts("0.35.1", 999_999, legacyMaximum));
-        Assert.True(ValidationBudgetContract.Accepts("0.35.1", 0, legacyMaximum));
-        Assert.True(ValidationBudgetContract.Accepts("0.35.1", legacyMaximum, legacyMaximum));
-        Assert.False(ValidationBudgetContract.Accepts("0.35.1", 1_000_000, legacyMaximum));
-        Assert.False(ValidationBudgetContract.Accepts("0.35.1", -1, legacyMaximum));
+        Assert.True(ValidationBudgetContract.Accepts(version, 999_999, legacyMaximum));
+        Assert.True(ValidationBudgetContract.Accepts(version, 0, legacyMaximum));
+        Assert.True(ValidationBudgetContract.Accepts(version, legacyMaximum, legacyMaximum));
+        Assert.False(ValidationBudgetContract.Accepts(version, 1_000_000, legacyMaximum));
+        Assert.False(ValidationBudgetContract.Accepts(version, -1, legacyMaximum));
     }
 
     [Theory]

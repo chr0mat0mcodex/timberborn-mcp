@@ -15,30 +15,32 @@ public sealed class VerticalSequentialTests
     private static BuildingProjectController.Step[] Steps(int mode) => Modes[mode]
         .Select(t => new BuildingProjectController.Step { Template = t }).ToArray();
 
-    [Fact]
-    public void FourVerticalModesShareCapacityAndKeepOldReceiptsDuringNextProject()
+    [Theory]
+    [InlineData(4)]
+    [InlineData(VerticalStairRequest.MaxProjectsPerSession)]
+    public void FourVerticalModesShareCapacityAndKeepOldReceiptsDuringNextProject(int capacity)
     {
-        var controller = new BuildingProjectController(VerticalStairRequest.MaxProjectsPerSession);
+        var controller = new BuildingProjectController(capacity);
         int writes = 0, expectedWrites = 0;
         BuildingProjectController.Receipt Start(int i) => controller.Start(Id(i + 1), $"f{i}", "key",
             Steps(i % 4), () => true, _ => writes++, _ => "confirmed", _ => "ready");
         var receipts = new List<BuildingProjectController.Receipt>();
         double tick = 0;
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < capacity; i++)
         {
             var receipt = Start(i); receipts.Add(receipt);
             Assert.Throws<BridgeRejectionException>(() => Start(i + 1));
             if (i > 0) Assert.Same(receipts[0], Start(0)); // Replay cannot replace the active project.
-            for (int j = 0; j < Modes[i].Length * 2; j++) controller.Tick(tick++);
-            expectedWrites += Modes[i].Length;
+            for (int j = 0; j < Modes[i % 4].Length * 2; j++) controller.Tick(tick++);
+            expectedWrites += Modes[i % 4].Length;
             Assert.Equal("completed", receipt.State);
             Assert.Equal(expectedWrites, writes);
             foreach (var previous in receipts) Assert.Same(previous, controller.Inspect(Guid.Parse(previous.ActionId)));
             Assert.Throws<BridgeRejectionException>(() => controller.Existing(Id(1), "changed"));
         }
-        Assert.Throws<BridgeRejectionException>(() => Start(4));
+        Assert.Throws<BridgeRejectionException>(() => Start(capacity));
         Assert.Same(receipts[0], Start(0)); // Replay remains available at capacity.
-        controller.Tick(100); Assert.Equal(expectedWrites, writes);
+        controller.Tick(tick); Assert.Equal(expectedWrites, writes);
     }
 
     [Theory]

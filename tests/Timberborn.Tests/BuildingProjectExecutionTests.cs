@@ -77,18 +77,20 @@ public sealed class BuildingProjectExecutionTests
         Assert.Equal("completed",receipt.State);Assert.Equal(5,writes);
         Assert.All(receipt.Steps,s=>Assert.Equal("confirmed",s.State));
     }
-    [Fact]
-    public void BoundedSequentialLedgerRetainsOldReceiptsAndNeverReplaysThem()
+    [Theory]
+    [InlineData(4)]
+    [InlineData(BuildingProjectController.MaxProjectsPerSession)]
+    public void BoundedSequentialLedgerRetainsOldReceiptsAndNeverReplaysThem(int capacity)
     {
-        var c = new BuildingProjectController(capacity: 4);
+        var c = new BuildingProjectController(capacity);
         int writes = 0;
-        var ids = Enumerable.Range(1, 5).Select(i => Guid.Parse($"00000000-0000-0000-0000-{i:D12}")).ToArray();
+        var ids = Enumerable.Range(1, capacity + 1).Select(i => Guid.Parse($"00000000-0000-0000-0000-{i:D12}")).ToArray();
         BuildingProjectController.Receipt Start(int i) => c.Start(ids[i], $"f{i}", "key",
             [new() { EntityId = ids[i].ToString("D"), Template = "SmallWarehouse.Folktails" }],
             () => true, _ => writes++, _ => "confirmed");
         var first = Start(0);
         Assert.Throws<BridgeRejectionException>(() => Start(1));
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < capacity; i++)
         {
             var current = i == 0 ? first : Start(i);
             c.Tick(i * 2); c.Tick(i * 2 + 1);
@@ -98,14 +100,14 @@ public sealed class BuildingProjectExecutionTests
             Assert.Same(first, Start(0));
             Assert.Throws<BridgeRejectionException>(() => c.Existing(ids[0], "changed"));
         }
-        Assert.Throws<BridgeRejectionException>(() => Start(4));
-        c.Tick(100); Assert.Equal(4, writes);
+        Assert.Throws<BridgeRejectionException>(() => Start(capacity));
+        c.Tick(capacity * 2 + 1); Assert.Equal(capacity, writes);
     }
     [Theory]
     [InlineData(false)] [InlineData(true)]
     public void FailedProjectBlocksAnotherIdEvenWithSpareCapacity(bool uncertain)
     {
-        var c = new BuildingProjectController(capacity: 4);
+        var c = new BuildingProjectController(BuildingProjectController.MaxProjectsPerSession);
         var r = c.Start(Id, "f", "k", Steps(), () => uncertain,
             _ => throw new InvalidOperationException(), _ => "confirmed");
         c.Tick(0);
@@ -114,7 +116,7 @@ public sealed class BuildingProjectExecutionTests
         Assert.Same(r, c.Inspect(Id));
     }
     [Theory]
-    [InlineData(0)] [InlineData(5)]
+    [InlineData(0)] [InlineData(BuildingProjectController.MaxProjectsPerSession + 1)]
     public void LedgerCapacityIsExplicitlyBounded(int capacity) =>
         Assert.Throws<ArgumentOutOfRangeException>(() => new BuildingProjectController(capacity));
     [Fact]

@@ -1,5 +1,17 @@
 # Projektstand
 
+## Abschluss am 2026-10-04 — 0.35.2 Projektbudget
+
+Menschliches Gate und gezielter Live-Test bestanden: fünf sequenzielle ebene
+Projekte derselben Sitzung fertig und erreichbar, erstes Replay ohne neue Objekte,
+belegter Standort weiterhin abgelehnt, keine offenen Baustellen, Simulation pausiert.
+1024 ebene und 1024 gemeinsam gezählte vertikale Projekte je Sitzung; historische
+Profile, Geometrie-, Zugangs- und Isolationsgrenzen bleiben unverändert.
+Grenzfall im automatischen Controllertest, kein vertikaler Massentest behauptet.
+Nächster Nutzerwunsch: gewünschte Lagerkonfiguration direkt im Bauauftrag;
+große und besondere Vorlagen bleiben genehmigte Folgearbeit.
+[Nachweise und Playtestfortschritt](docs/playtest-2026-10-04.md).
+
 Stand: 2026-10-03. Das Projekt entwickelt eine native MCP-Steuerung für Timberborn.
 Das Spiel ist ausschließlich Testsystem; konkrete Spielstände gehören nicht zur
 Projektbeschreibung.

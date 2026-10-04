@@ -12,6 +12,23 @@ public sealed class BuildingCapabilityTests
     private const string Session = "11111111-1111-1111-1111-111111111111";
 
     [Theory]
+    [InlineData("0.35.1", 4)]
+    [InlineData("0.35.2", 1024)]
+    public void ExpandedProjectBudgetIsBoundToInstalledVersion(string version, int capacity)
+    {
+        var report = BuildingCapabilityTools.Describe(version, "Folktails", true);
+        Assert.Equal("known", report.ProfileState);
+        Assert.Equal(5, report.Modes.Length);
+        Assert.All(report.Modes, m => Assert.Equal(capacity, m.MaxProjectsPerSession));
+        var flat = Assert.Single(report.Modes, m => m.Mode == "development_pilot");
+        Assert.Equal(4, flat.MaxNewGroundRoads);
+        Assert.Equal(8, flat.MaxSearchWidth);
+        Assert.Equal(64, report.MaxObjectFootprintCells);
+        Assert.False(report.RegularExecutionAllowed);
+        Assert.False(report.ConstructionPreflightProven);
+    }
+
+    [Theory]
     [InlineData("0.33.0", 1)]
     [InlineData("0.33.1", 4)]
     public void KnownProfileSeparatesFlatAndFixedVerticalScope(string version, int verticalCapacity)
@@ -34,7 +51,7 @@ public sealed class BuildingCapabilityTests
         Assert.Equal(verticalCapacity, vertical.MaxProjectsPerSession);
         Assert.All(report.Modes.Where(m => m.Tool == "execute_vertical_stair_pilot"),
             m => Assert.Equal(verticalCapacity, m.MaxProjectsPerSession));
-        Assert.Equal(4, VerticalStairRequest.MaxProjectsPerSession);
+        Assert.Equal(BuildingProjectController.MaxProjectsPerSession, VerticalStairRequest.MaxProjectsPerSession);
         Assert.Equal(300, vertical.MaxWaitRealSeconds);
         Assert.Equal(new[] { 2 }, vertical.UpperPathCounts);
         Assert.Equal(new[] { 0, 1, 2, 3 }, vertical.LiveRotations);

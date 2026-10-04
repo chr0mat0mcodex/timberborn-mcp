@@ -8,7 +8,7 @@ public static class ValidationBudgetContract
     // still report their smaller budget, so both remain valid observations.
     public static bool Accepts(string bridgeVersion, int remaining, int legacyMaximum)
     {
-        int maximum = bridgeVersion == "0.35.1"
+        int maximum = bridgeVersion is ("0.35.1" or "0.35.2")
             ? BuildingActionGate.MaxActionsPerSession - 1
             : legacyMaximum;
         return remaining >= 0 && remaining <= maximum;
