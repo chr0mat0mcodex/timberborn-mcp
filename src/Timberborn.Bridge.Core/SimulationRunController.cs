@@ -27,6 +27,7 @@ public sealed class SimulationRunController
     private SimulationRunStatus? active;
     private double started, phaseStarted, lastProgress, lastHours;
     private float initialSpeed;
+    private bool pauseAfterUnlock, wasLocked;
     private string finishState = "completed", finishReason = "target_reached";
 
     public SimulationRunStatus Inspect(string id) => history.TryGetValue(id, out var r) ? r : throw new BridgeRejectionException("run_not_found");
@@ -43,6 +44,7 @@ public sealed class SimulationRunController
             ObservedGameHours = hours, RequestedSpeed = r.Speed, ObservedSpeed = speed, MaxRealSeconds = r.MaxRealSeconds };
         history.Add(r.RunId, active);
         started = phaseStarted = lastProgress = now; lastHours = hours; initialSpeed = speed;
+        pauseAfterUnlock = wasLocked = false;
         var result = active;
         if (hours >= target) BeginPause("completed", "target_reached", now, changeSpeed);
         else RequestSpeed(r.Speed, changeSpeed);
@@ -50,12 +52,34 @@ public sealed class SimulationRunController
         return result;
     }
 
-    public void Tick(double hours, float speed, double now, Action<int> changeSpeed)
+    public void Tick(double hours, float speed, double now, Action<int> changeSpeed, bool speedLocked = false)
     {
         if (active is null) return;
         ValidateClock(hours, speed, now);
         var r = active; Observe(r, hours, speed, now);
+        if (speedLocked) {
+            wasLocked = true;
+            if (r.State == "pausing") { pauseAfterUnlock = true; return; }
+            r.Reason = "game_speed_locked";
+            if (hours < lastHours) BeginPause("failed", "clock_reversed", now, changeSpeed, true);
+            else if (hours >= r.TargetGameHours) BeginPause("completed", "target_reached", now, changeSpeed, true);
+            else if (now - started >= r.MaxRealSeconds) BeginPause("failed", "real_time_limit", now, changeSpeed, true);
+            return;
+        }
+        if (wasLocked) {
+            // Do not count a game-owned pause as stalled simulation or extend the real-time budget.
+            wasLocked = false; lastProgress = now; phaseStarted = now;
+            if (r.State != "pausing") {
+                r.Reason = r.State == "starting" ? "awaiting_speed" : "advancing";
+                return; // SpeedManager applies restored speed in LateUpdate, after the lock event.
+            }
+        }
         if (r.State == "pausing") {
+            if (pauseAfterUnlock) {
+                if (speed != 0 && speed != r.RequestedSpeed && speed != initialSpeed) { Finish("interrupted", "speed_changed"); return; }
+                pauseAfterUnlock = false; phaseStarted = now;
+                RequestSpeed(0, changeSpeed); return; // Confirm on a later unlocked update.
+            }
             if (speed == 0) Finish(finishState, finishReason);
             else if (speed != r.RequestedSpeed && speed != initialSpeed) Finish("interrupted", "speed_changed");
             else if (now - phaseStarted >= 5) Finish("failed", "pause_unconfirmed");
@@ -73,10 +97,10 @@ public sealed class SimulationRunController
         else if (now - lastProgress >= 120) BeginPause("failed", "simulation_stalled", now, changeSpeed);
     }
 
-    public SimulationRunStatus Cancel(string id, double hours, float speed, double now, Action<int> changeSpeed)
+    public SimulationRunStatus Cancel(string id, double hours, float speed, double now, Action<int> changeSpeed, bool speedLocked = false)
     {
         var r = Inspect(id);
-        if (!r.Terminal) { Observe(r, hours, speed, now); BeginPause("cancelled", "cancel_requested", now, changeSpeed); }
+        if (!r.Terminal) { Observe(r, hours, speed, now); BeginPause("cancelled", "cancel_requested", now, changeSpeed, speedLocked); }
         return r;
     }
 
@@ -89,13 +113,14 @@ public sealed class SimulationRunController
         if (active is not null) Finish("interrupted", "session_ended_pause_unconfirmed");
     }
 
-    private void BeginPause(string state, string reason, double now, Action<int> changeSpeed)
+    private void BeginPause(string state, string reason, double now, Action<int> changeSpeed, bool speedLocked = false)
     {
         if (active is null) return;
         if (active.State == "pausing") return; // no repeated commands or deadline extension
         active.State = "pausing"; active.Reason = reason;
         finishState = state; finishReason = reason; phaseStarted = now;
-        RequestSpeed(0, changeSpeed);
+        pauseAfterUnlock = speedLocked;
+        if (!speedLocked) RequestSpeed(0, changeSpeed);
     }
     private void RequestSpeed(int speed, Action<int> changeSpeed)
     {

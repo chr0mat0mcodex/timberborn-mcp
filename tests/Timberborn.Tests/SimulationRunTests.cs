@@ -10,6 +10,60 @@ namespace Timberborn.Tests;
 
 public sealed class SimulationRunTests
 {
+    [Fact]
+    public void GameLockDoesNotAbandonRunOrRestartSpeed()
+    {
+        var c = new SimulationRunController(); var commands = new List<int>();
+        var r = c.Start(Parse(Query()), 24, 0, 0, commands.Add);
+        c.Tick(24.1, 3, 1, commands.Add);
+        c.Tick(24.2, 0, 2, commands.Add, true);
+        Assert.False(r.Terminal); Assert.Equal("game_speed_locked", r.Reason);
+        c.Tick(24.2, 0, 140, commands.Add, true);
+        c.Tick(24.2, 0, 141, commands.Add); // unlocked event precedes LateUpdate speed restoration
+        Assert.False(r.Terminal);
+        c.Tick(24.3, 3, 142, commands.Add);
+        Assert.Equal("running", r.State); Assert.Single(commands); Assert.Equal(26, r.TargetGameHours);
+        c.Tick(26, 3, 150, commands.Add); c.Tick(26, 0, 151, commands.Add);
+        Assert.Equal("completed", r.State); Assert.Equal(new[] { 3, 0 }, commands);
+    }
+
+    [Fact]
+    public void GameLockDoesNotExtendRealTimeBudgetOrFalselyConfirmFinalPause()
+    {
+        var q = Query(); q["maxRealSeconds"] = "30";
+        var c = new SimulationRunController(); var commands = new List<int>();
+        var r = c.Start(Parse(q), 24, 0, 0, commands.Add);
+        c.Tick(24.1, 3, 1, commands.Add);
+        c.Tick(24.2, 0, 31, commands.Add, true);
+        Assert.Equal("pausing", r.State); Assert.False(r.Terminal); Assert.Single(commands);
+        c.Tick(24.2, 0, 40, commands.Add, true);
+        c.Tick(24.2, 3, 41, commands.Add);
+        Assert.False(r.Terminal); Assert.Equal(new[] { 3, 0 }, commands);
+        c.Tick(24.2, 0, 42, commands.Add);
+        Assert.Equal("failed", r.State); Assert.Equal("real_time_limit", r.Reason);
+    }
+
+    [Fact]
+    public void CancelDuringLockWaitsForUnlockWithoutRestartingSimulation()
+    {
+        var c = new SimulationRunController(); var commands = new List<int>();
+        var r = c.Start(Parse(Query()), 24, 0, 0, commands.Add);
+        c.Tick(24.1, 3, 1, commands.Add); c.Tick(24.2, 0, 2, commands.Add, true);
+        c.Cancel(r.RunId, 24.2, 0, 3, commands.Add, true);
+        c.Tick(24.2, 0, 4, commands.Add, true);
+        Assert.Single(commands); Assert.False(r.Terminal);
+        c.Tick(24.2, 3, 5, commands.Add); c.Tick(24.2, 0, 6, commands.Add);
+        Assert.Equal("cancelled", r.State); Assert.Equal(new[] { 3, 0 }, commands);
+    }
+
+    [Fact]
+    public void UnlockedManualPauseStillInterruptsWithoutResumeCommand()
+    {
+        var c = new SimulationRunController(); var commands = new List<int>();
+        var r = c.Start(Parse(Query()), 24, 0, 0, commands.Add);
+        c.Tick(24.1, 3, 1, commands.Add); c.Tick(24.2, 0, 2, commands.Add);
+        Assert.True(r.Terminal); Assert.Equal("speed_changed", r.Reason); Assert.Single(commands);
+    }
     private static NameValueCollection Query(string duration = "2", string unit = "hours", int speed = 3) => new() {
         ["session"] = "11111111-1111-4111-8111-111111111111", ["runId"] = Guid.NewGuid().ToString("D"),
         ["duration"] = duration, ["unit"] = unit, ["speed"] = speed.ToString(CultureInfo.InvariantCulture), ["expectedSpeed"] = "0", ["maxRealSeconds"] = "7200" };

@@ -1,5 +1,37 @@
 # Projektstand
 
+## Live bestanden — temporäre Spielsperren in Zeitläufen (2026-10-04)
+
+Menschliches Test-/Installationsgate abgeschlossen; alle fünf installierten
+Paketdateien stimmen mit Paket 0.35.3-20261004-231320-8e75fd0c überein.
+Gezielter Vier-Tage-Lauf: beim vom Nutzer ausgelösten Speichern dreimal
+running/game_speed_locked mit Tempo 0 beobachtet; danach derselbe Lauf wieder
+running/advancing mit Tempo 7. Ziel und Echtzeitbudget unverändert.
+Abschluss nach exakt 96 Spielstunden und 271,166 Echtzeitsekunden: completed,
+target_reached, pauseConfirmed, Überschwingen 0. Aktuelles Tempo separat 0.
+
+Negativkontrolle: ausdrückliche MCP-Pause unterbricht einen zweiten aktiven Lauf
+mit explicit_speed_change; aktuelles Tempo danach separat 0 und Spielzeit stabil.
+Der eingefrorene Unterbrechungsbeleg enthält noch Tempo 7 vor Befehlswirkung;
+deshalb die aktuelle Pause immer gesondert lesen.
+
+Öffentliches SpeedLockChangedEvent über EventBus angebunden; keine Entsperrung
+oder Wiederbeschleunigung durch die Bridge. Sperre beim Speichern jetzt direkt
+nachgewiesen; eine rückwirkende eindeutige Ursache aller früheren Abbrüche ist
+nicht beweisbar. Budgetablauf/Abbruch während Sperre synthetisch geprüft, im
+Livetest nicht zusätzlich provoziert. UI-Geschwindigkeitswechsel separat nicht
+live getestet. Gesamtziel bleibt offen: zuletzt 27 Biber, 23/157 Vorlagen.
+
+## Gesamtausbau: 27 Biber, 23/157 Vorlagen
+
+Sieben weitere Gebäude fertig; Karottenanbau und Bretterlager wirken.
+Spiel nach erfolgreicher Zeitlauf-Reparaturabnahme bestätigt pausiert. 27 Betten voll;
+Holzversorgung und weitere Wohnplätze als nächstes. Zwölf neue Forstzellen
+lebend/wachsend und ohne Wasserstress nachgewiesen. Gesamtziel weiterhin offen.
+[Belege und offene Schritte](docs/playtest-2026-10-04.md),
+[vollständige Vorlagenliste](docs/building-coverage.csv).
+
+
 ## Live bestanden — Bauchargen (2026-10-04)
 
 Menschliches Gate mit anschließendem „live bereit“; fünf installierte Paketdateien
