@@ -3,14 +3,19 @@ $ErrorActionPreference = 'Stop'
 if ($Live -and $NativeConfig) { throw 'Legacy- und nativen Livetest getrennt ausführen.' }
 if ($NativeConfig) { $NativeConfig = (Resolve-Path -LiteralPath $NativeConfig).Path }
 . "$PSScriptRoot/environment.ps1"
+. "$PSScriptRoot/cli-output.ps1"
 Push-Location $taskRoot
 try {
     $restoreArgs = @('restore', 'TimberbornMcp.slnx', '--configfile', 'NuGet.Config')
     if (-not $InitialRestore) { $restoreArgs += '--locked-mode' }
-    & dotnet @restoreArgs
-    if ($LASTEXITCODE -ne 0) { throw 'Restore fehlgeschlagen.' }
-    & dotnet build TimberbornMcp.slnx -c Release --no-restore
-    if ($LASTEXITCODE -ne 0) { throw 'Build fehlgeschlagen.' }
+    Invoke-TimberbornStep 'Abhängigkeiten prüfen' {
+        & dotnet @restoreArgs --verbosity quiet --nologo
+        if ($LASTEXITCODE -ne 0) { throw 'Restore fehlgeschlagen.' }
+    }
+    Invoke-TimberbornStep 'MCP und Tests kompilieren' {
+        & dotnet build TimberbornMcp.slnx -c Release --no-restore --verbosity quiet --nologo
+        if ($LASTEXITCODE -ne 0) { throw 'Build fehlgeschlagen.' }
+    }
     $oldLive = $env:TIMBERBORN_LIVE_TEST
     $oldWriteTest = $env:TIMBERBORN_LIVE_WRITE_TEST
     $oldWrites = $env:TIMBERBORN_ENABLE_WRITES
@@ -43,12 +48,18 @@ try {
         $env:TIMBERBORN_ENABLE_BUILDING_SETTINGS = '0'
         $env:TIMBERBORN_ENABLE_BUILDING_PLACEMENT = '0'
         $env:TIMBERBORN_ENABLE_REMOVAL = '0'
-        & dotnet test TimberbornMcp.slnx -c Release --no-build --no-restore
-        if ($LASTEXITCODE -ne 0) { throw 'Tests fehlgeschlagen.' }
+        # No retries: stop at the first failing test; do not start the next project.
+        foreach ($testProject in @('tests/Timberborn.Tests/Timberborn.Tests.csproj', 'tests/Timberborn.IntegrationTests/Timberborn.IntegrationTests.csproj')) {
+            $testLabel = if ($testProject -like '*/Timberborn.Tests/*') { 'Unit-Tests' } else { 'Integrationstests' }
+            Invoke-TimberbornStep $testLabel {
+                & dotnet test $testProject -c Release --no-build --no-restore --nologo --verbosity quiet --logger 'console;verbosity=minimal' -- xUnit.StopOnFail=true xUnit.ParallelizeTestCollections=false
+                if ($LASTEXITCODE -ne 0) { throw "Tests fehlgeschlagen: $testProject. Abbruch ohne Wiederholung." }
+            }
+        }
         if ($NativeConfig) {
             $env:TIMBERBORN_NATIVE_CONFIG = $NativeConfig
             $env:TIMBERBORN_NATIVE_LIVE_TEST = '1'
-            & dotnet test tests/Timberborn.IntegrationTests/Timberborn.IntegrationTests.csproj -c Release --no-build --no-restore --filter FullyQualifiedName~LiveNativeTests
+            & dotnet test tests/Timberborn.IntegrationTests/Timberborn.IntegrationTests.csproj -c Release --no-build --no-restore --filter FullyQualifiedName~LiveNativeTests -- xUnit.StopOnFail=true xUnit.ParallelizeTestCollections=false
             if ($LASTEXITCODE -ne 0) { throw 'Nativer Lesetest fehlgeschlagen. Kein automatischer Wiederholungsversuch.' }
         }
     } finally {

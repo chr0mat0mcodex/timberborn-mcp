@@ -1,5 +1,39 @@
 # Backlog
 
+## Live bestanden — Bauchargen (2026-10-04)
+
+Menschliches Gate mit anschließendem „live bereit“; fünf installierte Paketdateien
+gegen das neue Paket geprüft. Zwei Gebäude automatisch nacheinander fertig und
+zugänglich: kleines Lager mit Carrot/obtain, danach Mini-Wohnhaus. Zehn tote Bäume
+automatisch geräumt, sechs lebende erhalten. Räumwartefenster tatsächlich gestartet;
+bei der unabhängigen Rückfrage waren die Ziele bereits entfernt. Drei native
+Zeitfenster je exakt 24 Stunden, kein Überschwingen, Pause jeweils bestätigt.
+Fünf ausführende Chargenaufrufe bis Abschluss; Replay/Budgetkontrolle zusätzlich.
+Identischer Start und abgeschlossene Fortsetzung unverändert, Budgetänderung
+abgelehnt. Negative bebaute 1×1-Fläche stoppt vor Bau/Räumung und Folgegebäude.
+Unabhängige Zugangs-/Lagerabfragen stimmen mit Abschluss überein. 21 Betten,
+17 belegt; kein Nachweis für 100 zufriedene Biber oder neue Vorlagenabdeckung.
+
+Grenzen: kein erzwungener Prozessabbruch im Livetest; Materialmangel und erschöpftes
+Räumbudget synthetisch abgedeckt, hier nicht zusätzlich live provoziert.
+Baustellenkonfiguration in diesem Pilot erst nach Fertigstellung zurückgelesen.
+Verbesserungen: vollständiges Räumbudget läuft trotz früher geräumter Ziele aus;
+Budgetkonflikt meldet zu allgemein invalid_argument; gespeicherter completion-Wert
+kann während Räumung noch zum vorherigen Gebäude gehören. Keine falsche Aktualität
+behaupten: checkpointOnly und Zeitstempel beachten. Breitere Vorlagen-/Höhenplanung
+und kleinere gezielte Räumflächen bleiben offen.
+
+
+## Vor Test-Gate — Standortwahl und komplette Bauchargen
+
+Erneutes Nutzer-Go: 1–8 Gebäude, begrenzte Fläche, Rotationensuche, einmalige
+Vegetationsräumung mit festem Zeitbudget und sequenzielle Fertigstellung als
+MCP-Ablauf implementiert. Persistente Wiederaufnahme und kompakte Checkpoints;
+kein neuer Hintergrundprozess. Synthetische Prüfungen ergänzt, Ausführung und
+Livetest stehen aus. Räumung umfasst bei Bedarf alle freigegebenen passenden
+Ziele der Region; minimale Räumfläche und Höhenplanung bleiben offen.
+[Pilot und Grenzen](docs/building-batch-workflow.md).
+
 ## Live bestanden — vollständiger einzelner Bauablauf
 
 Reparatur nach menschlichem Gate bestanden: Lager plus zwei Wege fertig,
@@ -31,6 +65,20 @@ Objektarten bleiben Folgearbeit; keine allgemeine autonome Ausbaupipeline behaup
 
 ## Weitere Live-Lücken beim Kolonieausbau
 
+- Räumaufträge in Bauablauf integrieren: gleicher Vegetationsbatch kann sofortige
+  Entfernung und offene Arbeiteraufträge mischen. Live blieben vier tote Kiefern
+  zunächst markiert; nach einem begrenzten Spieltag waren alle entfernt. Bau
+  darf erst nach tatsächlicher Räumung starten. Status und Zeitbudget dieser
+  Vorbereitung mitführen, keine Wiederholung der ursprünglichen Markierung.
+- Generische erhöhte Gebäudeeingänge: DoubleLodge/TripleLodge sind im Katalog
+  als geometrisch unterstützt ausgewiesen, ihr Eingang liegt aber eine Ebene
+  über dem Ursprung. Ebener Projektablauf reicht nicht; vorhandene feste
+  Vertikalpiloten sind noch kein allgemeiner Anschluss solcher Wohngebäude.
+- Suchbereich vorab gegen gedrehte Grundfläche und Wegeingang erklären:
+  Forsthausursprung geometrisch frei, aber Grundfläche teilweise außerhalb der
+  angegebenen Region. Erst eine zusätzliche Spalte ermöglicht den Kandidaten.
+  Ursprungsdiagnose meldet requires_game_validation und erklärt diesen Planer-
+  Ausschluss nicht. Konkrete benötigte Suchgrenzen bzw. Ablehnungszähler ausgeben.
 - Flächenvorprüfung mit konkreten blockierten Zellen und Gründen: `set_area`
   meldet bei besetzter Pflanzfläche nur `invalid_argument` und einen pauschalen
   Hinweis auf möglicherweise unbestätigte Wirkung. Live: Kiefern vor der Farm,

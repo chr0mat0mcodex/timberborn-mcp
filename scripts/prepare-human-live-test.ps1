@@ -6,6 +6,11 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+. "$PSScriptRoot/cli-output.ps1"
+$preparationWatch = [Diagnostics.Stopwatch]::StartNew()
+$preparationPhase = 'Vorbereitung'
+Write-Host "`nTIMBERBORN  |  Live-Test vorbereiten" -ForegroundColor Cyan
+Write-Host 'Tests > Paket > Installation > Prüfung  |  Abbruch beim ersten Fehler' -ForegroundColor DarkGray
 
 function Get-NormalizedPath([string]$Path, [string]$Label) {
     if (-not (Test-Path -LiteralPath $Path -PathType Container)) { throw "$Label existiert nicht: $Path" }
@@ -38,7 +43,7 @@ function Stop-LocalMcpServers([string]$WorkspaceRoot) {
     })
     if ($matches.Count -eq 0) { return }
     $ids = @($matches | ForEach-Object ProcessId)
-    Write-Output "Vorbereitung: $($ids.Count) lokaler MCP-Prozess(e) beenden ..."
+    Write-TimberbornStatus 'INFO' "$($ids.Count) lokalen MCP-Prozess(e) beenden"
     foreach ($id in $ids) { Stop-Process -Id $id -ErrorAction Stop }
     foreach ($id in $ids) {
         try { Wait-Process -Id $id -Timeout 5 -ErrorAction Stop }
@@ -60,12 +65,12 @@ try {
     $targetDir = Join-Path $modsDir 'TimberbornAgentBridge'
     Assert-ChildPath $targetDir $modsDir 'Zielordner'
 
-    Write-Output '1/4: Automatische Tests und Build ausführen ...'
+    $preparationPhase = '1/4 Tests und Build'
+    Write-Host "`n$preparationPhase" -ForegroundColor Cyan
     & "$PSScriptRoot/verify.ps1"
-    if ($LASTEXITCODE -ne 0) { throw 'Automatische Tests fehlgeschlagen.' }
-    Write-Output '2/4: Native Bridge paketieren ...'
+    $preparationPhase = '2/4 Native Bridge paketieren'
+    Write-Host "`n$preparationPhase" -ForegroundColor Cyan
     & "$PSScriptRoot/build-native-bridge.ps1" -TimberbornManagedDir $managedDir -Port $Port
-    if ($LASTEXITCODE -ne 0) { throw 'Bridge-Paketierung fehlgeschlagen.' }
 
     $packageRoot = Get-ChildItem -LiteralPath (Join-Path $taskRoot '.local/packages') -Directory -Filter 'agent-bridge-*' | Sort-Object LastWriteTimeUtc -Descending | Select-Object -First 1
     if ($null -eq $packageRoot) { throw 'Kein gerade erzeugtes Bridge-Paket gefunden.' }
@@ -91,7 +96,8 @@ try {
     $previousInstall = Join-Path $backupRoot 'TimberbornAgentBridge'
     $installationStarted = $false
     try {
-        Write-Output '3/4: Mod sicher installieren ...'
+        $preparationPhase = '3/4 Mod sichern und installieren'
+        Write-Host "`n$preparationPhase" -ForegroundColor Cyan
         New-Item -ItemType Directory -Path $stagingDir | Out-Null
         Copy-Item -LiteralPath $sourceDir -Destination $stagingDir -Recurse
         $stagedModDir = Join-Path $stagingDir 'TimberbornAgentBridge'
@@ -100,7 +106,8 @@ try {
         if (Test-Path -LiteralPath $targetDir -PathType Container) { Move-Item -LiteralPath $targetDir -Destination $previousInstall }
         $installationStarted = $true
         Move-Item -LiteralPath $stagedModDir -Destination $targetDir
-        Write-Output '4/4: Installierte Paketdateien prüfen ...'
+        $preparationPhase = '4/4 Installierte Dateien prüfen'
+        Write-Host "`n$preparationPhase" -ForegroundColor Cyan
         foreach ($file in $packageFiles) { Assert-SameFile (Join-Path $sourceDir $file) (Join-Path $targetDir $file) }
     } catch {
         if ($installationStarted -and (Test-Path -LiteralPath $previousInstall -PathType Container)) {
@@ -111,8 +118,12 @@ try {
     } finally {
         if (Test-Path -LiteralPath $stagingDir -PathType Container) { Remove-Item -LiteralPath $stagingDir -Recurse -Force }
     }
-    Write-Output ''
-    Write-Output 'Bereit für den menschlichen Test: Tests bestanden, Mod installiert und Paketdateien verifiziert.'
-    Write-Output 'Nächste Schritte: Timberborn starten, einen Spielstand laden und danach dem Agenten "live bereit" schreiben.'
-    Write-Output 'Eine vorherige Mod-Installation wurde lokal gesichert; private Bridge-Konfiguration wurde beibehalten.'
+    Write-Host ''
+    Write-TimberbornStatus 'BEREIT' ("Tests bestanden, Mod installiert, {0} Dateien geprüft. Gesamt: {1:n1} s" -f $packageFiles.Count, $preparationWatch.Elapsed.TotalSeconds) Green
+    if (Test-Path -LiteralPath $previousInstall) { Write-Host "  Sicherung: $previousInstall" -ForegroundColor DarkGray }
+    Write-Host '  Jetzt Timberborn starten, Spielstand laden und "live bereit" schreiben.' -ForegroundColor Cyan
+} catch {
+    Write-Host ''
+    Write-TimberbornStatus 'ABGEBROCHEN' ("{0} nach {1:n1} s. Kein automatischer Neustart." -f $preparationPhase, $preparationWatch.Elapsed.TotalSeconds) Red
+    throw
 } finally { Pop-Location }

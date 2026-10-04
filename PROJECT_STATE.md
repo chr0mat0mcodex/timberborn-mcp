@@ -1,5 +1,56 @@
 # Projektstand
 
+## Live bestanden — Bauchargen (2026-10-04)
+
+Menschliches Gate mit anschließendem „live bereit“; fünf installierte Paketdateien
+gegen das neue Paket geprüft. Zwei Gebäude automatisch nacheinander fertig und
+zugänglich: kleines Lager mit Carrot/obtain, danach Mini-Wohnhaus. Zehn tote Bäume
+automatisch geräumt, sechs lebende erhalten. Räumwartefenster tatsächlich gestartet;
+bei der unabhängigen Rückfrage waren die Ziele bereits entfernt. Drei native
+Zeitfenster je exakt 24 Stunden, kein Überschwingen, Pause jeweils bestätigt.
+Fünf ausführende Chargenaufrufe bis Abschluss; Replay/Budgetkontrolle zusätzlich.
+Identischer Start und abgeschlossene Fortsetzung unverändert, Budgetänderung
+abgelehnt. Negative bebaute 1×1-Fläche stoppt vor Bau/Räumung und Folgegebäude.
+Unabhängige Zugangs-/Lagerabfragen stimmen mit Abschluss überein. 21 Betten,
+17 belegt; kein Nachweis für 100 zufriedene Biber oder neue Vorlagenabdeckung.
+
+Grenzen: kein erzwungener Prozessabbruch im Livetest; Materialmangel und erschöpftes
+Räumbudget synthetisch abgedeckt, hier nicht zusätzlich live provoziert.
+Baustellenkonfiguration in diesem Pilot erst nach Fertigstellung zurückgelesen.
+Verbesserungen: vollständiges Räumbudget läuft trotz früher geräumter Ziele aus;
+Budgetkonflikt meldet zu allgemein invalid_argument; gespeicherter completion-Wert
+kann während Räumung noch zum vorherigen Gebäude gehören. Keine falsche Aktualität
+behaupten: checkpointOnly und Zeitstempel beachten. Breitere Vorlagen-/Höhenplanung
+und kleinere gezielte Räumflächen bleiben offen.
+
+
+## Vor menschlichem Gate — vollständige Bauchargen
+
+Erster menschlicher Skriptlauf beim MCP-Build mit CS8604 abgebrochen; Installation
+nicht erreicht. Nullprüfung des Chargenauftrags korrigiert (explizite Ablehnung
+vor Feldzugriff). Erneuter menschlicher Skriptlauf und Livetest stehen aus.
+
+Zweiter Skriptlauf: MCP- und Integrationstest-Projekt bauen erfolgreich;
+Unit-Test-Projekt stoppt mit 22 xUnit1051-Meldungen. Alle 22 neuen asynchronen
+Testaufrufe reichen jetzt TestContext.Current.CancellationToken weiter.
+Tests/Installation noch nicht durchgelaufen; nächster menschlicher Lauf offen.
+
+Dritter Skriptlauf: alle Projekte bauen; Tests scheitern am MCP-Eingabeschema
+der Chargenwerkzeuge und verursachen dadurch weitere Katalog-/Startfehler.
+Schemawurzel explizit auf object eingeschränkt, passend zur vorhandenen
+Null-Ablehnung des Parsers. Gezielter Katalogtest mit/ohne Schreibfreigabe ergänzt.
+Erneuter menschlicher Testlauf und Installation bleiben ausstehend.
+
+Nach erneutem ausdrücklichem Go: MCP-Chargensteuerung für Standortwahl,
+einmalige autorisierte Vegetationsräumung samt Wartebudget und sequenzielle
+Fertigstellung implementiert. Private persistente Checkpoints vor Eingriffen,
+lesende Klärung nach Abbruch, feste Budgets, kompakte Fortschrittsantworten.
+Synthetische Prüfungen ergänzt; bislang nur Quellcode-/Diff-Prüfung, kein
+Testlauf/Build/Installation/Livetest. Noch kein Commit oder Push dieser Änderung.
+Nächster Schritt: menschliches `scripts/prepare-human-live-test.ps1`, danach
+gezielter Zwei-Gebäude-Pilot mit Wiederaufnahme und negativem Kontrollfall.
+[Umfang und Abnahme](docs/building-batch-workflow.md).
+
 ## Live bestanden — wiederaufnehmbare Bauabläufe
 
 Reparatur nach erneutem menschlichem Gate abgenommen: neues Lager und zwei Wege
