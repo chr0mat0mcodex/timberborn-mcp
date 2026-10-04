@@ -22,7 +22,7 @@ public sealed partial class NativeClient
             d.OptionIndex!=r.OptionIndex||d.Option is null||d.Option.PlanKey!=r.PlanKey||d.Executable||
             d.RoadValid is null||d.RoadStepLostConnections is null||d.RoadValid.Length>8||
             d.RoadValid.Length!=d.Option.NewRoadCells?.Length||d.RoadStepLostConnections.Length!=d.RoadValid.Length||
-            d.RoadStepLostConnections.Any(n=>n<0||n>16384)||d.AttemptsRemaining is <0 or >15||
+            d.RoadStepLostConnections.Any(n=>n<0||n>16384)||!ValidationBudgetContract.Accepts(e.BridgeVersion,d.AttemptsRemaining,15)||
             d.NoPersistentChangeObserved==d.SessionLocked||d.Limitations is null||d.Limitations.Length>16||
             d.Limitations.Any(s=>string.IsNullOrEmpty(s)||s.Length>160))throw new InvalidDataException("Invalid project preview");
         // Reuse the candidate's complete geometry contract; this is only a local

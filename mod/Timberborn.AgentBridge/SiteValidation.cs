@@ -30,10 +30,11 @@ public sealed class SiteValidation(PreviewFactory factory, BlockObjectValidation
     private int attempts;
     private int buildingAttempts;
     private int projectAttempts;
+    private const int MaxProjectValidationsPerSession = BuildingActionGate.MaxActionsPerSession;
 
     public object ValidateProject(BuildingProjectValidationRequest request)
     {
-        if(faulted||projectAttempts>=16)throw new InvalidOperationException("validation_session_locked");
+        if(faulted||projectAttempts>=MaxProjectValidationsPerSession)throw new InvalidOperationException("validation_session_locked");
         var plan=request.Plan;
         var current=JObject.FromObject(projectPlanner.Plan(plan));
         var options=(JArray)current["options"]!;
@@ -102,7 +103,7 @@ public sealed class SiteValidation(PreviewFactory factory, BlockObjectValidation
         return new {template=plan.Template,planKey=request.PlanKey,optionIndex=request.OptionIndex,option,
             buildingValid,roadValid=roadValid.ToArray(),roadStepLostConnections=stepLost.ToArray(),
             previewEntranceConnected=connection,roadProtection=safety,noPersistentChangeObserved=unchanged&&!faulted,
-            sessionLocked=faulted,attemptsRemaining=16-projectAttempts,executable=false,
+            sessionLocked=faulted,attemptsRemaining=MaxProjectValidationsPerSession-projectAttempts,executable=false,
             limitations=new[]{"joint_preview_not_build_order","preview_connection_not_builder_reachability","construction_state_unproven",
                 "registered_entities_and_stock_not_all_game_state","cached_previews_until_scene_unload","maximum_eight_new_roads","no_execution_token"} };
     }
@@ -116,7 +117,7 @@ public sealed class SiteValidation(PreviewFactory factory, BlockObjectValidation
     {
         allowed = false;
         safety = new RoadProtection.Report { reasons = new[] { "game_validation_not_passed" } };
-        if (faulted || (request.GenericBuilding ? buildingAttempts >= 256 : attempts >= 8) ||
+        if (faulted || (request.GenericBuilding ? buildingAttempts >= BuildingActionGate.MaxActionsPerSession : attempts >= BuildingActionGate.MaxActionsPerSession) ||
             (!previews.ContainsKey(request.Template) && previews.Count >= 64)) throw new InvalidOperationException("validation_session_locked");
         if (!request.GenericBuilding && (request.Template is not ("Lodge.Folktails" or "Path") ||
             (request.Template == "Lodge.Folktails" && faction.Current.Id != "Folktails"))) throw new ArgumentException("invalid_template");
@@ -183,7 +184,7 @@ public sealed class SiteValidation(PreviewFactory factory, BlockObjectValidation
         allowed = unchanged && valid && safety.status == "safe" && !faulted;
         return new { template = request.Template, origin = new { x = request.X, y = request.Y, z = request.Z },
             rotation = request.Rotation, gameValidated = true, valid = unchanged ? (bool?)valid : null, roadProtection = safety,
-            noPersistentChangeObserved = unchanged, sessionLocked = faulted, attemptsRemaining = request.GenericBuilding ? 256 - buildingAttempts : 8 - attempts,
+            noPersistentChangeObserved = unchanged, sessionLocked = faulted, attemptsRemaining = request.GenericBuilding ? BuildingActionGate.MaxActionsPerSession - buildingAttempts : BuildingActionGate.MaxActionsPerSession - attempts,
             limitations = new[] { "preview_validation_not_placement", "no_build_order_created", "no_material_delivery_or_completion_guarantee",
                 "registered_entity_ids_and_global_stock_checked_not_all_game_state", "hidden_preview_cached_until_scene_unload" } };
     }

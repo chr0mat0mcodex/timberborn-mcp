@@ -56,6 +56,33 @@ public sealed class BuildingProjectValidationTests
             Task.FromResult(new HttpResponseMessage(System.Net.HttpStatusCode.OK){Content=new StringContent(json)});
     }
     [Theory]
+    [InlineData(999999, true)]
+    [InlineData(15, true)]
+    [InlineData(0, true)]
+    [InlineData(1000000, false)]
+    [InlineData(-1, false)]
+    public async Task ExpandedProjectBudgetSurvivesFullResponseValidation(int remaining, bool accepted)
+    {
+        var e = Evidence();
+        var construction = new NativeConstructionPreview("unknown", "no_existing_construction_sites",
+            null, null, 0, [], [], new("unknown", "no_existing_construction_sites", null, null, null, [], []));
+        e = e with { BridgeVersion = "0.35.1", Data = e.Data with {
+            AttemptsRemaining = remaining,
+            RoadProtection = e.Data.RoadProtection with { ConstructionAccessPreview = construction }
+        } };
+        using var client = new NativeClient(new(8081, new string('a', 64)), new PreviewHandler(
+            System.Text.Json.JsonSerializer.Serialize(e, NativeJson.Options)));
+        var request = BuildingProjectValidationRequest.Parse(Query());
+        if (!accepted) {
+            await Assert.ThrowsAsync<InvalidDataException>(() => client.ValidateProject(request, TestContext.Current.CancellationToken));
+            return;
+        }
+        var result = await client.ValidateProject(request, TestContext.Current.CancellationToken);
+        Assert.Equal(remaining, result.Data.AttemptsRemaining);
+        Assert.False(result.Data.Executable);
+        Assert.False(result.Data.Assessment!.RegularExecutionAllowed);
+    }
+    [Theory]
     [InlineData("executable")] [InlineData("key")] [InlineData("count")] [InlineData("restoration")]
     [InlineData("lock")] [InlineData("budget")] [InlineData("session")]
     public void InconsistentEvidenceRejected(string defect)

@@ -58,6 +58,35 @@ public sealed class ValidationTests
     }
 
     private static JsonElement Args(string session) => JsonSerializer.SerializeToElement(new { template = "Path", x = 1, y = 2, z = 3, rotation = 0, session });
+    [Theory]
+    [InlineData("validate_build_site", 999999, true)]
+    [InlineData("validate_building", 999999, true)]
+    [InlineData("validate_build_site", 0, true)]
+    [InlineData("validate_building", 0, true)]
+    [InlineData("validate_build_site", 1000000, false)]
+    [InlineData("validate_building", 1000000, false)]
+    [InlineData("validate_build_site", -1, false)]
+    [InlineData("validate_building", -1, false)]
+    public async Task ExpandedSingleBudgetDoesNotBecomeBuildPermission(string tool, int remaining, bool accepted)
+    {
+        const string session = "11111111-1111-1111-1111-111111111111";
+        var construction = new NativeConstructionPreview("unknown", "no_existing_construction_sites",
+            null, null, 0, [], [], new("unknown", "no_existing_construction_sites", null, null, null, [], []));
+        var roads = new NativeRoadProtection("unknown", ["construction_and_road_node_coverage_unproven"],
+            4, 0, true, false, [], false, [], [], 2, 1, 0, construction);
+        var response = new BridgeEnvelope<NativeValidation>(1, session, DateTimeOffset.UtcNow, "0.35.1",
+            new("Path", new(1, 2, 3), 0, true, true, true, false, remaining, [], roads));
+        var handler = new ValidationHandler(JsonSerializer.Serialize(response, NativeJson.Options));
+        using var tools = new NativeTools(new NativeClient(new(8081, new string('a', 64)), handler),
+            enableValidation: true, enableBuildingPlacement: true);
+        var result = await tools.Invoke(tool, Args(session), TestContext.Current.CancellationToken);
+        Assert.Equal(accepted ? "ok" : "error", result["status"]!.GetValue<string>());
+        Assert.Equal(1, handler.Calls);
+        if (accepted) {
+            Assert.Equal(remaining, result["data"]!["attemptsRemaining"]!.GetValue<int>());
+            Assert.False(result["data"]!["assessment"]!["regularExecutionAllowed"]!.GetValue<bool>());
+        } else Assert.Equal("backend_incompatible", result["error"]!["code"]!.GetValue<string>());
+    }
     private sealed class ValidationHandler(string payload) : HttpMessageHandler
     {
         public int Calls { get; private set; }

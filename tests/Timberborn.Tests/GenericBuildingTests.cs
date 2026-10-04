@@ -48,11 +48,12 @@ public sealed class GenericBuildingTests
     }
 
     [Fact]
-    public void BudgetDoesNotEvictOldActionIds()
+    public void TestModeActionBudgetIsHighAndDoesNotEvictOldActionIds()
     {
-        var gate=new BuildingActionGate();int calls=0;
-        for(int i=0;i<256;i++)gate.Execute(Guid.NewGuid(),()=>++calls);
-        Assert.Throws<InvalidOperationException>(()=>gate.Execute(Guid.NewGuid(),()=>++calls));Assert.Equal(256,calls);
+        Assert.True(BuildingActionGate.MaxActionsPerSession >= 1_000_000);
+        var gate=new BuildingActionGate();var id=Guid.NewGuid();
+        gate.Execute(id,()=>0);
+        Assert.Throws<InvalidOperationException>(()=>gate.Execute(id,()=>0));
     }
 
     [Theory]

@@ -22,11 +22,14 @@ public static class BuildingPolicy
 // One singleton per loaded game. Never evict IDs: uncertain actions must not execute twice.
 public sealed class BuildingActionGate
 {
+    // Test mode: high operational ceiling, while every action ID remains permanent
+    // for the loaded game to prevent duplicate placement after an uncertain result.
+    public const int MaxActionsPerSession = 1_000_000;
     private readonly HashSet<Guid> attempted = new();
     public T Execute<T>(Guid actionId, Func<T> action)
     {
         if (actionId == Guid.Empty) throw new ArgumentException("invalid_action_id");
-        if (attempted.Count >= 256 || !attempted.Add(actionId)) throw new InvalidOperationException("action_used_or_session_limit");
+        if (attempted.Count >= MaxActionsPerSession || !attempted.Add(actionId)) throw new InvalidOperationException("action_used_or_session_limit");
         return action();
     }
 }
