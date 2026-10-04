@@ -1,5 +1,15 @@
 # Backlog
 
+## Bedienungsdiagnose aus regionalem Baupilot
+
+- waitSeconds-Grenzen direkt in Kurzbeschreibung nennen: Einzelprojekt 0–20,
+  Charge 0–45. Metadatenschema allein verhindert Parameterverwechslungen nicht.
+- Vor Eingriff erkannte Parameterfehler konkret benennen; pauschaler Hinweis
+  auf möglicherweise unbestätigte Aktion verursacht unnötige Diagnoseabfragen.
+- Regionaler Baukandidat inzwischen bis finished_accessible praktisch bestätigt;
+  nächste wirtschaftliche Grenze sind Holz- und Nahrungsproduktion.
+
+
 ## Priorität: regionale Flächensuche — Vorschlag nach Ausbaupilot
 
 Rund 40 MCP-Aufrufe für zwei Wohnhäuser, eine Transportstation und sieben

@@ -1,5 +1,29 @@
 # Projektstand
 
+## Praxistest: regionaler Kandidat bis zum fertigen Wohnhaus
+
+2026-10-04: Ersten regional gefundenen Lodge-Kandidaten im Entwicklungspilot
+frisch geplant und gebaut. Tatsächlicher Baustellenzugang buildersReachable=true
+vor Zeitlauf, anschließend finished_accessible: Gebäude fertig, Eingang frei
+und erreichbar. Exakt 24 Spielstunden, Überschwingen 0, Endpause bestätigt.
+Bevölkerung danach 32 (25 Erwachsene, 7 Kinder), 36 Betten, vier frei;
+keine kritischen Bedürfnisflags. Vorlagenabdeckung unverändert 24/157.
+
+Versorgungsgrenze: Wasser 83, Beeren 63, frei verfügbares Holz 1. Karottenbestand
+während des Laufs 0; nach Abschluss 30 lebende Karottenpflanzen, davon zwei reif,
+keine mit Wasserstress. Forststichprobe: 13 lebende Kiefern, noch nicht ausgewachsen,
+kein Wasserstress. Besetzte westliche Holzfällerflagge meldet laufenden Job;
+das allein beweist keinen ausreichenden Holzoutput. Nächster Ausbau muss zuerst
+Holz- und Nahrungsproduktion vergrößern, nicht weitere Baumaterialien verplanen.
+
+Bedienungsfehler im Test: advance_building_project akzeptiert waitSeconds nur
+0–20, Bauchargen dagegen 0–45. Versuch mit 30 vor Ausführung abgelehnt; lesend
+awaiting_simulation und run=null bestätigt, dann gezielt auf 20 korrigiert.
+Backlog: Parametergrenzen in kurzen Werkzeugbeschreibungen nennen und reine
+Parameterfehler von möglicherweise unbestätigten Aktionen unterscheiden.
+
+
+
 ## Live bestanden — regionale Flächensuche (2026-10-04)
 
 Menschliches Gate abgeschlossen, fünf installierte Paketdateien mit Paket
