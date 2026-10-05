@@ -1,5 +1,44 @@
 # Projektstand
 
+## Gebäudefokus: Farm, Sammelstelle, Zahnradwerkstatt (2026-10-05)
+
+Vorläufiges Ziel 50 Biber; Gebäudeausbau hat Vorrang. Weitere acht Spieltage bis
+Tag 402, 18,09375 Uhr. Aktuell 46 Biber (45 Erwachsene, ein Kind), 49 Betten,
+keine Obdachlosen, keine kritischen Bedürfnisflags und keine Stranded-Warnung.
+Die früher erreichten 50 sind ein historischer Zwischenstand, kein aktueller Wert.
+
+Zweite Farm fertig/erreichbar mit einem neuen Anschlussweg; drei zugewiesene
+Arbeiter. 38 neue feuchte Feldzellen in nativer Farmreichweite markiert und alle
+als lebende Karotten ohne Wasserstress nachgewiesen. Später acht Zellen gezielt
+für Werkstatt/Wege umgewidmet; 30 zusätzliche Anbauzellen verbleiben. Erste
+Ernte angelaufen: Endbestand 48 Karotten und drei Beeren, 66 Wasser. Noch kein
+langfristiger Versorgungsüberschuss nachgewiesen.
+
+Neu für die Katalogabdeckung: ScavengerFlag.Folktails und GearWorkshop.Folktails,
+beide finished_accessible samt bestätigter Endpause. CSV jetzt 28/157 reguläre
+Vorlagen, 129 offen, fünf Entwickler-Vorlagen ausgeschlossen. Die Sammelstelle
+hat nichts in Reichweite; Bau ist kein Altmetall-Ertragsnachweis. Zahnradwerkstatt
+hat einen Arbeiter, Rezept Gear und zehn Bretter im Eingang, aber keinen Kraft-
+anschluss: noch keine Zahnradproduktion. Drei neue Wege halten den südlichen
+Zugang offen; keine neue Stranded-Warnung nach Fertigbau.
+
+Nächster sinnvoller Schritt: Kraftanschluss der Werkstatt und danach weitere
+Produktions-/Gebäudetypen. Freie Baustoffe zuletzt 21 Holz und acht Bretter.
+Alle Zeitfenster abgeschlossen, Spiel pausiert. Verbesserungen nebenbei im
+Backlog: Suchfenster samt Route erklären, wählbare Kandidaten/freie Korridore,
+gebündelte Pflanz-/Umwidmungsaufträge und arbeitszeitbewusste Räumfenster.
+Keine MCP-Codeänderung in diesem Spielabschnitt.
+
+
+## Aktueller Spielauftrag (2026-10-05)
+
+Vorläufiges Bevölkerungsziel auf 50 Biber geändert und bereits erreicht.
+Schwerpunkt jetzt Gebäudetypen-Ausbau: jede reguläre Vorlage mindestens einmal
+fertig nachweisen. Keine weitere gezielte Bevölkerungsexpansion; Nahrung und
+Baustoffversorgung für den Ausbau stabilisieren. Historische Ziele unten sind
+überholt. Verbesserungsvorschläge weiter nebenbei dokumentieren.
+
+
 ## Spielabschnitt abgeschlossen (2026-10-05): 50 Biber, 26 Gebäudetypen
 
 Auf ausdrücklichen Spielauftrag etwa zehn Spieltage weitergespielt, Tag 384 bis

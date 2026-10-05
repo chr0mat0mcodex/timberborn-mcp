@@ -1,5 +1,24 @@
 # Backlog
 
+## Weitere Beobachtungen beim Farmbau (2026-10-05)
+
+- Räumzeitfenster sollten Arbeitszeiten berücksichtigen: acht Pflanzen nach acht
+  Abend-/Nachtstunden nur halb entfernt, erst im folgenden Arbeitsfenster vollständig.
+  Acht Einzelmarkierungen plus separate Flächenlöschung zeigen Bedarf für gebündelte
+  Umwidmung von Anbaufläche zu Baufläche mit verifiziertem Räumabschluss.
+
+- Sehr kleine Suchfenster liefern keinen Kandidaten trotz geometrisch freiem
+  Standort und nahem Weg. Derselbe Standort im 8×8-Fenster als Option mit einem
+  neuen Weg gefunden. Suchfenstergrenze/Anschlussroutengrenze als Ursache ausweisen;
+  Diagnose requires_game_validation ohne Grund ist für die Entscheidung zu schwach.
+- Bündelablauf wählt first_candidate; zur bewussten Erhaltung eines freien
+  Durchgangs war manuelle Auswahl von Option 1 und Einzelprojektaufruf nötig.
+  Freizuhaltende Korridore oder ausgeschlossene Grundrisse in Chargen unterstützen.
+- Farmreichweite plus Bodenfeuchte funktionierte für 38 neue Karottenmarkierungen;
+  fünf separate Schreibaufrufe nötig. Begrenzte Mehrrechteck-Pflanzaufträge würden
+  den Ablauf verkürzen, mit identischen Vorbedingungen und getrennten Nachweisen.
+
+
 ## Bauprüfung: gestrandete Biber trotz fertigem Gebäudezugang
 
 Südliche Wohncharge baute zwei Häuser mit finished_accessible. Anschließend drei
