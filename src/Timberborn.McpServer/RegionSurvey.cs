@@ -4,18 +4,20 @@ using Timberborn.Bridge.Core;
 namespace Timberborn.McpServer;
 
 public sealed record SurveyRequest(string Session, string DistrictId, string Template,
-    int X, int Y, int Z, int Width, int Height);
+    int X, int Y, int Z, int Width, int Height, string? WorkBuildingId = null, bool PlanBuildings = true);
 public sealed record SurveyRect(int X, int Y, int Z, int Width, int Height);
 public sealed record SurveyWindow(SurveyRect Region, int FreeCells, int VegetationCells, int PathCells);
 public sealed record SurveyCandidate(SurveyRect Region, int Rotation, int OptionIndex,
     string PlanKey, Position Origin, int NewPaths);
 public sealed record SurveyMoisture(string[] Rows, Dictionary<string, string> Legend,
     SurveyRect[] MoistEmptyGroundPatches);
+public sealed record SurveyWorkRange(string BuildingId, bool Supported, string Source,
+    int ObservedCells, string[] Rows, Dictionary<string, string> Legend, SurveyRect[] MoistEmptyGroundPatches);
 public sealed record RegionSurveyReport(string Template, SurveyRect Region, string[] Rows,
     Dictionary<string, string> Legend, SurveyRect[] EmptyGroundPatches, SurveyWindow[] SearchWindows,
     SurveyCandidate[] BuildingCandidates, int NativeReads, int PlanningCalls,
     DateTimeOffset ObservationStartedAtUtc, DateTimeOffset ObservationEndedAtUtc,
-    bool Atomic, string[] Limitations, SurveyMoisture Moisture);
+    bool Atomic, string[] Limitations, SurveyMoisture Moisture, SurveyWorkRange? WorkRange);
 
 public interface IRegionSurveyPort
 {
@@ -25,6 +27,7 @@ public interface IRegionSurveyPort
     Task<BridgeEnvelope<NativeAreas>> Areas(string kind, int offset, CancellationToken ct);
     Task<BridgeEnvelope<NativeRemovalTargets>> Targets(SurveyRect region, int offset, CancellationToken ct);
     Task<BridgeEnvelope<NativeBuildingPlan>> Plan(SurveyRequest request, SurveyRect region, int rotation, CancellationToken ct);
+    Task<BridgeEnvelope<NativeRange>> WorkRange(SurveyRequest request, int offset, CancellationToken ct);
 }
 
 // Bounded read composition only. A geometric patch never authorizes construction or planting.
@@ -33,6 +36,7 @@ public static class RegionSurvey
     public static void Validate(SurveyRequest r)
     {
         BuildBatchState.Id(r.Session); BuildBatchState.Id(r.DistrictId);
+        if (r.WorkBuildingId is not null) BuildBatchState.Id(r.WorkBuildingId);
         if (string.IsNullOrWhiteSpace(r.Template) || r.Template.Length > 160 ||
             r.X < 0 || r.Y < 0 || r.Z is < 0 or > 4095 || r.Width is < 1 or > 16 || r.Height is < 1 or > 16 ||
             (long)r.X + r.Width > 4096 || (long)r.Y + r.Height > 4096) throw new ArgumentException();
@@ -118,7 +122,37 @@ public static class RegionSurvey
         }
         var rows = Classify(r, maps, buildings, targets.Values.ToArray(), designations, uncertain);
         var patches = Patches(r, rows);
-        var windows = Windows(r, rows);
+        var windows = r.PlanBuildings ? Windows(r, rows) : [];
+        var moisture = Moisture(r, maps, rows);
+        SurveyWorkRange? workRange = null;
+        if (r.WorkBuildingId is not null) {
+            var cells = new HashSet<Position>(); int? total = null; string? source = null;
+            bool supported = false;
+            for (int offset = 0; ; offset += 32) {
+                if (offset >= 2048) throw new InvalidDataException("survey_work_range_bound");
+                var p = Check(await port.WorkRange(r, offset, ct));
+                if (p.Id != r.WorkBuildingId || p.Offset != offset || p.Limit != 32 || p.Total is < 0 or > 2048 ||
+                    total is not null && (total != p.Total || source != p.Source || supported != p.Supported) ||
+                    p.Items.Length != Math.Min(32, Math.Max(0, p.Total - offset)) ||
+                    p.HasMore != (offset + p.Items.Length < p.Total) || !p.Supported && p.Total != 0)
+                    throw new InvalidDataException("survey_work_range_changed");
+                total = p.Total; source = p.Source; supported = p.Supported;
+                foreach (var cell in p.Items) if (!cells.Add(cell)) throw new InvalidDataException("survey_duplicate_work_range_cell");
+                if (!p.HasMore) {
+                    if (cells.Count != p.Total) throw new InvalidDataException("survey_work_range_incomplete");
+                    break;
+                }
+            }
+            var rangeRows = new string[r.Height]; var eligible = new string[r.Height];
+            for (int y = 0; y < r.Height; y++) {
+                rangeRows[y] = new string(Enumerable.Range(0, r.Width).Select(x => !supported ? '?' :
+                    cells.Contains(new(r.X + x, r.Y + y, r.Z)) ? 'r' : '-').ToArray());
+                eligible[y] = new string(Enumerable.Range(0, r.Width).Select(x =>
+                    rangeRows[y][x] == 'r' && rows[y][x] == '.' && moisture.Rows[y][x] == 'm' ? '.' : 'x').ToArray());
+            }
+            workRange = new(r.WorkBuildingId, supported, source!, cells.Count, rangeRows,
+                new() { ["r"] = "in_native_work_range", ["-"] = "outside_observed_work_range", ["?"] = "work_range_unknown" }, Patches(r, eligible));
+        }
         var candidates = new List<SurveyCandidate>();
         foreach (var window in windows)
         for (int rotation = 0; rotation < 4; rotation++) {
@@ -144,7 +178,8 @@ public static class RegionSurvey
              "patches_are_not_planting_or_work_range_validation", "moisture_is_current_not_future_irrigation_or_yield",
              "paths_are_not_district_membership_proof", "top_three_overlapping_windows_only",
              "no_candidate_does_not_mean_region_unbuildable", "candidates_not_executable_revalidate_before_build",
-             "no_clearing_or_existing_access_safety_claim", "vegetation_origins_not_full_footprints"], Moisture(r, maps, rows));
+             "no_clearing_or_existing_access_safety_claim", "vegetation_origins_not_full_footprints",
+             "work_range_not_staffing_selected_job_or_crop_suitability"], moisture, workRange);
     }
 
     public static SurveyMoisture Moisture(SurveyRequest r, IReadOnlyList<MapCell> maps, string[] obstacleRows)

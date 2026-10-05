@@ -15,6 +15,50 @@ public sealed class RegionSurveyTests
         new(Guid.NewGuid(), template, origin, "Cw0", true, entrance, cells, false);
 
     [Fact]
+    public async Task FarmingSurveyCombinesAllRangePagesWithMoistureAndSkipsBuildingPlans()
+    {
+        var port = new Port { Moist = true };
+        var report = await RegionSurvey.Observe(Request with { WorkBuildingId = Session, PlanBuildings = false }, port, TestContext.Current.CancellationToken);
+        Assert.Equal(2, port.RangeReads); Assert.Equal(0, port.Plans);
+        Assert.Empty(report.BuildingCandidates); Assert.Empty(report.SearchWindows);
+        Assert.Equal(15, report.NativeReads);
+        Assert.NotNull(report.WorkRange); Assert.True(report.WorkRange.Supported);
+        Assert.Equal(40, report.WorkRange.ObservedCells);
+        Assert.NotEmpty(report.WorkRange.MoistEmptyGroundPatches);
+        foreach (var p in report.WorkRange.MoistEmptyGroundPatches)
+            foreach (int y in Enumerable.Range(p.Y, p.Height)) foreach (int x in Enumerable.Range(p.X, p.Width)) {
+                Assert.Equal('r', report.WorkRange.Rows[y][x]);
+                Assert.Equal('m', report.Moisture.Rows[y][x]);
+                Assert.Equal('.', report.Rows[y][x]);
+            }
+        Assert.All(report.WorkRange.Rows[0], c => Assert.Equal('-', c));
+    }
+
+    [Theory]
+    [InlineData("range_changed")]
+    [InlineData("range_duplicate")]
+    [InlineData("range_bound")]
+    [InlineData("range_session")]
+    public async Task IncompleteRangeNeverProducesRecommendations(string fault)
+    {
+        await Assert.ThrowsAnyAsync<Exception>(() => RegionSurvey.Observe(Request with {
+            WorkBuildingId = Session, PlanBuildings = false }, new Port { Fault = fault }, TestContext.Current.CancellationToken));
+    }
+
+    [Fact]
+    public async Task UnsupportedRangeIsUnknownAndDefaultRequestsDoNotReadRange()
+    {
+        var unknown = await RegionSurvey.Observe(Request with { WorkBuildingId = Session, PlanBuildings = false },
+            new Port { Fault = "range_unknown", Moist = true }, TestContext.Current.CancellationToken);
+        Assert.NotNull(unknown.WorkRange); Assert.False(unknown.WorkRange.Supported);
+        Assert.All(unknown.WorkRange.Rows, row => Assert.Equal(new string('?', 16), row));
+        Assert.Empty(unknown.WorkRange.MoistEmptyGroundPatches);
+        var port = new Port();
+        var defaults = await RegionSurvey.Observe(Request, port, TestContext.Current.CancellationToken);
+        Assert.Null(defaults.WorkRange); Assert.Equal(0, port.RangeReads); Assert.Equal(12, port.Plans);
+    }
+
+    [Fact]
     public void MoistureSeparatesDryUnknownWrongHeightAndOccupiedGround()
     {
         var r = Request with { Width = 8, Height = 1 };
@@ -140,6 +184,21 @@ public sealed class RegionSurveyTests
 
     private sealed class Port : IRegionSurveyPort
     {
+        public bool Moist { get; init; }
+        public int RangeReads { get; private set; }
+        public Task<BridgeEnvelope<NativeRange>> WorkRange(SurveyRequest r, int offset, CancellationToken ct) {
+            RangeReads++;
+            bool supported = Fault != "range_unknown";
+            var cells = Enumerable.Range(0, 40).Select(i => new Position(i % 16, 1 + i / 16, 3)).ToArray();
+            int total = supported ? 40 : 0;
+            if (Fault == "range_bound") total = 2049;
+            if (Fault == "range_changed" && offset > 0) total = 39;
+            var page = supported ? cells.Skip(offset).Take(32).ToArray() : [];
+            if (Fault == "range_duplicate" && offset > 0) page[0] = cells[0];
+            return Result(new NativeRange(r.WorkBuildingId!, supported, [], offset, 32, total, page,
+                offset + page.Length < total, [], supported ? "building_terrain_range" : "unavailable"),
+                Fault == "range_session" ? "33333333-3333-4333-8333-333333333333" : Session);
+        }
         public string Fault { get; init; } = "";
         public int Maps { get; private set; }
         public int Plans { get; private set; }
@@ -156,7 +215,8 @@ public sealed class RegionSurveyTests
         public Task<BridgeEnvelope<NativeMap>> Map(SurveyRect r, CancellationToken ct) {
             Maps++;
             return Result(new NativeMap(new(r.X, r.Y, r.Z), r.Width, r.Height, 1,
-                Enumerable.Range(r.Y, r.Height).SelectMany(y => Enumerable.Range(r.X, r.Width).Select(x => Cell(x, y))).ToArray(), []),
+                Enumerable.Range(r.Y, r.Height).SelectMany(y => Enumerable.Range(r.X, r.Width).Select(x =>
+                    Cell(x, y) with { SoilIsMoist = Moist ? x != 2 : null })).ToArray(), []),
                 Fault == "session" ? "33333333-3333-4333-8333-333333333333" : Session);
         }
         public Task<BridgeEnvelope<NativeObjects>> Objects(int offset, CancellationToken ct) {

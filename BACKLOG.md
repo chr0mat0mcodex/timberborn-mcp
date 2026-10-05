@@ -1,5 +1,14 @@
 # Backlog
 
+## Produktionsflächen: Feuchte mit Arbeitsreichweite verbinden
+
+Optionales Arbeitsgebäude und abschaltbare Bauplanung in survey_region vorbereitet.
+Pilot mit drei tatsächlich wachsenden Karotten bestätigt Nutzen des Abgleichs.
+Menschliches Gate und kombinierter Livetest bestanden; Bridge unverändert 0.35.4.
+Grenze: bis 64 interne Reichweitenseiten; spätere native Regionsfilterung kann
+auch diese internen Reads reduzieren. Keine Feld-/Forstautonomie behauptet.
+
+
 ## Versionswechsel: vergessene Clientfreigabe verhindern
 
 0.35.4 zunächst von den eigenen Versionslisten abgelehnt. Korrektur aller

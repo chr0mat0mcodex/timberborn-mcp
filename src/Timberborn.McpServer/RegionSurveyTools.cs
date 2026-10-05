@@ -22,7 +22,7 @@ public static class RegionSurveyTools
         foreach (string key in new[] { "x", "y", "z" }) { props[key]!["minimum"] = 0; props[key]!["maximum"] = 4095; }
         return new() {
             Name = Name,
-            Description = "Lesende Flächensuche bis 16×16 auf einer Bodenhöhe. Spiel muss pausiert sein. Bündelt Gelände, Gebäudegrundrisse, Eingänge, Vegetation und Pflanzmarkierungen. Kompakte Hindernis- und Feuchtigkeitsraster sowie freie/feuchte Bodenrechtecke bis 4×4. Feuchte ab Bridge 0.35.4, sonst unbekannt; keine Pflanzen-, Ertrags- oder Arbeitsreichweitengarantie. Prüft für template die vier Drehungen in höchstens drei priorisierten, überlappenden 8×8-Fenstern über native Bauplanung. Kandidaten sind NICHT ausführbar: vor Bau neu validieren. Kein Kandidat bedeutet nicht unbebaubar. Höchstens 512 Gebäude, je 512 Feld-/Forstmarkierungen und 128 Objekte pro Teilfläche; unvollständige Daten brechen ab. Keine Räumung, Zeitsteuerung oder Änderung.",
+            Description = "Lesende Regionalsuche bis 16×16, nur pausiert: Hindernisse, Bodenfeuchte und freie Rechtecke bis 4×4. Optional workBuildingId: native Arbeitsreichweite und freie feuchte Rechtecke darin, höchstens 2048 Reichweitenzellen/64 Seiten; unbekannt bleibt unbekannt. planBuildings=false überspringt Bauplanung für Anbausuchen; template/districtId bleiben Pflichtfelder. Sonst vier Drehungen in bis zu drei 8×8-Fenstern; Kandidaten vor Bau frisch validieren. Keine Pflanz-, Besetzungs- oder Ertragsgarantie. Unvollständige/wechselnde Daten brechen ab. Keine Spieländerung.",
             InputSchema = JsonSerializer.SerializeToElement(input),
             OutputSchema = JsonSerializer.SerializeToElement(options.GetJsonSchemaAsNode(typeof(NativeResult<RegionSurveyReport>))),
             Annotations = new() { ReadOnlyHint = true, DestructiveHint = false, IdempotentHint = true, OpenWorldHint = false }
@@ -51,6 +51,9 @@ public sealed class NativeRegionSurveyPort(NativeClient client) : IRegionSurveyP
         return q;
     }
     public Task<BridgeEnvelope<NativeSimulation>> Simulation(CancellationToken ct) => client.Simulation(ct);
+    public Task<BridgeEnvelope<NativeRange>> WorkRange(SurveyRequest r, int offset, CancellationToken ct) =>
+        client.WorkRange(LogisticsRequest.Parse("/agent-api/v1/work-range", Query(("session", r.Session),
+            ("id", r.WorkBuildingId!), ("offset", offset), ("limit", 32))), ct);
     public Task<BridgeEnvelope<NativeMap>> Map(SurveyRect r, CancellationToken ct) =>
         client.Map(BridgeRequest.Parse("/agent-api/v1/map", Query(("x", r.X), ("y", r.Y), ("z", r.Z),
             ("width", r.Width), ("height", r.Height), ("depth", 1))), ct);

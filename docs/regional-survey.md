@@ -1,5 +1,46 @@
 # Regionale Flächensuche — begrenzt live abgenommen
 
+## Live bestanden: regionale Arbeitsreichweite (2026-10-05)
+
+Menschliches Gate bestätigt, fünf installierte Dateien stimmen mit Paket
+0.35.4-20261005-174150-098e2061 überein. Farm: 490 native Reichweitenzellen,
+36 interne Reads, planningCalls=0. Fünf freie feuchte Rechtecke mit 13 Zellen;
+alle empfohlenen Zellen zugleich frei, feucht und in Reichweite. Unabhängige
+32-Zellen-Reichweitenseite stimmt vollständig mit dem Raster überein.
+Wohnhauskontrolle: supported=false/source=unavailable, vollständig unbekanntes
+Raster und keine Reichweitenempfehlungen; ebenfalls keine Planung (21 Reads).
+Keine Spielmutation im Abnahmetest. Feature im beschriebenen Umfang bestanden.
+Die folgenden offenen Gate-Einträge sind historische Vorbereitung.
+
+
+## Vor Test-Gate: regionale Arbeitsreichweite (2026-10-05)
+
+Anbaupilot auf Bridge 0.35.4 bestanden: drei freie, feuchte Zellen mit separat
+belegter Farmreichweite als Karotten markiert. Nach rund 23 Spielstunden alle
+DREI tatsächlich lebend/wachsend, ohne Wasserstress. Zeitlauf nach exakt 24 Stunden
+abgeschlossen, Überschwingen 0, Endpause bestätigt. Danach 35 Biber (26/9),
+36 Betten, Wasser 77, Beeren 70, frei verfügbares Holz 7. Keine kritischen
+Bedürfnisflags; Vorlagenabdeckung weiterhin 24/157, Gesamtziel offen.
+
+Nächste Effizienzverbesserung MCP-seitig vorbereitet, Bridge bleibt 0.35.4:
+survey_region optional workBuildingId und planBuildings=false. Vollständige
+native Reichweite (höchstens 2048 Zellen/64 Seiten), Quellenangabe und separates
+Raster; freie feuchte Rechtecke daraus neu berechnet, nicht nur vorhandene Top-6
+gefiltert. Fehlende Reichweite unbekannt, wechselnde/unvollständige Daten abweisen.
+Ohne workBuildingId bleibt bisheriges Verhalten; planBuildings=false spart bis
+zu zwölf Planaufrufe. template/districtId bleiben aus Kompatibilität Pflicht.
+Keine automatische Markierung und keine Aussage über Personal oder passenden Rohstoff.
+
+Regressionen ergänzt: mehrseitige Schnittmenge, trockene/gesperrte Zellen,
+unbekannte Reichweite, wechselnde Zähler, Duplikate, Budget, falsche Sitzung und
+Standardverhalten. Drei Feature-Dateien per Roslyn syntaktisch geprüft, kein Build
+oder Testlauf. Änderungen uncommitted bis menschliches Gate und Liveabnahme.
+Abnahmepilot: Farm plus 16×16-Region, planBuildings=false; planningCalls=0,
+Reichweitenzellen gegen gezielte inspect_work_range-Seite prüfen und Empfehlungen
+gegen Feuchte/Hindernisse. Nicht unterstütztes Wohnhaus muss unbekannte Reichweite
+und keine Empfehlungen liefern. Bei falscher Kontrollprobe stoppen.
+
+
 ## Live bestanden: Bodenfeuchte 0.35.4 (2026-10-05)
 
 Menschliches Gate abgeschlossen; alle fünf installierten Dateien stimmen mit
