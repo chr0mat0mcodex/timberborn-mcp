@@ -80,7 +80,7 @@ public sealed class NativeBuildBatchPort(NativeClient client) : IBuildBatchPort
     }
     public async Task<NativeProjectExecution> Submit(BuildBatchJob job, CancellationToken ct)
     {
-        var selected = job.Selection ?? throw new InvalidDataException(); var s = job.Spec;
+        var selected = job.Selection ?? throw new InvalidDataException(); var s = job.ActiveSpec;
         var q = PlanQuery(s, job.Index, selected.Rotation);
         q["actionId"] = job.ActionId; q["mode"] = "development_pilot";
         q["optionIndex"] = selected.OptionIndex.ToString(CultureInfo.InvariantCulture); q["planKey"] = selected.PlanKey;

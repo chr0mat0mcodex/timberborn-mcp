@@ -1,5 +1,21 @@
 # Backlog
 
+## Beauftragt: automatische Teilflächenwechsel in Bauchargen
+
+Go nach zwei räumlich ausgeschöpften Chargen. Basis plus drei zusätzliche
+8×8-Flächen implementiert, globale Räum-/Zeitgrenzen und gespeicherte Wechsel.
+Menschliches Gate und begrenzter Flächenwechsel-Livetest bestanden. Details:
+docs/building-batch-workflow.md. Globale gemeinsame Standortoptimierung bleibt offen.
+
+
+## Chargenplanung: Alternativen überlappen (Live 2026-10-05)
+
+Drei-Häuser-Charge baute das erste Haus fertig/erreichbar und stoppte dann korrekt
+mit no_candidate_in_authorized_region: regionale Alternativstandorte waren
+nicht gleichzeitig nutzbar. Verbesserung: vor Chargenstart Anzahl gemeinsam
+nutzbarer Standorte bzw. Konflikte ausweisen, keine Kapazität aus Kandidatenzahl
+ableiten. Fortsetzung mit begrenzter bestehender Räumcharge, keine neue Funktion.
+
 ## Produktionsflächen: Feuchte mit Arbeitsreichweite verbinden
 
 Optionales Arbeitsgebäude und abschaltbare Bauplanung in survey_region vorbereitet.

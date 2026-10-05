@@ -6,6 +6,17 @@ namespace Timberborn.McpServer;
 public sealed class BuildBatchEngine(IBuildBatchPort port, Action<BuildBatchJob> save)
 {
     private static void Stop(BuildBatchJob j, string reason) { j.State = "stopped"; j.Reason = reason; }
+    private static void NextRegionOrStop(BuildBatchJob j, string reason) {
+        if (j.RegionIndex + 1 >= BuildBatchState.Regions(j.Spec).Length) {
+            Stop(j, j.Spec.AdditionalRegions is { Length: > 0 } ? "no_candidate_in_authorized_regions" : reason);
+            return;
+        }
+        // Only called before submission or after fully verified clearance. Never abandon a pending write/run.
+        j.PreviousRegions.Add(new(j.RegionIndex, reason, j.ClearanceUsed, j.Targets.Length));
+        j.RegionIndex++; j.ClearanceUsed = false; j.Targets = []; j.RemovalCursor = 0;
+        j.Selection = null; j.Search = []; j.Completion = null; j.ClearanceRun = null;
+        j.State = "planning"; j.Reason = "";
+    }
     private async Task<bool> Paused(BuildBatchJob j, CancellationToken ct) {
         if ((await port.Current(j.Spec, ct)).CurrentSpeed == 0) return true;
         Stop(j, "external_simulation_not_paused"); return false;
@@ -19,7 +30,7 @@ public sealed class BuildBatchEngine(IBuildBatchPort port, Action<BuildBatchJob>
     public async Task<bool> Step(BuildBatchJob j, CancellationToken ct)
     {
         if (j.Terminal) return false;
-        var s = j.Spec;
+        var s = j.ActiveSpec;
         switch (j.State) {
             case "planning": {
                 if (j.Index == s.Items.Length) { j.State = "completed"; break; }
@@ -39,7 +50,7 @@ public sealed class BuildBatchEngine(IBuildBatchPort port, Action<BuildBatchJob>
                 j.Selection = choices.OrderBy(c => c.NewPaths).ThenBy(c => c.Rotation).ThenBy(c => c.Origin.Y).ThenBy(c => c.Origin.X).FirstOrDefault();
                 if (j.Selection is null) {
                     if (!j.ClearanceUsed && s.Clearing != "none") j.State = "discovering";
-                    else Stop(j, "no_candidate_in_authorized_region");
+                    else NextRegionOrStop(j, "no_candidate_in_authorized_region");
                     break;
                 }
                 Checkpoint(j, "pending_build"); // Never re-submit this actionId on recovery.
@@ -51,8 +62,8 @@ public sealed class BuildBatchEngine(IBuildBatchPort port, Action<BuildBatchJob>
                 if (!await Paused(j, ct)) break;
                 var targets = (await port.Targets(s, ct)).Where(t => t.Kind == "vegetation" && Inside(s, t) &&
                     (s.Clearing == "all_vegetation" || t.Vegetation?.LifeState == "dead")).OrderBy(t => t.Id).ToArray();
-                if (targets.Length == 0) { Stop(j, "no_removable_vegetation"); break; }
-                if (targets.Length > s.MaxClearTargets || targets.Any(t => !t.CanDelete || t.Mode != "demolition_mark")) { Stop(j, "clearance_limit_or_unsupported_target"); break; }
+                if (targets.Length == 0) { NextRegionOrStop(j, "no_removable_vegetation"); break; }
+                if (targets.Length + j.PreviousClearTargets > s.MaxClearTargets || targets.Any(t => !t.CanDelete || t.Mode != "demolition_mark")) { Stop(j, "clearance_limit_or_unsupported_target"); break; }
                 j.Targets = targets; j.RemovalCursor = 0; j.ClearanceUsed = true; j.State = "marking"; break;
             }
             case "marking": {
@@ -107,7 +118,7 @@ public sealed class BuildBatchEngine(IBuildBatchPort port, Action<BuildBatchJob>
                 if (c.Outcome == "finished_accessible") {
                     if (j.Selection is null || c.ActionId != j.ActionId || c.Steps.Length == 0 || c.Steps.Any(t => t.Finished != true) || c.CurrentSpeed != 0)
                         throw new InvalidDataException("invalid_batch_completion");
-                    j.Finished.Add(new(j.Index, j.ActionId, s.Items[j.Index].Template, j.Selection.Origin, c.Outcome));
+                    j.Finished.Add(new(j.Index, j.ActionId, s.Items[j.Index].Template, j.Selection.Origin, c.Outcome, j.RegionIndex));
                     j.Index++; j.Selection = null;
                     j.State = j.Index == s.Items.Length ? "completed" : "planning";
                     break;

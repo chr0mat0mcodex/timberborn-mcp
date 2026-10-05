@@ -1,5 +1,79 @@
 # Projektstand
 
+## Live bestanden: Mehrflächen-Charge (2026-10-05)
+
+Menschliches Gate abgeschlossen; fünf installierte Dateien stimmen mit Paket
+0.35.4-20261005-181012-9be85db6 überein. Native Vorprüfung: erste 1×1-Wegfläche
+ohne Kandidat, zweite 2×2-Fläche mit zwei Kandidaten. Charge wechselte automatisch
+auf regionIndex=1, dokumentierte die erste Fläche und baute genau einen Holzfäller
+ohne zusätzliche Wege. Frische unabhängige Abschlussabfrage: finished_accessible,
+Eingang frei/erreichbar, 24 Stunden exakt, Überschwingen 0, Pause bestätigt.
+Identischer start-Aufruf liefert denselben unveränderten Abschluss/Zeitstempel.
+Negativkontrolle mit zwei belegten Wegflächen: no_candidate_in_authorized_regions,
+finishedCount=0, keine Auswahl, kein Bau-/Räumlauf. Spiel blieb pausiert.
+
+Abnahme gilt für begrenzten automatischen Flächenwechsel und Abschluss/Replay.
+Mehrflächen-Räumung, gemeinsame Budgets und verlorene Bestätigungen synthetisch
+abgedeckt, in diesem Live-Pilot nicht zusätzlich erzeugt. Keine freie globale
+Standortoptimierung. Vorbereitung und frühere offene Gate-Einträge unten historisch.
+
+
+## Vor menschlichem Gate: mehrere Teilflächen (2026-10-05)
+
+Nach ausdrücklichem Go implementiert: Basisfläche plus optional additionalRegions
+mit bis zu drei weiteren Rechtecken (x/y/z/width/height, jeweils maximal 8×8).
+Feste Listenreihenfolge, kein Rücksprung und keine freie Kartensuche. Pro Fläche
+bisherige Planung und optionale Räumung; nur nach fehlendem Kandidaten bzw. fehlender
+räumbarer Vegetation weiter. Offene/unbestätigte Eingriffe, Materialmangel,
+Zugangsfehler oder ausgeschöpftes Räumbudget stoppen die gesamte Charge.
+
+Ein gemeinsames maxClearTargets (maximal 64), keine Multiplikation je Fläche.
+Worst-Case-Zeitbudget: clearanceHours × Flächenzahl + constructionHours × Gebäude
+höchstens 672 Stunden. Individuelle Laufgrenzen unverändert. RegionIndex und
+PreviousRegions bleiben gespeichert; Räumlauf-Kennungen je Fläche getrennt,
+Baukennungen weiterhin je Gebäude. Bei Flächenwechsel keine erneute Einreichung
+bereits gestarteter Aufträge. Fertignachweise enthalten die Teilfläche.
+
+Alte Einflächenparameter serialisieren unverändert (additionalRegions bei null
+weggelassen); alte Fingerprints und Räumkennungen bleiben gültig. Bestehende
+terminale Chargen werden nicht nachträglich erweitert: neue Liste braucht neue ID.
+Fünf Feature-Dateien syntaktisch geprüft; Regressionen ergänzt, aber noch nicht
+ausgeführt. Keine Modänderung, Bridge bleibt 0.35.4. Kein Commit vor Gate/Livetest.
+
+Abnahme nach menschlichem Skript: erste kleine Fläche ohne Kandidat, zweite
+mit vorher nativ geprüftem Bauplatz. Eine Charge muss selbst wechseln und ein
+Gebäude bis finished_accessible bauen; inspect/erneuter Start mit gleicher ID
+darf keinen weiteren Auftrag erzeugen. Negativkontrolle: nur ungeeignete Flächen
+stoppen begrenzt. Bei falscher Kontrollprobe oder unbestätigtem Eingriff stoppen.
+
+
+## Ausbaupilot nach Reichweitenabnahme (2026-10-05)
+
+13 zusätzliche Karottenzellen aus der kombinierten Suche markiert und sämtlich
+als lebende wachsende Pflanzen ohne Wasserstress nachgewiesen. Insgesamt 46
+Feldmarkierungen (33 vor Erweiterung). Neuer Holzfäller am natürlichen Abstieg:
+Baustellenzugang und finished_accessible belegt, besetzt, unterer Wald in nativer
+Reichweite. Zwölf reife Kiefern zur Ernte markiert; im Tagesfenster globales frei
+verfügbares Holz 15→41. Eigener Ausgang bei Abfrage leer, deshalb keine exakte
+gebäudebezogene Produktionsmenge behauptet.
+
+Erste Wohncharge: 1/3 fertig/erreichbar, dann no_candidate_in_authorized_region.
+Zweite Charge im selben Gebiet räumt 23 Vegetationsziele innerhalb 48 Stunden,
+baut ein weiteres Wohnhaus mit zwei Anschlusswegen fertig/erreichbar, stoppt dann
+1/2 ebenfalls mangels Kandidaten. Beide Chargen terminal; kein drittes Haus gebaut.
+Alle Zeitfenster beendet und Pause bestätigt. Endstand: 38 Biber (35 Erwachsene,
+3 Kinder), 42 Betten/vier frei, kein Obdachloser, keine kritischen Bedürfnisflags;
+Wasser 78, Beeren 70, frei verfügbares Holz 21. Keine Gesamtzufriedenheit behauptet.
+Gebäudetypenabdeckung unverändert: 24/157 reguläre Vorlagen, 133 noch offen.
+
+Effizienzentscheidung angefragt: begrenzter automatischer Teilflächenwechsel für
+Bauchargen oder ausdrücklich weitere manuelle Standortschritte. Zwei Stopps im
+8×8-Gebiet zeigen die Grenze. Beispielprojektion bei 20 Aufrufen je Restvorlage:
+mehr als 2600 Aufrufe, zusätzlich Bevölkerung und Versorgung; keine gemessene
+Prognose. Bis neuer Nutzerentscheidung keine weitere kostspielige Bau-/Suchserie.
+Reichweitenfeature bereits committed/gepusht als 4673105.
+
+
 ## Live bestanden: regionale Arbeitsreichweite (2026-10-05)
 
 Menschliches Gate bestätigt, fünf installierte Dateien stimmen mit Paket

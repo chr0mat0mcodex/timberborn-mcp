@@ -1,5 +1,52 @@
 # Bauchargen: begrenzter Live-Pilot bestanden
 
+## Live bestanden: Mehrflächen-Charge (2026-10-05)
+
+Menschliches Gate abgeschlossen; fünf installierte Dateien stimmen mit Paket
+0.35.4-20261005-181012-9be85db6 überein. Native Vorprüfung: erste 1×1-Wegfläche
+ohne Kandidat, zweite 2×2-Fläche mit zwei Kandidaten. Charge wechselte automatisch
+auf regionIndex=1, dokumentierte die erste Fläche und baute genau einen Holzfäller
+ohne zusätzliche Wege. Frische unabhängige Abschlussabfrage: finished_accessible,
+Eingang frei/erreichbar, 24 Stunden exakt, Überschwingen 0, Pause bestätigt.
+Identischer start-Aufruf liefert denselben unveränderten Abschluss/Zeitstempel.
+Negativkontrolle mit zwei belegten Wegflächen: no_candidate_in_authorized_regions,
+finishedCount=0, keine Auswahl, kein Bau-/Räumlauf. Spiel blieb pausiert.
+
+Abnahme gilt für begrenzten automatischen Flächenwechsel und Abschluss/Replay.
+Mehrflächen-Räumung, gemeinsame Budgets und verlorene Bestätigungen synthetisch
+abgedeckt, in diesem Live-Pilot nicht zusätzlich erzeugt. Keine freie globale
+Standortoptimierung. Vorbereitung und frühere offene Gate-Einträge unten historisch.
+
+
+## Vor menschlichem Gate: mehrere Teilflächen (2026-10-05)
+
+Nach ausdrücklichem Go implementiert: Basisfläche plus optional additionalRegions
+mit bis zu drei weiteren Rechtecken (x/y/z/width/height, jeweils maximal 8×8).
+Feste Listenreihenfolge, kein Rücksprung und keine freie Kartensuche. Pro Fläche
+bisherige Planung und optionale Räumung; nur nach fehlendem Kandidaten bzw. fehlender
+räumbarer Vegetation weiter. Offene/unbestätigte Eingriffe, Materialmangel,
+Zugangsfehler oder ausgeschöpftes Räumbudget stoppen die gesamte Charge.
+
+Ein gemeinsames maxClearTargets (maximal 64), keine Multiplikation je Fläche.
+Worst-Case-Zeitbudget: clearanceHours × Flächenzahl + constructionHours × Gebäude
+höchstens 672 Stunden. Individuelle Laufgrenzen unverändert. RegionIndex und
+PreviousRegions bleiben gespeichert; Räumlauf-Kennungen je Fläche getrennt,
+Baukennungen weiterhin je Gebäude. Bei Flächenwechsel keine erneute Einreichung
+bereits gestarteter Aufträge. Fertignachweise enthalten die Teilfläche.
+
+Alte Einflächenparameter serialisieren unverändert (additionalRegions bei null
+weggelassen); alte Fingerprints und Räumkennungen bleiben gültig. Bestehende
+terminale Chargen werden nicht nachträglich erweitert: neue Liste braucht neue ID.
+Fünf Feature-Dateien syntaktisch geprüft; Regressionen ergänzt, aber noch nicht
+ausgeführt. Keine Modänderung, Bridge bleibt 0.35.4. Kein Commit vor Gate/Livetest.
+
+Abnahme nach menschlichem Skript: erste kleine Fläche ohne Kandidat, zweite
+mit vorher nativ geprüftem Bauplatz. Eine Charge muss selbst wechseln und ein
+Gebäude bis finished_accessible bauen; inspect/erneuter Start mit gleicher ID
+darf keinen weiteren Auftrag erzeugen. Negativkontrolle: nur ungeeignete Flächen
+stoppen begrenzt. Bei falscher Kontrollprobe oder unbestätigtem Eingriff stoppen.
+
+
 Nach menschlichem Gate begrenzt live abgenommen (siehe PROJECT_STATE.md). MCP-Steuerung über
 vorhandene native Bau-, Räum- und Simulationsdienste; keine neue Mod-Schnittstelle.
 

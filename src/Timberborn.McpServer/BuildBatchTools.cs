@@ -25,7 +25,7 @@ public static class BuildBatchTools
             yield return new Tool {
                 Name = name,
                 Description = name switch {
-                    Start => "Startet eine gespeicherte Charge von 1–8 ebenen Gebäuden in höchstens 8×8 Feldern. Sucht erlaubte Drehungen, bevorzugt wenige neue Wege, baut sequenziell bis finished_accessible. Ohne Bauplatz räumt clearing einmal ALLE passenden natürlichen Vegetationsobjekte in der Fläche (maxClearTargets); none räumt nichts. Feste Räum-/Baubudgets, insgesamt höchstens 672 Stunden. Keine Forschung/Materialproduktion. Gleiche batchId liefert nur gespeicherten Status, geänderte Parameter werden abgelehnt. Danach advance verwenden.",
+                    Start => "Charge von 1–8 Gebäuden: Basisfläche plus optional bis drei additionalRegions, jede höchstens 8×8. Bei fehlendem Standort nächste Fläche in Listenreihenfolge, kein Rücksprung. Frische Bau-/Zugangsprüfung je Gebäude bis finished_accessible. clearing räumt bei Bedarf einmal je Fläche passende natürliche Vegetation; maxClearTargets gilt insgesamt (höchstens 64). Räum-/Baubudgets zusammen höchstens 672 Stunden. Unbestätigter Eingriff, fehlendes Material oder erschöpftes Räumbudget stoppt die ganze Charge. Gleiche batchId liest nur Status, geänderte Parameter abgelehnt. Danach advance, waitSeconds 0–45.",
                     Advance => "Setzt gespeicherte Baucharge fort: Standortwahl, Räumung, festes Räumzeitfenster und sequenzielle Fertigstellung. waitSeconds 0–45 begrenzt Statuswarten, höchstens 64 Zustandsübergänge. Kein Hintergrunddispatcher; zwischen Aufrufen läuft nur ein bereits gestartetes, begrenztes Spielzeitfenster weiter. Unbestätigte Eingriffe werden ausschließlich lesend geklärt.",
                     Inspect => "Liest ausschließlich den lokalen gespeicherten Chargenstatus, keinen aktuellen Spielzustand. checkpointOnly=true. Zur Fortsetzung advance verwenden.",
                     _ => "Stoppt weitere Aufträge dieser Charge dauerhaft. Ein bereits gestarteter Spielzeitlauf läuft bis zu seinem festen Budget und pausiert dann; kein sofortiger Spielstopp."
@@ -88,7 +88,10 @@ public static class BuildBatchTools
         var report = new { batchId = job.Spec.BatchId, job.State, job.Reason, checkpointOnly = true,
             job.UpdatedAtUtc, finishedCount = job.Index, total = job.Spec.Items.Length, job.Finished,
             currentActionId = job.Index < job.Spec.Items.Length ? job.ActionId : null, job.Selection,
+            regionIndex = job.RegionIndex, regionCount = BuildBatchState.Regions(job.Spec).Length,
+            region = job.Region, previousRegions = job.PreviousRegions,
             clearance = new { used = job.ClearanceUsed, targets = job.Targets.Length, processed = job.RemovalCursor,
+                totalTargets = job.PreviousClearTargets + job.Targets.Length,
                 runId = job.ClearanceUsed ? job.ClearanceRunId : null, state = job.ClearanceRun?.State },
             completion = job.Completion is null ? null : new { job.Completion.Outcome, job.Completion.RunId },
             job.Search };

@@ -31,6 +31,10 @@ public sealed class BuildBatchTests
         public int Builds, Runs, Marks;
         public bool NoPlan, LoseBuildAck, LoseMarkAck, KeepMarked, ClearanceDone, LoseRunAck;
         public int ClearanceStarts;
+        public Func<BuildBatchSpec, int, bool>? MissingPlan;
+        public List<int> SubmittedRegions = [];
+        public bool ClearEachRegion;
+        public HashSet<int> ClearedRegions = [];
         public string? Failure;
         public string? CompletionFailure;
         public string SavedState = "";
@@ -39,10 +43,16 @@ public sealed class BuildBatchTests
         public Task<string?> Prerequisite(BuildBatchSpec s, int i, CancellationToken ct) => Task.FromResult(Failure);
         public Task<NativeBuildingPlan> Plan(BuildBatchSpec s, int i, int r, CancellationToken ct) => Task.FromResult(new NativeBuildingPlan(
             s.Items[i].Template, s.DistrictId, new(s.X, s.Y, s.Z), s.Width, s.Height, r, 1, 0, 1, true, "complete",
-            NoPlan ? [] : [new(new(2, 2, 3), r, new(2, 3, 3), new(2, 4, 3), r == 0 ? [new(2, 3, 3)] : [], [], false, [], new string('a', 64))], []));
-        public Task<NativeRemovalTarget[]> Targets(BuildBatchSpec s, CancellationToken ct) => Task.FromResult(Objects);
+            NoPlan || ClearEachRegion && !ClearedRegions.Contains(s.X) || MissingPlan?.Invoke(s, i) == true ? [] : [new(new(s.X + 1, s.Y + 1, s.Z), r,
+                new(s.X + 1, s.Y + 2, s.Z), new(s.X + 1, s.Y + 3, s.Z),
+                r == 0 ? [new(s.X + 1, s.Y + 2, s.Z)] : [], [], false, [], new string('a', 64))], []));
+        public Task<NativeRemovalTarget[]> Targets(BuildBatchSpec s, CancellationToken ct) => Task.FromResult(ClearEachRegion ?
+            ClearedRegions.Contains(s.X) ? [] : new[] { new NativeRemovalTarget(
+                Guid.Parse(BuildBatchState.DerivedId(s, "tree:" + s.X)), "vegetation", "Pine",
+                new(s.X + 1, s.Y + 1, s.Z), "demolition_mark", true, false, "natural", "tree") } : Objects);
         public Task<NativeRemoval> Mark(BuildBatchSpec s, NativeRemovalTarget t, CancellationToken ct) {
             Assert.Equal("pending_mark", SavedState); Marks++;
+            if (ClearEachRegion) ClearedRegions.Add(s.X);
             Objects = KeepMarked ? [t with { Marked = true }] : []; NoPlan = KeepMarked;
             if (LoseMarkAck) throw new IOException();
             return Task.FromResult(new NativeRemoval(t.Id, t.Kind, t.Template, t.Position, "mark", "applied", true, null, []));
@@ -55,6 +65,7 @@ public sealed class BuildBatchTests
         }
         public Task<NativeProjectExecution> Submit(BuildBatchJob j, CancellationToken ct) {
             Assert.Equal("pending_build", SavedState); Assert.Equal(1, j.Selection!.Rotation); Builds++;
+            SubmittedRegions.Add(j.RegionIndex);
             if (LoseBuildAck) throw new IOException();
             return Task.FromResult(new NativeProjectExecution(j.ActionId, new string('a', 64), "completed", "", [], false, []));
         }
@@ -65,6 +76,87 @@ public sealed class BuildBatchTests
                 "completed", "", [new(j.ActionId, j.Spec.Items[j.Index].Template, true, finished, null, null)], null, null, 0, null, []));
         }
     }
+    [Fact]
+    public async Task Regions_switch_after_finished_build_and_survive_each_checkpoint_reload() {
+        string dir = Path.Combine(Path.GetTempPath(), "timberborn-regions-test-" + Guid.NewGuid().ToString("N"));
+        try {
+            var s = Spec() with { AdditionalRegions = [new(20, 1, 3, 8, 8)] };
+            var j = Job(s); var p = new Port { MissingPlan = (region, index) => index == 1 && region.X == 1 };
+            var store = new BuildBatchStore(dir);
+            using (store.Acquire()) {
+                store.Save(j);
+                for (int i = 0; i < 16 && !j.Terminal; i++) {
+                    var e = new BuildBatchEngine(p, x => { p.SavedState = x.State; store.Save(x); });
+                    await e.Step(j, TestContext.Current.CancellationToken);
+                    j = store.Load(s.Session, s.BatchId)!;
+                }
+            }
+            Assert.Equal("completed", j.State); Assert.Equal(new[] { 0, 1 }, p.SubmittedRegions);
+            Assert.Equal(2, j.Finished.Count); Assert.Equal(1, j.Finished[1].RegionIndex);
+            Assert.Equal(21, j.Finished[1].Origin.X); Assert.Single(j.PreviousRegions);
+        } finally { if (Directory.Exists(dir)) Directory.Delete(dir, true); }
+    }
+
+    [Fact]
+    public async Task Empty_regions_exhaust_once_and_pending_build_never_switches_or_resubmits() {
+        var s = Spec() with { AdditionalRegions = [new(20, 1, 3, 8, 8)] };
+        var j = Job(s); var p = new Port { NoPlan = true };
+        var e = new BuildBatchEngine(p, x => p.SavedState = x.State);
+        for (int i = 0; i < 4; i++) await e.Step(j, TestContext.Current.CancellationToken);
+        Assert.Equal("no_candidate_in_authorized_regions", j.Reason); Assert.Equal(0, p.Builds);
+        Assert.Equal(1, j.RegionIndex);
+        j = Job(s); p = new Port { MissingPlan = (region, _) => region.X == 1, LoseBuildAck = true };
+        e = new(p, x => p.SavedState = x.State);
+        await e.Step(j, TestContext.Current.CancellationToken);
+        await Assert.ThrowsAsync<IOException>(() => e.Step(j, TestContext.Current.CancellationToken));
+        string id = j.ActionId;
+        await e.Step(j, TestContext.Current.CancellationToken);
+        Assert.Equal(1, p.Builds); Assert.Equal(id, Assert.Single(j.Finished).ActionId);
+        Assert.Equal(1, j.RegionIndex);
+    }
+
+    [Fact]
+    public async Task Each_region_clears_once_with_separate_receipts_and_shared_budget() {
+        var j = Job(Spec() with { Clearing = "all_vegetation", MaxClearTargets = 2,
+            AdditionalRegions = [new(20, 1, 3, 8, 8)] });
+        var p = new Port { ClearEachRegion = true, MissingPlan = (s, i) => i == 1 && s.X == 1 };
+        var e = new BuildBatchEngine(p, x => p.SavedState = x.State);
+        for (int i = 0; i < 32 && !j.Terminal; i++) await e.Step(j, TestContext.Current.CancellationToken);
+        Assert.Equal("completed", j.State); Assert.Equal(2, p.Marks); Assert.Equal(2, p.Builds);
+        Assert.Equal(1, Assert.Single(j.PreviousRegions).Targets);
+        Assert.Single(j.Targets); Assert.Equal(2, j.PreviousClearTargets + j.Targets.Length);
+    }
+
+    [Fact]
+    public async Task Clearance_cap_is_shared_and_run_ids_are_distinct_per_region() {
+        var s = Spec() with { Clearing = "all_vegetation", MaxClearTargets = 1,
+            AdditionalRegions = [new(20, 1, 3, 8, 8)] };
+        var j = Job(s); string firstRun = j.ClearanceRunId;
+        j.RegionIndex = 1; j.PreviousRegions.Add(new(0, "no_candidate_in_authorized_region", true, 1));
+        j.State = "discovering";
+        Assert.NotEqual(firstRun, j.ClearanceRunId);
+        var p = new Port { Objects = [new(Guid.NewGuid(), "vegetation", "Pine", new(21, 2, 3),
+            "demolition_mark", true, false, "natural", "tree")] };
+        await new BuildBatchEngine(p, _ => { }).Step(j, TestContext.Current.CancellationToken);
+        Assert.Equal("clearance_limit_or_unsupported_target", j.Reason); Assert.Equal(0, p.Marks);
+    }
+
+    [Fact]
+    public void Region_bounds_total_time_and_legacy_fingerprints_are_preserved() {
+        Assert.Throws<ArgumentException>(() => BuildBatchState.Validate(Spec() with { AdditionalRegions =
+            [new(20, 1, 3, 8, 8), new(30, 1, 3, 8, 8), new(40, 1, 3, 8, 8), new(50, 1, 3, 8, 8)] }, true));
+        Assert.Throws<ArgumentException>(() => BuildBatchState.Validate(Spec() with { AdditionalRegions = [new(20, 1, 3, 9, 8)] }, true));
+        Assert.Throws<ArgumentException>(() => BuildBatchState.Validate(Spec() with { AdditionalRegions = [new(1, 1, 3, 8, 8)] }, true));
+        Assert.Throws<ArgumentException>(() => BuildBatchState.Validate(Spec() with { ClearanceHours = 168,
+            AdditionalRegions = [new(20, 1, 3, 8, 8), new(30, 1, 3, 8, 8), new(40, 1, 3, 8, 8)] }, true));
+        var json = JsonSerializer.SerializeToElement(Spec(), NativeJson.Options);
+        Assert.False(json.TryGetProperty("additionalRegions", out _));
+        var legacy = json.Deserialize<BuildBatchSpec>(BuildBatchState.Json)!;
+        Assert.Equal(BuildBatchState.Fingerprint(Spec()), BuildBatchState.Fingerprint(legacy));
+        Assert.NotEqual(BuildBatchState.Fingerprint(Spec()), BuildBatchState.Fingerprint(Spec() with { AdditionalRegions = [new(20, 1, 3, 8, 8)] }));
+        Assert.Equal(BuildBatchState.DerivedId(Spec(), "clearance"), Job().ClearanceRunId);
+    }
+
     [Fact]
     public async Task Sequential_builds_choose_fewer_paths_and_stop_after_completion() {
         var p = new Port(); var j = Job(); var e = new BuildBatchEngine(p, x => p.SavedState = x.State);
