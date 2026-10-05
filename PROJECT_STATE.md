@@ -1,5 +1,18 @@
 # Projektstand
 
+## Tagesabschluss und Übergabe (2026-10-05)
+
+Letzter Live-Stand unverändert: Tag 409, 18,09375 Uhr, pausiert; 47 Biber,
+29/157 reguläre Gebäudetypen. Holzausbau für die Fortsetzung vorbereitet,
+aber auf Wunsch in diesem Nachtrag keine Spielaktion oder Codeänderung ausgeführt.
+Konkrete Reihenfolge und Erfolgskriterien im
+[Tagesabschluss](docs/playtest-2026-10-04.md#tagesabschluss-2026-10-05-und-geplanter-holzausbau).
+Priorisierte MCP-Effizienzideen im [Backlog](BACKLOG.md): regionale Holzdiagnose,
+Bestands-/Verbrauchserklärung, Sammelmarkierung, bedingtes Zeitfenster und kompakte
+Antworten. Noch nicht implementiert oder abgenommen. Beim Wiedereinstieg zuerst
+Live-Zustand frisch lesen; bestehende lokale Integrationsänderungen separat behandeln.
+
+
 ## Kraftanschluss und Sauna fertig (2026-10-05)
 
 Weitere sieben Spieltage bis Tag 409, 18,09375 Uhr. Aktuell 47 Biber

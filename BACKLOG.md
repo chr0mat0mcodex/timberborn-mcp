@@ -1,5 +1,50 @@
 # Backlog
 
+## Effizienter Holzausbau – Vorschlag, keine Umsetzung (2026-10-05)
+
+Evidenz: Radbau nach einem Spieltag wegen Holzlieferung unvollständig. Für die
+Entscheidung waren getrennte Güter-, Inventar-, Vegetations-, Markierungs- und
+Arbeitsreichweitenabfragen nötig; Fällmarkierungen wurden über acht Seiten gelesen.
+Erst der Abgleich auf der unteren Ebene lieferte geeignete Kiefern. Am Ende
+27 Holz insgesamt, aber nur zwei frei verfügbar; neun im Saunainventar.
+
+Priorisierte Erweiterungen bestehender Werkzeuge:
+
+1. **Regionale Holzdiagnose (höchster Nutzen):** vorhandene Gebietssuche mit
+   nativer Arbeitsreichweite, Wachstum, Lebenszustand und aktuellen Fällmarkierungen
+   serverseitig verknüpfen. Für einen Holzfäller und ein begrenztes Gebiet nur
+   geeignete Kandidaten sowie Ausschlusszähler liefern; bekannte Höhen mitführen.
+   Unbekannte Reichweite gesondert ausweisen, keine Freigabe daraus ableiten.
+   Bestehende regionale Suche erweitern statt ein paralleles Planungssystem bauen.
+2. **Verfügbarkeit und Verbrauch gemeinsam erklären:** freie Holzbestände,
+   Baustellenbedarf und relevante Gebäudeinventare getrennt anzeigen. Bestand,
+   Transportreservierung und gemessener Zu-/Abfluss nicht vermischen. Raten nur
+   aus zwei zeitlich bezeichneten Beobachtungen, andernfalls ausdrücklich unbekannt.
+   So wird sichtbar, ob Ernte, Transport oder Verbrauch den Ausbau begrenzt.
+3. **Begrenzte Sammelmarkierung:** geprüfte Kandidaten in einem Auftrag markieren,
+   mit Sitzung, erwarteter Markierung und aktuellem Reichweitenbeleg. Ergebnis
+   zählt angenommen/abgelehnt/unbestätigt; keine automatische Wiederholung nach
+   unklarer Teiländerung. Das bestätigt Fällaufträge, nicht gefällte Bäume.
+4. **Bedingtes Zeitfenster:** optional nach beobachteter Holzlieferung oder einem
+   definierten frei verfügbaren Vorrat pausieren, mit harter Zeitgrenze. Nicht
+   nur auf feste Spieltage warten. Abschluss nennt Stoppgrund, Veränderungen und
+   bestätigte Pause; keine Aussage über langfristige Nachhaltigkeit.
+5. **Kompakte Standardantworten:** Zustand, Kernergebnis, Ausschlussgründe,
+   Vollständigkeit und notwendige nächste Aktion. Einzelobjekte, alte Schritte
+   und wiederholte Einschränkungen nur auf Detailabruf; entscheidende Unsicherheit
+   und Teilfehler bleiben immer sichtbar. Gebiet direkt filtern statt globale
+   Markierungsseiten beim Client zusammenzuführen.
+
+Vorgeschlagener Abnahmepilot für eine spätere Umsetzung: ein Holzfäller, ein
+begrenztes Gebiet mit mindestens einem geeigneten und einem ungeeigneten Baum
+(unreif, schon markiert oder außerhalb Reichweite). Diagnose gegen vorhandene
+Detailwerkzeuge abgleichen; bei falschem Einschluss stoppen. Ziel für den normalen
+Ablauf: Diagnose, Sammelauftrag, begrenzter Lauf und Abschluss in höchstens vier
+Client-Aufrufen, ohne zusätzliche manuelle globale Seitenabfragen. Das ist ein
+Entwurfsziel, kein gemessener Gewinn. Vorher/nachher Aufrufzahl, Antwortumfang und
+Zeit bis zur Entscheidung messen; einmalige Kontrollabfragen separat zählen.
+
+
 ## Kraftanschluss für Produktionsausbau (2026-10-05)
 
 MCP liefert Betriebswarnung fehlender Kraft, aber keine strukturierten
