@@ -1,5 +1,42 @@
 # Projektstand
 
+## Spielabschnitt abgeschlossen (2026-10-05): 50 Biber, 26 Gebäudetypen
+
+Auf ausdrücklichen Spielauftrag etwa zehn Spieltage weitergespielt, Tag 384 bis
+394 (18,09375 Uhr). Bevölkerung 38→50 (41 Erwachsene, neun Kinder).
+Sechs Gebäude fertig/erreichbar nachgewiesen: drei Wohnhäuser, ein Miniwohnhaus,
+ein Krankenbett und eine Hängematte. Ein südliches Wohnhaus anschließend zur
+Öffnung eines blockierten Geländedurchgangs entfernt; fünf Neubauten verbleiben.
+Krankenbett/Hängematte sind neue Typen: CSV 26 built_finished, 131 offen,
+fünf Entwickler-Vorlagen ausgeschlossen; Nenner weiterhin 157 reguläre Vorlagen.
+
+Drei Biber waren nach dem südlichen Wohnbau gestrandet, trotz nachgewiesener
+Hauszugänge. Nach gezieltem Abriss und acht Spielstunden keine Stranded- oder
+Exhausted-Warnung mehr, keine kritischen Bedürfnisflags. Endstand 49 Betten,
+49 belegt, ein Obdachloser; weiterer Wohnraum bleibt nötig. Ein gezielter
+Miniwohnhaus-Versuch auf breiterer Freifläche lieferte keinen Kandidaten und
+keinen Auftrag. Kein weiteres Skalieren enger Wohnstandorte in diesem Abschnitt.
+
+Wohncharge eins: ein Haus fertig; zweiter Kandidat nativ buildingValid=false,
+kein Objekt/keine offenen Baustellen, Charge nach Diagnose beendet. Gemischte
+Charge: Krankenbett plus Miniwohnhaus fertig, dann begrenzt kein Standort in
+beiden Flächen. Hängematte auf zweiter Fläche fertig. Südcharge: 25 Vegetationsziele
+in begrenztem Fenster geräumt, zwei Häuser fertig, eines wie oben entfernt.
+Fünf Vorlagen regulär erforscht: Hecke, Laterne, Krankenbett, Doppelwohnhaus,
+Hängematte. Forschung ist kein Gebäudenachweis; eingangslose/erhöhte Zugänge
+passen nicht automatisch zum ebenen Projektablauf.
+
+Abschließende Vorräte: 71 Wasser, 53 Beeren, null Karotten, 30 frei verfügbare
+Holzstämme und 33 Bretter. Nahrungsproduktion vor weiterem Wachstum priorisieren.
+Alle Chargen terminal, kein laufender Zeitauftrag, aktuelle Pause bestätigt.
+Verbesserungen in BACKLOG.md: definitive Ablehnung statt pending_build-Endlosschleife,
+Kandidatenalternativen nach sicherer Ablehnung, kompakte Fortschrittsantworten,
+frühes Beenden fertiger Bauzeitfenster, ausführungsbezogene Katalogfähigkeit,
+Wohnbelegung je Haus und Schutz freier Rückwege beweglicher Biber.
+Nächster Spielschritt: zusätzlicher Wohnraum mit offenem südlichem Durchgang,
+parallel Nahrungs-/Holzproduktion für Wachstum ausbauen. Gesamtziel bleibt offen.
+
+
 ## Live bestanden: eindeutige Eingabefehler (2026-10-05)
 
 Menschliches Gate bestätigt; fünf installierte Dateien stimmen mit Paket

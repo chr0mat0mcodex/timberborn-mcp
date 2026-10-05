@@ -1,5 +1,36 @@
 # Backlog
 
+## Bauprüfung: gestrandete Biber trotz fertigem Gebäudezugang
+
+Südliche Wohncharge baute zwei Häuser mit finished_accessible. Anschließend drei
+Biber südlich der Häuser gestrandet; bei freien Betten obdachlos/erschöpft.
+Beide Häuser selbst fertig, unpausiert, Distrikt zugeordnet. Engstelle außerhalb
+des bestehenden Wegnetzes durch Hausgrundrisse geschlossen. Zweites Haus gezielt
+entfernt; nach acht Spielstunden keine Stranded-/Exhausted-Warnung mehr. Gebäude-/Wegzugangsprüfung deckt aktuelle
+Biberpositionen und freie Geländeverbindungen nicht ab. Vor weiteren Flächenchargen
+freie Rückwege bzw. betroffene bewegliche Einheiten prüfen und diese Nachweislücke
+im Ergebnis deutlich ausweisen. Kein behaupteter allgemeiner Navigationsschutz.
+
+## Spielabschnitt 2026-10-05: Chargenfehler und unnötiges Warten
+
+- Definitive native Ablehnung vor Auftragsregistrierung bleibt als pending_build /
+  batch_interrupted hängen. Live: zweites Wohnhaus; inspect-Auftrag state_conflict,
+  Objekt fehlt, keine Baustellen, gezielte Vorschau buildingValid=false. Ursache
+  beibehalten und als abgelehnt abschließen; keinen unbestätigten Auftrag vortäuschen.
+- Erstkandidat kann native Bauvalidierung verfehlen. Nach eindeutig mutationsfreier
+  Ablehnung andere Kandidaten prüfen, mit festem Versuchslimit und erhaltener Diagnose.
+- Fertiges Haus wartet weiter bis Ende des fixen Zeitfensters. Optionale frühzeitige
+  Beendigung mit bestätigter Pause würde lange Chargen deutlich beschleunigen.
+- Wartende Antworten wiederholen Suchdetails und den Abschluss des Vorgängerhauses.
+  Aktuellen Baufortschritt, Restzeit und empfohlenen nächsten Abfragezeitpunkt anzeigen.
+- Wohnbelegung je Haus fehlt: freie Betten plus obdachlose Biber sind ohne
+  Bewohner-/Kapazitätsdaten pro Gebäude schwer zu erklären; Distrikt und Zugang
+  allein belegen keine tatsächliche Wohnnutzung.
+- Katalog-supported ist für Gebäude ohne Eingang oder mit erhöhtem Eingang zu grob:
+  Hecke/Laterne ohne Eingang, Doppelwohnhaus mit Eingang auf z+1. Direkt passende
+  Ausführungsfähigkeit samt Grund ausweisen, bevor Forschung/Standortsuche erfolgt.
+
+
 ## Beauftragt: automatische Teilflächenwechsel in Bauchargen
 
 Go nach zwei räumlich ausgeschöpften Chargen. Basis plus drei zusätzliche
