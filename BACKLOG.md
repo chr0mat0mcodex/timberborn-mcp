@@ -1,5 +1,13 @@
 # Backlog
 
+## Live bestanden: regionale unknown-Ausbreitung
+
+Ein other-Objekt sperrte bisher freie Zellen der gesamten Suchregion.
+Auf tatsächlich überlappende Teilflächen begrenzt, zwei Regressionsfälle ergänzt.
+Menschliches Gate und Live-Gegenprobe am 2026-10-05 bestanden: betroffene
+Teilfläche bleibt unbekannt, freie Rechtecke anderer Teilflächen wieder sichtbar.
+
+
 ## Bedienungsdiagnose aus regionalem Baupilot
 
 - waitSeconds-Grenzen direkt in Kurzbeschreibung nennen: Einzelprojekt 0–20,

@@ -84,6 +84,20 @@ public sealed class RegionSurveyTests
         Assert.Equal(2, port.Speeds);
     }
 
+    [Theory]
+    [InlineData("other_one_tile", 8)]
+    [InlineData("other_two_tiles", 16)]
+    public async Task UnknownFootprintOnlyExcludesTilesReportingItsOverlap(string fault, int unknownWidth)
+    {
+        var report = await RegionSurvey.Observe(Request, new Port { Fault = fault }, TestContext.Current.CancellationToken);
+        for (int y = 0; y < 8; y++) for (int x = 0; x < unknownWidth; x++)
+            Assert.NotEqual('.', report.Rows[y][x]);
+        Assert.Equal('.', report.Rows[9][1]); // unaffected lower tile remains usable
+        if (unknownWidth == 8) Assert.Equal('.', report.Rows[1][9]);
+        Assert.NotEmpty(report.EmptyGroundPatches);
+        Assert.All(report.EmptyGroundPatches, p => Assert.True(p.Y >= 8 || p.X >= unknownWidth));
+    }
+
     [Fact]
     public void WindowsOverlapAndPatchesDoNotOverlapOrCrossObstacles()
     {
@@ -105,6 +119,8 @@ public sealed class RegionSurveyTests
         public int Speeds { get; private set; }
         private readonly BuildingPosition[] roads = (from y in new[] { 0, 7, 8, 15 }
             from x in new[] { 0, 7, 8, 15 } select Building("Path", new(x, y, 3), [new(x, y, 3)])).ToArray();
+        private readonly NativeRemovalTarget unknown = new(Guid.NewGuid(), "other", "SyntheticSlope",
+            new(7, 1, 3), "unsupported", false, false, "unknown", "current_components");
         private static Task<BridgeEnvelope<T>> Result<T>(T data, string session = Session) =>
             Task.FromResult(new BridgeEnvelope<T>(1, session, DateTimeOffset.UnixEpoch, "test", data));
         public Task<BridgeEnvelope<NativeSimulation>> Simulation(CancellationToken ct) {
@@ -127,6 +143,7 @@ public sealed class RegionSurveyTests
         public Task<BridgeEnvelope<NativeRemovalTargets>> Targets(SurveyRect r, int offset, CancellationToken ct) {
             var t = new NativeRemovalTarget(Guid.NewGuid(), "vegetation", "SyntheticTree", new(r.X, r.Y, r.Z), "demolition_mark", true, false, "unknown", "current_components");
             NativeRemovalTarget[] items = Fault == "duplicate_targets" ? [t, t] : [];
+            if (r.Y == 0 && (Fault == "other_two_tiles" || Fault == "other_one_tile" && r.X == 0)) items = [unknown];
             return Result(new NativeRemovalTargets("all", offset, 32, items.Length, items, false, []));
         }
         public Task<BridgeEnvelope<NativeBuildingPlan>> Plan(SurveyRequest s, SurveyRect r, int rotation, CancellationToken ct) {

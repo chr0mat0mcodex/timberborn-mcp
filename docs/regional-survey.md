@@ -1,5 +1,46 @@
 # Regionale Flächensuche — begrenzt live abgenommen
 
+## Fortsetzung 2026-10-05 — unknown-Reparatur live bestanden
+
+Nutzer hat die Arbeit mit live bereit fortgesetzt. Neues Paket
+0.35.3-20261005-165123-33f2985e: alle fünf installierten Paketdateien stimmen.
+Anfangs Transport closed; nach erneuter Bereitmeldung reguläre MCP-Verbindung
+wieder erreichbar. Kein zusätzlicher Server oder Spielsteuerungs-Fallback.
+
+Gleicher 16×16-Nordpilot liefert jetzt drei Bodenrechtecke und vier Baukandidaten,
+33 interne Leseaufrufe inklusive zwölf Planungen in etwa 2,65 Sekunden. Die
+überlappende Teilfläche mit natürlicher Slope bleibt ohne freie Bodenrechtecke.
+Eine unbeteiligte 4×1-Fläche ist separat als hindernisfrei, trocken und auf
+richtiger Höhe geprüft. Reparatur im angekündigten Umfang live bestanden;
+Mehrteilflächen-Überlappung synthetisch abgedeckt, nicht zusätzlich live erzeugt.
+Nächster Schritt: nachweislich erreichbare Produktionsflächen vergrößern.
+
+
+
+## Vor menschlichem Gate — unbekannte Objekte regional begrenzen (2026-10-05)
+
+Fortsetzung des Gesamtziels: Nordscan 16×16 liefert wegen unbekannter Objekte
+keine Bodenrechtecke. Eine natürliche Slope auf niedrigerer Ebene wurde in einer
+überlappenden Teilfläche direkt nachgewiesen. Fehler im Klassifikator: jedes
+other-Objekt sperrte alle ansonsten freien Zellen der gesamten Region.
+
+Korrektur: unbekannte Grundrisse sperren nur die nativen 8×8-Abfrageflächen,
+die ihre Überlappung tatsächlich melden. Überlappt ein Objekt zwei Teilflächen,
+bleiben beide gesperrt. Bekannte Gebäude, Eingänge und Pflanzmarkierungen bleiben
+geschützt. Keine Annahme über den unbekannten Grundriss, keine neue Baufreigabe.
+Zwei synthetische Regressionsfälle ergänzt; Quellcode/Diff geprüft. Kein Build,
+keine Installation und kein Commit/Push dieser Reparatur.
+
+Nach menschlichem Gate denselben Nordausschnitt prüfen: unbekannte Objekte dürfen
+unbeteiligte Teilflächen nicht mehr sperren. Betroffene Überlappungsflächen müssen
+unbekannt bleiben; freie Rechtecke stichprobenweise nativ prüfen. Bei falschem
+Kontrollfall stoppen. Aktueller Ausbau unverändert: 32 Biber, 36 Betten, 24/157;
+Holz frei 1. Keine neuen Spielaktionen in dieser Diagnose. Aufforstung/Nahrung
+bleiben der nächste Schritt nach Reparatur. Die untersuchte Nordreihe enthält
+auch einen versetzten Wohnhausgrundriss und wurde deshalb nicht bepflanzt.
+
+
+
 ## Praxistest: regionaler Kandidat bis zum fertigen Wohnhaus
 
 2026-10-04: Ersten regional gefundenen Lodge-Kandidaten im Entwicklungspilot

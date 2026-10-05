@@ -1,5 +1,75 @@
 # Projektstand
 
+## Fortsetzung 2026-10-05 — unknown-Reparatur live bestanden
+
+Nutzer hat die Arbeit mit live bereit fortgesetzt. Neues Paket
+0.35.3-20261005-165123-33f2985e: alle fünf installierten Paketdateien stimmen.
+Anfangs Transport closed; nach erneuter Bereitmeldung reguläre MCP-Verbindung
+wieder erreichbar. Kein zusätzlicher Server oder Spielsteuerungs-Fallback.
+
+Gleicher 16×16-Nordpilot liefert jetzt drei Bodenrechtecke und vier Baukandidaten,
+33 interne Leseaufrufe inklusive zwölf Planungen in etwa 2,65 Sekunden. Die
+überlappende Teilfläche mit natürlicher Slope bleibt ohne freie Bodenrechtecke.
+Eine unbeteiligte 4×1-Fläche ist separat als hindernisfrei, trocken und auf
+richtiger Höhe geprüft. Reparatur im angekündigten Umfang live bestanden;
+Mehrteilflächen-Überlappung synthetisch abgedeckt, nicht zusätzlich live erzeugt.
+Nächster Schritt: nachweislich erreichbare Produktionsflächen vergrößern.
+
+
+
+## Tagesabschluss 4./5. Oktober 2026 — Arbeit pausiert
+
+Feierabend auf Nutzerwunsch. Gesamtziel offen; keine weitere Spielsteuerung,
+Tests oder Installation bis zur Fortsetzung. Letzter bestätigter Spielzustand:
+32 lebende Biber, 36 Betten (vier frei), 24 von 157 regulären Vorlagen gebaut.
+Fünf Entwicklerwerkzeuge ausgeschlossen; 133 reguläre Vorlagen ohne Baunachweis.
+Zufriedenheit insgesamt nicht nachgewiesen. Spiel zuletzt mit Tempo 0 beobachtet;
+kein neuer Save oder erneuter Zustandsabruf zum Tagesabschluss behauptet.
+
+Versorgung: zuletzt Wasser 83, Beeren 60, frei verfügbares Holz 1. Karottenbestand
+zuletzt 0; 30 lebende Pflanzen vorhanden. Die 13 Kiefern der Forststichprobe
+wachsen noch, ohne Wasserstress. Nächster wirtschaftlicher Schritt: größere
+nachweislich erreichbare Holz- und Nahrungsproduktion, danach weitere Wohnplätze.
+
+Abgenommen: Speichersperren im Zeitlauf, begrenzte Bauchargen, regionale Suche
+und ein daraus tatsächlich fertig/erreichbar gebautes Wohnhaus. Letzter gepushter
+Checkpoint: 4d117db; regionale Suche in e6006e3. Die nachfolgende unknown-Reparatur
+ist nur statisch geprüft und bleibt uncommitted: RegionSurvey.cs plus zwei
+Regressionsfälle in RegionSurveyTests.cs. Auch diese Abschlussdokumentation ist
+lokal gespeichert. Andere bereits vorhandene Änderungen bleiben erhalten.
+
+Wiedereinstieg: menschliches prepare-human-live-test.ps1 bei beendetem Spiel,
+danach laden und live bereit. Zuerst unknown-Reparatur im bisherigen Nordbereich
+gegenprüfen: nur tatsächlich betroffene Teilflächen unbekannt, keine Freigabe
+unbekannter Geometrie. Erst nach bestandenem Gate/Livetest gezielt committen und
+pushen, anschließend Versorgungsausbau. Ablauf: DEVELOPMENT_WORKFLOW.md.
+
+
+
+## Vor menschlichem Gate — unbekannte Objekte regional begrenzen (2026-10-05)
+
+Fortsetzung des Gesamtziels: Nordscan 16×16 liefert wegen unbekannter Objekte
+keine Bodenrechtecke. Eine natürliche Slope auf niedrigerer Ebene wurde in einer
+überlappenden Teilfläche direkt nachgewiesen. Fehler im Klassifikator: jedes
+other-Objekt sperrte alle ansonsten freien Zellen der gesamten Region.
+
+Korrektur: unbekannte Grundrisse sperren nur die nativen 8×8-Abfrageflächen,
+die ihre Überlappung tatsächlich melden. Überlappt ein Objekt zwei Teilflächen,
+bleiben beide gesperrt. Bekannte Gebäude, Eingänge und Pflanzmarkierungen bleiben
+geschützt. Keine Annahme über den unbekannten Grundriss, keine neue Baufreigabe.
+Zwei synthetische Regressionsfälle ergänzt; Quellcode/Diff geprüft. Kein Build,
+keine Installation und kein Commit/Push dieser Reparatur.
+
+Nach menschlichem Gate denselben Nordausschnitt prüfen: unbekannte Objekte dürfen
+unbeteiligte Teilflächen nicht mehr sperren. Betroffene Überlappungsflächen müssen
+unbekannt bleiben; freie Rechtecke stichprobenweise nativ prüfen. Bei falschem
+Kontrollfall stoppen. Aktueller Ausbau unverändert: 32 Biber, 36 Betten, 24/157;
+Holz frei 1. Keine neuen Spielaktionen in dieser Diagnose. Aufforstung/Nahrung
+bleiben der nächste Schritt nach Reparatur. Die untersuchte Nordreihe enthält
+auch einen versetzten Wohnhausgrundriss und wurde deshalb nicht bepflanzt.
+
+
+
 ## Praxistest: regionaler Kandidat bis zum fertigen Wohnhaus
 
 2026-10-04: Ersten regional gefundenen Lodge-Kandidaten im Entwicklungspilot

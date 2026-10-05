@@ -72,7 +72,10 @@ public static class RegionSurvey
                         (old.Kind != item.Kind || old.Template != item.Template || old.Position != item.Position || old.Marked != item.Marked))
                         throw new InvalidDataException("survey_targets_changed");
                     targets[item.Id] = item;
-                    if (item.Kind != "buildings" && (item.Position.Z != r.Z || item.Position.X < x || item.Position.X >= x + tile.Width ||
+                    // The native query reports overlap with THIS tile. An unknown footprint
+                    // cannot invalidate other tiles that did not report this object.
+                    if (item.Kind is not ("buildings" or "vegetation" or "planted" or "debris") ||
+                        item.Kind != "buildings" && (item.Position.Z != r.Z || item.Position.X < x || item.Position.X >= x + tile.Width ||
                         item.Position.Y < y || item.Position.Y >= y + tile.Height))
                         for (int yy = y; yy < y + tile.Height; yy++) for (int xx = x; xx < x + tile.Width; xx++) uncertain.Add((xx, yy));
                 }
@@ -165,8 +168,6 @@ public static class RegionSurvey
                 if (occupied.Contains((x, y))) label = 'b';
                 if (paths.Contains((x, y))) label = 'p';
                 if (entrances.Contains((x, y)) && !paths.Contains((x, y))) label = 'e';
-                // Unknown non-building overlap (e.g. origin outside the read tile) is not free land.
-                if (label == '.' && targets.Any(t => t.Kind is not ("vegetation" or "planted" or "debris" or "buildings"))) label = '?';
                 row[x - r.X] = label;
             }
             rows.Add(new string(row));
