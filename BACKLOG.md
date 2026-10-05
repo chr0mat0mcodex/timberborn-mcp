@@ -1,5 +1,23 @@
 # Backlog
 
+## Versionswechsel: vergessene Clientfreigabe verhindern
+
+0.35.4 zunächst von den eigenen Versionslisten abgelehnt. Korrektur aller
+betroffenen Listen und manifestgebundener Clienttest ergänzt; Gate und Livetest bestanden.
+Weitere Verbesserung: verteilte Versionslisten konsolidieren und inkompatible
+Bridge-Version auch im Aktivitätslogging als verständlichen Fehler ausgeben;
+aktuell generischer MCP-Aufruffehler. Kein größerer Umbau in dieser Reparatur.
+
+
+## Direkter Nutzerauftrag: grüne Pflanzflächen erkennen
+
+0.35.4 vorbereitet: Bodenfeuchte für leere Felder in inspect_map_region und
+survey_region; öffentliche SoilIsMoist-Abfrage statt Ableitung aus Pflanzenstress.
+Separate kompakte Feuchtigkeitskarte und freie feuchte Rechtecke, keine zusätzlichen
+Spielabfragen. Menschliches Gate und feucht/trocken/Höhen-Livekontrolle am 2026-10-05 bestanden.
+Pflanzenspezifische Eignung und Arbeitsreichweite bleiben separate Aussagen.
+
+
 ## Live bestanden: regionale unknown-Ausbreitung
 
 Ein other-Objekt sperrte bisher freie Zellen der gesamten Suchregion.

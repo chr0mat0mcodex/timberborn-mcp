@@ -1,5 +1,52 @@
 # Regionale Flächensuche — begrenzt live abgenommen
 
+## Live bestanden: Bodenfeuchte 0.35.4 (2026-10-05)
+
+Menschliches Gate abgeschlossen; alle fünf installierten Dateien stimmen mit
+Paket 0.35.4-20261005-172618-6954fbfd überein. Native MCP-Verbindung erreichbar.
+Vier Forstzellen feucht, 16 obere Vergleichszellen trocken; vier Zellen über
+Boden liefern null. Drei regionale Abfragen stimmen mit den direkten Proben
+überein. Trockenes freies 2×2-Rechteck ausgeschlossen, feuchtes freies 2×1-Rechteck
+gefunden und separat bestätigt. Rechteckzellen sind gleichzeitig hindernisfrei
+und feucht; bestehende Pflanzflächen bleiben ausgeschlossen.
+Regional 12 bzw. 17 native Reads, keine zusätzlichen Reads für Bodenfeuchte.
+Keine Spielmutation oder Simulation; Spiel pausiert. Momentane Bodenfeuchte
+belegt keine Arbeitsreichweite, pflanzenspezifische Eignung oder Dauerbewässerung.
+Versionslisten-/Syntaxkorrektur eingeschlossen; frühere offene Gate-Einträge
+unten sind historisch. Feature im beschriebenen Umfang abgenommen.
+
+
+## Bodenfeuchte: 0.35.4 vorbereitet, noch nicht live abgenommen
+
+Erster Live-Einstieg nach menschlichem Gate am 2026-10-05 blockiert: Mod startet,
+aber Client-Versionslisten akzeptieren 0.35.4 noch nicht. Listen korrigiert und
+manifestgebundener Client-Regressionstest ergänzt. Neuer Skriptlauf nötig;
+Feuchte-/Höhenvergleich noch nicht durchgeführt.
+
+inspect_map_region liefert soilIsMoist: true/false auf Bodenfeldern, null für
+andere Höhen bzw. alte Bridge. Quelle: öffentliches
+Timberborn.SoilMoistureSystem.ISoilMoistureService.SoilIsMoist(Vector3Int).
+Signatur gegen lokale Spielbibliothek per bestehendem MetadataLoadContext-Prüfer
+bestätigt; keine privaten Member, Methodenkörper oder neue Abhängigkeit nötig.
+Dienstauflösung und Koordinatensemantik bleiben Gegenstand des Livetests.
+
+survey_region ergänzt moisture.rows mit m=feucht, d=trocken, ?=unbekannt,
+-=kein Boden auf dieser Höhe sowie moisture.moistEmptyGroundPatches (maximal
+sechs disjunkte Rechtecke bis 4×4). Nur feuchte Zellen mit Hinderniszeichen .
+gehen ein. Gebäude, Felder, unbekannte Geometrie, Wasser und Verschmutzung bleiben
+ausgeschlossen. Das Hinderniszeichen . bedeutet nicht überflutet, nicht trockene
+Erde. Beide Karten haben identische Zeilen-/Spaltenreihenfolge. Keine zusätzlichen
+nativen Reads; Baukandidatensuche unverändert. Feuchte ist eine Momentaufnahme,
+keine Zusage pflanzenspezifischer Eignung, Bewirtschaftung oder zukünftiger Versorgung.
+
+Gate: menschliches prepare-human-live-test.ps1, danach Spiel laden/live bereit.
+Pilot: feuchte Bodenprobe bei lebenden Pflanzen und trockene Vergleichsprobe
+finden; Höhen-Negativkontrolle muss null liefern. Regionale Werte gegen dieselben
+direkt abgefragten Zellen vergleichen; feuchte Rechtecke dürfen keine gesperrte
+Zelle enthalten. Bei falscher Kontrollprobe stoppen und Koordinatensemantik
+diagnostizieren. Build, neue Tests und Livetest noch nicht ausgeführt.
+
+
 ## Fortsetzung 2026-10-05 — unknown-Reparatur live bestanden
 
 Nutzer hat die Arbeit mit live bereit fortgesetzt. Neues Paket

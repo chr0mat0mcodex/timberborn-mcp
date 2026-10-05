@@ -1,5 +1,51 @@
 # Projektstand
 
+## Live bestanden: Bodenfeuchte 0.35.4 (2026-10-05)
+
+Menschliches Gate abgeschlossen; alle fünf installierten Dateien stimmen mit
+Paket 0.35.4-20261005-172618-6954fbfd überein. Native MCP-Verbindung erreichbar.
+Vier Forstzellen feucht, 16 obere Vergleichszellen trocken; vier Zellen über
+Boden liefern null. Drei regionale Abfragen stimmen mit den direkten Proben
+überein. Trockenes freies 2×2-Rechteck ausgeschlossen, feuchtes freies 2×1-Rechteck
+gefunden und separat bestätigt. Rechteckzellen sind gleichzeitig hindernisfrei
+und feucht; bestehende Pflanzflächen bleiben ausgeschlossen.
+Regional 12 bzw. 17 native Reads, keine zusätzlichen Reads für Bodenfeuchte.
+Keine Spielmutation oder Simulation; Spiel pausiert. Momentane Bodenfeuchte
+belegt keine Arbeitsreichweite, pflanzenspezifische Eignung oder Dauerbewässerung.
+Versionslisten-/Syntaxkorrektur eingeschlossen; frühere offene Gate-Einträge
+unten sind historisch. Feature im beschriebenen Umfang abgenommen.
+
+
+## 0.35.4: Live-Einstieg blockiert, Clientkorrektur vorbereitet
+
+Nachfolgendes menschliches Gate beim Kompilieren abgebrochen: Versionsersetzung
+hatte einen einzelnen !=-Vergleich ungültig erweitert. Auf is not (Versionen)
+korrigiert; alle 29 geänderten C#-Dateien mit Roslyn syntaktisch geprüft, ohne
+Syntaxfehler. Das ersetzt keine Typprüfung, Tests oder den offenen Livetest.
+
+2026-10-05: Nach menschlichem Gate ist Paket 0.35.4 vorhanden; Spielprotokoll
+meldet geladene Mod und bereiten Endpoint, keine passende Start-Exception.
+Status und Simulation scheitern jedoch bereits vor dem Feuchtigkeitsnachweis.
+Quellcodebefund: zentrale Envelope-Versionsliste und weitere Vertragsprüfungen
+akzeptierten nur bis 0.35.3. Alle bisherigen 0.35.3-Prüfungen um 0.35.4 ergänzt,
+historische Versionen und Vertragsgrenzen unverändert. Regression liest die
+Version direkt aus dem Mod-Manifest und prüft den NativeClient mit synthetischer
+Feuchteantwort sowie Fähigkeits-/Budgetprofil. Nur statisch geprüft.
+Erneutes menschliches Skript-Gate nötig; kein bestandener Livetest, kein Commit.
+
+
+## Test-Gate offen: Bodenfeuchte (0.35.4, 2026-10-05)
+
+Auf Nutzerauftrag leere grüne/bewässerte Bodenflächen direkt abfragbar machen.
+Öffentliches ISoilMoistureService.SoilIsMoist(Vector3Int) lokal per Metadaten
+nachgewiesen und in die Kartenabfrage integriert; nur Boden, sonst null.
+Regionalsuche ergänzt separate Feuchtigkeitszeilen und freie feuchte Rechtecke
+ohne zusätzliche native Reads. Alte Bridge: unbekannt statt trocken.
+Feuchte bedeutet weder Pflanzbarkeit noch Arbeitsreichweite oder künftigen Ertrag.
+Zwei Regressionstests ergänzt; nur Quellcode/Diff geprüft, noch kein Build,
+Deploy, Livetest oder Commit dieser Erweiterung. Übergabe: docs/regional-survey.md.
+
+
 ## Fortsetzung 2026-10-05 — unknown-Reparatur live bestanden
 
 Nutzer hat die Arbeit mit live bereit fortgesetzt. Neues Paket

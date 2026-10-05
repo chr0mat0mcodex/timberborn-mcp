@@ -74,7 +74,7 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
                     : name == "find_buildings" ? "Liest Gebäude und Wege mit stabilen Vorlagen-IDs, Position, Eingang und bis zu 64 belegten Zellen je Objekt. Maximal 32 Einträge; Seiten sind frische Beobachtungen."
                     : name == "inspect_build_catalog" ? "Liest die Pilotvorlagen Lodge.Folktails und Path, aktive Fraktion, Freischaltung, Geometrie und Kosten. Keine gesamte Bauliste; globale Vorräte garantieren keine lokale Lieferung."
                     : site ? "Rein lesende räumliche Vorprüfung für Lodge.Folktails oder Path. Rotation 0/1/2/3 entspricht Cw0/Cw90/Cw180/Cw270; ungespiegelt. Meldet Hindernisse, Terrain, Eingang und Kosten. gameValidated bleibt false: KEINE vollständige Spiel-Bauprüfung, Freigabe oder Platzierung."
-                    : map ? "Liest höchstens 8x8x4 Spielzellen. Rohkoordinaten; keine Bauplatz- oder Erreichbarkeitsgarantie."
+                    : map ? "Liest bis 8x8x4 Zellen: Gelände, Wasser, Verschmutzung und soilIsMoist (ab Bridge 0.35.4, nur Boden; null=unbekannt/nicht anwendbar). Aktuelle Feuchte ist keine Pflanz-, Ertrags- oder Erreichbarkeitsgarantie."
                     : name == "inspect_colony" ? "Eigene Spielmod: drei Beispielgüter (keine gesamte Nahrung), Betten, Personal und bis zu 16 Blockobjekte mit Position. Namen sind Daten. Enthält Sitzungskennung."
                     : "Prüft die eigene lesende Spielmod. Kein Fallback auf Fremdmods, keine Schreibfunktionen.",
                 InputSchema = JsonSerializer.SerializeToElement(input), OutputSchema = JsonSerializer.SerializeToElement(options.GetJsonSchemaAsNode(result)),

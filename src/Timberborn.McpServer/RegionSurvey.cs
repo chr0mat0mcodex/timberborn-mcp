@@ -9,11 +9,13 @@ public sealed record SurveyRect(int X, int Y, int Z, int Width, int Height);
 public sealed record SurveyWindow(SurveyRect Region, int FreeCells, int VegetationCells, int PathCells);
 public sealed record SurveyCandidate(SurveyRect Region, int Rotation, int OptionIndex,
     string PlanKey, Position Origin, int NewPaths);
+public sealed record SurveyMoisture(string[] Rows, Dictionary<string, string> Legend,
+    SurveyRect[] MoistEmptyGroundPatches);
 public sealed record RegionSurveyReport(string Template, SurveyRect Region, string[] Rows,
     Dictionary<string, string> Legend, SurveyRect[] EmptyGroundPatches, SurveyWindow[] SearchWindows,
     SurveyCandidate[] BuildingCandidates, int NativeReads, int PlanningCalls,
     DateTimeOffset ObservationStartedAtUtc, DateTimeOffset ObservationEndedAtUtc,
-    bool Atomic, string[] Limitations);
+    bool Atomic, string[] Limitations, SurveyMoisture Moisture);
 
 public interface IRegionSurveyPort
 {
@@ -133,16 +135,36 @@ public static class RegionSurvey
         }
         if (Check(await port.Simulation(ct)).CurrentSpeed != 0) throw new BridgeRejectionException("state_conflict");
         return new(r.Template, new(r.X, r.Y, r.Z, r.Width, r.Height), rows,
-            new() { ["."] = "dry_ground_no_observed_obstacle", ["v"] = "vegetation", ["c"] = "plant_or_designation",
+            new() { ["."] = "unflooded_ground_no_observed_obstacle", ["v"] = "vegetation", ["c"] = "plant_or_designation",
                 ["b"] = "building_or_debris", ["p"] = "finished_path", ["e"] = "existing_entrance",
                 ["~"] = "water_or_contamination", ["h"] = "different_ground_height", ["?"] = "unknown" },
             patches, windows, candidates.OrderBy(c => c.NewPaths).ThenBy(c => c.Origin.Y).ThenBy(c => c.Origin.X)
                 .DistinctBy(c => (c.Origin, c.Rotation)).Take(4).ToArray(), reads, planningCalls, first!.Value, last, false,
             ["read_only_non_atomic", "rows_y_ascending_columns_x_ascending", "single_ground_level",
-             "patches_are_not_planting_or_work_range_validation", "irrigation_and_yield_unknown",
+             "patches_are_not_planting_or_work_range_validation", "moisture_is_current_not_future_irrigation_or_yield",
              "paths_are_not_district_membership_proof", "top_three_overlapping_windows_only",
              "no_candidate_does_not_mean_region_unbuildable", "candidates_not_executable_revalidate_before_build",
-             "no_clearing_or_existing_access_safety_claim", "vegetation_origins_not_full_footprints"]);
+             "no_clearing_or_existing_access_safety_claim", "vegetation_origins_not_full_footprints"], Moisture(r, maps, rows));
+    }
+
+    public static SurveyMoisture Moisture(SurveyRequest r, IReadOnlyList<MapCell> maps, string[] obstacleRows)
+    {
+        var cells = maps.ToDictionary(c => (c.X, c.Y));
+        var rows = new string[r.Height];
+        var eligible = new string[r.Height];
+        for (int y = 0; y < r.Height; y++) {
+            var row = new char[r.Width]; var free = new char[r.Width];
+            for (int x = 0; x < r.Width; x++) {
+                if (!cells.TryGetValue((r.X + x, r.Y + y), out var c) || c.Z != r.Z)
+                    throw new InvalidDataException("survey_missing_cells");
+                row[x] = !c.OnGround || c.TerrainHeight != r.Z ? '-' : c.SoilIsMoist switch {
+                    true => 'm', false => 'd', null => '?' };
+                free[x] = row[x] == 'm' && obstacleRows[y][x] == '.' ? '.' : 'x';
+            }
+            rows[y] = new string(row); eligible[y] = new string(free);
+        }
+        return new(rows, new() { ["m"] = "moist_ground", ["d"] = "dry_ground",
+            ["?"] = "moisture_unknown", ["-"] = "not_ground_at_requested_height" }, Patches(r, eligible));
     }
 
     public static string[] Classify(SurveyRequest r, IReadOnlyList<MapCell> maps, IReadOnlyList<BuildingPosition> buildings,

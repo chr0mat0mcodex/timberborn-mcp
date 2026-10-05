@@ -36,7 +36,7 @@ public sealed record NativeObject(Guid Id, string ObjectName, Position Position,
 public sealed record NativeSnapshot(string Scope, NativeResource[] Resources, Housing Housing, NativePopulation Population,
     Workforce Workforce, Position MapSize, int ObjectCount, NativeObject[] ObjectSample, bool ObjectsTruncated, string[] Limitations);
 public sealed record MapCell(int X, int Y, int Z, bool Underground, bool OnGround, int TerrainHeight,
-    float WaterDepth, float Contamination, bool Underwater);
+    float WaterDepth, float Contamination, bool Underwater, bool? SoilIsMoist = null);
 public sealed record NativeMap(Position Origin, int Width, int Height, int Depth, MapCell[] Cells, string[] Limitations);
 public sealed record NativeStatus(string Connection, string BridgeVersion, bool WritesEnabled);
 public sealed record BuildingPosition(Guid Id, string Template, Position Position, string Orientation, bool Finished,

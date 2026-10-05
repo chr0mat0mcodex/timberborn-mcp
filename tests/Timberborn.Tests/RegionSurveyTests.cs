@@ -15,6 +15,33 @@ public sealed class RegionSurveyTests
         new(Guid.NewGuid(), template, origin, "Cw0", true, entrance, cells, false);
 
     [Fact]
+    public void MoistureSeparatesDryUnknownWrongHeightAndOccupiedGround()
+    {
+        var r = Request with { Width = 8, Height = 1 };
+        var map = Enumerable.Range(0, 8).Select(x => Cell(x, 0) with { SoilIsMoist = true }).ToArray();
+        map[2] = map[2] with { SoilIsMoist = false };
+        map[3] = map[3] with { SoilIsMoist = null };
+        map[4] = map[4] with { OnGround = false };
+        map[5] = map[5] with { TerrainHeight = 2 };
+        var report = RegionSurvey.Moisture(r, map, ["......b?"]);
+        Assert.Equal("mmd?--mm", Assert.Single(report.Rows));
+        Assert.Equal(new SurveyRect(0, 0, 3, 2, 1), Assert.Single(report.MoistEmptyGroundPatches));
+        // Positive moisture must not turn flooded/contaminated or planted cells into free patches.
+        Assert.Empty(RegionSurvey.Moisture(r, map, ["~c....b?"]).MoistEmptyGroundPatches);
+    }
+
+    [Fact]
+    public async Task OldBridgeMoistureRemainsUnknownWithoutExtraReads()
+    {
+        var report = await RegionSurvey.Observe(Request, new Port(), TestContext.Current.CancellationToken);
+        Assert.All(report.Moisture.Rows, row => Assert.Equal(new string('?', 16), row));
+        Assert.Empty(report.Moisture.MoistEmptyGroundPatches);
+        Assert.Equal(25, report.NativeReads);
+        var oldCell = JsonSerializer.Deserialize<MapCell>("""{"x":0,"y":0,"z":3,"underground":false,"onGround":true,"terrainHeight":3,"waterDepth":0,"contamination":0,"underwater":false}""", NativeJson.Options);
+        Assert.Null(oldCell!.SoilIsMoist);
+    }
+
+    [Fact]
     public void FootprintsEntrancesWaterHeightsAndEmptyDesignationsAreExcluded()
     {
         var r = Request with { Width = 8, Height = 2 };

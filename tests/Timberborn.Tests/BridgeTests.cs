@@ -13,6 +13,30 @@ public sealed class BridgeTests
     private static BridgeRequest Snapshot() => BridgeRequest.Parse("/agent-api/v1/snapshot", new());
 
     [Fact]
+    public async Task CurrentManifestVersionCanReadMoistureThroughNativeClient()
+    {
+        var directory = new DirectoryInfo(AppContext.BaseDirectory);
+        while (directory is not null && !File.Exists(Path.Combine(directory.FullName, "mod", "Timberborn.AgentBridge", "manifest.json")))
+            directory = directory.Parent;
+        Assert.NotNull(directory);
+        using var manifest = JsonDocument.Parse(File.ReadAllText(Path.Combine(directory.FullName, "mod", "Timberborn.AgentBridge", "manifest.json")));
+        string version = manifest.RootElement.GetProperty("Version").GetString()!;
+        var map = new NativeMap(new(0, 0, 3), 3, 1, 1,
+            [new(0, 0, 3, false, true, 3, 0, 0, false, true),
+             new(1, 0, 3, false, true, 3, 0, 0, false, false),
+             new(2, 0, 3, false, false, 2, 0, 0, false, null)], []);
+        string payload = JsonSerializer.Serialize(new BridgeEnvelope<NativeMap>(1,
+            "11111111-1111-4111-8111-111111111111", DateTimeOffset.UtcNow, version, map), NativeJson.Options);
+        using var client = new NativeClient(new(8081, new string('a', 64)), new ResponseHandler(payload));
+        var request = BridgeRequest.Parse("/agent-api/v1/map", new NameValueCollection {
+            ["x"]="0", ["y"]="0", ["z"]="3", ["width"]="3", ["height"]="1", ["depth"]="1" });
+        var result = await client.Map(request, TestContext.Current.CancellationToken);
+        Assert.Equal(new bool?[] { true, false, null }, result.Data.Cells.Select(c => c.SoilIsMoist));
+        Assert.Equal("known", BuildingCapabilityTools.Describe(version, "Folktails", true).ProfileState);
+        Assert.True(ValidationBudgetContract.Accepts(version, 999_999, 255));
+    }
+
+    [Fact]
     public async Task QueueRunsOnlyWhenPumpedAndOnCallingThread()
     {
         using var queue = new MainThreadQueue();

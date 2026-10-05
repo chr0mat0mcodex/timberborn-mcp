@@ -9,6 +9,7 @@ using Timberborn.Modding;
 using Timberborn.Population;
 using Timberborn.ResourceCountingSystem;
 using Timberborn.SingletonSystem;
+using Timberborn.SoilMoistureSystem;
 using Timberborn.TerrainSystem;
 using Timberborn.WaterSystem;
 using UnityEngine;
@@ -34,7 +35,7 @@ public sealed class BridgeConfigurator : Configurator
 }
 
 public sealed class BridgeMod(ResourceCountingService resources, PopulationService population,
-    EntityRegistry entities, ITerrainService terrain, IThreadSafeWaterMap water, IGoodService goods,
+    EntityRegistry entities, ITerrainService terrain, IThreadSafeWaterMap water, ISoilMoistureService soilMoisture, IGoodService goods,
     ModRepository mods, SpatialObservations spatial, SiteValidation validation, PilotPlacement placement, BuildingObservations buildings, SimulationControl simulation, WorkforceObservations workforce, WorkplaceStaffing staffing, PriorityAndConstruction management, AreaManagement areas, RemovalManagement removal, BuildingCatalog catalog, BuildingSettings settings, ActivityLog activityLog, ActivityLogWindow activityWindow, Research research, EconomyObservations economy, LogisticsObservations logistics, DiagnosticsObservations diagnostics, ProductionGraph productionGraph, SelectionObservations selection, BuildingProjectPlanner projectPlanner, BuildingProjectExecution projectExecution, VerticalStairExecution verticalStairExecution)
     : ILoadableSingleton, IUnloadableSingleton, IUpdatableSingleton
 {
@@ -105,7 +106,7 @@ public sealed class BridgeMod(ResourceCountingService resources, PopulationServi
             _ => throw new ArgumentException("invalid_request")
         };
         return JsonConvert.SerializeObject(new { schemaVersion = 1, sessionId, observedAtUtc = DateTimeOffset.UtcNow,
-            bridgeVersion = "0.35.3", data });
+            bridgeVersion = "0.35.4", data });
     }
     private object Snapshot()
     {
@@ -164,10 +165,12 @@ public sealed class BridgeMod(ResourceCountingService resources, PopulationServi
                     var cell = new Vector3Int(x, y, z);
                     cells.Add(new { x, y, z, underground = terrain.Underground(cell), onGround = terrain.OnGround(cell),
                         terrainHeight = terrain.GetTerrainHeight(cell), waterDepth = water.WaterDepth(cell),
-                        contamination = water.ColumnContamination(cell), underwater = water.CellIsUnderwater(cell) });
+                        contamination = water.ColumnContamination(cell), underwater = water.CellIsUnderwater(cell),
+                        soilIsMoist = terrain.OnGround(cell) ? (bool?)soilMoisture.SoilIsMoist(cell) : null });
                 }
         return new { origin = Vec(start), width = r.Width, height = r.Height, depth = r.Depth, cells,
-            limitations = new[] { "raw_game_coordinates_semantics_need_live_validation", "no_buildability_or_reachability_claim" } };
+            limitations = new[] { "raw_game_coordinates_semantics_need_live_validation", "no_buildability_or_reachability_claim",
+                "soil_moisture_current_ground_only_not_crop_suitability_or_future_irrigation" } };
     }
     private static object Vec(Vector3Int value) => new { x = value.x, y = value.y, z = value.z };
 }
