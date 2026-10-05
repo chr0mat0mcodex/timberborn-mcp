@@ -53,7 +53,7 @@ public static class BuildingCompletionTools
             yield return new Tool {
                 Name = name,
                 Description = name == Advance
-                    ? "Führt EIN bereits gestartetes ebenes Bauprojekt durch ein begrenztes Bauzeitfenster. Bündelt Auftragsstatus, alle Bauobjekte, Zugang, Spielzeitlauf und Abschlussprüfung. Pro actionId genau ein dauerhaft im Spiel registriertes Zeitbudget, niemals automatisch verlängert. Gleiche Parameter setzen die Beobachtung nach MCP-Neustart fort; geändertes Budget wird abgelehnt. Erst nach bestätigtem Auftrag, Bauzugang und Pause starten. waitSeconds begrenzt internes Statuswarten; laufender Modlauf überlebt Disconnect. Bei Unsicherheit inspect_building_completion lesen. finished_accessible bestätigt alle Bauobjekte fertig, Gebäudezugang, gegebenenfalls Lagerkonfiguration und aktuelle Pause; kein Produktions-/Zufriedenheitsbeleg. budget_exhausted verlangt eine neue Entscheidung, keinen erneuten Start."
+                    ? "Führt EIN bereits gestartetes ebenes Bauprojekt durch ein begrenztes Bauzeitfenster. Bündelt Auftragsstatus, alle Bauobjekte, Zugang, Spielzeitlauf und Abschlussprüfung. Pro actionId genau ein dauerhaft im Spiel registriertes Zeitbudget, niemals automatisch verlängert. Gleiche Parameter setzen die Beobachtung nach MCP-Neustart fort; geändertes Budget wird abgelehnt. Erst nach bestätigtem Auftrag, Bauzugang und Pause starten. waitSeconds 0–20 begrenzt internes Statuswarten; laufender Modlauf überlebt Disconnect. Bei Unsicherheit inspect_building_completion lesen. finished_accessible bestätigt alle Bauobjekte fertig, Gebäudezugang, gegebenenfalls Lagerkonfiguration und aktuelle Pause; kein Produktions-/Zufriedenheitsbeleg. budget_exhausted verlangt eine neue Entscheidung, keinen erneuten Start."
                     : "Liest Bauauftrag, alle Bauobjekte, Gebäudezugang, zugehörigen begrenzten Simulationslauf und aktuellen Pausenstatus gebündelt. Keine Mutation oder neue Simulation. Mit session/actionId nach Disconnect oder MCP-Neustart wiederaufnehmbar; Spielsession muss fortbestehen. Auftrag completed allein bedeutet nicht fertig gebaut.",
                 InputSchema = JsonSerializer.SerializeToElement(new JsonObject {
                     ["type"] = "object", ["additionalProperties"] = false, ["properties"] = p,
@@ -73,7 +73,7 @@ public static class BuildingCompletionTools
             foreach (var key in new[] { "durationHours", "speed", "maxRealSeconds", "waitSeconds" }) input["required"]!.AsArray().Add(key);
             yield return new Tool {
                 Name = Develop,
-                Description = "Plant, startet und begleitet EIN neues ebenes Gebäudeprojekt mit festem Bauzeitbudget. Bestehende native Zugangsprüfungen bleiben. Kein Kandidat: Diagnose am Suchursprung, keine Mutation. Nach bestätigt abgeschlossenem Bauauftrag automatisch advance_building_project; Ergebnis kann noch running/awaiting_order sein. Nur einmal mit neuer actionId senden. Danach ausschließlich inspect_building_completion oder advance_building_project mit derselben session/actionId und unverändertem Zeitbudget; niemals develop erneut senden. Anfangskonfiguration direkt an Baustelle. Keine automatische Räumung, Forschung oder Mehrgebäude-Warteschlange.",
+                Description = "Plant, startet und begleitet EIN neues ebenes Gebäudeprojekt mit festem Bauzeitbudget. Bestehende native Zugangsprüfungen bleiben. Kein Kandidat: Diagnose am Suchursprung, keine Mutation. Nach bestätigt abgeschlossenem Bauauftrag automatisch advance_building_project; Ergebnis kann noch running/awaiting_order sein. Nur einmal mit neuer actionId senden. Danach ausschließlich inspect_building_completion oder advance_building_project mit derselben session/actionId und unverändertem Zeitbudget; niemals develop erneut senden. waitSeconds 0–20. Eingabefehler werden vor dem Auftrag abgewiesen. Anfangskonfiguration direkt an Baustelle. Keine automatische Räumung, Forschung oder Mehrgebäude-Warteschlange.",
                 InputSchema = JsonSerializer.SerializeToElement(input),
                 OutputSchema = JsonSerializer.SerializeToElement(json.GetJsonSchemaAsNode(typeof(NativeResult<DevelopmentReport>))),
                 Annotations = new() { ReadOnlyHint = false, DestructiveHint = true, IdempotentHint = false, OpenWorldHint = false }
@@ -89,21 +89,34 @@ public static class BuildingCompletionTools
         var keys = args.EnumerateObject().Select(p => p.Name).ToArray();
         if (keys.Length != allowed.Length || keys.Distinct().Count() != keys.Length || keys.Except(allowed).Any()) throw new ArgumentException();
         string Id(string key) => args.GetProperty(key).ValueKind == JsonValueKind.String &&
-            Guid.TryParseExact(args.GetProperty(key).GetString(), "D", out var id) && id != Guid.Empty ? id.ToString("D") : throw new ArgumentException();
+            Guid.TryParseExact(args.GetProperty(key).GetString(), "D", out var id) && id != Guid.Empty ? id.ToString("D") : throw new ArgumentException("Gültige, nicht leere UUID erforderlich.", key);
         int Number(string key, int min, int max) => args.GetProperty(key).ValueKind == JsonValueKind.Number &&
-            args.GetProperty(key).TryGetInt32(out int n) && n >= min && n <= max ? n : throw new ArgumentException();
+            args.GetProperty(key).TryGetInt32(out int n) && n >= min && n <= max ? n : throw new ArgumentException($"Ganzzahl im Bereich {min}–{max} erforderlich.", key);
         var r = new CompletionRequest(Id("session"), Id("actionId"), name == Inspect ? 0 : Number("durationHours", 1, 168),
             name == Inspect ? 0 : Number("speed", 1, 7), name == Inspect ? 0 : Number("maxRealSeconds", 30, 3600),
             name == Inspect ? 0 : Number("waitSeconds", 0, 20), name == Advance);
-        if (r.Advance && r.Speed is not (1 or 3 or 7)) throw new ArgumentException();
+        if (r.Advance && r.Speed is not (1 or 3 or 7)) throw new ArgumentException("Erlaubte Geschwindigkeiten: 1, 3, 7.", "speed");
         return r;
     }
 
     public static Task<JsonObject> Invoke(NativeClient client, string name, JsonElement args, bool enabled, CancellationToken ct, bool settingsEnabled = false)
     {
         if ((name is Advance or Develop) && !enabled) throw new ArgumentException();
-        if (name == Develop) return DevelopProject(client, args, settingsEnabled, ct);
-        return Execute(Parse(name, args), client.BuildingProjectExecution, client.Building, client.BuildingAccess,
+        CompletionRequest completion;
+        NameValueCollection? build = null;
+        // Pure parsing only: no native request has been attempted inside this catch.
+        try {
+            if (name == Develop) (build, completion) = ParseDevelopment(args, settingsEnabled);
+            else completion = Parse(name, args);
+        } catch (ArgumentException ex) {
+            var message = ex.ParamName is "session" or "actionId" or "durationHours" or "speed" or "maxRealSeconds" or "waitSeconds"
+                ? ex.Message : "Pflichtfelder, zusätzliche Felder und Bauparameter anhand des Werkzeugschemas prüfen.";
+            return Task.FromResult((JsonObject)JsonSerializer.SerializeToNode(new NativeResult<object>(1, "error", null,
+                new("native", false, null, null), new("invalid_argument",
+                    "Eingabe abgewiesen; kein Bau-/Simulationsauftrag gesendet. " + message, false)), NativeJson.Options)!);
+        }
+        if (name == Develop) return DevelopProject(client, (build!, completion), ct);
+        return Execute(completion, client.BuildingProjectExecution, client.Building, client.BuildingAccess,
             client.BuildingSettings, client.SimulationRun, client.Simulation, Task.Delay, ct);
     }
 
@@ -121,9 +134,8 @@ public static class BuildingCompletionTools
             Parse(Advance, JsonSerializer.SerializeToElement(finish)));
     }
 
-    private static async Task<JsonObject> DevelopProject(NativeClient client, JsonElement args, bool settingsEnabled, CancellationToken ct)
+    private static async Task<JsonObject> DevelopProject(NativeClient client, (NameValueCollection Build, CompletionRequest Completion) parsed, CancellationToken ct)
     {
-        var parsed = ParseDevelopment(args, settingsEnabled);
         var startJson = await WorkflowTools.Start(parsed.Build, client.BuildingPlan, client.BuildingProjectExecution, ct, client.Precheck);
         var start = startJson.Deserialize<NativeResult<BuildingStartResult>>(NativeJson.Options)!;
         NativeResult<CompletionReport>? finish = null;

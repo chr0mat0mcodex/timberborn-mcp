@@ -200,4 +200,33 @@ public sealed class BuildingCompletionTests
         Assert.Throws<ArgumentException>(() => BuildingCompletionTools.ParseDevelopment(JsonSerializer.SerializeToElement(invalid), true));
         Assert.Equal(3, BuildingCompletionTools.Catalog(true).Count());
     }
+
+    [Theory]
+    [InlineData(BuildingCompletionTools.Advance, "waitSeconds", 21)]
+    [InlineData(BuildingCompletionTools.Develop, "waitSeconds", 21)]
+    [InlineData(BuildingCompletionTools.Advance, "speed", 2)]
+    [InlineData(BuildingCompletionTools.Develop, "speed", 2)]
+    public async Task InvalidInputReportsFieldWithoutTouchingClient(string tool, string field, int value)
+    {
+        var args = new JsonObject {
+            ["session"] = Session, ["actionId"] = Action, ["durationHours"] = 24,
+            ["speed"] = 7, ["maxRealSeconds"] = 300, ["waitSeconds"] = 0
+        };
+        if (tool == BuildingCompletionTools.Develop) {
+            args["mode"] = "development_pilot"; args["selection"] = "first_candidate";
+            args["template"] = "SmallWarehouse.Folktails";
+            args["districtId"] = "33333333-3333-4333-8333-333333333333";
+            args["x"] = 1; args["y"] = 1; args["z"] = 3;
+            args["width"] = 2; args["height"] = 2; args["rotation"] = 0;
+        }
+        args[field] = value;
+        // A null client makes any accidental access fail instead of hiding a request in a mock.
+        var result = await BuildingCompletionTools.Invoke(null!, tool,
+            JsonSerializer.SerializeToElement(args), true, TestContext.Current.CancellationToken);
+        Assert.Equal("invalid_argument", result["error"]!["code"]!.GetValue<string>());
+        var message = result["error"]!["message"]!.GetValue<string>();
+        Assert.Contains(field, message);
+        Assert.Contains("kein Bau-/Simulationsauftrag gesendet", message);
+        Assert.DoesNotContain("unbestätigt", message);
+    }
 }

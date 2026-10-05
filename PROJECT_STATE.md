@@ -1,5 +1,43 @@
 # Projektstand
 
+## Live bestanden: eindeutige Eingabefehler (2026-10-05)
+
+Menschliches Gate bestätigt; fünf installierte Dateien stimmen mit Paket
+0.35.4-20261005-182839-57bfd38b überein. advance_building_project und
+develop_building_project lehnen waitSeconds=21 mit invalid_argument, Feldname,
+erlaubtem Bereich 0–20 und ausdrücklich keinem gesendeten Bau-/Simulationsauftrag ab.
+Gültiger develop-Aufruf auf frisch beobachteter belegter Wegzelle: status=ok,
+not_started, requestSubmitted=false, area_exhausted und object_intersection.
+Spielzeit unverändert (Tag 384, 16,375 Stunden), Tempo vor/nachher 0.
+
+Das Projektledger der früheren Sitzung ist nach Modneustart nicht verfügbar:
+gültige inspect_building_completion-Abfrage des alten Auftrags liefert state_conflict.
+Daher positive Kontrolle durch frische reguläre Planung ersetzt; kein neuer
+Fertigbau und keine sitzungsübergreifende Wiederaufnahme behauptet. Ungültige
+Geschwindigkeit synthetisch im menschlichen Testlauf abgedeckt, hier nicht
+zusätzlich live erzeugt. Parameterfehler anderer Werkzeugfamilien bleiben offen.
+Die folgende Gate-Vorbereitung ist historisch.
+
+
+## Vor menschlichem Gate: eindeutige Eingabefehler (2026-10-05)
+
+Live-Verbindung auf 0.35.4 bestätigt; keine Spielmutation in diesem Schritt.
+Quellcodebefund: zentrale Fehlerbehandlung meldet auch reine Parameterfehler
+bei Bauwerkzeugen als möglicherweise unbestätigte Aktion. Für develop_building_project,
+advance_building_project und inspect_building_completion jetzt reine Vorabprüfung
+von späteren Spielzugriffen getrennt. invalid_argument meldet ausdrücklich keinen
+Bau-/Simulationsauftrag; bekannte Zeit-/ID-Felder erhalten konkrete Hinweise.
+Echte Fehler nach Beginn der Spielzugriffe behalten ihre bisherige Behandlung.
+Werkzeugbeschreibungen nennen waitSeconds 0–20.
+
+Vier Regressionen für Wartezeit 21 und Geschwindigkeit 2 bei develop/advance
+mit absichtlich nicht vorhandenem Client ergänzt (jeder Zugriff wäre ein Fehler).
+Roslyn-Syntax und Diff geprüft; Tests/Build nicht ausgeführt. Änderung noch nicht
+live aktiv und nicht committed. Abnahme nach menschlichem Skript: ungültige
+Eingabe eindeutig ohne Auftragswirkung ablehnen, danach gültige Abschlussabfrage
+eines vorhandenen Projekts. Bei falscher Fehlerklasse keine weiteren Fälle skalieren.
+
+
 ## Live bestanden: Mehrflächen-Charge (2026-10-05)
 
 Menschliches Gate abgeschlossen; fünf installierte Dateien stimmen mit Paket

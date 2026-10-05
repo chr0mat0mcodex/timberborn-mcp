@@ -55,7 +55,7 @@ Teilfläche bleibt unbekannt, freie Rechtecke anderer Teilflächen wieder sichtb
 
 - waitSeconds-Grenzen direkt in Kurzbeschreibung nennen: Einzelprojekt 0–20,
   Charge 0–45. Metadatenschema allein verhindert Parameterverwechslungen nicht.
-- Vor Eingriff erkannte Parameterfehler konkret benennen; pauschaler Hinweis
+- Für develop/advance/inspect_building_completion implementiert, Gate und begrenzter Livetest bestanden: vor Eingriff erkannte Parameterfehler konkret benennen; pauschaler Hinweis
   auf möglicherweise unbestätigte Aktion verursacht unnötige Diagnoseabfragen.
 - Regionaler Baukandidat inzwischen bis finished_accessible praktisch bestätigt;
   nächste wirtschaftliche Grenze sind Holz- und Nahrungsproduktion.
