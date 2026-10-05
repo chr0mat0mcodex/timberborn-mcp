@@ -1,5 +1,32 @@
 # Projektstand
 
+## Kraftanschluss und Sauna fertig (2026-10-05)
+
+Weitere sieben Spieltage bis Tag 409, 18,09375 Uhr. Aktuell 47 Biber
+(43 Erwachsene, vier Kinder), 49 Betten, keine Obdachlosen, keine kritischen
+Bedürfnisflags und keine Stranded-Warnung. Alle Zeitfenster beendet, Pause bestätigt.
+
+Neues Kraftlaufrad direkt neben der Zahnradwerkstatt fertig; vier Anschlusswege
+fertig und Zugang frei. Kraftwarnung verschwunden und Zahnradproduktion tatsächlich
+nachgewiesen: fünf Zahnräder in der neuen Sauna verbaut, vier weitere im
+Werkstattausgang. Sauna finished_accessible, unpausiert, neun Holzstämme im
+Brennstoffinventar, keine Betriebswarnung. Besucherwirkung nicht separat nachgewiesen.
+CSV jetzt 29/157 reguläre Vorlagen fertig, 128 offen, fünf Entwickler-Vorlagen
+ausgeschlossen. Das zusätzliche Rad erhöht die Typenabdeckung nicht.
+
+Radbau zunächst nach 24 Stunden wegen fehlender Holzlieferung unfertig. Reife
+Kiefern in tatsächlicher Holzfällerreichweite auf der unteren Ebene gefunden und
+16 zusätzliche Fällzellen markiert; nach zwei weiteren Spieltagen Rad fertig und
+Produktion angelaufen. Kein Zugangsfehler als Ursache beobachtet. Weitere elf
+Karottenzellen für Rad, Wege und Sauna umgewidmet; rechnerisch 19 der ursprünglich
+38 zusätzlichen Anbauzellen verbleiben. Endbestand 81 Karotten, 41 Beeren,
+61 Wasser, zwei frei verfügbare Holzstämme, 31 Bretter und vier Zahnräder.
+
+Nächster Schritt: Holzlieferung vor weiteren materialintensiven Gebäuden stärken,
+dann zusätzliche Gebäudetypen. Kraftnetz-/Anschlussdiagnose im Backlog ergänzt.
+Keine MCP-Codeänderung; bestehende lokale Änderungen außerhalb dieser Doku erhalten.
+
+
 ## Gebäudefokus: Farm, Sammelstelle, Zahnradwerkstatt (2026-10-05)
 
 Vorläufiges Ziel 50 Biber; Gebäudeausbau hat Vorrang. Weitere acht Spieltage bis

@@ -1,5 +1,22 @@
 # Backlog
 
+## Kraftanschluss für Produktionsausbau (2026-10-05)
+
+MCP liefert Betriebswarnung fehlender Kraft, aber keine strukturierten
+Kraftanschlüsse, Netze, Leistung und Verbindungsgeometrie. Radposition muss aus
+einem funktionierenden Vergleich abgeleitet und über tatsächliche Produktion
+geprüft werden. Ergänzen: Anschlusspositionen/-richtungen, Netzzugehörigkeit,
+Erzeugung/Verbrauch und Vorschläge für geprüfte Kraftverbindungen.
+
+Live-Nachweis inzwischen bestanden: Rad neben Zahnradwerkstatt, Kraftwarnung
+verschwunden, fünf Zahnräder in Sauna verbaut und vier weitere im Ausgang.
+Das ist ein konkreter Produktionsnachweis, keine allgemeine Anschlussprüfung.
+Zusätzlich Materialengpässe mit passenden Arbeitsflächen verknüpfen: Radbau
+wartete auf Holz; globaler Bestand, Gebäudeinventare, Fällmarkierungen und native
+Holzfällerreichweite mussten getrennt gelesen werden. Vorschlag: kompakter
+Engpassbericht mit tatsächlich erreichbaren reifen, noch unmarkierten Bäumen.
+
+
 ## Weitere Beobachtungen beim Farmbau (2026-10-05)
 
 - Räumzeitfenster sollten Arbeitszeiten berücksichtigen: acht Pflanzen nach acht
