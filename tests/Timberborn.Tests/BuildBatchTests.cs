@@ -38,6 +38,10 @@ public sealed class BuildBatchTests
         public string? Failure;
         public string? CompletionFailure;
         public string SavedState = "";
+        public Func<string>? ReadCheckpoint;
+        private string CheckpointState => ReadCheckpoint?.Invoke() ?? SavedState;
+        public bool FinishedWhileRunning, PauseUnconfirmed, LosePauseAck;
+        public int EarlyPauses;
         public NativeRemovalTarget[] Objects = [];
         public Task<NativeSimulation> Current(BuildBatchSpec s, CancellationToken ct) => Task.FromResult(new NativeSimulation(0, 1, 0, 0));
         public Task<string?> Prerequisite(BuildBatchSpec s, int i, CancellationToken ct) => Task.FromResult(Failure);
@@ -51,31 +55,110 @@ public sealed class BuildBatchTests
                 Guid.Parse(BuildBatchState.DerivedId(s, "tree:" + s.X)), "vegetation", "Pine",
                 new(s.X + 1, s.Y + 1, s.Z), "demolition_mark", true, false, "natural", "tree") } : Objects);
         public Task<NativeRemoval> Mark(BuildBatchSpec s, NativeRemovalTarget t, CancellationToken ct) {
-            Assert.Equal("pending_mark", SavedState); Marks++;
+            Assert.Equal("pending_mark", CheckpointState); Marks++;
             if (ClearEachRegion) ClearedRegions.Add(s.X);
             Objects = KeepMarked ? [t with { Marked = true }] : []; NoPlan = KeepMarked;
             if (LoseMarkAck) throw new IOException();
             return Task.FromResult(new NativeRemoval(t.Id, t.Kind, t.Template, t.Position, "mark", "applied", true, null, []));
         }
         public Task<NativeSimulationRun> ClearanceRun(BuildBatchJob j, bool start, CancellationToken ct) {
-            if (start) { Assert.Equal("pending_clearance_run", SavedState); ClearanceStarts++; if (LoseRunAck) throw new IOException(); }
+            if (start) { Assert.Equal("pending_clearance_run", CheckpointState); ClearanceStarts++; if (LoseRunAck) throw new IOException(); }
             return Task.FromResult(new NativeSimulationRun(j.ClearanceRunId, ClearanceDone ? "completed" : "running", "",
                 0, j.Spec.ClearanceHours, ClearanceDone ? j.Spec.ClearanceHours : 0, ClearanceDone ? j.Spec.ClearanceHours : 0,
                 0, 1, j.Spec.MaxRealSeconds, j.Spec.Speed, ClearanceDone ? 0 : j.Spec.Speed, ClearanceDone, ClearanceDone, ClearanceDone));
         }
         public Task<NativeProjectExecution> Submit(BuildBatchJob j, CancellationToken ct) {
-            Assert.Equal("pending_build", SavedState); Assert.Equal(1, j.Selection!.Rotation); Builds++;
+            Assert.Equal("pending_build", CheckpointState); Assert.Equal(1, j.Selection!.Rotation); Builds++;
             SubmittedRegions.Add(j.RegionIndex);
             if (RejectBuild) throw new Timberborn.Bridge.Core.BridgeRejectionException("state_conflict");
             if (LoseBuildAck) throw new IOException();
             return Task.FromResult(new NativeProjectExecution(j.ActionId, new string('a', 64), "completed", "", [], false, []));
         }
         public Task<CompletionReport> Completion(BuildBatchJob j, bool advance, CancellationToken ct) {
-            if (advance) { Assert.Equal("pending_build_run", SavedState); Runs++; }
+            if (FinishedWhileRunning) {
+                if (advance) {
+                    Assert.Equal("pending_build_pause", CheckpointState);
+                    EarlyPauses++;
+                    if (LosePauseAck) throw new IOException();
+                }
+                bool paused = advance && !PauseUnconfirmed;
+                return Task.FromResult(new CompletionReport(j.ActionId, "run", paused ? "finished_accessible" : "running", "",
+                    "completed", "", [new(j.ActionId, j.Spec.Items[j.Index].Template, true, true, null, null)], null,
+                    new("run", paused ? "cancelled" : "running", paused ? "cancel_requested" : "advancing",
+                        0, 24, 1, 1, 0, 1, 300, 7, paused ? 0 : 7, paused, false, paused), paused ? 0 : null, null, []));
+            }
+            if (advance) { Assert.Equal("pending_build_run", CheckpointState); Runs++; }
             bool finished = Runs > j.Index;
             return Task.FromResult(new CompletionReport(j.ActionId, "run", CompletionFailure ?? (finished ? "finished_accessible" : "awaiting_simulation"), "",
                 "completed", "", [new(j.ActionId, j.Spec.Items[j.Index].Template, true, finished, null, null)], null, null, 0, null, []));
         }
+    }
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task Finished_objects_request_early_pause_but_next_build_requires_confirmed_pause(bool unconfirmed) {
+        var p = new Port { FinishedWhileRunning = true, PauseUnconfirmed = unconfirmed };
+        var j = Job(); var e = new BuildBatchEngine(p, x => p.SavedState = x.State);
+        await e.Step(j, TestContext.Current.CancellationToken); // Submit first building.
+        await e.Step(j, TestContext.Current.CancellationToken); // Observe and request pause.
+        Assert.Equal(1, p.EarlyPauses); Assert.Equal(1, p.Builds);
+        Assert.Equal(unconfirmed ? "building" : "planning", j.State);
+        Assert.Equal(unconfirmed ? 0 : 1, j.Finished.Count);
+        Assert.Equal(0, p.Runs);
+    }
+
+    [Fact]
+    public async Task Lost_early_pause_ack_keeps_checkpoint_and_does_not_repeat_command() {
+        string dir = Path.Combine(Path.GetTempPath(), "timberborn-pause-test-" + Guid.NewGuid().ToString("N"));
+        try {
+            var p = new Port { FinishedWhileRunning = true, LosePauseAck = true };
+            var j = Job(); var store = new BuildBatchStore(dir);
+            using var lease = store.Acquire();
+            var e = new BuildBatchEngine(p, x => { p.SavedState = x.State; store.Save(x); });
+            await e.Step(j, TestContext.Current.CancellationToken);
+            await Assert.ThrowsAsync<IOException>(() => e.Step(j, TestContext.Current.CancellationToken));
+            j = new BuildBatchStore(dir).Load(j.Spec.Session, j.Spec.BatchId)!;
+            Assert.Equal("pending_build_pause", j.State);
+            await e.Step(j, TestContext.Current.CancellationToken);
+            Assert.Equal("stopped", j.State);
+            Assert.Equal("simulation_pause_unconfirmed_no_retry", j.Reason);
+            Assert.Equal(1, p.EarlyPauses); Assert.Equal(1, p.Builds); Assert.Empty(j.Finished);
+        } finally { if (Directory.Exists(dir)) Directory.Delete(dir, true); }
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task Zero_wait_dispatches_ready_transitions_but_stops_for_unconfirmed_pause(bool unconfirmed) {
+        string dir = Path.Combine(Path.GetTempPath(), "timberborn-immediate-test-" + Guid.NewGuid().ToString("N"));
+        try {
+            var s = Spec(); var store = new BuildBatchStore(dir);
+            var p = new Port { FinishedWhileRunning = unconfirmed, PauseUnconfirmed = unconfirmed };
+            p.ReadCheckpoint = () => store.Load(s.Session, s.BatchId)!.State;
+            var input = JsonSerializer.SerializeToElement(new BatchStartRequest(s, 0), NativeJson.Options);
+            var result = await BuildBatchTools.Execute(BuildBatchTools.Start, input, true, true, true, store, p, TestContext.Current.CancellationToken);
+            Assert.Equal(unconfirmed ? "building" : "completed", result["data"]!["state"]!.GetValue<string>());
+            Assert.Equal(unconfirmed ? 1 : 2, p.Builds); Assert.Equal(unconfirmed ? 0 : 2, p.Runs);
+        } finally { if (Directory.Exists(dir)) Directory.Delete(dir, true); }
+    }
+
+    [Fact]
+    public void Checkpoint_replacement_keeps_open_snapshot_and_publishes_complete_new_state() {
+        string dir = Path.Combine(Path.GetTempPath(), "timberborn-replace-test-" + Guid.NewGuid().ToString("N"));
+        try {
+            var j = Job(); var store = new BuildBatchStore(dir);
+            using var lease = store.Acquire();
+            store.Save(j);
+            var path = Path.Combine(dir, j.Spec.Session + "-" + j.Spec.BatchId + ".json");
+            using var snapshot = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read | FileShare.Delete);
+            j.State = "stopped"; j.Reason = "materials_missing";
+            store.Save(j);
+            var current = store.Load(j.Spec.Session, j.Spec.BatchId)!;
+            Assert.Equal("stopped", current.State); Assert.Equal("materials_missing", current.Reason);
+            var previous = JsonSerializer.Deserialize<BuildBatchJob>(snapshot, NativeJson.Options)!;
+            Assert.Equal("planning", previous.State);
+            Assert.Empty(Directory.EnumerateFiles(dir, "*.tmp"));
+        } finally { if (Directory.Exists(dir)) Directory.Delete(dir, true); }
     }
     [Fact]
     public async Task Regions_switch_after_finished_build_and_survive_each_checkpoint_reload() {

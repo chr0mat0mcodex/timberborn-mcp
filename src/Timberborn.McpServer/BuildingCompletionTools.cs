@@ -53,7 +53,7 @@ public static class BuildingCompletionTools
             yield return new Tool {
                 Name = name,
                 Description = name == Advance
-                    ? "Führt EIN bereits gestartetes ebenes Bauprojekt durch ein begrenztes Bauzeitfenster. Bündelt Auftragsstatus, alle Bauobjekte, Zugang, Spielzeitlauf und Abschlussprüfung. Pro actionId genau ein dauerhaft im Spiel registriertes Zeitbudget, niemals automatisch verlängert. Gleiche Parameter setzen die Beobachtung nach MCP-Neustart fort; geändertes Budget wird abgelehnt. Erst nach bestätigtem Auftrag, Bauzugang und Pause starten. waitSeconds 0–20 begrenzt internes Statuswarten; laufender Modlauf überlebt Disconnect. Bei Unsicherheit inspect_building_completion lesen. finished_accessible bestätigt alle Bauobjekte fertig, Gebäudezugang, gegebenenfalls Lagerkonfiguration und aktuelle Pause; kein Produktions-/Zufriedenheitsbeleg. budget_exhausted verlangt eine neue Entscheidung, keinen erneuten Start."
+                    ? "Führt EIN bereits gestartetes ebenes Bauprojekt durch ein begrenztes Bauzeitfenster. Bündelt Auftragsstatus, alle Bauobjekte, Zugang, Spielzeitlauf und Abschlussprüfung. Pro actionId genau ein dauerhaft im Spiel registriertes maximales Zeitbudget, niemals automatisch verlängert. Sobald beim advance alle Bauobjekte fertig beobachtet werden, denselben Lauf früh pausieren und Zugang/Konfiguration erneut prüfen; inspect löst keine Pause aus. Gleiche Parameter setzen die Beobachtung nach MCP-Neustart fort; geändertes Budget wird abgelehnt. Erst nach bestätigtem Auftrag, Bauzugang und Pause starten. waitSeconds 0–20 begrenzt internes Statuswarten; laufender Modlauf überlebt Disconnect. Bei Unsicherheit inspect_building_completion lesen. finished_accessible bestätigt alle Bauobjekte fertig, Gebäudezugang, gegebenenfalls Lagerkonfiguration und aktuelle Pause; kein Produktions-/Zufriedenheitsbeleg. budget_exhausted verlangt eine neue Entscheidung, keinen erneuten Start."
                     : "Liest Bauauftrag, alle Bauobjekte, Gebäudezugang, zugehörigen begrenzten Simulationslauf und aktuellen Pausenstatus gebündelt. Keine Mutation oder neue Simulation. Mit session/actionId nach Disconnect oder MCP-Neustart wiederaufnehmbar; Spielsession muss fortbestehen. Auftrag completed allein bedeutet nicht fertig gebaut.",
                 InputSchema = JsonSerializer.SerializeToElement(new JsonObject {
                     ["type"] = "object", ["additionalProperties"] = false, ["properties"] = p,
@@ -236,18 +236,40 @@ public static class BuildingCompletionTools
                     "Kein erneuter Start. Zugehörigen Lauf mit inspect_building_completion lesen.", false));
             }
         }
+        // Completion, not the original time ceiling, ends an active construction run.
+        // Cancel only this project's durable handle; inspect remains strictly read-only.
+        async Task<bool> PauseFinishedProject()
+        {
+            if (!r.Advance || run is not { Terminal: false, State: "running" or "starting" } ||
+                steps.Count == 0 || steps.Any(s => !s.Found || s.Finished != true) ||
+                speed != run.RequestedSpeed || run.ObservedSpeed != run.RequestedSpeed) return true;
+            try {
+                run = await Run("simulation-run-cancel", runQuery);
+                refreshAfterRun = true;
+                return true;
+            } catch (Exception ex) when (ex is ArgumentException or HttpRequestException or IOException or InvalidDataException or JsonException or OperationCanceledException) {
+                return false; // Read the same handle after reconnect; never start another budget.
+            }
+        }
+        if (!await PauseFinishedProject())
+            return Result("simulation_unconfirmed", "inspect", new("unconfirmed", "Frühpause unbestätigt; denselben Lauf lesend prüfen, keinen neuen starten.", false));
         // Bounded polling of the SAME native handle, never a second time window or detached task.
         var clock = System.Diagnostics.Stopwatch.StartNew();
         for (int seconds = 0; run is { Terminal: false } && seconds < r.WaitSeconds && clock.Elapsed.TotalSeconds < r.WaitSeconds; seconds += 2) {
             await delay(TimeSpan.FromSeconds(Math.Max(0, Math.Min(2, Math.Min(r.WaitSeconds - seconds, r.WaitSeconds - clock.Elapsed.TotalSeconds)))), ct);
             run = await Run("simulation-run", runQuery);
+            await Observe();
+            if (!await PauseFinishedProject())
+                return Result("simulation_unconfirmed", "inspect", new("unconfirmed", "Frühpause unbestätigt; denselben Lauf lesend prüfen, keinen neuen starten.", false));
             refreshAfterRun = true;
         }
         if (run is { Terminal: false }) { speed = null; return Result("running", "inspect"); }
         if (refreshAfterRun) await Observe();
         if (steps.Any(s => !s.Found)) return Result("entity_missing", "diagnose");
         if (retained == false) return Result("configuration_changed", "diagnose");
-        if (run is { State: not "completed" }) return Result("simulation_stopped", "diagnose");
+        bool cancelledAfterCompletion = run is { State: "cancelled", Reason: "cancel_requested", PauseConfirmed: true } &&
+            steps.Count > 0 && steps.All(s => s.Found && s.Finished == true);
+        if (run is { State: not "completed" } && !cancelledAfterCompletion) return Result("simulation_stopped", "diagnose");
         if (speed != 0) return Result("not_paused", "diagnose");
         if (Finished()) return Result("finished_accessible", "done");
         if (steps.All(s => s.Finished == true)) return Result("access_unproven", "diagnose");

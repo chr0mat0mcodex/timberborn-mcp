@@ -1,5 +1,29 @@
 # Projektstand
 
+## Bauchargen-Frühabschluss live bestanden (2026-10-10)
+
+Menschliches Entwickler-Gate durch anschließende Bereitmeldung bestätigt;
+Bridge 0.36.0 erreichbar. Zwei kleine Lager in einer Charge ohne neue Wege:
+Frühpause nach 4 und 3 statt jeweils 24 Spielstunden. Derselbe advance-Aufruf
+schloss beide Bauten sequenziell ab; frische Einzelabfragen bestätigten
+finished_accessible, freien Eingang, erhaltene Karotten-/accept-Konfiguration
+und Pause. Laufkennungen und ursprüngliche Zeitobergrenzen blieben unverändert.
+Identischer start wiederholte nur den terminalen Checkpoint, ohne Doppelbauten.
+
+Kontrollfälle: unfertige erste Bank löste keinen Folgeauftrag aus; nach ihrer
+Fertigstellung bei 6,90625 Stunden stoppte die nächste Materialprüfung im selben
+Aufruf mit materials_missing (nur ein statt zwei benötigten Brettern vorhanden).
+Keine zweite Bank beauftragt. Journalwechsel im Livepilot ohne Zugriffsfehler.
+Die ursprüngliche externe Ursache des File.Move-Fehlers bleibt unbekannt.
+
+Zwei Holzfällerplätze dienten als austauschbare Testfläche; Testbank wieder
+entfernt, zwei Lager bleiben. Endstand Tag 424, 9,875 Uhr, Tempo 0. Keine neuen
+Vorlagentypen: kumulative Abdeckung weiterhin 33/157. Keine künstlich erzeugte
+verlorene Pausenbestätigung im Livetest; dafür vorbereitete Regressionen im Gate.
+Kein Hintergrunddispatcher, Räumzeitfenster weiterhin unverändert.
+
+[Details](docs/building-batch-workflow.md).
+
 ## Gebäudespieltest 0.36.0 (2026-10-10)
 
 Aktueller Nutzerauftrag: reguläre Gebäudetypen einmal bauen, Verbesserungen

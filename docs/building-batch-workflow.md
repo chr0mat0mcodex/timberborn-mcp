@@ -1,5 +1,58 @@
 # Bauchargen: begrenzter Live-Pilot bestanden
 
+## Bauchargen-Frühabschluss live bestanden (2026-10-10)
+
+Menschliches Entwickler-Gate durch anschließende Bereitmeldung bestätigt;
+Bridge 0.36.0 erreichbar. Zwei kleine Lager in einer Charge ohne neue Wege:
+Frühpause nach 4 und 3 statt jeweils 24 Spielstunden. Derselbe advance-Aufruf
+schloss beide Bauten sequenziell ab; frische Einzelabfragen bestätigten
+finished_accessible, freien Eingang, erhaltene Karotten-/accept-Konfiguration
+und Pause. Laufkennungen und ursprüngliche Zeitobergrenzen blieben unverändert.
+Identischer start wiederholte nur den terminalen Checkpoint, ohne Doppelbauten.
+
+Kontrollfälle: unfertige erste Bank löste keinen Folgeauftrag aus; nach ihrer
+Fertigstellung bei 6,90625 Stunden stoppte die nächste Materialprüfung im selben
+Aufruf mit materials_missing (nur ein statt zwei benötigten Brettern vorhanden).
+Keine zweite Bank beauftragt. Journalwechsel im Livepilot ohne Zugriffsfehler.
+Die ursprüngliche externe Ursache des File.Move-Fehlers bleibt unbekannt.
+
+Zwei Holzfällerplätze dienten als austauschbare Testfläche; Testbank wieder
+entfernt, zwei Lager bleiben. Endstand Tag 424, 9,875 Uhr, Tempo 0. Keine neuen
+Vorlagentypen: kumulative Abdeckung weiterhin 33/157. Keine künstlich erzeugte
+verlorene Pausenbestätigung im Livetest; dafür vorbereitete Regressionen im Gate.
+Kein Hintergrunddispatcher, Räumzeitfenster weiterhin unverändert.
+
+## Umsetzung und frühere Gate-Diagnose (2026-10-10)
+
+Erster Gateversuch: Build bestanden, ein Unit-Test scheitert beim Ersetzen des
+Chargenjournals (UnauthorizedAccessException bei File.Move mit Overwrite).
+Korrektur: File.Replace für bestehende Checkpoints, File.Move nur bei Erstanlage.
+Kein Delete-then-write und keine Wiederholungen. Atomaren Austausch mit offenem
+Snapshot-Leser zusätzlich als Regression ergänzt; anschließend menschliches Gate
+und oben dokumentierter Livetest bestanden.
+
+MCP-only-Änderung für Bridge 0.36.0: `advance_building_batch` erkennt fertig
+beobachtete Bauobjekte und lässt den zugehörigen Simulationslauf früh pausieren.
+Erst bei bestätigter Pause, erneut geprüften Objekten, Gebäudezugang und ggf.
+Lagerkonfiguration folgt `finished_accessible` und der nächste Bauauftrag.
+`constructionHours` bleibt unveränderte Obergrenze. Ein bewusst beendeter Lauf
+kann dabei `cancelled/cancel_requested`, das Bauprojekt trotzdem korrekt
+`finished_accessible` melden. Unfertige oder unterbrochene Projekte zählen nicht.
+
+`waitSeconds` begrenzt nur internes Warten; sofort mögliche Übergänge laufen
+auch bei 0 im selben Aufruf weiter (maximal 64). Es gibt keinen Hintergrund-
+Dispatcher: nach Rückgabe ist erneut `advance` nötig; ohne aktiven Aufruf gilt
+weiter die native Zeitobergrenze. Räumzeitfenster bleiben vorerst unverändert.
+Einzelprojekt-advance nutzt dieselbe Frühpause; reine inspect-Aufrufe mutieren nie.
+Verlorene Pausenbestätigung mit demselben Lauf lesend klären, kein neuer Zeitlauf.
+
+Quell-/Diffprüfung durch Agent; Testausführung über menschliches Gate bestätigt.
+Build, Tests und Installation ausschließlich über Entwickler-Gate.
+Live-Abnahme: zwei kleine Gebäude mit großzügigem Zeitbudget; erstes muss weit
+vor Zeitlimit pausieren und nach Zugangsprüfung zum zweiten wechseln. Kontrollfall:
+noch unfertiger Bau/fehlender Zugang darf keinen Folgeauftrag auslösen. Endpause
+und unveränderte Budget-/Laufkennung prüfen; bei Abweichung stoppen.
+
 ## Live bestanden: Mehrflächen-Charge (2026-10-05)
 
 Menschliches Gate abgeschlossen; fünf installierte Dateien stimmen mit Paket

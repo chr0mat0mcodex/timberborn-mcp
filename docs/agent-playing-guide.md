@@ -145,3 +145,14 @@ Spielaktionen weiterhin auf strukturierte Zustandsdaten stützen. Keine Dateien
 oder Bildhistorie anlegen. Mindestens zwei Sekunden zwischen Aufnahmen;
 bei screenshot_unavailable Zustand klären, kein automatischer Retry.
 [Nachweis und Grenzen](screenshot-0.36.0.md).
+
+## Bauchargen-Frühabschluss (live geprüft am 2026-10-10)
+
+Nach bestandenem Entwickler-Gate und Livetest nutzt advance bei fertig
+beobachteten Bauobjekten die frühe Pause des zugehörigen Laufs. Erst bestätigte
+Pause und frischer Zugang erlauben den Folgeauftrag. constructionHours bleibt
+Obergrenze; waitSeconds begrenzt nur Warten, nicht sofort mögliche Übergänge.
+Nach Rückgabe weiter advance derselben Charge aufrufen; kein Hintergrunddispatcher.
+Ein cancelled-Lauf mit cancel_requested kann nach vollständiger Abschlussprüfung
+zu finished_accessible gehören. inspect bleibt lesend; unbestätigte Pause zuerst
+lesend klären. Zwei Lager mit Frühpause und unmittelbarem Folgeauftrag live geprüft.

@@ -50,9 +50,16 @@ unabhängig von einer neuen Oberfläche. Noch nicht implementiert.
   Bauplatz; vier gezielt entfernte Karottenmarkierungen ermöglichten den Anschluss.
 - Bei Fertigstellung aller Bauobjekte früh pausieren und Zugang prüfen:
   Bauhütte samt Wegen bei 28,625 von 48 Stunden fertig, Charge wartete weiter.
+  Auf Nutzerauftrag MCP-only umgesetzt; Entwickler-Gate und Liveabnahme
+  bestanden (zwei Lager nach 4/3 statt jeweils 24 Stunden), siehe [Bauchargen](docs/building-batch-workflow.md). Kein Frühstopp des
+  Räumlaufs oder Hintergrunddispatcher in diesem Umfang.
+- Konkrete fehlgeschlagene Spielvalidatoren und Stützbedingungen liefern.
+  Dachterrasse auf freiem Boden mit Weg und Material: Planer findet Kandidaten,
+  Bau lehnt mit state_conflict ab; Einzelvalidierung nur placement_invalid_in_preview.
+  Stackable-Auflage vor teurer Räumung prüfen, nicht aus supported ableiten.
 
 Evidenz und weitere Ergebnisse: [Spieltest 0.36.0](docs/playtest-0.36.0.md).
-Nur dokumentiert; keine Umsetzung im laufenden Spieltest.
+Übrige Vorschläge nur dokumentiert; Frühabschluss separat implementiert und abgenommen.
 
 ## Baumstumpf-Korrektur live bestätigt (2026-10-10)
 

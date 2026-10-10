@@ -26,7 +26,7 @@ public static class BuildBatchTools
                 Name = name,
                 Description = "Standardantwort kompakt mit aktuellem Fortschritt; details=true liefert Such-/Verlaufdetails. " + (name switch {
                     Start => "Charge von 1–8 Gebäuden: Basisfläche plus optional bis drei additionalRegions, jede höchstens 8×8. Bei fehlendem Standort nächste Fläche in Listenreihenfolge, kein Rücksprung. Frische Bau-/Zugangsprüfung je Gebäude bis finished_accessible. clearing räumt bei Bedarf einmal je Fläche passende natürliche Vegetation; maxClearTargets gilt insgesamt (höchstens 64). Räum-/Baubudgets zusammen höchstens 672 Stunden. Unbestätigter Eingriff, fehlendes Material oder erschöpftes Räumbudget stoppt die ganze Charge. Gleiche batchId liest nur Status, geänderte Parameter abgelehnt. Danach advance, waitSeconds 0–45.",
-                    Advance => "Setzt gespeicherte Baucharge fort: Standortwahl, Räumung, festes Räumzeitfenster und sequenzielle Fertigstellung. waitSeconds 0–45 begrenzt Statuswarten, höchstens 64 Zustandsübergänge. Kein Hintergrunddispatcher; zwischen Aufrufen läuft nur ein bereits gestartetes, begrenztes Spielzeitfenster weiter. Unbestätigte Eingriffe werden ausschließlich lesend geklärt.",
+                    Advance => "Setzt gespeicherte Baucharge fort: Standortwahl, Räumung, festes Räumzeitfenster und sequenzielle Fertigstellung. Fertige Bauobjekte lösen beim advance eine frühe Pause ihres bestehenden Laufs aus; danach Zugang/Konfiguration prüfen und direkt weiter. constructionHours ist eine Obergrenze. waitSeconds 0–45 begrenzt nur Statuswarten; fertige Übergänge auch bei 0 im selben Aufruf, höchstens 64 insgesamt. Kein Hintergrunddispatcher; zwischen Aufrufen läuft nur ein bereits gestartetes, begrenztes Spielzeitfenster weiter. Unbestätigte Eingriffe werden ausschließlich lesend geklärt.",
                     Inspect => "Liest ausschließlich den lokalen gespeicherten Chargenstatus, keinen aktuellen Spielzustand. checkpointOnly=true. Zur Fortsetzung advance verwenden.",
                     _ => "Stoppt weitere Aufträge dieser Charge dauerhaft. Ein bereits gestarteter Spielzeitlauf läuft bis zu seinem festen Budget und pausiert dann; kein sofortiger Spielstopp."
                 }),
@@ -76,8 +76,13 @@ public static class BuildBatchTools
             try {
                 for (int i = 0; i < 64 && !job.Terminal; i++) {
                     bool waiting = await engine.Step(job, ct);
-                    if (watch.Elapsed.TotalSeconds >= handle.WaitSeconds) break;
-                    if (waiting) await Task.Delay(TimeSpan.FromSeconds(Math.Max(0, Math.Min(2, handle.WaitSeconds - watch.Elapsed.TotalSeconds))), ct);
+                    // waitSeconds limits waiting, not already available state transitions.
+                    // Finish/access -> planning -> next order proceeds in the same call;
+                    // the 64-transition cap still bounds immediate work, including waitSeconds=0.
+                    if (waiting) {
+                        if (watch.Elapsed.TotalSeconds >= handle.WaitSeconds) break;
+                        await Task.Delay(TimeSpan.FromSeconds(Math.Max(0, Math.Min(2, handle.WaitSeconds - watch.Elapsed.TotalSeconds))), ct);
+                    }
                 }
             } catch (Exception ex) when (ex is IOException or InvalidDataException or HttpRequestException or ArgumentException or JsonException or OperationCanceledException) {
                 // The durable write-ahead checkpoint remains authoritative, never automatically retry a write.
@@ -106,7 +111,7 @@ public static class BuildBatchTools
                     buildProgress = current.Steps.LastOrDefault()?.BuildProgress,
                     elapsedGameHours = current.Run?.ElapsedGameHours,
                     remainingGameHours = current.Run is null ? (double?)null : Math.Max(0, current.Run.TargetGameHours - current.Run.ObservedGameHours) },
-                unconfirmed = job.State is "pending_build" or "pending_build_run" or "pending_mark" or "pending_clearance_run",
+                unconfirmed = job.State is "pending_build" or "pending_build_run" or "pending_build_pause" or "pending_mark" or "pending_clearance_run",
                 nextAction = job.Terminal ? "done_or_diagnose_reason" : "advance_existing_batch",
                 suggestedPollSeconds = job.Terminal ? 0 : 10,
                 clearanceRunId = job.ClearanceRun?.RunId,

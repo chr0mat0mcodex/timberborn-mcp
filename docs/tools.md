@@ -176,3 +176,11 @@ Zeitpunkt, Pixelgrößen, Kameraposition/Höhe, Richtung, Zielabstand, Bildwinke
 und Bildweite auf der Zielebene. Keine Kameraänderung oder Dateiablage.
 1280×720 und 640×360 sowie falsche Session live geprüft.
 [Abnahme und Grenzen](screenshot-0.36.0.md).
+
+## Live geprüft: früh fertiggestellte Bauchargen
+
+advance_building_batch und advance_building_project: bei fertigen Bauobjekten
+zugehörigen Lauf früh pausieren, Abschlusszugang/Konfiguration prüfen. Zeitbudget
+bleibt Obergrenze; sofort mögliche Chargenübergänge auch bei waitSeconds=0.
+Kein Hintergrunddispatcher, reine inspect-Aufrufe ändern nichts.
+Entwickler-Gate und Zwei-Lager-Livepilot bestanden: [Nachweis](building-batch-workflow.md).

@@ -1,5 +1,44 @@
 # Gebäudespieltest mit 0.36.0 — 2026-10-10
 
+## Bauchargen-Frühabschluss live bestanden (2026-10-10)
+
+Menschliches Entwickler-Gate durch anschließende Bereitmeldung bestätigt;
+Bridge 0.36.0 erreichbar. Zwei kleine Lager in einer Charge ohne neue Wege:
+Frühpause nach 4 und 3 statt jeweils 24 Spielstunden. Derselbe advance-Aufruf
+schloss beide Bauten sequenziell ab; frische Einzelabfragen bestätigten
+finished_accessible, freien Eingang, erhaltene Karotten-/accept-Konfiguration
+und Pause. Laufkennungen und ursprüngliche Zeitobergrenzen blieben unverändert.
+Identischer start wiederholte nur den terminalen Checkpoint, ohne Doppelbauten.
+
+Kontrollfälle: unfertige erste Bank löste keinen Folgeauftrag aus; nach ihrer
+Fertigstellung bei 6,90625 Stunden stoppte die nächste Materialprüfung im selben
+Aufruf mit materials_missing (nur ein statt zwei benötigten Brettern vorhanden).
+Keine zweite Bank beauftragt. Journalwechsel im Livepilot ohne Zugriffsfehler.
+Die ursprüngliche externe Ursache des File.Move-Fehlers bleibt unbekannt.
+
+Zwei Holzfällerplätze dienten als austauschbare Testfläche; Testbank wieder
+entfernt, zwei Lager bleiben. Endstand Tag 424, 9,875 Uhr, Tempo 0. Keine neuen
+Vorlagentypen: kumulative Abdeckung weiterhin 33/157. Keine künstlich erzeugte
+verlorene Pausenbestätigung im Livetest; dafür vorbereitete Regressionen im Gate.
+Kein Hintergrunddispatcher, Räumzeitfenster weiterhin unverändert.
+
+
+## Aktueller Abschluss vor Entwicklungswechsel
+
+Nach erneutem Go weitere zwei Typen fertig und erreichbar: Wasserpflanzenfarm
+bei (32,38,3), Bäckerei bei (23,22,3), jeweils Rotation 2 und kein neuer Weg.
+Abdeckung jetzt 33/157, 124 offen. Kein Betriebs-/Produktionsnachweis für beide.
+Holznachschub über zehn bestätigte Kiefernmarkierungen wiederhergestellt;
+Bestandsfrühstopps bei 31 bzw. 15 freien Stämmen nach 1,875 bzw. 0,3125 Stunden.
+Sägewerk kurz für Bretterproduktion aktiviert, danach wieder pausiert; Sauna
+weiter pausiert. Abschluss Tag 423, 19,96875 Uhr, Tempo 0; 49 Biber, 49 Betten,
+keine kritischen Bedürfnisflags, 70 Wasser, 20 freie Holzstämme, keine Beeren.
+Andere Nahrung separat lesen; diese Übersicht ist keine vollständige Nahrungsbilanz.
+
+Nutzer beauftragt nun Frühabschluss von advance_building_batch; Spieltest dafür
+unterbrochen. Umsetzung und Gate-Status in [Bauchargen](building-batch-workflow.md).
+Spieler-Aktionsjournal samt Chat-Aufruf separat im Backlog, noch nicht implementiert.
+
 Nutzerauftrag: jedes reguläre Gebäude mindestens einmal fertigstellen;
 Verbesserungsvorschläge begleitend notieren, keine MCP-Implementierung in diesem Lauf.
 Erster Pilot: drei fehlende Typen, danach Aufwand und Ergebnis bewerten.
@@ -44,6 +83,15 @@ gemäß AGENTS.md angefordert. Kein MCP-Code geändert.
 
 ## Verbesserungsbeobachtungen
 
+Fortsetzung nach ausdrücklichem Go trotz Aufwand: sechs Karottenmarkierungen
+auf (30..32,37..38,3) für einen direkt angeschlossenen Grundriss entfernt und
+Pflanzen regulär geräumt. Dachterrasse auf Boden von Spielvalidierung abgelehnt
+(valid=false, placement_invalid_in_preview); kein Neubau und kein Retry.
+Stützregel Stackable deutet auf erforderliche Auflage hin, exakter Validatorgrund
+noch nicht verfügbar. Freie Fläche für Wasserpflanzenfarm vorgesehen; Charge
+vor Bau wegen fehlendem Material gestoppt (23 statt 30 freie Stämme).
+Begrenzter zweitägiger Sammellauf mit Frühstopp bei 30 gestartet.
+
 - Bestandsübersicht nach Vorlagentyp mit Fertig-/Baustellenanzahl und exemplarischer
   Position: sechs Seiten mit 186 vollständigen Objektgeometrien waren für die
   reine Typenabdeckung nötig. Abgleich gegen regulären Katalog integrieren.
@@ -60,3 +108,6 @@ gemäß AGENTS.md angefordert. Kein MCP-Code geändert.
 - Frühstopp bei Fertigstellung: alle fünf Objekte der Bauhütte schon fertig,
   aber Charge wartet bei 28,625 von 48 Stunden weiter auf das feste Zeitfenster.
   Fertigstellung erkennen, pausieren und danach Zugang prüfen.
+- Spezifische Platzierungsregeln und fehlgeschlagene Spielvalidatoren ausgeben:
+  freie Dachterrasse mit genügend Material liefert lediglich state_conflict bzw.
+  placement_invalid_in_preview. Stützregel allein wird von Vorprüfung nicht geprüft.

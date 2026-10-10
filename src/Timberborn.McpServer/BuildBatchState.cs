@@ -124,11 +124,11 @@ public sealed class BuildBatchStore(string directory)
         if (job.SchemaVersion != 1 || job.Spec.Session != session || job.Spec.BatchId != id || job.Fingerprint != BuildBatchState.Fingerprint(job.Spec) ||
             job.Index < 0 || job.Index > job.Spec.Items.Length || job.Finished is null || job.Finished.Count != job.Index ||
             job.Targets is null || job.Targets.Length + job.PreviousClearTargets > job.Spec.MaxClearTargets || job.RemovalCursor < 0 || job.RemovalCursor > job.Targets.Length ||
-            job.State is not ("planning" or "discovering" or "marking" or "pending_mark" or "verify_clearance" or "pending_clearance_run" or "clearance_wait" or "pending_build" or "building" or "pending_build_run" or "completed" or "stopped" or "cancelled"))
+            job.State is not ("planning" or "discovering" or "marking" or "pending_mark" or "verify_clearance" or "pending_clearance_run" or "clearance_wait" or "pending_build" or "building" or "pending_build_run" or "pending_build_pause" or "completed" or "stopped" or "cancelled"))
             throw new InvalidDataException("invalid_batch_journal");
         if (job.Search is null || job.State == "pending_mark" && job.RemovalCursor >= job.Targets.Length ||
             job.State == "completed" && job.Index != job.Spec.Items.Length ||
-            job.State is "pending_build" or "pending_build_run" or "building" && (job.Selection is null || job.Index >= job.Spec.Items.Length) ||
+            job.State is "pending_build" or "pending_build_run" or "pending_build_pause" or "building" && (job.Selection is null || job.Index >= job.Spec.Items.Length) ||
             job.Targets.Select(t => t.Id).Distinct().Count() != job.Targets.Length ||
             job.Targets.Any(t => t.Kind != "vegetation" || !t.CanDelete || t.Mode != "demolition_mark" ||
                 t.Position.X < active.X || t.Position.X >= active.X + active.Width ||
@@ -160,7 +160,11 @@ public sealed class BuildBatchStore(string directory)
             using (var stream = new FileStream(temp, FileMode.CreateNew, FileAccess.Write, FileShare.None)) {
                 JsonSerializer.Serialize(stream, job, NativeJson.Options); stream.Flush(true);
             }
-            File.Move(temp, path, true);
+            // Existing checkpoints use the replacement primitive, not Windows'
+            // overwrite-move path. The dispatcher lease serializes writers.
+            // Never delete the committed checkpoint first or retry a failed exchange.
+            if (File.Exists(path)) File.Replace(temp, path, null);
+            else File.Move(temp, path);
         } finally { if (File.Exists(temp)) File.Delete(temp); }
     }
 }

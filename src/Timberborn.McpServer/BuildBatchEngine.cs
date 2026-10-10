@@ -111,13 +111,28 @@ public sealed class BuildBatchEngine(IBuildBatchPort port, Action<BuildBatchJob>
             }
             case "pending_build":
             case "pending_build_run":
+            case "pending_build_pause":
             case "building": {
                 string previous = j.State;
                 var c = j.Completion = await port.Completion(j, false, ct);
+                if (previous == "pending_build_pause" && c.Outcome is "awaiting_simulation" or "awaiting_order") {
+                    Stop(j, "simulation_pause_unconfirmed_no_retry"); break;
+                }
                 if (c.Outcome == "awaiting_order") { j.State = "building"; save(j); return true; }
                 if (c.Outcome == "awaiting_simulation") {
                     if (previous == "pending_build_run") { Stop(j, "simulation_start_unconfirmed_no_retry"); break; }
                     Checkpoint(j, "pending_build_run");
+                    c = j.Completion = await port.Completion(j, true, ct);
+                    if (c.Outcome == "simulation_unconfirmed") throw new IOException("simulation_unconfirmed");
+                }
+                // A read may already see every object finished while the original time budget
+                // is still running. Advance may pause that exact run, then recheck access.
+                if (previous == "pending_build_pause" && c.Outcome == "running" && c.Run is not { State: "pausing" }) {
+                    Stop(j, "simulation_pause_unconfirmed_no_retry"); break;
+                }
+                if (c.Outcome == "running" && c.Run is { Terminal: false, State: "running" or "starting" } && c.Steps.Length > 0 &&
+                    c.Steps.All(t => t.Found && t.Finished == true)) {
+                    Checkpoint(j, "pending_build_pause");
                     c = j.Completion = await port.Completion(j, true, ct);
                     if (c.Outcome == "simulation_unconfirmed") throw new IOException("simulation_unconfirmed");
                 }

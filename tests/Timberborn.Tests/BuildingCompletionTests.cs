@@ -18,7 +18,8 @@ public sealed class BuildingCompletionTests
     private sealed class Fixture
     {
         public NativeSimulationRun? Run;
-        public int Starts, Reads;
+        public int Starts, Reads, Cancels;
+        public bool TimeoutAfterCancel, DeferredPause, FinishDuringDelay;
         public bool Finished, Missing, TimeoutAfterStart, FailRead, ChangedSession, PathUnfinished;
         public bool? Builders = true, EntranceBlocked = false;
         public bool? UnconnectedBlocked = false;
@@ -44,6 +45,15 @@ public sealed class BuildingCompletionTests
             (q, ct) => Task.FromResult(Envelope(new NativeBuildingSettings(Guid.Parse(Action), "SmallWarehouse.Folktails", new(1, 1, 3), Finished,
                 null, true, new(ChangedConfiguration ? "Berries" : "Carrot", true, [], "obtain", true, 30, [], false), false, null, []))),
             (q, values, ct) => {
+                if (q.Route == "simulation-run-cancel") {
+                    Cancels++;
+                    Assert.Equal(r.RunId, q.RunId);
+                    Run = Running(r) with { State = DeferredPause ? "pausing" : "cancelled", Reason = "cancel_requested",
+                        ObservedSpeed = DeferredPause ? 7 : 0, PauseConfirmed = !DeferredPause, Terminal = !DeferredPause };
+                    Speed = DeferredPause ? 7 : 0;
+                    if (TimeoutAfterCancel) throw new HttpRequestException();
+                    return Task.FromResult(Envelope(Run));
+                }
                 if (!q.Starts) {
                     Reads++;
                     if (FailRead) throw new HttpRequestException();
@@ -60,12 +70,67 @@ public sealed class BuildingCompletionTests
                 return Task.FromResult(Envelope(Run));
             },
             ct => Task.FromResult(Envelope(new NativeSimulation(Speed, 0, 0, 0))),
-            (t, ct) => Task.CompletedTask, TestContext.Current.CancellationToken);
+            (t, ct) => { if (FinishDuringDelay) Finished = true; return Task.CompletedTask; }, TestContext.Current.CancellationToken);
     }
 
     private static NativeSimulationRun Completed(CompletionRequest r) => new(r.RunId, "completed", "target_reached",
         0, 24, 24, 24, 0, 12, 300, 7, 0, true, true, true);
+    private static NativeSimulationRun Running(CompletionRequest r) => new(r.RunId, "running", "advancing",
+        0, 24, 1, 1, 0, 1, 300, 7, 7, false, false, false);
     private static string Outcome(JsonObject result) => result["data"]!["outcome"]!.GetValue<string>();
+
+    [Fact]
+    public async Task FinishedProjectPausesItsRunBeforeTimeCeilingButInspectDoesNotMutate()
+    {
+        var f = new Fixture { Finished = true, Run = Running(Request()), Speed = 7 };
+        Assert.Equal("running", Outcome(await f.Invoke(Request(false))));
+        Assert.Equal(0, f.Cancels);
+        Assert.Equal("finished_accessible", Outcome(await f.Invoke(Request())));
+        Assert.Equal(1, f.Cancels); Assert.Equal(0, f.Starts);
+        Assert.False(f.Run!.TargetReached);
+        Assert.Equal("finished_accessible", Outcome(await f.Invoke(Request())));
+        Assert.Equal(1, f.Cancels);
+    }
+
+    [Fact]
+    public async Task CompletionDuringPollingStopsEarlyWithoutWaitingForTimeTarget()
+    {
+        var f = new Fixture { FinishDuringDelay = true };
+        Assert.Equal("finished_accessible", Outcome(await f.Invoke(Request() with { WaitSeconds = 2 })));
+        Assert.Equal(1, f.Starts); Assert.Equal(1, f.Cancels);
+        Assert.Equal(1d, f.Run!.ElapsedGameHours);
+    }
+
+    [Fact]
+    public async Task EarlyPauseNeedsConfirmationAndLostAcknowledgementRecoversByReading()
+    {
+        var f = new Fixture { Finished = true, Run = Running(Request()), Speed = 7, DeferredPause = true };
+        Assert.Equal("running", Outcome(await f.Invoke(Request())));
+        Assert.Equal("running", Outcome(await f.Invoke(Request())));
+        Assert.Equal(1, f.Cancels);
+        f.Run = f.Run! with { State = "cancelled", ObservedSpeed = 0, PauseConfirmed = true, Terminal = true }; f.Speed = 0;
+        Assert.Equal("finished_accessible", Outcome(await f.Invoke(Request(false))));
+
+        f = new Fixture { Finished = true, Run = Running(Request()), Speed = 7, TimeoutAfterCancel = true };
+        Assert.Equal("simulation_unconfirmed", Outcome(await f.Invoke(Request())));
+        Assert.Equal("finished_accessible", Outcome(await f.Invoke(Request(false))));
+        Assert.Equal(1, f.Cancels); Assert.Equal(0, f.Starts);
+    }
+
+    [Fact]
+    public async Task EarlyPauseDoesNotBypassAccessOrFinishUnfinishedPaths()
+    {
+        var f = new Fixture { Finished = true, Run = Running(Request()), Speed = 7, EntranceBlocked = true };
+        Assert.Equal("access_unproven", Outcome(await f.Invoke(Request())));
+        Assert.Equal(1, f.Cancels);
+        f = new Fixture { Finished = true, PathUnfinished = true, Run = Running(Request()), Speed = 7 };
+        Assert.Equal("running", Outcome(await f.Invoke(Request())));
+        Assert.Equal(0, f.Cancels);
+        f = new Fixture { Run = Running(Request()) with { State = "cancelled", Reason = "cancel_requested", Terminal = true,
+            PauseConfirmed = true, ObservedSpeed = 0 }, Speed = 0 };
+        Assert.Equal("simulation_stopped", Outcome(await f.Invoke(Request())));
+        Assert.Equal(0, f.Starts);
+    }
 
     [Fact]
     public async Task DisconnectResumesSameRunWithoutAnotherStart()
