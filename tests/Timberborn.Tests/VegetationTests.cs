@@ -48,6 +48,27 @@ public sealed class VegetationTests
         var result=await tools.Invoke("inspect_removal_targets",JsonSerializer.SerializeToElement(new{kind="vegetation",x=1,y=2,z=3,width=1,height=1,depth=1,offset=0,limit=32}),TestContext.Current.CancellationToken);
         Assert.Equal(valid?"ok":"error",result["status"]!.GetValue<string>());
     }
+    [Theory]
+    [InlineData("valid", true)]
+    [InlineData("legacy", true)]
+    [InlineData("empty", false)]
+    [InlineData("outside", false)]
+    [InlineData("duplicate", false)]
+    public async Task RemovalOverlapContractValidatesClippedGeometry(string shape, bool valid)
+    {
+        Position[]? cells = shape switch {
+            "legacy" => null, "empty" => [], "outside" => [new(2, 2, 3)],
+            "duplicate" => [new(1, 2, 3), new(1, 2, 3)], _ => [new(1, 2, 3)] };
+        var target = new NativeRemovalTarget(Guid.NewGuid(), "other", "SyntheticSlope", new(1, 2, 2),
+            "unsupported", false, false, "unknown", "current_components", null, cells);
+        var data = new NativeRemovalTargets("all", 0, 32, 1, [target], false, []);
+        var json = JsonSerializer.Serialize(new BridgeEnvelope<NativeRemovalTargets>(1, Guid.NewGuid().ToString(),
+            DateTimeOffset.UnixEpoch, "0.36.0", data), NativeJson.Options);
+        using var tools = new NativeTools(new NativeClient(new(8081, new string('a', 64)), new Handler(json)));
+        var result = await tools.Invoke("inspect_removal_targets", JsonSerializer.SerializeToElement(new {
+            kind = "all", x = 1, y = 2, z = 3, width = 1, height = 1, depth = 1, offset = 0, limit = 32 }), TestContext.Current.CancellationToken);
+        Assert.Equal(valid ? "ok" : "error", result["status"]!.GetValue<string>());
+    }
     private sealed class Handler(string json):HttpMessageHandler
     {protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage r,CancellationToken ct)=>Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK){Content=new StringContent(json)});}
 }

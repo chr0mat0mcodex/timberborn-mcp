@@ -1,5 +1,10 @@
 # Native MCP-Werkzeuge
 
+Live abgenommen: `timberborn_server_control` (`action: stop|start|status`)
+kommt vom persistenten Codex-Vorschaltprozess, nicht aus der Spiel-Bridge.
+Stop sperrt das Backend vor dem menschlichen Gate; Start erst nach `live bereit`.
+[Einrichtung, Fehlerverhalten und Abnahme](codex-mcp-supervisor.md).
+
 Verifizierte Bridge: 0.35.0, generischer ebener Projektpilot begrenzt live geprüft.
 Praktischer Ablauf: [Spielanleitung für Agenten](agent-playing-guide.md).
 Historische Versionsabschnitte unten sind keine allgemeine Baufreigabe;
@@ -184,3 +189,16 @@ zugehörigen Lauf früh pausieren, Abschlusszugang/Konfiguration prüfen. Zeitbu
 bleibt Obergrenze; sofort mögliche Chargenübergänge auch bei waitSeconds=0.
 Kein Hintergrunddispatcher, reine inspect-Aufrufe ändern nichts.
 Entwickler-Gate und Zwei-Lager-Livepilot bestanden: [Nachweis](building-batch-workflow.md).
+
+## Live abgenommen: Rampengeometrie, Höhen und Suchabdeckung
+
+survey_region erhält scanOtherHeights (Standard true), maxHeights (Standard 4,
+1–8 inklusive Ausgangshöhe) und maxWindows (Standard 3, 1–9 je Höhe). Zusätzliche
+Höhen samt Kandidaten stehen in additionalLevels; vorhandene Wege priorisieren
+die Auswahl, sind ohne separate Abfrage kein Distriktbeleg. coverage.heights
+zeigt ausgelassene Höhen. planningRows: u ungeprüft, p teilweise, c alle vier
+Drehungen vollständig im Fenster gesucht, niemals automatisch bauvalidiert.
+Native overlapCells lokalisieren Rampen/Hindernisse. Bei älteren Bridges ohne
+Geometrie begrenzte Verfeinerung; verbleibendes unknown samt Budgetflag beachten.
+planBuildings=false/workBuildingId behalten die einzelne angefragte Ebene.
+Beide zuvor übersehenen Gebiete live geprüft: [Umfang und Nachweise](regional-survey.md).

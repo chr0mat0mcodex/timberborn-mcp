@@ -1,6 +1,23 @@
 # Backlog
 
-## Priorität: blinde Flecken der Flächensuche (2026-10-10)
+Abnahme 2026-10-10: Vorschaltprozess einschließlich Spielkontakt nach Backendwechsel
+und Rampen-/Höhensuche in beiden Pilotgebieten bestanden. Die untenstehenden
+Gate-Vermerke sind historisch; Nachweise in PROJECT_STATE.md und den Fachdokumenten.
+Offen bleiben dauerhaftes Suchregister und Client-Neustart bei erstmaliger
+Werkzeugkatalogübernahme bzw. gegebenenfalls neu hinzugefügten Werkzeugen.
+
+## Persistente Codex-Verbindung — Umsetzung am Gate (2026-10-10)
+
+Vorschaltprozess, stop/start/status und Skriptsperre vorbereitet; Python-Tests im
+menschlichen Gate. Offen: einmalige Clientumstellung, Gate und Stop/Start-Nachweis
+ohne Clientneustart. [Prüfplan](docs/codex-mcp-supervisor.md).
+
+## Blinde Flecken der Flächensuche — Umsetzung am Gate (2026-10-10)
+
+Native Geometriemasken, automatische Folgeebenen und Suchabdeckung vorbereitet,
+noch nicht live abgenommen. [Umfang/Prüfplan](docs/regional-survey.md).
+Ein dauerhaftes sitzungsübergreifendes Suchregister bleibt Folgearbeit; aktuelle
+Abdeckung wird pro Aufruf samt ungesuchten Ebenen geliefert.
 
 Live belegt: obere Wege hinter Hauptsiedlung und neben Sägewerk sind bereits
 an den Distrikt angeschlossen. Drei Bauvorschauen gültig, ein größerer Kandidat
@@ -21,7 +38,7 @@ abgelehnt. [Prüfumfang und Vorgehen](docs/regional-survey.md).
 - Abnahme für spätere Umsetzung: bekannte Slope neben freiem angeschlossenem
   Bauplatz darf die Nachbarprüfung nicht verhindern; Hinderniszelle bleibt korrekt
   gesperrt/unbekannt. Höhe 3 versus 4 und größeres abgelehntes Gebäude als Kontrollen.
-  Keine Implementierung oder neue Regeln in AGENTS.md mit diesem Dokumentationsauftrag.
+  Nach Folgeauftrag jetzt implementiert; Entwickler-Gate und Liveabnahme stehen aus. AGENTS.md unverändert.
 
 
 ## Aktionsjournal des Spielers — geplante MCP-Abfrage (2026-10-10)

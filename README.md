@@ -10,6 +10,10 @@ Spielansicht inklusive Kameraposition/Höhe, Richtung und Bildweite sind begrenz
 live geprüft; Bilddaten werden als MCP-Bildblock mit Größenlimit ausgegeben.
 [Abnahme und Grenzen](docs/screenshot-0.36.0.md).
 
+Codex während des menschlichen Build-Gates verbunden halten:
+[Vorschaltprozess einmalig einrichten](docs/codex-mcp-supervisor.md)
+(Gate und Stop/Start-Liveabnahme bestanden).
+
 **Phase E abgeschlossen** mit 0.35.1 im begrenzten, live geprüften Umfang.
 [Abschlussnachweise](missionsplan.md#abschluss-phase-e),
 [offene Folgearbeiten](BACKLOG.md#offene-folgearbeiten-nach-phase-e).

@@ -1,5 +1,11 @@
 # Spielanleitung für Agenten
 
+Codex-Lifecycle (live abgenommen): vor der Testübergabe
+`timberborn_server_control(action=stop)`, nach menschlichem `live bereit`
+`action=start`, dann Spielstatus und aktuelle Session prüfen. Der Vorschaltprozess
+bleibt verbunden. Unterbrochene Aufträge nie ungeprüft erneut senden.
+[Einmalige Einrichtung und Grenzen](codex-mcp-supervisor.md).
+
 Stand: Bridge 0.36.0; aktualisiert am 10. Oktober 2026.
 Diese Anleitung beschreibt die vorhandenen MCP-Fähigkeiten. Aktueller Auftrag
 und Projektregeln stehen in [AGENTS.md](../AGENTS.md) und
@@ -156,3 +162,16 @@ Nach Rückgabe weiter advance derselben Charge aufrufen; kein Hintergrunddispatc
 Ein cancelled-Lauf mit cancel_requested kann nach vollständiger Abschlussprüfung
 zu finished_accessible gehören. inspect bleibt lesend; unbestätigte Pause zuerst
 lesend klären. Zwei Lager mit Frühpause und unmittelbarem Folgeauftrag live geprüft.
+
+## Live abgenommen: Rampengeometrie, Höhen und Suchabdeckung
+
+survey_region erhält scanOtherHeights (Standard true), maxHeights (Standard 4,
+1–8 inklusive Ausgangshöhe) und maxWindows (Standard 3, 1–9 je Höhe). Zusätzliche
+Höhen samt Kandidaten stehen in additionalLevels; vorhandene Wege priorisieren
+die Auswahl, sind ohne separate Abfrage kein Distriktbeleg. coverage.heights
+zeigt ausgelassene Höhen. planningRows: u ungeprüft, p teilweise, c alle vier
+Drehungen vollständig im Fenster gesucht, niemals automatisch bauvalidiert.
+Native overlapCells lokalisieren Rampen/Hindernisse. Bei älteren Bridges ohne
+Geometrie begrenzte Verfeinerung; verbleibendes unknown samt Budgetflag beachten.
+planBuildings=false/workBuildingId behalten die einzelne angefragte Ebene.
+Beide zuvor übersehenen Gebiete live geprüft: [Umfang und Nachweise](regional-survey.md).

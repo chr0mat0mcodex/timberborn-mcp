@@ -145,6 +145,9 @@ public sealed class RegionSurveyTests
         Assert.Equal(0, port.Maps);
         await Assert.ThrowsAsync<ArgumentException>(() => RegionSurvey.Observe(Request with { X = 4090 }, port, TestContext.Current.CancellationToken));
         Assert.Equal(0, port.Maps);
+        await Assert.ThrowsAsync<ArgumentException>(() => RegionSurvey.Observe(Request with { MaxHeights = 9 }, port, TestContext.Current.CancellationToken));
+        await Assert.ThrowsAsync<ArgumentException>(() => RegionSurvey.Observe(Request with { MaxWindows = 10 }, port, TestContext.Current.CancellationToken));
+        Assert.Equal(0, port.Maps);
     }
 
     [Fact]
@@ -156,17 +159,67 @@ public sealed class RegionSurveyTests
     }
 
     [Theory]
-    [InlineData("other_one_tile", 8)]
-    [InlineData("other_two_tiles", 16)]
-    public async Task UnknownFootprintOnlyExcludesTilesReportingItsOverlap(string fault, int unknownWidth)
+    [InlineData("other_one_tile", 1)]
+    [InlineData("other_two_tiles", 2)]
+    [InlineData("exact_overlap", 0)]
+    public async Task UnknownFootprintIsLocalAndFreeNeighboursStillGetPlans(string fault, int unknownCells)
     {
         var report = await RegionSurvey.Observe(Request, new Port { Fault = fault }, TestContext.Current.CancellationToken);
-        for (int y = 0; y < 8; y++) for (int x = 0; x < unknownWidth; x++)
-            Assert.NotEqual('.', report.Rows[y][x]);
-        Assert.Equal('.', report.Rows[9][1]); // unaffected lower tile remains usable
-        if (unknownWidth == 8) Assert.Equal('.', report.Rows[1][9]);
+        Assert.Equal(fault == "exact_overlap" ? 'o' : '?', report.Rows[1][7]);
+        Assert.Equal('.', report.Rows[2][7]);
+        Assert.Equal(unknownCells, report.Coverage.UnknownCells);
+        Assert.NotEmpty(report.BuildingCandidates);
         Assert.NotEmpty(report.EmptyGroundPatches);
-        Assert.All(report.EmptyGroundPatches, p => Assert.True(p.Y >= 8 || p.X >= unknownWidth));
+        if (fault == "exact_overlap") Assert.Equal(0, report.Coverage.RefinementReads);
+        else Assert.InRange(report.Coverage.RefinementReads, 1, 64);
+    }
+
+    [Fact]
+    public async Task RefinementBudgetAndChangedObjectsNeverBecomeFreeGround()
+    {
+        var bounded = await RegionSurvey.Observe(Request, new Port { Fault = "other_everywhere" }, TestContext.Current.CancellationToken);
+        Assert.Equal(64, bounded.Coverage.RefinementReads);
+        Assert.True(bounded.Coverage.RefinementBudgetExhausted);
+        Assert.True(bounded.Coverage.UnknownCells > 0);
+        await Assert.ThrowsAsync<InvalidDataException>(() => RegionSurvey.Observe(Request,
+            new Port { Fault = "refinement_changed" }, TestContext.Current.CancellationToken));
+        await Assert.ThrowsAsync<InvalidDataException>(() => RegionSurvey.Observe(Request,
+            new Port { Fault = "invalid_overlap" }, TestContext.Current.CancellationToken));
+    }
+
+    [Fact]
+    public async Task AutomaticHeightsPrioritizeRoadsAndExposeSkippedLevels()
+    {
+        var report = await RegionSurvey.Observe(Request with { MaxHeights = 2 }, new Port { Fault = "heights" }, TestContext.Current.CancellationToken);
+        Assert.Equal(4, Assert.Single(report.AdditionalLevels).Region.Z);
+        Assert.Contains(report.Coverage.Heights, h => h.Z == 4 && h.ObstaclesInspected && h.ObservedPathCells > 0);
+        Assert.Contains(report.Coverage.Heights, h => h.Z == 5 && !h.ObstaclesInspected);
+        Assert.NotEmpty(report.AdditionalLevels[0].BuildingCandidates);
+        var one = await RegionSurvey.Observe(Request with { ScanOtherHeights = false }, new Port { Fault = "heights" }, TestContext.Current.CancellationToken);
+        Assert.Empty(one.AdditionalLevels);
+        Assert.Contains(one.Coverage.Heights, h => h.Z == 4 && !h.ObstaclesInspected);
+        var crops = await RegionSurvey.Observe(Request with { PlanBuildings = false }, new Port { Fault = "heights" }, TestContext.Current.CancellationToken);
+        Assert.Empty(crops.AdditionalLevels); Assert.Equal(0, crops.PlanningCalls);
+        Assert.All(crops.Coverage.PlanningRows, row => Assert.All(row, c => Assert.Equal('u', c)));
+    }
+
+    [Fact]
+    public async Task SessionChangeOnAdditionalHeightRejectsEntireResult()
+    {
+        await Assert.ThrowsAsync<BridgeRejectionException>(() => RegionSurvey.Observe(Request,
+            new Port { Fault = "height_session" }, TestContext.Current.CancellationToken));
+    }
+
+    [Fact]
+    public void CoverageDoesNotConfuseOptionsLimitWithExhaustiveSearch()
+    {
+        var r = Request with { Width = 2, Height = 1 };
+        var maps = new[] { Cell(0, 0), Cell(1, 0) };
+        var rect = new SurveyRect(0, 0, 3, 1, 1);
+        var plans = Enumerable.Range(0, 4).Select(rot => new SurveyPlanCoverage(rect, rot, true, "area_exhausted")).ToArray();
+        Assert.Equal("cu", RegionSurvey.Coverage(r, maps, [], [".."], plans, 0, false).PlanningRows[0]);
+        plans[3] = plans[3] with { SearchComplete = false, StopReason = "option_limit" };
+        Assert.Equal("pu", RegionSurvey.Coverage(r, maps, [], [".."], plans, 0, false).PlanningRows[0]);
     }
 
     [Fact]
@@ -175,7 +228,8 @@ public sealed class RegionSurveyTests
         var rows = Enumerable.Repeat(".......p........", 16).ToArray();
         var windows = RegionSurvey.Windows(Request, rows);
         Assert.Equal(3, windows.Length);
-        Assert.Contains(windows, w => w.Region.X == 4);
+        Assert.True(windows.SelectMany(w => Enumerable.Range(w.Region.Y, w.Region.Height)
+            .SelectMany(y => Enumerable.Range(w.Region.X, w.Region.Width).Select(x => (x, y)))).Distinct().Count() >= 160);
         var patches = RegionSurvey.Patches(Request, rows);
         var cells = patches.SelectMany(p => Enumerable.Range(p.Y, p.Height).SelectMany(y => Enumerable.Range(p.X, p.Width).Select(x => (x, y)))).ToArray();
         Assert.Equal(cells.Length, cells.Distinct().Count());
@@ -200,6 +254,7 @@ public sealed class RegionSurveyTests
                 Fault == "range_session" ? "33333333-3333-4333-8333-333333333333" : Session);
         }
         public string Fault { get; init; } = "";
+        private bool Heights => Fault is "heights" or "height_session";
         public int Maps { get; private set; }
         public int Plans { get; private set; }
         public int Speeds { get; private set; }
@@ -216,11 +271,13 @@ public sealed class RegionSurveyTests
             Maps++;
             return Result(new NativeMap(new(r.X, r.Y, r.Z), r.Width, r.Height, 1,
                 Enumerable.Range(r.Y, r.Height).SelectMany(y => Enumerable.Range(r.X, r.Width).Select(x =>
-                    Cell(x, y) with { SoilIsMoist = Moist ? x != 2 : null })).ToArray(), []),
-                Fault == "session" ? "33333333-3333-4333-8333-333333333333" : Session);
+                    Cell(x, y) with { Z = r.Z, TerrainHeight = Heights ? (x < 8 ? 4 : 5) : 3,
+                        OnGround = r.Z == (Heights ? (x < 8 ? 4 : 5) : 3), SoilIsMoist = Moist ? x != 2 : null })).ToArray(), []),
+                Fault == "session" || Fault == "height_session" && r.Z == 4 ? "33333333-3333-4333-8333-333333333333" : Session);
         }
         public Task<BridgeEnvelope<NativeObjects>> Objects(int offset, CancellationToken ct) {
             var items = roads.ToArray();
+            if (Heights) items = items.Concat([Building("Path", new(7, 7, 4), [new(7, 7, 4)])]).ToArray();
             if (Fault == "truncated") items[0] = items[0] with { CellsTruncated = true };
             if (Fault == "missing_geometry") items[0] = items[0] with { OccupiedCells = [] };
             return Result(new NativeObjects("buildings_and_paths", offset, 32, Fault == "objects_bound" ? 513 : items.Length, items, false, []));
@@ -230,7 +287,18 @@ public sealed class RegionSurveyTests
         public Task<BridgeEnvelope<NativeRemovalTargets>> Targets(SurveyRect r, int offset, CancellationToken ct) {
             var t = new NativeRemovalTarget(Guid.NewGuid(), "vegetation", "SyntheticTree", new(r.X, r.Y, r.Z), "demolition_mark", true, false, "unknown", "current_components");
             NativeRemovalTarget[] items = Fault == "duplicate_targets" ? [t, t] : [];
-            if (r.Y == 0 && (Fault == "other_two_tiles" || Fault == "other_one_tile" && r.X == 0)) items = [unknown];
+            bool overlaps = r.Y <= 1 && r.Y + r.Height > 1 && r.X <= (Fault == "other_one_tile" ? 7 : 8) && r.X + r.Width > 7;
+            if (Fault is "other_one_tile" or "other_two_tiles" or "exact_overlap" or "invalid_overlap" or "refinement_changed") {
+                if (overlaps) {
+                    var value = unknown;
+                    if (Fault == "exact_overlap") value = value with { OverlapCells = new[] { new Position(7, 1, 3), new Position(8, 1, 3) }
+                        .Where(p => p.X >= r.X && p.X < r.X + r.Width).ToArray() };
+                    if (Fault == "invalid_overlap") value = value with { OverlapCells = [new(-1, 0, 3)] };
+                    if (Fault == "refinement_changed" && r.Width < 8) value = value with { Marked = true };
+                    items = [value];
+                }
+            }
+            if (Fault == "other_everywhere") items = [unknown];
             return Result(new NativeRemovalTargets("all", offset, 32, items.Length, items, false, []));
         }
         public Task<BridgeEnvelope<NativeBuildingPlan>> Plan(SurveyRequest s, SurveyRect r, int rotation, CancellationToken ct) {

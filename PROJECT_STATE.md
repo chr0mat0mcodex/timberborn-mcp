@@ -1,5 +1,89 @@
 # Projektstand
 
+## Vorschaltprozess und Regionalsuche live abgenommen (2026-10-10)
+
+Nach Katalogübernahme sind alle Spielwerkzeuge verfügbar. timberborn_status vor
+und nach stop/status/start bestätigt dieselbe erreichbare Bridge 0.36.0 und Sitzung;
+keine Client-Neustarts innerhalb dieses Zyklus. Menschlicher Vollgate-Lauf und acht
+warnungsfreie Python-Tests liegen vor. Erstbefüllung/Toolkatalogänderungen können
+weiterhin einen Client-Neustart benötigen; regulärer Backendwechsel wurde belegt.
+
+Sägewerksfeld (31,4), 8×8, Start z=3: z=4 automatisch untersucht, auf beiden Ebenen
+null unbekannte Zellen und null Legacy-Verfeinerungsreads. Rampe lokal als o;
+vier Lagerkandidaten oben. 33 native Reads, vier Planungen. Lager (32,8,4)
+in Spielvorschau gültig und angeschlossen, kein neuer Weg nötig.
+Hauptsiedlungsfeld (30,24), 16×16, z=4: zwei getrennte Fenster, acht Planungen,
+28 native Reads. Suchabdeckung unterscheidet p/c/u; elf weitere beobachtete Höhen
+wegen maxHeights=1 ausdrücklich ungeprüft. Lager (35,28,4) ebenfalls gültig und
+angeschlossen. Negative Lodge (33,27,4) trotz Vorschau-Anschluss geometrisch ungültig.
+Alle drei Vorschauen melden Zustand wiederhergestellt, keine Sitzungssperre.
+Keine Bauaufträge/Räumungen; Spiel bleibt pausiert. Bauarbeiter-/fertiger Gebäudezugang
+weiterhin nicht nachgewiesen, keine neue reguläre Ausführungsfreigabe.
+
+## Vorschaltprozess: Stop/Start live bestanden, Katalogübernahme offen (2026-10-10)
+
+Menschlicher gezielter Test: alle acht Python-Tests ohne Warnungen bestanden.
+Danach start → stop → status → start über dieselbe Codex-Verbindung erfolgreich:
+Backend aktiv/ungesperrt, gestoppt/gesperrt, weiterhin gestoppt, wieder aktiv.
+Kein Timeout und kein Transportverlust. Lokaler Katalog enthält 76 Backendwerkzeuge,
+darunter timberborn_status und survey_region. Laufende Agentensitzung exponiert
+trotz Änderungsnachricht weiterhin nur das Lifecycle-Werkzeug. Erstbefüllter Cache
+braucht deshalb noch einen Client-Neustart zur tatsächlichen Werkzeugübernahme.
+Backend zuletzt aktiv, Gatesperre aufgehoben. Kein neuer Build/Testlauf nötig.
+Spielkontakt, Regionalsuche-Abnahme und Commit/Push bleiben offen.
+
+## Vorschaltprozess: erster Livepilot, zwei Korrekturen offen (2026-10-10)
+
+start meldet Backend aktiv; Verbindung bleibt auch nach stop/status/start nutzbar.
+Stop meldete jedoch Timeout trotz beendetem Backend: alte Registry-PIDs waren
+inzwischen RuntimeBroker/conhost/Codex-Prozessen zugeteilt. Prozessstartzeit wird
+jetzt mit Registry-Heartbeat verglichen. Keine fremden Prozesse beendet.
+Spielwerkzeuge wurden in dieser Agentensitzung nach tools/list_changed nicht
+sichtbar; daher kein timberborn_status und keine Regionalsuche-Abnahme möglich.
+Werkzeugkatalog wird jetzt nach erfolgreichem Backend-Handshake lokal gecacht und
+beim nächsten Frontendstart auch während Gatesperre angeboten. Erstbefüllung braucht
+einen Backendstart der neuen Fassung; tatsächliche Clientaktualisierung bleibt zu prüfen.
+Zwei Regressionstests ergänzt (PID-Wiederverwendung, Katalog bei gesperrtem Start).
+Menschlicher gezielter Python-Test und erneuter Livepilot offen; kein Commit/Push.
+
+## Persistenter Codex-Vorschaltprozess vorbereitet — Gate offen (2026-10-10)
+
+Menschlicher Gate-Lauf vollständig bestanden: sechs Python-Tests, Release-Build,
+Unit-/Integrationstests, Bridge-Paketierung und Installation mit fünf geprüften
+Dateien (138,9 Sekunden). Noch keine Liveabnahme.
+ResourceWarning für offene stdout-Pipes erkannt: Reader schließt seinen Kanal nun
+im finally; Stop wartet außerhalb des Protokolllocks auf Readerende. Stop-/Crashtests
+prüfen geschlossene Kanäle zusätzlich. Diese nach dem Python-Testschritt vorgenommene
+Korrektur braucht nur den gezielten menschlichen Python-Test, keinen erneuten Mod-Build;
+danach Codex einmal neu starten, damit der Vorschaltprozess den neuen Code lädt.
+
+Python-stdio-Frontend mit eigenem stop/start/status-Werkzeug, Backend-Handshake
+nach Neustart und projektweiter Gatesperre implementiert. Vorbereitungsskript
+stoppt über die Sperre und verwendet nur noch den exakten Releasepfad als Rückfall.
+Synthetische Tests in verify.ps1 eingebunden, vom Agenten nicht ausgeführt.
+Bestehender Codex-Servereintrag auf Vorschaltprozess umgestellt und zurückgeprüft.
+[Einrichtung, Grenzen und Liveabnahme](docs/codex-mcp-supervisor.md).
+Livebestätigung und Prüfung der Kanal-Korrektur offen; kein Commit/Push. Danach Rampenblindfleck
+fachlich abnehmen; dessen offener Status bleibt bestehen.
+
+## Rampenblindfleck: Liveabnahme an Clientverbindung blockiert (2026-10-10)
+
+Nach menschlichem Gate erneut live bereit gemeldet. Erster timberborn_status
+scheitert mit Transport closed; kein Bridgekontakt, keine neue Session und kein
+fachlicher Livebeleg. Client-Reconnect-Werkzeug in dieser Sitzung nicht verfügbar.
+Codex-MCP-Verbindung muss clientseitig neu aufgebaut werden; kein isolierter
+stdio-Prozess als Ersatz. Keine Spieländerung, kein Commit/Push. Danach geplante
+Regionalsuche-Abnahme fortsetzen. Die Bereitmeldung ersetzt kein Liveergebnis.
+
+## Rampenblindfleck und Höhensuche vorbereitet — Gate offen (2026-10-10)
+
+Native Überlappungszellen statt pauschaler unknown-Kachel; automatischer Scan
+weiterer beobachteter Höhen, abdeckungsorientierte Fenster und explizite ungeprüfte
+Bereiche implementiert. Grenzen einstellbar, Legacy-Fallback begrenzt. Tests ergänzt,
+noch nicht ausgeführt; kein Build/Commit/Push. Ein Modpaket über menschliches Gate.
+[Umfang und konkrete Liveabnahme](docs/regional-survey.md).
+
+
 ## Bauflächen oberhalb der Siedlung und beim Sägewerk geprüft (2026-10-10)
 
 Obere Wege auf z=4 in beiden Gebieten nativ distriktverbunden. Kleines Lager

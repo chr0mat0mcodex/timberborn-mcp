@@ -6,6 +6,10 @@ if ($NativeConfig) { $NativeConfig = (Resolve-Path -LiteralPath $NativeConfig).P
 . "$PSScriptRoot/cli-output.ps1"
 Push-Location $taskRoot
 try {
+    Invoke-TimberbornStep 'MCP-Vorschaltprozess prüfen' {
+        & python -B -m unittest discover -s tests/supervisor -p 'test_*.py' -v -f
+        if ($LASTEXITCODE -ne 0) { throw 'Vorschaltprozess-Tests fehlgeschlagen. Abbruch ohne Wiederholung.' }
+    }
     $restoreArgs = @('restore', 'TimberbornMcp.slnx', '--configfile', 'NuGet.Config')
     if (-not $InitialRestore) { $restoreArgs += '--locked-mode' }
     Invoke-TimberbornStep 'Abhängigkeiten prüfen' {

@@ -19,7 +19,10 @@ nicht nur Werkzeugaufruf oder erfolgreiche Paketierung.
    relevante Tests ergänzen, Quellcode und Diff gezielt prüfen. Keine eigenen
    Build-/Testläufe; keine alternative Debug- oder Parallelausgabe.
 2. **Agent: Testübergabe.** Erwarteten fachlichen Nachweis, bekannte Grenzen und
-   den Aufruf des menschlichen Skripts nennen. Noch nicht committen.
+   den Aufruf des menschlichen Skripts nennen. Vorher
+   `timberborn_server_control(action=stop)` oder `scripts/stop-codex-mcp.ps1`
+   ausführen: Backendende und Gatesperre bestätigen. Der Vorschaltprozess bleibt
+   verbunden. Kein Spiel-MCP-Aufruf mehr bis `live bereit`. Noch nicht committen.
 3. **Mensch: Test und Deploy.** Bei beendetem Spiel
    `scripts/prepare-human-live-test.ps1 -TimberbornManagedDir <Managed-Verzeichnis>`
    ausführen. Das Skript führt die automatischen Tests aus, baut und paketiert die
@@ -27,7 +30,12 @@ nicht nur Werkzeugaufruf oder erfolgreiche Paketierung.
    installiert die neue Mod und verifiziert die Paketdateien.
 4. **Mensch: Spiel bereitstellen.** Timberborn starten, einen beliebigen
    passenden Spielstand laden und dem Agenten `live bereit` melden.
-5. **Agent: Abschluss-Livetest.** Genau den angekündigten MCP-Nachweis ausführen,
+5. **Agent: Wiederanschluss und Abschluss-Livetest.** Nach `live bereit` mit
+   `timberborn_server_control(action=start)` das neue Backend starten; zuerst
+   timberborn_status und aktuelle Session bestätigen. Der Vorschaltprozess wiederholt
+   nur den Protokoll-Handshake, niemals unterbrochene Spielaufträge. Kein separates
+   Start-Process/dotnet als Ersatz für einen stdio-Wiederanschluss.
+   Genau den angekündigten MCP-Nachweis ausführen,
    Ergebnis und relevante Grenze berichten. Bei Fehlschlag gezielt diagnostizieren;
    keine automatische Vollketten-Wiederholung.
 6. **Agent: Abschluss.** Nur wenn Skript und feature-spezifischer Livetest
@@ -35,6 +43,11 @@ nicht nur Werkzeugaufruf oder erfolgreiche Paketierung.
    pushen.
 
 ## Skriptoptionen
+
+Einmalige Codex-Einrichtung, Lifecycle-Werkzeug und Abnahme:
+[Persistenter MCP-Vorschaltprozess](docs/codex-mcp-supervisor.md).
+Das Gate prüft dessen synthetische Python-Tests ebenfalls ohne Wiederholung.
+Python 3.8 oder neuer muss als `python` erreichbar sein; keine Zusatzpakete.
 
 `-ModsRoot <Pfad>` setzt bei Bedarf einen abweichenden Timberborn-Mod-Ordner.
 `-Port <Port>` erzeugt für eine Erstinstallation eine passende lokale
@@ -48,8 +61,9 @@ und niemals ausgegeben oder versioniert.
 - Build, automatische Tests, Paketierung und Installation erfolgen ausschließlich
   im vom menschlichen Entwickler gestarteten Gate. Ein Release-Build als Grundlage
   für Prüfung und Livetest; keine Debug-/Parallelfassung als Ausweichweg.
-- Gesperrte Dateien des laufenden MCP sind ein Grund zur Übergabe ans Gate, nicht
-  zum Prozessabschuss oder zu einem anderen Ausgabeverzeichnis durch den Agenten.
+- Der projektgenaue MCP-Stopp unmittelbar vor dem Gate ist ausdrücklich beauftragt.
+  Keine allgemeinen dotnet-/Codex-Abschüsse und keine anderen Ausgabeverzeichnisse.
+  Das menschliche Skript behält seinen eigenen Prozessstopp als zusätzliche Sicherung.
 - Kein Commit/Push ohne bestätigten erfolgreichen Skriptlauf und erfolgreichen
   Abschluss-Livetest.
 

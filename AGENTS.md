@@ -29,11 +29,22 @@ Schutz anderer Projekte/Systemdateien und nachvollziehbare Git-Checkpoints bleib
    über das Entwickler-Test-Gate; keine Debug-/Parallelfassung als Ausweichweg.
    Compiler- und Testnachweise entstehen im Gate, nicht durch Syntaxprüfung.
    Details stehen in DEVELOPMENT_WORKFLOW.md.
-2. Am Test-Gate übergibt der Agent an den menschlichen Entwickler. Dieser führt
+2. Vor der Übergabe stoppt der Agent den eindeutig diesem Projekt zugeordneten
+   Codex-Timberborn-MCP über `timberborn_server_control(action=stop)` oder
+   `scripts/stop-codex-mcp.ps1` und bestätigt den Prozesszustand. Der persistente
+   Vorschaltprozess bleibt verbunden; nur sein Backend wird beendet und gesperrt.
+   Danach keine MCP-Aufrufe bis `live bereit`, damit kein vorzeitiger Neustart erfolgt.
+   Dies ist ausdrücklich erlaubtes Lifecycle-Handling, kein Agent-Build/Testlauf.
+   Am Test-Gate übergibt der Agent an den menschlichen Entwickler. Dieser führt
    `scripts/prepare-human-live-test.ps1` aus; das Skript testet, baut, paketiert,
    installiert die Mod mit Sicherung und prüft die installierten Paketdateien.
 3. Nach erfolgreichem Skriptlauf startet und lädt der Mensch Timberborn und meldet
-   dem Agenten `live bereit`. Erst dann führt der Agent den gezielten MCP-Livetest
+   dem Agenten `live bereit`. Dann startet der Agent mit
+   `timberborn_server_control(action=start)` das Backend durch den verbundenen
+   Vorschaltprozess und bestätigt `timberborn_status` samt aktueller Session.
+   Ein isolierter stdio-Prozess ist kein Wiederanschluss. Einmalige Codex-Einrichtung
+   und Ausfallgrenzen stehen in `docs/codex-mcp-supervisor.md`.
+   Erst dann führt der Agent den gezielten MCP-Livetest
    für die jeweilige Fähigkeit durch.
 4. Der Agent nennt vor der Übergabe den erwarteten Nachweis und nach dem Livetest
    das konkrete Ergebnis. Bei Fehlern wird diagnostiziert; keine automatische

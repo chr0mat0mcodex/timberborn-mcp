@@ -20,9 +20,11 @@ public static class RegionSurveyTools
         var props = input["properties"]!.AsObject();
         foreach (string key in new[] { "width", "height" }) { props[key]!["minimum"] = 1; props[key]!["maximum"] = 16; }
         foreach (string key in new[] { "x", "y", "z" }) { props[key]!["minimum"] = 0; props[key]!["maximum"] = 4095; }
+        props["maxHeights"]!["minimum"] = 1; props["maxHeights"]!["maximum"] = 8;
+        props["maxWindows"]!["minimum"] = 1; props["maxWindows"]!["maximum"] = 9;
         return new() {
             Name = Name,
-            Description = "Lesende Regionalsuche bis 16×16, nur pausiert: Hindernisse, Bodenfeuchte und freie Rechtecke bis 4×4. Optional workBuildingId: native Arbeitsreichweite und freie feuchte Rechtecke darin, höchstens 2048 Reichweitenzellen/64 Seiten; unbekannt bleibt unbekannt. planBuildings=false überspringt Bauplanung für Anbausuchen; template/districtId bleiben Pflichtfelder. Sonst vier Drehungen in bis zu drei 8×8-Fenstern; Kandidaten vor Bau frisch validieren. Keine Pflanz-, Besetzungs- oder Ertragsgarantie. Unvollständige/wechselnde Daten brechen ab. Keine Spieländerung.",
+            Description = "Lesende Regionalsuche bis 16×16, nur pausiert. Native Überlappungszellen lokalisieren Rampen/Hindernisse; ältere Bridge: höchstens 64 zusätzliche Verfeinerungsreads je Höhe, Rest unbekannt. Standard scanOtherHeights=true: relevante Gelände-/Weghöhen automatisch prüfen, maxHeights=4 (1–8, inklusive z), Wege bevorzugt. maxWindows=3 (1–9) je Höhe, vier Drehungen, bevorzugt neue Flächenabdeckung. Höchstens maxHeights×maxWindows×4 Planungen; Kandidaten pro Höhe auf vier begrenzt. coverage.heights meldet ungeprüfte Ebenen; planningRows u=ungeprüft/p=teilweise/c=vier Drehungen vollständig gesucht, keine Bauvalidierung. additionalLevels enthält obere/untere Ergebnisse. Freie Rechtecke bis 4×4 und Feuchte. planBuildings=false oder workBuildingId: nur angefragte Höhe, keine automatische Höhenfolge; workBuildingId liefert native Reichweite bis 2048 Zellen. Keine Pflanz-, Bau-, Distrikt- oder Ertragsgarantie. Kandidaten frisch validieren; unvollständige/wechselnde Daten brechen ab. Keine Spieländerung.",
             InputSchema = JsonSerializer.SerializeToElement(input),
             OutputSchema = JsonSerializer.SerializeToElement(options.GetJsonSchemaAsNode(typeof(NativeResult<RegionSurveyReport>))),
             Annotations = new() { ReadOnlyHint = true, DestructiveHint = false, IdempotentHint = true, OpenWorldHint = false }

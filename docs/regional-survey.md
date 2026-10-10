@@ -1,5 +1,77 @@
 # Regionale Flächensuche — begrenzt live abgenommen
 
+## Erweiterung live abgenommen (2026-10-10)
+
+Menschlicher Release-Gate-Lauf einschließlich Tests/Installation bestanden.
+Sägewerksfeld (31,4), 8×8, Start z=3, maxHeights=2/maxWindows=1: Ebene z=4
+automatisch gefunden, Rampe lokal als o, beide Ebenen ohne unknown und ohne
+Legacy-Verfeinerungsreads. 33 native Reads und vier Planungen statt Einzelabfragen;
+vier obere Lagerkandidaten. Lager bei (32,8,4) mit nativer Vorschau gültig,
+Eingang angeschlossen, keine neuen Wege.
+
+Hinter Hauptsiedlung (30,24), 16×16, z=4, maxHeights=1/maxWindows=2:
+28 native Reads, acht Planungen, zwei nicht überlappende 8×8-Fenster.
+Raster zeigt teilweise/vollständig/ungeprüft (p/c/u) getrennt; elf andere beobachtete
+Höhen ausdrücklich nicht auf Hindernisse untersucht. Lager bei (35,28,4)
+gültig und angeschlossen. Negativkontrolle Lodge (33,27,4) korrekt ungültig,
+obwohl Vorschau-Eingang angeschlossen. Alle Vorschauen wiederhergestellt,
+keine Sitzungssperre, keine Bau-/Räumaufträge. Simulation durchgehend pausiert.
+
+Dies belegt Flächensuche, Höhenfolge, begrenzte Suchabdeckung und Spielvorschau,
+nicht tatsächlichen Bauarbeiterzugang oder fertigen Gebäudezugang. Legacy-Fallback
+und Maximalbudgets sind synthetisch geprüft, nicht zusätzlich live skaliert.
+Die nachfolgenden Gate-Abschnitte halten den vorherigen Entwicklungsstand fest.
+
+## Regionalsuche erweitert — Entwickler-Test-Gate offen (2026-10-10)
+
+Auftrag: Rampenblindfleck vollständig beheben, Höhen und ungeprüfte Bereiche
+berücksichtigen. Quellcode vorbereitet; keine Agent-Builds oder Testausführung.
+
+- Native Mod liefert overlapCells aus öffentlichem PositionedBlocks.GetOccupiedCoordinates,
+  auf den Abfragequader begrenzt (maximal 8×8×4 Zellen), ohne Namensheuristik oder
+  Reflection. Backend prüft Nichtleere, eindeutige Zellen und Abfragegrenzen.
+- RegionSurvey vereinigt die Teilmasken je Objekt. Unknown betrifft bei vorhandener
+  Geometrie nur echte Objektzellen: o kennzeichnet nachgewiesene Belegung durch
+  andere Objekte (Rampe/Ruine), nicht fehlende Geometrie. Vegetation/Schutt ebenfalls mit Überlappungszellen
+  statt allein dem Ursprung. Die Rampe wird nicht als frei erklärt. Kein Extra-Read
+  zur Verfeinerung bei vollständiger neuer Geometrie.
+- Kompatibilität für ältere Bridge ohne Masken: native Überlappungsabfragen rekursiv
+  verkleinern, maximal 64 Zusatzreads je Höhe. Nur eine vollständige Abfrage ohne
+  unbekannte Überlappung entlastet Zellen. Rest bleibt unknown, Budgetflag sichtbar.
+- scanOtherHeights=true als Standard für Bausuche: neben angefragtem z weitere
+  beobachtete Gelände-/Weghöhen untersuchen, Wege bevorzugt. maxHeights=4 inklusive
+  Ausgangshöhe, einstellbar 1–8. additionalLevels enthält eigene Raster, Feuchte,
+  Kandidaten und Suchabdeckung. Keine neue vertikale Wegplanung.
+- maxWindows=3 je Höhe, einstellbar 1–9. Fenster bevorzugen noch nicht erfasste
+  Fläche statt immer dieselben hoch bewerteten Überlappungen; vier Drehungen je
+  Fenster. Höchstens maxHeights×maxWindows×4 Planungen, im Maximum 288. Standard
+  höchstens 48, auf einer flachen Ebene weiterhin höchstens zwölf. Keine globale
+  Vollsuche behauptet; Kandidatenliste bleibt auf vier je Höhe begrenzt.
+- coverage.heights: Geländeanzahl, beobachtete Wegzellen und ObstaclesInspected.
+  Nicht untersuchte Höhen bleiben explizit false. planningRows: u=ungeprüft,
+  p=teilweise (z.B. Optionslimit), c=alle vier Drehungen mit vollständiger
+  Ursprungssuche in abdeckenden Fenstern. Das ist keine Platzierungsvalidierung
+  und kein Nachweis aller denkbaren Anschlussrouten über Fenstergrenzen hinweg.
+- planBuildings=false und workBuildingId bleiben auf der angefragten Ebene;
+  keine unnötigen zusätzlichen Höhensuchen bei Landwirtschaftsdiagnose.
+- Bestehende Versionsnummer 0.36.0, additive optionale Bridge-Felder; Paketstand
+  statt Versionsnummer allein beachten. Neues Modpaket am menschlichen Gate nötig.
+
+Regressionen vorbereitet: lokale Rampenüberlappung über Kachelgrenzen, gültige/
+fehlerhafte native Masken, Legacy-Verfeinerung und Budgetende, veränderte Objekte,
+zusätzliche Höhen mit Wegpriorität und ausgelassenen Ebenen, Sitzungswechsel auf
+oberer Ebene, vollständige versus abgeschnittene Suche und breitere Fensterabdeckung.
+
+Live-Gate nach Skript und Bereitmeldung: Sägewerksfeld bei z=4 darf wegen Slope
+nicht mehr fast vollständig unbekannt werden und muss Lager-/Lodge-Kandidaten
+liefern; belegte Rampenzellen bleiben ausgeschlossen. Dasselbe Gebiet ab z=3
+aufrufen: z=4 mit Wegen muss in additionalLevels auftauchen. Hinter Hauptsiedlung
+freie Nachbarn auf z=4 erkennen; Limits/ausgelassene Ebenen sichtbar prüfen.
+Je ein gültiger Kandidat pro Gebiet frisch validieren, den bekannten abgelehnten
+Lodge-Kandidaten als Negativkontrolle verwenden. Keine pauschale Baufreigabe.
+Bei falschem Kontrollfall stoppen. Commit/Push erst nach Gate und Livetest.
+
+
 ## Systematische Gegenprüfung der blinden Flecken (2026-10-10)
 
 Bridge 0.36.0, strukturierte Liveabfragen; keine Bauten oder Räumungen.

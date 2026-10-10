@@ -8,7 +8,17 @@ public sealed partial class NativeClient
         var d=result.Data;
         if(d.Kind!=r.Kind||d.Offset!=r.Offset||d.Limit!=r.Limit||d.Total<0||d.Items is null||d.Items.Length!=Math.Min(r.Limit,Math.Max(0,d.Total-r.Offset))||d.HasMore!=((long)r.Offset+d.Items.Length<d.Total)||d.Limitations is null||d.Items.Any(i=>i is null||i.Id==Guid.Empty||i.Position is null||i.Position.X<0||i.Position.Y<0||i.Position.Z<0||string.IsNullOrEmpty(i.Template)||(!RemovalRequest.IsKind(i.Kind)&&i.Kind!="other")||(r.Kind!="all"&&i.Kind!=r.Kind)||i.Mode is not ("delete" or "demolition_mark" or "unsupported")||i.PlantOrigin!="unknown"||string.IsNullOrEmpty(i.Classification))||d.Items.Select(i=>i.Id).Distinct().Count()!=d.Items.Length)throw new InvalidDataException("Invalid removal targets");
         if(d.Items.Any(i=>(i.Vegetation is not null&&!i.Vegetation.IsValid())||(result.BridgeVersion is "0.13.2" or "0.14.0" or "0.14.1" or "0.15.0" or "0.16.0" or "0.17.0" or "0.17.1" or "0.17.2" or "0.18.0" or "0.19.0" or "0.19.1" or "0.19.2" or "0.20.0" or "0.20.1" or "0.21.0" or "0.21.1"&&(i.Kind is "planted" or "vegetation")&&i.Vegetation is null)))throw new InvalidDataException("Missing or invalid vegetation state");
+        foreach (var item in d.Items) ValidateOverlapCells(item.OverlapCells, r);
         return result;
+    }
+    public static void ValidateOverlapCells(Position[]? cells, RemovalRequest r)
+    {
+        // Null supports older bridges; a supplied mask must be complete and nonempty.
+        if (cells is null) return;
+        if (cells.Length == 0 || cells.Length > r.Width * r.Height * r.Depth ||
+            cells.Distinct().Count() != cells.Length || cells.Any(p => p is null ||
+                p.X < r.X || p.X >= r.X + r.Width || p.Y < r.Y || p.Y >= r.Y + r.Height || p.Z < r.Z || p.Z >= r.Z + r.Depth))
+            throw new InvalidDataException("Invalid removal overlap cells");
     }
     public async Task<BridgeEnvelope<NativeRemoval>> RemoveObject(RemovalRequest r,CancellationToken ct)
     {

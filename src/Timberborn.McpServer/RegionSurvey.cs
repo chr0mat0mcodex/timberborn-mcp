@@ -4,7 +4,8 @@ using Timberborn.Bridge.Core;
 namespace Timberborn.McpServer;
 
 public sealed record SurveyRequest(string Session, string DistrictId, string Template,
-    int X, int Y, int Z, int Width, int Height, string? WorkBuildingId = null, bool PlanBuildings = true);
+    int X, int Y, int Z, int Width, int Height, string? WorkBuildingId = null, bool PlanBuildings = true,
+    bool ScanOtherHeights = true, int MaxHeights = 4, int MaxWindows = 3);
 public sealed record SurveyRect(int X, int Y, int Z, int Width, int Height);
 public sealed record SurveyWindow(SurveyRect Region, int FreeCells, int VegetationCells, int PathCells);
 public sealed record SurveyCandidate(SurveyRect Region, int Rotation, int OptionIndex,
@@ -13,11 +14,17 @@ public sealed record SurveyMoisture(string[] Rows, Dictionary<string, string> Le
     SurveyRect[] MoistEmptyGroundPatches);
 public sealed record SurveyWorkRange(string BuildingId, bool Supported, string Source,
     int ObservedCells, string[] Rows, Dictionary<string, string> Legend, SurveyRect[] MoistEmptyGroundPatches);
+public sealed record SurveyHeight(int Z, int TerrainCells, int ObservedPathCells, bool ObstaclesInspected);
+public sealed record SurveyPlanCoverage(SurveyRect Region, int Rotation, bool SearchComplete, string StopReason);
+public sealed record SurveyCoverage(int RefinementReads, bool RefinementBudgetExhausted,
+    int UnknownCells, string[] PlanningRows, SurveyPlanCoverage[] Plans, SurveyHeight[] Heights);
+public sealed record SurveyLevel(SurveyRect Region, string[] Rows, SurveyRect[] EmptyGroundPatches,
+    SurveyWindow[] SearchWindows, SurveyCandidate[] BuildingCandidates, SurveyMoisture Moisture, SurveyCoverage Coverage);
 public sealed record RegionSurveyReport(string Template, SurveyRect Region, string[] Rows,
     Dictionary<string, string> Legend, SurveyRect[] EmptyGroundPatches, SurveyWindow[] SearchWindows,
     SurveyCandidate[] BuildingCandidates, int NativeReads, int PlanningCalls,
     DateTimeOffset ObservationStartedAtUtc, DateTimeOffset ObservationEndedAtUtc,
-    bool Atomic, string[] Limitations, SurveyMoisture Moisture, SurveyWorkRange? WorkRange);
+    bool Atomic, string[] Limitations, SurveyMoisture Moisture, SurveyWorkRange? WorkRange, SurveyCoverage Coverage, SurveyLevel[] AdditionalLevels);
 
 public interface IRegionSurveyPort
 {
@@ -38,27 +45,70 @@ public static class RegionSurvey
         BuildBatchState.Id(r.Session); BuildBatchState.Id(r.DistrictId);
         if (r.WorkBuildingId is not null) BuildBatchState.Id(r.WorkBuildingId);
         if (string.IsNullOrWhiteSpace(r.Template) || r.Template.Length > 160 ||
-            r.X < 0 || r.Y < 0 || r.Z is < 0 or > 4095 || r.Width is < 1 or > 16 || r.Height is < 1 or > 16 ||
+            r.MaxHeights is < 1 or > 8 || r.MaxWindows is < 1 or > 9 || r.X < 0 || r.Y < 0 || r.Z is < 0 or > 4095 || r.Width is < 1 or > 16 || r.Height is < 1 or > 16 ||
             (long)r.X + r.Width > 4096 || (long)r.Y + r.Height > 4096) throw new ArgumentException();
     }
 
-    public static async Task<RegionSurveyReport> Observe(SurveyRequest r, IRegionSurveyPort port, CancellationToken ct)
+    private sealed class ObservationContext { public string? Version; }
+    public static Task<RegionSurveyReport> Observe(SurveyRequest r, IRegionSurveyPort port, CancellationToken ct) =>
+        ObserveLevel(r, port, new ObservationContext(), ct);
+    private static async Task<RegionSurveyReport> ObserveLevel(SurveyRequest r, IRegionSurveyPort port, ObservationContext context, CancellationToken ct)
     {
         Validate(r);
         ct.ThrowIfCancellationRequested();
         int reads = 0, planningCalls = 0;
-        string? version = null;
         DateTimeOffset? first = null; DateTimeOffset last = default;
         T Check<T>(BridgeEnvelope<T> e) {
             ct.ThrowIfCancellationRequested(); reads++;
-            if (e.SessionId != r.Session || version is not null && e.BridgeVersion != version)
+            if (e.SessionId != r.Session || context.Version is not null && e.BridgeVersion != context.Version)
                 throw new BridgeRejectionException("stale_session");
-            version = e.BridgeVersion; first ??= e.ObservedAtUtc; last = e.ObservedAtUtc;
+            context.Version = e.BridgeVersion; first ??= e.ObservedAtUtc; last = e.ObservedAtUtc;
             return e.Data;
         }
         if (Check(await port.Simulation(ct)).CurrentSpeed != 0) throw new BridgeRejectionException("state_conflict");
         var maps = new List<MapCell>(); var targets = new Dictionary<Guid, NativeRemovalTarget>();
         var uncertain = new HashSet<(int X, int Y)>();
+        var targetCells = new Dictionary<Guid, HashSet<Position>>();
+        var uncertainTiles = new List<SurveyRect>();
+        int refinementReads = 0; bool refinementBudgetExhausted = false;
+        bool UnknownOverlap(NativeRemovalTarget item, SurveyRect tile) =>
+            item.Kind is not ("buildings" or "vegetation" or "planted" or "debris") ||
+            item.Kind != "buildings" && (item.Position.Z != r.Z || item.Position.X < tile.X ||
+                item.Position.X >= tile.X + tile.Width || item.Position.Y < tile.Y || item.Position.Y >= tile.Y + tile.Height);
+        async Task Refine(SurveyRect tile) {
+            // Only absence in a complete native overlap query can clear uncertainty.
+            var found = new List<NativeRemovalTarget>(); int? total = null;
+            var seen = new HashSet<Guid>();
+            for (int offset = 0; ; offset += 32) {
+                if (refinementReads >= 64) { refinementBudgetExhausted = true; return; }
+                refinementReads++;
+                var page = Check(await port.Targets(tile, offset, ct));
+                if (page.Kind != "all" || page.Offset != offset || page.Limit != 32 || page.Total > 128 ||
+                    total is not null && total != page.Total) throw new InvalidDataException("survey_refinement_changed");
+                total = page.Total;
+                foreach (var item in page.Items) {
+                    if (!seen.Add(item.Id) || !targets.TryGetValue(item.Id, out var old) ||
+                        old.Kind != item.Kind || old.Template != item.Template || old.Position != item.Position || old.Marked != item.Marked)
+                        throw new InvalidDataException("survey_refinement_changed");
+                    found.Add(item);
+                }
+                if (!page.HasMore) {
+                    if (seen.Count != page.Total) throw new InvalidDataException("survey_refinement_incomplete");
+                    break;
+                }
+                if (offset >= 96) throw new InvalidDataException("survey_refinement_bound");
+            }
+            if (!found.Any(t => UnknownOverlap(t, tile))) {
+                for (int yy = tile.Y; yy < tile.Y + tile.Height; yy++)
+                    for (int xx = tile.X; xx < tile.X + tile.Width; xx++) uncertain.Remove((xx, yy));
+                return;
+            }
+            if (tile.Width == 1 && tile.Height == 1) return;
+            int w = Math.Max(1, tile.Width / 2), h = Math.Max(1, tile.Height / 2);
+            for (int yy = tile.Y; yy < tile.Y + tile.Height; yy += h)
+                for (int xx = tile.X; xx < tile.X + tile.Width; xx += w)
+                    await Refine(new(xx, yy, tile.Z, Math.Min(w, tile.X + tile.Width - xx), Math.Min(h, tile.Y + tile.Height - yy)));
+        }
         for (int y = r.Y; y < r.Y + r.Height; y += 8)
         for (int x = r.X; x < r.X + r.Width; x += 8) {
             var tile = new SurveyRect(x, y, r.Z, Math.Min(8, r.X + r.Width - x), Math.Min(8, r.Y + r.Height - y));
@@ -78,15 +128,23 @@ public static class RegionSurvey
                         (old.Kind != item.Kind || old.Template != item.Template || old.Position != item.Position || old.Marked != item.Marked))
                         throw new InvalidDataException("survey_targets_changed");
                     targets[item.Id] = item;
-                    // The native query reports overlap with THIS tile. An unknown footprint
-                    // cannot invalidate other tiles that did not report this object.
-                    if (item.Kind is not ("buildings" or "vegetation" or "planted" or "debris") ||
-                        item.Kind != "buildings" && (item.Position.Z != r.Z || item.Position.X < x || item.Position.X >= x + tile.Width ||
-                        item.Position.Y < y || item.Position.Y >= y + tile.Height))
+                    if (item.OverlapCells is { } overlap) {
+                        if (overlap.Length == 0 || overlap.Length > tile.Width * tile.Height || overlap.Distinct().Count() != overlap.Length ||
+                            overlap.Any(cell => cell is null || cell.Z != r.Z || cell.X < x || cell.X >= x + tile.Width || cell.Y < y || cell.Y >= y + tile.Height))
+                            throw new InvalidDataException("survey_invalid_overlap");
+                        if (!targetCells.TryGetValue(item.Id, out var cells)) targetCells[item.Id] = cells = [];
+                        cells.UnionWith(overlap);
+                    } else if (UnknownOverlap(item, tile)) {
+                        if (!uncertainTiles.Contains(tile)) uncertainTiles.Add(tile);
                         for (int yy = y; yy < y + tile.Height; yy++) for (int xx = x; xx < x + tile.Width; xx++) uncertain.Add((xx, yy));
+                    }
                 }
                 if (!p.HasMore) { if (seen.Count != p.Total) throw new InvalidDataException("survey_targets_incomplete"); break; }
             }
+        }
+        foreach (var tile in uncertainTiles) await Refine(tile);
+        foreach (var (id, cells) in targetCells) {
+            targets[id] = targets[id] with { OverlapCells = cells.ToArray() };
         }
         var buildings = new List<BuildingPosition>(); int? objectTotal = null;
         for (int offset = 0; ; offset += 32) {
@@ -154,6 +212,7 @@ public static class RegionSurvey
                 new() { ["r"] = "in_native_work_range", ["-"] = "outside_observed_work_range", ["?"] = "work_range_unknown" }, Patches(r, eligible));
         }
         var candidates = new List<SurveyCandidate>();
+        var coveragePlans = new List<SurveyPlanCoverage>();
         foreach (var window in windows)
         for (int rotation = 0; rotation < 4; rotation++) {
             var p = Check(await port.Plan(r, window.Region, rotation, ct)); planningCalls++;
@@ -161,6 +220,7 @@ public static class RegionSurvey
                 p.Origin != new Position(window.Region.X, window.Region.Y, r.Z) ||
                 p.Width != window.Region.Width || p.Height != window.Region.Height)
                 throw new InvalidDataException("survey_plan_mismatch");
+            coveragePlans.Add(new(window.Region, rotation, p.SearchComplete, p.StopReason));
             for (int i = 0; i < p.Options.Length; i++) {
                 var o = p.Options[i];
                 if (o.Executable || string.IsNullOrEmpty(o.PlanKey)) throw new InvalidDataException("survey_invalid_plan");
@@ -168,18 +228,56 @@ public static class RegionSurvey
             }
         }
         if (Check(await port.Simulation(ct)).CurrentSpeed != 0) throw new BridgeRejectionException("state_conflict");
-        return new(r.Template, new(r.X, r.Y, r.Z, r.Width, r.Height), rows,
+        var report = new RegionSurveyReport(r.Template, new(r.X, r.Y, r.Z, r.Width, r.Height), rows,
             new() { ["."] = "unflooded_ground_no_observed_obstacle", ["v"] = "vegetation", ["c"] = "plant_or_designation",
-                ["b"] = "building_or_debris", ["p"] = "finished_path", ["e"] = "existing_entrance",
+                ["b"] = "building_or_debris", ["o"] = "other_object_observed_occupied_cell", ["p"] = "finished_path", ["e"] = "existing_entrance",
                 ["~"] = "water_or_contamination", ["h"] = "different_ground_height", ["?"] = "unknown" },
             patches, windows, candidates.OrderBy(c => c.NewPaths).ThenBy(c => c.Origin.Y).ThenBy(c => c.Origin.X)
                 .DistinctBy(c => (c.Origin, c.Rotation)).Take(4).ToArray(), reads, planningCalls, first!.Value, last, false,
-            ["read_only_non_atomic", "rows_y_ascending_columns_x_ascending", "single_ground_level",
+            ["read_only_non_atomic", "rows_y_ascending_columns_x_ascending", "each_level_separate_ground_plane_no_vertical_route_planning",
              "patches_are_not_planting_or_work_range_validation", "moisture_is_current_not_future_irrigation_or_yield",
-             "paths_are_not_district_membership_proof", "top_three_overlapping_windows_only",
+             "paths_are_not_district_membership_proof", "bounded_coverage_ranked_windows",
              "no_candidate_does_not_mean_region_unbuildable", "candidates_not_executable_revalidate_before_build",
-             "no_clearing_or_existing_access_safety_claim", "vegetation_origins_not_full_footprints",
-             "work_range_not_staffing_selected_job_or_crop_suitability"], moisture, workRange);
+             "no_clearing_or_existing_access_safety_claim", "overlap_cells_clipped_to_query_legacy_vegetation_origin_only",
+             "work_range_not_staffing_selected_job_or_crop_suitability",
+             "heights_with_obstaclesInspected_false_remain_unchecked",
+             "planning_coverage_is_search_not_placement_validation"], moisture, workRange,
+            Coverage(r, maps, buildings, rows, coveragePlans, refinementReads, refinementBudgetExhausted), []);
+        if (!r.ScanOtherHeights || !r.PlanBuildings || r.WorkBuildingId is not null || r.MaxHeights == 1) return report;
+        var levels = new List<SurveyLevel>();
+        foreach (var height in report.Coverage.Heights.Where(h => h.Z != r.Z && h.Z >= 0 && h.Z <= 4095)
+            .OrderByDescending(h => h.ObservedPathCells > 0).ThenByDescending(h => h.TerrainCells)
+            .ThenBy(h => Math.Abs(h.Z - r.Z)).ThenBy(h => h.Z).Take(r.MaxHeights - 1)) {
+            var other = await ObserveLevel(r with { Z = height.Z, ScanOtherHeights = false }, port, context, ct);
+            reads += other.NativeReads; planningCalls += other.PlanningCalls; last = other.ObservationEndedAtUtc;
+            levels.Add(new(other.Region, other.Rows, other.EmptyGroundPatches, other.SearchWindows,
+                other.BuildingCandidates, other.Moisture, other.Coverage));
+        }
+        var inspected = levels.Select(l => l.Region.Z).Append(r.Z).ToHashSet();
+        var coverage = report.Coverage with { Heights = report.Coverage.Heights
+            .Select(h => h with { ObstaclesInspected = inspected.Contains(h.Z) }).ToArray() };
+        return report with { AdditionalLevels = levels.ToArray(), Coverage = coverage,
+            NativeReads = reads, PlanningCalls = planningCalls, ObservationEndedAtUtc = last };
+    }
+
+    public static SurveyCoverage Coverage(SurveyRequest r, IReadOnlyList<MapCell> maps,
+        IReadOnlyList<BuildingPosition> buildings, string[] rows, IReadOnlyList<SurveyPlanCoverage> plans,
+        int refinementReads, bool exhausted)
+    {
+        var paths = buildings.Where(b => b.Template == "Path" && b.Finished)
+            .SelectMany(b => b.OccupiedCells).Where(p => p.X >= r.X && p.X < r.X + r.Width && p.Y >= r.Y && p.Y < r.Y + r.Height)
+            .Distinct().ToArray();
+        var heights = maps.Select(c => c.TerrainHeight).Concat(paths.Select(p => p.Z)).Distinct().Order()
+            .Select(z => new SurveyHeight(z, maps.Count(c => c.TerrainHeight == z), paths.Count(p => p.Z == z), z == r.Z)).ToArray();
+        var planningRows = new string[r.Height];
+        for (int y = 0; y < r.Height; y++) planningRows[y] = new string(Enumerable.Range(0, r.Width).Select(x => {
+            var covering = plans.Where(p => r.X + x >= p.Region.X && r.X + x < p.Region.X + p.Region.Width &&
+                r.Y + y >= p.Region.Y && r.Y + y < p.Region.Y + p.Region.Height).ToArray();
+            // complete requires all four orientations to report exhausted search at this origin.
+            return Enumerable.Range(0, 4).All(rot => covering.Any(p => p.Rotation == rot && p.SearchComplete)) ? 'c' :
+                covering.Length > 0 ? 'p' : 'u';
+        }).ToArray());
+        return new(refinementReads, exhausted, rows.Sum(row => row.Count(c => c == '?')), planningRows, plans.ToArray(), heights);
     }
 
     public static SurveyMoisture Moisture(SurveyRequest r, IReadOnlyList<MapCell> maps, string[] obstacleRows)
@@ -220,8 +318,8 @@ public static class RegionSurvey
                 char label = c.TerrainHeight != r.Z || !c.OnGround ? 'h' : c.Underwater || c.WaterDepth > 0 || c.Contamination > 0 ? '~' : '.';
                 if (uncertain?.Contains((x, y)) == true) label = '?';
                 if (designations.Contains(pos)) label = 'c';
-                foreach (var t in targets.Where(t => t.Position == pos))
-                    label = t.Kind switch { "vegetation" when label == '.' => 'v', "planted" => 'c', "debris" => 'b', _ => label };
+                foreach (var t in targets.Where(t => t.OverlapCells is { } cells ? cells.Contains(pos) : t.Position == pos))
+                    label = t.Kind switch { "vegetation" when label == '.' => 'v', "planted" => 'c', "debris" => 'b', "other" when t.OverlapCells is not null => 'o', _ => label };
                 if (occupied.Contains((x, y))) label = 'b';
                 if (paths.Contains((x, y))) label = 'p';
                 if (entrances.Contains((x, y)) && !paths.Contains((x, y))) label = 'e';
@@ -257,7 +355,16 @@ public static class RegionSurvey
             var window = new SurveyWindow(new(r.X + x, r.Y + y, r.Z, w, h), cells.Count(c => c == '.'), cells.Count(c => c == 'v'), cells.Count(c => c == 'p'));
             if (window.FreeCells > 0 && window.PathCells > 0) options.Add(window);
         }
-        return options.OrderByDescending(w => w.FreeCells).ThenByDescending(w => w.PathCells)
-            .ThenBy(w => w.Region.Y).ThenBy(w => w.Region.X).Take(3).ToArray();
+        var selected = new List<SurveyWindow>(); var covered = new HashSet<(int X, int Y)>();
+        IEnumerable<(int X, int Y)> Cells(SurveyWindow w) =>
+            from yy in Enumerable.Range(w.Region.Y, w.Region.Height)
+            from xx in Enumerable.Range(w.Region.X, w.Region.Width) select (xx, yy);
+        while (options.Count > 0 && selected.Count < r.MaxWindows) {
+            var next = options.OrderByDescending(w => Cells(w).Count(c => !covered.Contains(c)))
+                .ThenByDescending(w => w.FreeCells).ThenByDescending(w => w.PathCells)
+                .ThenBy(w => w.Region.Y).ThenBy(w => w.Region.X).First();
+            selected.Add(next); covered.UnionWith(Cells(next)); options.Remove(next);
+        }
+        return selected.ToArray();
     }
 }
