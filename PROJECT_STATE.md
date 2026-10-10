@@ -1,5 +1,18 @@
 # Projektstand
 
+## Bauflächen oberhalb der Siedlung und beim Sägewerk geprüft (2026-10-10)
+
+Obere Wege auf z=4 in beiden Gebieten nativ distriktverbunden. Kleines Lager
+hinter Hauptsiedlung sowie kleines Lager/Wohnhaus beim Sägewerk bestehen
+Spielvorschau mit Anschluss ohne neue Wege. Größerer Kandidat hinter Siedlung
+abgelehnt; höherer Hang z=8 weiterhin teilweise unbekannt. Keine Bauten/Räumungen.
+MCP-Suchlücke belegt: Slope/other setzt ganze 8×8-Kachel auf unknown und verhindert
+survey-Planung trotz direkt gültiger Plätze. Maßnahmen im Backlog, noch kein Code.
+[Prüfgrenzen und Verfahren gegen blinde Flecken](docs/regional-survey.md).
+Endpause Tag 424, 21,375 Uhr; zwischenzeitlichen fremden Tempo-Wechsel beobachtet,
+Urheber unbekannt. Kein neuer Nachweis von Gebäudetypen.
+
+
 ## Bauchargen-Frühabschluss live bestanden (2026-10-10)
 
 Menschliches Entwickler-Gate durch anschließende Bereitmeldung bestätigt;

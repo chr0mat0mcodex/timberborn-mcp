@@ -1,5 +1,29 @@
 # Backlog
 
+## Priorität: blinde Flecken der Flächensuche (2026-10-10)
+
+Live belegt: obere Wege hinter Hauptsiedlung und neben Sägewerk sind bereits
+an den Distrikt angeschlossen. Drei Bauvorschauen gültig, ein größerer Kandidat
+abgelehnt. [Prüfumfang und Vorgehen](docs/regional-survey.md).
+
+- RegionSurvey: ein Slope/other-Objekt macht derzeit seine ganze 8×8-Kachel
+  unbekannt; im Sägewerksfeld unterdrückt das sämtliche Planungsaufrufe trotz
+  direkt nachweisbarer gültiger Bauplätze. Öffentliche Hindernisgeometrie nutzen,
+  soweit vorhanden; sonst Unsicherheit ausdrücklich lokalisieren/begründen und
+  begrenzte direkte Kandidatenprüfung zulassen. Unbekannt nie einfach freigeben.
+- Höhenübersicht und obere distriktverbundene Wege in die Gebietsauswahl aufnehmen;
+  Höhenwechsel dürfen nicht lediglich als h aus der weiteren Planung verschwinden.
+- Abdeckungsregister pro Rechteck/Höhe/Vorlage/Drehung: ungeprüft, beobachtet,
+  Kandidat, validiert, abgelehnt, unknown; Zeit/Sitzung und Abbruchgrund/Optionslimit.
+  Räum- und Bauänderungen invalidieren betroffene Ergebnisse.
+- Kompakte Diagnose: whyUnknown, unterdrückte Suchfenster, planningCalls,
+  ungesuchte Höhen und Abdeckung. Drei bevorzugte Fenster sind keine Vollsuche.
+- Abnahme für spätere Umsetzung: bekannte Slope neben freiem angeschlossenem
+  Bauplatz darf die Nachbarprüfung nicht verhindern; Hinderniszelle bleibt korrekt
+  gesperrt/unbekannt. Höhe 3 versus 4 und größeres abgelehntes Gebäude als Kontrollen.
+  Keine Implementierung oder neue Regeln in AGENTS.md mit diesem Dokumentationsauftrag.
+
+
 ## Aktionsjournal des Spielers — geplante MCP-Abfrage (2026-10-10)
 
 Der menschliche Spieler greift auch ohne vorherige Ankündigung ein. Der Agent

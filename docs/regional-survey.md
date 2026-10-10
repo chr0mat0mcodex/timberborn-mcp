@@ -1,5 +1,76 @@
 # Regionale Flächensuche — begrenzt live abgenommen
 
+## Systematische Gegenprüfung der blinden Flecken (2026-10-10)
+
+Bridge 0.36.0, strukturierte Liveabfragen; keine Bauten oder Räumungen.
+Gebiete über Rasterkoordinaten und Geländeebenen definiert, nicht Kamerarichtung.
+Vollständiger Gebäude-/Wegebestand gelesen; Sägewerk bei (26,7,3), Hauptdistrikt
+bei (29,30,3). Höhenstichproben in fünf 8×8-Feldern, anschließend flächige
+16×16-Raster und gezielte Anschlussfelder. Kein vollständiger Kartenatlas.
+
+| Gebiet und abgedeckte Ebene | Beobachtung | Gezielter Baunachweis |
+| --- | --- | --- |
+| Hinter Hauptsiedlung: x=30–45, y=24–39, z=4 | 20 freie Rasterzellen, zehn Vegetationszellen, sechs Wege; 207 Zellen andere Höhe. Schmale nutzbare Terrasse. Wege (34,28,4) und (34,33,4) nativ distriktverbunden. | Kleines Lager (35,28,4), Drehung 1: Spielvorschau gültig, Eingang angeschlossen, kein neuer Weg. |
+| Höherer Hang im selben Rechteck, z=8 | 192 unbekannte Zellen, sieben Vegetationszellen, 57 andere Höhe. Keine freie Fläche zuverlässig ausgewiesen. | Nicht als ungeeignet klassifiziert. Hindernisse/weitere Höhen und Zugang bleiben offen. |
+| Neben Sägewerk: x=27–42, y=0–15, z=4 | 50 freie, 70 Vegetations-, 125 unbekannte Zellen, zwei Wege, acht andere Höhe, eine Gebäudezelle. Wege (32,7,4) und (33,7,4) nativ distriktverbunden. Ausgewiesene freie Flächen trocken. | Kleines Lager (32,8,4), Drehung 0 und Lodge (31,8,4), Drehung 0: Spielvorschau gültig, Eingang angeschlossen, jeweils kein neuer Weg. Alternative Belegungen, nicht gleichzeitig zugesichert. |
+
+Rasterzahlen sind Klassifikationen auf genau einer Höhe, keine Anzahl sicherer
+Bauplätze. Zusätzliche Umgebungssichtung beim Sägewerk: x=19–34, y=0–15, z=3.
+Ein weiterer z=3-Aufruf wurde nach zwischenzeitlichem Tempo-Wechsel abgewiesen;
+keine vollständige zusätzliche z=3-Abdeckung behauptet. Die Ursache des Wechsels
+auf Tempo 7 wurde nicht ermittelt. Für weitere Prüfungen explizit pausiert und
+nachgelesen; Endzustand Tag 424, 21,375 Uhr, Tempo 0.
+
+Gegenprobe größerer Grundriss: vier Drehungen einer Lodge in jedem Anschlussfeld
+(x=32–37/y=24–31/z=4 und x=31–38/y=4–11/z=4). Hinter der Siedlung meldete der
+Planer Kandidaten, aber Lodge (33,27,4), Drehung 3 scheiterte an der nativen
+Platzierungsprüfung. Ursache durch aktuelle Diagnose nicht genauer belegt.
+Beim Sägewerk bestand der oben genannte Lodge-Kandidat. Vier gemeinsame
+Vorschauprüfungen insgesamt: drei gültig, eine abgelehnt; jeweils keine bleibende
+Änderung beobachtet und Vorschauzustand wiederhergestellt. Kandidatenlisten teils
+am Optionslimit gekürzt; keine vollständige Aufzählung aller Bauplätze.
+Alle Vorschauen behalten die bekannte Bauphasennachweislücke: kein tatsächlicher
+Bauarbeiter-, Liefer-, Fertigbau- oder Betriebsnachweis, keine pauschale Baufreigabe.
+
+### Konkrete Ursache im MCP
+
+Im Sägewerksfeld x=31–38/y=4–11/z=4 lieferte survey_region 62 unbekannte Zellen,
+zwei Wege, keine Suchfenster und planningCalls=0. Direkte Planung im gleichen
+Feld fand dagegen kleine Lagerplätze und den später gültigen Lodge-Kandidaten.
+Die vollständige Hindernisabfrage enthielt eine natürliche Slope bei (31,7,3),
+Kategorie other, die in die obere Ebene hineinragt. RegionSurvey.Observe setzt
+bei einem unbekannten Hindernisgrundriss vorsorglich die gesamte betroffene
+8×8-Kachel auf uncertain. Dadurch verschwinden auch tatsächlich prüfbare
+Nachbarflächen aus der automatischen Fensterauswahl. Das ist eine belegte
+Informations-/Suchlücke, keine falsche Behauptung der Spielvalidierung.
+Die 192 unbekannten Hangzellen sind nicht einzeln auf dieselbe Ursache untersucht.
+
+### Vorgehen gegen erneute blinde Flecken
+
+1. Vor Ausbau zunächst alle vorhandenen Wege und Geländehöhen am Siedlungsrand
+   inventarisieren; Suchgebiete mit x/y-Grenzen und jeder relevanten z-Ebene führen.
+   Ein z=3-Ergebnis bewertet keine Fläche auf z=4.
+2. Pro Gebiet Abdeckung und Erkenntnisstufe getrennt dokumentieren: ungeprüft,
+   Gelände/Hindernisse beobachtet, Anschluss bestätigt, Kandidat gefunden,
+   Vorschau gültig/abgelehnt. Unbekannt und am Limit abgeschnitten separat halten.
+3. Vor Abriss bestehender Gebäude zuerst ungenutzte, bereits distriktverbundene
+   Randflächen prüfen. Ein kleiner und ein repräsentativer größerer Grundriss
+   reichen als Pilot; keine Vollkatalogsuche ohne erkennbaren Nutzen.
+4. Bei unbekannten Kacheln Ursache und tatsächliche planningCalls prüfen.
+   Konkrete Hindernisse lesen; begrenzte direkte Planung um bestätigte Wege
+   verwenden, statt die ganze Region aus der Auswahl zu streichen. Gültige
+   Vorschau bleibt Voraussetzung für jede positive Platzierungsaussage.
+5. Suchfenster nicht ausschließlich nach den drei besten freien Ausschnitten
+   auswählen: bisher ungeprüfte Bereiche/Höhen und Anschlussnähe berücksichtigen.
+   Nach vier repräsentativen Vorschauen wie hier Befund dokumentieren; weitere
+   Suche nur bei offenem, konkretem Bauziel. Ergebnisse nach Spieländerung frisch prüfen.
+
+MCP-Folgearbeiten im Backlog: Höhenübersicht, Abdeckungsregister, lokalisierte
+unknown-Gründe und nachvollziehbare Fensterauswahl. In diesem Auftrag dokumentiert,
+nicht implementiert. Befund: beide Bereiche wurden bisher zu wenig berücksichtigt;
+beim Sägewerk verstärkt eine konkrete Aggregationsschwäche den Planungsfehler.
+
+
 ## Live bestanden: regionale Arbeitsreichweite (2026-10-05)
 
 Menschliches Gate bestätigt, fünf installierte Dateien stimmen mit Paket
