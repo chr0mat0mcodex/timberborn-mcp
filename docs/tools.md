@@ -144,3 +144,22 @@ expanded. unavailable liefert keine Teilmenge als vollständige Liste; erweitert
 Baustellen sind nicht unterstützt. Unabhängig von anderen Baustellen abfragbar.
 Zellen sind aktuelle gecachte Spielzugänge, kein Preview- oder Einzelpunkt-
 Erreichbarkeitsnachweis. buildersReachable bleibt die getrennte tatsächliche Abfrage.
+
+## Holzwerkzeuge und Chargen 0.35.5 — live abgenommen
+
+`inspect_forestry(session, workBuildingId, x, y, z, width, height, depth=1,
+consumerIds?)` liefert höchstens 16 geeignete Bäume in einer Region bis 8×8×4,
+Gesamtzahl/Trunkierung, Ausschlussgründe, freie/gesamte Holzbestände und optional
+Inventar-/Personalzustände von bis acht Gebäuden. Nur pausiert. Keine Ertragsrate.
+Baumstümpfe (`cutYieldRemoved=true`) und fehlende/unbekannte Holzerträge werden
+ausgeschlossen; ausgewachsen allein ist kein Nachweis eines fällbaren Baums.
+
+`mark_forestry(region, actionId, treeIds)` setzt nach frischer Prüfung reguläre
+Fällmarkierungen für 1–16 gewählte IDs. Derselbe Aufruf liest nur seinen Beleg;
+bei `unconfirmed` lesend klären. Keine Ernte- oder Lieferzusage.
+
+`run_simulation_for` erhält optional `stopAtAvailableLogs`: Bestandsziel kann vor
+dem Zeitlimit eine bestätigte Pause auslösen. `stockTargetReached` und
+`targetReached` unterscheiden; die erste Beobachtung ist kein dauerhafter Vorrat.
+Bauchargen antworten standardmäßig kompakt; `details=true` zeigt den Verlauf.
+[Abnahme und Grenzen](forestry-efficiency-0.35.5.md).

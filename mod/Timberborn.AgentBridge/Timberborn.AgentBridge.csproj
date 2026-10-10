@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework><LangVersion>latest</LangVersion>
-    <AssemblyVersion>0.35.4.0</AssemblyVersion><Version>0.35.4</Version>
+    <AssemblyVersion>0.35.5.0</AssemblyVersion><Version>0.35.5</Version>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../../src/Timberborn.Bridge.Core/Timberborn.Bridge.Core.csproj" />

@@ -23,9 +23,13 @@ Schutz anderer Projekte/Systemdateien und nachvollziehbare Git-Checkpoints bleib
 
 ## Entwicklungszyklus: Agent → Mensch → Live-Test
 
-1. Der Agent implementiert eine klar abgegrenzte Fähigkeit und führt nur gezielte,
-   günstige Quellcode-/Diff-Prüfungen aus. Er startet weder die vollständige
-   Test-/Build-/Deploy-Kette noch installiert er die Mod selbst.
+1. Der Agent implementiert eine klar abgegrenzte Fähigkeit, prüft den Diff und
+   kompiliert die betroffenen Projekte einschließlich betroffener Mod gegen die
+   lokalen Spielreferenzen. Er führt die betroffenen automatischen Tests gezielt
+   aus. Syntaxprüfung allein ersetzt keine Compiler-/Typprüfung. Erst bei Erfolg
+   erfolgt die Übergabe; fehlende Prüfmöglichkeiten werden konkret benannt.
+   Er startet weder die vollständige Test-/Build-/Deploy-Kette noch installiert
+   er die Mod selbst. Details stehen in DEVELOPMENT_WORKFLOW.md.
 2. Am Test-Gate übergibt der Agent an den Menschen. Der Mensch führt
    `scripts/prepare-human-live-test.ps1` aus; das Skript testet, baut, paketiert,
    installiert die Mod mit Sicherung und prüft die installierten Paketdateien.

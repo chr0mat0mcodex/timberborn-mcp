@@ -11,6 +11,61 @@ namespace Timberborn.Tests;
 public sealed class SimulationRunTests
 {
     [Fact]
+    public void Wood_threshold_stops_early_but_requires_observed_pause() {
+        var q = Query(); q["stopAtAvailableLogs"] = "10";
+        var c = new SimulationRunController(); var commands = new List<int>();
+        var r = c.Start(Parse(q), 24, 0, 0, commands.Add, 2);
+        c.Tick(24.1, 3, 1, commands.Add, availableLogs: 9);
+        Assert.False(r.StockTargetReached);
+        c.Tick(24.2, 3, 2, commands.Add, availableLogs: 10);
+        Assert.Equal("pausing", r.State); Assert.False(r.Terminal);
+        c.Tick(24.2, 0, 3, commands.Add, availableLogs: 8);
+        Assert.Equal("completed", r.State); Assert.True(r.PauseConfirmed);
+        Assert.True(r.StockTargetReached); Assert.False(r.TargetReached);
+        Assert.Equal(10, r.ObservedAvailableLogs); Assert.Equal("stock_target_reached", r.Reason);
+        Assert.Equal(new[] { 3, 0 }, commands);
+    }
+
+    [Fact]
+    public void Already_met_stock_target_does_not_accelerate_and_unknown_stock_fails_closed() {
+        var q = Query(); q["stopAtAvailableLogs"] = "10";
+        var c = new SimulationRunController(); var commands = new List<int>();
+        Assert.Throws<BridgeRejectionException>(() => c.Start(Parse(q), 24, 0, 0, commands.Add));
+        var r = c.Start(Parse(q), 24, 0, 0, commands.Add, 10);
+        Assert.Equal(new[] { 0 }, commands);
+        c.Tick(24, 0, 1, commands.Add, availableLogs: 10);
+        Assert.True(r.Terminal); Assert.True(r.StockTargetReached);
+        c = new(); commands.Clear();
+        r = c.Start(Parse(q), 24, 0, 0, commands.Add, 2);
+        c.Tick(24.1, 3, 1, commands.Add);
+        c.Tick(24.1, 0, 2, commands.Add);
+        Assert.Equal("failed", r.State); Assert.Equal("stock_observation_unavailable", r.Reason);
+    }
+
+    [Fact]
+    public void Unreached_stock_target_still_respects_time_budget() {
+        var q = Query(); q["stopAtAvailableLogs"] = "10";
+        var c = new SimulationRunController();
+        var r = c.Start(Parse(q), 24, 0, 0, _ => { }, 2);
+        c.Tick(26, 3, 1, _ => { }, availableLogs: 2);
+        c.Tick(26, 0, 2, _ => { }, availableLogs: 2);
+        Assert.Equal("completed", r.State); Assert.Equal("target_reached", r.Reason);
+        Assert.False(r.StockTargetReached); Assert.True(r.PauseConfirmed);
+    }
+
+    [Fact]
+    public async Task Native_client_accepts_stock_completion_before_time_target() {
+        var q = Query(); q["stopAtAvailableLogs"] = "10"; var request = Parse(q);
+        var status = new NativeSimulationRun(request.RunId, "completed", "stock_target_reached", 24, 26,
+            24.5, .5, 0, 2, request.MaxRealSeconds, request.Speed, 0, true, false, true, 10, 10, true);
+        var payload = JsonSerializer.Serialize(new BridgeEnvelope<NativeSimulationRun>(1, request.Session,
+            DateTimeOffset.UnixEpoch, "0.35.5", status), NativeJson.Options);
+        using var client = new NativeClient(new NativeConfiguration(8081, new string('a', 64)), new ResponseHandler(payload));
+        var result = await client.SimulationRun(request, q, TestContext.Current.CancellationToken);
+        Assert.True(result.Data.StockTargetReached); Assert.False(result.Data.TargetReached);
+    }
+
+    [Fact]
     public void GameLockDoesNotAbandonRunOrRestartSpeed()
     {
         var c = new SimulationRunController(); var commands = new List<int>();

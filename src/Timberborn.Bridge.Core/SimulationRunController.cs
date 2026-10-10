@@ -18,6 +18,9 @@ public sealed class SimulationRunStatus
     public bool PauseConfirmed { get; set; }
     public bool TargetReached { get; set; }
     public bool Terminal { get; set; }
+    public int? StopAtAvailableLogs { get; set; }
+    public int? ObservedAvailableLogs { get; set; }
+    public bool StockTargetReached { get; set; }
 }
 
 public sealed class SimulationRunController
@@ -32,27 +35,34 @@ public sealed class SimulationRunController
 
     public SimulationRunStatus Inspect(string id) => history.TryGetValue(id, out var r) ? r : throw new BridgeRejectionException("run_not_found");
 
-    public SimulationRunStatus Start(SimulationRunRequest r, double hours, float speed, double now, Action<int> changeSpeed)
+    public bool StockConditionActive => active?.StopAtAvailableLogs is not null;
+
+    public SimulationRunStatus Start(SimulationRunRequest r, double hours, float speed, double now, Action<int> changeSpeed, int? availableLogs = null)
     {
         if (!r.Starts) throw new ArgumentException();
         ValidateClock(hours, speed, now);
         if (history.ContainsKey(r.RunId)) throw new BridgeRejectionException("run_id_used");
         if (active is not null || history.Count >= Capacity || speed != r.ExpectedSpeed) throw new BridgeRejectionException("state_conflict");
+        if (r.StopAtAvailableLogs is not null && (availableLogs is null || availableLogs < 0)) throw new BridgeRejectionException("state_conflict");
         double target = r.Route == "simulation-run-for" ? hours + r.DurationHours : r.TargetHours;
         if (target < hours || target - hours > 672) throw new BridgeRejectionException("invalid_time_target");
         active = new SimulationRunStatus { RunId = r.RunId, StartGameHours = hours, TargetGameHours = target,
-            ObservedGameHours = hours, RequestedSpeed = r.Speed, ObservedSpeed = speed, MaxRealSeconds = r.MaxRealSeconds };
+            ObservedGameHours = hours, RequestedSpeed = r.Speed, ObservedSpeed = speed, MaxRealSeconds = r.MaxRealSeconds,
+            StopAtAvailableLogs = r.StopAtAvailableLogs, ObservedAvailableLogs = r.StopAtAvailableLogs is null ? null : availableLogs };
         history.Add(r.RunId, active);
         started = phaseStarted = lastProgress = now; lastHours = hours; initialSpeed = speed;
         pauseAfterUnlock = wasLocked = false;
         var result = active;
-        if (hours >= target) BeginPause("completed", "target_reached", now, changeSpeed);
+        if (r.StopAtAvailableLogs is { } threshold && availableLogs >= threshold) {
+            active.StockTargetReached = true; BeginPause("completed", "stock_target_reached", now, changeSpeed);
+        }
+        else if (hours >= target) BeginPause("completed", "target_reached", now, changeSpeed);
         else RequestSpeed(r.Speed, changeSpeed);
         Observe(result, hours, speed, now);
         return result;
     }
 
-    public void Tick(double hours, float speed, double now, Action<int> changeSpeed, bool speedLocked = false)
+    public void Tick(double hours, float speed, double now, Action<int> changeSpeed, bool speedLocked = false, int? availableLogs = null)
     {
         if (active is null) return;
         ValidateClock(hours, speed, now);
@@ -92,6 +102,13 @@ public sealed class SimulationRunController
         } else if (speed != r.RequestedSpeed) { Finish("interrupted", "speed_changed"); return; }
         if (hours < lastHours) { BeginPause("failed", "clock_reversed", now, changeSpeed); return; }
         if (hours > lastHours) { lastHours = hours; lastProgress = now; }
+        if (r.StopAtAvailableLogs is { } threshold) {
+            if (availableLogs is null || availableLogs < 0) { BeginPause("failed", "stock_observation_unavailable", now, changeSpeed); return; }
+            r.ObservedAvailableLogs = availableLogs;
+            if (availableLogs >= threshold) {
+                r.StockTargetReached = true; BeginPause("completed", "stock_target_reached", now, changeSpeed); return;
+            }
+        }
         if (hours >= r.TargetGameHours) BeginPause("completed", "target_reached", now, changeSpeed);
         else if (now - started >= r.MaxRealSeconds) BeginPause("failed", "real_time_limit", now, changeSpeed);
         else if (now - lastProgress >= 120) BeginPause("failed", "simulation_stalled", now, changeSpeed);

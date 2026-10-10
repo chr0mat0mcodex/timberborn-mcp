@@ -29,7 +29,7 @@ public sealed class BuildBatchTests
     private sealed class Port : IBuildBatchPort
     {
         public int Builds, Runs, Marks;
-        public bool NoPlan, LoseBuildAck, LoseMarkAck, KeepMarked, ClearanceDone, LoseRunAck;
+        public bool NoPlan, LoseBuildAck, LoseMarkAck, KeepMarked, ClearanceDone, LoseRunAck, RejectBuild;
         public int ClearanceStarts;
         public Func<BuildBatchSpec, int, bool>? MissingPlan;
         public List<int> SubmittedRegions = [];
@@ -66,6 +66,7 @@ public sealed class BuildBatchTests
         public Task<NativeProjectExecution> Submit(BuildBatchJob j, CancellationToken ct) {
             Assert.Equal("pending_build", SavedState); Assert.Equal(1, j.Selection!.Rotation); Builds++;
             SubmittedRegions.Add(j.RegionIndex);
+            if (RejectBuild) throw new Timberborn.Bridge.Core.BridgeRejectionException("state_conflict");
             if (LoseBuildAck) throw new IOException();
             return Task.FromResult(new NativeProjectExecution(j.ActionId, new string('a', 64), "completed", "", [], false, []));
         }
@@ -175,6 +176,15 @@ public sealed class BuildBatchTests
         Assert.Equal(1, p.Builds); Assert.Single(j.Finished);
     }
     [Fact]
+    public async Task Explicit_rejection_is_terminal_and_never_retried() {
+        var p = new Port { RejectBuild = true }; var j = Job();
+        var e = new BuildBatchEngine(p, x => p.SavedState = x.State);
+        await e.Step(j, TestContext.Current.CancellationToken);
+        await e.Step(j, TestContext.Current.CancellationToken);
+        Assert.Equal("stopped", j.State); Assert.Equal("build_rejected:state_conflict", j.Reason);
+        Assert.Equal(1, p.Builds); Assert.Equal(0, p.Runs);
+    }
+    [Fact]
     public async Task Lost_clearance_ack_reads_absence_without_repeating_mark() {
         var p = new Port { NoPlan = true, LoseMarkAck = true, Objects = [new(Guid.Parse("44444444-4444-4444-8444-444444444444"),
             "vegetation", "Pine", new(2, 2, 3), "demolition_mark", true, false, "natural", "tree")] };
@@ -237,6 +247,12 @@ public sealed class BuildBatchTests
             var changed = JsonSerializer.SerializeToElement(new BatchStartRequest(s with { ConstructionHours = 48 }, 0), NativeJson.Options);
             await Assert.ThrowsAsync<ArgumentException>(() => BuildBatchTools.Execute(BuildBatchTools.Start, changed, true, true, true, store, p, TestContext.Current.CancellationToken));
             var handle = JsonSerializer.SerializeToElement(new BatchHandle(s.Session, s.BatchId), NativeJson.Options);
+            var compact = await BuildBatchTools.Execute(BuildBatchTools.Inspect, handle, false, false, false, store, p, TestContext.Current.CancellationToken);
+            Assert.Null(compact["data"]!["search"]);
+            Assert.True(compact["data"]!["detailsAvailable"]!.GetValue<bool>());
+            var detailedHandle = JsonSerializer.SerializeToElement(new BatchHandle(s.Session, s.BatchId, Details: true), NativeJson.Options);
+            var detailed = await BuildBatchTools.Execute(BuildBatchTools.Inspect, detailedHandle, false, false, false, store, p, TestContext.Current.CancellationToken);
+            Assert.NotNull(detailed["data"]!["search"]);
             await BuildBatchTools.Execute(BuildBatchTools.Stop, handle, false, false, false, store, p, TestContext.Current.CancellationToken);
             await BuildBatchTools.Execute(BuildBatchTools.Advance, handle, true, true, true, store, p, TestContext.Current.CancellationToken);
             Assert.Equal("cancelled", store.Load(s.Session, s.BatchId)!.State); Assert.Equal(0, p.Builds);

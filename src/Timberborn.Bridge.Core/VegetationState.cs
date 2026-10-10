@@ -8,9 +8,17 @@ public sealed class VegetationState
     public bool? WaterStress { get; }
     public bool? IsGrown { get; }
     public float? GrowthProgress { get; }
-    public VegetationState(string lifeState, bool? isDying, bool? waterStress, bool? isGrown, float? growthProgress)
-    { LifeState=lifeState; IsDying=isDying; WaterStress=waterStress; IsGrown=isGrown; GrowthProgress=growthProgress; }
+    public bool? CutYieldRemoved { get; }
+    public bool? CutIsYielding { get; }
+    public string? CutYieldGood { get; }
+    public int? CutYieldAmount { get; }
+    public VegetationState(string lifeState, bool? isDying, bool? waterStress, bool? isGrown, float? growthProgress,
+        bool? cutYieldRemoved = null, bool? cutIsYielding = null, string? cutYieldGood = null, int? cutYieldAmount = null)
+    { LifeState=lifeState; IsDying=isDying; WaterStress=waterStress; IsGrown=isGrown; GrowthProgress=growthProgress;
+      CutYieldRemoved=cutYieldRemoved; CutIsYielding=cutIsYielding; CutYieldGood=cutYieldGood; CutYieldAmount=cutYieldAmount; }
     public bool IsTappingCandidate() => LifeState=="alive" && IsDying==false && WaterStress==false && IsGrown==true;
     public bool IsValid() => (LifeState is "alive" or "dead" or "unknown") &&
+        (!CutYieldAmount.HasValue || CutYieldAmount.Value >= 0) &&
+        (CutYieldGood is null || CutYieldGood.Length is > 0 and <= 160) &&
         (!GrowthProgress.HasValue || (!float.IsNaN(GrowthProgress.Value) && !float.IsInfinity(GrowthProgress.Value) && GrowthProgress.Value>=0));
 }

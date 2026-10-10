@@ -1,6 +1,16 @@
 # Kompatibilität und Nachweise
 
-## Aktuelle Basis
+## Aktueller Zusatznachweis 0.35.5 (2026-10-10)
+
+Menschliches Gate mit anschließender Bereitmeldung; native Bridge 0.35.5 live
+bestätigt. Baumstumpf-/Ertragsunterscheidung, Sammelmarkierung/Replay, früher
+Holzstopp und kompakte/terminale Chargenberichte bestanden. Gültige Flagge
+unabhängig finished_accessible bestätigt. 77 gezielte Unit-Tests und sechs
+Integrationsvarianten bestanden; MCP-/Testprojekte und Mod ohne Compilerwarnung.
+Keine erneute allgemeine Katalog-, Fraktions- oder Spielversionsabnahme.
+[Nachweis](../forestry-efficiency-0.35.5.md).
+
+## Frühere Basis
 
 Installiert und begrenzt live bestanden: 0.35.1 mit budgetgerechter ebener
 Routensuche, generischem Gebäudeprojekt und dynamischem MCP-Katalogprofil.

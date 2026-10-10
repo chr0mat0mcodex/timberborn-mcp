@@ -13,8 +13,8 @@ public sealed record BuildBatchSpec(string Session, string BatchId, string Distr
     int Width, int Height, int[] Rotations, BatchBuilding[] Items, string Clearing, int MaxClearTargets,
     int ClearanceHours, int ConstructionHours, int Speed, int MaxRealSeconds,
     [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] BatchRegion[]? AdditionalRegions = null);
-public sealed record BatchStartRequest(BuildBatchSpec Batch, int WaitSeconds);
-public sealed record BatchHandle(string Session, string BatchId, int WaitSeconds = 0);
+public sealed record BatchStartRequest(BuildBatchSpec Batch, int WaitSeconds, bool Details = false);
+public sealed record BatchHandle(string Session, string BatchId, int WaitSeconds = 0, bool Details = false);
 public sealed record BatchSelection(int Rotation, int OptionIndex, string PlanKey, Position Origin, int NewPaths);
 public sealed record BatchSearch(int Rotation, int Checked, int Rejected, string StopReason);
 public sealed record BatchFinished(int Index, string ActionId, string Template, Position Origin, string Proof, int RegionIndex = 0);

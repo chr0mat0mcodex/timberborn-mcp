@@ -1,4 +1,5 @@
 using Timberborn.Backend.Native;
+using Timberborn.Bridge.Core;
 
 namespace Timberborn.McpServer;
 
@@ -54,8 +55,13 @@ public sealed class BuildBatchEngine(IBuildBatchPort port, Action<BuildBatchJob>
                     break;
                 }
                 Checkpoint(j, "pending_build"); // Never re-submit this actionId on recovery.
-                var receipt = await port.Submit(j, ct);
-                if (receipt.State is "stopped" or "unconfirmed") { j.Reason = receipt.Reason; throw new IOException("build_unconfirmed"); }
+                NativeProjectExecution receipt;
+                try { receipt = await port.Submit(j, ct); }
+                catch (BridgeRejectionException ex) {
+                    Stop(j, "build_rejected:" + ex.Code); break;
+                }
+                if (receipt.State == "stopped") { Stop(j, "build_stopped:" + receipt.Reason); break; }
+                if (receipt.State == "unconfirmed") { j.Reason = receipt.Reason; throw new IOException("build_unconfirmed"); }
                 j.State = "building"; break;
             }
             case "discovering": {

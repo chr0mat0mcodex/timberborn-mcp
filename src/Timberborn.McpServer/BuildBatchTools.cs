@@ -24,12 +24,12 @@ public static class BuildBatchTools
             input["type"] = "object";
             yield return new Tool {
                 Name = name,
-                Description = name switch {
+                Description = "Standardantwort kompakt mit aktuellem Fortschritt; details=true liefert Such-/Verlaufdetails. " + (name switch {
                     Start => "Charge von 1–8 Gebäuden: Basisfläche plus optional bis drei additionalRegions, jede höchstens 8×8. Bei fehlendem Standort nächste Fläche in Listenreihenfolge, kein Rücksprung. Frische Bau-/Zugangsprüfung je Gebäude bis finished_accessible. clearing räumt bei Bedarf einmal je Fläche passende natürliche Vegetation; maxClearTargets gilt insgesamt (höchstens 64). Räum-/Baubudgets zusammen höchstens 672 Stunden. Unbestätigter Eingriff, fehlendes Material oder erschöpftes Räumbudget stoppt die ganze Charge. Gleiche batchId liest nur Status, geänderte Parameter abgelehnt. Danach advance, waitSeconds 0–45.",
                     Advance => "Setzt gespeicherte Baucharge fort: Standortwahl, Räumung, festes Räumzeitfenster und sequenzielle Fertigstellung. waitSeconds 0–45 begrenzt Statuswarten, höchstens 64 Zustandsübergänge. Kein Hintergrunddispatcher; zwischen Aufrufen läuft nur ein bereits gestartetes, begrenztes Spielzeitfenster weiter. Unbestätigte Eingriffe werden ausschließlich lesend geklärt.",
                     Inspect => "Liest ausschließlich den lokalen gespeicherten Chargenstatus, keinen aktuellen Spielzustand. checkpointOnly=true. Zur Fortsetzung advance verwenden.",
                     _ => "Stoppt weitere Aufträge dieser Charge dauerhaft. Ein bereits gestarteter Spielzeitlauf läuft bis zu seinem festen Budget und pausiert dann; kein sofortiger Spielstopp."
-                },
+                }),
                 InputSchema = JsonSerializer.SerializeToElement(input),
                 OutputSchema = JsonSerializer.SerializeToElement(json.GetJsonSchemaAsNode(typeof(NativeResult<object>))),
                 Annotations = new() { ReadOnlyHint = name == Inspect, DestructiveHint = name is Start or Advance,
@@ -48,7 +48,7 @@ public static class BuildBatchTools
         BatchStartRequest? request = name == Start ? BuildBatchState.Parse<BatchStartRequest>(args) : null;
         if (request is not null && request.Batch is null) throw new ArgumentException("batch_required");
         var handle = request is null ? BuildBatchState.Parse<BatchHandle>(args) :
-            new BatchHandle(request.Batch.Session, request.Batch.BatchId, request.WaitSeconds);
+            new BatchHandle(request.Batch.Session, request.Batch.BatchId, request.WaitSeconds, request.Details);
         BuildBatchState.Id(handle.Session); BuildBatchState.Id(handle.BatchId);
         if (handle.WaitSeconds is < 0 or > 45 || name is Inspect or Stop && handle.WaitSeconds != 0) throw new ArgumentException();
         if (request is not null) BuildBatchState.Validate(request.Batch, settingsEnabled);
@@ -85,7 +85,7 @@ public static class BuildBatchTools
                 fault = new("batch_interrupted", "Gespeicherten Status prüfen; advance klärt ausstehende Eingriffe lesend. Keine neue batchId als Retry.", false);
             }
         }
-        var report = new { batchId = job.Spec.BatchId, job.State, job.Reason, checkpointOnly = true,
+        object report = new { batchId = job.Spec.BatchId, job.State, job.Reason, checkpointOnly = true,
             job.UpdatedAtUtc, finishedCount = job.Index, total = job.Spec.Items.Length, job.Finished,
             currentActionId = job.Index < job.Spec.Items.Length ? job.ActionId : null, job.Selection,
             regionIndex = job.RegionIndex, regionCount = BuildBatchState.Regions(job.Spec).Length,
@@ -95,6 +95,23 @@ public static class BuildBatchTools
                 runId = job.ClearanceUsed ? job.ClearanceRunId : null, state = job.ClearanceRun?.State },
             completion = job.Completion is null ? null : new { job.Completion.Outcome, job.Completion.RunId },
             job.Search };
+        if (!handle.Details) {
+            var current = job.Index < job.Spec.Items.Length && job.Completion?.ActionId == job.ActionId ? job.Completion : null;
+            report = new { batchId = job.Spec.BatchId, job.State, job.Reason, checkpointOnly = true, job.UpdatedAtUtc,
+                finishedCount = job.Index, total = job.Spec.Items.Length, regionIndex = job.RegionIndex,
+                currentActionId = job.Index < job.Spec.Items.Length ? job.ActionId : null,
+                progress = current is null ? null : new { current.Outcome, current.CurrentSpeed,
+                    finishedObjects = current.Steps.Count(s => s.Finished == true), totalObjects = current.Steps.Length,
+                    materialProgress = current.Steps.LastOrDefault()?.MaterialProgress,
+                    buildProgress = current.Steps.LastOrDefault()?.BuildProgress,
+                    elapsedGameHours = current.Run?.ElapsedGameHours,
+                    remainingGameHours = current.Run is null ? (double?)null : Math.Max(0, current.Run.TargetGameHours - current.Run.ObservedGameHours) },
+                unconfirmed = job.State is "pending_build" or "pending_build_run" or "pending_mark" or "pending_clearance_run",
+                nextAction = job.Terminal ? "done_or_diagnose_reason" : "advance_existing_batch",
+                suggestedPollSeconds = job.Terminal ? 0 : 10,
+                clearanceRunId = job.ClearanceRun?.RunId,
+                detailsAvailable = true };
+        }
         return JsonSerializer.SerializeToNode(new NativeResult<object>(1, fault is null ? "ok" : "error", report,
             new("native", false, job.Spec.Session, null), fault), NativeJson.Options)!.AsObject();
     }

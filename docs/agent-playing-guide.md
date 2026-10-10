@@ -1,6 +1,6 @@
 # Spielanleitung für Agenten
 
-Stand: Bridge 0.35.1, nach generischem Bauablauf und Wegbudget-Grenzkontrolle.
+Stand: Bridge 0.35.5; aktualisiert am 10. Oktober 2026.
 Diese Anleitung beschreibt die vorhandenen MCP-Fähigkeiten. Aktueller Auftrag
 und Projektregeln stehen in [AGENTS.md](../AGENTS.md) und
 [missionsplan.md](../missionsplan.md); das lokale Spiel ist das freigegebene
@@ -112,3 +112,16 @@ Baum samt Bau-/Fertigzugang separat bestanden. [Details](road-budget-planner.md)
 Historische Nachweise ersetzen keine frische Standortprüfung. Spiel-Multi-Eingänge,
 Direkt-fertig-Distriktzentrum und beliebige Katalogobjekte sind nicht pauschal
 live abgenommen. Lagergut, Personal, Produktion und Versorgung separat prüfen.
+
+## Holzdiagnose und kompakte Chargen ab 0.35.5
+
+Bei Pause inspect_forestry für eine begrenzte Holzfällerregion verwenden.
+Ausgewachsen bedeutet nicht fällbar: Baumreste und fehlender Holzertrag sind
+separat ausgeschlossen. Nur angebotene IDs an mark_forestry übergeben;
+completed bestätigt Markierungen, keine Ernte. Gleiche actionId liest den Beleg.
+run_simulation_for kann mit stopAtAvailableLogs früh pausieren; stockTargetReached
+vom normalen Zeitlimit targetReached unterscheiden. Aktuelle Pause und Ernte
+bei Bedarf getrennt nachlesen. Bauchargen sind standardmäßig kompakt;
+details=true nur für Such-/Verlaufsdiagnose. build_rejected ist terminal,
+keine Wiederholung mit neuer ID ohne Diagnose und geänderte Voraussetzungen.
+[Liveumfang und Grenzen](forestry-efficiency-0.35.5.md).

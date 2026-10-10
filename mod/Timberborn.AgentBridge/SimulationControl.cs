@@ -1,6 +1,8 @@
 using Timberborn.Bridge.Core;
 using Timberborn.TimeSystem;
 using Timberborn.SingletonSystem;
+using Timberborn.Goods;
+using Timberborn.ResourceCountingSystem;
 
 namespace Timberborn.AgentBridge;
 
@@ -10,8 +12,11 @@ public sealed class SimulationControl
     private readonly IDayNightCycle time;
     private readonly EventBus events;
     private bool speedLocked;
-    public SimulationControl(SpeedManager speed, IDayNightCycle time, EventBus events) {
+    private readonly IGoodService goods;
+    private readonly ResourceCountingService resources;
+    public SimulationControl(SpeedManager speed, IDayNightCycle time, EventBus events, IGoodService goods, ResourceCountingService resources) {
         this.speed = speed; this.time = time; this.events = events;
+        this.goods = goods; this.resources = resources;
         events.Register(this);
     }
     [OnEvent]
@@ -19,12 +24,18 @@ public sealed class SimulationControl
     private readonly SimulationRunController runs = new();
     private readonly System.Diagnostics.Stopwatch wall = System.Diagnostics.Stopwatch.StartNew();
     private double Hours => time.DayNumber * 24d + time.HoursPassedToday;
-    public void Update() => runs.Tick(Hours, speed.CurrentSpeed, wall.Elapsed.TotalSeconds, s => speed.ChangeSpeed(s), speedLocked);
+    private int? AvailableLogs() {
+        try { return goods.Goods.Contains("Log") ? resources.GetGlobalResourceCount("Log").AvailableStock : null; }
+        catch { return null; } // Unknown stock stops a conditional run; never assume zero or met.
+    }
+    public void Update() => runs.Tick(Hours, speed.CurrentSpeed, wall.Elapsed.TotalSeconds, s => speed.ChangeSpeed(s), speedLocked,
+        runs.StockConditionActive ? AvailableLogs() : null);
     public void Unload() { events.Unregister(this); runs.Unload(s => speed.ChangeSpeed(s)); }
     public object Run(SimulationRunRequest r)
     {
         if (r.Starts && speedLocked) throw new BridgeRejectionException("state_conflict");
-        var result = r.Starts ? runs.Start(r, Hours, speed.CurrentSpeed, wall.Elapsed.TotalSeconds, s => speed.ChangeSpeed(s))
+        var result = r.Starts ? runs.Start(r, Hours, speed.CurrentSpeed, wall.Elapsed.TotalSeconds, s => speed.ChangeSpeed(s),
+            r.StopAtAvailableLogs is null ? null : AvailableLogs())
             : r.Route == "simulation-run-cancel" ? runs.Cancel(r.RunId, Hours, speed.CurrentSpeed, wall.Elapsed.TotalSeconds, s => speed.ChangeSpeed(s), speedLocked) : runs.Inspect(r.RunId);
         return Newtonsoft.Json.Linq.JObject.FromObject(result, Newtonsoft.Json.JsonSerializer.Create(new Newtonsoft.Json.JsonSerializerSettings {
             ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() }));

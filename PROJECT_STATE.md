@@ -1,5 +1,92 @@
 # Projektstand
 
+## 0.35.5 abgeschlossen (2026-10-10)
+
+Holzdiagnose mit echter Ertragsprüfung, Sammelmarkierung/Replay, früher Holzstopp,
+kompakte Chargenantworten und terminale Bauablehnung live bestanden. Gültiger
+Einzelbau zusätzlich unabhängig als finished_accessible und pausiert bestätigt.
+Kompakter Ablehnungsbericht 439 statt 973 Zeichen. Gezielte Vorprüfung: drei
+Projekt-Builds ohne Warnungen/Fehler, 77 Unit-Tests und sechs Integrationsvarianten
+bestanden; menschliches Gate durch anschließende Bereitmeldung bestätigt.
+[Abschlussnachweis und Grenzen](docs/forestry-efficiency-0.35.5.md).
+Screenshot-Wunsch, native Forstfilter und präzisere Eingabefehler bleiben im Backlog.
+Frühere offene Abnahmestände unten sind historisch. Hermes-/Starteränderungen
+bleiben separat im Arbeitsbaum.
+
+## Baumstumpf-Korrektur und Holzstopp live bestanden (2026-10-10)
+
+Nach erneutem menschlichem Gate native Bridge 0.35.5 erreichbar. Vollständige
+Kontrollfläche: 45 Objekte, davon 34 abgeerntete Reste, acht junge Bäume ohne
+Fällertrag und drei fällbare Kiefern mit je zwei Holz. Forestry und alle
+Detailseiten stimmen überein. Stumpfauftrag abgewiesen; zwei echte Bäume markiert,
+Replay identisch, beide anschließend als already_marked ausgeschlossen.
+
+Begrenzter Lauf mit Holzschwelle drei: stock_target_reached nach 1,9375
+Spielstunden und 5,51 realen Sekunden, vier freie Stämme statt zuvor zwei.
+Beide Zielbäume anschließend als abgeerntet bestätigt. Pause separat gelesen:
+Tag 411, 5,78125 Uhr, Tempo null. Kein Vollbeleg für 0.35.5: Chargenantwort und
+terminale Bauablehnung noch live offen; deshalb noch kein Versionsabschluss,
+Commit oder Push. [Nachweis](docs/forestry-efficiency-0.35.5.md).
+
+## Vorprüfung vor Testübergabe korrigiert (2026-10-10)
+
+CS8602 in ForestrySurvey behoben: nach der Nullprüfung wird durchgehend die
+geprüfte lokale Vegetationsvariable verwendet. MCP-/Unit-Testprojekt,
+Integrationstestprojekt und Mod gegen lokale Spielreferenzen erfolgreich
+kompiliert, jeweils ohne Warnungen/Fehler. 77 gezielte Forestry-, SimulationRun-
+und BuildBatch-Tests sowie alle sechs Varianten des Integrationstests
+AuthenticatedBridgeThroughRealStdioHonorsIndependentActionGates bestanden.
+Sandbox-Teststarts scheiterten vor der Ausführung am Testhost-Verbindungsaufbau;
+die genannten erfolgreichen Testläufe erfolgten außerhalb der Sandbox.
+
+Auf Nutzerauftrag AGENTS.md, DEVELOPMENT_WORKFLOW.md und globalen
+general-mod-workflow aktualisiert: betroffene Projekte und Tests vor der Übergabe
+wirklich ausführen, Compilerprüfung nicht durch Syntaxprüfung ersetzen.
+Skill validiert; Diff-Prüfung sauber. Keine Installation, kein Commit/Push.
+Erneutes menschliches Gate und Livevergleich Baumstumpf/erntefähiger Baum bleiben
+für die korrigierten Ertragsdaten erforderlich; 0.35.5 ist noch nicht abgenommen.
+
+## 0.35.5-Livepilot gestoppt: Baumreste nicht unterscheiden (2026-10-10)
+
+Menschliches Gate und native Verbindung bestätigt; fünf installierte Paketdateien
+mit Paket 0.35.5-20261010-180251-9ec61831 identisch. Sammelmarkierung zweier IDs,
+identisches Replay, Parameterkonflikt und bereits erreichtes Holzziel geprüft.
+Benutzerhinweis während des Pilots: angebotene Objekte können Baumstümpfe sein.
+Lebens-/Wachstumsflags allein sind kein Nachweis eines vorhandenen Fällertrags.
+Die bisherige Kandidatenprüfung ist deshalb nicht abgenommen. Lauf abgebrochen,
+Pause bestätigt bei Tag 411, 3,875 Uhr; Holzziel fünf nicht erreicht.
+
+Korrektur vorbereitet: öffentliche Cuttable.Yielder-Felder IsYieldRemoved,
+IsYielding, Yield.GoodId und Yield.Amount in Vegetationsdaten aufnehmen. Forestry
+schließt abgeerntete Reste, fehlende Ertragsdaten und fehlendes Holz aus.
+Gezielte Tests für lebende/ausgewachsene Stümpfe, Nullbestand und unbekannte Daten
+ergänzt; nur Syntax-/Diff-Prüfung. Erneutes menschliches Gate und stumpf-/baum-
+spezifischer Livetest erforderlich. Versionsabschluss, Commit und Push bleiben offen.
+
+
+## 0.35.5 vorbereitet – menschliches Gate offen (2026-10-10)
+
+Auftrag: Versionsabschluss einschließlich Holz-/Effizienzfunktionen. Implementiert:
+kompakte regionale Holzdiagnose mit optionalen Verbraucherinventaren, gebündelte
+Fällmarkierungen mit Replay-Beleg, früher Simulationsstopp bei freiem Holzbestand,
+terminale Bauablehnung und kompakte Chargenantworten mit optionalen Details.
+Manifest/Bridge/Assembly und Client-Versionserkennung auf 0.35.5 vorbereitet.
+[Umfang, Grenzen und Abnahme](docs/forestry-efficiency-0.35.5.md).
+
+Menschlicher Gate-Lauf: MCP-/Test-Build und Unit-Tests bestanden. Integrationstest
+stoppte an veralteter Werkzeugliste (inspect_forestry fehlte); Erwartungen für
+lesende Holzdiagnose und separat freigeschaltete Markierung korrigiert. Erneuter
+Gate-Lauf bestätigte Build/Unit-Tests, stoppte aber an der ebenfalls veralteten
+ReadOnly-Erwartung für mark_forestry. Schreibwerkzeugliste korrigiert und explizite
+Annotationstests ergänzt; entsprechende Erwartungen in den Integrationstests
+zusammen geprüft. Erfolgreicher Gesamtlauf, Mod-Build, Installation und gezielter
+Livetest stehen aus. Keine neue Spielbeobachtung;
+letzter historischer Spielstand weiter unten. Kein Commit/Push dieser Implementierung
+vor erfolgreichem Gate. Screenshot-Funktion als optionaler lesender Spielbildabruf
+im Backlog vermerkt, noch nicht implementiert. Vorhandene lokale Integrationsänderungen
+erhalten; sie sind kein Bestandteil des behaupteten Funktionsnachweises.
+
+
 ## Tagesabschluss und Übergabe (2026-10-05)
 
 Letzter Live-Stand unverändert: Tag 409, 18,09375 Uhr, pausiert; 47 Biber,

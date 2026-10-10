@@ -5,6 +5,11 @@ Beobachtung und kontrollierte Eingriffe über reguläre Spielservices.
 
 ## Status
 
+Aktueller Stand am 10. Oktober: Bridge 0.35.5. Holzdiagnose unterscheidet
+fällbare Bäume und Baumstümpfe; Sammelmarkierung, früher Holzstopp, kompakte
+Chargenantworten und terminale Bauablehnung sind begrenzt live geprüft.
+[Abschluss und Grenzen](docs/forestry-efficiency-0.35.5.md).
+
 **Phase E abgeschlossen** mit 0.35.1 im begrenzten, live geprüften Umfang.
 [Abschlussnachweise](missionsplan.md#abschluss-phase-e),
 [offene Folgearbeiten](BACKLOG.md#offene-folgearbeiten-nach-phase-e).

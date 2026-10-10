@@ -1,5 +1,46 @@
 # Backlog
 
+## Baumstumpf-Korrektur live bestätigt (2026-10-10)
+
+Benutzer weist im Livepilot auf Baumreste hin. Growable.IsGrown und Lebenszustand
+belegen keinen noch vorhandenen Fällertrag. Quellcodekorrektur nutzt öffentliche
+Cuttable.Yielder-Daten: abgeerntete Reste separat zählen; nur aktiven positiven
+Log-Ertrag empfehlen. Fehlende Ertragsdaten bleiben unbekannt und ausgeschlossen.
+Keine heuristische Unterscheidung über Namen, Modelle oder Screenshot notwendig.
+Livekontrolle vollständig über 45 Objekte: 34 abgeerntete Reste und acht junge
+Bäume ohne Holzertrag ausgeschlossen, drei fällbare Kiefern mit je zwei Holz
+erkannt. Stumpfauftrag abgelehnt; zwei echte Bäume markiert, Replay identisch,
+anschließende Diagnose bestätigt beide als already_marked. Detailnachweis in
+docs/forestry-efficiency-0.35.5.md. Übrige Versionsabnahme bleibt separat offen.
+
+
+## 0.35.5 abgeschlossen (2026-10-10)
+
+Holzdiagnose mit Ertragsprüfung, Sammelmarkierung/Replay, früher Holzstopp,
+kompakte Chargenantworten und terminale native Bauablehnung live bestanden.
+[Abschlussnachweis](docs/forestry-efficiency-0.35.5.md).
+
+Folgearbeiten: native räumliche Filter statt 31 internen Reads je Forstdiagnose;
+Forestry-Eingabefehler als Ablehnung vor Auftrag ausweisen statt pauschal
+„möglicherweise unbestätigt“; Verbrauchsraten und allgemeine ereignisbasierte
+Bauabschlüsse. Die Entwurfsabschnitte vom 5. Oktober sind teilweise umgesetzt.
+
+
+
+## Gewünscht: optionales Spielbild über MCP (2026-10-10)
+
+Lesende Screenshot-Funktion, damit der spielende Agent bei Bedarf das aktuelle
+Spielbild sehen kann. Expliziter Abruf statt Dauerstream; Bild als MCP-Bildinhalt
+mit Sitzungskennung, Aufnahmezeit und Bildgröße zurückgeben. Nur Timberborn-
+Spielansicht, keine Aufnahme anderer Desktopfenster; begrenzte Auflösung und
+Antwortgröße. Aufnahme bei fehlender Kamera oder ungeladenem Spiel klar ablehnen.
+Keine Screenshots in Git und kein automatisches Mitschreiben einer Bildhistorie.
+Strukturierte Daten bleiben Grundlage der Aktionen; Bild dient ergänzender
+Orientierung. Noch nicht implementiert. Vor Umsetzung öffentliche Spiel-/Unity-
+Aufnahme-API und Bildausgabe des MCP-SDK prüfen; Abnahme mit explizitem Bildabruf,
+Aufnahmezeit/Session und kontrolliertem Fehler ohne geladene Spielansicht.
+
+
 ## Effizienter Holzausbau – Vorschlag, keine Umsetzung (2026-10-05)
 
 Evidenz: Radbau nach einem Spieltag wegen Holzlieferung unvollständig. Für die
