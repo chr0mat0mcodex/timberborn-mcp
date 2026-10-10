@@ -42,6 +42,28 @@ sowie Ablehnung fremder Session. [Abnahme](docs/screenshot-0.36.0.md).
 Minimierte Ansicht/fehlende Kamera nicht zusätzlich live provoziert.
 
 
+## Agenten-UI im Spiel — geplantes Vorhaben (2026-10-10)
+
+Eine Mod-Oberfläche für die Zusammenarbeit zwischen menschlichem Spieler und
+Agenten vorsehen. Umfang und Interaktionskonzept vor Umsetzung konkretisieren;
+dieser Eintrag ist Planung, keine bereits implementierte Funktion.
+
+- **„Zeigen“-Button:** Der Spieler stellt Kamera und UI ein und hält per Knopf
+  diese Spielansicht für den Agenten fest. Vorhandene Screenshot-Funktion samt
+  Kamerametadaten nutzen. Aufnahmezeitpunkt ist der Klick; späteres Abholen darf
+  nicht stillschweigend eine inzwischen veränderte Ansicht aufnehmen.
+- Übergabe und sichtbaren Status festlegen: Aufnahme bereit, vom Agenten abgeholt
+  oder fehlgeschlagen. Ein Klick allein startet noch keinen Agentenlauf; den
+  Abruf beim nächsten Agentenkontakt ausdrücklich vom aktiven Benachrichtigen
+  unterscheiden. Begrenzte sitzungsgebundene Aufbewahrung, keine Bildhistorie.
+- Abnahme: Ansicht A zeigen, Kamera auf B bewegen, beim Agenten weiterhin A
+  mit zugehörigem Zeitpunkt und Kameradaten erhalten; Sitzungswechsel und
+  fehlgeschlagene Aufnahme eindeutig behandeln. Entwickler-Test-Gate bleibt.
+
+Bis dahin funktioniert „schau mal“ im Chat mit einer Aufnahme zum Zeitpunkt des
+Werkzeugaufrufs. Der Ingame-Button gehört zum größeren UI-Vorhaben, nicht zu einer
+noch offenen Pflichtfunktion des abgenommenen Screenshot-Releases 0.36.0.
+
 ## Effizienter Holzausbau – Vorschlag, keine Umsetzung (2026-10-05)
 
 Evidenz: Radbau nach einem Spieltag wegen Holzlieferung unvollständig. Für die
