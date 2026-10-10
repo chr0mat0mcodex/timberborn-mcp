@@ -70,7 +70,7 @@ public sealed class BridgeHttpServer : IDisposable
             catch (InvalidOperationException) { status = 503; json = "{\"error\":\"observation_unavailable\"}"; }
         }
         var bytes = Encoding.UTF8.GetBytes(json);
-        if (bytes.Length > 128 * 1024) { status = 507; bytes = Encoding.UTF8.GetBytes("{\"error\":\"response_too_large\"}"); }
+        if (bytes.Length > (request.Url?.AbsolutePath == "/agent-api/v1/screenshot" ? ScreenshotRequest.MaxResponseBytes : 128 * 1024)) { status = 507; bytes = Encoding.UTF8.GetBytes("{\"error\":\"response_too_large\"}"); }
         context.Response.StatusCode = status;
         context.Response.ContentType = "application/json; charset=utf-8";
         context.Response.Headers["Cache-Control"] = "no-store";

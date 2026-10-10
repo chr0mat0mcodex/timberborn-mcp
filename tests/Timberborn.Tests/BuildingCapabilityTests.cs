@@ -16,6 +16,8 @@ public sealed class BuildingCapabilityTests
     [InlineData("0.35.2", 1024)]
     [InlineData("0.35.3", 1024)]
     [InlineData("0.35.4", 1024)]
+    [InlineData("0.35.5", 1024)]
+    [InlineData("0.36.0", 1024)]
     public void ExpandedProjectBudgetIsBoundToInstalledVersion(string version, int capacity)
     {
         var report = BuildingCapabilityTools.Describe(version, "Folktails", true);
@@ -64,7 +66,7 @@ public sealed class BuildingCapabilityTests
 
     [Theory]
     [InlineData("0.32.1", "Folktails")]
-    [InlineData("0.36.0", "Folktails")]
+    [InlineData("99.0.0", "Folktails")]
     [InlineData("0.33.0", "IronTeeth")]
     public void UnknownProfileNeverInventsCapabilities(string version, string faction)
     {

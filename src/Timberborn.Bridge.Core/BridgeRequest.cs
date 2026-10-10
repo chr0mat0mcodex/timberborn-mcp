@@ -6,6 +6,7 @@ namespace Timberborn.Bridge.Core;
 public sealed class BridgeRequest
 {
     public string Route { get; }
+    public ScreenshotRequest? Screenshot { get; private set; }
     public BuildingProjectExecutionRequest? ProjectExecution { get; private set; }
     public BuildingPlanRequest? BuildingPlan { get; private set; }
     public BuildingProjectValidationRequest? ProjectValidation { get; private set; }
@@ -43,6 +44,7 @@ public sealed class BridgeRequest
 
     public static BridgeRequest Parse(string path, NameValueCollection query)
     {
+        if(path == "/agent-api/v1/screenshot") { var r=ScreenshotRequest.Parse(query); return new BridgeRequest("screenshot",session:r.Session) { Screenshot=r }; }
         if (path == "/agent-api/v1/selection")
         {
             var sessions = query.GetValues("session");

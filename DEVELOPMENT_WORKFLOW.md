@@ -15,9 +15,9 @@ kann die Spiel-Bridge unverändert bleiben; trotzdem menschliches Test-Gate und
 gezielter MCP-Livetest. Erfolgsnachweis nennt fachliche Aussage und deren Grenze,
 nicht nur Werkzeugaufruf oder erfolgreiche Paketierung.
 
-1. **Agent: Umsetzung und Vorprüfung.** Klar abgegrenzte Änderung implementieren,
-   Diff prüfen, betroffene Projekte kompilieren und relevante Tests gezielt
-   ausführen. Bei Mod-Code gegen die lokalen Spielreferenzen kompilieren.
+1. **Agent: Umsetzung und Quellprüfung.** Klar abgegrenzte Änderung implementieren,
+   relevante Tests ergänzen, Quellcode und Diff gezielt prüfen. Keine eigenen
+   Build-/Testläufe; keine alternative Debug- oder Parallelausgabe.
 2. **Agent: Testübergabe.** Erwarteten fachlichen Nachweis, bekannte Grenzen und
    den Aufruf des menschlichen Skripts nennen. Noch nicht committen.
 3. **Mensch: Test und Deploy.** Bei beendetem Spiel
@@ -45,25 +45,25 @@ und niemals ausgegeben oder versioniert.
 
 - Das Skript wird vom Menschen lokal gestartet, weil es die Mod-Installation
   verändert. Es bricht ab, wenn ein Timberborn-Prozess läuft.
-- Gezielte Projekt-Builds und betroffene automatische Tests gehören zur
-  Agent-Vorprüfung. Kein automatischer Start der vollständigen `verify.ps1`-,
-  Paketierungs- oder Deploy-Kette; keine Installation oder Prozessbeendigung
-  durch die Vorprüfung.
+- Build, automatische Tests, Paketierung und Installation erfolgen ausschließlich
+  im vom menschlichen Entwickler gestarteten Gate. Ein Release-Build als Grundlage
+  für Prüfung und Livetest; keine Debug-/Parallelfassung als Ausweichweg.
+- Gesperrte Dateien des laufenden MCP sind ein Grund zur Übergabe ans Gate, nicht
+  zum Prozessabschuss oder zu einem anderen Ausgabeverzeichnis durch den Agenten.
 - Kein Commit/Push ohne bestätigten erfolgreichen Skriptlauf und erfolgreichen
   Abschluss-Livetest.
 
 ## Vorprüfung vor der Übergabe
 
-- Tatsächlich kompilieren: Syntax-/Diffprüfung erkennt keine Typ-, Referenz- oder
-  Nullability-Fehler. Vorhandenen Restore nutzen; fehlende Voraussetzungen benennen.
+- Betroffene Verträge, Referenzen, Nullability-Fluss und Diffs gezielt lesen;
+  passende Regressionstests vorbereiten. Syntaxprüfung ersetzt keinen Build.
 - Bei neuen MCP-Werkzeugen Namen, Aktionsschalter, Read-only-Annotationen und
-  Vertragsprüfungen gemeinsam aktualisieren und die betroffenen Testvarianten ausführen.
-- Nach einem gemeldeten Fehler den betroffenen Build/Test gezielt reproduzieren,
-  korrigieren und erfolgreich prüfen, bevor der Mensch die Vollkette erneut startet.
-  Keine blinden Wiederholungen; bei neuem Fehler Diagnose statt Retry.
-- Nur tatsächlich ausgeführte Prüfungen als bestanden nennen. Compiler, Tests,
-  Installation und fachlicher Livetest sind getrennte Nachweise. Bei unverändertem
-  Code erfolgreiche gezielte Prüfungen nicht grundlos wiederholen.
+  Vertragsprüfungen zusammen aktualisieren.
+- Nach einem Gate-Fehler die konkrete Ursache im Quellcode korrigieren und den
+  erwarteten Nachweis nennen. Der Entwickler startet das Gate erneut; keine
+  automatische Wiederholung oder zusätzliche Buildvariante durch den Agenten.
+- Ausgeführte Prüfungen und vorbereitete Tests getrennt benennen. Änderungen sind
+  bis zum erfolgreichen Gate und fachlichen Livetest nicht abgenommen.
 
 ## Git-Sicherung
 

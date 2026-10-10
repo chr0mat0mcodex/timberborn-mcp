@@ -84,6 +84,15 @@ public sealed class NativeBridgeTests
                             return JsonSerializer.Serialize(new BridgeEnvelope<object>(1,session,DateTimeOffset.UtcNow,"0.22.0",new NativeActivityAck(activityLog.Record(a,DateTimeOffset.UtcNow))),NativeJson.Options);
                         }
                         if(r.Route=="activity-log")return JsonSerializer.Serialize(new BridgeEnvelope<object>(1,session,DateTimeOffset.UtcNow,"0.22.0",new NativeActivityLog(128,activityLog.Snapshot().Reverse().Take(32).ToArray(),activityLog.Revision,false,false)),NativeJson.Options);
+                        if(r.Screenshot is not null) {
+                            if(r.Session!=session) throw new BridgeRejectionException("stale_session");
+                            // Synthetic marker fixture checks transport/metadata, never image rendering.
+                            byte[] pixels=[255,216,255,192,0,8,8,2,208,5,0,3,255,217];
+                            var frame=new NativeScreenshot("game_view_with_ui","image/jpeg",1280,720,1920,1080,pixels.Length,DateTimeOffset.UtcNow,
+                                new("unity_world_y_up","world_units",new(1,10,3),10,new(0,0,1),new(0,1,0),new(0,0,0),new(1,10,23),20,20,
+                                    "perpendicular_to_forward_through_camera_target",30,17,45,65,false,16f/9,new(0,0,1,1)),Convert.ToBase64String(pixels));
+                            return JsonSerializer.Serialize(new BridgeEnvelope<NativeScreenshot>(1,session,DateTimeOffset.UtcNow,"0.36.0",frame),NativeJson.Options);
+                        }
                         Interlocked.Increment(ref observations);
                         if((r.Route=="alert-targets" || r.Diagnostics is not null && r.Route!="needs") && r.Session!=session)throw new BridgeRejectionException("stale_session");
                         object data = r.Route switch
@@ -197,12 +206,23 @@ public sealed class NativeBridgeTests
             if (enableValidation) { expected.AddRange(["set_building_paused","set_storage_good","set_storage_mode","set_farm_priority","set_farm_crop"]); expected.Add("validate_build_site"); expected.Add("set_workplace_staffing"); expected.AddRange(["demolish_building","remove_planted","remove_vegetation","remove_debris"]); }
             if (enablePlacement) { expected.Add("unlock_building"); expected.Add("place_path"); expected.Add("set_building_priority"); } if (enableLodgePlacement) { expected.Add("place_building"); expected.Add("validate_building"); expected.Add("validate_building_project"); expected.Add("execute_building_project_pilot"); expected.Add("execute_vertical_stair_pilot"); expected.Add("set_area"); expected.Add("place_lodge"); expected.Add("set_simulation_speed"); expected.AddRange(["run_simulation_for", "run_simulation_until", "cancel_simulation_run"]); }
             expected.Add("survey_region"); expected.Add("inspect_building_capabilities"); expected.Add("inspect_building_completion"); expected.AddRange(["inspect_building_batch", "stop_building_batch"]);
-            expected.Add("inspect_forestry");
+            expected.Add("inspect_forestry"); expected.Add("capture_screenshot");
             // This fixture binds the area opt-in to enableLodgePlacement, independently of validation.
             if (enableLodgePlacement) expected.Add("mark_forestry");
             if (enableValidation) expected.Add("remove_vegetation_batch");
             if (enableLodgePlacement) expected.AddRange(["start_building_project", "advance_building_project", "develop_building_project", "start_building_batch", "advance_building_batch"]);
             Assert.Equal(expected.Order(), tools.Select(t => t.Name).Order());
+            if(!enableValidation && !enablePlacement && !enableLodgePlacement) {
+                var frame=await client.CallToolWithReasonAsync("capture_screenshot",new Dictionary<string,object?> { ["session"]=session },cancellationToken:ct);
+                Assert.False(frame.IsError); Assert.Equal(2,frame.Content.Count);
+                Assert.IsType<ModelContextProtocol.Protocol.ImageContentBlock>(frame.Content[1]);
+                var metadata=frame.StructuredContent!.Value.GetProperty("data");
+                Assert.False(metadata.TryGetProperty("imageBase64",out _));
+                Assert.Equal(10,metadata.GetProperty("camera").GetProperty("height").GetSingle());
+                var stale=await client.CallToolWithReasonAsync("capture_screenshot",new Dictionary<string,object?> { ["session"]="11111111-1111-4111-8111-111111111111" },cancellationToken:ct);
+                Assert.True(stale.IsError);Assert.Equal("stale_session",stale.StructuredContent!.Value.GetProperty("error").GetProperty("code").GetString());
+            }
+
             if (enableValidation) {
                 var batch = await client.CallToolWithReasonAsync("remove_vegetation_batch", new Dictionary<string, object?> {
                     ["session"] = session, ["operation"] = "mark",

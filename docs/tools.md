@@ -163,3 +163,12 @@ dem Zeitlimit eine bestätigte Pause auslösen. `stockTargetReached` und
 `targetReached` unterscheiden; die erste Beobachtung ist kein dauerhafter Vorrat.
 Bauchargen antworten standardmäßig kompakt; `details=true` zeigt den Verlauf.
 [Abnahme und Grenzen](forestry-efficiency-0.35.5.md).
+
+## capture_screenshot ab 0.36.0 — begrenzt live abgenommen
+
+Expliziter Bildabruf mit session, optional maxWidth/maxHeight und reasoning.
+Ein MCP-JPEG-Bildblock, keine Base64-Doppelung im Text. Metadaten enthalten
+Zeitpunkt, Pixelgrößen, Kameraposition/Höhe, Richtung, Zielabstand, Bildwinkel
+und Bildweite auf der Zielebene. Keine Kameraänderung oder Dateiablage.
+1280×720 und 640×360 sowie falsche Session live geprüft.
+[Abnahme und Grenzen](screenshot-0.36.0.md).

@@ -27,7 +27,7 @@ Bauabschlüsse. Die Entwurfsabschnitte vom 5. Oktober sind teilweise umgesetzt.
 
 
 
-## Gewünscht: optionales Spielbild über MCP (2026-10-10)
+## Screenshot 0.36.0 live abgenommen (2026-10-10)
 
 Lesende Screenshot-Funktion, damit der spielende Agent bei Bedarf das aktuelle
 Spielbild sehen kann. Expliziter Abruf statt Dauerstream; Bild als MCP-Bildinhalt
@@ -36,9 +36,10 @@ Spielansicht, keine Aufnahme anderer Desktopfenster; begrenzte Auflösung und
 Antwortgröße. Aufnahme bei fehlender Kamera oder ungeladenem Spiel klar ablehnen.
 Keine Screenshots in Git und kein automatisches Mitschreiben einer Bildhistorie.
 Strukturierte Daten bleiben Grundlage der Aktionen; Bild dient ergänzender
-Orientierung. Noch nicht implementiert. Vor Umsetzung öffentliche Spiel-/Unity-
-Aufnahme-API und Bildausgabe des MCP-SDK prüfen; Abnahme mit explizitem Bildabruf,
-Aufnahmezeit/Session und kontrolliertem Fehler ohne geladene Spielansicht.
+Orientierung. Entwickler-Gate und begrenzter Livetest bestanden: Spielbild,
+Auflösungsbegrenzung, Kameraposition/Höhe, Richtung, Bildwinkel und Bildweite,
+sowie Ablehnung fremder Session. [Abnahme](docs/screenshot-0.36.0.md).
+Minimierte Ansicht/fehlende Kamera nicht zusätzlich live provoziert.
 
 
 ## Effizienter Holzausbau – Vorschlag, keine Umsetzung (2026-10-05)

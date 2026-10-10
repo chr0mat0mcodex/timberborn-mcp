@@ -10,7 +10,7 @@ public sealed class BridgeRejectionException : ArgumentException
         if (!IsCode(code)) throw new ArgumentException("invalid_rejection_code");
         Code = code;
     }
-    public static bool IsCode(string? code) => code is "stale_session" or "template_locked" or
+    public static bool IsCode(string? code) => code is "screenshot_busy" or "screenshot_unavailable" or "screenshot_too_large" or "stale_session" or "template_locked" or
         "template_disabled" or "state_conflict" or "building_not_found" or "entity_not_found" or "not_pausable" or
         "finished_building_required" or "unsupported_storage_good" or "not_storage" or "not_farm" or
         "not_crop_prioritizer" or "unavailable_crop" or "unsupported_setting" or "run_not_found" or "run_id_used" or "invalid_time_target";

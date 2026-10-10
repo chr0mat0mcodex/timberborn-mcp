@@ -1,5 +1,11 @@
 # Kompatibilität und Nachweise
 
+## Screenshot-Zusatznachweis 0.36.0 (2026-10-10)
+
+Entwickler-Gate und begrenzte Liveabnahme bestanden: zwei Spielbildauflösungen,
+Kamerametadaten einschließlich Bildweite, falsche Session ohne Bild. Keine
+zusätzliche Fraktions-/Plattformabnahme. [Details](../screenshot-0.36.0.md).
+
 ## Aktueller Zusatznachweis 0.35.5 (2026-10-10)
 
 Menschliches Gate mit anschließender Bereitmeldung; native Bridge 0.35.5 live

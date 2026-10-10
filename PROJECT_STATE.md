@@ -1,5 +1,32 @@
 # Projektstand
 
+## 0.36.0 Screenshot abgeschlossen (2026-10-10)
+
+Entwickler-Gate mit anschließender Bereitmeldung; native Bridge 0.36.0 bestätigt.
+Zwei sichtbare Spielaufnahmen inklusive UI und Kamerametadaten live bestanden:
+1280×720 / 122828 Bytes, 640×360 / 41678 Bytes. Position/Höhe, Blickrichtung,
+Zielabstand, Bildwinkel und Bildweite konsistent; falsche Session ohne Bild
+abgewiesen. Keine Bilddateien gespeichert. [Abnahme und Grenzen](docs/screenshot-0.36.0.md).
+Einziger Release-Stand über Entwickler-Gate; keine weiteren Agent-Builds.
+Vorbereitungsstände unten historisch; vorhandene Hermes-/Starteränderungen separat.
+
+## 0.36.0 Screenshot vorbereitet — Entwickler-Gate offen (2026-10-10)
+
+Erster Entwickler-Gatelauf: MCP-/Test-Build bestanden, Unit-Tests an veralteter
+Negativerwartung für 0.36.0 gestoppt. Zwei entsprechende Teststellen gefunden
+(BuildingCapabilityTests und GenericBuildingProjectTests): unbekannte Version
+auf 99.0.0 geändert, positive 0.36.0-Vertrags-/Profilfälle ergänzt. Nur Quell-/
+Diff-Prüfung; erneuter Entwickler-Gatelauf erforderlich, keine Agent-Testausführung.
+
+Expliziter Unity-Spielbildabruf mit begrenztem JPEG und MCP-Bildblock implementiert;
+Kameraposition/Höhe, Richtung, Ziel, Abstand, Bildwinkel und Bildweite auf Zielebene
+in Metadaten. [Umfang und Prüfplan](docs/screenshot-0.36.0.md). Noch kein Livebeleg.
+Finaler Stand nur quellgeprüft, vorbereitete Tests noch nicht ausgeführt.
+Auf Nutzerkorrektur gilt wieder ausschließlich das Entwickler-Test-Gate:
+keine Agent-Builds/Testläufe, keine Debug-/Parallelfassung. Frühere Vorprüfregel
+und Zwischenstand-Builds unten sind historisch. Installation, Livetest, Commit
+und Push für 0.36.0 stehen aus.
+
 ## 0.35.5 abgeschlossen (2026-10-10)
 
 Holzdiagnose mit echter Ertragsprüfung, Sammelmarkierung/Replay, früher Holzstopp,

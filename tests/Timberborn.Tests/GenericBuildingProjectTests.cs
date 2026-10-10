@@ -32,10 +32,11 @@ public sealed class GenericBuildingProjectTests
         var e = new BridgeEnvelope<NativeProjectExecution>(1, Session, DateTimeOffset.UtcNow, "0.35.0", data);
         NativeClient.ValidateProjectExecution(e, r);
         NativeClient.ValidateProjectExecution(e with { BridgeVersion = "0.35.1" }, r);
+        NativeClient.ValidateProjectExecution(e with { BridgeVersion = "0.36.0" }, r);
         var status = BuildingProjectExecutionRequest.Parse(false, new() { ["session"] = Session, ["actionId"] = Action });
         NativeClient.ValidateProjectExecution(e, status);
         Assert.Throws<InvalidDataException>(() => NativeClient.ValidateProjectExecution(e with { BridgeVersion = "0.34.0" }, status));
-        Assert.Throws<InvalidDataException>(() => NativeClient.ValidateProjectExecution(e with { BridgeVersion = "0.36.0" }, r));
+        Assert.Throws<InvalidDataException>(() => NativeClient.ValidateProjectExecution(e with { BridgeVersion = "99.0.0" }, r));
         Assert.Throws<InvalidDataException>(() => NativeClient.ValidateProjectExecution(e with { SessionId = Action }, r));
         Assert.Throws<InvalidDataException>(() => NativeClient.ValidateProjectExecution(e,
             Request("DifferentSyntheticBuilding", rotation)));
@@ -92,6 +93,7 @@ public sealed class GenericBuildingProjectTests
     [Theory]
     [InlineData("0.35.0", "Folktails", 5)] [InlineData("0.35.0", "IronTeeth", 1)]
     [InlineData("0.35.1", "Folktails", 5)] [InlineData("0.35.1", "IronTeeth", 1)]
+    [InlineData("0.36.0", "Folktails", 5)] [InlineData("0.36.0", "IronTeeth", 1)]
     public void ProfileUsesCatalogueScopeNotAnExhaustiveOrProvenTemplateList(string version, string faction, int modes)
     {
         var report = BuildingCapabilityTools.Describe(version, faction, true);

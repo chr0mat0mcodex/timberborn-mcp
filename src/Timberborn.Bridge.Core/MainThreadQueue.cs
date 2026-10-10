@@ -12,6 +12,7 @@ public sealed class MainThreadQueue : IDisposable
     private readonly object sync = new();
     private readonly Queue<Pending> pending = new();
     private bool stopped;
+    private readonly HashSet<Pending> active = new();
     public async Task<string> Enqueue(BridgeRequest request, CancellationToken ct)
     {
         ct.ThrowIfCancellationRequested();
@@ -19,7 +20,7 @@ public sealed class MainThreadQueue : IDisposable
         lock (sync)
         {
             if (stopped) throw new InvalidOperationException("session_closed");
-            if (pending.Count >= 8) throw new InvalidOperationException("busy");
+            if (pending.Count + active.Count >= 8) throw new InvalidOperationException("busy");
             pending.Enqueue(work);
         }
         using (ct.Register(() => work.Completion.TrySetCanceled()))
@@ -39,11 +40,30 @@ public sealed class MainThreadQueue : IDisposable
             catch (Exception) { work.Completion.TrySetException(new InvalidOperationException("observation_failed")); }
         }
     }
+    // Start on the game thread; frame-dependent observations complete without blocking it.
+    public void PumpAsync(Func<BridgeRequest, Task<string>> observe) {
+        Pending work;
+        lock(sync) {
+            if(stopped || pending.Count==0) return;
+            work=pending.Dequeue(); active.Add(work);
+        }
+        if(work.Token.IsCancellationRequested) { lock(sync) active.Remove(work); work.Completion.TrySetCanceled(); return; }
+        _ = Complete(work,observe);
+    }
+    private async Task Complete(Pending work,Func<BridgeRequest,Task<string>> observe) {
+        try { work.Completion.TrySetResult(await observe(work.Request).ConfigureAwait(false)); }
+        catch(BridgeRejectionException ex) { work.Completion.TrySetException(new BridgeRejectionException(ex.Code)); }
+        catch(ArgumentException) { work.Completion.TrySetException(new ArgumentException("invalid_request")); }
+        catch(Exception) { work.Completion.TrySetException(new InvalidOperationException("observation_failed")); }
+        finally { lock(sync) active.Remove(work); }
+    }
     public void Dispose()
     {
         lock (sync)
         {
             stopped = true;
+            foreach(var work in active) work.Completion.TrySetCanceled();
+            active.Clear();
             while (pending.Count > 0) pending.Dequeue().Completion.TrySetCanceled();
         }
     }

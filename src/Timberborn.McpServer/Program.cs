@@ -68,6 +68,7 @@ builder.Services.AddMcpServer().WithStdioServerTransport()
             : request.Name == "set_building_paused"
                 ? await actions!.InvokeAsync(backendArguments, ct)
                 : await service!.InvokeAsync(request.Name, backendArguments, ct);
+        if(native is not null && request.Name==ScreenshotTools.Name) return ScreenshotTools.ToToolResult(result);
         return ResponsePresentation.ToToolResult(native is null ? result : ResponsePresentation.Present(request.Name, result, full));
     });
 try { await builder.Build().RunAsync(); }

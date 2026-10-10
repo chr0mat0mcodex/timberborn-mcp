@@ -1,6 +1,6 @@
 # Spielanleitung für Agenten
 
-Stand: Bridge 0.35.5; aktualisiert am 10. Oktober 2026.
+Stand: Bridge 0.36.0; aktualisiert am 10. Oktober 2026.
 Diese Anleitung beschreibt die vorhandenen MCP-Fähigkeiten. Aktueller Auftrag
 und Projektregeln stehen in [AGENTS.md](../AGENTS.md) und
 [missionsplan.md](../missionsplan.md); das lokale Spiel ist das freigegebene
@@ -125,3 +125,16 @@ bei Bedarf getrennt nachlesen. Bauchargen sind standardmäßig kompakt;
 details=true nur für Such-/Verlaufsdiagnose. build_rejected ist terminal,
 keine Wiederholung mit neuer ID ohne Diagnose und geänderte Voraussetzungen.
 [Liveumfang und Grenzen](forestry-efficiency-0.35.5.md).
+
+## Optionales Spielbild ab 0.36.0
+
+capture_screenshot mit aktueller session liefert auf ausdrücklichen Abruf ein
+Spielbild inklusive UI. Standard 1280×720; kleinere maxWidth/maxHeight sparen
+Bilddaten, reduzieren aber die Lesbarkeit. Metadaten enthalten Position,
+absolute Welthöhe (Unity Y), Blickrichtung, Zielabstand, Bildwinkel und Bildweite
+auf der Ebene durch den Kamerazielpunkt. Keine Höhe über Gelände und keine
+sichtbare Geländegrundfläche daraus behaupten. Nur ergänzende Orientierung;
+Spielaktionen weiterhin auf strukturierte Zustandsdaten stützen. Keine Dateien
+oder Bildhistorie anlegen. Mindestens zwei Sekunden zwischen Aufnahmen;
+bei screenshot_unavailable Zustand klären, kein automatischer Retry.
+[Nachweis und Grenzen](screenshot-0.36.0.md).
