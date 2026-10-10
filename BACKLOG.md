@@ -1,5 +1,37 @@
 # Backlog
 
+## Aktionsjournal des Spielers — geplante MCP-Abfrage (2026-10-10)
+
+Der menschliche Spieler greift auch ohne vorherige Ankündigung ein. Der Agent
+soll die letzten X Aktionen im Spiel abfragen und seine Planung daran anpassen
+können. Teil des Vorhabens Agenten-UI im Spiel; strukturierter MCP-Abruf auch
+unabhängig von einer neuen Oberfläche. Noch nicht implementiert.
+
+- Geplanter lesender Call, Arbeitsname `inspect_recent_actions`: aktuelle
+  Sitzung, begrenztes `limit` für die letzten X Einträge, optional Cursor für
+  Änderungen seit der letzten Abfrage sowie Filter nach Herkunft/Aktionsart.
+- Erfassen: neue Bauaufträge, Abriss-/Räumaufträge, Flächenmarkierungen,
+  Gebäude- und Lagereinstellungen, Pause/Tempo, Forschung und weitere relevante
+  Spielereingriffe. Unterstützte Ereignisarten und Erfassungslücken offenlegen.
+- Kompakte Einträge mit Sequenznummer, Spiel-/Aufnahmezeit, Aktion, betroffenem
+  Objekt/Vorlage/Position, altem und neuem Wert soweit beobachtet sowie Ergebnis.
+  Auftrag, beobachtete Statusänderung und spätere Wirkung getrennt ausweisen.
+- Herkunft nur bei belegbarer Zuordnung als Mensch, MCP oder Simulation
+  kennzeichnen; sonst unknown. Ein Zustandsvergleich allein beweist keinen
+  menschlichen Eingriff. Geeignete öffentliche Spielereignisse zuerst prüfen.
+- Begrenzter sitzungsgebundener Puffer; Cursor, ältester verfügbarer Eintrag,
+  Überlauf, Erfassungsbeginn und Sitzungswechsel explizit melden. Keine
+  rückwirkende Vollständigkeit vor Erfassungsbeginn behaupten; keine Rohjournale
+  oder personenbezogenen Inhalte ins Repository schreiben.
+- Chat-Aufruf **„Überprüf mal meine letzten Aktionen“**: nach Implementierung
+  Journal abrufen, Änderungen knapp erklären und Konflikte mit laufenden
+  Agentenaufträgen prüfen. Keine automatische Rücknahme menschlicher Änderungen.
+  Optional vor Fortsetzung längerer Bauabläufe Änderungen seit Cursor abfragen.
+- Liveabnahme: Mensch erteilt Bauauftrag, ändert Einstellung und Tempo ohne
+  Vorankündigung; Agent findet die Einträge und Werte wieder. MCP-Kontrollaktion,
+  automatische Fertigstellung, Limit/Cursor, Pufferüberlauf und Sitzungswechsel
+  getrennt prüfen. Entwickler-Test-Gate bleibt maßgeblich.
+
 ## Gebäudespieltest 0.36.0 — laufende Effizienzbeobachtungen (2026-10-10)
 
 - Kompakte Typenabdeckung aus aktuellem Bestand: Fertig-/Baustellenanzahl je
