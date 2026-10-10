@@ -166,6 +166,10 @@ Bauchargen antworten standardmäßig kompakt; `details=true` zeigt den Verlauf.
 
 ## capture_screenshot ab 0.36.0 — begrenzt live abgenommen
 
+„Schau mal“ im Chat ist ein ausdrücklicher Abruf: aktuelle Sitzung ermitteln,
+einmal capture_screenshot aufrufen und das Bild ansehen. Erfasst wird die vom
+Spieler eingestellte Kamera samt UI zum Aufnahmezeitpunkt, ohne Kameraänderung.
+
 Expliziter Bildabruf mit session, optional maxWidth/maxHeight und reasoning.
 Ein MCP-JPEG-Bildblock, keine Base64-Doppelung im Text. Metadaten enthalten
 Zeitpunkt, Pixelgrößen, Kameraposition/Höhe, Richtung, Zielabstand, Bildwinkel

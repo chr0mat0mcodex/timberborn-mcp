@@ -128,6 +128,13 @@ keine Wiederholung mit neuer ID ohne Diagnose und geänderte Voraussetzungen.
 
 ## Optionales Spielbild ab 0.36.0
 
+Wenn der Spieler im Chat „schau mal“, „zeig ich dir“ oder sinngemäß darum bittet,
+die aktuelle Ansicht anzusehen: aktuelle Sitzung ermitteln und einmal
+capture_screenshot aufrufen. Der Spieler stellt zuvor Kamera und UI im Spiel
+selbst ein; diese Ansicht unverändert erfassen. Das zurückgegebene Bild ansehen
+und auf den gezeigten Sachverhalt antworten. Die Aufnahme entsteht beim Aufruf,
+nicht rückwirkend beim Absenden der Nachricht. Kein Ingame-Knopf erforderlich.
+
 capture_screenshot mit aktueller session liefert auf ausdrücklichen Abruf ein
 Spielbild inklusive UI. Standard 1280×720; kleinere maxWidth/maxHeight sparen
 Bilddaten, reduzieren aber die Lesbarkeit. Metadaten enthalten Position,

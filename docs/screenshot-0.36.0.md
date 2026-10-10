@@ -25,6 +25,11 @@ Die folgenden Gate-/Vorbereitungsabschnitte dokumentieren den früheren Verlauf.
 
 ## Umfang
 
+Zeigen durch den Spieler: Kamera und UI im Spiel einstellen, dann im Chat
+„schau mal“ schreiben. Der Agent ruft die aktuelle Ansicht einmal ab und sieht
+sie an. Vorhandene, live geprüfte Aufnahmefunktion; keine zusätzliche Mod-Funktion
+oder neuer Build. Aufnahmezeitpunkt ist der Werkzeugaufruf, nicht die Chatnachricht.
+
 capture_screenshot(session, maxWidth=1280, maxHeight=720, reasoning) liefert
 explizit einen JPEG-Bildblock plus kompakte Metadaten. Maximal 1600×900,
 Seitenverhältnis erhalten, kein Hochskalieren, JPEG-Qualität 75, höchstens
