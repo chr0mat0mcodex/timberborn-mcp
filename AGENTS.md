@@ -62,6 +62,14 @@ Schutz anderer Projekte/Systemdateien und nachvollziehbare Git-Checkpoints bleib
 
 ## Aktueller Missionsschwerpunkt
 
+- 0.37.0: beauftragter Erweiterungsumfang sind explizite Baupläne mit höchstens
+  32 Teilen, 32×32 Grundfläche und acht belegten Höhenebenen einschließlich
+  Gebäudevolumen. Ablauf und Pilot: `docs/large-projects-0.37.0.md`.
+  `advance_large_project` erteilt höchstens einen Auftrag, nach tatsächlicher
+  Fertigstellung aller Vorgänger. `inspect` ist nur Ledger-Lesung. Kraftgeometrie,
+  reale Netzverbindung und Betrieb getrennt nachweisen. Keine allgemeine Freigabe
+  aus `pilotEligible`; Gate und Commitregeln bleiben unverändert.
+
 - Maßgeblicher Etappenplan seit 2026-10-03: [missionsplan.md](missionsplan.md).
   Zuerst bestehende Wege/Gebäude-/Baustellenzugänge erhalten und Zugang neuer
   Gebäude während Bau und nach Fertigstellung nachweisen; erst danach Umfang

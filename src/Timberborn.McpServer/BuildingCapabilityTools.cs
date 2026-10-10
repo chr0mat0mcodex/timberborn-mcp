@@ -17,6 +17,7 @@ public sealed record ProjectModeCapability(string Mode, string Tool, string[] Ob
     public TemplateLiveEvidence[] TemplateEvidence { get; init; } = [];
     public string TemplateSelection { get; init; } = "fixed_template_list";
     public string EntranceModel { get; init; } = "public_block_object_spec_single_entrance";
+    public int? MaxOccupiedHeightSpan { get; init; }
 }
 
 public sealed record TemplateLiveEvidence(string Template, int[] LiveRotations, string EvidenceSource, string EvidenceReference);
@@ -56,12 +57,12 @@ public static class BuildingCapabilityTools
     public static BuildingCapabilityReport Describe(string bridgeVersion, string faction, bool serverEnabled)
     {
         // Exact profile binding: new deployments require explicit review, never a >= version guess.
-        bool generic = bridgeVersion is ("0.35.0" or "0.35.1" or "0.35.2" or "0.35.3" or "0.35.4" or "0.35.5" or "0.36.0");
+        bool generic = bridgeVersion is ("0.35.0" or "0.35.1" or "0.35.2" or "0.35.3" or "0.35.4" or "0.35.5" or "0.36.0" or "0.37.0");
         bool known = bridgeVersion is ("0.33.0" or "0.33.1" or "0.34.0") && faction == "Folktails" ||
             generic && faction is ("Folktails" or "IronTeeth");
         bool lodge = bridgeVersion == "0.34.0" || generic;
-        int flatCapacity = bridgeVersion is ("0.35.2" or "0.35.3" or "0.35.4" or "0.35.5" or "0.36.0") ? BuildingProjectController.MaxProjectsPerSession : 4;
-        int verticalCapacity = bridgeVersion is ("0.35.2" or "0.35.3" or "0.35.4" or "0.35.5" or "0.36.0") ? VerticalStairRequest.MaxProjectsPerSession :
+        int flatCapacity = bridgeVersion is ("0.35.2" or "0.35.3" or "0.35.4" or "0.35.5" or "0.36.0" or "0.37.0") ? BuildingProjectController.MaxProjectsPerSession : 4;
+        int verticalCapacity = bridgeVersion is ("0.35.2" or "0.35.3" or "0.35.4" or "0.35.5" or "0.36.0" or "0.37.0") ? VerticalStairRequest.MaxProjectsPerSession :
             bridgeVersion is ("0.33.1" or "0.34.0" or "0.35.0" or "0.35.1") ? 4 : 1;
         ProjectModeCapability[] modes = known ? [
             new("development_pilot", "execute_building_project_pilot",
@@ -88,6 +89,12 @@ public static class BuildingCapabilityTools
                 "documented_bounded_live_cases_not_current_site_validation", "docs/vertical-warehouse-pilot.md")
         ] : [];
         if (faction != "Folktails") modes = modes.Where(m => m.Tool != "execute_vertical_stair_pilot").ToArray();
+        if(known && bridgeVersion=="0.37.0") modes=modes.Append(new ProjectModeCapability(
+            "large_project_development_pilot", "start_large_project", [], [0,1,2,3], [], 1,32,32,32,32,128,null,[],
+            "not_live_proven", "docs/large-projects-0.37.0.md") {
+                MaxOccupiedHeightSpan=8, TemplateSelection="native_catalog_supported_geometry_except_new_districts",
+                EntranceModel="applicable_entrance_and_path_access_no_invented_entranceless_door"
+            }).ToArray();
         return new(bridgeVersion, faction, known ? "known" : "unknown", known ? 64 : null, serverEnabled, "not_observed",
             false, false, false, modes,
             ["fresh_session_and_action_identity", "template_unlock_and_costs_from_build_catalog",
@@ -106,7 +113,7 @@ public static class BuildingCapabilityTools
                 "flat_mode_live_rotations_cover_all_building_templates_use_template_evidence_for_individual_coverage",
                 "empty_live_rotations_with_not_catalogued_does_not_mean_never_tested",
                 "no_site_validation_preview_or_build_order", "no_general_road_or_builder_preflight_safety",
-                "completed_receipt_is_not_finished_construction", "no_delivery_staffing_or_operation_guarantee"]);
+                "legacy_completed_receipt_is_not_finished_construction_large_project_checks_finished_parts", "no_delivery_staffing_or_operation_guarantee"]);
     }
 
     private static TemplateLiveEvidence[] FlatEvidence(bool lodge, bool lodgeProven)

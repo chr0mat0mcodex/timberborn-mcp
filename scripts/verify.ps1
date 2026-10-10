@@ -7,8 +7,23 @@ if ($NativeConfig) { $NativeConfig = (Resolve-Path -LiteralPath $NativeConfig).P
 Push-Location $taskRoot
 try {
     Invoke-TimberbornStep 'MCP-Vorschaltprozess prüfen' {
-        & python -B -m unittest discover -s tests/supervisor -p 'test_*.py' -v -f
-        if ($LASTEXITCODE -ne 0) { throw 'Vorschaltprozess-Tests fehlgeschlagen. Abbruch ohne Wiederholung.' }
+        # unittest writes its normal summary to stderr. Capture both streams so
+        # successful runs stay compact; failures retain the complete diagnosis.
+        $supervisorOutput = @(& python -B -m unittest discover -s tests/supervisor -p 'test_*.py' -q -f 2>&1)
+        $supervisorExitCode = $LASTEXITCODE
+        if ($supervisorExitCode -ne 0) {
+            $supervisorOutput | ForEach-Object { Write-Host "$_" }
+            throw 'Vorschaltprozess-Tests fehlgeschlagen. Abbruch ohne Wiederholung.'
+        }
+        foreach ($entry in $supervisorOutput) {
+            $line = "$entry"
+            if ($line -match '^Ran (\d+) tests? in .+$') {
+                Write-TimberbornStatus 'TESTS' ("{0} Vorschaltprozess-Tests ausgeführt" -f $Matches[1]) Green
+            } elseif ($line -notmatch '^\s*$|^-{3,}$|^OK$') {
+                # Keep warnings, skipped-test notices and unexpected diagnostics.
+                Write-Host $line
+            }
+        }
     }
     $restoreArgs = @('restore', 'TimberbornMcp.slnx', '--configfile', 'NuGet.Config')
     if (-not $InitialRestore) { $restoreArgs += '--locked-mode' }

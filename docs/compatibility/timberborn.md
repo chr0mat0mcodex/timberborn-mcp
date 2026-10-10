@@ -1,5 +1,16 @@
 # Kompatibilität und Nachweise
 
+## 0.37.0 — begrenzte Live-Nachweise (2026-10-10)
+
+Nach menschlichen Gates und Bereitmeldungen: reale Wellen-/Lagerfolge und
+fünfteiliger Höhenbau mit Treppe, zwei Plattformen, Weg und erhöhtem Lager fertig.
+Aufgeschobene Stützenprüfung nur in der Planung, vollständige native Prüfung
+vor jedem realen Auftrag. Träger-Negativkontrolle, Bestandsblockade, identischer
+Start und Stopp vor Ausführung geprüft. Bau-/Fertigzugang sowie reale Kraftnetzdaten
+separat beobachtet. [Belege und Grenzen](../large-projects-0.37.0.md).
+Kein Livebau mit 32 Teilen/acht Ebenen und keine Abnahme sämtlicher Sondergebäude,
+Fraktionen oder Kraftdrehungen. Der Release-Nachweis bleibt auf diese Fälle begrenzt.
+
 ## Screenshot-Zusatznachweis 0.36.0 (2026-10-10)
 
 Entwickler-Gate und begrenzte Liveabnahme bestanden: zwei Spielbildauflösungen,

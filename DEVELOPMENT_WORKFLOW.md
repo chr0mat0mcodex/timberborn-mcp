@@ -47,6 +47,9 @@ nicht nur Werkzeugaufruf oder erfolgreiche Paketierung.
 Einmalige Codex-Einrichtung, Lifecycle-Werkzeug und Abnahme:
 [Persistenter MCP-Vorschaltprozess](docs/codex-mcp-supervisor.md).
 Das Gate prüft dessen synthetische Python-Tests ebenfalls ohne Wiederholung.
+Bei Erfolg zeigt es nur Testanzahl und Schrittdauer; Warnungen und Hinweise auf
+übersprungene Tests bleiben sichtbar. Bei Fehlern erscheint die vollständige
+Python-Testdiagnose vor dem Abbruch.
 Python 3.8 oder neuer muss als `python` erreichbar sein; keine Zusatzpakete.
 
 `-ModsRoot <Pfad>` setzt bei Bedarf einen abweichenden Timberborn-Mod-Ordner.

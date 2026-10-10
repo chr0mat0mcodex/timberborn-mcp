@@ -1,5 +1,14 @@
 # Architekturentscheidungen
 
+## 0.37.0: expliziter 3D-Plan, getrennte Kraftbeobachtung
+
+Beauftragter Umfang: 32 Teile / acht belegte Höhen; eigenes sitzungsgebundenes
+Ledger statt Aufweichen der alten festen Treppenquittung. Topologische Reihenfolge
+und tatsächliche Fertigstellung vor jedem Folgeauftrag. Kein Hintergrundcontroller
+und keine neue Laufzeitabhängigkeit. Öffentliche MechanicalNode-/Transput-/Graph-
+API für Geometrie bzw. reale Netze; keine private Reflection. Bekannte Vorprüflücken
+bleiben als Entwicklungspilot ausgewiesen. [Details/Gate](../large-projects-0.37.0.md).
+
 ## Native Bridge statt Fremdmod-Abhängigkeit
 
 Die eigene Agent Bridge ist die Laufzeitbasis. Der MCP-Server spricht sie über

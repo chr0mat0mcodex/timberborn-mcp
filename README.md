@@ -5,7 +5,12 @@ Beobachtung und kontrollierte Eingriffe über reguläre Spielservices.
 
 ## Status
 
-Aktueller Stand am 10. Oktober: Bridge 0.36.0. Explizite Screenshots der
+0.37.0: begrenzte Livepiloten für [größere Bauvorhaben](docs/large-projects-0.37.0.md)
+einschließlich realem Stützenbau bestanden. Implementierte Grenzen: 32 Bauteile
+und acht belegte Höhenebenen; dazu Kraftanschlussdiagnose. Keine pauschale
+Abnahme aller Bauteile oder Kraftdrehungen.
+
+Vorheriger Release-Stand: Bridge 0.36.0. Explizite Screenshots der
 Spielansicht inklusive Kameraposition/Höhe, Richtung und Bildweite sind begrenzt
 live geprüft; Bilddaten werden als MCP-Bildblock mit Größenlimit ausgegeben.
 [Abnahme und Grenzen](docs/screenshot-0.36.0.md).

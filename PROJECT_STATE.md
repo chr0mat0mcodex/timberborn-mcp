@@ -1,5 +1,50 @@
 # Projektstand
 
+## 0.37.0 größere Bauvorhaben — Stützenpilot bestanden (2026-10-10)
+
+Aktuell: Nach menschlichem Gate fünfteilige Höhenfolge vollständig gebaut und
+als `completed` bestätigt. Trägerabhängigkeit negativ geprüft; oberer Weg und
+Lager erst nach realer Trägerfertigstellung nativ validiert. Alle vier Baustellen
+erreichbar, fertiger Lagereingang frei, Distriktdistanz 33. Bestandsblockade mit
+sieben verlorenen Verbindungen korrekt abgewiesen und restauriert. Separaten
+Plan vor Auftrag gestoppt, kein Objekt entstanden; dadurch weitere Großprojekte
+in dieser Sitzung erwartungsgemäß blockiert. Tag 435, 19,40625 Uhr pausiert;
+Sägewerk pausiert. Log geprüft, sieben priorisierte Verbesserungen im BACKLOG
+festgehalten. Keine Rohlogs/Spiel-IDs gespeichert. Fachlicher Abschluss für 0.37.0;
+keine pauschale Katalog-/Kraftdrehungsabnahme. Folgende Absätze sind Historie.
+
+Aktuell: Kraftvorschau-Korrektur nach erneutem menschlichem Gate live bestanden.
+Zweiteilige Folge Welle (26,6,3) → Lager (32,8,4) vollständig fertiggestellt;
+Start erzeugt keine Baustelle, Advance wartet auf Fertigstellung, Bauarbeiterzugang
+und fertiger Lagereingang separat bestätigt. Reales Dreiknotennetz mit 53 Angebot.
+Noch offene Lücke: Vorschauplattformen zählen nicht als reale Träger für die native
+Geometrieprüfung von oberem Weg/Lager. Korrektur `deferred_native_validation`
+mit expliziter Trägerabhängigkeit, Kollisionskontrolle und zwingender frischer
+Ausführungsprüfung vorbereitet; passende Policy-/Ausführungstests ergänzt.
+Erneutes Gate nötig. Stützenfläche (33,8..10,4) frei, Plattform regulär freigeschaltet,
+Sägewerk aktiviert. Tag 430, 15 Uhr pausiert, null offene Baustellen.
+Keine Gesamt-Abnahme, kein Commit/Push. Folgende Absätze sind frühere Zwischenschritte.
+
+Erster Livepilot nach Katalogübernahme: zwei identische Lagerpläne gültig mit
+identischem Schlüssel, schwebendes Lager ohne Stütze korrekt ungültig; jeweils
+Vorschau wiederhergestellt. Kraftleser bestätigt Sägewerk/Rad als verbundenes
+Zweiknotennetz mit momentan null Leistung. Kraftwellen-Vorschau liefert jedoch
+Backendfehler. Pilot gestoppt, null offene Baustellen rückgelesen; kein Bauauftrag.
+Korrektur vorbereitet: Vorschauports als getrennte öffentliche Transput-Deskriptoren
+aus TransputProviderSpec statt Runtime-Ports eines Vorschau-Knotens. Erneutes
+menschliches Gate und Kraftvorschau-Livetest nötig, keine Abnahme/kein Push.
+
+Explizite 3D-Pläne mit bis zu 32 Bauteilen, 32×32 Grundfläche und acht belegten
+Höhenebenen implementiert. Abhängigkeiten, gemeinsame Vorschau, sequenzielle
+Fertigstellungsprüfung und Kraftgeometrie/-netzleser. Neue Werkzeuge und
+Regressionstests vorbereitet, Doku/Agentenanleitung ergänzt.
+Nach menschlichem Gate/Bereitmeldung: Backendstart und Spielkontakt mit Bridge
+0.37.0 bestätigt. Supervisor-Katalog enthält alle sechs neuen Werkzeuge; laufende
+Codex-Sitzung bietet sie noch nicht an. Feature-Livetest wartet auf Client-Neustart,
+kein weiterer Build erforderlich. Letzter vollständig live abgenommener Stand
+bleibt 0.36.0. Kein Commit/Push vor fachlicher Abnahme.
+[Umfang, Grenzen und Livepilot](docs/large-projects-0.37.0.md).
+
 ## Vorschaltprozess und Regionalsuche live abgenommen (2026-10-10)
 
 Nach Katalogübernahme sind alle Spielwerkzeuge verfügbar. timberborn_status vor

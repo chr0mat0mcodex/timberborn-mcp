@@ -1,5 +1,87 @@
 # Backlog
 
+## MCP-Log und Aufrufeffizienz — konkrete Livebefunde (2026-10-10)
+
+Auf Nutzerauftrag während des 0.37-Stützenpiloten geprüft: aktuelle 32 Logeinträge
+und Implementierung von `InvokeLogged`/`ActivityTools`. Nur verdichtete Befunde,
+keine Rohlogs oder Spiel-IDs gespeichert. Vorschläge, noch nicht implementiert:
+
+- **P1: Auftragszustände eindeutig trennen.** Projekt `waiting` mit Teilstatus
+  `unconfirmed` nach erfolgreicher Platzierung wurde von der Aktionsprüfung als
+  Wiederholungsrisiko blockiert. Normalen Zwischenzustand `awaiting_observation`
+  nennen; terminale unbestätigte Wirkung separat halten. Ergänzend rein lesenden
+  `refresh_large_project` anbieten: tatsächliche Objekte/Zugänge bestätigen, ohne
+  jemals den nächsten Auftrag auszulösen. Abnahme: unterbrochene Antwort lässt
+  sich ohne Schreibaufruf klären; kein doppelter Auftrag.
+- **P1: Fachliches Ergebnis statt nur `ok`.** Advance, Projektleser und
+  Fällmarkierung lieferten leere Summaries. Log getrennt um Transportergebnis,
+  fachlichen Zustand/Grund, Projekt-/Laufkorrelation und knappen Effekt ergänzen:
+  etwa „Treppe im Bau; 0/5 fertig; kein neuer Auftrag“ bzw. „2/2 markiert,
+  Ernte ausstehend“. Fehlercode und ungültiges Feld nennen, keine Rohantworten.
+  Abnahme: Bauauftrag, Warten, Ablehnung, Fertigstellung und bloße Lesung sind
+  ohne zusätzliche Detailabfrage unterscheidbar.
+- **P1: Wartegrund und gezielter Baustopp.** Ein Tagesfenster ließ die Treppe
+  bei Materialfortschritt 0,8 stehen; erst getrennte Gebäude-/Güterabfragen
+  zeigten vier Bretter am Bau und null frei verfügbare Stämme. Projektdiagnose
+  mit Kosten, Baustellenbestand, verfügbaren Gütern und beobachtetem Zugang
+  bündeln; keine erfundene Restliefermenge. Begrenzten Simulationslauf bei echter
+  Fertigstellung der ausgewählten Teile stoppen lassen, mit hartem Zeitlimit
+  und bestätigter Pause. Kein automatisches Setzen des Nachfolgers.
+- **P2: Zielgerichtete Suchfilter.** Für drei Holzfäller und zwei Verbraucher
+  mussten sieben Gebäudeseiten mit insgesamt 197 Objekten gelesen werden.
+  `find_buildings` um Vorlagen-/Rollen- und Regionsfilter erweitern; Güter gezielt
+  über IDs abfragen. Abnahme: diese Diagnose benötigt höchstens zwei Leseaufrufe,
+  ohne Wegeinventar und unbeteiligte Güter zu übertragen.
+- **P2: Grenzen im Werkzeugschema.** Mein Aufruf `inspect_goods(limit=64)` war
+  ungültig; `limit=32` funktionierte. Numerische Min-/Maximalwerte im Inputschema
+  und feldbezogene Fehlermeldungen ausgeben. Agent muss Fehlerdaten vor Zugriff
+  auf `data.items` prüfen; keine zusätzliche Spielabfrage wegen Parserfehlern.
+- **P2: Log gezielt und vollständig abrufen.** Aktuell maximal die neuesten 32
+  aus 128 Einträgen, darunter die eigene laufende Logabfrage. Cursor/Sequenz,
+  `hasMore`, sichtbare Ringpufferlücke und Filter nach Projekt/Lauf/Aktionen
+  ergänzen; eigene Loglesung standardmäßig ausblenden. Ein fehlender Eintrag
+  beweist bei Best-Effort-Telemetrie keine Nichtausführung. Vor dem Server
+  blockierte Aufrufe können nur mit separater Client-/Supervisor-Telemetrie
+  sichtbar werden; Spiel-Log darf dazu keine erfundenen Aussagen machen.
+- **P2: Tempowechsel nachvollziehbar machen.** Im selben Pilot unterbrach ein
+  Lauf wegen `speed_changed` (7 → 3); spätere Leser meldeten erst 0, dann 7.
+  Urheber unbekannt, keine menschliche Aktion daraus behaupten. Lauf-/Tempoevents
+  mit alter/neuer Stufe, Spielzeit und bekannter Quelle protokollieren; unbekannte
+  Quelle ausdrücklich markieren. Aktuelles Tempo und eingefrorenen Laufabschluss
+  gemeinsam ausgeben, damit ein alter Abschlusswert nicht als Istzustand gilt.
+
+Empfohlene Reihenfolge: eindeutiger Rückbestätigungsleser und Ergebnislog,
+danach Bau-/Materialdiagnose mit Fertigstellungsstopp, dann Suchfilter und Cursor.
+Keine Ausweitung der laufenden 0.37-Abnahme; Umsetzung als abgegrenzte Folgearbeit.
+
+## Siedlung als Gesamtanlage planen (Spielerfeedback 2026-10-10)
+
+Die aktuelle Ansicht zeigt dicht aneinander gesetzte Testbauten, schmale
+Verbindungen zu weiteren Einzelbauten und kaum erschlossene erhöhte Flächen.
+Einzelne gültige Bauplätze ergeben keinen brauchbaren Gesamtplan für „jedes
+Gebäude einmal“. Vor weiterem Katalogausbau zusammenhängende Bereiche für
+Wohnen/Freizeit, Produktion und große Sondergebäude planen; benötigte Grundflächen,
+Hauptwege, Höhenzugänge und Kraftleitungen vorab reservieren. Reservierungen und
+regionale Suchabdeckung persistent im Plan führen; spätere Bauten dürfen die
+vorgesehenen Korridore nicht versehentlich verbrauchen. Eigenständige Folgefähigkeit,
+kein stiller Umfangszuwachs der laufenden 0.37-Abnahme.
+
+## 0.37.0 größere Bauvorhaben — Stützenpilot bestanden (2026-10-10)
+
+Kraftvorschau, reale Kraftverbindung und zweiteilige Baufolge bestanden.
+Nach erneutem Gate jetzt auch fünfteilige Stützenfolge fertig: bedingte Planung,
+strikte native Ausführungsprüfung, Bau-/Fertigzugänge und negative Trägerkontrolle.
+Bestandsblockade und Stopp vor Bauauftrag geprüft. Fachlicher Abschluss dokumentiert;
+keine pauschale Vorlagen-/Kraftdrehungsabnahme.
+
+Beauftragter erster Umfang: 32 Teile / acht belegte Höhen, explizite Abhängigkeiten,
+Fertigstellung vor Folgeauftrag, entrancelose Stützen/Kraftteile sowie öffentliche
+Kraftports und Netzleistung. [Abnahmeplan](docs/large-projects-0.37.0.md).
+F03 damit erweitert, noch nicht abgenommen und nicht vollständig erledigt:
+automatische 3D-Routensuche bleibt offen. F04: neuer Distrikt-Lebenszyklus,
+Gelände-Seitenanbauten und Mehrfacheingänge weiter offen. F01 bleibt ausdrücklich
+offen; Vorschau ersetzt keinen vollständigen Baustellenzugangsnachweis.
+
 Abnahme 2026-10-10: Vorschaltprozess einschließlich Spielkontakt nach Backendwechsel
 und Rampen-/Höhensuche in beiden Pilotgebieten bestanden. Die untenstehenden
 Gate-Vermerke sind historisch; Nachweise in PROJECT_STATE.md und den Fachdokumenten.

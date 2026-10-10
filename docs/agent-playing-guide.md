@@ -1,5 +1,34 @@
 # Spielanleitung für Agenten
 
+## Erweiterung 0.37.0: größere Bauvorhaben (begrenzter Livepilot bestanden)
+
+Nach Stützenkorrektur: `placementState=deferred_native_validation` bedeutet
+noch keine gültige Geometrie. Direkt abhängige geplante Träger müssen zuerst
+real fertig sein; Advance muss dann die vollständige native Prüfung bestehen.
+Nicht als bestandene Vorschau oder Ausführungsfreigabe zusammenfassen.
+
+Nur mit bestätigter Bridge 0.37.0: `plan_large_project` → `start_large_project`
+→ `advance_large_project`. Explizit alle Stützen, Treppen, Wege, Gebäude und
+Kraftstücke mit `dependsOn` angeben. Höchstens 32 Teile, 32×32 Grundfläche und
+acht belegte Höhenebenen einschließlich Gebäudevolumen. Keine automatische
+3D-Geländeroutensuche annehmen. Katalog/Freischaltung zuerst prüfen.
+
+Plan/Start/Advance verlangen Pause. Ein Advance setzt höchstens einen Auftrag;
+Vorgänger müssen wirklich fertig und anwendbare Zugänge nachgewiesen sein.
+Bei `waiting` begrenzte Simulation separat ausführen, Pause bestätigen und
+erneut Advance. `inspect_large_project` liest nur den gespeicherten Stand.
+`stop_large_project` behält bestehende Objekte. Bei `unconfirmed`/`stopped`
+diagnostizieren, keine neue Action-ID als Retry. `pilotEligible` bedeutet keine
+reguläre Baufreigabe und keinen vollständigen Bauarbeiter-Vorabnachweis.
+
+Kraftlinks im Plan sind Anschlussgeometrie. Nach dem Bau
+`inspect_power_network` für reale Ports/Netzleistung lesen, Betrieb getrennt
+prüfen. Entrancelose Bauteile brauchen keinen erfundenen Gebäude-Eingang.
+Neue Distrikte, Gelände-Seitenanbauten und Mehrfacheingänge bleiben ausgeschlossen.
+[Genaue Parameter, Zustände und Livepilot](large-projects-0.37.0.md).
+Fünfteiliger Stützenpilot am 2026-10-10 vollständig fertiggestellt; Grenzen und
+Einzelnachweise stehen im verlinkten Pilotbericht, keine pauschale Katalogabnahme.
+
 Codex-Lifecycle (live abgenommen): vor der Testübergabe
 `timberborn_server_control(action=stop)`, nach menschlichem `live bereit`
 `action=start`, dann Spielstatus und aktuelle Session prüfen. Der Vorschaltprozess

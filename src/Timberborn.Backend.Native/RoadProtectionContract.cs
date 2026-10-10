@@ -2,7 +2,7 @@ namespace Timberborn.Backend.Native;
 
 public static class RoadProtectionContract
 {
-    public static void Validate(NativeRoadProtection? d, bool applied, bool requireBaseline = false, bool requireProbeKinds = false, bool requireConstructionPreview = false, bool requireConstructionDetails = false, bool requireConstructionEndpoints = false, bool requireConstructionQueryControls = false)
+    public static void Validate(NativeRoadProtection? d, bool applied, bool requireBaseline = false, bool requireProbeKinds = false, bool requireConstructionPreview = false, bool requireConstructionDetails = false, bool requireConstructionEndpoints = false, bool requireConstructionQueryControls = false, int maxCandidateCells = 64)
     {
         if (d?.ConstructionAccessPreview is { } construction) ConstructionPreviewContract.Validate(construction);
         if (requireConstructionEndpoints || requireConstructionQueryControls)
@@ -28,7 +28,7 @@ public static class RoadProtectionContract
             d.Affected.Any(a => a is null || a.Id == Guid.Empty || a.Entrance is null || a.DistrictCenter is null) ||
             d.Affected.Any(a => requireProbeKinds && a.Kind is null || a.Kind is not (null or "building_access" or "construction_access" or "road_cell")) ||
             d.Affected.Length != Math.Min(d.LostConnections, 32) || d.AffectedTruncated != (d.LostConnections > d.Affected.Length) ||
-            d.CandidateCells is null || d.CandidateCells.Length > 64 || d.CandidateCells.Any(c => c is null) ||
+            d.CandidateCells is null || d.CandidateCells.Length > maxCandidateCells || d.CandidateCells.Any(c => c is null) ||
             d.Status == "safe" && (!d.Restored || !d.ConstructionCovered || d.LostConnections != 0 || d.CheckedConnections == 0) ||
             d.Status == "blocked" && (!d.Restored || d.LostConnections == 0) || applied && d.Status != "safe")
             throw new InvalidDataException("Invalid road protection evidence");

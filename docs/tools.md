@@ -1,5 +1,20 @@
 # Native MCP-Werkzeuge
 
+## 0.37.0 — begrenzte Bau-/Stützenpiloten live bestanden
+
+| Werkzeug | Art | Zweck |
+| --- | --- | --- |
+| `plan_large_project` | Vorschau/POST | Expliziter Plan bis 32 Teile, 32×32 und acht belegte Höhen, Abhängigkeiten und Kraftgeometrie |
+| `start_large_project` | Schreiben/POST | Frisch validierten Plan registrieren, noch kein Auftrag |
+| `advance_large_project` | Schreiben/POST | Fertigstellung prüfen, höchstens einen Folgeauftrag erteilen |
+| `inspect_large_project` | Lesen/GET | Gespeicherte Projektquittung, keine Fortschrittsaktualisierung |
+| `stop_large_project` | Schreiben/POST | Folgeaufträge stoppen, Objekte behalten |
+| `inspect_power_network` | Lesen/GET | Echte Ports, Netzmitglieder und Leistung des angegebenen Objekts |
+
+Alle mit Sessionbindung und `reasoning`; vier Schreibwerkzeuge über den
+Gebäudebauschalter, zwei Leser unabhängig davon. Kein automatischer Wiederholungs-
+oder Hintergrundbau. [Parameter, Grenzen und Statusbedeutung](large-projects-0.37.0.md).
+
 Live abgenommen: `timberborn_server_control` (`action: stop|start|status`)
 kommt vom persistenten Codex-Vorschaltprozess, nicht aus der Spiel-Bridge.
 Stop sperrt das Backend vor dem menschlichen Gate; Start erst nach `live bereit`.
