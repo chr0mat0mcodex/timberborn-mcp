@@ -1,5 +1,18 @@
 # Projektstand
 
+## Gebäudespieltest 0.36.0 (2026-10-10)
+
+Aktueller Nutzerauftrag: reguläre Gebäudetypen einmal bauen, Verbesserungen
+begleitend dokumentieren. Bauhütte neu finished_accessible; vorhandene fertige
+Treppe bei vollständigem Bestandsabgleich nachgetragen. CSV jetzt 31/157,
+126 offen; fünf Entwicklerwerkzeuge ausgeschlossen. Katalog weiterhin mit
+15 nicht unterstützten regulären Vorlagen. Kein Neubau von Terrasse/Wasserfarm.
+Tag 417, 17,78125 Uhr, pausiert, keine Baustellen. 49 Biber, 49 Betten,
+23 freie Holzstämme. Sägewerk und Sauna für Holzansammlung pausiert.
+Ein von drei geplanten Typen fertig; Charge wegen fehlendem weiterem Standort
+gestoppt. Aufwandsalarm und neue Entscheidung vor Skalierung; kein MCP-Code geändert.
+[Nachweise und Verbesserungsvorschläge](docs/playtest-0.36.0.md).
+
 ## 0.36.0 Screenshot abgeschlossen (2026-10-10)
 
 Entwickler-Gate mit anschließender Bereitmeldung; native Bridge 0.36.0 bestätigt.

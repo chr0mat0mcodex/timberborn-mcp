@@ -1,5 +1,27 @@
 # Backlog
 
+## Gebäudespieltest 0.36.0 — laufende Effizienzbeobachtungen (2026-10-10)
+
+- Kompakte Typenabdeckung aus aktuellem Bestand: Fertig-/Baustellenanzahl je
+  Vorlage, Abgleich gegen regulären Katalog. Der Pilot benötigte sechs
+  Objektseiten mit vollständiger Geometrie für lediglich 30 fertige Typen.
+- Katalog nach fehlenden Typen, Materialkosten, Eingangshöhe und unterstütztem
+  Baupfad filtern. Vollständiger aktueller Katalog: 157 reguläre Vorlagen,
+  davon 15 im Baupfad nicht unterstützt; Entwicklerwerkzeuge separat ausschließen.
+- Regionalsuche stärker nach tatsächlichem Anschluss und nutzbarer gleicher
+  Höhe bewerten; 33 native Reads/zwölf Planungen im südlichen Testgebiet ohne
+  Kandidaten. Räumbare Anbauflächen gesondert ausweisen.
+- Präzise Eingabefehler statt pauschalem invalid_argument; Leser unterscheiden
+  sich hinsichtlich erforderlicher/unerlaubter session. Schema bleibt maßgeblich.
+- Vor Räumaufträgen verbleibende Pflanzmarkierungen und spätere Anschlusswege
+  gemeinsam prüfen. Erste Charge räumte zwölf Objekte ohne danach nutzbaren
+  Bauplatz; vier gezielt entfernte Karottenmarkierungen ermöglichten den Anschluss.
+- Bei Fertigstellung aller Bauobjekte früh pausieren und Zugang prüfen:
+  Bauhütte samt Wegen bei 28,625 von 48 Stunden fertig, Charge wartete weiter.
+
+Evidenz und weitere Ergebnisse: [Spieltest 0.36.0](docs/playtest-0.36.0.md).
+Nur dokumentiert; keine Umsetzung im laufenden Spieltest.
+
 ## Baumstumpf-Korrektur live bestätigt (2026-10-10)
 
 Benutzer weist im Livepilot auf Baumreste hin. Growable.IsGrown und Lebenszustand
