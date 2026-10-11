@@ -12,8 +12,13 @@ Native hypothetische Bauarbeiterreichweite bleibt unbekannt, Zugangshilfen behal
 ihre Laufzeitprüfung. [Abnahme und Grenzen](docs/automatic-access-planning.md).
 Materialwartezeit erforderte nach dem 48-Stunden-Chargenlimit einen separaten
 Produktionslauf. Alle Teile fertig, Ledger freigegeben, belegter Weg als Ziel abgewiesen.
-Testgebäude zurückgebaut; Rückgewinnungsstapel (48,8,6) und drei Sammelzugangshilfen
-bleiben bis zur Sammlung. Spiel pausiert. Überhang und spätere Überbauung noch ungeprüft.
+Ergänzend bestanden: Windrad über vorhandenem Weg, Mast-auf-Weg-Gegenprobe und
+kleines Lager unter dem Rotor. Bauzugänge und fertiger Lagereingang separat belegt.
+Beide Zusatzpiloten autonom fertig (10,26 bzw. 11,92 Sekunden), Ledger freigegeben.
+Testgebäude, beide Testwege und Treppe entfernt; alle Rückgewinnungsstapel regulär
+eingesammelt. Testfläche frisch mit null Objekten bestätigt. Nachbarwerkstatt
+weiterhin erreichbar. Keine aktive Agentencharge, Spiel zuletzt Tempo 7.
+Spätere Überbauung bleibt ungeprüft.
 
 ## 2026-10-11: Harzveredelung und erste Folgegebäude fertig
 

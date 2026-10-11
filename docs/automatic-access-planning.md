@@ -1,5 +1,34 @@
 # Automatische Zugangsplanung für Gesamtpläne
 
+## Ergänzende Liveprüfung: Rotorüberhang und Bau unter Überhang
+
+Am 2026-10-11 mit unverändertem 0.37.0-Build geprüft:
+
+- WindTurbine (47,7,6), Fundament/Mast (48,8,6): vorhandener Weg (47,7,6)
+  unter dem Rotor bleibt gültige Arbeitszelle. Acht freie Kandidaten, 69 Suchknoten,
+  keine zusätzlichen Hilfen. Tatsächliche Baustelle `buildersReachable=true`;
+  autonom fertig nach 10,26 Sekunden / 3,5 Spielstunden, Pause bestätigt.
+- Gegenprobe mit Mast auf Bestandsweg: `target_intersects_existing_or_planned_object`,
+  Zielindex 0, Phase `target_geometry`, null Aufträge.
+- Separates SmallPile (47,8,6) unter dem fertigen Rotor: native Geometrie gültig,
+  sieben freie Arbeitszellen, zwei davon am Distriktweg, 124 Suchknoten.
+  Echte Baustelle erreichbar; fertig nach 11,92 Sekunden / 1,75 Spielstunden.
+  Fertiger Eingang weder blockiert noch unerreichbar, Distriktdistanz 44.
+- Beide Ledger nach frischem Abgleich freigegeben; keine verlorenen Bestandsanschlüsse.
+  Keine Kraftproduktion behauptet: das Testwindrad war nicht ans Produktionsnetz gekoppelt.
+
+Das zuvor als leer bestätigte Lager und das Testwindrad wurden gezielt entfernt.
+Nach regulärer Sammlung ihrer Rückgewinnungsstapel beide Testwege und die
+Testtreppe zurückgebaut; auch die Treppenrohstoffe anschließend eingesammelt.
+Abschlussabfrage der Testfläche (45,7,5), 5×3×4: null Objekte, keine Reststapel.
+Bestandswege daneben erhalten; Holzwerkstatt weiterhin zugänglich, Distriktdistanz 47.
+Kein `remove_debris`, kein Löschen gelagerter Güter. Alle Testledger freigegeben.
+Die Simulation lief beim abschließenden Lesen wieder mit Tempo 7; keine eigene
+aktive Bau- oder Simulationscharge zurückgelassen. Zwei Sammelstarts wurden wegen
+geänderter Geschwindigkeit abgewiesen; vor weiterem Vorgehen jeweils frisch gelesen.
+Dies belegt Rotorfreiraum und einen niedrigen Bau darunter,
+keine allgemeine Freigabe sämtlicher Überhang-/Spezialvorlagen oder späterer Überbauung.
+
 ## Liveprüfung 2026-10-11: begrenzter Höhenzugangspilot bestanden
 
 Nach menschlichem Gate und Bereitmeldung ist Policy 1 live vorhanden; installierte
@@ -26,13 +55,14 @@ Aussage über einen Arbeitseingang oder Distriktdistanz aus null-Werten ableiten
 
 Zusätzliche Test-Wetterstation entfernt. Ihr Rückgewinnungsstapel bei (48,8,6)
 bleibt erhalten, ebenso die Treppe (45,7,5) und Wege (46,7,6)/(47,7,6) für Sammlung.
-Diese drei Hilfen erst nach Sammlung und frischer Bestandszugangsprüfung entfernen.
-Keine Rohstofflöschung. Spiel pausiert, kein laufender Auftrag.
+Dies war der Zwischenstand nach dem ersten Pilot. Die ergänzende Liveprüfung oben
+schließt Sammlung und Rückbau aller drei Hilfen ab. Keine Rohstofflöschung.
 
 Begrenzte Abnahme: fehlender Arbeitsweg, automatische Höhenroute, echter
 Baustellenzugang, tatsächliche Fertigstellung und belegter Bestandsweg. Überhang-/
-Windradfall und spätere Überbauung einer zunächst erreichbaren Arbeitszelle wurden
-nicht separat live geprüft; dafür keine allgemeine Freigabe behaupten.
+Windradfall waren hier zunächst nicht separat geprüft; die ergänzende Abnahme
+oben liefert diese Nachweise. Spätere Überbauung einer zunächst erreichbaren
+Arbeitszelle bleibt ungeprüft; dafür keine allgemeine Freigabe behaupten.
 
 ## Erweiterung: Bauarbeitszugang — begrenzt live abgenommen
 

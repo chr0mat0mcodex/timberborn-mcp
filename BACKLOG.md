@@ -17,7 +17,9 @@ automatische Wege/Treppen/Stützen sowie gezielte Fehlerdiagnose. Suchrand zwöl
 Zellen bei unveränderten Budgets. Nach menschlichem Gate: negative Gegenprobe,
 automatische Höhenroute, realer Bauarbeiterzugang, Fertigstellung und belegter
 Bestandsweg geprüft. [Nachweise und Grenzen](docs/automatic-access-planning.md).
-Überhangfall und spätere Überbauung noch nicht separat live geprüft.
+Ergänzend bestanden: Windrad mit Arbeitsweg unter dem Rotor, Mast-auf-Weg-Gegenprobe
+und kleines Lager unter dem fertigen Rotor einschließlich Bau- und Eingangszugang.
+Spätere Überbauung einer zunächst erreichbaren Arbeitszelle bleibt separat ungeprüft.
 Offen bleiben native hypothetische Baustellenreichweite, automatische Routensuche
 für bereits bestehende Reparaturprojekte und besondere Bauformen. Produktionsziele
 und weitere Gebäudeunterstützung folgen separat; kein autonomer Kolonieausbau.
