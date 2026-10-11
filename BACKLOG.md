@@ -1,5 +1,17 @@
 # Backlog
 
+## 0.46.0 — kompakte Bauprojektberichte begrenzt live abgenommen
+
+Nach Größenkorrektur menschliches Gate und Zweiteil-Livepilot bestanden.
+Start trennt zwei Versuche von noch null bestätigten Platzierungen; Abschluss
+und frische Diagnose bestätigen zwei fertige zugängliche Teile sowie Pause.
+Compact/Full: Ledger 1.384/1.856 UTF-8-JSON-Bytes (25,4 % kleiner), fertige
+Diagnose 1.065/1.278 Bytes (16,7 % kleiner); gemeinsame Werte unverändert.
+Unterirdischer Weg bleibt native_invalid, pilotEligible=false, restored=true.
+Testwege entfernt, Fläche leer und Bestandsanschluss bestätigt; keine Rohstoffe
+gelöscht. Doku/Agentenanleitung angepasst, Ausführungslogik und Limits unverändert.
+[Vertrag und begrenzte Abnahme](docs/compact-project-reports.md).
+
 ## 0.45.0 — Aktionsergebnisse und Laufberichte begrenzt live abgenommen
 
 Menschliches Gate nach korrigierter Integrationserwartung bestanden; Bridge 0.45.0

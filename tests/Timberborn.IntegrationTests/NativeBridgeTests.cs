@@ -219,6 +219,11 @@ public sealed class NativeBridgeTests
             expected.Add("inspect_building_configuration");
             if(enableValidation && enableLodgePlacement)expected.Add("configure_buildings");
             Assert.Equal(expected.Order(), tools.Select(t => t.Name).Order());
+            foreach(var projectTool in tools.Where(t=>t.Name.EndsWith("large_project",StringComparison.Ordinal) || t.Name is "plan_large_project_access" or "plan_large_project_repair" or "run_large_project_repair")) {
+                var schema=projectTool.ProtocolTool.InputSchema;
+                Assert.Equal("compact",schema.GetProperty("properties").GetProperty("detail").GetProperty("default").GetString());
+                Assert.DoesNotContain(schema.GetProperty("required").EnumerateArray(),p=>p.GetString()=="detail");
+            }
             if(!enableValidation && !enablePlacement && !enableLodgePlacement) {
                 var frame=await client.CallToolWithReasonAsync("capture_screenshot",new Dictionary<string,object?> { ["session"]=session },cancellationToken:ct);
                 Assert.False(frame.IsError); Assert.Equal(2,frame.Content.Count);

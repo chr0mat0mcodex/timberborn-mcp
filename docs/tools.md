@@ -1,5 +1,22 @@
 # Native MCP-Werkzeuge
 
+## 0.46: kompakte Bauprojektberichte (begrenzt live abgenommen)
+
+Große Projektwerkzeuge liefern standardmäßig Compact, detail=full die nativen
+Vollbelege. summary trennt attempted/confirmedPlaced/finishedAccessRecorded;
+Unknowns und unconfirmed bleiben getrennt. Ledger ist keine frische Zugangsprüfung.
+Für tatsächlichen Zustand diagnose_large_project nutzen; finishedAccessible ist
+getrennt von bloß vorhandenen oder unzugänglichen fertigen Gebäuden.
+attentionParts im Ledger enthält nicht fertige/blockierte IDs mit Originalindex;
+alle fertigen IDs stehen in Full. Die frische Diagnose zählt erfolgreiche Teile
+aggregiert; Problemteile bleiben in parts, summary.attentionPartIndices verweist
+auf ihre Originalindizes. knownBlockedParts ist keine vollständige Diagnose.
+Mehr Details nur mit inspect/diagnose und derselben actionId lesen, niemals
+Aufträge erneut senden. Planungsdetails bei Bedarf schon mit detail=full anfordern.
+nextStep ist ein Hinweis ohne Ausführung/Freigabe; Pause, Blockaden und mögliche
+Aufgabe unbeauftragter Restteile vor Abschluss beachten. Alte Standortchargen bleiben
+bei details=true. [Vertrag und Pilot](compact-project-reports.md).
+
 ## 0.45: Aktionsergebnisse und kompakte Läufe (begrenzt live abgenommen)
 
 Native Fehler ergänzen error.execution: not_executed, unconfirmed oder

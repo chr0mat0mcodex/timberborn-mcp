@@ -8,7 +8,7 @@ namespace Timberborn.McpServer;
 public static class ResponsePresentation
 {
     public static bool Supports(string name) => name is "timberborn_status" or
-        "inspect_building_settings" or "set_storage_good" or "set_storage_mode" or "validate_building" || SimulationRunTools.Handles(name);
+        "inspect_building_settings" or "set_storage_good" or "set_storage_mode" or "validate_building" || SimulationRunTools.Handles(name) || ProjectReportPresentation.Supports(name);
 
     private static string[] OptionalFields(string name) => name switch {
         "inspect_building_settings" => ["limitations", "allowedGoods", "allowedPlants"],
@@ -24,7 +24,9 @@ public static class ResponsePresentation
         var input = JsonNode.Parse(tool.InputSchema.GetRawText())!.AsObject();
         input["properties"]!.AsObject()["detail"] = new JsonObject {
             ["type"] = "string", ["enum"] = new JsonArray("compact", "full"), ["default"] = "compact",
-            ["description"] = SimulationRunTools.Handles(tool.Name)
+            ["description"] = ProjectReportPresentation.Supports(tool.Name)
+                ? "compact: Baufortschritt, Nachweisart, konkrete Blockaden und nächster Schritt. full: vollständige native Belege. Bestehende Projekte mit inspect_large_project oder diagnose_large_project und derselben actionId lesen; niemals Aufträge für mehr Details wiederholen. Planungsdetails beim ersten Planaufruf mit full anfordern; Schritte und planKey bleiben auch kompakt erhalten."
+                : SimulationRunTools.Handles(tool.Name)
                 ? "compact: Laufstatus, Ziele, unveränderte Messwerte und Diagnosebefunde; Zeitkategorien mit null Stunden entfallen. full: vollständige Belege. Details eines gestarteten Laufs mit inspect_simulation_run und derselben runId lesen, niemals erneut starten."
                 : "compact: knapper Ergebnisbeleg. full: zusätzlich Auswahllisten, vollständiger Zustand und Geometriedetails. Bei Schreibaufrufen keinen zweiten Auftrag nur für Details senden; Zustand separat lesen." };
         tool.InputSchema = JsonSerializer.SerializeToElement(input);
@@ -112,6 +114,7 @@ public static class ResponsePresentation
                 break;
         }
         if(SimulationRunTools.Handles(name))RunReportPresentation.Compact(data);
+        if(ProjectReportPresentation.Supports(name))ProjectReportPresentation.Compact(name,data);
         return copy;
     }
 
