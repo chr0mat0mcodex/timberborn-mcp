@@ -1,5 +1,12 @@
 # Backlog
 
+## Abgenommen: 0.39.0 Gebäudesuche und Sammeldiagnose
+
+Beauftragt und implementiert: native Vorlagen-/Status-/Ankerbereichsfilter,
+Wege optional, Manufactory-Auswahl; bis 32 Betriebsbeobachtungen mit einem
+fachlichen Request und kompakter Antwort. Inaktive Kraftverbraucher separat.
+Gate und begrenzter Livevergleich bestanden (15 IDs, drei Einzelkontrollen). [Vertrag und Pilot](docs/building-query-batch.md).
+
 ## Abgenommen: 0.38.0 Rezeptwahl und gebündelte Betriebsdiagnose
 
 Nach Abschluss von 0.37.0 beauftragt. Rezeptoptionen samt Zutaten/Produkten,

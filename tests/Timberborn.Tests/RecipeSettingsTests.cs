@@ -70,13 +70,13 @@ public sealed class RecipeSettingsTests
     public void ReadinessSeparatesWarningsUnknownsAndProductionEvidence()
     {
         var d=new NativeOperation(Id.ToString(),"SyntheticWorkshop",true,false,new(1,2,2,true,false,true),
-            new(true,"SyntheticRecipe",true,true,true,false,true,0),[],[],[],new(true,true,true,true,100,200));
+            new(true,"SyntheticRecipe",true,true,true,false,true,0),[],[],[],new(true,true,true,true,100,200,true));
         var a=OperationAssessmentBuilder.Read(d);
         Assert.Empty(a.Blockers);Assert.Contains("understaffed",a.Warnings);Assert.Contains("network_power_deficit",a.Warnings);
         Assert.False(a.ProductionProven);
         a=OperationAssessmentBuilder.Read(d with{Manufacturing=null,Power=null});
         Assert.Contains("manufacturing_not_observed",a.Unknown);Assert.Contains("power_not_observed",a.Unknown);
-        a=OperationAssessmentBuilder.Read(d with{Paused=true,Manufacturing=new(false,null,false,null,null,null,null,0),Power=new(true,true,false,true,0,100)});
+        a=OperationAssessmentBuilder.Read(d with{Paused=true,Manufacturing=new(false,null,false,null,null,null,null,0),Power=new(true,true,false,true,0,100,true)});
         Assert.Contains("recipe_missing",a.Blockers);Assert.Contains("building_paused",a.Blockers);Assert.Contains("consumer_not_powered",a.Blockers);
         a=OperationAssessmentBuilder.Read(d with{Manufacturing=new(true,"SyntheticRecipe",false,false,false,true,false,0)});
         Assert.Contains("ingredients_not_ready",a.Blockers);Assert.Contains("fuel_not_ready",a.Blockers);Assert.Contains("output_capacity_unavailable",a.Blockers);
@@ -100,7 +100,7 @@ public sealed class RecipeSettingsTests
             "no_component"=>new(false,null,null,null,null,null),
             "contradiction"=>new(false,true,true,true,100,50),
             "negative"=>new(true,true,true,true,-1,50),
-            _=>new(true,true,false,true,0,50) };
+            _=>new(true,true,false,true,0,50,true) };
         var d=new NativeOperation(Id.ToString(),"SyntheticWorkshop",true,false,null,
             new(true,"SyntheticRecipe",true,true,true,false,true,0),[],[],[],power,new([],[],[],true));
         using var handler=new Reply(d);using var client=new NativeClient(new(8081,new string('a',64)),handler);

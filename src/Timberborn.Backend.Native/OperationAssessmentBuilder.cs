@@ -26,7 +26,9 @@ public static class OperationAssessmentBuilder
         } else unknown.Add("manufacturing_not_observed");
         if(d.Power is {} p) {
             if(p.IsConsumer==true) {
-                if(p.NetworkValid!=true) unknown.Add("power_network_unconfirmed");
+                if(p.Active==false) warnings.Add("consumer_inactive");
+                else if(p.Active is null) unknown.Add("consumer_activity_unknown");
+                else if(p.NetworkValid!=true) unknown.Add("power_network_unconfirmed");
                 else {
                     if(p.Powered==false) blockers.Add("consumer_not_powered");
                     if(p.Supply<p.Demand) warnings.Add("network_power_deficit");

@@ -1,5 +1,18 @@
 # Native MCP-Werkzeuge
 
+## 0.39.0 — begrenzt live abgenommen
+
+- `find_buildings`: Filter template/finished/productionOnly/includePaths und
+  vollständiger Ankerbereich x/y/z/width/height/depth; kompakt als Standard,
+  geometry nur bei detail=full. Wege standardmäßig ausgeschlossen.
+- `inspect_building_operations(ids, session, detail)`: 1–32 eindeutige IDs,
+  ein nativer Beobachtungsrequest, Einzelstatus observed/not_found. Kompakte
+  Betriebs-Summary; full ergänzt Inventare und Statustexte.
+- `inspect_building_operation`: zusätzlich power.active für korrekte Einordnung
+  inaktiver Verbraucher; gemeinsame Diagnose mit der Sammelabfrage.
+
+[Vertrag und begrenzter Pilot](building-query-batch.md).
+
 ## 0.38.0 — Gate und begrenzter Livetest bestanden
 
 - `inspect_building_settings`: zusätzlich aktuelle/erlaubte Rezepte mit

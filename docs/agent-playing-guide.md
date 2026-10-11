@@ -1,5 +1,16 @@
 # Spielanleitung für Agenten
 
+## 0.39.0 live abgenommen — Such- und Diagnoseeffizienz
+
+`find_buildings` gezielt mit template, finished oder
+productionOnly verwenden. Wege/Treppen sind standardmäßig ausgeschlossen;
+includePaths=true bei Wegeaufgaben. Bereiche filtern den Anker einschließlich Z,
+nicht den Gebäudegrundriss. Geometrie nur mit detail=full unter geometry.
+Gefundene IDs gemeinsam an `inspect_building_operations` übergeben (maximal 32,
+aktuelle session). not_found und unbekannte Belege nicht als Erfolg interpretieren.
+Full nur für Inventare/Statustexte nachladen. Inaktive Kraftverbraucher sind kein
+Beweis einer kaputten Verbindung. [Vertrag und Pilot](building-query-batch.md).
+
 ## 0.38.0: Rezeptwahl und Inbetriebnahme — begrenzt live abgenommen
 
 `inspect_building_settings` für

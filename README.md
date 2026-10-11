@@ -5,6 +5,8 @@ Beobachtung und kontrollierte Eingriffe über reguläre Spielservices.
 
 ## Status
 
+**0.39.0 begrenzt live abgenommen:** [Gebäudefilter und Sammeldiagnose](docs/building-query-batch.md).
+
 **0.37.0 abgeschlossen:** [Releaseumfang und Grenzen](docs/releases/0.37.0.md).
 **0.38.0 begrenzt live abgenommen:** [Rezeptwahl und Betriebsdiagnose](docs/recipe-operation-settings.md).
 

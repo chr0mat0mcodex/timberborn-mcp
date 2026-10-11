@@ -51,6 +51,9 @@ public static class ResponsePresentation
     public static (JsonElement Arguments, bool Full) ReadRequest(string name, JsonElement args)
     {
         if (args.ValueKind != JsonValueKind.Object) throw new ArgumentException("Expected object");
+        // These tools own their detail contract: search skips native geometry work,
+        // and batch returns a typed compact/full view after validating raw evidence.
+        if (BuildingQueryTools.Handles(name)) return (args, false);
         bool seen = false, full = false;
         using var stream = new MemoryStream();
         using (var writer = new Utf8JsonWriter(stream)) {

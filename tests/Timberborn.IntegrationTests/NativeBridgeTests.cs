@@ -129,6 +129,8 @@ public sealed class NativeBridgeTests
                             "map" => new NativeMap(new(r.X, r.Y, r.Z), 1, 1, 1,
                                 [new(r.X, r.Y, r.Z, false, true, 2, 0.5f, 0, true)], ["synthetic_test"]),
                             "workforce" => new NativeWorkforce("entities_with_worker_component", r.Offset, r.Limit, 0, 0, 0, [], false, ["synthetic_test"]),
+                            "building-search" => new BuildingSearch(r.BuildingQuery!.Offset,r.BuildingQuery.Limit,0,[],false,1,["synthetic_test"]),
+                            "building-operations" when r.Session==session => new OperationBatch(r.BuildingQuery!.Ids.Select(id=>new OperationBatchItem(id,"not_found",null)).ToArray(),1,["synthetic_test"]),
                             "objects" => new NativeObjects("buildings_and_paths", r.Offset, r.Limit, 0, [], false, ["synthetic_test"]),
                             "building" => new NativeBuilding(Guid.Parse(r.EntityId), false, null, ["synthetic_test"]),
                             "building-catalog" => new NativeBuildingCatalog("Folktails",r.Offset,r.Limit,1,
@@ -147,7 +149,7 @@ public sealed class NativeBridgeTests
                                 Guid.NewGuid(), "applied", r.Template == "Path", true, ["synthetic_test"])),
                             _ => throw new ArgumentException()
                         };
-                        return JsonSerializer.Serialize(new BridgeEnvelope<object>(1, session, DateTimeOffset.UtcNow, r.ProjectExecution is not null ? "0.26.0" : "0.22.0", data), NativeJson.Options);
+                        return JsonSerializer.Serialize(new BridgeEnvelope<object>(1, session, DateTimeOffset.UtcNow, r.BuildingQuery is not null ? "0.39.0" : r.ProjectExecution is not null ? "0.26.0" : "0.22.0", data), NativeJson.Options);
                     });
                     await Task.Delay(5, pumpStop.Token);
                 }
@@ -202,7 +204,7 @@ public sealed class NativeBridgeTests
                 }
             }), cancellationToken: ct);
             var tools = await client.ListToolsAsync(cancellationToken: ct);
-            var expected = new List<string> { "inspect_simulation_run", "inspect_production_graph", "inspect_needs", "inspect_beaver_needs", "inspect_building_operation", "inspect_building_access", "inspect_road_connection", "inspect_path_district", "inspect_selection", "inspect_work_range", "inspect_good_history", "find_buildings", "inspect_alert_targets", "inspect_alerts", "inspect_goods", "inspect_research", "inspect_agent_log", "inspect_area_types", "inspect_areas", "inspect_build_catalog", "inspect_build_options", "plan_building_project", "inspect_building_project", "inspect_vertical_stair_pilot", "precheck_building", "inspect_building", "inspect_building_priority", "inspect_building_settings", "inspect_colony", "inspect_colony_overview", "inspect_construction", "inspect_map_region", "inspect_simulation", "inspect_workforce", "inspect_removal_targets", "precheck_build_site", "timberborn_status" };
+            var expected = new List<string> { "inspect_simulation_run", "inspect_production_graph", "inspect_needs", "inspect_beaver_needs", "inspect_building_operation", "inspect_building_operations", "inspect_building_access", "inspect_road_connection", "inspect_path_district", "inspect_selection", "inspect_work_range", "inspect_good_history", "find_buildings", "inspect_alert_targets", "inspect_alerts", "inspect_goods", "inspect_research", "inspect_agent_log", "inspect_area_types", "inspect_areas", "inspect_build_catalog", "inspect_build_options", "plan_building_project", "inspect_building_project", "inspect_vertical_stair_pilot", "precheck_building", "inspect_building", "inspect_building_priority", "inspect_building_settings", "inspect_colony", "inspect_colony_overview", "inspect_construction", "inspect_map_region", "inspect_simulation", "inspect_workforce", "inspect_removal_targets", "precheck_build_site", "timberborn_status" };
             if (enableValidation) { expected.AddRange(["set_building_paused","set_storage_good","set_storage_mode","set_farm_priority","set_farm_crop","set_building_recipe"]); expected.Add("validate_build_site"); expected.Add("set_workplace_staffing"); expected.AddRange(["demolish_building","remove_planted","remove_vegetation","remove_debris"]); }
             if (enablePlacement) { expected.Add("unlock_building"); expected.Add("place_path"); expected.Add("set_building_priority"); } if (enableLodgePlacement) { expected.Add("place_building"); expected.Add("validate_building"); expected.Add("validate_building_project"); expected.Add("execute_building_project_pilot"); expected.Add("execute_vertical_stair_pilot"); expected.Add("set_area"); expected.Add("place_lodge"); expected.Add("set_simulation_speed"); expected.AddRange(["run_simulation_for", "run_simulation_until", "cancel_simulation_run"]); }
             expected.Add("survey_region"); expected.Add("inspect_building_capabilities"); expected.Add("inspect_building_completion"); expected.AddRange(["inspect_building_batch", "stop_building_batch"]);
@@ -316,7 +318,10 @@ public sealed class NativeBridgeTests
             Assert.Equal(0.5f, map.StructuredContent!.Value.GetProperty("data").GetProperty("cells")[0].GetProperty("waterDepth").GetSingle());
             var status = await client.CallToolWithReasonAsync("timberborn_status", cancellationToken: ct);
             Assert.Equal(enablePlacement || enableLodgePlacement || enableValidation, status.StructuredContent!.Value.GetProperty("data").GetProperty("writesEnabled").GetBoolean());
-            var objects = await client.CallToolWithReasonAsync("find_buildings", new Dictionary<string, object?> { ["offset"] = 0, ["limit"] = 32 }, cancellationToken: ct);
+            var bulk=await client.CallToolWithReasonAsync("inspect_building_operations",new Dictionary<string,object?>{["ids"]=new[]{Guid.NewGuid().ToString("D")},["session"]=session},cancellationToken:ct);
+            Assert.False(bulk.IsError);
+            Assert.Equal("not_found",bulk.StructuredContent!.Value.GetProperty("data").GetProperty("items")[0].GetProperty("state").GetString());
+            var objects = await client.CallToolWithReasonAsync("find_buildings", new Dictionary<string, object?> { ["offset"] = 0, ["limit"] = 32, ["detail"]="full", ["productionOnly"]=true }, cancellationToken: ct);
             Assert.False(objects.IsError);
             Assert.Equal(0, objects.StructuredContent!.Value.GetProperty("data").GetProperty("total").GetInt32());
             var catalog = await client.CallToolWithReasonAsync("inspect_build_catalog", cancellationToken: ct);
@@ -327,14 +332,14 @@ public sealed class NativeBridgeTests
             Assert.False(site.IsError);
             Assert.False(site.StructuredContent!.Value.GetProperty("data").GetProperty("gameValidated").GetBoolean());
             Assert.Equal("requires_game_validation", site.StructuredContent!.Value.GetProperty("data").GetProperty("assessment").GetString());
-            Assert.Equal((enableLodgePlacement ? 12 : 8) + (enablePlacement ? 4 : 1) + 12 + (enableValidation ? 2 : 0), Volatile.Read(ref observations));
+            Assert.Equal((enableLodgePlacement ? 12 : 8) + (enablePlacement ? 4 : 1) + 13 + (enableValidation ? 2 : 0), Volatile.Read(ref observations));
             if (enableValidation)
             {
                 var validation = await client.CallToolWithReasonAsync("validate_build_site", new Dictionary<string, object?>
                     { ["template"] = "Path", ["x"] = 1, ["y"] = 2, ["z"] = 3, ["rotation"] = 0, ["session"] = session }, cancellationToken: ct);
                 Assert.False(validation.IsError);
                 Assert.True(validation.StructuredContent!.Value.GetProperty("data").GetProperty("noPersistentChangeObserved").GetBoolean());
-                Assert.Equal((enableLodgePlacement ? 13 : 9) + (enablePlacement ? 4 : 1) + 12 + (enableValidation ? 2 : 0), Volatile.Read(ref observations));
+                Assert.Equal((enableLodgePlacement ? 13 : 9) + (enablePlacement ? 4 : 1) + 13 + (enableValidation ? 2 : 0), Volatile.Read(ref observations));
             }
             if (enablePlacement)
             {

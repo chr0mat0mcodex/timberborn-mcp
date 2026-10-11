@@ -1,5 +1,14 @@
 # Projektstand
 
+## 0.39.0 — begrenzt live abgenommen
+
+Menschliches Gate und Such-/Sammelpilot bestanden: 15 Produktionsgebäude in einem
+nativen Betriebsrequest; drei Einzelkontrollen identisch. Kompakte Batchantwort
+70,6 % kleiner als Full. Höhen-/Vorlagen-/Wegefilter, Teilabdeckung und negative
+ID-/Sessionkontrollen geprüft. Inaktiver Verbraucher korrekt eingeordnet;
+Papierfabrik wieder aktiviert, Simulation pausiert. Liveumfang 15 statt maximal 32.
+[Nachweis und Grenzen](docs/building-query-batch.md).
+
 ## 0.38.0 — begrenzt live abgenommen
 
 Menschliches Gate und Rezeptpilot bestanden: Rezeptwahl/Rücklesung an Grill und

@@ -79,12 +79,12 @@ public sealed class BridgeMod(Timberborn.CameraSystem.CameraService cameraServic
             screenshots=host.AddComponent<ScreenshotCapture>();
         }
         var data=await screenshots.Capture(request.Screenshot,cameraService);
-        return JsonConvert.SerializeObject(new { schemaVersion=1,sessionId,observedAtUtc=DateTimeOffset.UtcNow,bridgeVersion="0.38.0",data });
+        return JsonConvert.SerializeObject(new { schemaVersion=1,sessionId,observedAtUtc=DateTimeOffset.UtcNow,bridgeVersion="0.39.0",data });
     }
     private string Observe(BridgeRequest request)
     {
         if(request.LargeProject is not null && request.Session!=sessionId)throw new BridgeRejectionException("stale_session");
-        if ((request.ProjectExecution is not null || request.VerticalStair is not null || request.ProjectValidation is not null || request.BuildingPlan is not null || request.SimulationRun is not null || request.Diagnostics is not null && request.Diagnostics.Route!="needs" || request.Logistics is not null && request.Logistics.Route!="good-history" || request.Research?.Write == true || request.Settings is not null || request.Route is "selection" or "alert-targets" or "building-validation" or "building-placement" or "site-validation" or "path-placement" or "lodge-placement" or "building" or "simulation-speed" or "workplace-staffing" or "priority" or "set-priority" or "set-area" or "remove-object") && request.Session != sessionId) throw new BridgeRejectionException("stale_session");
+        if ((request.BuildingQuery?.Session.Length>0 || request.ProjectExecution is not null || request.VerticalStair is not null || request.ProjectValidation is not null || request.BuildingPlan is not null || request.SimulationRun is not null || request.Diagnostics is not null && request.Diagnostics.Route!="needs" || request.Logistics is not null && request.Logistics.Route!="good-history" || request.Research?.Write == true || request.Settings is not null || request.Route is "selection" or "alert-targets" or "building-validation" or "building-placement" or "site-validation" or "path-placement" or "lodge-placement" or "building" or "simulation-speed" or "workplace-staffing" or "priority" or "set-priority" or "set-area" or "remove-object") && request.Session != sessionId) throw new BridgeRejectionException("stale_session");
         object RecordActivity()
         {
             var a=request.Activity!;
@@ -101,6 +101,8 @@ public sealed class BridgeMod(Timberborn.CameraSystem.CameraService cameraServic
             "activity" => RecordActivity(),
             "production-graph" => productionGraph.Read(),
             "activity-log" => new { capacity=ActivityLog.Capacity, items=activityLog.Snapshot().AsEnumerable().Reverse().Take(32).Select(ActivityLog.Payload).ToArray(), revision=activityLog.Revision, windowVisible=activityWindow.Visible, uiAttached=activityWindow.Attached },
+            "building-search" => spatial.Search(request.BuildingQuery!),
+            "building-operations" => diagnostics.Operations(request.BuildingQuery!),
             "building-settings" => settings.Read(request.Settings!),
             "set-building-paused" or "set-storage-good" or "set-storage-mode" or "set-farm-priority" or "set-farm-crop" or "set-building-recipe" => settings.Set(request.Settings!),
             "simulation-run-for" or "simulation-run-until" or "simulation-run" or "simulation-run-cancel" => simulation.Run(request.SimulationRun!),
@@ -120,7 +122,7 @@ public sealed class BridgeMod(Timberborn.CameraSystem.CameraService cameraServic
             _ => throw new ArgumentException("invalid_request")
         };
         return JsonConvert.SerializeObject(new { schemaVersion = 1, sessionId, observedAtUtc = DateTimeOffset.UtcNow,
-            bridgeVersion = "0.38.0", data });
+            bridgeVersion = "0.39.0", data });
     }
     private object Snapshot()
     {

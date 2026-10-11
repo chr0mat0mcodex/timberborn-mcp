@@ -1,6 +1,8 @@
 using Timberborn.BlockSystem;
 using Timberborn.Bridge.Core;
 using Timberborn.Buildings;
+using Timberborn.Workshops;
+using Timberborn.PathSystem;
 using Timberborn.Coordinates;
 using Timberborn.EntitySystem;
 using Timberborn.GameFactionSystem;
@@ -39,6 +41,27 @@ public sealed class SpatialObservations(EntityRegistry entities, TemplateNameMap
         return new { scope = "buildings_and_paths", offset = request.Offset, limit = request.Limit,
             total = candidates.Length, items, hasMore = request.Offset + items.Length < candidates.Length,
             limitations = new[] { "pages_are_fresh_observations", "no_district_reachability", "occupied_cells_capped_at_512" } };
+    }
+
+    public object Search(BuildingQueryRequest r)
+    {
+        var all=entities.Entities.Where(e=>e.Initialized&&!e.Deleted&&
+            e.TryGetComponent<BlockObject>(out var b)&&!b.IsPreview&&e.TryGetComponent<TemplateSpec>(out var t)&&
+            (e.HasComponent<Building>()||e.HasComponent<PathSpec>())&&
+            r.Matches(t.TemplateName,b.IsFinished,e.HasComponent<PathSpec>(),e.HasComponent<Manufactory>(),b.Coordinates.x,b.Coordinates.y,b.Coordinates.z))
+            .OrderBy(e=>e.EntityId).ToArray();
+        var items=all.Skip(r.Offset).Take(r.Limit).Select(e=>{
+            var b=e.GetComponent<BlockObject>();object? geometry=null;
+            if(r.Full) {
+                var cells=b.PositionedBlocks.GetOccupiedCoordinates().Take(BuildingPolicy.MaxGeometryCells+1).ToArray();
+                geometry=new {orientation=b.Orientation.ToString(),entrance=b.HasEntrance?Vec(b.PositionedEntrance.Coordinates):null,
+                    occupiedCells=cells.Take(BuildingPolicy.MaxGeometryCells).Select(Vec).ToArray(),cellsTruncated=cells.Length>BuildingPolicy.MaxGeometryCells};
+            }
+            return new {id=e.EntityId,template=e.GetComponent<TemplateSpec>().TemplateName,position=Vec(b.Coordinates),
+                finished=b.IsFinished,isPath=e.HasComponent<PathSpec>(),production=e.HasComponent<Manufactory>(),geometry};
+        }).ToArray();
+        return new {offset=r.Offset,limit=r.Limit,total=all.Length,items,hasMore=(long)r.Offset+items.Length<all.Length,
+            nativeReads=1,limitations=new[]{"filters_before_pagination","bounds_match_anchor_not_footprint","production_means_manufactory_component_not_output","geometry_null_means_not_requested","pages_are_separate_observations"}};
     }
 
     public object Catalog() => new { faction = faction.Current.Id,
