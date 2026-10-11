@@ -70,3 +70,88 @@ wirkungsabhängiges Räumende, früh verständliche Fremdbaustellen-Diagnose,
 gemeinsame Straßen-/Viertelplanung, Änderungsabruf seit Cursor und aktueller
 Simulationszustand neben eingefrorenem Laufabschluss. Keine Umsetzung während
 dieses Spielauftrags; menschliches Test-Gate bleibt unverändert.
+
+## Terrassenabkürzung und Gebäudefolge 2026-10-11
+
+Neun Bauteile mit zwei Treppenflügen fertiggestellt. Terrassenzugang nach einer
+Spielstunde Navigationsaktualisierung mit nativer Distriktdistanz 24 statt 72,
+Eingang frei; Doppelwohnhaus unverändert Distanz 15. Direkt nach Fertigstellung
+zeigte die Abfrage noch den alten Distanzwert. Keine gemessene Gehzeit.
+
+13 weitere Typen fertig: Roof1x1, Roof1x2, Roof2x2, Roof2x3, Roof3x2,
+Weathervane, Lantern, Hedge, Shrub, WoodFence, Chronometer, Lever, Relay.
+Gesamte Projektfolge completed; tatsächliche Baustellenzugänge und Fertigstatus
+je Teil kontrolliert. Automationsbetrieb nicht nachgewiesen. CSV jetzt 51/157
+reguläre Typen, 106 noch nicht nachgewiesen, fünf Entwicklervorlagen separat.
+
+Danach frei verfügbares Rundholz erschöpft, 33 Bretter und 11 Zahnräder vorhanden.
+Altes Sägewerk vorübergehend pausiert. Westlicher Brückenkopf hatte abgeerntete
+Stümpfe. Erste kostenlose Holzfällerfahne fertig und zugänglich, jedoch keine
+westlichen Ertragsbäume in Arbeitsreichweite. Fahne deshalb eine Zelle landeinwärts
+versetzt und bisherigen Platz als Wegverlängerung genutzt; Erntenachweis offen.
+
+## Holzversorgung, Eichen und nächste Vierergruppe
+
+- Abgebrochenen Abschluss zuerst lesend geprüft: nicht ausgeführt. Nach expliziter
+  Freigabe fertigen Einzelbau abgeschlossen. Nutzer erlaubt in diesem Spieltest
+  generell Fortsetzung im Gesamtzustand waiting nach separatem Objektnachweis;
+  terminale stopped/unconfirmed bleiben ausgeschlossen. Diese Aussage dokumentiert
+  die Freigabe des konkreten Tests und ändert keine dauerhafte Agentenregel.
+- Landseitiger Weg am westlichen Brückenkopf plus versetzte Holzfällerfahne fertig.
+  Arbeitsplatz auf VeryHigh, ein Arbeiter tatsächlich zugewiesen. Fünf zuvor
+  erreichbare markierte Bäume später als abgeerntete Reste nachgewiesen.
+  Frei verfügbare Stämme von 3 auf 18 gestiegen, anschließend trotz Bauverbrauch
+  wieder 20. Kein allein diesem Arbeitsplatz zugerechneter Gesamtertrag behauptet.
+- 54 neue Eichenmarkierungen auf feuchtem, förstererreichbarem Boden gesetzt und
+  vollständig rückgelesen. Anschließend alle 54 als lebende Pflanzen nachgewiesen,
+  kein Wasserstress, Wachstum etwa 3 bis 12 Prozent. Alle stehen innerhalb bereits
+  vorhandener Fällmarkierungen. Noch keine reife nachhaltige Ernte nachgewiesen.
+- Siebenteilige obere Baugruppe vollständig completed: Treppe, Plattform, Weg,
+  TripleLodge, TriplePlatform, FlowSensor, Levee. Vier weitere fehlende Typen fertig.
+  Hauseingang auf Z7 frei, native Distriktdistanz 32; Haus auf trockenem Z6-Gelände.
+  FlowSensor/Levee hier Bau-Test auf dem Plateau, keine Strömungs-/Stauwirkung.
+- Abdeckung jetzt 55/157 reguläre Typen, 102 offen, fünf Entwicklervorlagen separat.
+  Kolonie zuletzt 47 Biber bei 51 Betten. Sägewerk nach Holzaufbau wieder aktiviert.
+  Screenshots aus unveränderter Spieleransicht angesehen, nicht gespeichert.
+- Sechs tote, zuvor ertragreiche Birken zusätzlich regulär markiert; anschließend
+  alle sechs als abgeerntet (cutYieldRemoved=true, Ertrag 0) nachgewiesen.
+  Wieder aktiviertes Sägewerk: freie Bretter von 5 auf 13 gestiegen; Stämme teils
+  im Produktionspuffer gebunden. Freie/gesamte Bestände nicht addieren.
+
+## Warnungsbereinigung: Korrektur des früheren Terrassennachweises
+
+Spätere Warnungsprüfung zeigte zwei verlorene Bestandszugänge: Lodge und SmallTank
+teilten das Eingangsfeld der neuen Abkürzungstreppe. Kürzung auf Distanz 24 war
+somit kein erfolgreicher Gesamtabschluss. Treppe entfernt und flachen Weg
+wiederhergestellt; beide Bestandsgebäude wieder frei zugänglich, Distanz 15.
+Terrasse weiterhin erreichbar, jetzt wieder Distanz 72. Neue konfliktfreie
+Abkürzung bleibt offen; ursprüngliche Behauptung optimaler Endlösung zurückgenommen.
+
+Zwei leere Lager auf Gear beziehungsweise Carrot eingestellt und rückgelesen.
+Grill/Bäckerei mangels MCP-Rezeptwahl und Schrottfahne ohne erreichbaren Schrott
+vorläufig pausiert; kein behobener Produktionsbetrieb behauptet. Wasserbauer
+bekam neun native gültige und erreichbare Spadderdock-Markierungen auf Z2.
+Oberes Sägewerk erhält eigenes Laufrad; Bau-/Leistungsnachweis noch ausstehend.
+- Zwischenprüfung nach Warnungsreparaturen: 51 Biber, 54 zugängliche Betten,
+  keine Obdachlosen. Damit reduziertes Bevölkerungsziel 50 erstmals aktuell belegt.
+  Wasserfarm tatsächlich mit laufendem Arbeitsauftrag und ohne Statuswarnung.
+- Laufrad mit drei Zuwegen fertig, Projekt completed. Reale Netzverbindung zum
+  oberen Sägewerk bestätigt. Erste Abschlussabfrage abends ohne momentane Leistung;
+  Arbeitsplatz besetzt. Alle showAlert=true-Gruppen verschwunden; normale Status
+  Paused/Empty/Drying verbleiben. Tagesbetriebsprüfung folgt.
+
+### Abschlusskontrolle und Eingriff des Spielers
+
+- Morgens native Leistung 53 bei Bedarf 50, Sägewerk powered und actualInput 50.
+  Ein Arbeiter aktiv, Zutaten vorhanden, 13 Bretter im Ausgangspuffer. Dieser ist
+  aktuell voll (outputSpace=false); keine dauerhafte ungehinderte Produktion behauptet.
+- Spieler ergänzte 100 Eichen-Pflanzplätze. Alle sechs Flächenseiten gelesen:
+  154 Oak und 18 Pine, insgesamt 172. Die bisherigen 54 Eichen waren als lebende
+  Pflanzen belegt; für die neuen 100 ist hier nur der Pflanzauftrag vollständig belegt.
+  Aktuelle Spieleransicht unverändert aufgenommen und angesehen, nicht gespeichert.
+- Keine showAlert=true-Gruppe. Drei bewusst pausierte Betriebe bleiben eingeschränkt;
+  Rezeptwahl für Grill/Bäckerei und Schrottversorgung sind weiter offen.
+  Zusätzlich gewöhnliche Status Emptying, Drying sowie eine kontaminierte Birke
+  am Kartenrand (9,0,2); kein kontaminierter Biber in dieser Statusgruppe.
+- 53 Biber, 54 Betten, keine Obdachlosen. Simulation an Tag 497, 9,3125 Uhr pausiert.
+  Bevölkerungsteilziel erreicht, Gebäudeziel 55/157; konfliktfreie Terrassenkürzung offen.

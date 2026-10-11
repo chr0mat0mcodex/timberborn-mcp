@@ -1,5 +1,38 @@
 # Projektstand
 
+## Spieltest-Abschluss und Warnungsbereinigung (2026-10-11)
+
+Korrektur: Terrassenabkürzung störte zwei Bestandszugänge trotz positiver Vorschau.
+Treppe zurückgebaut, Eingangspfad wiederhergestellt. Haus/Tank wieder verbunden;
+Terrasse bleibt erreichbar, wieder Distanz 72. Konfliktfreie Kürzung weiter offen.
+Lager konfiguriert, Wasserpflanzen markiert, untätige Betriebe vorläufig pausiert.
+Laufrad fertig und morgens 53 Leistung bei 50 Bedarf bestätigt; oberes Sägewerk
+mit 13 Brettern im vollen Ausgangspuffer. Keine aktiven HUD-Alertgruppen mehr;
+Grill, Bäckerei und Schrottfahne bleiben vorläufig pausiert. Eine kontaminierte
+und eine trocknende Birke sind separate natürliche Statusmeldungen.
+Spieler ergänzte 100 Eichen-Pflanzplätze: jetzt 154 Eichen- und 18 Kiefernplätze;
+neue Markierungen sind noch kein vollständiger Nachweis tatsächlich gepflanzter Bäume.
+53 Biber, 54 Betten, keine Obdachlosen; Tag 497 um 9,3125 Uhr pausiert.
+55/157 reguläre Gebäudetypen nachgewiesen. Details im Spieltestjournal und Backlog.
+
+## Spieltest 2026-10-11: Holzanschluss, 54 Eichen, vier weitere Typen
+
+Westlicher Brückenkopf landseitig angebunden, Holzfäller besetzt und Erntewirkung
+beobachtet. 54 neue Eichen tatsächlich gepflanzt, lebend und wachsend; noch unreif.
+TripleLodge, TriplePlatform, FlowSensor und Levee fertig. Obere Siebenerfolge
+completed, Wohnhauseingang frei bei Distriktdistanz 32. Abdeckung 55/157 reguläre
+Typen, 102 offen. Sägewerk nach temporärer Pause wieder aktiv; Materialaufbau läuft.
+Details und Grenzen: docs/settlement-relocation-playtest.md.
+
+## Spieltest 2026-10-11: Terrasse verkürzt, 13 weitere Typen
+
+Terrassen-Distriktdistanz durch zwei direkte Treppenflüge von 72 auf 24 reduziert;
+Zugang nach Navigationsaktualisierung bestätigt. 13 neue Dach-/Dekorations- und
+Automationsvorlagen fertig, Abdeckung 51/157 reguläre Typen; 106 offen.
+Rundholzengpass wird über westlichen Brückenkopf bearbeitet, altes Sägewerk
+vorläufig pausiert. Holzernte und weitere Baugruppe noch offen.
+Details: docs/settlement-relocation-playtest.md. Frühere Stände folgen historisch.
+
 ## Spieltest 2026-10-11: dreigeschossiger Wohnabschnitt und Dachterrasse
 
 Doppelwohnhaus über bestehender Lodge sowie drei Doppelplattformen und

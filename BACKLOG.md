@@ -869,3 +869,45 @@ Historische Baupläne, Kolonieziele und Spielstände sind bewusst kein Backlog m
 
 Aktuelle UI-Objektauswahl in 0.30.0 erledigt: Gebäude, Auswahlwechsel und keine
 Auswahl live geprüft; Grenzen und Nachweis stehen in PROJECT_STATE.md.
+
+## Baufortsetzung und Waldzugang: Livebefunde 2026-10-11
+
+- P1: Gesamtstatus waiting mit Teilstatus unconfirmed eindeutig von terminalem
+  Gesamtstatus unconfirmed unterscheiden. Aktuelle pauschale Limitations-Zeile
+  führte zur Blockierung regulärer Fertigbestätigung durch Aktionsprüfung.
+  Lesende reconcile-Funktion erwägen; abgeschlossene Einzelteile nie neu platzieren.
+- P1: Waldstandort muss vom Eingang aus erreichbare Ertragsbäume nachweisen.
+  Eingang auf Brücke kann zugänglich sein, während angrenzender Wald außerhalb
+  des nativen Arbeitsbereichs bleibt. Landseitigen Wegausgang gezielt prüfen.
+- P2: Veraltete Navigationsdistanz nach Fertigstellung sichtbar machen: Terrasse
+  zunächst weiter 72, nach einer Spielstunde 24. Freshness/ausstehendes Update nennen.
+- P2: Planablehnung präzisieren. Gebäudepause zwischen Plan und Start veränderte
+  Bestandsanschlusszahl und PlanKey; state_conflict allein erklärt das nicht.
+  Änderungsgrund liefern, ohne Prüfungen oder frische Validierung auszulassen.
+- P1: Holzdiagnose trennt Rest-Ertrag von Lebenszustand. Tote Birken meldeten
+  cutIsYielding=true und Log-Ertrag 1, wurden aber als not_observed_alive verworfen.
+  Erntefähigkeit durch regulären Spielservice separat prüfen, tote Vollbäume nicht
+  mit abgeernteten Stümpfen vermischen; keine pauschale Freigabe allein nach Ertrag.
+- P2: Pflanznachweise bündeln. inspect_areas liefert Markierungen, Pflanzenzustand
+  bleibt null; tatsächlicher Nachweis von 54 Eichen erforderte zusätzliche
+  Objektseiten. Regionalen Bericht mit markiert/gepflanzt/lebend/reif/Ertrag anbieten.
+- P2: Kompakte, direkt sichtbare Fortsetzungsbelege ausgeben: Gesamtstatus,
+  currentIndex, currentEntityId, found, finished, nächster Auftrag. In intern
+  gebündelten Aufrufen erhobene Fertigbelege wurden von der Aktionsprüfung teils
+  übersehen oder mit der nächsten pending-ID verwechselt. Keine Prüfungen lockern.
+- Erntenachweis zu toten Vollbäumen: Alle sechs zusätzlich regulär markierten Birken wurden
+  anschließend mit cutYieldRemoved=true und Ertrag 0 gelesen. Der bisherige
+  Ausschluss not_observed_alive verwirft damit praktisch erntbare Vollbäume.
+
+## Warnungsbereinigung: Bestandszugang und Betrieb (2026-10-11)
+
+- P1: Regression nach Treppenersatz eines bestehenden Weges. Native gemeinsame
+  Vorschau meldete keinen verlorenen Anschluss, später waren Haus und Wassertank
+  mit Eingang auf derselben Treppenzelle unverbunden. Abkürzung entfernt, flacher
+  Weg wiederhergestellt: beide Eingänge frei, Distanz 15. Terrasse bleibt verbunden,
+  wieder Distanz 72. Fertigabnahme muss betroffene Bestandszugänge nach echten
+  Navigationsticks erneut prüfen, nicht nur Vorschau und neue Gebäude.
+- P1: Rezeptauswahl fehlt als Schreibfunktion. inspect_building_operation erkennt
+  hasRecipe=false, aber Grill/Bäckerei können per MCP keine Rezeptwahl erhalten.
+  Reguläre auswählbare Rezepte lesen, erwartetes altes Rezept prüfen, neues setzen
+  und Wirkung rücklesen; benötigte Zutaten/Brennstoff getrennt anzeigen.
