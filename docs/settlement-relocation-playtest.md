@@ -1,6 +1,30 @@
 # Siedlungsumbau: Flussland frei, Wohnen auf Z4
 
 Laufender Spieltest vom 2026-10-10/11; kein Versionsabschluss.
+
+## Fortsetzung 2026-10-11: Papierfabrik und Vogelscheuche
+
+- Obere trockene Baufläche geräumt: vier tote Kiefern im Fabrik-/Laufradgrundriss,
+  danach ein abgeernteter Stumpf und ein toter Jungbaum für den Westzugang.
+  Arbeiteraufträge erst nach tatsächlichem Entfernen als geräumt behandelt.
+- Erster Achtteilplan hatte keinen verbundenen südlichen Laufradzugang und wurde
+  nicht gestartet. Korrigierter Elfteilplan mit neun zusammenhängenden Wegfeldern
+  nativ gültig; keine verlorenen Bestandsverbindungen in der Vorschau.
+- Papierfabrik (41,21,6), Drehung 0, fertig/besetzt. Laufrad (43,23,6), Drehung 2,
+  anschließend fertig/besetzt. Projekt completed, Fabrikzugang Distanz 69.
+  Reale Verbindung Fabrik (42,22,6) zu Laufrad (42,23,6) bestätigt.
+- Tagsüber Netz 53 Leistung bei 80 Bedarf. Zehn Papier im Fabrikbestand waren
+  erster Produktionsbeleg; volle Leistung ausdrücklich nicht nachgewiesen.
+  Das Vorschaufeld rotationMatches=false verhinderte reale Verbindung nicht.
+- Vogelscheuche für 200 Forschungspunkte freigeschaltet, (43,20,6) nativ geprüft,
+  gebaut und separat finished=true gelesen; Einzelprojekt completed.
+  Insgesamt 61/157 reguläre Typen nachgewiesen, 96 offen, fünf Entwicklervorlagen
+  weiterhin ausgenommen. Keine allgemeine Katalog- oder Versionsabnahme.
+- Abschluss Tag 523, 18,46875 Uhr pausiert. Fabrikpuffer 18 Papier/10 Stämme,
+  workingHours=false, kein laufender Auftrag; Nachtmomentaufnahme Kraft 0/0.
+  Unveränderte Spieleransicht ergänzend betrachtet, Bild nicht gespeichert.
+  Verbesserungen nur dokumentiert: gebündelte Sofortwege, Anschlussrotation,
+  klare Semantik von actualInput bei unterversorgtem Netz.
 Nutzer hat Fortsetzung trotz dokumentiertem Aufwand ausdrücklich beauftragt.
 
 ## Ziel und Plan

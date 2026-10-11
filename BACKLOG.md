@@ -1,5 +1,26 @@
 # Backlog
 
+## Papierfabrik-Spieltest 2026-10-11
+
+- **P1: Sofort fertige Wege innerhalb eines begrenzten Projektaufrufs abarbeiten.**
+  Elfteilprojekt aus neun Wegen, Fabrik und Laufrad benötigt zwölf Advance-Aufrufe
+  plus separate Rücklesungen. Jeden Weg nativ prüfen, genau einmal beauftragen,
+  tatsächliche Fertigstellung lesen und bei eindeutigem Ergebnis direkt zum
+  nächsten Teil übergehen. Bei Baustelle, Ablehnung oder ungeklärter Wirkung
+  stoppen; harte Teile-/Zeitgrenze und kompakter Fortschrittsbericht. Ergänzt
+  den bestehenden Wunsch nach wirkungsabhängiger Projektfortsetzung.
+- **P1: Kraftvorschau fachlich verständlich machen.** Papierfabrik Drehung 0 und
+  Laufrad Drehung 2: geometrischer Link vorhanden, rotationMatches=false;
+  nach Fertigstellung genau dieser Anschluss real verbunden und Papier produziert.
+  Bedeutung des Felds prüfen, Richtungsverträglichkeit getrennt von absoluter
+  Drehung ausweisen. Kontrollfall: gegenüberliegende kompatible Ports versus
+  gleichgerichtete/unpassende Ports. Keine Netzgarantie aus reiner Vorschau.
+- **P2: Kraftbedarf und tatsächlich zugeteilte Leistung klar trennen.** Tagsüber
+  Netz 53 Erzeugung/80 Bedarf, gleichzeitig actualInput=80 und Produktion.
+  Semantik dieses Werts prüfen; nicht als volle Versorgung ausgeben. Nachts
+  bei workingHours=false korrekt 0/0. Betriebszeit und Versorgung gemeinsam
+  diagnostizieren, ohne eine Nachtpause als Defekt zu melden.
+
 ## Höhenwohnblock: Livebefunde 2026-10-11
 
 - **P1: Gemischte Träger verständlich prüfen.** Dachterrasse auf vorhandenem

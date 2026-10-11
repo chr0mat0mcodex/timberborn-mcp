@@ -1,5 +1,17 @@
 # Projektstand
 
+## 2026-10-11: Papierproduktion und Vogelscheuche nachgewiesen
+
+Papierfabrik (41,21,6), eigenes Laufrad (43,23,6), neun Wegfelder und anschließend
+Vogelscheuche (43,20,6) fertig; beide Projekte completed. Abdeckung 61/157,
+96 reguläre Typen offen. Fabrikzugang erreichbar, native Distriktdistanz 69.
+Echte Kraftverbindung bestätigt: tagsüber 53 Erzeugung bei 80 Bedarf, Papier
+tatsächlich produziert. Zuletzt 18 Papier im Fabrikpuffer; nachts ohne laufenden
+Arbeitsauftrag 0/0 Leistung. Keine volle Kraftversorgung behauptet.
+Tag 523, 18,46875 Uhr pausiert, keine offenen Projekte aus diesem Ausbau.
+Nächste sinnvolle Schritte: Papierlager/Bienenstock und bessere Kraftversorgung.
+Neue Befunde zu Sofortwegen und irreführendem rotationMatches im Backlog.
+
 ## 2026-10-11: 15 Tage Eichenwachstum vollständig geprüft
 
 Vom Nutzer gewünschter Lauf exakt 360 Spielstunden, automatisch pausiert an
