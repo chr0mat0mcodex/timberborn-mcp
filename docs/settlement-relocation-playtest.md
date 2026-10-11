@@ -2,6 +2,53 @@
 
 Laufender Spieltest vom 2026-10-10/11; kein Versionsabschluss.
 
+## Produktionsketten und vollständiger Windersatz
+
+- Kraftleitung Mühle–Windturbine: fünf waagerechte Wellen, drei vertikale
+  Wellen auf (46,25,6/7/8), alle fertig; Gesamtprojekt completed. Gemeinsames
+  Zehn-Mitglieder-Netz separat gelesen. Flaute 0/60, später 128 Erzeugung.
+- Zwei Dandelion auf (23,14..15,3) angepflanzt; später zwei Antidote direkt
+  im Kräuterkundler. Zehn zusätzliche Weizenfelder (22..23,29..30,3) und
+  (27..29,34..35,3) separat als lebende Pflanzen beobachtet, rund 60 Prozent.
+  Pflanzen waren durch Filter vegetation zunächst fälschlich nicht sichtbar;
+  all samt vollständiger zweiter Seite bestätigte sie als planted.
+- Nutzer setzte WheatFlour an der Mühle und Bread an der Bäckerei. Bäckerei
+  aktiv, Brennholz fünf; zwischenzeitlich besetzt, später wieder Personalmangel.
+  Arbeitsplatzpriorität High gesetzt und rückgelesen. Später 35 Brote und fünf
+  Mehl direkt in der besetzten Bäckerei: Produktionskette tatsächlich angelaufen.
+- Zwei Erfinder auf dem trockenen Hochland samt kurzen Wegen fertig, gemeinsames
+  Vierteilprojekt completed. Beide später besetzt, Forschung bis 852 beobachtet.
+- Windersatz auf Nutzerwunsch begonnen. Südliches Papier-Laufrad entfernt;
+  zwei senkrechte Wellen fertig. Darüber native gültige Turbinenbaustelle,
+  aber buildersReachable=false und nach zwei Tagen kein Material. Pilot nicht
+  auf weitere Laufräder skaliert. Temporäre Bautreppe durch Menschen angefragt,
+  da separate MCP-Bauaufträge an ConstructionIsolation scheitern und ein Stop
+  das Ledger nach erfolgter Platzierung nicht freigibt. Mensch baute Treppe
+  (43,23,6), Drehung 0; Turbine danach fertig, Projekt completed. Reales Netz
+  nach Entfernung beider Papier-Laufräder mit 123 Erzeugung beobachtet.
+- Drei Folgeumbauten mit vorgezogener Bautreppe: unteres Sägewerk, oberes
+  Sägewerk, Zahnradwerkstatt. Jede Turbinenbaustelle vor dem Lauf tatsächlich
+  buildersReachable=true; alle drei Vierteilprojekte completed. Turbinenpositionen
+  (24,8,5), (38,2,6), (27,39,5), jeweils auf zwei vertikalen Wellen. Alle real
+  mit dem zugehörigen Verbraucher verbunden, letzter Standort 113 Erzeugung.
+  Unteres Sägewerk aktiviert und besetzt, vier Bretter im Puffer beobachtet.
+- Vier reine Bautreppen nach Projektabschluss entfernt. Fabrikzugänge danach
+  weiterhin frei und erreichbar, Distanzen Papier 69, Sägewerke 23/40, Zahnrad 15.
+  Vollständige pausierte Inventur: 374 eindeutige Objekte, keine Laufräder,
+  fünf fertige Windturbinen (vier neu, eine für Mühle), keine offene Baustelle.
+- Nutzer ergänzte 24 Weizenmarkierungen: nun 34 Wheat, 89 Carrot, 9 Spadderdock.
+  Ein Beerensammler entfernt, verbleibender aktiv und besetzt. Keine Behauptung,
+  alle neuen Markierungen seien bereits gepflanzt oder geerntet.
+- Nutzer fordert dringend vollständige Bauchargen ohne Agenteninteraktion pro
+  Bauteil; als P0 im Backlog, ausdrücklich noch nicht implementieren.
+  Bauabdeckung unverändert 66/157; Ausbau der Versorgung erzeugt keine neuen Typen.
+- Abschlusslauf an Tag 563, 12,96875 Uhr pausiert. Vier umgebaute Netze jeweils
+  94 Erzeugung, Bedarf Papier 80, Sägewerke jeweils 50, Zahnrad 120. Letzteres
+  somit bei dieser Windstärke unterversorgt; kein Dauerleistungsversprechen.
+  53 Biber (49 Erwachsene, vier Kinder), acht arbeitslos, keine freien
+  Arbeitsplatzstellen. Fünf Laufrad-Arbeitsplätze entfernt; aktuelle acht
+  Arbeitslose nicht allein dem Umbau zurechnen, Bevölkerung änderte sich mit.
+
 ## Größere Baugruppe: Kräuterkundler, Mühle und Windturbine
 
 - Sechs tote Kiefern beziehungsweise abgeerntete Reste geräumt; zwei echte

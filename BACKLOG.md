@@ -1,5 +1,80 @@
 # Backlog
 
+## P0 — Dringend: vollständige Baucharge beauftragen, dann bis fertig simulieren
+
+Expliziter Nutzerauftrag vom 2026-10-11: **Noch nicht implementieren, nur
+festhalten.** Der bisherige Ablauf mit einem Auftrag, Simulationslauf,
+Rücklesung und erneutem Agentenaufruf pro Bauteil ist zu interaktionsintensiv.
+
+Gewünschtes Zielverhalten:
+
+- Einen vollständigen Bauplan einschließlich Wege, Kraftanschlüsse, Stützen
+  und temporärer Bauzugänge gemeinsam vorbereiten und prüfen.
+- **Alle Bauaufträge gesammelt im Spiel erteilen.** Danach die Simulation
+  einmal starten und bis zur tatsächlichen Fertigstellung aller Aufträge laufen
+  lassen. Kein Agentenwechsel und kein weiterer advance-Aufruf pro Teil.
+- Abhängigkeiten, Bauzugang und bei zunächst nicht platzierbaren Teilen die
+  automatische spätere Auftragserteilung innerhalb derselben serverseitigen
+  Charge lösen. Solche Ausnahmen ausdrücklich im Ergebnis ausweisen; nicht
+  still zum bisherigen manuellen Einzelschrittverfahren zurückfallen.
+- Der Server beobachtet Fortschritt und meldet nur fertige Gesamtcharge oder
+  konkrete Blockade mit betroffenem Teil und Ursache. Bounded Lauf, Abbruch,
+  Wiederanschluss und menschliche Eingriffe bleiben nachvollziehbar; keine
+  Wiederholung bereits erteilter Aufträge.
+- Abschluss kompakt: beauftragt/fertig/offen, Zugangsbelege und relevante
+  Blockaden. Produktion und Kraftleistung bei Bedarf separat nachweisen.
+
+Abnahmekriterium: gemischter Bauplan mit Treppe, Höhenstützen, Windturbine und
+weiterem Gebäude; ein Chargenstart, keine Agenteninteraktion pro Bauteil,
+Fertigmeldung für die gesamte Charge. Blockierter Kontrollfall meldet sich
+gezielt. Anzahl externer MCP-Aufrufe gegen den aktuellen Ablauf vergleichen.
+Priorität vor weiterer Skalierung des bisherigen Einzelauftrag-Verfahrens.
+
+## Produktionsketten: Livebefunde 2026-10-11
+
+- **P1: Bauzugang reparieren und Bauhilfen einplanen.** Windturbine auf zwei
+  fertigen senkrechten Wellen ließ sich nativ platzieren, war als Baustelle
+  aber `buildersReachable=false`; keine Materiallieferung nach zwei Spieltagen.
+  Temporäre Treppe/Plattform bereits vor dem Hochbau planen, danach gezielt
+  entfernen können. Laufende Projekte benötigen einen begrenzten Reparaturplan
+  mit bekannten Baustellen als Bestand und frischer Zugangsprüfung. Aktuell
+  sperrt ConstructionIsolation zusätzliche Aufträge; Stop nach erfolgter
+  Platzierung gibt das Großprojekt-Ledger nicht frei. Kein blindes Warten,
+  kein Abbruch als vermeintlicher Reparaturweg. Menschliche Bautreppe bei
+  (43,23,6), Drehung 0, ermöglichte die Fertigstellung. Turbine danach über
+  beide Wellen real verbunden; nach Entfernung beider Papier-Laufräder 123
+  Erzeugung beobachtet. Folgender Windumbau plant die Bautreppe vor den Wellen.
+  Bestätigter Folgefall am unteren Sägewerk: Treppe (26,9,3), Drehung 0,
+  vorab gebaut; hohe Turbinenbaustelle danach buildersReachable=true mit dieser
+  tatsächlichen Zugangszelle. Turbine fertig und real verbunden. Keine
+  allgemeine Erreichbarkeitsfreigabe für beliebige Türme daraus ableiten.
+
+- **P1: Pflanzenabfrage ohne Kategorienfalle.** `kind=vegetation` schließt
+  aktuell passend markierte Nutzpflanzen aus (`kind=planted`). Dadurch lieferte
+  ein bewachsenes Weizengebiet null Treffer. Eine gemeinsame Pflanzenabfrage
+  mit optionalen Filtern für Markierung, Art, Reife und Ertrag anbieten; leere
+  Teilkategorie nicht als leere Fläche interpretieren. Kontrollread `all`
+  bestätigte zehn lebende Weizenpflanzen mit rund 60 Prozent Wachstum.
+- **P1: Sicheren Vorprüfungsfehler von unbestätigter Mutation unterscheiden.**
+  Wechsel bestehender Karottenmarkierungen auf Weizen wurde vor Ausführung
+  abgelehnt; Rücklesung zeigte unveränderte Karotten. Native `CanPlant`-Prüfung
+  läuft vor der Mutation, aber die Antwort meldet pauschal mögliche
+  Unbestätigtheit. Konkreten Fehler samt betroffenen Zellen und nachweislich
+  nicht erfolgtem Schreibbeginn transportieren; echte Teiländerungen getrennt.
+- **P1: Betriebsaufnahme als zusammenhängenden Nachweis unterstützen.**
+  Spieler wählte WheatFlour/Bread manuell. Bäckerei anschließend besetzt und
+  mit fünf Stämmen versorgt, aber noch ohne Mehl. Rezept, Personal, Brennstoff,
+  Zutaten, Netzverbindung, momentane Kraft und tatsächlichen Produktausgang
+  getrennt und kompakt zusammenführen. Rezept-Schreibfunktion bleibt offen.
+- **P2: Bauwartezeit an Fertigstellung koppeln.** Achtteilige Kraftleitung
+  benötigt weiterhin einzelne Simulationsläufe und Rücklesungen. Ein Schacht
+  blieb nachts bei 97,5 Prozent stehen. Begrenzten Lauf mit Fertigstellungsziel
+  und anschließendem sicheren Folgeschritt anbieten; kein blindes Zeitwachstum.
+- **Kraftbeleg:** Drei VerticalPowerShaft auf derselben Rasterzelle, Z6/7/8,
+  verbinden die Höhen über echte Top-/Bottom-Ports. Acht Leitungsteile fertig;
+  Mühle und Windturbine danach im selben Zehn-Mitglieder-Netz. Flaute ergab
+  trotzdem 0 Erzeugung bei 60 Bedarf: Verbindung ist kein Leistungsnachweis.
+
 ## Größere Baugruppe: Livebefunde 2026-10-11
 
 - **P1: Bauplan um Betriebsvoraussetzungen ergänzen.** Kräuterkundler fertig,

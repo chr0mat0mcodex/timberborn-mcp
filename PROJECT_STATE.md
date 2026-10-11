@@ -1,5 +1,41 @@
 # Projektstand
 
+## Dringender Entwicklungsauftrag vorgemerkt: vollständige Bauchargen
+
+Nutzer verlangt am 2026-10-11: alle Bauaufträge gesammelt erteilen, anschließend
+ein Simulationslauf bis zur Fertigstellung der ganzen Charge; weniger
+Agenteninteraktionen, keine manuelle Fortsetzung pro Bauteil. Als P0 mit
+Abnahmekriterien im Backlog dokumentiert. **Noch nicht implementieren.**
+
+## 2026-10-11: Produktionsketten angelaufen, alle Laufräder ersetzt
+
+Achtteilige Kraftleitung von Mühle zur Windturbine über Z6/7/8 fertig und
+Projekt completed. Beide im selben Netz; später 128 Erzeugung beobachtet,
+zuvor Flaute. Zehn Weizenpflanzen tatsächlich gewachsen; südliche Farm auf
+Wheat priorisiert. Nutzer hat Mühle auf WheatFlour und Bäckerei auf Bread
+gestellt und Bäckerei aktiviert. Brennstoff geliefert, Besetzung schwankt;
+Bäckerei nun Arbeitsplatzpriorität High, separat rückgelesen. Später 35 Brote
+und fünf Mehl direkt in der besetzten Bäckerei nachgewiesen. Zwei Dandelionpflanzen führten zu zwei Antidote im
+Kräuterkundler. Zwei zusätzliche Erfinderplätze (44,19,6)/(47,18,6), jeweils
+Drehung 2, samt zwei Wegen fertig; Forschungsprojekt completed, beide später
+besetzt, Forschungsbestand bis 852 beobachtet.
+
+Alle fünf Laufräder durch vier zusätzliche Windturbinen ersetzt: Papierfabrik
+(41,22,8), unteres Sägewerk (24,8,5), oberes Sägewerk (38,2,6), Zahnradwerkstatt
+(27,39,5). Je zwei senkrechte Wellen; reale Netzverbindung separat bestätigt.
+Papierpilot zunächst unerreichbar, menschliche Bautreppe ermöglichte den Bau.
+Folgeprojekte enthielten die Bautreppe zuerst; alle drei hohen Baustellen
+buildersReachable=true. Alle Projekte completed. Vier reine Bautreppen danach
+entfernt, Fabrikzugänge weiterhin unblocked/accessible. Vollständige pausierte
+Inventur: 374 Objekte, null Laufräder, fünf fertige Windturbinen einschließlich
+Mühlenturbine, keine offene Baustelle. Windleistung schwankt; keine Dauerleistung.
+Nutzer ergänzte 24 Weizenmarkierungen (jetzt 34, Gesamtanbau 132) und entfernte
+einen Beerensammler; verbleibender Sammler aktiv und besetzt. Abschluss an Tag
+563, 12,96875 Uhr pausiert: alle vier Windnetze 94 Erzeugung, Bedarf Papier 80,
+Sägewerke jeweils 50, Zahnrad 120 (Unterversorgung bei dieser Windstärke).
+53 Biber, davon 49 Erwachsene; acht arbeitslos, keine unbesetzten Arbeitsplätze.
+Abdeckung unverändert 66/157, 91 offen. Neue Befunde im Backlog; kein Code geändert.
+
 ## 2026-10-11: größere Etappe mit vier neuen Typen abgeschlossen
 
 Kräuterkundler (43,25,6), Mühle (46,21,6), Windturbine (45,28,8) und
