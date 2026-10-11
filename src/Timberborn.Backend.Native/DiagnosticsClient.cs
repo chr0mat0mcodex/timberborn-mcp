@@ -10,13 +10,15 @@ public sealed record OperationWorkplace(int Assigned,int Desired,int Maximum,boo
 public sealed record OperationManufacturing(bool HasRecipe,string? Recipe,bool Ready,bool? HasIngredients,bool? HasFuel,bool? ConsumesFuel,bool? OutputSpace,float ProductionProgress);
 public sealed record OperationInventoryGood(string Id,int Stock,int UnreservedStock,int ReservedCapacity,int UnreservedCapacity);
 public sealed record OperationInventory(string Component,int Capacity,int TotalStock,bool IsInput,bool IsOutput,bool PublicInput,bool PublicOutput,bool Full,bool FullyReserved,bool Unblocked,OperationInventoryGood[] Goods);
-public sealed record NativeOperation(string Id,string Template,bool Finished,bool? Paused,OperationWorkplace? Workplace,OperationManufacturing? Manufacturing,string[] Statuses,string[] Limitations,OperationInventory[]? Inventories=null);
+public sealed record OperationPower(bool ComponentPresent, bool? IsConsumer, bool? Powered, bool? NetworkValid, int? Supply, int? Demand);
+public sealed record OperationAssessment(string[] Blockers, string[] Warnings, string[] Unknown, bool ProductionProven);
+public sealed record NativeOperation(string Id,string Template,bool Finished,bool? Paused,OperationWorkplace? Workplace,OperationManufacturing? Manufacturing,string[] Statuses,string[] Limitations,OperationInventory[]? Inventories=null, OperationPower? Power=null, OperationAssessment? Assessment=null);
 
 public sealed partial class NativeClient
 {
     private static void DiagnosticsEnvelope<T>(BridgeEnvelope<T> e,DiagnosticsRequest r,string[]? limits)
     {
-        if(e.BridgeVersion is not ("0.20.1" or "0.21.0" or "0.21.1" or "0.22.0" or "0.23.0" or "0.23.1" or "0.23.2" or "0.24.0" or "0.24.1" or "0.25.0" or "0.26.0" or "0.27.0" or "0.28.0" or "0.28.1" or "0.29.0" or "0.29.1" or "0.29.2" or "0.29.3" or "0.30.0" or "0.31.0" or "0.31.1" or "0.31.2" or "0.31.3" or "0.31.4" or "0.32.0" or "0.32.1" or "0.33.0" or "0.33.1" or "0.34.0" or "0.35.0" or "0.35.1" or "0.35.2" or "0.35.3" or "0.35.4" or "0.35.5" or "0.36.0" or "0.37.0")||r.Session.Length>0&&e.SessionId!=r.Session||limits is null||limits.Any(s=>s is null))throw new InvalidDataException("Invalid diagnostics envelope");
+        if(e.BridgeVersion is not ("0.20.1" or "0.21.0" or "0.21.1" or "0.22.0" or "0.23.0" or "0.23.1" or "0.23.2" or "0.24.0" or "0.24.1" or "0.25.0" or "0.26.0" or "0.27.0" or "0.28.0" or "0.28.1" or "0.29.0" or "0.29.1" or "0.29.2" or "0.29.3" or "0.30.0" or "0.31.0" or "0.31.1" or "0.31.2" or "0.31.3" or "0.31.4" or "0.32.0" or "0.32.1" or "0.33.0" or "0.33.1" or "0.34.0" or "0.35.0" or "0.35.1" or "0.35.2" or "0.35.3" or "0.35.4" or "0.35.5" or "0.36.0" or "0.37.0" or "0.38.0")||r.Session.Length>0&&e.SessionId!=r.Session||limits is null||limits.Any(s=>s is null))throw new InvalidDataException("Invalid diagnostics envelope");
     }
     private static bool DiagnosticPage(DiagnosticsRequest r,int offset,int limit,int total,int count,bool more)=>offset==r.Offset&&limit==r.Limit&&total>=0&&count==Math.Min(limit,Math.Max(0,total-offset))&&more==((long)offset+count<total);
     private static bool SortedNeedIds(IEnumerable<string> ids)=>ids.All(BuildingPolicy.ValidTemplate)&&ids.SequenceEqual(ids.Distinct().Order(StringComparer.Ordinal));
@@ -50,7 +52,13 @@ public sealed partial class NativeClient
         if(d.Workplace is {} w&&(w.Assigned<0||w.Desired<0||w.Maximum<0||w.Desired>w.Maximum||w.Assigned==0&&w.AnyJobRunning))throw new InvalidDataException("Invalid workplace observation");
         if(d.Manufacturing is {} m&&(!float.IsFinite(m.ProductionProgress)||m.ProductionProgress<0||m.HasRecipe!=(m.Recipe is not null)||m.HasRecipe&&!BuildingPolicy.ValidTemplate(m.Recipe!)||
             m.HasRecipe!=(m.HasIngredients is not null)||m.HasRecipe!=(m.HasFuel is not null)||m.HasRecipe!=(m.ConsumesFuel is not null)||m.HasRecipe!=(m.OutputSpace is not null)))throw new InvalidDataException("Invalid manufacturing observation");
-        if(e.BridgeVersion is ("0.21.1" or "0.22.0" or "0.23.0" or "0.23.1" or "0.23.2" or "0.24.0" or "0.24.1" or "0.25.0" or "0.26.0" or "0.27.0" or "0.28.0" or "0.28.1" or "0.29.0" or "0.29.1" or "0.29.2" or "0.29.3" or "0.30.0" or "0.31.0" or "0.31.1" or "0.31.2" or "0.31.3" or "0.31.4" or "0.32.0" or "0.32.1" or "0.33.0" or "0.33.1" or "0.34.0" or "0.35.0" or "0.35.1" or "0.35.2" or "0.35.3" or "0.35.4" or "0.35.5" or "0.36.0" or "0.37.0")&&d.Finished&&d.Inventories is null||!d.Finished&&d.Inventories is not null)throw new InvalidDataException("Missing inventory observation");
+        if(e.BridgeVersion is ("0.21.1" or "0.22.0" or "0.23.0" or "0.23.1" or "0.23.2" or "0.24.0" or "0.24.1" or "0.25.0" or "0.26.0" or "0.27.0" or "0.28.0" or "0.28.1" or "0.29.0" or "0.29.1" or "0.29.2" or "0.29.3" or "0.30.0" or "0.31.0" or "0.31.1" or "0.31.2" or "0.31.3" or "0.31.4" or "0.32.0" or "0.32.1" or "0.33.0" or "0.33.1" or "0.34.0" or "0.35.0" or "0.35.1" or "0.35.2" or "0.35.3" or "0.35.4" or "0.35.5" or "0.36.0" or "0.37.0" or "0.38.0")&&d.Finished&&d.Inventories is null||!d.Finished&&d.Inventories is not null)throw new InvalidDataException("Missing inventory observation");
+        if(e.BridgeVersion=="0.38.0" && d.Finished && d.Power is null || !d.Finished && d.Power is not null)
+            throw new InvalidDataException("Missing power observation");
+        if(d.Power is {} p && (p.ComponentPresent!=(p.IsConsumer is not null) || p.ComponentPresent!=(p.Powered is not null) ||
+            p.ComponentPresent!=(p.NetworkValid is not null) || (p.NetworkValid==true)!=(p.Supply is not null) ||
+            (p.NetworkValid==true)!=(p.Demand is not null) || p.Supply<0 || p.Demand<0))
+            throw new InvalidDataException("Invalid power observation");
         if(d.Inventories is {} inventories){
             if(inventories.Length>8)throw new InvalidDataException("Inventory limit");
             foreach(var i in inventories){
@@ -60,6 +68,6 @@ public sealed partial class NativeClient
                 // Capacity may legitimately be exceeded; raw unreserved capacity is not clamped.
             }
         }
-        return e;
+        return e with { Data=d with { Assessment=OperationAssessmentBuilder.Read(d) } };
     }
 }

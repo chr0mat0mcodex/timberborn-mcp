@@ -182,14 +182,18 @@ public sealed class LargeProjectTests
         Assert.True(BridgeHttpServer.MethodAllowed("GET","/agent-api/v1/power-network",false,false));
         Assert.All(tools,t=>Assert.Equal(!LargeProjectTools.Writes(t.Name),t.Annotations!.ReadOnlyHint));
     }
-    [Fact]
-    public void CapabilityProfileDoesNotInventLiveEvidence()
+    [Theory]
+    [InlineData("0.37.0")]
+    [InlineData("0.38.0")]
+    public void CapabilityProfileDoesNotInventLiveEvidence(string version)
     {
-        var mode=Assert.Single(BuildingCapabilityTools.Describe("0.37.0","Folktails",true).Modes,m=>m.Tool=="start_large_project");
+        var profile=BuildingCapabilityTools.Describe(version,"Folktails",true);
+        Assert.Equal("known",profile.ProfileState);
+        var mode=Assert.Single(profile.Modes,m=>m.Tool=="start_large_project");
         Assert.Equal(32,mode.MaxSteps);Assert.Equal(8,mode.MaxOccupiedHeightSpan);Assert.Empty(mode.LiveRotations);
         Assert.Equal("not_live_proven",mode.EvidenceSource);
         Assert.DoesNotContain(BuildingCapabilityTools.Describe("0.36.0","Folktails",true).Modes,m=>m.Tool=="start_large_project");
-        Assert.Equal("unknown",BuildingCapabilityTools.Describe("0.38.0","Folktails",true).ProfileState);
+        Assert.Equal("unknown",BuildingCapabilityTools.Describe("99.0.0","Folktails",true).ProfileState);
     }
     [Fact]
     public void ResponseContractRejectsPrematureCompletionWrongSessionAndDuplicateEntities()

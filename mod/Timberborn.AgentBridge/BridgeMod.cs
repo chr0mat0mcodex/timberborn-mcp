@@ -79,7 +79,7 @@ public sealed class BridgeMod(Timberborn.CameraSystem.CameraService cameraServic
             screenshots=host.AddComponent<ScreenshotCapture>();
         }
         var data=await screenshots.Capture(request.Screenshot,cameraService);
-        return JsonConvert.SerializeObject(new { schemaVersion=1,sessionId,observedAtUtc=DateTimeOffset.UtcNow,bridgeVersion="0.37.0",data });
+        return JsonConvert.SerializeObject(new { schemaVersion=1,sessionId,observedAtUtc=DateTimeOffset.UtcNow,bridgeVersion="0.38.0",data });
     }
     private string Observe(BridgeRequest request)
     {
@@ -102,7 +102,7 @@ public sealed class BridgeMod(Timberborn.CameraSystem.CameraService cameraServic
             "production-graph" => productionGraph.Read(),
             "activity-log" => new { capacity=ActivityLog.Capacity, items=activityLog.Snapshot().AsEnumerable().Reverse().Take(32).Select(ActivityLog.Payload).ToArray(), revision=activityLog.Revision, windowVisible=activityWindow.Visible, uiAttached=activityWindow.Attached },
             "building-settings" => settings.Read(request.Settings!),
-            "set-building-paused" or "set-storage-good" or "set-storage-mode" or "set-farm-priority" or "set-farm-crop" => settings.Set(request.Settings!),
+            "set-building-paused" or "set-storage-good" or "set-storage-mode" or "set-farm-priority" or "set-farm-crop" or "set-building-recipe" => settings.Set(request.Settings!),
             "simulation-run-for" or "simulation-run-until" or "simulation-run" or "simulation-run-cancel" => simulation.Run(request.SimulationRun!),
             "simulation" => simulation.Observe(), "simulation-speed" => simulation.Set(request),
             "snapshot" => Snapshot(), "map" => Map(request), "objects" => spatial.Objects(request),
@@ -120,7 +120,7 @@ public sealed class BridgeMod(Timberborn.CameraSystem.CameraService cameraServic
             _ => throw new ArgumentException("invalid_request")
         };
         return JsonConvert.SerializeObject(new { schemaVersion = 1, sessionId, observedAtUtc = DateTimeOffset.UtcNow,
-            bridgeVersion = "0.37.0", data });
+            bridgeVersion = "0.38.0", data });
     }
     private object Snapshot()
     {

@@ -32,10 +32,10 @@ public sealed class NativeBridgeTests
         int observations = 0; var activityLog=new ActivityLog();
         float currentSpeed = 1; int desiredWorkers = 2; string priority = "Normal"; string areaState = "unmarked";
         var session = Guid.NewGuid().ToString("D");
-        var settingValues=new Dictionary<string,string>{["paused"]="false",["good"]="",["mode"]="accept",["priority"]="harvesting",["resource"]=""};
+        var settingValues=new Dictionary<string,string>{["paused"]="false",["good"]="",["mode"]="accept",["priority"]="harvesting",["resource"]="",["recipe"]=""};
         NativeBuildingSettings Settings(Guid id)=>new(id,"SyntheticSettingsBuilding",new(1,2,3),true,new(settingValues["paused"]=="true",true),true,
             new(settingValues["good"],true,["Berries","Carrot"],settingValues["mode"],true,30,[],false),true,
-            new(settingValues["priority"],settingValues["resource"],true,false,[new("Carrot",true)]),["synthetic_hybrid_fixture"]);
+            new(settingValues["priority"],settingValues["resource"],true,false,[new("Carrot",true)]),["synthetic_hybrid_fixture"],true,new(settingValues["recipe"],true,[new("SyntheticRecipe",1,[new("Wheat",2)],[new("Flour",1)],0,null)]));
         object Change(BuildingSettingsRequest r){
             if(r.Session!=session)throw new BridgeRejectionException("stale_session");
             var key=BuildingSettingsRequest.ValueKey(r.Route);
@@ -113,7 +113,7 @@ public sealed class NativeBridgeTests
                             "research" => new NativeResearch(sciencePoints,r.Research!.Offset,r.Research.Limit,1,r.Research.Offset==0?[new("SyntheticResearch",10,true,researchUnlocked,!researchUnlocked)]:[],false,["synthetic_test"]),
                             "unlock-building" => Unlock(r.Research!),
                             "building-settings" when r.Session==session => Settings(Guid.Parse(r.Settings!.Id)),
-                            "set-building-paused" or "set-storage-good" or "set-storage-mode" or "set-farm-priority" or "set-farm-crop" => Change(r.Settings!),
+                            "set-building-paused" or "set-storage-good" or "set-storage-mode" or "set-farm-priority" or "set-farm-crop" or "set-building-recipe" => Change(r.Settings!),
                             "removal-targets" => new NativeRemovalTargets(r.Removal!.Kind,r.Removal.Offset,r.Removal.Limit,0,[],false,["synthetic_test"]),
                             "remove-object" when r.Session == session => new NativeRemoval(Guid.Parse(r.Removal!.Id),r.Removal.Kind,r.Removal.Template,new(r.Removal.X,r.Removal.Y,r.Removal.Z),r.Removal.Operation,"applied",r.Removal.Operation=="delete",r.Removal.Operation=="delete"?null:r.Removal.Operation=="mark",["synthetic_test"]),
                             "workplace-staffing" when r.Session == session && r.ExpectedDesiredWorkers == desiredWorkers && r.DesiredWorkers <= 4 => new NativeStaffingResult(Guid.Parse(r.EntityId), "DistrictCenter.Folktails", desiredWorkers, r.DesiredWorkers, desiredWorkers = r.DesiredWorkers, 2, 4, "applied", ["synthetic_test"]),
@@ -203,7 +203,7 @@ public sealed class NativeBridgeTests
             }), cancellationToken: ct);
             var tools = await client.ListToolsAsync(cancellationToken: ct);
             var expected = new List<string> { "inspect_simulation_run", "inspect_production_graph", "inspect_needs", "inspect_beaver_needs", "inspect_building_operation", "inspect_building_access", "inspect_road_connection", "inspect_path_district", "inspect_selection", "inspect_work_range", "inspect_good_history", "find_buildings", "inspect_alert_targets", "inspect_alerts", "inspect_goods", "inspect_research", "inspect_agent_log", "inspect_area_types", "inspect_areas", "inspect_build_catalog", "inspect_build_options", "plan_building_project", "inspect_building_project", "inspect_vertical_stair_pilot", "precheck_building", "inspect_building", "inspect_building_priority", "inspect_building_settings", "inspect_colony", "inspect_colony_overview", "inspect_construction", "inspect_map_region", "inspect_simulation", "inspect_workforce", "inspect_removal_targets", "precheck_build_site", "timberborn_status" };
-            if (enableValidation) { expected.AddRange(["set_building_paused","set_storage_good","set_storage_mode","set_farm_priority","set_farm_crop"]); expected.Add("validate_build_site"); expected.Add("set_workplace_staffing"); expected.AddRange(["demolish_building","remove_planted","remove_vegetation","remove_debris"]); }
+            if (enableValidation) { expected.AddRange(["set_building_paused","set_storage_good","set_storage_mode","set_farm_priority","set_farm_crop","set_building_recipe"]); expected.Add("validate_build_site"); expected.Add("set_workplace_staffing"); expected.AddRange(["demolish_building","remove_planted","remove_vegetation","remove_debris"]); }
             if (enablePlacement) { expected.Add("unlock_building"); expected.Add("place_path"); expected.Add("set_building_priority"); } if (enableLodgePlacement) { expected.Add("place_building"); expected.Add("validate_building"); expected.Add("validate_building_project"); expected.Add("execute_building_project_pilot"); expected.Add("execute_vertical_stair_pilot"); expected.Add("set_area"); expected.Add("place_lodge"); expected.Add("set_simulation_speed"); expected.AddRange(["run_simulation_for", "run_simulation_until", "cancel_simulation_run"]); }
             expected.Add("survey_region"); expected.Add("inspect_building_capabilities"); expected.Add("inspect_building_completion"); expected.AddRange(["inspect_building_batch", "stop_building_batch"]);
             expected.Add("inspect_forestry"); expected.Add("capture_screenshot");
@@ -236,7 +236,7 @@ public sealed class NativeBridgeTests
                 Assert.Equal(2, batch.StructuredContent!.Value.GetProperty("data").GetProperty("applied").GetInt32());
                 Assert.Equal(2, batch.StructuredContent.Value.GetProperty("data").GetProperty("pendingWorkerOrders").GetInt32());
             }
-            Assert.All(tools, t => { Assert.Equal(t.Name is not ("plan_large_project_access" or "close_large_project" or "plan_large_project_repair" or "run_large_project_repair" or "run_large_project" or "plan_large_project" or "start_large_project" or "advance_large_project" or "stop_large_project" or "mark_forestry" or "protect_forestry" or "start_building_batch" or "advance_building_batch" or "stop_building_batch" or "develop_building_project" or "advance_building_project" or "remove_vegetation_batch" or "start_building_project" or "run_simulation_for" or "run_simulation_until" or "cancel_simulation_run" or "unlock_building" or "set_building_paused" or "set_storage_good" or "set_storage_mode" or "set_farm_priority" or "set_farm_crop" or "place_building" or "execute_building_project_pilot" or "execute_vertical_stair_pilot" or "validate_building_project" or "validate_building" or "validate_build_site" or "place_path" or "place_lodge" or "set_simulation_speed" or "set_workplace_staffing" or "set_building_priority" or "set_area" or "demolish_building" or "remove_planted" or "remove_vegetation" or "remove_debris"), t.ProtocolTool.Annotations!.ReadOnlyHint); Assert.NotNull(t.ProtocolTool.OutputSchema); });
+            Assert.All(tools, t => { Assert.Equal(t.Name is not ("plan_large_project_access" or "close_large_project" or "plan_large_project_repair" or "run_large_project_repair" or "run_large_project" or "plan_large_project" or "start_large_project" or "advance_large_project" or "stop_large_project" or "mark_forestry" or "protect_forestry" or "start_building_batch" or "advance_building_batch" or "stop_building_batch" or "develop_building_project" or "advance_building_project" or "remove_vegetation_batch" or "start_building_project" or "run_simulation_for" or "run_simulation_until" or "cancel_simulation_run" or "unlock_building" or "set_building_paused" or "set_storage_good" or "set_storage_mode" or "set_farm_priority" or "set_farm_crop" or "set_building_recipe" or "place_building" or "execute_building_project_pilot" or "execute_vertical_stair_pilot" or "validate_building_project" or "validate_building" or "validate_build_site" or "place_path" or "place_lodge" or "set_simulation_speed" or "set_workplace_staffing" or "set_building_priority" or "set_area" or "demolish_building" or "remove_planted" or "remove_vegetation" or "remove_debris"), t.ProtocolTool.Annotations!.ReadOnlyHint); Assert.NotNull(t.ProtocolTool.OutputSchema); });
             foreach(var name in new[]{"inspect_goods","inspect_alerts","inspect_alert_targets"}) {
                 var args=new Dictionary<string,object?>{["offset"]=0,["limit"]=32,["reasoning"]="Versorgung lesend prüfen."};
                 if(name=="inspect_alert_targets") {args["session"]=session;args["alertId"]=new string('0',64);}
@@ -437,7 +437,7 @@ public sealed class NativeBridgeTests
             if(enableValidation){
                 foreach(var (tool,key,before,after) in new[]{("set_building_paused","paused","false","true"),("set_storage_good","good","","Berries"),
                     ("set_storage_mode","mode","accept","obtain"),("set_storage_mode","mode","obtain","supply"),("set_storage_mode","mode","supply","empty"),("set_storage_mode","mode","empty","accept"),
-                    ("set_farm_priority","priority","harvesting","planting"),("set_farm_crop","resource","","Carrot"),("set_storage_good","good","Berries","")}){
+                    ("set_farm_priority","priority","harvesting","planting"),("set_farm_crop","resource","","Carrot"),("set_building_recipe","recipe","","SyntheticRecipe"),("set_storage_good","good","Berries","")}){
                     var settingArgs=new Dictionary<string,object?>{["id"]=settingsId,["session"]=session,[key]=key=="paused"?true:after,["expected"+char.ToUpperInvariant(key[0])+key[1..]]=key=="paused"?false:before};
                     var change=await client.CallToolWithReasonAsync(tool,settingArgs,cancellationToken:ct);Assert.False(change.IsError);
                     Assert.Equal(after,change.StructuredContent!.Value.GetProperty("data").GetProperty("observedValue").GetString());
@@ -445,6 +445,8 @@ public sealed class NativeBridgeTests
                 }
                 var stale=await client.CallToolWithReasonAsync("set_storage_good",new Dictionary<string,object?>{["id"]=settingsId,["session"]=session,["good"]="Carrot",["expectedGood"]="Berries"},cancellationToken:ct);
                 Assert.True(stale.IsError);Assert.Equal("",settingValues["good"]);
+                var staleRecipe=await client.CallToolWithReasonAsync("set_building_recipe",new Dictionary<string,object?>{["id"]=settingsId,["session"]=session,["recipe"]="SyntheticRecipe",["expectedRecipe"]=""},cancellationToken:ct);
+                Assert.True(staleRecipe.IsError);Assert.Equal("SyntheticRecipe",settingValues["recipe"]);
                 var resumed=await client.CallToolWithReasonAsync("set_building_paused",new Dictionary<string,object?>{["id"]=settingsId,["session"]=session,["paused"]=false,["expectedPaused"]=true},cancellationToken:ct);
                 Assert.False(resumed.IsError);Assert.Equal("false",settingValues["paused"]);
             }

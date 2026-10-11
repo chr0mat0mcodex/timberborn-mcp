@@ -1,5 +1,26 @@
 # Backlog
 
+## Abgenommen: 0.38.0 Rezeptwahl und gebündelte Betriebsdiagnose
+
+Nach Abschluss von 0.37.0 beauftragt. Rezeptoptionen samt Zutaten/Produkten,
+Auswahl mit Zustandskonfliktprüfung und Rücklesung; gebündelte Diagnose für
+Rezept, Personal, Pause, Zutaten und Kraft. Menschliches Gate und begrenzter
+Livetest bestanden; Bäckerei-Output 180 → 190 Brot, Simulation pausiert. [Vertrag und Pilot](docs/recipe-operation-settings.md).
+
+## Neue Beobachtungen aus 0.38.0
+
+- Nutzeranforderung: Rezeptwahl generell fraktionsunabhängig halten. Bestehender
+  Pfad verwendet bereits native ProductionRecipes pro Gebäude, ohne Folktails-
+  Whitelist. Bei nächster geeigneter Iron-Teeth-Sitzung denselben Wechsel- und
+  Konfliktpilot mit dort angebotenen Rezepten nachweisen; keine eigene Rezeptliste.
+
+- Veralteten Client-Werkzeugkatalog nach Backendwechsel sichtbar melden.
+- Gebäudesuche nach Vorlage filtern, statt Wege seitenweise mitzulesen.
+- Kraftstatus bei inaktiven Verbrauchern einordnen: unversorgt ist kein Beweis
+  eines defekten Anschlusses.
+
+Nur vorgemerkt, noch nicht umgesetzt.
+
 ## Erledigt: interne Wald-Leseaufrufe reduziert
 
 Menschliches Gate und Vergleichspilot bestanden: Übersicht 54→32 (−40,7 %),

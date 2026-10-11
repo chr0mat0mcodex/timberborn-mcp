@@ -1,5 +1,17 @@
 # Native MCP-Werkzeuge
 
+## 0.38.0 — Gate und begrenzter Livetest bestanden
+
+- `inspect_building_settings`: zusätzlich aktuelle/erlaubte Rezepte mit
+  Zutaten, Produkten, Zyklusdauer, Forschung und Brennstoff.
+- `set_building_recipe(id, session, recipe, expectedRecipe)`: native Rezeptwahl
+  fertiger Gebäude; bestehendes Settings-Gate, Konfliktprüfung und Rücklesung.
+- `inspect_building_operation`: zusätzlich nativer Kraftzustand und gebündelte
+  `assessment` mit Blockaden, Warnungen und unbekannten Prüfpunkten; ein Request,
+  kein Produktionsnachweis aus Bereitschaft.
+
+[Vertrag und begrenzter Pilot](recipe-operation-settings.md).
+
 ## Live abgenommen: gesamte Waldreichweite und Fällschutz
 
 Folgeoptimierung live bestanden: interne 256er-Seiten und beim Schutz

@@ -8,6 +8,7 @@ using Timberborn.MortalSystem;
 using Timberborn.StatusSystem;
 using Timberborn.TemplateSystem;
 using Timberborn.Workshops;
+using Timberborn.MechanicalSystem;
 using Timberborn.WorkSystem;
 namespace Timberborn.AgentBridge;
 
@@ -60,10 +61,19 @@ public sealed class DiagnosticsObservations(EntityRegistry entities)
                 consumesFuel=recipe?(bool?)m.CurrentRecipe.ConsumesFuel:null,outputSpace=recipe?(bool?)m.HasUnreservedCapacityForCurrentProducts():null,
                 productionProgress=m.ProductionProgress};
         }
+        object? power=null;
+        if(block.IsFinished) {
+            bool hasPower=e.TryGetComponent<MechanicalNode>(out var node);
+            var graph=hasPower?node.Graph:null;
+            bool valid=graph is not null && graph.Valid;
+            power=new { componentPresent=hasPower, isConsumer=hasPower?(bool?)node.IsConsumer:null,
+                powered=hasPower?(bool?)node.Powered:null, networkValid=hasPower?(bool?)valid:null,
+                supply=valid?(int?)graph!.PowerSupply:null, demand=valid?(int?)graph!.PowerDemand:null };
+        }
         var statuses=e.TryGetComponent<StatusSubject>(out var subject)?subject.ActiveStatuses.Where(s=>s.IsActive&&s.IsVisible()).Select(s=>Text(s.StatusDescription)).Distinct().OrderBy(s=>s,StringComparer.Ordinal).ToArray():Array.Empty<string>();
         if(statuses.Length>32)throw new InvalidOperationException("status_limit");
         return new {id=r.Id,template=e.GetComponent<TemplateSpec>().TemplateName,finished=block.IsFinished,
-            paused=e.TryGetComponent<PausableBuilding>(out var pause)?(bool?)pause.Paused:null,workplace,manufacturing,statuses,
+            paused=e.TryGetComponent<PausableBuilding>(out var pause)?(bool?)pause.Paused:null,workplace,manufacturing,statuses,power,
             inventories=block.IsFinished?InventoryObservations.Read(e):null,
             limitations=new[]{"null_means_component_or_observation_unavailable","unfinished_buildings_have_no_operating_diagnosis","manufacturing_only_for_native_manufactory_component","ready_not_guaranteed_actual_production","no_job_running_may_mean_off_hours_or_travel","understaffed_not_necessarily_fully_blocked","statuses_are_untrusted_localized_text","not_complete_power_water_resource_or_delivery_diagnosis","inventories_are_enabled_components_on_this_finished_entity_only","global_buffered_output_not_identical_to_pump_stock","capacity_may_be_ignored_by_game_component","unreserved_capacity_is_per_good_not_additive","reservation_is_not_a_delivery_guarantee","no_inventory_owner_attribution_outside_this_entity"}};
     }

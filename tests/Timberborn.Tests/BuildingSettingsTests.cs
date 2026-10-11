@@ -14,7 +14,7 @@ public sealed class BuildingSettingsTests
     [InlineData("POST",true,true,false)] [InlineData("POST",true,false,true)]
     public void AllSettingWritesNeedOwnBodylessPost(string method,bool enabled,bool body,bool expected)
     {
-        foreach(var route in new[]{"set-building-paused","set-storage-good","set-storage-mode","set-farm-priority","set-farm-crop"})
+        foreach(var route in new[]{"set-building-paused","set-storage-good","set-storage-mode","set-farm-priority","set-farm-crop","set-building-recipe"})
             Assert.Equal(expected,BridgeHttpServer.MethodAllowed(method,"/agent-api/v1/"+route,body,true,true,true,true,true,true,true,true,true,enabled));
     }
     [Fact]

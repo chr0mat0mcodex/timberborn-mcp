@@ -3,6 +3,7 @@ using Timberborn.Bridge.Core;
 using Timberborn.Buildings;
 using Timberborn.EntitySystem;
 using Timberborn.Fields;
+using Timberborn.Workshops;
 using Timberborn.Goods;
 using Timberborn.InventorySystem;
 using Timberborn.Planting;
@@ -42,7 +43,18 @@ public sealed class BuildingSettings(EntityRegistry entities, IGoodService goods
     private object Observe(EntityComponent e)
     {
         var b=e.GetComponent<BlockObject>(); var t=e.GetComponent<TemplateSpec>();
-        object? storage=null, farm=null, pause=null;
+        object? storage=null, farm=null, pause=null, recipes=null;
+        bool hasRecipes=e.TryGetComponent<Manufactory>(out var manufactory);
+        if(hasRecipes && b.IsFinished) {
+            var choices=manufactory.ProductionRecipes.OrderBy(r=>r.Id,StringComparer.Ordinal).ToArray();
+            if(choices.Length>64 || choices.Any(r=>r.Ingredients.Length>64 || r.Products.Length>64))
+                throw new InvalidOperationException("recipe_limit");
+            recipes=new { selectedRecipe=manufactory.HasCurrentRecipe?manufactory.CurrentRecipe.Id:"",
+                canChangeRecipe=choices.Length>0, allowedRecipes=choices.Select(r=>new { id=r.Id,
+                    cycleHours=r.CycleDurationInHours, ingredients=r.Ingredients.OrderBy(g=>g.Id,StringComparer.Ordinal).Select(g=>new {id=g.Id,amount=g.Amount}).ToArray(),
+                    products=r.Products.OrderBy(g=>g.Id,StringComparer.Ordinal).Select(g=>new {id=g.Id,amount=g.Amount}).ToArray(),
+                    science=r.ProducedSciencePoints, fuel=r.ConsumesFuel?r.Fuel:null }).ToArray() };
+        }
         if(e.TryGetComponent<PausableBuilding>(out var p)) pause=new { paused=p.Paused, canPause=p.IsPausable() };
         bool hasStorage=e.TryGetComponent<Stockpile>(out var s), hasFarm=e.TryGetComponent<FarmHouse>(out var f);
         if(hasStorage && b.IsFinished) {
@@ -65,7 +77,7 @@ public sealed class BuildingSettings(EntityRegistry entities, IGoodService goods
                 canChangeCrop=hasPlants && hasPreference, canClearCropPriority=false, allowedPlants=plants };
         }
         return new { id=e.EntityId, template=t.TemplateName, position=new { x=b.Coordinates.x,y=b.Coordinates.y,z=b.Coordinates.z },
-            finished=b.IsFinished, pause, storageComponentPresent=hasStorage, storage, farmComponentPresent=hasFarm, farm,
+            finished=b.IsFinished, pause, recipeComponentPresent=hasRecipes, recipes, storageComponentPresent=hasStorage, storage, farmComponentPresent=hasFarm, farm,
             limitations=new[] { "storage_and_farm_settings_only_for_finished_buildings", "area_designations_are_global_not_assigned_to_farm",
                 "crop_preference_uses_plantable_prioritizer_not_forced_job_assignment", "no_farm_reachability_or_output_guarantee",
                 "crop_priority_clear_not_exposed", "stock_may_include_previously_selected_goods" } };
@@ -100,6 +112,11 @@ public sealed class BuildingSettings(EntityRegistry entities, IGoodService goods
             if(!b.IsFinished && !(allowConstructionStorage && r.Route is ("set-storage-good" or "set-storage-mode")))
                 throw new BridgeRejectionException("finished_building_required");
             switch(r.Route) {
+                case "set-building-recipe":
+                    if(!e.TryGetComponent<Manufactory>(out var m)) throw new BridgeRejectionException("not_manufactory");
+                    var recipe=m.ProductionRecipes.SingleOrDefault(p=>p.Id==r.Value);
+                    if(recipe is null) throw new BridgeRejectionException("unavailable_recipe");
+                    read=()=>m.HasCurrentRecipe?m.CurrentRecipe.Id:""; set=()=>m.SetRecipe(recipe); break;
                 case "set-storage-good":
                     if(!e.TryGetComponent<Stockpile>(out var s) || !e.TryGetComponent<SingleGoodAllower>(out var a) ||
                         e.HasComponent<FixedStockpile>() || (r.Value!="" && !goods.GetGoodsForType(

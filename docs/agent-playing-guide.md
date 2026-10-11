@@ -1,5 +1,18 @@
 # Spielanleitung für Agenten
 
+## 0.38.0: Rezeptwahl und Inbetriebnahme — begrenzt live abgenommen
+
+`inspect_building_settings` für
+Rezeptoptionen lesen, `set_building_recipe` mit dem gelesenen `expectedRecipe`
+aufrufen und Auswahl separat bestätigen. Nur native Optionen fertiger Gebäude.
+Rezept-IDs immer aus dem konkreten Gebäude lesen: derselbe generische Pfad gilt
+für andere Fraktionen einschließlich Iron Teeth; keine Folktails-IDs voraussetzen.
+`inspect_building_operation.assessment` bündelt belegte Blockaden, Warnungen und
+Unbekanntes einschließlich Kraft in einem Aufruf. Bereitschaft und erfolgreiche
+Auswahl beweisen keine Produktion; Output separat im begrenzten Produktionslauf
+nachweisen. Keine automatische Wiederholung bei Konflikt oder unbestätigter
+Aktion. [Vertrag, Grenzen und Pilot](recipe-operation-settings.md).
+
 ## Waldreichweite und Fällschutz — begrenzt live abgenommen
 
 Folgeoptimierung live bestanden: intern größere Seiten und gezielte

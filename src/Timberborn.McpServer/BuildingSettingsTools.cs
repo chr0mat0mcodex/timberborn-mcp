@@ -13,6 +13,7 @@ public static class BuildingSettingsTools
     private static readonly Dictionary<string,string> Routes=new() {
         ["inspect_building_settings"]="building-settings", ["set_building_paused"]="set-building-paused",
         ["set_storage_good"]="set-storage-good", ["set_storage_mode"]="set-storage-mode",
+        ["set_building_recipe"]="set-building-recipe",
         ["set_farm_priority"]="set-farm-priority", ["set_farm_crop"]="set-farm-crop" };
     public static bool Handles(string name)=>Routes.ContainsKey(name);
     public static bool Writes(string name)=>Handles(name) && name!="inspect_building_settings";
@@ -33,7 +34,8 @@ public static class BuildingSettingsTools
                 props[key]=p;
             }
             string description=name switch {
-                "inspect_building_settings"=>"Liest Gebäudepause sowie bei fertigen Lagern/Farmen die Betriebsoptionen. Lager: ausgewähltes Gut (leer=keines), zulässige Güter, Modus, Kapazität und vorhandene Bestände. Farm: Pflanzen-/Erntenpriorität, bevorzugte Pflanze, erlaubte Pflanzen mit Unlockstatus. Fehlende Komponente/noch unfertig ausdrücklich unterscheiden. Anbauflächen separat über inspect_areas(kind=crops) lesen; keine feste Farm-Zuordnung behaupten.",
+                "set_building_recipe"=>"Wählt recipe aus recipes.allowedRecipes eines fertigen Produktionsgebäudes über Manufactory.SetRecipe. expectedRecipe muss der zuletzt gelesenen Auswahl entsprechen (leer=keine). Keine freie Rezeptdefinition oder leere Zielauswahl. Spiel kann laufenden Produktionsfortschritt beim Wechsel zurücksetzen; Auswahlbestätigung ist kein Produktionsnachweis.",
+                "inspect_building_settings"=>"Liest außerdem recipes mit aktueller Auswahl, erlaubten Rezepten, Zutaten, Produkten, Zyklusdauer, Brennstoff und Forschung. recipeComponentPresent=null bedeutet ältere Bridge, false keine Manufactory; recipes=null bei unfertigen Gebäuden. Liest Gebäudepause sowie bei fertigen Lagern/Farmen die Betriebsoptionen. Lager: ausgewähltes Gut (leer=keines), zulässige Güter, Modus, Kapazität und vorhandene Bestände. Farm: Pflanzen-/Erntenpriorität, bevorzugte Pflanze, erlaubte Pflanzen mit Unlockstatus. Fehlende Komponente/noch unfertig ausdrücklich unterscheiden. Anbauflächen separat über inspect_areas(kind=crops) lesen; keine feste Farm-Zuordnung behaupten.",
                 "set_building_paused"=>"Pausiert oder aktiviert genau ein Gebäude über reguläres Pause/Resume. paused und expectedPaused sind boolesch; aktuelle Session nötig. IsPausable muss gelten. Betrifft auch geeignete Baustellen, nicht die globale Simulationsgeschwindigkeit. Fortsetzen garantiert keine Arbeiter oder Produktion.",
                 "set_storage_good"=>"Wählt ein passendes Lagergut über die reguläre Lagerauswahl; good leer hebt die Auswahl auf. expectedGood ist die zuletzt gelesene Auswahl (leer=keine). Nur fertige, frei konfigurierbare Lager und Güter aus allowedGoods. Alte Bestände bleiben Spielzustand; kein Leeren durch Löschen und keine sofortige Umlagerung.",
                 "set_storage_mode"=>"Setzt Lagermodus accept (Annehmen), empty (Leeren), obtain (Beschaffen) oder supply (Liefern) über die Spielmethoden. Fertiges Lager, zuletzt gelesener expectedMode und frische Session nötig. Modusänderung bewegt selbst keine Güter.",

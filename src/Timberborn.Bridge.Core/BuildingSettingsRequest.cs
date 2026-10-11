@@ -11,12 +11,12 @@ public sealed class BuildingSettingsRequest
     public bool Write => Route != "building-settings";
     public static bool Handles(string path) => path is "/agent-api/v1/building-settings" or
         "/agent-api/v1/set-building-paused" or "/agent-api/v1/set-storage-good" or "/agent-api/v1/set-storage-mode" or
-        "/agent-api/v1/set-farm-priority" or "/agent-api/v1/set-farm-crop";
+        "/agent-api/v1/set-farm-priority" or "/agent-api/v1/set-farm-crop" or "/agent-api/v1/set-building-recipe";
     public static bool IsStorageMode(string value) => value is "accept" or "empty" or "obtain" or "supply";
     public static bool IsFarmPriority(string value) => value is "planting" or "harvesting";
     public static string ValueKey(string route) => route switch {
         "set-building-paused" => "paused", "set-storage-good" => "good", "set-storage-mode" => "mode",
-        "set-farm-priority" => "priority", "set-farm-crop" => "resource", _ => throw new ArgumentException() };
+        "set-building-recipe" => "recipe", "set-farm-priority" => "priority", "set-farm-crop" => "resource", _ => throw new ArgumentException() };
     public static string ExpectedKey(string route) => "expected" + char.ToUpperInvariant(ValueKey(route)[0]) + ValueKey(route).Substring(1);
     public static BuildingSettingsRequest Parse(string path, NameValueCollection q)
     {
@@ -40,7 +40,7 @@ public sealed class BuildingSettingsRequest
             "set-storage-mode" => IsStorageMode(r.Value) && IsStorageMode(r.ExpectedValue),
             "set-farm-priority" => IsFarmPriority(r.Value) && IsFarmPriority(r.ExpectedValue),
             "set-storage-good" => Identifier(r.Value) && Identifier(r.ExpectedValue),
-            "set-farm-crop" => BuildingPolicy.ValidTemplate(r.Value) && Identifier(r.ExpectedValue),
+            "set-farm-crop" or "set-building-recipe" => BuildingPolicy.ValidTemplate(r.Value) && Identifier(r.ExpectedValue),
             _ => false };
         if(!valid) throw new ArgumentException("invalid_setting_value");
         return r;

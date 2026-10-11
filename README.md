@@ -5,6 +5,9 @@ Beobachtung und kontrollierte Eingriffe über reguläre Spielservices.
 
 ## Status
 
+**0.37.0 abgeschlossen:** [Releaseumfang und Grenzen](docs/releases/0.37.0.md).
+**0.38.0 begrenzt live abgenommen:** [Rezeptwahl und Betriebsdiagnose](docs/recipe-operation-settings.md).
+
 Nach menschlichem Gate begrenzt live abgenommen:
 [automatische Zugangs- und Bauhilfenplanung](docs/automatic-access-planning.md).
 

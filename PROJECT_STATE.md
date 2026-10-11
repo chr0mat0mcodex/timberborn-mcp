@@ -1,5 +1,13 @@
 # Projektstand
 
+## 0.38.0 — begrenzt live abgenommen
+
+Menschliches Gate und Rezeptpilot bestanden: Rezeptwahl/Rücklesung an Grill und
+Bäckerei, veralteter Erwartungswert und unbekanntes Rezept abgelehnt, Pausekontrolle
+geprüft. Bäckerei-Ausgangsbestand Brot 180 → 190 nach begrenztem Lauf; automatische
+Pause an Tag 629, Stunde 10. Ursprüngliche Rezepte wiederhergestellt, keine Bauten
+oder Rohstoffe entfernt. [Nachweis und Grenzen](docs/recipe-operation-settings.md).
+
 ## 0.37.0 abgeschlossen
 
 Versionsabschluss am 2026-10-11 nach menschlichen Gates und begrenzten Livetests;
