@@ -1,5 +1,18 @@
 # Spielanleitung für Agenten
 
+## 0.45: Ausführungsgewissheit und kurze Laufberichte (begrenzt live abgenommen)
+
+Bei Fehlern error.execution lesen: not_executed bedeutet kein schreibender
+Spielauftrag übergeben; Argument/Ursache korrigieren. unconfirmed bedeutet
+Transportübergabe begonnen, Ergebnis lesend anhand bestehender IDs klären.
+Kein automatisches Retry. ledger_required verweist auf gespeicherte Bauchargen,
+not_applicable bezeichnet Lesefehler. Fachliche data.outcome-Belege bleiben gültig.
+Laufberichte sind standardmäßig kompakt. Für vollständige Belege denselben Lauf
+mit inspect_simulation_run(..., detail=full) lesen, keinen Start wiederholen.
+Historische Messung und separat datierte aktuelle Diagnose trennen. Compact lässt
+bekannte Null-Zeitkategorien und Rohbelege weg, verändert keine Messwerte.
+[Details](action-results-and-run-reports.md).
+
 ## 0.44: über ein Zeitfenster messen (begrenzt live abgenommen)
 
 Für Durchsatz `run_simulation_for` mit buildingIds (maximal acht) und

@@ -1,5 +1,18 @@
 # Projektstand
 
+## 0.45.0 — Aktionsergebnisse und Laufberichte begrenzt live abgenommen
+
+Menschliches Gate nach korrigierter Integrationserwartung bestanden; Bridge 0.45.0
+live bestätigt. Zwei ungültige Gebäudeauswahlen melden not_executed und legen
+keinen Lauf an; lesendes run_not_found meldet not_applicable.
+Drei Spielstunden mit zwei Gebäuden: automatische Pause, identische historische
+Messwerte und Diagnosebefunde in Compact/Full; Text und StructuredContent gleich.
+Compact 3.436 statt 8.206 UTF-8-JSON-Bytes (58,1 % weniger in diesem Pilot).
+Erfinder zwei native Zyklen, Papierfabrik null mit mehreren Blockaden.
+Vollständige Inventarbelege nur in Full; keine zusätzliche interne Lesekostenersparnis.
+Transportfehler synthetisch im Gate, keine absichtlichen Live-Verbindungsabbrüche.
+[Vertrag und Abnahme](docs/action-results-and-run-reports.md).
+
 ## 0.44.0 — Durchsatz und Zeitanteile begrenzt live abgenommen
 
 Nach Korrektur der Fortschrittsbasis bei unveränderter Spielzeit menschliches

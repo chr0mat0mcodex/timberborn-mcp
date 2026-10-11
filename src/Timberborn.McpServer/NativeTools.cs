@@ -83,6 +83,7 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
     }
     public async Task<JsonObject> Invoke(string name, JsonElement args, CancellationToken ct)
     {
+        using var dispatch=new NativeDispatchTrace();
         JsonObject Wrap<T>(BridgeEnvelope<T> envelope) => (JsonObject)JsonSerializer.SerializeToNode(
             new NativeResult<T>(1, "ok", envelope.Data, new("native", false, envelope.SessionId, envelope.ObservedAtUtc), null), NativeJson.Options)!;
         try
@@ -178,8 +179,15 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
         {
             string code = ex is BridgeRejectionException rejection ? rejection.Code : ex is ArgumentException ? "invalid_argument" : ex is UnauthorizedAccessException ? "authentication_failed"
                 : ex is JsonException or InvalidDataException ? "backend_incompatible" : "backend_unavailable";
+            bool action = LargeProjectTools.Writes(name) || ForestryTools.Writes(name) || BuildBatchTools.Handles(name) || BuildingCompletionTools.Handles(name) || WorkflowTools.Handles(name) || BuildingConfigurationTools.Writes(name) || SimulationRunTools.Writes(name) || BuildingSettingsTools.Writes(name) || name is "unlock_building" or "place_building" or "place_path" or "place_lodge" or "set_simulation_speed" or "set_workplace_staffing" or "set_building_priority" or "set_area" or "demolish_building" or "remove_planted" or "remove_vegetation" or "remove_debris";
+            string execution=dispatch.WriteAttempts>0?"unconfirmed":action||code=="invalid_argument"?"not_executed":"not_applicable";
+            string message=execution switch {
+                "not_executed"=>"Nicht ausgeführt: kein schreibender Spielauftrag an den Transport übergeben. Ursache korrigieren; kein automatisches Retry.",
+                "unconfirmed"=>"Schreibender Spielauftrag an den Transport übergeben; Ausgang unbestätigt. Nur lesend klären, niemals automatisch wiederholen.",
+                _=>"Leseabfrage fehlgeschlagen. Parameter, Spielzustand, Verbindung oder Antwortdaten prüfen."
+            };
             return (JsonObject)JsonSerializer.SerializeToNode(new NativeResult<object>(1, "error", null,
-                new("native", false, null, null), new(code, ex is BridgeRejectionException ? "Spielzustand lehnt den Aufruf ab; Zustand neu lesen und Entscheidung prüfen. Kein automatisches Retry." : LargeProjectTools.Writes(name) || ForestryTools.Writes(name) || BuildBatchTools.Handles(name) || BuildingCompletionTools.Handles(name) || WorkflowTools.Handles(name) || BuildingConfigurationTools.Writes(name) || SimulationRunTools.Writes(name) || BuildingSettingsTools.Writes(name) || name is "unlock_building" or "place_building" or "place_path" or "place_lodge" or "set_simulation_speed" or "set_workplace_staffing" or "set_building_priority" or "set_area" or "demolish_building" or "remove_planted" or "remove_vegetation" or "remove_debris" ? "Aktionsergebnis möglicherweise unbestätigt. Nur lesend klären; niemals automatisch erneut ausführen." : "Native Bridge: Parameter, Verbindung oder Daten prüfen.", code == "backend_unavailable" && !LargeProjectTools.Writes(name) && !ForestryTools.Writes(name) && !BuildBatchTools.Handles(name) && !BuildingCompletionTools.Handles(name) && !WorkflowTools.Handles(name) && !BuildingConfigurationTools.Writes(name) && !SimulationRunTools.Writes(name) && name != "unlock_building" && !BuildingSettingsTools.Writes(name) && name is not ("validate_building" or "place_building" or "validate_build_site" or "place_path" or "place_lodge" or "set_simulation_speed" or "set_workplace_staffing" or "set_building_priority" or "set_area" or "demolish_building" or "remove_planted" or "remove_vegetation" or "remove_debris"))), NativeJson.Options)!;
+                new("native", false, null, null), new(code,message,code=="backend_unavailable"&&!action&&dispatch.WriteAttempts==0,execution)), NativeJson.Options)!;
         }
     }
     public async Task<JsonObject> InvokeLogged(string name,JsonElement args,CancellationToken ct)
@@ -193,6 +201,7 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
         try {
             var result=await Invoke(name,args,ct);
             state=result["status"]?.GetValue<string>()=="error"?(BridgeRejectionException.IsCode(result["error"]?["code"]?.GetValue<string>())?"rejected":"error"):result["data"]?["outcome"]?.GetValue<string>() is "applied" or "rejected" or "unconfirmed" ? result["data"]!["outcome"]!.GetValue<string>() : "ok";
+            if(result["error"]?["execution"]?.GetValue<string>()=="unconfirmed")state="unconfirmed";
             if(BuildingConfigurationTools.Handles(name) && (result["data"]?["outcome"]?.GetValue<string>()=="partial" || result["data"]?["proofState"]?.GetValue<string>()=="unconfirmed"))state="unconfirmed";
             if(name=="unlock_building" && result["data"]?["outcome"]?.GetValue<string>() is "cost_changed" or "unavailable" or "insufficient_points" or "not_unlockable")state="rejected";
             if(LargeProjectTools.Handles(name) && result["data"]?["state"]?.GetValue<string>()=="unconfirmed")state="unconfirmed";

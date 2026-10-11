@@ -1,5 +1,15 @@
 # Native MCP-Werkzeuge
 
+## 0.45: Aktionsergebnisse und kompakte Läufe (begrenzt live abgenommen)
+
+Native Fehler ergänzen error.execution: not_executed, unconfirmed oder
+not_applicable; unterbrochene Bauchargen ledger_required. Kein automatisches Retry.
+run_simulation_for/until, inspect_simulation_run und cancel_simulation_run:
+optionales detail=compact|full, Standard compact. Kernstatus, Pause, Messwerte,
+Blockaden und aktuelle Diagnosebefunde bleiben; vollständige Rohbelege in Full.
+Mehr Details nur lesend mit derselben runId anfordern.
+[Vertrag](action-results-and-run-reports.md).
+
 ## 0.44: Messmodus im Produktionslauf (begrenzt live abgenommen)
 
 `run_simulation_for(..., buildingIds, measureProduction=true)` misst bis duration

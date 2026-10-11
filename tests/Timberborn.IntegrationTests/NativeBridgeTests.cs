@@ -252,6 +252,8 @@ public sealed class NativeBridgeTests
                     args["session"]=Guid.NewGuid().ToString();
                     var rejected=await client.CallToolWithReasonAsync(name,args,cancellationToken:ct);
                     Assert.True(rejected.IsError);Assert.Equal("stale_session",rejected.StructuredContent!.Value.GetProperty("error").GetProperty("code").GetString());
+                    Assert.Equal("not_applicable",rejected.StructuredContent.Value.GetProperty("error").GetProperty("execution").GetString());
+                    Assert.Contains(activityLog.Snapshot(),e=>e.Tool==name&&e.State=="rejected");
                 }
             }
             foreach(var name in new[]{"inspect_building_access","inspect_road_connection","inspect_work_range","inspect_good_history"}){
@@ -281,7 +283,10 @@ public sealed class NativeBridgeTests
                 Assert.True(rejected.IsError);
                 Assert.Equal("stale_session",rejected.StructuredContent!.Value.GetProperty("error").GetProperty("code").GetString());
                 Assert.False(rejected.StructuredContent.Value.GetProperty("error").GetProperty("retryable").GetBoolean());
-                Assert.Contains(activityLog.Snapshot(),e=>e.Tool=="unlock_building"&&e.State=="rejected");
+                // A POST reached the transport: an error code alone is not an execution receipt.
+                Assert.Equal("unconfirmed",rejected.StructuredContent.Value.GetProperty("error").GetProperty("execution").GetString());
+                Assert.Contains(activityLog.Snapshot(),e=>e.Tool=="unlock_building"&&e.State=="unconfirmed");
+                Assert.DoesNotContain(activityLog.Snapshot(),e=>e.Tool=="unlock_building"&&e.State=="rejected");
                 Assert.Equal(20,sciencePoints);
                 unlockArgs["session"]=session;
                 var unlocked=await client.CallToolWithReasonAsync("unlock_building",unlockArgs,cancellationToken:ct);

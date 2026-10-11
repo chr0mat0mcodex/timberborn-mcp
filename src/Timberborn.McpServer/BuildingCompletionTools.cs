@@ -113,7 +113,7 @@ public static class BuildingCompletionTools
                 ? ex.Message : "Pflichtfelder, zusätzliche Felder und Bauparameter anhand des Werkzeugschemas prüfen.";
             return Task.FromResult((JsonObject)JsonSerializer.SerializeToNode(new NativeResult<object>(1, "error", null,
                 new("native", false, null, null), new("invalid_argument",
-                    "Eingabe abgewiesen; kein Bau-/Simulationsauftrag gesendet. " + message, false)), NativeJson.Options)!);
+                    "Eingabe abgewiesen; kein Bau-/Simulationsauftrag gesendet. " + message, false, "not_executed")), NativeJson.Options)!);
         }
         if (name == Develop) return DevelopProject(client, (build!, completion), ct);
         return Execute(completion, client.BuildingProjectExecution, client.Building, client.BuildingAccess,

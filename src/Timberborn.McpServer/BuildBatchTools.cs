@@ -87,7 +87,7 @@ public static class BuildBatchTools
             } catch (Exception ex) when (ex is IOException or InvalidDataException or HttpRequestException or ArgumentException or JsonException or OperationCanceledException) {
                 // The durable write-ahead checkpoint remains authoritative, never automatically retry a write.
                 job = store.Load(handle.Session, handle.BatchId) ?? job;
-                fault = new("batch_interrupted", "Gespeicherten Status prüfen; advance klärt ausstehende Eingriffe lesend. Keine neue batchId als Retry.", false);
+                fault = new("batch_interrupted", "Gespeicherten Status prüfen; advance klärt ausstehende Eingriffe lesend. Keine neue batchId als Retry.", false, "ledger_required");
             }
         }
         object report = new { batchId = job.Spec.BatchId, job.State, job.Reason, checkpointOnly = true,

@@ -8,12 +8,13 @@ namespace Timberborn.McpServer;
 public static class ResponsePresentation
 {
     public static bool Supports(string name) => name is "timberborn_status" or
-        "inspect_building_settings" or "set_storage_good" or "set_storage_mode" or "validate_building";
+        "inspect_building_settings" or "set_storage_good" or "set_storage_mode" or "validate_building" || SimulationRunTools.Handles(name);
 
     private static string[] OptionalFields(string name) => name switch {
         "inspect_building_settings" => ["limitations", "allowedGoods", "allowedPlants"],
         "set_storage_good" or "set_storage_mode" => ["limitations", "observation"],
         "validate_building" => ["limitations", "candidateCells", "origin", "accesses", "rangeOrigin", "originSource", "accessCells", "source"],
+        _ when SimulationRunTools.Handles(name) => RunReportPresentation.OptionalFields,
         _ => []
     };
 
@@ -23,7 +24,9 @@ public static class ResponsePresentation
         var input = JsonNode.Parse(tool.InputSchema.GetRawText())!.AsObject();
         input["properties"]!.AsObject()["detail"] = new JsonObject {
             ["type"] = "string", ["enum"] = new JsonArray("compact", "full"), ["default"] = "compact",
-            ["description"] = "compact: knapper Ergebnisbeleg. full: zusätzlich Auswahllisten, vollständiger Zustand und Geometriedetails. Bei Schreibaufrufen keinen zweiten Auftrag nur für Details senden; Zustand separat lesen." };
+            ["description"] = SimulationRunTools.Handles(tool.Name)
+                ? "compact: Laufstatus, Ziele, unveränderte Messwerte und Diagnosebefunde; Zeitkategorien mit null Stunden entfallen. full: vollständige Belege. Details eines gestarteten Laufs mit inspect_simulation_run und derselben runId lesen, niemals erneut starten."
+                : "compact: knapper Ergebnisbeleg. full: zusätzlich Auswahllisten, vollständiger Zustand und Geometriedetails. Bei Schreibaufrufen keinen zweiten Auftrag nur für Details senden; Zustand separat lesen." };
         tool.InputSchema = JsonSerializer.SerializeToElement(input);
         if (tool.OutputSchema is { } output) {
             var schema = JsonNode.Parse(output.GetRawText())!;
@@ -108,6 +111,7 @@ public static class ResponsePresentation
                     foreach (var check in checks.OfType<JsonObject>()) check.Remove("source");
                 break;
         }
+        if(SimulationRunTools.Handles(name))RunReportPresentation.Compact(data);
         return copy;
     }
 

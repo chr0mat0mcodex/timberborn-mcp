@@ -59,11 +59,11 @@ builder.Services.AddMcpServer().WithStdioServerTransport()
         bool full = false;
         if (native is not null) {
             try { (arguments, full) = ResponsePresentation.ReadRequest(request.Name, arguments); }
-            catch (ArgumentException) { throw new McpProtocolException("detail muss compact oder full sein und vom Werkzeug unterstützt werden.", McpErrorCode.InvalidParams); }
+            catch (ArgumentException) { throw new McpProtocolException("Nicht ausgeführt: detail muss compact oder full sein und vom Werkzeug unterstützt werden.", McpErrorCode.InvalidParams); }
         }
         JsonElement backendArguments;
         try { backendArguments = ActivityTools.RequireReasoning(arguments); }
-        catch (ArgumentException) { throw new McpProtocolException("reasoning ist erforderlich: nicht leere Begründung, maximal 600 Zeichen.", McpErrorCode.InvalidParams); }
+        catch (ArgumentException) { throw new McpProtocolException("Nicht ausgeführt: reasoning ist erforderlich: nicht leere Begründung, maximal 600 Zeichen.", McpErrorCode.InvalidParams); }
         var result = native is not null ? await native.InvokeLogged(request.Name, arguments, ct)
             : request.Name == "set_building_paused"
                 ? await actions!.InvokeAsync(backendArguments, ct)
