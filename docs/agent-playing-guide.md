@@ -1,5 +1,19 @@
 # Spielanleitung für Agenten
 
+## Produktionsziele — gezielt live abgenommen
+
+Für Materialwartezeit `run_simulation_for` mit `goodTargets` (bis acht eindeutige
+`good`/`amount`) und optional `stopAtScience` verwenden. Zuvor verfügbare Bestände
+und Produktionsmöglichkeiten lesen. Feste Spiel-/Echtzeitgrenzen wählen; alle Ziele
+müssen gleichzeitig erreicht sein. Nicht mit `stopAtAvailableLogs` kombinieren.
+Nach einem Start nur lesen; Mod pausiert selbst. Zielerfolg ausschließlich anhand
+`productionTargetsReached`, `reason` und bestätigter Pause melden, nicht aus
+`completed` oder `targetReached` allein. Zeitablauf ist kein Produktionsnachweis.
+`productionDiagnostics` ist eine frische, begrenzte Manufakturbeobachtung;
+terminale Zielbestände sind historisch eingefroren. Zutaten-, Personal-, Kapazitäts-
+und Netzbefunde beachten, unbekannte Lieferung/Windursache nicht erfinden.
+[Vertrag und menschliches Testgate](production-target-runs.md).
+
 ## Bauarbeitszugang: Policy 1 begrenzt live abgenommen
 
 Für neue Gebäude bevorzugt `plan_large_project_access`: Zielgebäude vorgeben,

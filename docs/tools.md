@@ -1,5 +1,16 @@
 # Native MCP-Werkzeuge
 
+## Live abgenommen: Mehrfachziele für Simulationsläufe
+
+`run_simulation_for`: optional `goodTargets=[{good,amount},…]` (1–8 eindeutige
+Güter) und `stopAtScience`, jeweils ganzzahlig 1–1.000.000. Nicht zusammen mit
+dem alten Holz-Ziel. Antwort ergänzt beobachtete Zielbestände, Forschung,
+`productionTargetsReached` und frische `productionDiagnostics` mit Zeitstempel.
+Alle Ziele gleichzeitig; automatische Pause. `production_time_limit` und
+`production_observation_unavailable` unterscheiden Budget und Beobachtungslücke
+von `production_targets_reached`. Kein neues Werkzeug und keine Änderung am
+Zeitziel-Aufruf `run_simulation_until`. [Details/Gate](production-target-runs.md).
+
 ## Bauarbeitszugang mit Policy 1 (begrenzt live abgenommen)
 
 `plan_large_project_access` sucht mit zwölf Zellen Rand und liefert zusätzlich

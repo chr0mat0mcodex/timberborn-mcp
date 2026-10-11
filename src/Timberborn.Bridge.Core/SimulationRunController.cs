@@ -21,6 +21,11 @@ public sealed class SimulationRunStatus
     public int? StopAtAvailableLogs { get; set; }
     public int? ObservedAvailableLogs { get; set; }
     public bool StockTargetReached { get; set; }
+    public ProductionTargetState[] GoodTargets { get; set; } = Array.Empty<ProductionTargetState>();
+    public int? StopAtScience { get; set; }
+    public int? ObservedScience { get; set; }
+    public bool ProductionTargetsReached { get; set; }
+    public bool HasProductionTargets => GoodTargets.Length > 0 || StopAtScience is not null;
 }
 
 public sealed class SimulationRunController
@@ -38,8 +43,9 @@ public sealed class SimulationRunController
 
     public bool StockConditionActive => active?.StopAtAvailableLogs is not null;
     public bool HasActiveRun => active is not null;
+    public SimulationRunStatus? ActiveProductionRun => active?.HasProductionTargets == true ? active : null;
 
-    public SimulationRunStatus Start(SimulationRunRequest r, double hours, float speed, double now, Action<int> changeSpeed, int? availableLogs = null, bool deferSpeedStart = false)
+    public SimulationRunStatus Start(SimulationRunRequest r, double hours, float speed, double now, Action<int> changeSpeed, int? availableLogs = null, bool deferSpeedStart = false, ProductionSample? production = null)
     {
         if (!r.Starts) throw new ArgumentException();
         ValidateClock(hours, speed, now);
@@ -48,15 +54,20 @@ public sealed class SimulationRunController
         if (r.StopAtAvailableLogs is not null && (availableLogs is null || availableLogs < 0)) throw new BridgeRejectionException("state_conflict");
         double target = r.Route == "simulation-run-for" ? hours + r.DurationHours : r.TargetHours;
         if (target < hours || target - hours > 672) throw new BridgeRejectionException("invalid_time_target");
-        active = new SimulationRunStatus { RunId = r.RunId, StartGameHours = hours, TargetGameHours = target,
+        var pending = new SimulationRunStatus { RunId = r.RunId, StartGameHours = hours, TargetGameHours = target,
             ObservedGameHours = hours, RequestedSpeed = r.Speed, ObservedSpeed = speed, MaxRealSeconds = r.MaxRealSeconds,
-            StopAtAvailableLogs = r.StopAtAvailableLogs, ObservedAvailableLogs = r.StopAtAvailableLogs is null ? null : availableLogs };
+            StopAtAvailableLogs = r.StopAtAvailableLogs, ObservedAvailableLogs = r.StopAtAvailableLogs is null ? null : availableLogs,
+            GoodTargets = r.GoodTargets.Select(t => new ProductionTargetState { Good=t.Good, Amount=t.Amount }).ToArray(), StopAtScience=r.StopAtScience };
+        if (pending.HasProductionTargets && !ProductionTargets.Observe(pending, production))
+            throw new BridgeRejectionException("state_conflict");
+        active = pending;
         history.Add(r.RunId, active);
         started = phaseStarted = lastProgress = now; lastHours = hours; initialSpeed = speed;
         pauseAfterUnlock = wasLocked = false;
         deferredStart = deferSpeedStart;
         var result = active;
-        if (r.StopAtAvailableLogs is { } threshold && availableLogs >= threshold) {
+        if (active.ProductionTargetsReached) BeginPause("completed", "production_targets_reached", now, changeSpeed);
+        else if (r.StopAtAvailableLogs is { } threshold && availableLogs >= threshold) {
             active.StockTargetReached = true; BeginPause("completed", "stock_target_reached", now, changeSpeed);
         }
         else if (hours >= target) BeginPause("completed", "target_reached", now, changeSpeed);
@@ -74,7 +85,7 @@ public sealed class SimulationRunController
         RequestSpeed(active.RequestedSpeed, changeSpeed);
     }
 
-    public void Tick(double hours, float speed, double now, Action<int> changeSpeed, bool speedLocked = false, int? availableLogs = null)
+    public void Tick(double hours, float speed, double now, Action<int> changeSpeed, bool speedLocked = false, int? availableLogs = null, ProductionSample? production = null)
     {
         if (active is null) return;
         ValidateClock(hours, speed, now);
@@ -90,7 +101,7 @@ public sealed class SimulationRunController
             if (r.State == "pausing") { pauseAfterUnlock = true; return; }
             r.Reason = "game_speed_locked";
             if (hours < lastHours) BeginPause("failed", "clock_reversed", now, changeSpeed, true);
-            else if (hours >= r.TargetGameHours) BeginPause("completed", "target_reached", now, changeSpeed, true);
+            else if (hours >= r.TargetGameHours) BeginPause("completed", r.HasProductionTargets ? "production_time_limit" : "target_reached", now, changeSpeed, true);
             else if (now - started >= r.MaxRealSeconds) BeginPause("failed", "real_time_limit", now, changeSpeed, true);
             return;
         }
@@ -120,6 +131,10 @@ public sealed class SimulationRunController
         } else if (speed != r.RequestedSpeed) { Finish("interrupted", "speed_changed"); return; }
         if (hours < lastHours) { BeginPause("failed", "clock_reversed", now, changeSpeed); return; }
         if (hours > lastHours) { lastHours = hours; lastProgress = now; }
+        if (r.HasProductionTargets) {
+            if (!ProductionTargets.Observe(r, production)) { BeginPause("failed", "production_observation_unavailable", now, changeSpeed); return; }
+            if (r.ProductionTargetsReached) { BeginPause("completed", "production_targets_reached", now, changeSpeed); return; }
+        }
         if (r.StopAtAvailableLogs is { } threshold) {
             if (availableLogs is null || availableLogs < 0) { BeginPause("failed", "stock_observation_unavailable", now, changeSpeed); return; }
             r.ObservedAvailableLogs = availableLogs;
@@ -127,7 +142,7 @@ public sealed class SimulationRunController
                 r.StockTargetReached = true; BeginPause("completed", "stock_target_reached", now, changeSpeed); return;
             }
         }
-        if (hours >= r.TargetGameHours) BeginPause("completed", "target_reached", now, changeSpeed);
+        if (hours >= r.TargetGameHours) BeginPause("completed", r.HasProductionTargets ? "production_time_limit" : "target_reached", now, changeSpeed);
         else if (now - started >= r.MaxRealSeconds) BeginPause("failed", "real_time_limit", now, changeSpeed);
         else if (now - lastProgress >= 120) BeginPause("failed", "simulation_stalled", now, changeSpeed);
     }

@@ -1,5 +1,19 @@
 # Backlog
 
+## Abgenommen: Produktionslauf bis Zielbestand
+
+Nach ausdrücklicher Umfangsauswahl: bis acht Güter und optional Forschung,
+gleichzeitiger freier Zielbestand, automatische Pause, feste Zeitbudgets und
+belegte Produktionsdiagnose. Menschliches Gate und gezielter Livetest am
+2026-10-11 bestanden: Mehrfachziel, automatische Pause, bereits erfülltes Ziel,
+unbekanntes Gut und Zutatenmangel mit Zeitlimit. [Nachweis](docs/production-target-runs.md).
+Keine automatische Rezeptwahl, Produktionskettenplanung oder vollständige Wind-/
+Lieferursachendiagnose. Große/spezielle Harzgebäude bleiben nachgelagert.
+
+Verbesserung aus dem Pilot: unbekannte Zielgüter werden korrekt ohne Laufanlage
+abgewiesen, die Antwort nennt aber nur `state_conflict`. Künftig das unbekannte
+Gut bzw. die fehlende Beobachtung konkret ausweisen; erspart Diagnoseaufrufe.
+
 ## Beobachtung aus dem Bauzugangspilot: Materialwartezeit und Diagnosepräzision
 
 Die neue Zugangsroute funktioniert auch mit Höhenwechsel. Der Testbau wartet

@@ -29,6 +29,12 @@ public static class SimulationRunTools
             if (name == "run_simulation_for") {
                 props["duration"] = new JsonObject { ["type"] = "number", ["minimum"] = 0.000001, ["maximum"] = 672 };
                 props["unit"] = new JsonObject { ["type"] = "string", ["enum"] = new JsonArray("hours", "days", "weeks") };
+                props["goodTargets"] = new JsonObject { ["type"]="array", ["minItems"]=1, ["maxItems"]=8,
+                    ["items"]=new JsonObject { ["type"]="object", ["properties"]=new JsonObject {
+                        ["good"]=new JsonObject { ["type"]="string", ["pattern"]="^[A-Za-z0-9._-]{1,160}$" },
+                        ["amount"]=new JsonObject { ["type"]="integer", ["minimum"]=1, ["maximum"]=1000000 } },
+                        ["required"]=new JsonArray("good","amount"), ["additionalProperties"]=false } };
+                props["stopAtScience"] = new JsonObject { ["type"]="integer", ["minimum"]=1, ["maximum"]=1000000 };
                 props["stopAtAvailableLogs"] = new JsonObject { ["type"] = "integer", ["minimum"] = 1, ["maximum"] = 1000000 };
             }
             if (name == "run_simulation_until") {
@@ -36,8 +42,8 @@ public static class SimulationRunTools
                 props["hour"] = new JsonObject { ["type"] = "number", ["minimum"] = 0, ["exclusiveMaximum"] = 24 };
             }
             yield return new Tool { Name = name,
-                Description = "Begrenzter asynchroner Spielzeitlauf. Ab Bridge 0.35.5 optional stopAtAvailableLogs bei run_simulation_for: stoppt früh bei erreichtem frei verfügbarem Holzbestand; sonst bleibt duration das harte Spielzeitlimit. reason und stockTargetReached unterscheiden Bestandsziel vom Zeitlimit. Kein Ertragsnachweis, keine Reservierung. Bereits erreichtes Bestandsziel startet keine Beschleunigung. Start: eigene neue runId (UUID), aktuelle session und expectedSpeed; maximal 28 Spieltage, Woche=7 Tage. until: monotoner dayNumber aus inspect_simulation, KEIN Zyklustag; hour 0..<24. maxRealSeconds 30..86400, z.B. 7200. Mod überwacht ohne MCP-Polling und pausiert am Ziel; completed erst nach beobachteter Pause, overshootHours beachten. Status/Abbruch mit derselben runId/session. Ein aktiver Lauf, 128 IDs pro Sitzung; IDs nie wiederverwenden. MCP-Abbruch/Disconnect beendet den Modlauf NICHT. Bei unbestätigter Antwort nur Status lesen, Start niemals automatisch wiederholen. Manuelle Speedänderung unterbricht; Stillstand 120s, Speed/Pause-Bestätigung 5s. Zeitlimits erst beim nächsten Spiel-Update auswertbar. Endstatus ist eingefrorener Abschlussbeleg; aktuellen Zustand mit inspect_simulation lesen. Keine Spielsperren entsperrt.",
-                InputSchema = JsonSerializer.SerializeToElement(new JsonObject { ["type"] = "object", ["properties"] = props, ["required"] = new JsonArray(props.Where(p => p.Key != "stopAtAvailableLogs").Select(p => (JsonNode?)JsonValue.Create(p.Key)).ToArray()), ["additionalProperties"] = false }),
+                Description = "Begrenzter autonomer Simulationslauf; neue UUID pro Start, aktuelle session/expectedSpeed. for: duration als Obergrenze, optional goodTargets (1–8 eindeutige good/amount) und stopAtScience; ALLE Ziele gleichzeitig aus AvailableStock/SciencePoints. Exklusiv zum kompatiblen stopAtAvailableLogs. Bereits erfüllt: keine Beschleunigung. until: monotoner dayNumber und hour, kein Zyklustag. Maximal 28 Spieltage; maxRealSeconds 30..86400. Mod pausiert selbst. productionTargetsReached mit production_targets_reached belegt das Bestandsziel; production_time_limit nur Zeitablauf. targetReached bleibt Zeitindikator. Fehlende Bestandsbeobachtung stoppt. Diagnose frisch, begrenzt auf aktuelle Manufakturen; eingefrorene terminale Zielbestände sind historische Belege. Keine Reservierung, Ertrags-, Windursachen- oder Liefergarantie. Status/Abbruch mit derselben ID; nach unbestätigtem Start nur lesen, nie wiederholen. Manuelles Tempo unterbricht; kein Entsperren des Spiels. Ein aktiver Lauf, 128 IDs/Sitzung; Abschluss erst mit beobachteter Pause.",
+                InputSchema = JsonSerializer.SerializeToElement(new JsonObject { ["type"] = "object", ["properties"] = props, ["required"] = new JsonArray(props.Where(p => p.Key is not ("stopAtAvailableLogs" or "goodTargets" or "stopAtScience")).Select(p => (JsonNode?)JsonValue.Create(p.Key)).ToArray()), ["additionalProperties"] = false }),
                 OutputSchema = JsonSerializer.SerializeToElement(options.GetJsonSchemaAsNode(typeof(NativeResult<NativeSimulationRun>))),
                 Annotations = new() { ReadOnlyHint = !write, DestructiveHint = write, IdempotentHint = !write, OpenWorldHint = false } };
         }
@@ -47,7 +53,20 @@ public static class SimulationRunTools
         if (Writes(name) && !enabled) throw new ArgumentException();
         var q = new NameValueCollection();
         foreach (var p in args.EnumerateObject()) {
-            if (p.Name is "session" or "runId" or "unit") {
+            if (p.Name == "goodTargets") {
+                if (p.Value.ValueKind != JsonValueKind.Array || p.Value.GetArrayLength() is <1 or >8) throw new ArgumentException();
+                var entries = p.Value.EnumerateArray().Select(v => {
+                    if (v.ValueKind != JsonValueKind.Object) throw new ArgumentException();
+                    var keys=v.EnumerateObject().Select(x=>x.Name).ToArray();
+                    if (keys.Length!=2 || keys.Distinct().Count()!=2 || !keys.Contains("good") || !keys.Contains("amount")) throw new ArgumentException();
+                    if (v.GetProperty("good").ValueKind!=JsonValueKind.String || v.GetProperty("amount").ValueKind!=JsonValueKind.Number || !v.GetProperty("amount").TryGetInt32(out int amount)) throw new ArgumentException();
+                    string good=v.GetProperty("good").GetString()??"";
+                    if (!BuildingPolicy.ValidTemplate(good) || amount is <1 or >1000000) throw new ArgumentException();
+                    return good+":"+amount.ToString(System.Globalization.CultureInfo.InvariantCulture);
+                });
+                q.Add(p.Name,string.Join(";",entries));
+            }
+            else if (p.Name is "session" or "runId" or "unit") {
                 if (p.Value.ValueKind != JsonValueKind.String) throw new ArgumentException();
                 q.Add(p.Name, p.Value.GetString());
             }

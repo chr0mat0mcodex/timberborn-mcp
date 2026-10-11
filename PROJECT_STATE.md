@@ -1,5 +1,19 @@
 # Projektstand
 
+## Live abgenommen: Produktionslauf bis Zielbestand
+
+Explizit beauftragt: bis acht gleichzeitige Güterziele plus optional Forschung.
+Bestehendes `run_simulation_for` erweitert, feste Zeitlimits/automatische Pause
+beibehalten, vorhandenes Holz-Ziel kompatibel. Frische, begrenzte Manufakturdiagnose
+trennt native Zutaten-/Personal-/Kapazitäts- und Kraftbefunde von unbekannter
+Liefer- oder Windursache. Nach menschlichem Gate am 2026-10-11 live bestanden:
+zwei Güter plus Forschung gleichzeitig, automatische Pause nach 30,20 Sekunden,
+bereits erfülltes Forschungsziel ohne Zeitfortschritt, unbekanntes Gut ohne
+Laufanlage sowie Zutatenmangel mit Zeitlimit statt Zielerfolg. Historischer
+Abschlussbeleg bleibt bei frischer Diagnose eingefroren. Spiel pausiert an
+Tag 611, Stunde 12,09375; keine offenen Testläufe oder neuen Testbauten.
+[Vertrag, Nachweis und Grenzen](docs/production-target-runs.md).
+
 ## Begrenzt abgenommen: Bauarbeitszugang und automatische Ergänzung
 
 Nach menschlichem Gate am 2026-10-11 begrenzt live geprüft: fehlender Arbeitsweg

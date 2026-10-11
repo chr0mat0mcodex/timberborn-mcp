@@ -3,6 +3,8 @@ using Timberborn.TimeSystem;
 using Timberborn.SingletonSystem;
 using Timberborn.Goods;
 using Timberborn.ResourceCountingSystem;
+using Timberborn.ScienceSystem;
+using Timberborn.EntitySystem;
 
 namespace Timberborn.AgentBridge;
 
@@ -14,9 +16,11 @@ public sealed class SimulationControl
     private bool speedLocked;
     private readonly IGoodService goods;
     private readonly ResourceCountingService resources;
-    public SimulationControl(SpeedManager speed, IDayNightCycle time, EventBus events, IGoodService goods, ResourceCountingService resources) {
+    private readonly ScienceService science;
+    private readonly EntityRegistry entities;
+    public SimulationControl(SpeedManager speed, IDayNightCycle time, EventBus events, IGoodService goods, ResourceCountingService resources, ScienceService science, EntityRegistry entities) {
         this.speed = speed; this.time = time; this.events = events;
-        this.goods = goods; this.resources = resources;
+        this.goods = goods; this.resources = resources; this.science = science; this.entities = entities;
         events.Register(this);
     }
     [OnEvent]
@@ -49,17 +53,33 @@ public sealed class SimulationControl
         try { return goods.Goods.Contains("Log") ? resources.GetGlobalResourceCount("Log").AvailableStock : null; }
         catch { return null; } // Unknown stock stops a conditional run; never assume zero or met.
     }
+    private ProductionSample Sample(IEnumerable<string> ids, bool withScience) {
+        var sample = new ProductionSample();
+        foreach (string id in ids) {
+            try { sample.Goods[id] = goods.HasGood(id) ? resources.GetGlobalResourceCount(id).AvailableStock : null; }
+            catch { sample.Goods[id] = null; }
+        }
+        if (withScience) { try { sample.Science = science.SciencePoints; } catch { sample.Science = null; } }
+        return sample;
+    }
     public void Update() => runs.Tick(Hours, speed.CurrentSpeed, wall.Elapsed.TotalSeconds, s => speed.ChangeSpeed(s), speedLocked,
-        runs.StockConditionActive ? AvailableLogs() : null);
+        runs.StockConditionActive ? AvailableLogs() : null,
+        runs.ActiveProductionRun is { } active ? Sample(active.GoodTargets.Select(t=>t.Good),active.StopAtScience is not null) : null);
     public void Unload() { events.Unregister(this); runs.Unload(s => speed.ChangeSpeed(s)); }
     public object Run(SimulationRunRequest r)
     {
         if (r.Starts && (speedLocked || batchOwner is not null)) throw new BridgeRejectionException("state_conflict");
         var result = r.Starts ? runs.Start(r, Hours, speed.CurrentSpeed, wall.Elapsed.TotalSeconds, s => speed.ChangeSpeed(s),
-            r.StopAtAvailableLogs is null ? null : AvailableLogs())
+            r.StopAtAvailableLogs is null ? null : AvailableLogs(), production: Sample(r.GoodTargets.Select(t=>t.Good),r.StopAtScience is not null))
             : r.Route == "simulation-run-cancel" ? runs.Cancel(r.RunId, Hours, speed.CurrentSpeed, wall.Elapsed.TotalSeconds, s => speed.ChangeSpeed(s), speedLocked) : runs.Inspect(r.RunId);
-        return Newtonsoft.Json.Linq.JObject.FromObject(result, Newtonsoft.Json.JsonSerializer.Create(new Newtonsoft.Json.JsonSerializerSettings {
+        var payload = Newtonsoft.Json.Linq.JObject.FromObject(result, Newtonsoft.Json.JsonSerializer.Create(new Newtonsoft.Json.JsonSerializerSettings {
             ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() }));
+        if (result.HasProductionTargets) {
+            try { payload["productionDiagnostics"] = Newtonsoft.Json.Linq.JArray.FromObject(ProductionRunObservations.Read(entities,resources,result), Newtonsoft.Json.JsonSerializer.Create(new Newtonsoft.Json.JsonSerializerSettings { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() })); }
+            catch { payload["productionDiagnostics"] = null; }
+            payload["diagnosticsObservedGameHours"] = Hours;
+        }
+        return payload;
     }
     public object Observe() => new { currentSpeed = speed.CurrentSpeed, dayNumber = time.DayNumber,
         dayProgress = time.DayProgress, hoursPassedToday = time.HoursPassedToday };
