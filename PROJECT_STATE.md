@@ -1,5 +1,16 @@
 # Projektstand
 
+## 2026-10-11: Papierlager, Zusatzkraft und Bienenstock fertig
+
+Achtteilprojekt abgeschlossen: Papierlager (41,25,6), fünf Wegfelder, zweites
+Laufrad (44,21,6), Drehung 3, und Bienenstock (27,26,3). Lager Paper/accept
+separat rückgelesen, danach 30 Papier tatsächlich eingelagert. Beide Laufräder
+im Fabriknetz, tagsüber 106 Erzeugung bei 80 Bedarf. Fertige Zugänge bestätigt:
+Lager native Distanz 72, Zusatzlaufrad 78. Bienenstock fertig; Pflanzenwirkung
+mit aktueller Schnittstelle nicht gesondert nachgewiesen.
+Abdeckung 62/157 reguläre Typen, 95 offen. Tag 526, 12,46875 Uhr pausiert;
+kein offenes Projekt aus diesem Ausbau. Verbesserungen nur im Backlog notiert.
+
 ## 2026-10-11: Papierproduktion und Vogelscheuche nachgewiesen
 
 Papierfabrik (41,21,6), eigenes Laufrad (43,23,6), neun Wegfelder und anschließend

@@ -1,5 +1,17 @@
 # Backlog
 
+## Bienenstock und Zusatzkraft: Livebefunde 2026-10-11
+
+- **P2: Wirkungsbereiche strukturiert abfragen.** Bienenstock fertig, aber
+  aktuelle Tools belegen weder tatsächliche Effektzellen noch betroffene Pflanzen
+  oder aktive Wachstumsboni. Native Reichweite, wirksame Ziele und Grenzen
+  getrennt liefern; Bau allein nicht als landwirtschaftlichen Nutzen ausgeben.
+  Kontrollfälle: Pflanze innerhalb/außerhalb, leere Fläche und mehrere Effekte.
+- **Kraftvorschau-Befund bestätigt:** Auch Laufrad Drehung 3 östlich der
+  Papierfabrik meldet rotationMatches=false, ist fertig real verbunden und erhöht
+  das Netz von 53/80 auf 106/80. Unpassende Drehung 1 wurde vor Auftrag anhand
+  der Portposition und des fehlenden Eingangsanschlusses verworfen.
+
 ## Papierfabrik-Spieltest 2026-10-11
 
 - **P1: Sofort fertige Wege innerhalb eines begrenzten Projektaufrufs abarbeiten.**

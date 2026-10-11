@@ -2,6 +2,25 @@
 
 Laufender Spieltest vom 2026-10-10/11; kein Versionsabschluss.
 
+## Fortsetzung: Papierlager, zweites Laufrad und Bienenstock
+
+- Bienenstock für 400 Forschungspunkte freigeschaltet. Für obere Zufahrt zwei
+  tote Kiefern geräumt: Jungbaum unmittelbar entfernt, Vollbaum erst nach
+  Arbeiterauftrag und 16 Spielstunden separat als entfernt bestätigt.
+- Gemeinsamer Achtteilplan: kleines Lager (41,25,6), fünf Wege über (43..45,24,6)
+  bis (45,22,6), Laufrad (44,21,6), Drehung 3, Bienenstock (27,26,3).
+  Erste Laufraddrehung 1 hatte falschen Port und keinen verbundenen Eingang;
+  Plan vor Start korrigiert. Korrigierte Vorschau ohne verlorene Verbindungen.
+- Lager fertig, Paper/accept konfiguriert und separat rückgelesen; später
+  30 Papier im Lager. Fertiger Zugang Distanz 72. Zusatzlaufrad fertig/besetzt,
+  Zugang Distanz 78; reales gemeinsames Fabriknetz mit beiden Rädern bestätigt.
+  Tagsüber 106 Leistung bei 80 Bedarf, Überschuss 26; keine Nachtgarantie.
+- Bienenstock fertig und separat gelesen. Gesamtprojekt completed. Wirkung
+  auf Pflanzen nicht beobachtbar; entsprechende Diagnose im Backlog ergänzt.
+  Abdeckung 62/157 reguläre Typen, 95 offen, fünf Entwicklervorlagen ausgeschlossen.
+- Abschluss Tag 526, 12,46875 Uhr pausiert. Keine neuen offenen Projektteile;
+  keine Codeänderung, kein Build und kein Versionsabschluss in diesem Abschnitt.
+
 ## Fortsetzung 2026-10-11: Papierfabrik und Vogelscheuche
 
 - Obere trockene Baufläche geräumt: vier tote Kiefern im Fabrik-/Laufradgrundriss,
