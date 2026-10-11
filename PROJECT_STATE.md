@@ -1,5 +1,19 @@
 # Projektstand
 
+## Neue Sitzung 2026-10-11: drei weitere Typen und funktionierender Tank
+
+VerticalPowerShaft, MediumTank und SuspensionBridge1x1 fertig; alle drei Projekte
+completed. Abdeckung 59/157 reguläre Typen, 98 offen. Tank Water/accept, zuletzt
+175 Wasser; Nachbarhaus weiterhin zugänglich. Zusätzlicher oberer Holzfäller
+fertig/besetzt, fünf tote Vollbäume nachweislich geerntet. Zwei weitere zur Ernte
+markiert, noch nicht geerntet nachgewiesen. Alte gestoppte Sitzung ist beendet.
+Oberes Sägewerk wieder aktiv; unteres und Zahnradwerkstatt vorläufig pausiert.
+Freie Baustoffe: 8 Stämme, 15 Bretter, 7 Zahnräder. 54 Biber/54 belegte Betten,
+keine Obdachlosen. Tag 503, 14,71875 Uhr pausiert. Papierfabrik bleibt freigeschaltet,
+aber ungebaut; nächster größerer Ausbau braucht Materialaufbau.
+Regionalsuche lieferte erneut ungültigen gedrehten Tankplatz über Geländekante;
+native Prüfung verhinderte den Auftrag. Befund im Backlog, Details im Spieltestjournal.
+
 ## Fortsetzung 2026-10-11: Pegel fertig, Projektstopp diagnostiziert
 
 StreamGauge fertig und separat gelesen: 56/157 reguläre Typen, 101 offen.

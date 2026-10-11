@@ -920,3 +920,9 @@ Auswahl live geprüft; Grenzen und Nachweis stehen in PROJECT_STATE.md.
   Kontrollierten Neuplanungsabschluss nach bestätigten bestehenden Aufträgen
   entwickeln, damit ein diagnostizierter Stopp keinen Spielstand-Neuladevorgang
   erzwingt. Keine automatische Wiederholung unbestätigter Aufträge.
+
+- P1: Regionalsuche/gedrehter Grundriss erneut inkonsistent: MediumTank-Kandidat
+  (42,13,6), Drehung 2, ohne neue Wege vorgeschlagen. Native 3D-Prüfung lehnt ab;
+  tatsächlicher Grundriss enthält (41/42,12,6) über niedrigerem Gelände. Herkunft
+  der Kandidatenkoordinate und Drehtransformation vereinheitlichen, volle Auflage
+  prüfen. Ungeprüfte Suchtreffer nicht als belastbare Bauplätze darstellen.

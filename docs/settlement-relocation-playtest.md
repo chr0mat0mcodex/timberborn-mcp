@@ -175,3 +175,37 @@ Oberes Sägewerk erhält eigenes Laufrad; Bau-/Leistungsnachweis noch ausstehend
 - Abdeckung 56/157, 101 offen. Zuletzt 6 freie Stämme, 38 freie Bretter, 20 Zahnräder.
   54 belegte Betten, keine freien Betten oder Obdachlosen. Tag 499, 10,84375 Uhr pausiert.
   Zum Weiterbauen neue Spielsitzung durch Speichern/Neuladen erforderlich; kein Build-Gate.
+
+## Neue Sitzung: Kraftwelle, Tank und obere Holzernte
+
+- Nach menschlichem Neuladen neue Session bestätigt. Pegel vorhanden/fertig,
+  alte unbeauftragte Kraftwellen-ID nicht vorhanden. Neu geplante Kraftwelle
+  (44,12,6) fertig, Einzelprojekt completed; kein erneuter Schutzstopp.
+  Nur Bau nachgewiesen, keine produktive Kraftverbindung dieser Welle.
+- Mittlerer Tank (41,18,6) nach Räumung zweier toter Kiefern fertig; ein neues
+  Wegfeld (41,17,6), Projekt completed. Water/accept rückgelesen, anschließend
+  23 Wasser eingelagert. Nachbarhaus weiterhin zugänglich, Distriktdistanz 62.
+- Vorherigen Tankentwurf über Bestandswegen verworfen (24 verlorene Verbindungen
+  in Vorschau). Regionalsuche lieferte anschließend gedrehten Kandidaten über
+  Geländekante; native Prüfung wies ihn zurück. Konkreter Befund im Backlog.
+- Zusätzlicher kostenloser Holzfäller (40,19,6), Drehung 1, fertig und besetzt,
+  Einzelprojekt completed. 16 neue Fällmarkierungen auf oberem trockenen Bestand
+  rückgelesen. Fünf tote ertragreiche Vollbäume danach cutYieldRemoved=true;
+  freie Stämme 4 auf 14. Bestandsziel pausierte nach 12,3125 Spielstunden.
+  Westlicher Holzplatz dagegen 27 abgeerntete Reste, neun Objekte ohne Ertrag,
+  keine erntbaren Kandidaten in untersuchter 8×8-Fläche.
+- Kurze Hängebrücke (42,13,6), Drehung 2, nativ gültig und beauftragt,
+  Bauarbeiterzugang bestätigt. Fertigstellung noch ausstehend.
+- Brücke anschließend fertig und Projekt completed. Erst Stämme geliefert,
+  Bretter fehlten; oberes Sägewerk aktiviert, konkurrierende Zahnradproduktion
+  vorläufig pausiert, beide Änderungen rückgelesen. Nach 18 Spielstunden fertig.
+  Entranceloser Brückenbauteil: native Eingangswarnungen false, keine erfundene
+  Gebäudetür; keine neue durchgehende Verkehrsroute behauptet.
+- Abschließend 59/157 reguläre Typen, 98 offen. Tankbestand 175 Wasser.
+  54 Biber, 54 belegte Betten, keine Obdachlosen. Freie Baustoffe 8 Log, 15 Plank,
+  7 Gear. Tag 503, 14,71875 Uhr pausiert, keine offenen bekannten Bauprojekte.
+- Oberer Holzfäller nach erster Ernte mit Nothing to do in range. Zwei benachbarte
+  tote Vollkiefern mit je zwei Stämmen zusätzlich markiert und Markierungen
+  rückgelesen; deren Erntewirkung noch nicht bestätigt. Unteres Sägewerk und
+  Zahnradwerkstatt vorläufig pausiert, oberes Sägewerk läuft.
+  Screenshot der unveränderten Spieleransicht betrachtet, nicht gespeichert.
