@@ -17,6 +17,8 @@ public sealed class SimulationRunRequest
     public ProductionTarget[] GoodTargets { get; private set; } = Array.Empty<ProductionTarget>();
     public string[] BuildingIds { get; private set; } = Array.Empty<string>();
     public bool MeasureProduction { get; private set; }
+    // Legacy native callers retain diagnostics; the public status tool explicitly opts out.
+    public bool Diagnose { get; private set; } = true;
     public int? StopAtScience { get; private set; }
     public bool Starts => Route is "simulation-run-for" or "simulation-run-until";
     public bool Writes => Route != "simulation-run";
@@ -27,6 +29,7 @@ public sealed class SimulationRunRequest
         if (!Handles(path)) throw new ArgumentException();
         var r = new SimulationRunRequest { Route = path.Substring("/agent-api/v1/".Length) };
         var keys = new List<string> { "session", "runId" };
+        if (r.Route == "simulation-run" && q["diagnose"] is not null) keys.Add("diagnose");
         if (r.Starts) keys.AddRange(new[] { "speed", "expectedSpeed", "maxRealSeconds" });
         if (r.Route == "simulation-run-for") keys.AddRange(new[] { "duration", "unit" });
         if (r.Route == "simulation-run-for" && q["stopAtAvailableLogs"] is not null) keys.Add("stopAtAvailableLogs");
@@ -43,6 +46,8 @@ public sealed class SimulationRunRequest
         }
         int Integer(string key, int min, int max) { double n = Number(key, min, max); if (n != Math.Floor(n)) throw new ArgumentException(); return (int)n; }
         r.Session = Id("session"); r.RunId = Id("runId");
+        if (q["diagnose"] is not null)
+            r.Diagnose = Read("diagnose") switch { "true" => true, "false" => false, _ => throw new ArgumentException() };
         if (r.Starts) {
             r.Speed = Integer("speed", 1, 7); r.ExpectedSpeed = Integer("expectedSpeed", 0, 7);
             if (r.Speed is not (1 or 3 or 7) || r.ExpectedSpeed is not (0 or 1 or 3 or 7)) throw new ArgumentException();

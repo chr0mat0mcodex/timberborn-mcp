@@ -223,6 +223,17 @@ public sealed class ForestryRangeTests
             Assert.Equal("stopped", result["data"]!["state"]!.GetValue<string>());
             Assert.False(result["data"]!["readbackConfirmed"]!.GetValue<bool>());
             Assert.DoesNotContain(port.Objects[3].Position, port.Marks);
+            var saved = JsonSerializer.Deserialize<ForestryProtectionReport>(
+                File.ReadAllText(Path.Combine(dir, Session + "-protect-" + Action + ".json")), NativeJson.Options)!;
+            Assert.Equal("stopped", saved.State);
+            Assert.Equal(2, saved.Confirmed);
+            Assert.False(saved.ReadbackConfirmed);
+            Assert.Empty(Directory.EnumerateFiles(dir, "*.tmp"));
+            var replay = await ForestryTools.Execute(ForestryTools.Protect,
+                JsonSerializer.SerializeToElement(new ForestryProtectionRequest(Session, Session, "SyntheticPine", Action), NativeJson.Options),
+                true, port, dir, TestContext.Current.CancellationToken);
+            Assert.Equal(result["data"]!.ToJsonString(), replay["data"]!.ToJsonString());
+            Assert.Equal(2, port.Writes);
         } finally { if (Directory.Exists(dir)) Directory.Delete(dir, true); }
     }
 }

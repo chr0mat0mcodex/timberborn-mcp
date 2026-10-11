@@ -96,13 +96,13 @@ public sealed class SimulationControl
         CleanupBuildingProof();
         var payload = Newtonsoft.Json.Linq.JObject.FromObject(result, Newtonsoft.Json.JsonSerializer.Create(new Newtonsoft.Json.JsonSerializerSettings {
             ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() }));
-        if (result.HasProductionTargets) {
+        if (result.HasProductionTargets && r.Diagnose) {
             try { payload["productionDiagnostics"] = Newtonsoft.Json.Linq.JArray.FromObject(ProductionRunObservations.Read(entities,resources,result), Newtonsoft.Json.JsonSerializer.Create(new Newtonsoft.Json.JsonSerializerSettings { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() })); }
             catch { payload["productionDiagnostics"] = null; }
             payload["diagnosticsObservedGameHours"] = Hours;
         }
         // Enrich only explicit inspection: never a global endpoint scan on ticks/start/cancel.
-        if(r.Route=="simulation-run"&&result.BuildingIds.Length>0) {
+        if(r.Route=="simulation-run"&&r.Diagnose&&result.BuildingIds.Length>0) {
             payload["bottleneckObservedGameHours"]=Hours;
             try {
                 var query=BuildingQueryRequest.Parse("/agent-api/v1/building-operations",new System.Collections.Specialized.NameValueCollection {

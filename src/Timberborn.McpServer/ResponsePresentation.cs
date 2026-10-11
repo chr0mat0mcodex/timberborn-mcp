@@ -22,6 +22,13 @@ public static class ResponsePresentation
     {
         if (!Supports(tool.Name)) return tool;
         var input = JsonNode.Parse(tool.InputSchema.GetRawText())!.AsObject();
+        if (StatusWaitTools.Handles(tool.Name)) {
+            var properties=input["properties"]!.AsObject();
+            properties["waitSeconds"]=new JsonObject { ["type"]="integer", ["minimum"]=0, ["maximum"]=30, ["default"]=0 };
+            properties["after"]=new JsonObject { ["type"]="string", ["pattern"]="^[0-9a-f]{64}$", ["description"]="Letztes watch.changeToken desselben Laufs und derselben Sitzung; abweichender Zustand kehrt sofort zurück." };
+            properties["diagnose"]=new JsonObject { ["type"]="boolean", ["default"]=false, ["description"]="Einmalige frische Diagnose nach dem Statuswarten. false spart Inventar-/Wegdiagnose; detail=full allein aktiviert sie nicht." };
+            tool.Description = "0.47: leichte Statuslesung, standardmäßig diagnose=false. waitSeconds 0–30 wartet mit höchstens einer Folgelesung pro Sekunde bis Änderung, Blockade, Ende oder Wartefrist. Kein Auftrag/Tempoeingriff. watch enthält Änderungskennung, Wartegrund und Abfragezahlen; meta.observedAtUtc ist die letzte tatsächliche Beobachtung. diagnose=true ergänzt einmal am Ende frische Diagnose; beim Bauprojekt separat unter watch.diagnosis. detail steuert nur Ausgabeumfang. " + tool.Description;
+        }
         input["properties"]!.AsObject()["detail"] = new JsonObject {
             ["type"] = "string", ["enum"] = new JsonArray("compact", "full"), ["default"] = "compact",
             ["description"] = ProjectReportPresentation.Supports(tool.Name)
@@ -115,6 +122,8 @@ public static class ResponsePresentation
         }
         if(SimulationRunTools.Handles(name))RunReportPresentation.Compact(data);
         if(ProjectReportPresentation.Supports(name))ProjectReportPresentation.Compact(name,data);
+        if (name=="inspect_large_project" && copy["watch"]?["diagnosis"]?["data"] is JsonObject diagnosis)
+            ProjectReportPresentation.Compact("diagnose_large_project",diagnosis);
         return copy;
     }
 

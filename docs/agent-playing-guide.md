@@ -1,5 +1,18 @@
 # Spielanleitung für Agenten
 
+## 0.47: günstiger Status und Warten (begrenzt live abgenommen)
+
+inspect_simulation_run/inspect_large_project standardmäßig ohne frische Diagnose.
+waitSeconds=0 liefert sofort; 1–30 wartet auf Änderung/Blockade/Ende. Mit after
+letztes watch.changeToken übergeben. Zeitfortschritt allein weckt nicht.
+diagnose=true fordert einmal am Ende frische Diagnose an; detail=full allein tut
+das nicht. Beim Projekt steht diese separat mit eigener Zeit unter watch.diagnosis.
+watch.reason/changed/statusReads/diagnosticRequests und meta.observedAtUtc lesen;
+wait_limit ist kein Laufabschluss, not_requested keine Entwarnung. Fehler nicht
+blind wiederholen. Benutzerabbruch beendet nur das Warten, nicht den Spielauftrag.
+Manuelle Bauprojekte werden durch Warten nicht fortgesetzt. Keine engen Pollschleifen.
+[Vertrag, Grenzen und Pilot](lightweight-status-wait.md).
+
 ## 0.46: kompakte Bauprojektberichte (begrenzt live abgenommen)
 
 Große Projektwerkzeuge liefern standardmäßig Compact, detail=full die nativen

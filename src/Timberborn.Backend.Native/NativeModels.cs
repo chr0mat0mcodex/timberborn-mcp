@@ -74,7 +74,10 @@ public sealed record NativeOperations(bool PauseComponentPresent, NativePause? P
 public sealed record NativeBuilding(Guid Id, bool Found, NativeBuildingDetails? Details, string[] Limitations);
 public sealed record NativeMeta(string Backend, bool Simulated, string? SessionId, DateTimeOffset? ObservedAtUtc);
 public sealed record NativeFault(string Code, string Message, bool Retryable, string? Execution = null);
-public sealed record NativeResult<T>(int SchemaVersion, string Status, T? Data, NativeMeta Meta, NativeFault? Error);
+public sealed record StatusWatch(string ChangeToken, bool? Changed, string Reason, double WaitedSeconds,
+    int StatusReads, int DiagnosticRequests, string DiagnosisState, JsonElement? Diagnosis = null);
+public sealed record NativeResult<T>(int SchemaVersion, string Status, T? Data, NativeMeta Meta, NativeFault? Error,
+    [property: System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)] StatusWatch? Watch = null);
 public sealed record NativeSimulation(float CurrentSpeed, int DayNumber, float DayProgress, float HoursPassedToday);
 public sealed record NativeSpeedResult(int RequestedSpeed, float PreviousSpeed, bool MatchedImmediately,
     NativeSimulation Observation, string[] Limitations);

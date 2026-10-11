@@ -4,6 +4,10 @@ Status: Menschliches Gate und begrenzter Livepilot bestanden, einschließlich
 der abschließenden Beschreibungskorrektur. 0.43.0 ist im unten dokumentierten
 Umfang abgenommen. Frühere Fehler- und Gateabschnitte sind Historie.
 
+> Folgeänderung 0.47 begrenzt live abgenommen: öffentliche Simulationsstatuslesungen liefern frische
+> Diagnose nur noch mit diagnose=true. [Vertrag](lightweight-status-wait.md).
+> Die folgenden 0.43-Angaben beschreiben die ursprüngliche Abnahme.
+
 ## Vertrag
 
 `inspect_building_operations(session, ids, diagnose=true)` erweitert die bestehende

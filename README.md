@@ -5,6 +5,8 @@ Beobachtung und kontrollierte Eingriffe über reguläre Spielservices.
 
 ## Status
 
+**0.47.0 begrenzt live abgenommen:** [Günstige Statusabfragen und Warten](docs/lightweight-status-wait.md).
+
 **0.46.0 begrenzt live abgenommen:** [Kompakte Bauprojektberichte](docs/compact-project-reports.md).
 
 **0.45.0 begrenzt live abgenommen:** [Aktionsergebnisse und kompakte Laufberichte](docs/action-results-and-run-reports.md).

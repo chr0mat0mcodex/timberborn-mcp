@@ -1,5 +1,18 @@
 # Backlog
 
+## 0.47.0 — günstige Statuslesung und begrenztes Warten begrenzt live abgenommen
+
+inspect_simulation_run und inspect_large_project: waitSeconds 0–30, optional after,
+diagnose=false als Standard. Einfache Statuslesungen ohne teuren Diagnosescan;
+Diagnose auf Wunsch einmal nach dem Warten. Sessiongebundene Änderungskennung,
+Beobachtungszeit und Abfragezahlen, kein Schreibauftrag/Tempo-/Budgeteingriff.
+Menschliches Gate nach Waldprotokoll-Korrektur ausdrücklich bestätigt. Live 0.47:
+30,007 Sekunden / 30 leichte Reads ohne Diagnose; Abschluss nach weiteren
+11,274 Sekunden mit Pause. Bekannte Blockade sofort; explizite Diagnose genau
+einmal. Zweiteil-Projekt nach 1,024 Sekunden abgeschlossen, Full-Diagnose mit
+eigener Beobachtungszeit. Testwege entfernt, Bestandswege erhalten, Endpause.
+[Vertrag, Grenzen und Nachweis](docs/lightweight-status-wait.md).
+
 ## 0.46.0 — kompakte Bauprojektberichte begrenzt live abgenommen
 
 Nach Größenkorrektur menschliches Gate und Zweiteil-Livepilot bestanden.

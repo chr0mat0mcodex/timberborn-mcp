@@ -87,6 +87,11 @@ public sealed class ForestryTests
             var port = new Port { LostAck = lost };
             var first = await ForestryTools.Execute(ForestryTools.Mark, args, true, port, dir, TestContext.Current.CancellationToken);
             Assert.Equal(lost ? "unconfirmed" : "completed", first["data"]!["state"]!.GetValue<string>());
+            var saved = JsonSerializer.Deserialize<ForestryMarkReport>(File.ReadAllText(
+                Path.Combine(dir, Request.Session + "-" + request.ActionId + ".json")), NativeJson.Options)!;
+            Assert.Equal(lost ? "unconfirmed" : "completed", saved.State);
+            Assert.Equal(lost ? 0 : 1, saved.Confirmed);
+            Assert.Empty(Directory.EnumerateFiles(dir, "*.tmp"));
             await ForestryTools.Execute(ForestryTools.Mark, args, true, port, dir, TestContext.Current.CancellationToken);
             Assert.Equal(1, port.Writes);
             var changed = JsonSerializer.SerializeToElement(request with { Region = Request with { Depth = 1 } }, NativeJson.Options);

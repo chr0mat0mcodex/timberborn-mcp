@@ -46,7 +46,10 @@ public static class ForestryProtection
                 using (var stream = new FileStream(temp, FileMode.CreateNew, FileAccess.Write, FileShare.None)) {
                     JsonSerializer.Serialize(stream, receipt, NativeJson.Options); stream.Flush(true);
                 }
-                File.Move(temp, path, true);
+                // Match BuildBatchStore: lease serializes writers; preserve the
+                // committed receipt until replacement succeeds. No action retry.
+                if (File.Exists(path)) File.Replace(temp, path, null);
+                else File.Move(temp, path);
             } finally { if (File.Exists(temp)) File.Delete(temp); }
         }
         Save();

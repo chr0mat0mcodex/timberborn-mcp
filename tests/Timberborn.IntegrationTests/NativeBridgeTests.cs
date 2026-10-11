@@ -150,7 +150,7 @@ public sealed class NativeBridgeTests
                                 Guid.NewGuid(), "applied", r.Template == "Path", true, ["synthetic_test"])),
                             _ => throw new ArgumentException()
                         };
-                        return JsonSerializer.Serialize(new BridgeEnvelope<object>(1, session, DateTimeOffset.UtcNow, r.RecentActions is not null ? "0.40.0" : r.BuildingQuery is not null ? "0.39.0" : r.ProjectExecution is not null ? "0.26.0" : "0.22.0", data), NativeJson.Options);
+                        return JsonSerializer.Serialize(new BridgeEnvelope<object>(1, session, DateTimeOffset.UtcNow, r.SimulationRun is not null ? "0.47.0" : r.RecentActions is not null ? "0.40.0" : r.BuildingQuery is not null ? "0.39.0" : r.ProjectExecution is not null ? "0.26.0" : "0.22.0", data), NativeJson.Options);
                     });
                     await Task.Delay(5, pumpStop.Token);
                 }
@@ -442,6 +442,7 @@ public sealed class NativeBridgeTests
                 var query = new Dictionary<string,object?> { ["runId"]=runId, ["session"]=session };
                 var observed = await client.CallToolWithReasonAsync("inspect_simulation_run", query, cancellationToken:ct);
                 Assert.Equal("running", observed.StructuredContent!.Value.GetProperty("data").GetProperty("state").GetString());
+                Assert.Equal(0,observed.StructuredContent.Value.GetProperty("watch").GetProperty("diagnosticRequests").GetInt32());
                 var duplicate = await client.CallToolWithReasonAsync("run_simulation_for", startArgs, cancellationToken:ct);
                 Assert.Equal("run_id_used", duplicate.StructuredContent!.Value.GetProperty("error").GetProperty("code").GetString());
                 query["session"]=Guid.NewGuid().ToString("D");
@@ -451,6 +452,12 @@ public sealed class NativeBridgeTests
                 Assert.False((await client.CallToolWithReasonAsync("cancel_simulation_run", query, cancellationToken:ct)).IsError);
                 observed = await client.CallToolWithReasonAsync("inspect_simulation_run", query, cancellationToken:ct);
                 Assert.Equal("cancelled", observed.StructuredContent!.Value.GetProperty("data").GetProperty("state").GetString());
+                query["waitSeconds"]=30;
+                query["after"]=observed.StructuredContent.Value.GetProperty("watch").GetProperty("changeToken").GetString();
+                var terminal=await client.CallToolWithReasonAsync("inspect_simulation_run",query,cancellationToken:ct);
+                Assert.Equal("terminal",terminal.StructuredContent!.Value.GetProperty("watch").GetProperty("reason").GetString());
+                Assert.False(terminal.StructuredContent.Value.GetProperty("watch").GetProperty("changed").GetBoolean());
+                Assert.Equal(1,terminal.StructuredContent.Value.GetProperty("watch").GetProperty("statusReads").GetInt32());
                 Assert.Equal(0, currentSpeed);
             }
             var settingsRead=await client.CallToolWithReasonAsync("inspect_building_settings",new Dictionary<string,object?>{["id"]=settingsId,["session"]=session},cancellationToken:ct);

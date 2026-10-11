@@ -89,6 +89,7 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
         try
         {
             args=ActivityTools.WithoutReasoning(args);
+            if (StatusWaitTools.Handles(name)) return await StatusWaitTools.Invoke(client,name,args,ct);
             if(LargeProjectTools.Handles(name)) return await LargeProjectTools.Invoke(client,name,args,enableBuildingPlacement,ct,enableSpeedControl);
             if (name==RecentActionsTools.Name) return await RecentActionsTools.Invoke(client,args,ct);
             if (BuildingQueryTools.Handles(name)) return await BuildingQueryTools.Invoke(client,name,args,ct);
