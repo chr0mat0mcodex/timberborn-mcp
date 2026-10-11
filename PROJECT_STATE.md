@@ -1,5 +1,13 @@
 # Projektstand
 
+## 0.40.0 — Änderungsjournal begrenzt live abgenommen
+
+Menschliches Gate und Abschluss-Livepilot bestanden: 30 Einträge mit Bau/Entfernung,
+Gebäudepause, Tempo und Fertigstellung; MCP-Herkunft getrennt von unknown.
+Cursor/Filter/Fehlerfälle und Sessionwechsel geprüft, keine Erfassungsfehler.
+Rezept-/Lager-/Sollpersonal-/Abrissmarkierungsfelder noch nicht einzeln live belegt.
+[Nachweis und Grenzen](docs/recent-actions-journal.md).
+
 ## 0.39.0 — begrenzt live abgenommen
 
 Menschliches Gate und Such-/Sammelpilot bestanden: 15 Produktionsgebäude in einem

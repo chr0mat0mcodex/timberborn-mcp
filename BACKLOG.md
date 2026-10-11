@@ -1,5 +1,13 @@
 # Backlog
 
+## Abgenommen: 0.40.0 Änderungsjournal
+
+Beauftragter erster Umfang implementiert: Gebäude/Wege, Fertigstellung,
+Pause/Rezept/Lager/Sollpersonal/Abrissmarkierung und Tempo; Cursor, Filter,
+Ringpuffer und sichtbare Erfassungslücken. Gate und begrenzter Livepilot bestanden.
+Pflanzen/Flächen/Forschung und nachweisbare Mensch-/Simulationsherkunft bleiben
+Folgeumfang. [Vertrag und Pilot](docs/recent-actions-journal.md).
+
 ## Abgenommen: 0.39.0 Gebäudesuche und Sammeldiagnose
 
 Beauftragt und implementiert: native Vorlagen-/Status-/Ankerbereichsfilter,

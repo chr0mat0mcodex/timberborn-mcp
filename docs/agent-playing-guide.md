@@ -1,5 +1,17 @@
 # Spielanleitung für Agenten
 
+## 0.40.0 — Änderungen seit dem letzten Kontakt
+
+Bei „Überprüf mal meine letzten Aktionen“
+`inspect_recent_actions` mit frischer session, limit und gegebenenfalls after
+aufrufen. page.nextCursor auch bei leerem Ergebnis merken; Cursor je Session und
+Filter führen. Ohne Cursor letzte X Einträge, keine vollständige Vorgeschichte.
+Herkunft unknown nicht als menschlich ausgeben. gap/dropped, Startzeit,
+trackingComplete und observationFailures prüfen; bei Lücken aktuelle Objekte
+gezielt neu lesen. Konflikte erklären, menschliche Änderungen nicht automatisch
+zurücknehmen. Keine unbegrenzten Vollscans oder Pollschleifen.
+[Abdeckung und Pilot](recent-actions-journal.md).
+
 ## 0.39.0 live abgenommen — Such- und Diagnoseeffizienz
 
 `find_buildings` gezielt mit template, finished oder

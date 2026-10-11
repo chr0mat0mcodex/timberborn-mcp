@@ -6,6 +6,7 @@ namespace Timberborn.Bridge.Core;
 public sealed class BridgeRequest
 {
     public string Route { get; }
+    public RecentActionsRequest? RecentActions { get; private set; }
     public BuildingQueryRequest? BuildingQuery { get; private set; }
     public LargeProjectRequest? LargeProject { get; private set; }
     public ScreenshotRequest? Screenshot { get; private set; }
@@ -46,6 +47,7 @@ public sealed class BridgeRequest
 
     public static BridgeRequest Parse(string path, NameValueCollection query)
     {
+        if(path=="/agent-api/v1/recent-actions") {var r=RecentActionsRequest.Parse(query);return new BridgeRequest("recent-actions",session:r.Session){RecentActions=r};}
         if(BuildingQueryRequest.Handles(path)) {var r=BuildingQueryRequest.Parse(path,query);return new BridgeRequest(path.Substring("/agent-api/v1/".Length),session:r.Session){BuildingQuery=r};}
         if(LargeProjectRequest.Handles(path)) {var r=LargeProjectRequest.Parse(path,query);return new BridgeRequest("large-project",session:r.Session){LargeProject=r};}
         if(path == "/agent-api/v1/screenshot") { var r=ScreenshotRequest.Parse(query); return new BridgeRequest("screenshot",session:r.Session) { Screenshot=r }; }

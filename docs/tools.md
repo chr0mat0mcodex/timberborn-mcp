@@ -1,5 +1,13 @@
 # Native MCP-Werkzeuge
 
+## 0.40.0 — Änderungsjournal begrenzt live abgenommen
+
+`inspect_recent_actions(session, limit=32, after?, kind=all, source=all)`:
+letzte X Änderungen oder seit Cursor, maximal 64, 512 im sitzungsgebundenen
+Speicher. Vorher/Nachher, Objekt/Position, Sequenz und Aufnahme-/Spielzeit.
+Herkunft nur mcp/unknown; keine Behauptung menschlicher Urheberschaft.
+Cursor und Erfassungslücken ausdrücklich lesen. [Vertrag](recent-actions-journal.md).
+
 ## 0.39.0 — begrenzt live abgenommen
 
 - `find_buildings`: Filter template/finished/productionOnly/includePaths und
