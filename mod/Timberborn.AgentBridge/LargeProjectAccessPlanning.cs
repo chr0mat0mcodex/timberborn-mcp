@@ -22,8 +22,8 @@ public sealed partial class LargeProjectService
             throw new BridgeRejectionException("state_conflict");
         var district=District(request.DistrictId);
         var steps=request.Steps.Select(s=>new LargeProjectStep {Template=s.Template,X=s.X,Y=s.Y,Z=s.Z,Rotation=s.Rotation,DependsOn=s.DependsOn.ToArray()}).ToList();
-        var originals=steps.Select(s=>Resolve(s).GetSpec<BlockObjectSpec>().GetBlocks(Placement(s)).Take(65).ToArray()).ToArray();
-        if(originals.Any(c=>c.Length is <1 or >64)) throw new ArgumentException("project_occupied_extent_limit");
+        var originals=steps.Select(s=>Resolve(s).GetSpec<BlockObjectSpec>().GetBlocks(Placement(s)).Take(BuildingPolicy.MaxGeometryCells + 1).ToArray()).ToArray();
+        if(originals.Any(c=>c.Length is <1 or >BuildingPolicy.MaxGeometryCells)) throw new ArgumentException("project_occupied_extent_limit");
         var occupied=originals.SelectMany(c=>c).ToArray();
         int minX=Math.Max(0,occupied.Min(c=>c.Coordinates.x)-12), minY=Math.Max(0,occupied.Min(c=>c.Coordinates.y)-12);
         int maxX=Math.Min(4095,occupied.Max(c=>c.Coordinates.x)+12), maxY=Math.Min(4095,occupied.Max(c=>c.Coordinates.y)+12);
@@ -47,7 +47,7 @@ public sealed partial class LargeProjectService
                     catch(Exception ex) when((s.Template is "Stairs.Folktails" or "Platform.Folktails") && (ex is ArgumentException or BridgeRejectionException))
                     {unavailable.Add(s.Template);return Array.Empty<Block>();}
                 }
-                value=spec.GetBlocks(Placement(s)).Take(65).ToArray();
+                value=spec.GetBlocks(Placement(s)).Take(BuildingPolicy.MaxGeometryCells + 1).ToArray();
                 geometryCache.Add(key,value);
             }
             return value;
@@ -59,7 +59,7 @@ public sealed partial class LargeProjectService
         bool Clear(LargeProjectStep s,IEnumerable<LargeProjectStep> additional)
         {
             var shape=Geometry(s);
-            return shape.Length is >0 and <=64 && shape.All(c=>Inside(new(c.Coordinates.x,c.Coordinates.y,c.Coordinates.z))&&
+            return shape.Length is >0 and <=BuildingPolicy.MaxGeometryCells && shape.All(c=>Inside(new(c.Coordinates.x,c.Coordinates.y,c.Coordinates.z))&&
                 (!terrain.Underground(c.Coordinates)||c.Underground||c.OptionallyUnderground)&&
                 !blocks.GetObjectsAt(c.Coordinates).Any(b=>!b.IsPreview&&b.IsIntersecting(c))&&
                 !steps.Concat(additional).Where(other=>!Same(s,other)).Any(other=>Geometry(other).Any(c.IsIntersecting)));

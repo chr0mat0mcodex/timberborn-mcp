@@ -1,5 +1,18 @@
 # Spielanleitung für Agenten
 
+## Große Geometrie — regulärer Großbau live belegt
+
+Installiertes Paket über `inspect_build_options.geometryCellCount/maxGeometryCells`
+prüfen: bis 512 native Blöcke, auch feste `Single`/`Hex`-Vorlagen. Fehlende Felder
+bedeuten älteres Paket; 0.37.0 allein belegt die Erweiterung nicht. Native Formen
+und Untergrundzellen vollständig prüfen, keine gefüllten Bounding-Boxen erfinden.
+Großprojektgrenzen bleiben 32 Teile, 32×32, acht belegte Höhen. Sonderstandorte
+wie Mine bleiben Sache der nativen Validierung. Ohne ebenerdigen Eingang den
+expliziten Großprojektpfad verwenden. `supported` ist kein Bau-/Betriebsnachweis.
+DomedGarden samt automatischem Zugang live fertig; Hex-Platzierung, eingangslose
+Großgebäude und Sonderstandorte ausdrücklich zurückgestellt. Keine pauschale
+Abnahme aus dem Katalog ableiten. [Nachweis und Grenzen](large-building-geometry.md).
+
 ## Produktionsziele — gezielt live abgenommen
 
 Für Materialwartezeit `run_simulation_for` mit `goodTargets` (bis acht eindeutige

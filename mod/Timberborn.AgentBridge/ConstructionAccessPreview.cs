@@ -1,3 +1,4 @@
+using Timberborn.Bridge.Core;
 using Timberborn.BlockSystem;
 using Timberborn.BuildingsNavigation;
 using Timberborn.BuildingsReachability;
@@ -155,8 +156,8 @@ public sealed class ConstructionAccessPreview(INavigationRangeService ranges, IN
     public void ObservePreview(Sample s, IEnumerable<Block> candidate)
     {
         if (s.Reason != "captured") return;
-        try { var cells = candidate.Take(577).ToArray();
-            if (cells.Length > 576) throw new InvalidOperationException("candidate_detail_limit");
+        try { var cells = candidate.Take(BuildingPolicy.MaxProjectGeometryCells + 1).ToArray();
+            if (cells.Length > BuildingPolicy.MaxProjectGeometryCells) throw new InvalidOperationException("candidate_detail_limit");
             s.During = Read(s, true, cells, out var states); s.DetailDuring = states; }
         catch { s.Reason = "construction_range_unavailable"; }
     }

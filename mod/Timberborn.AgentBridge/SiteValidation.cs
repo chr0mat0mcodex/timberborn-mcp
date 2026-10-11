@@ -56,8 +56,8 @@ public sealed class SiteValidation(PreviewFactory factory, BlockObjectValidation
         var stepLost=new List<int>();bool buildingValid=false,connection=false;
         RoadProtection.Sample? sample=null;bool[]? withPreview=null;
         var candidate=template.GetSpec<BlockObjectSpec>().GetBlocks(new Placement(Pos(option["origin"]!),
-            new[]{Orientation.Cw0,Orientation.Cw90,Orientation.Cw180,Orientation.Cw270}[plan.Rotation],FlipMode.Unflipped)).Take(65).ToArray();
-        if(candidate.Length==0||candidate.Length>64)throw new ArgumentException("unsupported_geometry");
+            new[]{Orientation.Cw0,Orientation.Cw90,Orientation.Cw180,Orientation.Cw270}[plan.Rotation],FlipMode.Unflipped)).Take(BuildingPolicy.MaxGeometryCells + 1).ToArray();
+        if(candidate.Length==0||candidate.Length>BuildingPolicy.MaxGeometryCells)throw new ArgumentException("unsupported_geometry");
         projectAttempts++;
         try {
             sample=roads.Capture();
@@ -130,8 +130,8 @@ public sealed class SiteValidation(PreviewFactory factory, BlockObjectValidation
         if (!unlocks.Unlocked(building)) throw new BridgeRejectionException("template_locked");
         var rotation = new[] { Orientation.Cw0, Orientation.Cw90, Orientation.Cw180, Orientation.Cw270 }[request.Rotation];
         var placement = new Placement(new Vector3Int(request.X, request.Y, request.Z), rotation, FlipMode.Unflipped);
-        var cells = spec.GetBlocks(placement).Take(65).ToArray();
-        if (cells.Length == 0 || cells.Length > 64 || cells.Any(c => !terrain.Contains(c.Coordinates)))
+        var cells = spec.GetBlocks(placement).Take(BuildingPolicy.MaxGeometryCells + 1).ToArray();
+        if (cells.Length == 0 || cells.Length > BuildingPolicy.MaxGeometryCells || cells.Any(c => !terrain.Contains(c.Coordinates)))
             throw new ArgumentException("invalid_region");
         var beforeIds = RegisteredIds();
         var beforeStock = Stocks();

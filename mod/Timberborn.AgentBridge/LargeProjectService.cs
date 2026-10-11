@@ -152,10 +152,10 @@ public sealed partial class LargeProjectService(BuildingCatalog catalog, Preview
         if(faulted||speed.CurrentSpeed!=0||!ConstructionIsolation.Allows(entities, ownedSites))throw new BridgeRejectionException("state_conflict");
         var district=District(r.DistrictId);var order=LargeProjectRequest.Order(r.Steps);
         var templates=r.Steps.Select(Resolve).ToArray();
-        var cells=r.Steps.Select((s,i)=>templates[i].GetSpec<BlockObjectSpec>().GetBlocks(Placement(s)).Take(65).ToArray()).ToArray();
-        if(cells.Any(c=>c.Length is <1 or >64))throw new ArgumentException("project_occupied_extent_limit");
+        var cells=r.Steps.Select((s,i)=>templates[i].GetSpec<BlockObjectSpec>().GetBlocks(Placement(s)).Take(BuildingPolicy.MaxGeometryCells + 1).ToArray()).ToArray();
+        if(cells.Any(c=>c.Length is <1 or >BuildingPolicy.MaxGeometryCells))throw new ArgumentException("project_occupied_extent_limit");
         int minZ=cells.SelectMany(c=>c).Min(c=>c.Coordinates.z);
-        if(cells.Any(c=>c.Length is <1 or >64)||cells.SelectMany(c=>c).Any(c=>!blocks.Contains(c.Coordinates)||c.Coordinates.z-minZ>=8)||
+        if(cells.Any(c=>c.Length is <1 or >BuildingPolicy.MaxGeometryCells)||cells.SelectMany(c=>c).Any(c=>!blocks.Contains(c.Coordinates)||c.Coordinates.z-minZ>=8)||
             cells.SelectMany(c=>c).Max(c=>c.Coordinates.x)-cells.SelectMany(c=>c).Min(c=>c.Coordinates.x)>=32||
             cells.SelectMany(c=>c).Max(c=>c.Coordinates.y)-cells.SelectMany(c=>c).Min(c=>c.Coordinates.y)>=32)throw new ArgumentException("project_occupied_extent_limit");
         var baseline=roads.Capture();if(!baseline.Complete)throw new BridgeRejectionException("state_conflict");

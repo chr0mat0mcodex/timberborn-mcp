@@ -41,8 +41,8 @@ public sealed class PilotPlacement(SiteValidation validation, TemplateNameMapper
         var spec = template.GetSpec<BlockObjectSpec>();
         var rotation = new[] { Orientation.Cw0, Orientation.Cw90, Orientation.Cw180, Orientation.Cw270 }[request.Rotation];
         var placement = new Placement(position, rotation, FlipMode.Unflipped);
-        var footprint = spec.GetBlocks(placement).Take(65).ToArray();
-        if ((request.GenericBuilding ? footprint.Length is < 1 or > 64 : footprint.Length != (request.Template == "Path" ? 1 : 4)) ||
+        var footprint = spec.GetBlocks(placement).Take(BuildingPolicy.MaxGeometryCells + 1).ToArray();
+        if ((request.GenericBuilding ? footprint.Length is < 1 or > BuildingPolicy.MaxGeometryCells : footprint.Length != (request.Template == "Path" ? 1 : 4)) ||
             footprint.Any(cell => !blocks.Contains(cell.Coordinates) || blocks.GetObjectsAt(cell.Coordinates).Any(b => !b.IsPreview && (!request.GenericBuilding || b.IsIntersecting(cell)))))
             return Result("rejected");
         validation.Validate(request, out var allowed, out safety);

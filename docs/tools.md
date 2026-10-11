@@ -1,5 +1,15 @@
 # Native MCP-Werkzeuge
 
+## 512-Zellen-Geometrie — begrenzter Großbau-Nachweis
+
+`inspect_build_options` ergänzt `geometryCellCount` und `maxGeometryCells`.
+`inspect_building_capabilities` übernimmt das tatsächlich gemeldete Limit;
+fehlende neue Felder bleiben ältere Pakete. Vorprüfung/Objektlisten liefern bis
+512 native Zellen, Großprojekte behalten 32 Teile/32×32/acht Höhen.
+Kein neuer Werkzeugname. Hex nur als feste Einzelvorlage mit nativer Validierung.
+DomedGarden samt Zugang live fertig; native Hex-Platzierung und weitere
+Sondertests auf Nutzerentscheidung zurückgestellt. [Nachweis und Grenzen](large-building-geometry.md).
+
 ## Live abgenommen: Mehrfachziele für Simulationsläufe
 
 `run_simulation_for`: optional `goodTargets=[{good,amount},…]` (1–8 eindeutige

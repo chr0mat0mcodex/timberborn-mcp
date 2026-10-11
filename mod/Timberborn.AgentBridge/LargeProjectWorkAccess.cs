@@ -47,7 +47,7 @@ public sealed partial class LargeProjectService
         var template = Resolve(step);
         if (!RequiresWorkAccess(template, step.Template))
             return new() { state = "helper_runtime_check" };
-        var shape = template.GetSpec<BlockObjectSpec>().GetBlocks(Placement(step)).Take(65).ToArray();
+        var shape = BuildingPolicy.Geometry(template.GetSpec<BlockObjectSpec>().GetBlocks(Placement(step)));
         var candidates = WorkCells(shape, planned);
         var report = new WorkAccessReport { required = true, candidateCount = candidates.Length };
         if (candidates.Length == 0) { report.state = "no_work_cell"; return report; }

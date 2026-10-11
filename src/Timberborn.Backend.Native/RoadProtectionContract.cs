@@ -2,7 +2,7 @@ namespace Timberborn.Backend.Native;
 
 public static class RoadProtectionContract
 {
-    public static void Validate(NativeRoadProtection? d, bool applied, bool requireBaseline = false, bool requireProbeKinds = false, bool requireConstructionPreview = false, bool requireConstructionDetails = false, bool requireConstructionEndpoints = false, bool requireConstructionQueryControls = false, int maxCandidateCells = 64)
+    public static void Validate(NativeRoadProtection? d, bool applied, bool requireBaseline = false, bool requireProbeKinds = false, bool requireConstructionPreview = false, bool requireConstructionDetails = false, bool requireConstructionEndpoints = false, bool requireConstructionQueryControls = false, int maxCandidateCells = Timberborn.Bridge.Core.BuildingPolicy.MaxGeometryCells)
     {
         if (d?.ConstructionAccessPreview is { } construction) ConstructionPreviewContract.Validate(construction);
         if (requireConstructionEndpoints || requireConstructionQueryControls)

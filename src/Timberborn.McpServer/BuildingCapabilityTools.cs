@@ -145,6 +145,9 @@ public static class BuildingCapabilityTools
         var e = await client.BuildingCatalog(BridgeRequest.Parse("/agent-api/v1/building-catalog", query), ct);
         if (e.SessionId != session) throw new BridgeRejectionException("state_conflict");
         var report = Describe(e.BridgeVersion, e.Data.Faction, serverEnabled);
+        // Same-version packages exist: prefer the observed catalogue budget to a version guess.
+        if (report.ProfileState == "known" && e.Data.Items.FirstOrDefault()?.MaxGeometryCells is { } observedLimit)
+            report = report with { MaxObjectFootprintCells = observedLimit };
         return (JsonObject)JsonSerializer.SerializeToNode(new NativeResult<BuildingCapabilityReport>(1, "ok", report,
             new("native", false, e.SessionId, e.ObservedAtUtc), null), NativeJson.Options)!;
     }

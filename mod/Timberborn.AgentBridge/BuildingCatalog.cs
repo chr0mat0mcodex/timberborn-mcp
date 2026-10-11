@@ -41,7 +41,7 @@ public sealed class BuildingCatalog(TemplateService service, FactionService fact
                 unlocked = unlocks.Unlocked(building), supported = reasons.Length == 0, unsupportedReasons = reasons,
                 layout = p.Layout.ToString(), toolShape = p.ToolShape.ToString(), toolGroup = p.ToolGroupId,
                 size = Vec(b.Size), entrance = b.Entrance.HasEntrance ? Vec(b.Entrance.Coordinates) : null,
-                placeFinished = building.PlaceFinished,
+                placeFinished = building.PlaceFinished, geometryCellCount = b.Blocks.Length, maxGeometryCells = BuildingPolicy.MaxGeometryCells,
                 costs = building.BuildingCost.Select(c => new { id = c.Id, required = c.Amount,
                     availableGlobally = resources.GetGlobalResourceCount(c.Id).AvailableStock }).ToArray() };
         }).ToArray();

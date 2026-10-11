@@ -30,15 +30,15 @@ public sealed class SpatialObservations(EntityRegistry entities, TemplateNameMap
         {
             var block = e.GetComponent<BlockObject>();
             var template = e.GetComponent<TemplateSpec>();
-            var occupied = block.PositionedBlocks.GetOccupiedCoordinates().Take(65).ToArray();
+            var occupied = block.PositionedBlocks.GetOccupiedCoordinates().Take(BuildingPolicy.MaxGeometryCells + 1).ToArray();
             return new { id = e.EntityId, template = template.TemplateName, position = Vec(block.Coordinates),
                 orientation = block.Orientation.ToString(), finished = block.IsFinished,
                 entrance = block.HasEntrance ? Vec(block.PositionedEntrance.Coordinates) : null,
-                occupiedCells = occupied.Take(64).Select(Vec).ToArray(), cellsTruncated = occupied.Length > 64 };
+                occupiedCells = occupied.Take(BuildingPolicy.MaxGeometryCells).Select(Vec).ToArray(), cellsTruncated = occupied.Length > BuildingPolicy.MaxGeometryCells };
         }).ToArray();
         return new { scope = "buildings_and_paths", offset = request.Offset, limit = request.Limit,
             total = candidates.Length, items, hasMore = request.Offset + items.Length < candidates.Length,
-            limitations = new[] { "pages_are_fresh_observations", "no_district_reachability", "occupied_cells_capped_at_64" } };
+            limitations = new[] { "pages_are_fresh_observations", "no_district_reachability", "occupied_cells_capped_at_512" } };
     }
 
     public object Catalog() => new { faction = faction.Current.Id,
@@ -72,8 +72,8 @@ public sealed class SpatialObservations(EntityRegistry entities, TemplateNameMap
         var placement = new Placement(new Vector3Int(request.X, request.Y, request.Z), rotation, FlipMode.Unflipped);
         var geometry = spec.GetBlocks();
         var positioned = PositionedBlocks.From(geometry, placement);
-        var occupied = positioned.GetOccupiedAndUndergroundBlocks().Take(65).ToArray();
-        if (occupied.Length == 0 || occupied.Length > 64) throw new ArgumentException("unsupported_geometry");
+        var occupied = positioned.GetOccupiedAndUndergroundBlocks().Take(BuildingPolicy.MaxGeometryCells + 1).ToArray();
+        if (occupied.Length == 0 || occupied.Length > BuildingPolicy.MaxGeometryCells) throw new ArgumentException("unsupported_geometry");
         var reasons = new HashSet<string>();
         if (!request.GenericBuilding && !Compatible(request.Template)) reasons.Add("wrong_faction");
         if (!template.UsableWithCurrentFeatureToggles || !template.GetSpec<PlaceableBlockObjectSpec>().UsableWithCurrentFeatureToggles)

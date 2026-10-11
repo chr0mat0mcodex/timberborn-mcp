@@ -1,5 +1,20 @@
 # Projektstand
 
+## Begrenzt live abgenommen: große Gebäude bis 512 native Blöcke
+
+Menschliches Gate und regulärer DomedGarden-Großbau am 2026-10-11 bestanden:
+zwölfteiliger Gesamtplan mit zwei Treppen und neun Wegen autonom fertig,
+Bauarbeiterzugang und fertiger Eingang separat bestätigt; Ledger freigegeben.
+Kataloglimit 512 und große/gedrehte Hex-Geometrie lesend nachgewiesen.
+32 Teile, 32×32 und acht belegte Höhen bleiben unverändert.
+Nutzerentscheidung: Großbau-Nachweis sichern, Sondertests zurückstellen.
+Keine pauschale Abnahme der sechs Vorlagen: eingangslose Gebäude, native
+Hex-Platzierung und besondere Standortkontrollen bleiben offen. Gemessener
+Forschungsaufwand dafür etwa 12–13 reale Stunden ohne weiteren Ausbau.
+Spiel pausiert, Veredelung aktiv. DomedGarden und elf Zugangsteile stehen noch;
+Rückbau offen, keine Rückgewinnungsrohstoffe gelöscht.
+[Umfang, Nachweis und Grenzen](docs/large-building-geometry.md).
+
 ## Live abgenommen: Produktionslauf bis Zielbestand
 
 Explizit beauftragt: bis acht gleichzeitige Güterziele plus optional Forschung.

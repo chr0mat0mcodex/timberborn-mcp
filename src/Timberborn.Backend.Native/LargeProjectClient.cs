@@ -67,7 +67,7 @@ public sealed partial class NativeClient
                     foreach(var part in parts) ConstructionWorkAccessContract.Validate(part.GetProperty("constructionWorkAccess"),d.GetProperty("pilotEligible").GetBoolean());
                 }
                 var safety=d.GetProperty("roadProtection").Deserialize<NativeRoadProtection>(NativeJson.Options);
-                RoadProtectionContract.Validate(safety,false,requireBaseline:true,requireProbeKinds:true,requireConstructionPreview:true,maxCandidateCells:2048);
+                RoadProtectionContract.Validate(safety,false,requireBaseline:true,requireProbeKinds:true,requireConstructionPreview:true,maxCandidateCells:BuildingPolicy.MaxProjectGeometryCells);
                 foreach(var link in d.GetProperty("powerLinks").EnumerateArray()) {
                     int from=link.GetProperty("fromStep").GetInt32();if(from<0||from>=parts.Length)throw new InvalidDataException();
                     CheckVector(link.GetProperty("from"));CheckVector(link.GetProperty("to"));_=link.GetProperty("rotationMatches").GetBoolean();

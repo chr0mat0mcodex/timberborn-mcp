@@ -16,10 +16,15 @@ public sealed class GenericBuildingTests
     [InlineData("TwoSegmentLine", "Square", false, false, 1, true)]
     [InlineData("SideLine", "Square", false, false, 2, true)]
     [InlineData("Half", "Square", false, false, 12, false)]
-    [InlineData("Single", "Hex", false, false, 12, false)]
+    [InlineData("Single", "Hex", false, false, 12, true)]
     [InlineData("Single", "Square", true, false, 12, false)]
     [InlineData("Single", "Square", false, true, 12, false)]
-    [InlineData("Single", "Square", false, false, 65, false)]
+    [InlineData("Single", "Square", false, false, 65, true)]
+    [InlineData("Single", "Hex", false, false, 512, true)]
+    [InlineData("Rectangle", "Hex", false, false, 12, false)]
+    [InlineData("Single", "Triangle", false, false, 12, false)]
+    [InlineData("Single", "Square", false, false, 513, false)]
+    [InlineData("Single", "Square", false, false, 0, false)]
     public void SpecialFormsRequireExplicitSupport(string layout,string shape,bool side,bool dev,int cells,bool allowed) =>
         Assert.Equal(allowed,BuildingPolicy.UnsupportedReasons(layout,shape,side,dev,cells).Length==0);
 

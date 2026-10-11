@@ -1,5 +1,24 @@
 # Backlog
 
+## Großbau-Nachweis gesichert; Sondertests zurückgestellt
+
+Bis 512 native Blockeinträge durch Katalog, Baupfade und Zugangsplanung;
+32 Teile/32×32/acht Höhen unverändert. Menschliches Gate und DomedGarden mit elf
+automatisch ergänzten Zugangsteilen am 2026-10-11 bestanden. Reale Bauarbeiter-
+reichweite und fertiger Eingang separat belegt. Feste Single/Hex-Geometrie ist
+vorbereitet und lesend geprüft, native Platzierung nicht abgenommen.
+Nach gemessenem Forschungsaufwand von etwa 12–13 realen Stunden ausdrücklich
+zurückgestellt: Großgebäude ohne Eingang, native Hex-Platzierung mit isolierter
+Außenzellen-Negativkontrolle sowie Mine auf ungeeignetem Standort.
+Kein automatischer Kolonieausbau dafür. Testbau und elf Zugangshelfer stehen noch;
+bei späterem Rückbau Rohstoffe regulär einsammeln, nicht löschen.
+[Umfang und begrenzter Nachweis](docs/large-building-geometry.md).
+
+Livebeobachtung: `find_buildings`-Beschreibung nennt noch 64 Zellen, obwohl der
+neue Transport 512 unterstützt. Bei nächster Quellkorrektur Beschreibung angleichen.
+Testvorbereitung sollte Forschung, Materialkapazität, freie Arbeitskräfte und
+große freie Grundfläche vor der Pilotwahl gemeinsam bewerten.
+
 ## Abgenommen: Produktionslauf bis Zielbestand
 
 Nach ausdrücklicher Umfangsauswahl: bis acht Güter und optional Forschung,

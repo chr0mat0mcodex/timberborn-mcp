@@ -62,13 +62,13 @@ public sealed partial class NativeClient : IDisposable
     public async Task<BridgeEnvelope<NativeObjects>> Objects(BridgeRequest r, CancellationToken ct)
     {
         if (r.Route != "objects") throw new ArgumentException();
-        var result = await Get<NativeObjects>($"objects?offset={r.Offset}&limit={r.Limit}", ct);
+        var result = await Get<NativeObjects>($"objects?offset={r.Offset}&limit={r.Limit}", ct, maxResponseBytes: 1024 * 1024);
         var d = result.Data;
         if (d.Scope != "buildings_and_paths" || d.Offset != r.Offset || d.Limit != r.Limit || d.Total < 0 ||
             d.Items is null || d.Items.Length != Math.Min(r.Limit, Math.Max(0, d.Total - r.Offset)) ||
             d.HasMore != ((long)r.Offset + d.Items.Length < d.Total) || d.Limitations is null ||
             d.Items.Any(o => o is null || o.Id == Guid.Empty || string.IsNullOrEmpty(o.Template) || o.Template.Length > 160 ||
-                o.Position is null || o.OccupiedCells is null || o.OccupiedCells.Length > 64 || o.OccupiedCells.Any(p => p is null)) ||
+                o.Position is null || o.OccupiedCells is null || o.OccupiedCells.Length > BuildingPolicy.MaxGeometryCells || o.OccupiedCells.Any(p => p is null)) ||
             d.Items.Select(o => o.Id).Distinct().Count() != d.Items.Length)
             throw new InvalidDataException("Invalid objects");
         return result;
@@ -109,7 +109,7 @@ public sealed partial class NativeClient : IDisposable
         var d = result.Data;
         if (d.Template != r.Template || d.Origin != new Position(r.X, r.Y, r.Z) || d.Rotation != r.Rotation ||
             d.GameValidated || d.Assessment is not ("blocked" or "requires_game_validation") || d.Reasons is null ||
-            (d.Assessment == "blocked") != (d.Reasons.Length > 0) || d.Cells is null || d.Cells.Length is < 1 or > 64 ||
+            (d.Assessment == "blocked") != (d.Reasons.Length > 0) || d.Cells is null || d.Cells.Length is < 1 or > BuildingPolicy.MaxGeometryCells ||
             d.Cells.Any(c => c is null || c.Position is null || c.SupportRule is null) || !ValidCosts(d.Costs) || d.Limitations is null)
             throw new InvalidDataException("Invalid site precheck");
         return result;

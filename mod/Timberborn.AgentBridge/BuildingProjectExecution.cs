@@ -107,8 +107,8 @@ public sealed class BuildingProjectExecution(SiteValidation validation, RoadProt
         var template = catalog.Resolve(step.Template);
         var spec = template.GetSpec<BlockObjectSpec>();
         var placement = new Placement(Position(step), Rotation(step), FlipMode.Unflipped);
-        var footprint = spec.GetBlocks(placement).Take(65).ToArray();
-        if (footprint.Length is < 1 or > 64 || entities.Entities.Any(e => e.EntityId.ToString("D") == step.EntityId) ||
+        var footprint = spec.GetBlocks(placement).Take(BuildingPolicy.MaxGeometryCells + 1).ToArray();
+        if (footprint.Length is < 1 or > BuildingPolicy.MaxGeometryCells || entities.Entities.Any(e => e.EntityId.ToString("D") == step.EntityId) ||
             footprint.Any(c => !blocks.Contains(c.Coordinates) || blocks.GetObjectsAt(c.Coordinates).Any(b => !b.IsPreview && b.IsIntersecting(c))))
             throw new InvalidOperationException();
         placers.GetMatchingPlacer(spec).Place(new EntitySetup.Builder(template.Blueprint).SetId(Guid.Parse(step.EntityId)), placement);

@@ -3,7 +3,7 @@ namespace Timberborn.Backend.Native;
 
 public sealed record BuildingOption(string Template, bool Available, bool Unlocked, bool Supported,
     string[] UnsupportedReasons, string Layout, string ToolShape, string ToolGroup, Position Size, Position? Entrance,
-    bool PlaceFinished, NativeCost[] Costs);
+    bool PlaceFinished, NativeCost[] Costs, int? GeometryCellCount = null, int? MaxGeometryCells = null);
 public sealed record NativeBuildingCatalog(string Faction, int Offset, int Limit, int Total, BuildingOption[] Items,
     bool HasMore, string[] Limitations);
 
@@ -19,6 +19,8 @@ public sealed partial class NativeClient
             d.HasMore != ((long)r.Offset+d.Items.Length < d.Total) || d.Limitations is null ||
             d.Items.Any(i => i is null || !BuildingPolicy.ValidTemplate(i.Template) || i.Size is null ||
                 i.Size.X <= 0 || i.Size.Y <= 0 || i.Size.Z <= 0 || i.UnsupportedReasons is null ||
+                (i.GeometryCellCount is null) != (i.MaxGeometryCells is null) || i.GeometryCellCount is < 0 || i.MaxGeometryCells is < 1 or > BuildingPolicy.MaxGeometryCells ||
+                i.Supported && (i.GeometryCellCount is 0 || i.GeometryCellCount > i.MaxGeometryCells) ||
                 i.Supported != (i.UnsupportedReasons.Length == 0) || string.IsNullOrEmpty(i.Layout) ||
                 string.IsNullOrEmpty(i.ToolShape) || i.ToolGroup is null || !ValidCosts(i.Costs)) ||
             d.Items.Select(i => i.Template).Distinct().Count() != d.Items.Length)

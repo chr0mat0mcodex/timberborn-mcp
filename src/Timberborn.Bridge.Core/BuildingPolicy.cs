@@ -2,6 +2,17 @@ namespace Timberborn.Bridge.Core;
 
 public static class BuildingPolicy
 {
+    public const int MaxGeometryCells = 512;
+    public const int MaxProjectGeometryCells = 32 * MaxGeometryCells;
+
+    // Preserve native sparse/underground blocks; never replace a shape with its bounding box.
+    public static T[] Geometry<T>(IEnumerable<T> blocks)
+    {
+        var cells = blocks.Take(MaxGeometryCells + 1).ToArray();
+        if (cells.Length is < 1 or > MaxGeometryCells) throw new ArgumentException("unsupported_geometry");
+        return cells;
+    }
+
     public static bool ValidTemplate(string? value) => value is not null && value.Length is >= 1 and <= 160 &&
         value.All(c => c is >= 'A' and <= 'Z' or >= 'a' and <= 'z' or >= '0' and <= '9' or '.' or '_' or '-');
 
@@ -11,10 +22,10 @@ public static class BuildingPolicy
         // SideLine and TwoSegmentLine describe drag gestures, not a ban on one fixed object.
         // Placement still uses exactly one blueprint footprint and the normal game validators.
         if (layout is not ("Single" or "Rectangle" or "SideLine" or "TwoSegmentLine")) reasons.Add("special_layout");
-        if (shape != "Square") reasons.Add("special_tool_shape");
+        if (shape != "Square" && !(shape == "Hex" && layout == "Single")) reasons.Add("special_tool_shape");
         if (terrainSide) reasons.Add("terrain_side_attachment");
         if (developerTool) reasons.Add("developer_tool");
-        if (cells is < 1 or > 64) reasons.Add("geometry_exceeds_64_cells");
+        if (cells is < 1 or > MaxGeometryCells) reasons.Add("geometry_exceeds_512_cells");
         return reasons.ToArray();
     }
 }
