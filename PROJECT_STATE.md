@@ -1,11 +1,23 @@
 # Projektstand
 
-## Dringender Entwicklungsauftrag vorgemerkt: vollständige Bauchargen
+## 2026-10-11: Autonome Bauchargen — begrenzte Liveabnahme bestanden
 
-Nutzer verlangt am 2026-10-11: alle Bauaufträge gesammelt erteilen, anschließend
-ein Simulationslauf bis zur Fertigstellung der ganzen Charge; weniger
-Agenteninteraktionen, keine manuelle Fortsetzung pro Bauteil. Als P0 mit
-Abnahmekriterien im Backlog dokumentiert. **Noch nicht implementieren.**
+Nach ausdrücklichem Go: `run_large_project` implementiert. Die Mod beauftragt
+den gesamten unabhängigen Satz pausiert, startet danach die Simulation und
+übernimmt explizite Stütz-/Zugangsabhängigkeiten bis fertig oder blockiert.
+Kein Advance je Bauteil; feste Zeitbudgets, bestätigte Abschlusspause und
+kein Replay bei Verbindungsverlust. Alter manueller Ablauf bleibt kompatibel.
+Nach menschlichem Gate/Bereitmeldung und einmaliger Codex-Katalogübernahme:
+Fünfteiliger Höhenbau in 34,19 Sekunden, neunteilige Weg-/Turbinen-/Lagercharge
+in 27,90 Sekunden vollständig fertig und jeweils automatisch pausiert.
+Zwei ausführende Starts für 14 Teile, kein Advance oder separater Simulationslauf.
+Beide Lagereingänge separat zugänglich; fertige Turbine separat bestätigt.
+Negativkontrolle auf Hauptweg: elf gefährdete Verbindungen, Start abgewiesen.
+Ein-Stunden-Kontrolle: blocked/game_time_limit mit Pause; abhängiges Lager fehlt
+nachweislich. Eine unfertige Testturbine bleibt, terminales Ledger sperrt weitere
+Großprojekte dieser Sitzung. Spiel pausiert. Keine Liveaussage zu 32 Teilen/acht
+Ebenen, Kraftbetrieb oder Wiederanschluss mitten im aktiven Lauf.
+[Technik, Grenzen und konkreter Pilot](docs/autonomous-construction-batches.md).
 
 ## 2026-10-11: Produktionsketten angelaufen, alle Laufräder ersetzt
 

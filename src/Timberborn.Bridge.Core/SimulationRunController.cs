@@ -31,13 +31,15 @@ public sealed class SimulationRunController
     private double started, phaseStarted, lastProgress, lastHours;
     private float initialSpeed;
     private bool pauseAfterUnlock, wasLocked;
+    private bool deferredStart;
     private string finishState = "completed", finishReason = "target_reached";
 
     public SimulationRunStatus Inspect(string id) => history.TryGetValue(id, out var r) ? r : throw new BridgeRejectionException("run_not_found");
 
     public bool StockConditionActive => active?.StopAtAvailableLogs is not null;
+    public bool HasActiveRun => active is not null;
 
-    public SimulationRunStatus Start(SimulationRunRequest r, double hours, float speed, double now, Action<int> changeSpeed, int? availableLogs = null)
+    public SimulationRunStatus Start(SimulationRunRequest r, double hours, float speed, double now, Action<int> changeSpeed, int? availableLogs = null, bool deferSpeedStart = false)
     {
         if (!r.Starts) throw new ArgumentException();
         ValidateClock(hours, speed, now);
@@ -52,14 +54,24 @@ public sealed class SimulationRunController
         history.Add(r.RunId, active);
         started = phaseStarted = lastProgress = now; lastHours = hours; initialSpeed = speed;
         pauseAfterUnlock = wasLocked = false;
+        deferredStart = deferSpeedStart;
         var result = active;
         if (r.StopAtAvailableLogs is { } threshold && availableLogs >= threshold) {
             active.StockTargetReached = true; BeginPause("completed", "stock_target_reached", now, changeSpeed);
         }
         else if (hours >= target) BeginPause("completed", "target_reached", now, changeSpeed);
+        else if (deferredStart) active.Reason = "awaiting_dispatch";
         else RequestSpeed(r.Speed, changeSpeed);
         Observe(result, hours, speed, now);
         return result;
+    }
+
+    // A construction batch reserves the controller while paused, dispatches, then starts once.
+    public void BeginDeferred(string id, double now, Action<int> changeSpeed)
+    {
+        if (active is null || active.RunId != id || active.State != "starting" || !deferredStart) throw new BridgeRejectionException("state_conflict");
+        deferredStart = false; phaseStarted = now; active.Reason = "awaiting_speed";
+        RequestSpeed(active.RequestedSpeed, changeSpeed);
     }
 
     public void Tick(double hours, float speed, double now, Action<int> changeSpeed, bool speedLocked = false, int? availableLogs = null)
@@ -67,6 +79,12 @@ public sealed class SimulationRunController
         if (active is null) return;
         ValidateClock(hours, speed, now);
         var r = active; Observe(r, hours, speed, now);
+        if (deferredStart && r.State == "starting" && !speedLocked)
+        {
+            if (speed != initialSpeed) Finish("interrupted", "speed_changed");
+            else if (now - started >= r.MaxRealSeconds) BeginPause("failed", "real_time_limit", now, changeSpeed);
+            return;
+        }
         if (speedLocked) {
             wasLocked = true;
             if (r.State == "pausing") { pauseAfterUnlock = true; return; }

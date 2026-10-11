@@ -2,8 +2,11 @@
 
 ## P0 — Dringend: vollständige Baucharge beauftragen, dann bis fertig simulieren
 
-Expliziter Nutzerauftrag vom 2026-10-11: **Noch nicht implementieren, nur
-festhalten.** Der bisherige Ablauf mit einem Auftrag, Simulationslauf,
+Explizites Umsetzungs-Go vom 2026-10-11: **Begrenzt live abgenommen.** Zwei
+autonome Chargen mit zusammen 14 fertigen Teilen, Wegblockade und Zeitlimit
+geprüft. Neuer `run_large_project`-Dispatcher in der Mod;
+[Vertrag und Abnahmeplan](docs/autonomous-construction-batches.md).
+Der bisherige Ablauf mit einem Auftrag, Simulationslauf,
 Rücklesung und erneutem Agentenaufruf pro Bauteil ist zu interaktionsintensiv.
 
 Gewünschtes Zielverhalten:
@@ -29,6 +32,12 @@ weiterem Gebäude; ein Chargenstart, keine Agenteninteraktion pro Bauteil,
 Fertigmeldung für die gesamte Charge. Blockierter Kontrollfall meldet sich
 gezielt. Anzahl externer MCP-Aufrufe gegen den aktuellen Ablauf vergleichen.
 Priorität vor weiterer Skalierung des bisherigen Einzelauftrag-Verfahrens.
+
+Ausführung erfüllt im begrenzten Pilot; offene Folgeverbesserungen: Wiederanschluss
+mitten im aktiven Lauf gezielt live belegen, Material-/Zugangsblockaden genauer
+diagnostizieren, terminale Testledger kontrolliert abschließen können und
+Standortsuche/Räumung an Gesamtpläne anbinden. Keine automatische Wiederaufnahme
+gestoppter oder unbestätigter Aufträge. Details/Nachweis im verlinkten Bericht.
 
 ## Produktionsketten: Livebefunde 2026-10-11
 

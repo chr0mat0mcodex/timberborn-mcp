@@ -1,5 +1,27 @@
 # Spielanleitung für Agenten
 
+## Autonome Gesamtpläne — begrenzter Livetest bestanden
+
+Für vorbereitete Gesamtpläne `plan_large_project` → **einmal `run_large_project`** verwenden.
+Gleiche Planparameter plus `actionId`, `mode=development_pilot`, `speed` (1/3/7),
+`maxGameHours` (1–672) und `maxRealSeconds` (30–86400). Pausiert starten; die Mod
+erteilt alle unabhängigen Aufträge gemeinsam und startet dann die Simulation.
+Echte Stütz-/Zugangsabhängigkeiten mit `dependsOn` angeben; keine künstlichen
+Ketten unabhängiger Gebäude. Zurückgestellte Teile erscheinen in `deferredParts`
+und werden nach Fertigstellung ihrer Abhängigkeiten automatisch beauftragt.
+
+Kein Advance und keine separaten Simulationsläufe pro Bauteil. Optional den Stand
+mit `inspect_large_project` lesen; das Lesen löst nichts aus. `completed` erfordert
+alle fertigen Teile, anwendbare Zugänge und bestätigte Pause. `blockedPart`/`reason`
+erklären Stopps; unbekannte Wirkung nicht erneut beauftragen. Nach MCP-Abbruch
+dieselbe Action-ID lesen, nach Spielneuladen neue Session beachten. Die Mod läuft
+bei MCP-Trennung weiter; Tempowechsel unterbricht, Stop pausiert die Charge.
+[Vertrag und Abnahmeplan](autonomous-construction-batches.md).
+
+Die folgenden Einzelschritt-Anweisungen beschreiben den manuellen Altmodus.
+Die automatische Standortsuche/Räumung von `start_building_batch` ist weiterhin
+ein separater älterer Ablauf, kein Hintergrunddispatcher für Gesamtpläne.
+
 ## Erweiterung 0.37.0: größere Bauvorhaben (begrenzter Livepilot bestanden)
 
 Nach Stützenkorrektur: `placementState=deferred_native_validation` bedeutet

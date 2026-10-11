@@ -95,6 +95,12 @@ public static class BuildingCapabilityTools
                 MaxOccupiedHeightSpan=8, TemplateSelection="native_catalog_supported_geometry_except_new_districts",
                 EntranceModel="applicable_entrance_and_path_access_no_invented_entranceless_door"
             }).ToArray();
+        if(known && bridgeVersion=="0.37.0") modes=modes.Append(new ProjectModeCapability(
+            "large_project_batch_development_pilot", "run_large_project", [], [0,1,2,3], [], 1,32,32,32,32,128,86400,[],
+            "not_live_proven", "docs/autonomous-construction-batches.md") {
+                MaxOccupiedHeightSpan=8, TemplateSelection="native_catalog_supported_geometry_except_new_districts",
+                EntranceModel="applicable_entrance_and_path_access_no_invented_entranceless_door"
+            }).ToArray();
         return new(bridgeVersion, faction, known ? "known" : "unknown", known ? 64 : null, serverEnabled, "not_observed",
             false, false, false, modes,
             ["fresh_session_and_action_identity", "template_unlock_and_costs_from_build_catalog",

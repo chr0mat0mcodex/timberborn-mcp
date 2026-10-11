@@ -1,5 +1,11 @@
 # Größere Bauvorhaben 0.37.0
 
+**Neue Ergänzung 2026-10-11, begrenzt live abgenommen:**
+[Autonome Bauchargen](autonomous-construction-batches.md) mit `run_large_project`.
+Die nachfolgenden Einzelschritt-/Advance-Beschreibungen bleiben der manuelle
+Altmodus. Der neue Mod-Dispatcher setzt unabhängige Aufträge gesammelt und
+behandelt explizite Abhängigkeiten ohne Folgeaufruf des Agenten.
+
 ## Korrektur live bestanden: wirkungsloser Stopp sperrt keine Folgeprojekte
 
 2026-10-11 nach menschlichem Gate/Bereitmeldung: gültigen Ein-Weg-Plan

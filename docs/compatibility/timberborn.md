@@ -1,5 +1,13 @@
 # Kompatibilität und Nachweise
 
+## 0.37.0-Ergänzung autonome Charge — begrenzt live abgenommen
+
+`run_large_project`: nach menschlichem Gate zwei vollständige Chargen mit fünf
+und neun Teilen, automatische Folgeaufträge und Abschlusspause, negative Weg-
+und Zeitlimitkontrolle bestanden. [Livetest](../autonomous-construction-batches.md).
+Die Versionsnummer allein beweist diese Fähigkeit nicht. Frühere manuelle
+Stützen-/Kraftpiloten gelten weiterhin nur für den damaligen Einzelschrittmodus.
+
 ## 0.37.0 — begrenzte Live-Nachweise (2026-10-10)
 
 Nach menschlichen Gates und Bereitmeldungen: reale Wellen-/Lagerfolge und

@@ -1,5 +1,14 @@
 # Native MCP-Werkzeuge
 
+## Autonome Gesamtcharge (begrenzter Livetest bestanden)
+
+`run_large_project` (POST, Bau- **und** Tempofreigabe): gleicher expliziter Plan
+wie Plan/Start, zusätzlich `speed`, `maxGameHours`, `maxRealSeconds`. Alle
+unabhängigen Aufträge pausiert setzen, danach serverseitig bis fertig begleiten;
+explizite Abhängigkeiten automatisch nachziehen. `inspect_large_project` liest
+die automatisch aktualisierte Batchquittung, `stop_large_project` stoppt und
+fordert eine Pause an. Keine Advance-Aufrufe pro Teil. [Details](autonomous-construction-batches.md).
+
 ## 0.37.0 — begrenzte Bau-/Stützenpiloten live bestanden
 
 | Werkzeug | Art | Zweck |
@@ -13,7 +22,8 @@
 
 Alle mit Sessionbindung und `reasoning`; vier Schreibwerkzeuge über den
 Gebäudebauschalter, zwei Leser unabhängig davon. Kein automatischer Wiederholungs-
-oder Hintergrundbau. [Parameter, Grenzen und Statusbedeutung](large-projects-0.37.0.md).
+oder Hintergrundbau **im manuellen Altmodus dieser Tabelle**.
+[Parameter, Grenzen und Statusbedeutung](large-projects-0.37.0.md).
 
 Live abgenommen: `timberborn_server_control` (`action: stop|start|status`)
 kommt vom persistenten Codex-Vorschaltprozess, nicht aus der Spiel-Bridge.

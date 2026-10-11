@@ -69,7 +69,7 @@ public sealed class BridgeMod(Timberborn.CameraSystem.CameraService cameraServic
             Debug.LogError($"[Timberborn Agent Bridge] Start failed at {stage}: {ex.GetType().Name}. No game changes performed.");
         }
     }
-    public void UpdateSingleton() { simulation.Update(); projectExecution.Update(); verticalStairExecution.Update(); queue.PumpAsync(ObserveAsync); }
+    public void UpdateSingleton() { simulation.Update(); largeProjects.Update(); projectExecution.Update(); verticalStairExecution.Update(); queue.PumpAsync(ObserveAsync); }
     public void Unload() { if(screenshots is not null) { screenshots.Cancel(); UnityEngine.Object.Destroy(screenshots.gameObject); } simulation.Unload(); server?.Dispose(); queue.Dispose(); }
     private async System.Threading.Tasks.Task<string> ObserveAsync(BridgeRequest request) {
         if(request.Screenshot is null) return Observe(request);

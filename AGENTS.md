@@ -69,6 +69,12 @@ Schutz anderer Projekte/Systemdateien und nachvollziehbare Git-Checkpoints bleib
   Fertigstellung aller Vorgänger. `inspect` ist nur Ledger-Lesung. Kraftgeometrie,
   reale Netzverbindung und Betrieb getrennt nachweisen. Keine allgemeine Freigabe
   aus `pilotEligible`; Gate und Commitregeln bleiben unverändert.
+  Beauftragte P0-Ergänzung vom 2026-10-11: `run_large_project` übernimmt einen
+  Gesamtplan autonom in der Mod; unabhängige Aufträge gemeinsam, explizite
+  Abhängigkeiten automatisch nach Fertigstellung. Kein Advance pro Teil.
+  Begrenzter Livetest mit fünf und neun Teilen bestanden; Ablauf und Grenzen:
+  `docs/autonomous-construction-batches.md`. Die Einzelschrittregel oben gilt
+  weiterhin für den manuellen Altmodus.
 
 - Maßgeblicher Etappenplan seit 2026-10-03: [missionsplan.md](missionsplan.md).
   Zuerst bestehende Wege/Gebäude-/Baustellenzugänge erhalten und Zugang neuer

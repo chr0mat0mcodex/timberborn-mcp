@@ -25,10 +25,10 @@ using UnityEngine;
 namespace Timberborn.AgentBridge;
 
 // Explicit 3D blueprints, public previews, normal placement services. No save editing.
-public sealed class LargeProjectService(BuildingCatalog catalog, PreviewFactory factory, BlockObjectValidationService validators,
+public sealed partial class LargeProjectService(BuildingCatalog catalog, PreviewFactory factory, BlockObjectValidationService validators,
     EntityRegistry entities, IBlockService blocks, SpeedManager speed, RoadProtection roads, SiteValidation validation,
     BlockObjectPlacerService placers, BuildingUnlockingService unlocks, PowerObservations power,
-    IGoodService goods, ResourceCountingService resources)
+    IGoodService goods, ResourceCountingService resources, SimulationControl simulation)
 {
     private readonly LargeProjectLedger ledger=new();
     private readonly Dictionary<string,(LargeProjectRequest Request,RoadProtection.Sample Baseline)> jobs=new();
@@ -59,12 +59,21 @@ public sealed class LargeProjectService(BuildingCatalog catalog, PreviewFactory 
     public object Handle(LargeProjectRequest r)
     {
         if(r.Operation=="power-network") return power.Read(r.EntityId);
+        if(r.Operation=="run") return StartBatch(r);
+        if(batches.ContainsKey(r.ActionId))
+        {
+            if(r.Operation=="inspect") return BatchReceipt(r.ActionId);
+            if(r.Operation=="stop") { batches[r.ActionId].Stop(); UpdateBatch(r.ActionId); return BatchReceipt(r.ActionId); }
+            throw new BridgeRejectionException("state_conflict");
+        }
+        if(activeBatch is not null && r.Operation is ("plan" or "start" or "advance")) throw new BridgeRejectionException("state_conflict");
         if(r.Operation=="plan") return Plan(r);
         if(r.Operation=="inspect") return Receipt(r.ActionId);
         if(r.Operation=="stop") {ledger.Stop(r.ActionId);return Receipt(r.ActionId);}
         if(r.Operation=="start")
         {
             if(ledger.Existing(r.ActionId,Fingerprint(r)) is not null) return Receipt(r.ActionId);
+            if(jobs.Count>=128 || BatchesBlockNewProject)throw new BridgeRejectionException("state_conflict");
             var plan=Plan(r);
             if((string?)plan["planKey"]!=r.PlanKey || (bool?)plan["pilotEligible"]!=true) throw new BridgeRejectionException("state_conflict");
             var baseline=roads.Capture();if(!baseline.Complete)throw new BridgeRejectionException("state_conflict");
@@ -209,7 +218,7 @@ public sealed class LargeProjectService(BuildingCatalog catalog, PreviewFactory 
             (safety.status=="safe"||safety.status=="unknown"&&safety.reasons.SequenceEqual(new[]{"construction_and_road_node_coverage_unproven"}));
         var result=JObject.FromObject(new{order,parts=results,powerLinks=links.ToArray(),pilotEligible=eligible,regularExecutionAllowed=false,
             restored=restored&&!faulted,sessionLocked=faulted,roadProtection=safety,
-            limitations=new[]{"explicit_3d_blueprint_not_automatic_terrain_route_search","maximum_32_parts_32x32_eight_occupied_levels","topological_order_all_prior_parts_finish_before_next","joint_preview_not_builder_preflight","deferred_native_validation_is_unknown_until_real_supports_finish","entranceless_parts_have_no_invented_door","planned_power_ports_not_live_network_or_supply","new_districts_and_unsupported_catalog_layouts_excluded","no_reservation_or_execution_permission","no_material_delivery_or_production_guarantee"}});
+            limitations=new[]{"explicit_3d_blueprint_not_automatic_terrain_route_search","maximum_32_parts_32x32_eight_occupied_levels","batch_waits_only_for_explicit_dependencies","joint_preview_not_builder_preflight","deferred_native_validation_is_unknown_until_real_supports_finish","entranceless_parts_have_no_invented_door","planned_power_ports_not_live_network_or_supply","new_districts_and_unsupported_catalog_layouts_excluded","no_reservation_or_execution_permission","no_material_delivery_or_production_guarantee"}});
         // Runtime diagnostic counters and cached preview identities are not plan identity.
         // Start always repeats native validation; this key binds the blueprint and sampled baseline.
         result["planKey"]=Hash(Fingerprint(r)+"|"+string.Join(",",before.OrderBy(id=>id))+"|"+string.Join(",",beforeStock)+"|"+

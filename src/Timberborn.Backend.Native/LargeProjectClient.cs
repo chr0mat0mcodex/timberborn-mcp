@@ -9,10 +9,11 @@ public sealed partial class NativeClient
         string route=r.Operation=="power-network"?r.Operation:"large-project-"+r.Operation;
         string query="session="+r.Session;
         if(r.Operation=="power-network")query+="&id="+r.EntityId;
-        else if(r.Operation is "plan" or "start")
+        else if(r.Operation is "plan" or "start" or "run")
         {
             query+="&districtId="+r.DistrictId+"&steps="+Uri.EscapeDataString(LargeProjectRequest.Encode(r.Steps));
-            if(r.Operation=="start")query+="&actionId="+r.ActionId+"&planKey="+r.PlanKey+"&mode=development_pilot";
+            if(r.Operation is "start" or "run")query+="&actionId="+r.ActionId+"&planKey="+r.PlanKey+"&mode=development_pilot";
+            if(r.Operation=="run")query+="&speed="+r.Speed+"&maxGameHours="+r.MaxGameHours+"&maxRealSeconds="+r.MaxRealSeconds;
         }
         else query+="&actionId="+r.ActionId;
         var e=await Get<JsonElement>(route+"?"+query,ct,LargeProjectRequest.Writes(r.Operation)?HttpMethod.Post:HttpMethod.Get,maxResponseBytes:LargeProjectRequest.MaxResponseBytes);
@@ -76,6 +77,8 @@ public sealed partial class NativeClient
             }
             else
             {
+                if(d.TryGetProperty("executionMode",out var mode)&&mode.GetString()=="batch") { ValidateBatchReceipt(d,r,order); return; }
+                if(r.Operation=="run")throw new InvalidDataException();
                 if(d.GetProperty("actionId").GetString()!=r.ActionId||!ValidPlanKey(d.GetProperty("planKey").GetString()??"")||r.Operation=="start"&&d.GetProperty("planKey").GetString()!=r.PlanKey)throw new InvalidDataException();
                 var state=d.GetProperty("state").GetString();var ids=d.GetProperty("entityIds").EnumerateArray().Select(v=>v.GetString()).ToArray();var states=d.GetProperty("partStates").EnumerateArray().Select(v=>v.GetString()).ToArray();
                 if(state is not ("ready" or "waiting" or "completed" or "stopped" or "unconfirmed")||ids.Length!=order.Length||states.Length!=order.Length||ids.Distinct().Count()!=ids.Length||ids.Any(s=>!Guid.TryParseExact(s,"D",out var id)||id==Guid.Empty)||states.Any(s=>s is not ("pending" or "unconfirmed" or "construction" or "finished")))throw new InvalidDataException();
@@ -87,6 +90,27 @@ public sealed partial class NativeClient
         }
         catch(Exception ex) when(ex is KeyNotFoundException or InvalidOperationException or FormatException or OverflowException or InvalidDataException or JsonException)
         {throw new InvalidDataException("Invalid 0.37 project/power response",ex);}
+    }
+    private static void ValidateBatchReceipt(JsonElement d,LargeProjectRequest r,int[] order)
+    {
+        if(r.Operation is not ("run" or "inspect" or "stop")||d.GetProperty("actionId").GetString()!=r.ActionId||!ValidPlanKey(d.GetProperty("planKey").GetString()??""))throw new InvalidDataException();
+        var state=d.GetProperty("state").GetString();
+        if(state is not ("running" or "pausing" or "completed" or "blocked" or "stopped" or "unconfirmed" or "interrupted")||d.GetProperty("reason").GetString() is not {Length:>0 and <=160})throw new InvalidDataException();
+        var ids=d.GetProperty("entityIds").EnumerateArray().Select(v=>v.GetString()).ToArray();
+        var states=d.GetProperty("partStates").EnumerateArray().Select(v=>v.GetString()).ToArray();
+        if(ids.Length!=order.Length||states.Length!=order.Length||ids.Distinct().Count()!=ids.Length||ids.Any(s=>!Guid.TryParseExact(s,"D",out var id)||id==Guid.Empty)||states.Any(s=>s is not ("pending" or "unconfirmed" or "construction" or "finished")))throw new InvalidDataException();
+        if(d.GetProperty("ordered").GetInt32()!=states.Count(s=>s!="pending")||d.GetProperty("finished").GetInt32()!=states.Count(s=>s=="finished"))throw new InvalidDataException();
+        var deferred=d.GetProperty("deferredParts").EnumerateArray().Select(v=>v.GetInt32()).ToArray();
+        if(deferred.Length>order.Length||deferred.Distinct().Count()!=deferred.Length||deferred.Any(i=>i<0||i>=order.Length||states[i]!="pending"))throw new InvalidDataException();
+        var blocked=d.GetProperty("blockedPart");
+        if(blocked.ValueKind!=JsonValueKind.Null&&(blocked.GetInt32()<0||blocked.GetInt32()>=order.Length))throw new InvalidDataException();
+        var sim=d.GetProperty("simulation").Deserialize<SimulationRunStatus>(NativeJson.Options)??throw new InvalidDataException();
+        if(sim.RunId!=r.ActionId||sim.RequestedSpeed is not (1 or 3 or 7)||sim.MaxRealSeconds is <30 or >86400||sim.State is not ("starting" or "running" or "pausing" or "completed" or "cancelled" or "interrupted" or "failed"))throw new InvalidDataException();
+        foreach(double value in new[]{sim.StartGameHours,sim.TargetGameHours,sim.ObservedGameHours,sim.ElapsedGameHours,sim.ElapsedRealSeconds,(double)sim.ObservedSpeed})if(!double.IsFinite(value)||value<0)throw new InvalidDataException();
+        if(sim.TargetGameHours<=sim.StartGameHours||sim.TargetGameHours-sim.StartGameHours>672||sim.PauseConfirmed!=(sim.ObservedSpeed==0)||sim.Terminal!=(sim.State is "completed" or "cancelled" or "interrupted" or "failed"))throw new InvalidDataException();
+        if(state is "completed" or "blocked" or "stopped" or "unconfirmed" or "interrupted") { if(!sim.Terminal)throw new InvalidDataException(); }
+        if(state=="completed"&&(states.Any(s=>s!="finished")||!sim.PauseConfirmed||sim.State!="cancelled"||blocked.ValueKind!=JsonValueKind.Null))throw new InvalidDataException();
+        if(r.Operation=="run"&&(d.GetProperty("planKey").GetString()!=r.PlanKey||!order.SequenceEqual(LargeProjectRequest.Order(r.Steps))||sim.RequestedSpeed!=r.Speed||sim.MaxRealSeconds!=r.MaxRealSeconds||sim.TargetGameHours-sim.StartGameHours!=r.MaxGameHours))throw new InvalidDataException();
     }
     private static void CheckPorts(JsonElement ports)
     {

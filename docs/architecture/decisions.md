@@ -1,5 +1,19 @@
 # Architekturentscheidungen
 
+## 2026-10-11: autonome Gesamtcharge in der Mod (begrenzte Liveabnahme)
+
+P0-Go: Die neue Ausführung `run_large_project` läuft über einen Spielthread-
+Dispatcher mit eigenem Chargenledger. Erst alle unabhängigen Aufträge, dann ein
+begrenzter Simulationslauf; explizite Bauabhängigkeiten folgen automatisch.
+Ein MCP-seitiger Loop über das alte Advance-Protokoll würde den Engpass nur
+verlagern und beim Verbindungsabbruch hängen bleiben. Daher besitzt die Mod
+Auftragsabsichten, Fortschritt und Simulation. Sie reserviert den vorhandenen
+`SimulationRunController`, statt eine konkurrierende Temposteuerung einzuführen.
+Manueller Altmodus und dessen Quittungen bleiben unverändert. Keine neue
+Abhängigkeit oder private Spiel-API. [Vertrag und Pilot](../autonomous-construction-batches.md).
+
+Die folgende Entscheidung dokumentiert den bisherigen manuellen Modus.
+
 ## 0.37.0: expliziter 3D-Plan, getrennte Kraftbeobachtung
 
 Beauftragter Umfang: 32 Teile / acht belegte Höhen; eigenes sitzungsgebundenes

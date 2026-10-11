@@ -25,9 +25,12 @@ public sealed class LargeProjectRequest
     public string ActionId { get; private set; } = "";
     public string PlanKey { get; private set; } = "";
     public string EntityId { get; private set; } = "";
+    public int Speed { get; private set; }
+    public int MaxGameHours { get; private set; }
+    public int MaxRealSeconds { get; private set; }
     public LargeProjectStep[] Steps { get; private set; } = Array.Empty<LargeProjectStep>();
-    public static bool Handles(string path) => path is "/agent-api/v1/large-project-plan" or "/agent-api/v1/large-project-start" or "/agent-api/v1/large-project-advance" or "/agent-api/v1/large-project-inspect" or "/agent-api/v1/large-project-stop" or "/agent-api/v1/power-network";
-    public static bool Writes(string operation) => operation is "plan" or "start" or "advance" or "stop"; // plan uses temporary native previews
+    public static bool Handles(string path) => path is "/agent-api/v1/large-project-plan" or "/agent-api/v1/large-project-start" or "/agent-api/v1/large-project-run" or "/agent-api/v1/large-project-advance" or "/agent-api/v1/large-project-inspect" or "/agent-api/v1/large-project-stop" or "/agent-api/v1/power-network";
+    public static bool Writes(string operation) => operation is "plan" or "start" or "run" or "advance" or "stop"; // plan uses temporary native previews
 
     public static LargeProjectRequest Parse(string path, NameValueCollection q)
     {
@@ -38,14 +41,23 @@ public sealed class LargeProjectRequest
         var r = new LargeProjectRequest { Operation = operation, Session = Id("session") };
         string[] keys;
         if (operation == "power-network") { r.EntityId = Id("id"); keys = new[] { "session", "id" }; }
-        else if (operation is "plan" or "start")
+        else if (operation is "plan" or "start" or "run")
         {
             r.DistrictId = Id("districtId"); r.Steps = Decode(One("steps"));
             keys = operation == "plan" ? new[] { "session", "districtId", "steps" } : new[] { "session", "districtId", "steps", "actionId", "planKey", "mode" };
-            if (operation == "start")
+            if (operation is "start" or "run")
             {
                 r.ActionId = Id("actionId"); r.PlanKey = One("planKey");
                 if (One("mode") != "development_pilot" || r.PlanKey.Length != 64 || r.PlanKey.Any(c => !(c is >= '0' and <= '9' or >= 'a' and <= 'f'))) throw new ArgumentException("invalid_plan_or_mode");
+            }
+            if (operation == "run")
+            {
+                int Number(string key, int min, int max) => int.TryParse(One(key), NumberStyles.None, CultureInfo.InvariantCulture, out int n) && n >= min && n <= max ? n : throw new ArgumentException("invalid_" + key);
+                r.Speed = Number("speed", 1, 7);
+                if (r.Speed is not (1 or 3 or 7)) throw new ArgumentException("invalid_speed");
+                r.MaxGameHours = Number("maxGameHours", 1, 672);
+                r.MaxRealSeconds = Number("maxRealSeconds", 30, 86400);
+                keys = keys.Concat(new[] { "speed", "maxGameHours", "maxRealSeconds" }).ToArray();
             }
         }
         else { r.ActionId = Id("actionId"); keys = new[] { "session", "actionId" }; }

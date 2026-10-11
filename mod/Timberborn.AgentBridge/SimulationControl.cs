@@ -22,6 +22,27 @@ public sealed class SimulationControl
     [OnEvent]
     public void OnSpeedLockChanged(SpeedLockChangedEvent change) => speedLocked = change.IsLocked;
     private readonly SimulationRunController runs = new();
+    private string? batchOwner;
+    public bool SpeedLocked => speedLocked;
+    public void RequireBatchAvailable()
+    {
+        if (batchOwner is not null || runs.HasActiveRun || speedLocked || speed.CurrentSpeed != 0)
+            throw new BridgeRejectionException("state_conflict");
+    }
+    public SimulationRunStatus StartBatch(LargeProjectRequest r)
+    {
+        RequireBatchAvailable();
+        var request = SimulationRunRequest.Parse("/agent-api/v1/simulation-run-for", new System.Collections.Specialized.NameValueCollection {
+            {"session", r.Session}, {"runId", r.ActionId}, {"duration", r.MaxGameHours.ToString(System.Globalization.CultureInfo.InvariantCulture)}, {"unit", "hours"},
+            {"speed", r.Speed.ToString(System.Globalization.CultureInfo.InvariantCulture)}, {"expectedSpeed", "0"}, {"maxRealSeconds", r.MaxRealSeconds.ToString(System.Globalization.CultureInfo.InvariantCulture)} });
+        var result = runs.Start(request, Hours, speed.CurrentSpeed, wall.Elapsed.TotalSeconds, s => speed.ChangeSpeed(s), deferSpeedStart: true);
+        batchOwner = r.ActionId;
+        return result;
+    }
+    public SimulationRunStatus InspectBatch(string id) => runs.Inspect(id);
+    public void BeginBatch(string id) => runs.BeginDeferred(id, wall.Elapsed.TotalSeconds, s => speed.ChangeSpeed(s));
+    public void CancelBatch(string id) => runs.Cancel(id, Hours, speed.CurrentSpeed, wall.Elapsed.TotalSeconds, s => speed.ChangeSpeed(s), speedLocked);
+    public void ReleaseBatch(string id) { if (batchOwner == id && runs.Inspect(id).Terminal) batchOwner = null; }
     private readonly System.Diagnostics.Stopwatch wall = System.Diagnostics.Stopwatch.StartNew();
     private double Hours => time.DayNumber * 24d + time.HoursPassedToday;
     private int? AvailableLogs() {
@@ -33,7 +54,7 @@ public sealed class SimulationControl
     public void Unload() { events.Unregister(this); runs.Unload(s => speed.ChangeSpeed(s)); }
     public object Run(SimulationRunRequest r)
     {
-        if (r.Starts && speedLocked) throw new BridgeRejectionException("state_conflict");
+        if (r.Starts && (speedLocked || batchOwner is not null)) throw new BridgeRejectionException("state_conflict");
         var result = r.Starts ? runs.Start(r, Hours, speed.CurrentSpeed, wall.Elapsed.TotalSeconds, s => speed.ChangeSpeed(s),
             r.StopAtAvailableLogs is null ? null : AvailableLogs())
             : r.Route == "simulation-run-cancel" ? runs.Cancel(r.RunId, Hours, speed.CurrentSpeed, wall.Elapsed.TotalSeconds, s => speed.ChangeSpeed(s), speedLocked) : runs.Inspect(r.RunId);

@@ -5,6 +5,11 @@ Beobachtung und kontrollierte Eingriffe über reguläre Spielservices.
 
 ## Status
 
+Neu begrenzt live abgenommen: [autonome Bauchargen](docs/autonomous-construction-batches.md).
+Ein Gesamtplan, alle unabhängigen Aufträge gemeinsam, danach Simulation bis fertig
+oder blockiert; Folgeaufträge ohne Agentenaufruf pro Bauteil. Zwei Piloten mit 14
+fertigen Teilen sowie Wegblockade und Zeitlimit geprüft.
+
 0.37.0: begrenzte Livepiloten für [größere Bauvorhaben](docs/large-projects-0.37.0.md)
 einschließlich realem Stützenbau bestanden. Implementierte Grenzen: 32 Bauteile
 und acht belegte Höhenebenen; dazu Kraftanschlussdiagnose. Keine pauschale

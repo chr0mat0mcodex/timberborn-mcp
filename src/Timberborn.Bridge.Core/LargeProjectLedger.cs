@@ -23,6 +23,7 @@ public sealed class LargeProjectLedger
         public bool PlacementAttempted;
     }
     private readonly Dictionary<string, Entry> entries = new();
+    public bool BlocksNewProject => entries.Values.Any(e => e.Result.State != "completed" && !(e.Result.State == "stopped" && e.Result.Reason == "stop_requested_objects_retained" && !e.PlacementAttempted));
     public Receipt? Existing(string id, string fingerprint)
     {
         if (!entries.TryGetValue(id, out var entry)) return null;
