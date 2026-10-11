@@ -1,5 +1,15 @@
 # Native MCP-Werkzeuge
 
+## 0.43: gemeinsame Engpassdiagnose (begrenzt live abgenommen)
+
+`inspect_building_operations(session, ids, diagnose=true, detail?)`: bis acht IDs,
+Zutaten/Brennstoff, Quellen/Produktlager und native Wege, Personal/Kraft gemeinsam.
+`summary.bottleneck` enthält Belege und Abdeckung, `assessment.findings` nächste
+Schritte mit Bereich/Code/Schwere/Gut. Ohne diagnose bleibt die 32er-Übersicht.
+`inspect_simulation_run` ergänzt für buildingIds aktuelle Betriebsdaten unter
+currentBuildingOperations, bottleneckObservedGameHours und bottleneckState;
+historische Produktionsbeweise bleiben getrennt. [Vertrag](production-bottlenecks.md).
+
 ## 0.42: gemeinsame Gebäudeeinrichtung (begrenzt live abgenommen)
 
 `configure_buildings(session, jobId, items, proofHours?, proofSpeed?, proofMaxRealSeconds?)`:

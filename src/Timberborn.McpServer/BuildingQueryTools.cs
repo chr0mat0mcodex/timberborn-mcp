@@ -10,7 +10,7 @@ using Timberborn.Bridge.Core;
 namespace Timberborn.McpServer;
 
 public sealed record OperationSummary(string Template,bool Finished,bool? Paused,OperationWorkplace? Workplace,
-    OperationManufacturing? Manufacturing,OperationPower? Power,OperationAssessment? Assessment);
+    OperationManufacturing? Manufacturing,OperationPower? Power,OperationAssessment? Assessment, BottleneckEvidence? Bottleneck=null);
 public sealed record OperationViewItem(string Id,string State,OperationSummary? Summary,NativeOperation? Details);
 public sealed record OperationView(OperationViewItem[] Items,int NativeReads,string[] Limitations);
 
@@ -23,6 +23,7 @@ public static class BuildingQueryTools
         foreach(bool batch in new[]{false,true}) {
             var p=new JsonObject { ["detail"]=new JsonObject{["type"]="string",["enum"]=new JsonArray("compact","full"),["default"]="compact"} };
             if(batch) {
+                p["diagnose"]=new JsonObject{["type"]="boolean",["default"]=false,["description"]="0.43: Engpassbelege und nächste Schritte für maximal acht IDs; begrenzte Lager-/Wegprüfung."};
                 p["session"]=new JsonObject{["type"]="string",["format"]="uuid"};
                 p["ids"]=new JsonObject{["type"]="array",["minItems"]=1,["maxItems"]=32,["uniqueItems"]=true,
                     ["items"]=new JsonObject{["type"]="string",["format"]="uuid"}};
@@ -50,7 +51,7 @@ public static class BuildingQueryTools
                 if(p.Value.ValueKind!=JsonValueKind.Array||p.Value.GetArrayLength() is <1 or >32||p.Value.EnumerateArray().Any(v=>v.ValueKind!=JsonValueKind.String))throw new ArgumentException();
                 if(p.Value.EnumerateArray().Any(v=>!Guid.TryParseExact(v.GetString(),"D",out var id)||id==Guid.Empty))throw new ArgumentException();
                 q.Add(p.Name,string.Join(",",p.Value.EnumerateArray().Select(v=>v.GetString())));
-            } else if(p.Name is "finished" or "includePaths" or "productionOnly") {
+            } else if(p.Name is "finished" or "includePaths" or "productionOnly" or "diagnose") {
                 if(p.Value.ValueKind is not (JsonValueKind.True or JsonValueKind.False))throw new ArgumentException();q.Add(p.Name,p.Value.GetBoolean()?"true":"false");
             } else if(p.Name is "detail" or "session" or "template") {
                 if(p.Value.ValueKind!=JsonValueKind.String)throw new ArgumentException();q.Add(p.Name,p.Value.GetString());
@@ -64,7 +65,7 @@ public static class BuildingQueryTools
         if(!batch)return Wrap(await client.SearchBuildings(r,ct));
         var result=await client.BuildingOperations(r,ct);
         var view=new OperationView(result.Data.Items.Select(i=>new OperationViewItem(i.Id,i.State,
-            i.Operation is {} o?new(o.Template,o.Finished,o.Paused,o.Workplace,o.Manufacturing,o.Power,o.Assessment):null,
+            i.Operation is {} o?new(o.Template,o.Finished,o.Paused,o.Workplace,o.Manufacturing,o.Power,o.Assessment,o.Bottleneck):null,
             r.Full?i.Operation:null)).ToArray(),result.Data.NativeReads,result.Data.Limitations);
         return Wrap(new BridgeEnvelope<OperationView>(result.SchemaVersion,result.SessionId,result.ObservedAtUtc,result.BridgeVersion,view));
     }

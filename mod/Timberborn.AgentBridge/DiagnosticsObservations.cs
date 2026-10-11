@@ -12,7 +12,7 @@ using Timberborn.MechanicalSystem;
 using Timberborn.WorkSystem;
 namespace Timberborn.AgentBridge;
 
-public sealed class DiagnosticsObservations(EntityRegistry entities)
+public sealed class DiagnosticsObservations(EntityRegistry entities, Timberborn.ResourceCountingSystem.ResourceCountingService resources)
 {
     private IEnumerable<EntityComponent> Beavers()=>entities.Entities.Where(e=>e.Initialized&&!e.Deleted&&e.HasComponent<Beaver>());
     private static string Life(EntityComponent e)=>e.TryGetComponent<Mortal>(out var m)?m.Dead?"dead":"alive":"unknown";
@@ -56,13 +56,14 @@ public sealed class DiagnosticsObservations(EntityRegistry entities)
     {
         var requested=new HashSet<Guid>(r.Ids.Select(Guid.Parse));
         var found=entities.Entities.Where(e=>requested.Contains(e.EntityId)&&e.Initialized&&!e.Deleted&&e.TryGetComponent<BlockObject>(out var b)&&!b.IsPreview).ToDictionary(e=>e.EntityId);
+        var diagnosis=r.Diagnose?new BottleneckObservations(entities,resources):null;
         var items=r.Ids.Select(id=>{
             bool exists=found.TryGetValue(Guid.Parse(id),out var e);
-            return new {id,state=exists?"observed":"not_found",operation=exists?ObserveOperation(e!):null};
+            return new {id,state=exists?"observed":"not_found",operation=exists?ObserveOperation(e!,diagnosis):null};
         }).ToArray();
         return new {items,nativeReads=1,limitations=new[]{"single_game_thread_observation","missing_ids_are_not_found_not_empty_operations","no_production_proof_from_readiness"}};
     }
-    private static object ObserveOperation(EntityComponent e)
+    private static object ObserveOperation(EntityComponent e, BottleneckObservations? diagnosis=null)
     {
         var block=e.GetComponent<BlockObject>();
         object? workplace=null,manufacturing=null;
@@ -89,6 +90,7 @@ public sealed class DiagnosticsObservations(EntityRegistry entities)
         return new {id=e.EntityId.ToString("D"),template=e.GetComponent<TemplateSpec>().TemplateName,finished=block.IsFinished,
             paused=e.TryGetComponent<PausableBuilding>(out var pause)?(bool?)pause.Paused:null,workplace,manufacturing,statuses,power,
             inventories=block.IsFinished?InventoryObservations.Read(e):null,
+            bottleneck=diagnosis?.Read(e).ToWire(),
             limitations=new[]{"null_means_component_or_observation_unavailable","unfinished_buildings_have_no_operating_diagnosis","manufacturing_only_for_native_manufactory_component","ready_not_guaranteed_actual_production","no_job_running_may_mean_off_hours_or_travel","understaffed_not_necessarily_fully_blocked","statuses_are_untrusted_localized_text","not_complete_power_water_resource_or_delivery_diagnosis","inventories_are_enabled_components_on_this_finished_entity_only","global_buffered_output_not_identical_to_pump_stock","capacity_may_be_ignored_by_game_component","unreserved_capacity_is_per_good_not_additive","reservation_is_not_a_delivery_guarantee","no_inventory_owner_attribution_outside_this_entity"}};
     }
 }

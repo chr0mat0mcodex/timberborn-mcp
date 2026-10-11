@@ -17,7 +17,7 @@ public sealed partial class NativeClient
         if(r.HasBounds)q+=$"&x={r.X}&y={r.Y}&z={r.Z}&width={r.Width}&height={r.Height}&depth={r.Depth}";
         var e=await Get<BuildingSearch>("building-search?"+q,ct,maxResponseBytes:1024*1024);
         var d=e.Data;
-        if(e.BridgeVersion is not ("0.39.0" or "0.40.0" or "0.41.0" or "0.42.0") || d.Items is null || d.Limitations is null || d.NativeReads!=1 ||
+        if(e.BridgeVersion is not ("0.39.0" or "0.40.0" or "0.41.0" or "0.42.0" or "0.43.0") || d.Items is null || d.Limitations is null || d.NativeReads!=1 ||
             d.Offset!=r.Offset||d.Limit!=r.Limit||d.Total<0||d.Items.Length!=Math.Min(r.Limit,Math.Max(0,d.Total-r.Offset))||
             d.HasMore!=((long)r.Offset+d.Items.Length<d.Total))throw new InvalidDataException("Invalid building search page");
         foreach(var item in d.Items) {
@@ -36,9 +36,9 @@ public sealed partial class NativeClient
 
     public async Task<BridgeEnvelope<OperationBatch>> BuildingOperations(BuildingQueryRequest r,CancellationToken ct)
     {
-        var e=await Get<OperationBatch>($"building-operations?session={r.Session}&ids={Uri.EscapeDataString(string.Join(",",r.Ids))}",ct,maxResponseBytes:2*1024*1024);
+        var e=await Get<OperationBatch>($"building-operations?session={r.Session}&ids={Uri.EscapeDataString(string.Join(",",r.Ids))}{(r.Diagnose?"&diagnose=true":"")}",ct,maxResponseBytes:2*1024*1024);
         var d=e.Data;
-        if(e.BridgeVersion is not ("0.39.0" or "0.40.0" or "0.41.0" or "0.42.0")||e.SessionId!=r.Session||d.Items is null||d.Limitations is null||d.NativeReads!=1||d.Items.Length!=r.Ids.Length)
+        if(e.BridgeVersion is not ("0.39.0" or "0.40.0" or "0.41.0" or "0.42.0" or "0.43.0")||e.SessionId!=r.Session||d.Items is null||d.Limitations is null||d.NativeReads!=1||d.Items.Length!=r.Ids.Length)
             throw new InvalidDataException("Invalid operation batch");
         var items=new List<OperationBatchItem>();
         for(int i=0;i<r.Ids.Length;i++) {
@@ -47,6 +47,8 @@ public sealed partial class NativeClient
                 (item.State=="observed")!=(item.Operation is not null))throw new InvalidDataException("Invalid batch item correlation");
             if(item.Operation is {} operation) {
                 ValidateOperation(operation,item.Id,e.BridgeVersion);
+                if(r.Diagnose&&operation.Bottleneck is null)throw new InvalidDataException("Missing bottleneck evidence");
+                if(operation.Bottleneck is {} evidence)BottleneckContract.Validate(evidence);
                 items.Add(item with{Operation=operation with{Assessment=OperationAssessmentBuilder.Read(operation)}});
             } else items.Add(item);
         }

@@ -101,6 +101,17 @@ public sealed class SimulationControl
             catch { payload["productionDiagnostics"] = null; }
             payload["diagnosticsObservedGameHours"] = Hours;
         }
+        // Enrich only explicit inspection: never a global endpoint scan on ticks/start/cancel.
+        if(r.Route=="simulation-run"&&result.BuildingIds.Length>0) {
+            payload["bottleneckObservedGameHours"]=Hours;
+            try {
+                var query=BuildingQueryRequest.Parse("/agent-api/v1/building-operations",new System.Collections.Specialized.NameValueCollection {
+                    {"session",r.Session},{"ids",string.Join(",",result.BuildingIds)},{"diagnose","true"}});
+                payload["currentBuildingOperations"]=Newtonsoft.Json.Linq.JObject.FromObject(new DiagnosticsObservations(entities,resources).Operations(query),
+                    Newtonsoft.Json.JsonSerializer.Create(new Newtonsoft.Json.JsonSerializerSettings { ContractResolver=new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() }));
+                payload["bottleneckState"]="observed";
+            } catch {payload["bottleneckState"]="unavailable";}
+        }
         return payload;
     }
     public object Observe() => new { currentSpeed = speed.CurrentSpeed, dayNumber = time.DayNumber,

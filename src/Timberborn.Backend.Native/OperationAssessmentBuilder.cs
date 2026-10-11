@@ -35,6 +35,6 @@ public static class OperationAssessmentBuilder
                 }
             }
         } else unknown.Add("power_not_observed");
-        return new(blockers.ToArray(),warnings.ToArray(),unknown.ToArray(),false);
+        return new(blockers.ToArray(),warnings.ToArray(),unknown.ToArray(),false,d.Bottleneck is null?null:BottleneckAssessment.Read(d));
     }
 }

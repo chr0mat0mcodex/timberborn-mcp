@@ -1,5 +1,19 @@
 # Spielanleitung für Agenten
 
+## 0.43: Engpässe gemeinsam erklären (begrenzt live abgenommen)
+
+`inspect_building_operations` mit `diagnose=true` und höchstens acht IDs verwenden.
+Zuerst assessment.findings, dann die zugehörigen bottleneck-Belege lesen:
+Zutaten/Brennstoff lokal und global, passende Quellen/Produktlager samt Wegstatus,
+Personal und Kraft. Erreichbares Lager mit Platz zuerst für Abtransport nutzen;
+keinen Lagerneubau allein aus output_capacity_unavailable ableiten. complete=false
+oder unbekannter Weg ist kein Negativnachweis. Globale Transportmengen nicht dem
+Zielgebäude zuschreiben. Vorschläge ausführen nur als getrennten kontrollierten Auftrag.
+Bei buildingIds-Läufen liefert inspect_simulation_run dieselbe aktuelle Diagnose
+separat datiert; sie darf eingefrorene Produktionsnachweise nicht umdeuten.
+Für günstige Übersicht diagnose weglassen (weiter bis 32 IDs). Keine enge Pollschleife.
+[Umfang und Nachweisgrenzen](production-bottlenecks.md).
+
 ## 0.42: mehrere Gebäude gemeinsam einrichten (begrenzt live abgenommen)
 
 Vorher native Rezepte und tatsächliche Einstellungen lesen. `configure_buildings`

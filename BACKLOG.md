@@ -1,5 +1,19 @@
 # Backlog
 
+## Abgenommen: 0.43.0 Engpassdiagnose
+
+Auch das abschließende menschliche Gate der Beschreibungskorrektur und die erneute Zweierdiagnose sind bestanden. Der aktualisierte Werkzeugkatalog zeigt korrekte Umlaute. 0.43.0 ist im dokumentierten Umfang abgenommen.
+
+Menschliches Gate und begrenzter Abschluss-Livepilot bestanden. Grill,
+Papierfabrik und Erfinder liefern verwertbare Diagnose; Quellenbestand und Wege
+separat bestätigt. Freies Papierlager erkannt, Leermodus korrekt ausgeschlossen;
+Kastanienmangel mit lokal/global null korrekt diagnostiziert. Gemeinsamer Lauf:
+Erfinder ein Zyklus, Papierfabrik kein Zyklus wegen vollem Ausgang, Zeitlimit und
+automatische Pause bestätigt. Testeinstellungen wiederhergestellt, keine Abrisse
+oder Rohstofflöschung. Achtfach- und Teilabdeckungsgrenzen automatisch geprüft,
+nicht als achtfacher Live- oder Lasttest abgenommen.
+[Vertrag und Nachweisgrenzen](docs/production-bottlenecks.md).
+
 ## Abgenommen: 0.42.0 gemeinsame Einrichtung und Betriebsaufnahme
 
 Bis acht Rezept-/Personal-/Pauseziele, gemeinsame Vorprüfung, konkrete Teilfehler,

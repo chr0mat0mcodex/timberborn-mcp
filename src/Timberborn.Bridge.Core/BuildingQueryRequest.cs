@@ -10,6 +10,7 @@ public sealed class BuildingQueryRequest
     public bool? Finished { get; private set; }
     public bool IncludePaths { get; private set; }
     public bool ProductionOnly { get; private set; }
+    public bool Diagnose { get; private set; }
     public bool Full { get; private set; }
     public bool HasBounds { get; private set; }
     public int X { get; private set; }
@@ -25,7 +26,7 @@ public sealed class BuildingQueryRequest
     {
         if(!Handles(path))throw new ArgumentException();
         bool batch=path.EndsWith("building-operations",StringComparison.Ordinal);
-        var allowed=batch?new[]{"ids","session","detail"}:new[]{"offset","limit","template","finished","includePaths","productionOnly","detail","x","y","z","width","height","depth"};
+        var allowed=batch?new[]{"ids","session","detail","diagnose"}:new[]{"offset","limit","template","finished","includePaths","productionOnly","detail","x","y","z","width","height","depth"};
         foreach(string? key in q.AllKeys)
             if(key is null || !allowed.Contains(key) || q.GetValues(key) is not {Length:1})throw new ArgumentException();
         string Read(string key)=>q[key]??throw new ArgumentException();
@@ -38,9 +39,11 @@ public sealed class BuildingQueryRequest
         if(batch) {
             string Id(string value) {if(!Guid.TryParseExact(value,"D",out var id)||id==Guid.Empty)throw new ArgumentException();return id.ToString("D");}
             r.Session=Id(Read("session"));
+            if(q["diagnose"] is not null)r.Diagnose=Flag("diagnose");
             var raw=Read("ids");if(raw.Length>32*37)throw new ArgumentException();
             r.Ids=raw.Split(',').Select(Id).ToArray();
             if(r.Ids.Length is <1 or >32 || r.Ids.Distinct().Count()!=r.Ids.Length)throw new ArgumentException();
+            if(r.Diagnose&&r.Ids.Length>8)throw new ArgumentException("diagnosis_maximum_eight_buildings");
             return r;
         }
         r.Offset=Number("offset",0,65535);r.Limit=Number("limit",1,32);
