@@ -1,5 +1,12 @@
 # Projektstand
 
+## 0.37.0 abgeschlossen
+
+Versionsabschluss am 2026-10-11 nach menschlichen Gates und begrenzten Livetests;
+letzter Funktionscheckpoint `7cec7ec`. [Umfang und Grenzen](docs/releases/0.37.0.md).
+Sondertests bleiben ausdrücklich zurückgestellt. Nächster beauftragter Ausbau:
+Rezeptwahl und gebündelte Inbetriebnahme-Diagnose, mit eigenem menschlichem Gate.
+
 ## Live abgenommen: interne Waldabfragen gebündelt
 
 Menschliches Gate und Vergleichspilot 2026-10-11 bestanden: Übersicht 54→32

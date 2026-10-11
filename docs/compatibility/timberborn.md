@@ -1,5 +1,11 @@
 # Kompatibilität und Nachweise
 
+## Versionsabschluss 0.37.0
+
+Am 2026-10-11 abgeschlossen: [Releaseumfang und Nachweisgrenzen](../releases/0.37.0.md).
+Die folgenden Einzelpiloten sind begrenzte Nachweise, keine pauschale Abnahme
+aller Gebäudetypen oder Sonderstandorte.
+
 ## 0.37.0-Ergänzung autonome Charge — begrenzt live abgenommen
 
 `run_large_project`: nach menschlichem Gate zwei vollständige Chargen mit fünf
