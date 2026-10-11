@@ -1,5 +1,18 @@
 # Projektstand
 
+## 2026-10-11: größere Etappe mit vier neuen Typen abgeschlossen
+
+Kräuterkundler (43,25,6), Mühle (46,21,6), Windturbine (45,28,8) und
+Bevölkerungszähler (46,19,6), Drehung 2, separat fertig nachgewiesen.
+Achtteilprojekt samt fünf Wegen und folgendes Zählerprojekt completed.
+Abdeckung 66/157 reguläre Typen, 91 offen. Tag 537, 14,125 Uhr pausiert.
+Kräuterkundlerzugang Distanz 74, Mühlenzugang 83. Kräuterkundler benötigt
+Dandelion; Mühle ohne Rezept/Kraftanschluss; Windturbine ohne Verbraucher.
+Bauabdeckung ist kein Produktionsnachweis. Forschung nach 800 Punkten für
+diese vier Freischaltungen weitgehend verbraucht; nächste größere Baugruppe
+braucht Forschungsaufbau und teilweise neue Materialketten. Verbesserungen
+zu Betriebsplanung und zentralen Kraftports dokumentiert, kein Code geändert.
+
 ## 2026-10-11: Papierlager, Zusatzkraft und Bienenstock fertig
 
 Achtteilprojekt abgeschlossen: Papierlager (41,25,6), fünf Wegfelder, zweites

@@ -2,6 +2,31 @@
 
 Laufender Spieltest vom 2026-10-10/11; kein Versionsabschluss.
 
+## Größere Baugruppe: Kräuterkundler, Mühle und Windturbine
+
+- Sechs tote Kiefern beziehungsweise abgeerntete Reste geräumt; zwei echte
+  Arbeiteraufträge erst nach Rücklesung als entfernt behandelt. Drei neue Typen
+  für zusammen 600 Forschungspunkte freigeschaltet.
+- Gemeinsamer Achtteilplan mit Kräuterkundler (43,25,6), fünf Wegen über
+  (45,21,6)/(45..48,20,6), Mühle (46,21,6) und Windturbine (45,28,8).
+  Windturbine zunächst tiefer native_invalid, vor Start aufs höhere ebene Feld
+  verlegt; dort native_valid. Keine ungeprüfte Kraftverbindung behauptet.
+- Alle Teile separat fertig nachgewiesen, Gesamtprojekt completed. Fünf Wege
+  und nächster Mühlenauftrag in begrenzter sequenzieller Agentenfolge verarbeitet;
+  unveränderte native Prüfungen, keine erneute Sendung eines unbestätigten Auftrags.
+- Kräuterkundler besetzt: Berries/Paper vorhanden, Dandelion fehlt. Mühle ohne
+  ausgewähltes Rezept und ohne Kraft. Windturbine einzelnes Netz ohne Verbraucher;
+  beobachtete Leistung 0. Bauabdeckung steigt auf 65/157, Betrieb separat offen.
+- Anschließend begrenzter Dreitageslauf für fehlende Forschung; 206 Punkte
+  erreicht, Bevölkerungszähler für 200 freigeschaltet. Einzelplan (46,19,6),
+  Drehung 2, nativ gültig, Zugang verbunden. Nach zwölf Spielstunden separat
+  fertig nachgewiesen und Projekt completed. Keine neue Rückfrage zwischen Bauten.
+- Vier neue Typen in dieser Etappe, insgesamt 66/157 reguläre Typen, 91 offen.
+  Kräuterkundlerzugang Distanz 74, Mühlenzugang 83. Abschluss Tag 537,
+  14,125 Uhr pausiert. Unveränderte Spieleransicht ergänzend angesehen;
+  keine Aufnahme gespeichert. Windleistung bleibt Momentaufnahme und ohne
+  angeschlossenen Verbraucher kein produktiver Kraftnachweis.
+
 ## Fortsetzung: Papierlager, zweites Laufrad und Bienenstock
 
 - Bienenstock für 400 Forschungspunkte freigeschaltet. Für obere Zufahrt zwei

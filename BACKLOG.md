@@ -1,5 +1,23 @@
 # Backlog
 
+## Größere Baugruppe: Livebefunde 2026-10-11
+
+- **P1: Bauplan um Betriebsvoraussetzungen ergänzen.** Kräuterkundler fertig,
+  Rezept Antidote vorhanden, aber Dandelion fehlt; Mühle fertig ohne Rezept und
+  Kraft. Kosten des Gebäudes reichen als Planungshilfe nicht. Rezeptwahl,
+  Zutatenquellen, Lagerung und Kraftanschluss als getrennte beobachtete Lücken
+  zusammenfassen. Vorhandene Rezept-Schreibfunktion-Lücke erneut bestätigt.
+- **P2: Volumen, Fundament und tatsächliche Kraftanschlüsse unterscheiden.**
+  Windturbinenports liegen am zentralen Sockel innerhalb der 3×3-Ausdehnung.
+  Randnachbarschaft zu einer Mühle beweist deshalb keine Kraftverbindung.
+  Vorschau sollte nutzbare Portzellen und konkrete native Ablehnungsgründe
+  zeigen. Tiefer Standort abgelehnt, höherer ebener Standort gültig; Ursache
+  des ersten Fehlers nicht eindeutig beobachtet, kein pauschaler Geländefehler.
+- **Effizienzbeleg:** Fünf Sofortwege mit anschließender Mühle in einer begrenzten
+  Agentenfolge abgearbeitet, weiterhin jeder Teil separat gelesen/validiert und
+  nur einmal beauftragt. Kein neuer Servermodus, kein Retry; native Bündelung
+  bleibt offen. Zustands-/Rückleseaufwand lässt sich so bereits besser bündeln.
+
 ## Bienenstock und Zusatzkraft: Livebefunde 2026-10-11
 
 - **P2: Wirkungsbereiche strukturiert abfragen.** Bienenstock fertig, aber
