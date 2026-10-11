@@ -1,5 +1,13 @@
 # Backlog
 
+## Abgenommen: 0.42.0 gemeinsame Einrichtung und Betriebsaufnahme
+
+Bis acht Rezept-/Personal-/Pauseziele, gemeinsame Vorprüfung, konkrete Teilfehler,
+optional bestehender Produktionslauf. Nach Untergrenzenkorrektur Gate und begrenzter
+Livepilot bestanden: drei Konfigurationen, zwei Produktionsnachweise, zwei
+mutationsfreie Konfliktkontrollen und stabile Historie. Keine automatische
+Versorgung oder Produktionskettenplanung. [Nachweis](docs/building-configuration-batch.md).
+
 ## Abgenommen: 0.41.0 Gebäudebezogener Produktionsnachweis
 
 Beauftragter Umfang implementiert: bis acht Manufakturen im bestehenden Lauf,

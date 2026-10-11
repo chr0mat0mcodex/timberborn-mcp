@@ -1,5 +1,17 @@
 # Spielanleitung für Agenten
 
+## 0.42: mehrere Gebäude gemeinsam einrichten (begrenzt live abgenommen)
+
+Vorher native Rezepte und tatsächliche Einstellungen lesen. `configure_buildings`
+mit bis acht vollständigen Zielen und passenden expected-Werten verwenden.
+Sollpersonal mindestens 1; Deaktivierung über paused=true, nicht über Soll 0.
+Simulation muss pausiert und frei von aktiven Läufen sein. Alle Vorbedingungen
+werden gemeinsam geprüft; Teilfehler stoppen die weitere Einrichtung. Kein Replay.
+Nach unbestätigtem Aufruf `inspect_building_configuration` mit derselben jobId.
+Optional proofHours/proofSpeed/proofMaxRealSeconds gemeinsam angeben; anschließend
+Produktion über `inspect_simulation_run` mit runId=jobId prüfen. applied ist nur
+Einrichtungserfolg, kein Betriebsnachweis. [Vertrag](building-configuration-batch.md).
+
 ## 0.41: Produktion je Gebäude nachweisen (begrenzt live abgenommen)
 
 Bis acht fertige Manufakturen zuerst per Sammeldiagnose auswählen und konfigurieren.

@@ -5,6 +5,7 @@ namespace Timberborn.Bridge.Core;
 
 public sealed class BridgeRequest
 {
+    public BuildingConfigurationRequest? Configuration { get; private set; }
     public string Route { get; }
     public RecentActionsRequest? RecentActions { get; private set; }
     public BuildingQueryRequest? BuildingQuery { get; private set; }
@@ -63,6 +64,7 @@ public sealed class BridgeRequest
         if(path is "/agent-api/v1/vertical-stair-execute" or "/agent-api/v1/vertical-stair-status") { var r=VerticalStairRequest.Parse(path.EndsWith("execute"),query);return new BridgeRequest("vertical-stair-execution",session:r.Session) { VerticalStair=r }; }
         if(path=="/agent-api/v1/building-project-validation") { var v=BuildingProjectValidationRequest.Parse(query);return new BridgeRequest("building-project-validation",session:v.Plan.Session) { ProjectValidation=v }; }
         if(path == "/agent-api/v1/building-plan") { var p=BuildingPlanRequest.Parse(query); return new BridgeRequest("building-plan",session:p.Session) { BuildingPlan=p }; }
+        if(BuildingConfigurationRequest.Handles(path)) {var r=BuildingConfigurationRequest.Parse(path,query);return new BridgeRequest(r.Write?"configure-buildings":"building-configuration",session:r.Session){Configuration=r};}
         if (SimulationRunRequest.Handles(path)) { var r = SimulationRunRequest.Parse(path, query); return new BridgeRequest(r.Route, session:r.Session) { SimulationRun=r }; }
         if (DiagnosticsRequest.Handles(path)) { var d=DiagnosticsRequest.Parse(path,query); return new BridgeRequest(d.Route,session:d.Session) { Diagnostics=d }; }
         if (LogisticsRequest.Handles(path)) { var l=LogisticsRequest.Parse(path,query); return new BridgeRequest(l.Route,session:l.Session) { Logistics=l }; }

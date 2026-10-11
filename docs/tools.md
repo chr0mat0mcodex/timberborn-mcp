@@ -1,5 +1,14 @@
 # Native MCP-Werkzeuge
 
+## 0.42: gemeinsame Gebäudeeinrichtung (begrenzt live abgenommen)
+
+`configure_buildings(session, jobId, items, proofHours?, proofSpeed?, proofMaxRealSeconds?)`:
+1–8 eindeutige fertige Manufakturen, native Rezeptwahl, Sollpersonal, Pause;
+alle expected-Werte erforderlich. Gemeinsame Vorprüfung, Teilfehler ohne Rollback.
+`inspect_building_configuration(session, jobId)` liest die unveränderte Quittung.
+Optionaler Produktionslauf verwendet den vorhandenen Lauf mit runId=jobId.
+[Parameter, Fehler und Abnahmeplan](building-configuration-batch.md).
+
 ## 0.41: Erweiterter Produktionslauf (begrenzt live abgenommen)
 
 `run_simulation_for` nimmt optional `buildingIds` (1–8 eindeutige IDs) entgegen,

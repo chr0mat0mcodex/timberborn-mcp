@@ -5,6 +5,8 @@ Beobachtung und kontrollierte Eingriffe über reguläre Spielservices.
 
 ## Status
 
+**0.42.0 begrenzt live abgenommen:** [gemeinsame Gebäudeeinrichtung](docs/building-configuration-batch.md).
+
 **0.41.0 begrenzt live abgenommen:** [Produktionsnachweis für bis acht Gebäude](docs/building-production-proof.md).
 
 **0.40.0 begrenzt live abgenommen:** [Änderungsjournal](docs/recent-actions-journal.md).

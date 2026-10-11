@@ -59,7 +59,7 @@ public sealed class RecentActionsJournal
     public void BeginMcp(bool reconcile) { if(reconcile)Capture();mcpDepth++; }
     public void EndMcp(bool reconcile) { try { if(reconcile)Capture(); } finally {mcpDepth--;} }
     public IDisposable Scope(string route)=>new McpScope(this,route is
-        "large-project" or "building-project-execution" or "vertical-stair-execution" or
+        "configure-buildings" or "large-project" or "building-project-execution" or "vertical-stair-execution" or
         "building-placement" or "path-placement" or "lodge-placement" or "remove-object" or
         "set-building-paused" or "set-storage-good" or "set-storage-mode" or "set-building-recipe" or
         "workplace-staffing" or "simulation-speed" or "simulation-run-for" or "simulation-run-until" or "simulation-run-cancel");

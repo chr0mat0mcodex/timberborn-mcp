@@ -35,6 +35,10 @@ public sealed class SimulationControl
         if (batchOwner is not null || runs.HasActiveRun || speedLocked || speed.CurrentSpeed != 0)
             throw new BridgeRejectionException("state_conflict");
     }
+    public void RequireConfigurationAvailable(BuildingConfigurationRequest r) {
+        RequireBatchAvailable();
+        if(r.ProofHours is not null)runs.RequireUnusedRun(r.JobId);
+    }
     public SimulationRunStatus StartBatch(LargeProjectRequest r)
     {
         RequireBatchAvailable();

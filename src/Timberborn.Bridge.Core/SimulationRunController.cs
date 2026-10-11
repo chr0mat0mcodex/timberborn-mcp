@@ -46,6 +46,10 @@ public sealed class SimulationRunController
 
     public SimulationRunStatus Inspect(string id) => history.TryGetValue(id, out var r) ? r : throw new BridgeRejectionException("run_not_found");
 
+    public void RequireUnusedRun(string id) {
+        if(history.ContainsKey(id))throw new BridgeRejectionException("run_id_used");
+        if(history.Count>=Capacity)throw new BridgeRejectionException("state_conflict");
+    }
     public bool StockConditionActive => active?.StopAtAvailableLogs is not null;
     public bool HasActiveRun => active is not null;
     public SimulationRunStatus? ActiveBuildingRun => active?.HasBuildingTargets==true?active:null;

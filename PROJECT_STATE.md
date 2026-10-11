@@ -1,5 +1,14 @@
 # Projektstand
 
+## 0.42.0 — gemeinsame Einrichtung begrenzt live abgenommen
+
+Nach Personal-Untergrenzenkorrektur menschliches Gate und Abschluss-Livepilot
+bestanden: Dreierkonfiguration, zwei Erfinder automatisch bis Produktionsnachweis,
+Rezept-/Zustandskonflikte vollständig vor Änderungen abgewiesen. Historie stabil,
+Grill zurückgestellt und Simulation pausiert. Achtfachgrenze/Personaländerung
+im Sammelpfad automatisch; Livepersonal blieb Soll 1.
+[Vertrag und Nachweisgrenzen](docs/building-configuration-batch.md).
+
 ## 0.41.0 — Produktionsnachweis begrenzt live abgenommen
 
 Menschliches Gate und drei Livekontrollen bestanden: Grill/Bäckerei gemeinsam

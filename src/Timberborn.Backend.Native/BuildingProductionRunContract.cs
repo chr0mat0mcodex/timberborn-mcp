@@ -6,7 +6,7 @@ public static class BuildingProductionRunContract
     public static void Validate(NativeSimulationRun d,SimulationRunRequest r,string version)
     {
         var ids=d.BuildingIds??[];var states=d.BuildingProduction??[];
-        if(version=="0.41.0"&&(d.BuildingIds is null||d.BuildingProduction is null)||ids.Length>8||ids.Distinct().Count()!=ids.Length||
+        if(version is ("0.41.0" or "0.42.0")&&(d.BuildingIds is null||d.BuildingProduction is null)||ids.Length>8||ids.Distinct().Count()!=ids.Length||
             ids.Any(id=>!Guid.TryParseExact(id,"D",out var guid)||guid==Guid.Empty)||states.Any(s=>s is null)||
             !states.Select(s=>s.Id).SequenceEqual(ids)||d.BuildingJournalCursor<0||
             r.Starts&&!r.BuildingIds.SequenceEqual(ids)||ids.Length>0&&(d.StopAtAvailableLogs is not null||(d.GoodTargets?.Length??0)>0||d.StopAtScience is not null))
