@@ -121,6 +121,8 @@ public sealed class SpatialObservations(EntityRegistry entities, TemplateNameMap
                 if (block.MatterBelow.ToString() == "Stackable" && !stackable) reasons.Add("required_stackable_missing");
             }
             return new { position = Vec(p), insideMap = inside, underground, onGround, intersectsObject = intersects,
+                occupation = block.Occupation.ToString(), occupationMask = (int)block.Occupation,
+                fullOccupation = block.Occupation == Block.FullFrom(p).Occupation && block.IsIntersecting(Block.FullFrom(p)),
                 supportRule = block.MatterBelow.ToString() };
         }).ToArray();
         Vector3Int? entrance = null;

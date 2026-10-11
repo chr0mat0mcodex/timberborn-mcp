@@ -99,8 +99,55 @@ public sealed class RegionGroupPlanningTests
         Assert.Equal(before,ResponsePresentation.Present(RegionBuildPlanning.Name,envelope,true).ToJsonString());
         Assert.True(JsonNode.DeepEquals(data["steps"],compact["data"]!["steps"]));
         Assert.True(JsonNode.DeepEquals(data["planKey"],compact["data"]!["planKey"]));
-        Assert.Null(compact["data"]!["attempts"]![0]!["evidence"]);
+        Assert.Empty(compact["data"]!["attempts"]!.AsArray());
+        Assert.True(compact.ToJsonString().Length<before.Length);
         Assert.NotNull(data["attempts"]![0]!["evidence"]);
+    }
+    [Fact]
+    public async Task ExactOverlapsDoNotConsumeNativeBudgetAndMissingGeometryIsNotGuessed()
+    {
+        var first=Candidate(0) with{SolidCells=[new(0,2,3),new(1,2,3)]};
+        var overlap=Candidate(1) with{SolidCells=[new(1,2,3)]};
+        var free=Candidate(2) with{SolidCells=[new(2,2,3)]};
+        var choices=new Dictionary<string,SurveyCandidate[]>{{"Synthetic",[first,overlap,free]}};
+        int calls=0;
+        var r=await RegionGroupPlanning.Plan(Request,["Synthetic","Synthetic"],1,choices,
+            (s,_)=>{calls++;return Task.FromResult(Reply(s));},TestContext.Current.CancellationToken);
+        Assert.Equal(2,calls);Assert.Equal("complete",r["state"]!.GetValue<string>());
+        Assert.Equal(1,r["filteredCandidates"]!.GetValue<int>());
+        var blocked=r["attempts"]!.AsArray().OfType<JsonObject>().Single(a=>a["state"]!.GetValue<string>()=="filtered");
+        Assert.Equal("planned_building",blocked["occupations"]![0]!["kind"]!.GetValue<string>());
+        Assert.Equal("native_intersection_profile",blocked["occupations"]![0]!["occupation"]!.GetValue<string>());
+        var compact=(JsonObject)r.DeepClone();RegionGroupPlanning.Compact(compact);
+        Assert.Equal("Synthetic",compact["filterSummary"]![0]!["occupations"]![0]!["template"]!.GetValue<string>());
+        Assert.Equal(2,r["steps"]![1]!["x"]!.GetValue<int>());
+        choices["Synthetic"]=[first,overlap with{SolidCells=null},free];
+        calls=0;
+        var unknown=await RegionGroupPlanning.Plan(Request,["Synthetic","Synthetic"],1,choices,
+            (s,_)=>{calls++;return Task.FromResult(Reply(s,s.Length==1));},TestContext.Current.CancellationToken);
+        Assert.Equal(2,calls);Assert.Equal(0,unknown["filteredCandidates"]!.GetValue<int>());
+        Assert.Equal("partial",unknown["state"]!.GetValue<string>());
+    }
+    [Fact]
+    public async Task DifferentHeightsDoNotCountAsSameOccupiedCell()
+    {
+        var choices=new Dictionary<string,SurveyCandidate[]>{{"Synthetic",[
+            Candidate(0) with{SolidCells=[new(0,2,3)]},
+            Candidate(0) with{Origin=new(0,2,4),SolidCells=[new(0,2,4)]}]}};
+        var r=await RegionGroupPlanning.Plan(Request,["Synthetic","Synthetic"],1,choices,
+            (s,_)=>Task.FromResult(Reply(s)),TestContext.Current.CancellationToken);
+        Assert.Equal("complete",r["state"]!.GetValue<string>());Assert.Equal(0,r["filteredCandidates"]!.GetValue<int>());
+    }
+    [Fact]
+    public void NativeOccupationProfilesDistinguishCompatibleLayersAndUnknown()
+    {
+        var a=Candidate(0) with{CellOccupations=[new(new(0,2,3),"Bottom, Path, Middle",7)],
+            OccupationProfiles=[new(7,[1,7],true)]};
+        var other=Candidate(0) with{CellOccupations=[new(new(0,2,3),"Bottom",1)]};
+        Assert.Single(RegionGroupPlanning.ConflictingCells(a,other));
+        Assert.Empty(RegionGroupPlanning.ConflictingCells(a,other with{CellOccupations=[new(new(0,2,3),"Top",8)]}));
+        Assert.Empty(RegionGroupPlanning.ConflictingCells(a with{OccupationProfiles=null},other));
+        Assert.Empty(RegionGroupPlanning.ConflictingCells(a,other with{CellOccupations=[new(new(0,2,4),"Bottom",1)]}));
     }
     [Theory]
     [InlineData(0)][InlineData(9)]

@@ -1,5 +1,6 @@
 using Timberborn.Backend.Native;
 using Timberborn.Bridge.Core;
+using System.Text.Json.Serialization;
 
 namespace Timberborn.McpServer;
 
@@ -9,7 +10,11 @@ public sealed record SurveyRequest(string Session, string DistrictId, string Tem
 public sealed record SurveyRect(int X, int Y, int Z, int Width, int Height);
 public sealed record SurveyWindow(SurveyRect Region, int FreeCells, int VegetationCells, int PathCells);
 public sealed record SurveyCandidate(SurveyRect Region, int Rotation, int OptionIndex,
-    string PlanKey, Position Origin, int NewPaths);
+    string PlanKey, Position Origin, int NewPaths,
+    [property: JsonIgnore] Position[]? OccupiedCells = null,
+    [property: JsonIgnore] Position[]? SolidCells = null,
+    [property: JsonIgnore] CandidateOccupation[]? CellOccupations = null,
+    [property: JsonIgnore] OccupationProfile[]? OccupationProfiles = null);
 public sealed record SurveyMoisture(string[] Rows, Dictionary<string, string> Legend,
     SurveyRect[] MoistEmptyGroundPatches);
 public sealed record SurveyWorkRange(string BuildingId, bool Supported, string Source,
@@ -224,7 +229,7 @@ public static class RegionSurvey
             for (int i = 0; i < p.Options.Length; i++) {
                 var o = p.Options[i];
                 if (o.Executable || string.IsNullOrEmpty(o.PlanKey)) throw new InvalidDataException("survey_invalid_plan");
-                candidates.Add(new(window.Region, rotation, i, o.PlanKey, o.Origin, o.NewRoadCells.Length));
+                candidates.Add(new(window.Region, rotation, i, o.PlanKey, o.Origin, o.NewRoadCells.Length, o.OccupiedCells, o.SolidCells, o.CellOccupations, o.OccupationProfiles));
             }
         }
         if (Check(await port.Simulation(ct)).CurrentSpeed != 0) throw new BridgeRejectionException("state_conflict");

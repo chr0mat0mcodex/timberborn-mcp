@@ -1,5 +1,21 @@
 # Native MCP-Werkzeuge
 
+## 0.50.0 — effizientere Gruppenplanung begrenzt live abgenommen
+
+Gemeinsame Flächendaten innerhalb eines Gruppenaufrufs, frische Pause-/Sessiongrenzen
+und unveränderte native Gesamtprüfung. Frühfilter anhand nativer Belegungsverträglichkeit (BlockOccupations.Intersects);
+unbekannte Profile/fehlende Geometrie bleiben nativ zu prüfen.
+`readMetrics` nennt tatsächliche Reads, Cachetreffer und native Vorschauen.
+Antworten nennen Belegungsarten: geplantes Gebäude mit Index/Vorlage, Bestandsgebäude,
+Weg, Vegetation, Rohstoffstapel oder unbekanntes Objekt. Regionsbelegung ist Kontext,
+kein erfundener Ablehnungsgrund. Compact bündelt Filterbefunde und beschränkt
+Bestandsbeispiele mit total/truncated; `detail=full` enthält alle Belege.
+Acht Gebäude/32 Teile bleiben. Nach menschlichem Gate: gemischte Dreiergruppe
+mit vier gemeinsamen Wegen live fertig und zugänglich, Endpause bestätigt.
+28 Reads eingespart, drei statt sechs native Vorschauen, Compact 71 % kürzer.
+Testobjekte entfernt; Bestandswege und Rohstoffstapel erhalten.
+[Vertrag und Pilot](efficient-group-planning.md).
+
 ## 0.49.0 — gemeinsame regionale Gebäudegruppe begrenzt live abgenommen
 
 `plan_region_buildings` erweitert: exklusiv zu `template` eine Liste `templates`

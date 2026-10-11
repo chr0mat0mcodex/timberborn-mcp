@@ -91,6 +91,22 @@ public sealed class RegionBuildPlanningTests
         await Assert.ThrowsAsync<ArgumentException>(()=>RegionBuildPlanning.Invoke(null!,JsonSerializer.SerializeToElement(Request,NativeJson.Options),false,TestContext.Current.CancellationToken));
         Assert.True(RegionSurveyTools.Reader().Annotations!.ReadOnlyHint);
     }
+    [Fact]
+    public void CandidateOccupationRequiresExactBoundedNativeGeometryOn050()
+    {
+        var q=new System.Collections.Specialized.NameValueCollection{{"session",Request.Session},{"districtId",Request.DistrictId},
+            {"template",Request.Template},{"x","0"},{"y","0"},{"z","3"},{"width","1"},{"height","2"},{"rotation","0"}};
+        var request=BuildingPlanRequest.Parse(q);
+        var option=new BuildingPlanOption(new(0,0,3),0,new(0,1,3),new(0,1,3),[],[new(0,1,3)],false,
+            ["joint_game_validation_pending","construction_reachability_unproven","road_protection_incomplete"],new string('a',64),
+            [new(0,0,3)],[new(0,0,3)],[new(new(0,0,3),"Full")]);
+        var data=new NativeBuildingPlan(Request.Template,Request.DistrictId,new(0,0,3),1,2,0,2,1,2,true,"area_exhausted",[option],[]);
+        var e=new BridgeEnvelope<NativeBuildingPlan>(1,Request.Session,DateTimeOffset.UnixEpoch,"0.50.0",data);
+        NativeClient.ValidateBuildingPlan(e,request);
+        Assert.Throws<InvalidDataException>(()=>NativeClient.ValidateBuildingPlan(e with{Data=data with{Options=[option with{OccupiedCells=null}]}},request));
+        Assert.Throws<InvalidDataException>(()=>NativeClient.ValidateBuildingPlan(e with{Data=data with{Options=[option with{SolidCells=[new(0,1,3)]}]}},request));
+        Assert.Throws<InvalidDataException>(()=>NativeClient.ValidateBuildingPlan(e with{Data=data with{Options=[option with{CellOccupations=[new(new(4,1,3),"Full")]}]}},request));
+    }
     [Theory]
     [InlineData(0)][InlineData(5)]
     public void InvalidCandidateBudgetRejected(int max)

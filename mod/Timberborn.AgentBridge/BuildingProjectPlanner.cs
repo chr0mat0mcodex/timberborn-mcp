@@ -36,6 +36,8 @@ public sealed class BuildingProjectPlanner(EntityRegistry entities, SpatialObser
             goals[i]=road[i]&&district.IsOnInstantDistrictRoad(NavigationCoordinateSystem.GridToWorld(p));
         }
         var options=new List<object>();
+        var occupationMasks=OccupationMaskDomain.Create(Enum.GetValues(typeof(BlockOccupations))
+            .Cast<BlockOccupations>().Select(v=>(int)v),(int)BlockOccupations.All);
         var rejectionReasons=new Dictionary<string,int>();
         var rejectedSites=new List<object>();
         void Reject(Vector3Int origin,IEnumerable<string> reasons) {
@@ -57,7 +59,13 @@ public sealed class BuildingProjectPlanner(EntityRegistry entities, SpatialObser
             var route=FlatRoadSearch.FindWithinRoadBudget(r.Width,r.Height,start,footprint,passable,goals,
                 road,BuildingProjectPilotPolicy.MaxNewRoads);
             if(route is null) { Reject(p,new[]{"no_ground_route_within_road_budget"});continue; }
-            var option=new { origin=Vec(p),rotation=r.Rotation,entrance=Vec(entry),
+            var option=new { origin=Vec(p),rotation=r.Rotation,entrance=Vec(entry),occupiedCells=occupied.Select(Vec).ToArray(),
+                solidCells=site["cells"]!.Where(c=>(bool?)c["fullOccupation"]==true).Select(c=>c["position"]!.DeepClone()).ToArray(),
+                cellOccupations=site["cells"]!.Select(c=>new{position=c["position"]!.DeepClone(),occupation=(string?)c["occupation"],mask=(int)c["occupationMask"]!}).ToArray(),
+                occupationProfiles=site["cells"]!.Select(c=>(int)c["occupationMask"]!).Distinct().Select(mask=>new{mask,
+                    conflictsWith=occupationMasks.Contains(mask)
+                        ? occupationMasks.Where(other=>BlockOccupationsExtensions.Intersects((BlockOccupations)mask,(BlockOccupations)other)).ToArray()
+                        : Array.Empty<int>(),known=occupationMasks.Contains(mask)}).ToArray(),
                 connection=Vec(Cell(route[0])),newRoadCells=route.Where(n=>!road[n]).Select(n=>Vec(Cell(n))).ToArray(),
                 routeCells=route.Select(n=>Vec(Cell(n))).ToArray(),executable=false,
                 reasons=new[]{"joint_game_validation_pending","construction_reachability_unproven","road_protection_incomplete"} };

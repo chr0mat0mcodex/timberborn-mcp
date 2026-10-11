@@ -106,6 +106,21 @@ public sealed class RegionSurveyTests
     }
 
     [Fact]
+    public void InternalCandidateGeometryStaysAvailableButIsNotSerialized()
+    {
+        var candidate=new SurveyCandidate(new(0,0,3,2,2),0,0,new string('a',64),new(0,0,3),0,
+            [new(0,0,3)],[new(0,0,3)],[new(new(0,0,3),"Full")]);
+        var json=JsonSerializer.Serialize(candidate,NativeJson.Options);
+        Assert.DoesNotContain("occupiedCells",json);
+        Assert.DoesNotContain("solidCells",json);
+        Assert.DoesNotContain("cellOccupations",json);
+        Assert.Single(candidate.OccupiedCells!);
+        Assert.Single(candidate.SolidCells!);
+        Assert.Single(candidate.CellOccupations!);
+        Assert.Contains("planKey",json);
+    }
+
+    [Fact]
     public async Task SurveyUsesBoundedNativePlansAndReturnsCompactNonExecutableAdvice()
     {
         var port = new Port();
@@ -236,6 +251,47 @@ public sealed class RegionSurveyTests
         Assert.DoesNotContain(cells, p => rows[p.y][p.x] != '.');
     }
 
+    [Fact]
+    public async Task SharedGroupObservationsReuseAreaDataButReadFreshBoundariesAndPlans()
+    {
+        var inner=new Port();var shared=new SharedRegionSurveyPort(inner);
+        var request=Request with{ScanOtherHeights=false};
+        await RegionSurvey.Observe(request,shared,TestContext.Current.CancellationToken);
+        int maps=inner.Maps,reads=shared.NativeReads,plans=inner.Plans;
+        await RegionSurvey.Observe(request with{Template="Other.Folktails"},shared,TestContext.Current.CancellationToken);
+        Assert.Equal(maps,inner.Maps);Assert.Equal(plans*2,inner.Plans);
+        Assert.Equal(4,inner.Speeds);Assert.True(shared.CacheHits>0);
+        var occupation=shared.Occupations();
+        Assert.Equal(0,occupation["total"]!.GetValue<int>());
+        Assert.Equal(plans+2,shared.NativeReads-reads);
+        var fresh=new SharedRegionSurveyPort(inner);
+        await RegionSurvey.Observe(request,fresh,TestContext.Current.CancellationToken);
+        Assert.Equal(maps*2,inner.Maps);
+    }
+    [Fact]
+    public async Task SharedObservationNeverCachesPauseBoundaryOrSwallowsSessionError()
+    {
+        var resumed=new SharedRegionSurveyPort(new Port{Fault="resume"});
+        await resumed.Simulation(TestContext.Current.CancellationToken);
+        await Assert.ThrowsAsync<BridgeRejectionException>(()=>resumed.Simulation(TestContext.Current.CancellationToken));
+        var stale=new SharedRegionSurveyPort(new Port{Fault="session"});
+        await stale.Simulation(TestContext.Current.CancellationToken);
+        await Assert.ThrowsAsync<BridgeRejectionException>(()=>stale.Map(new(0,0,3,1,1),TestContext.Current.CancellationToken));
+        using var stop=new CancellationTokenSource();stop.Cancel();
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(()=>resumed.Objects(0,stop.Token));
+    }
+
+    [Fact]
+    public async Task SharedOccupationReportsKindWithoutInventingOverlapCells()
+    {
+        var shared=new SharedRegionSurveyPort(new Port{Fault="vegetation"});
+        await shared.Targets(new(0,0,3,1,1),0,TestContext.Current.CancellationToken);
+        var occupation=shared.Occupations()["items"]![0]!;
+        Assert.Equal("vegetation",occupation["kind"]!.GetValue<string>());
+        Assert.Equal("SyntheticTree",occupation["template"]!.GetValue<string>());
+        Assert.False(occupation["cellsKnown"]!.GetValue<bool>());
+    }
+
     private sealed class Port : IRegionSurveyPort
     {
         public bool Moist { get; init; }
@@ -286,7 +342,7 @@ public sealed class RegionSurveyTests
             Result(new NativeAreas(kind, true, offset, 32, Fault == "designation_bound" ? 513 : 0, [], false, []));
         public Task<BridgeEnvelope<NativeRemovalTargets>> Targets(SurveyRect r, int offset, CancellationToken ct) {
             var t = new NativeRemovalTarget(Guid.NewGuid(), "vegetation", "SyntheticTree", new(r.X, r.Y, r.Z), "demolition_mark", true, false, "unknown", "current_components");
-            NativeRemovalTarget[] items = Fault == "duplicate_targets" ? [t, t] : [];
+            NativeRemovalTarget[] items = Fault == "duplicate_targets" ? [t, t] : Fault == "vegetation" ? [t] : [];
             bool overlaps = r.Y <= 1 && r.Y + r.Height > 1 && r.X <= (Fault == "other_one_tile" ? 7 : 8) && r.X + r.Width > 7;
             if (Fault is "other_one_tile" or "other_two_tiles" or "exact_overlap" or "invalid_overlap" or "refinement_changed") {
                 if (overlaps) {
