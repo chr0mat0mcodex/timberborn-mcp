@@ -1,5 +1,30 @@
 # Größere Bauvorhaben 0.37.0
 
+## Korrektur live bestanden: wirkungsloser Stopp sperrt keine Folgeprojekte
+
+2026-10-11 nach menschlichem Gate/Bereitmeldung: gültigen Ein-Weg-Plan
+registriert und vor Advance ausdrücklich gestoppt. Vorgesehene Entity fehlt.
+Neuen Plan mit neuer ID in derselben Sitzung erfolgreich registriert, genau
+einen Weg gebaut und `completed` samt beobachtetem Zugang bestätigt. Alte ID
+danach weiterhin `stopped`, ohne Bauversuch. Kein Spielstand-Neuladen zwischen
+Stopp und Folgeprojekt. Anschließender fünfteiliger Wohnaufbau vollständig fertig:
+Zuweg (32,24,4), Treppe (33,24,4), Plattform (34,24,4), Weg (34,24,5),
+Lodge (35,25,5) auf vorhandenem Wohnhaus. Baustellenzugang von Plattform und Haus
+beobachtet; Treppe war bei der Abfrage bereits fertig. Fertiger Hauseingang frei,
+Distriktdistanz 13, alle fünf Teile finished/completed. Bestandsstraße erhalten.
+Zwei reale Wohngeschosse, kein Nachweis eines achtgeschossigen Hochhauses.
+
+Expliziter Stopp vor jedem Platzierungsversuch erlaubt ein neues unabhängiges
+Projekt in derselben Sitzung. Die alte ID bleibt terminal und zählt weiter zum
+Limit von 128 Projekten. Ein intern vor dem Spielaufruf gesetztes Merkmal hält
+jeden Platzierungsversuch fest, auch bei Ausnahme oder fehlender Bestätigung.
+Teilbau, unbestätigte Wirkung und automatische Fehler bleiben blockierend.
+Kein Löschen des Ledgers, keine Wiederholung gestoppter Aufträge.
+
+Regressionstests im menschlichen Gate; Agent führte keine Build-/Testläufe aus.
+Livebeleg gilt für ausdrücklichen Stopp vor Bauversuch. Kein Abschlussverfahren
+für Teilbau oder unbestätigte Wirkung hinzugefügt.
+
 ## Stützenkorrektur live bestanden (2026-10-10)
 
 Nach menschlichem Gate und `live bereit`: Bridge 0.37.0 erreichbar, neue Sitzung,

@@ -81,3 +81,21 @@ Stoppbestätigung abbrechen und diagnostizieren; kein Commit/Push vor beiden Bel
 Runtime-Dateien liegen ausschließlich unter `.local/codex-mcp-supervisor/`, enthalten
 keine Zugangsdaten und werden nicht versioniert. stdout bleibt JSON-RPC; Diagnose
 geht nach stderr. Das Skript gibt die private Bridge-Konfiguration niemals aus.
+# Gate-Korrektur vom 2026-10-11 — Liveprobe bestanden
+
+Nach menschlichem Gate/Bereitmeldung: Backendstart und Bridgekontakt erfolgreich.
+Abschließend Stop mit running=false/gate=true, danach Start über dieselbe
+Verbindung mit running=true/gate=false und unveränderter Spielsitzung bestätigt.
+Kein erneuter Codex-Neustart für den Stop/Start-Pilot erforderlich.
+
+FILE_SHARE_DELETE allein ist im menschlichen Gate fehlgeschlagen. Stattdessen
+serialisiert ein benannter Windows-Mutex je Dateipfad Leser, Austausch und
+Löschen über Prozesse hinweg. Sperrzeitlimit fünf Sekunden; kein Datei-Retry.
+Ein Schreibfehler stoppt das Backend ohne weiteren Publish-Versuch im Fehlerpfad;
+das Gate verlangt weiterhin eine tatsächlich geschriebene Stoppbestätigung.
+Keine Wiederholung von Builds oder Spielaktionen. Zwei Regressionen vorbereitet:
+Ein separater Schreiber wartet bei offenem Leser und ersetzt danach erfolgreich;
+Backend-Stopp bei ausgefallenem Statusschreiben. Alte Vorschaltprozesse laden
+Codeänderungen erst beim Wiederaufbau ihrer Verbindung. Der nachgewiesen hängende
+Altprozess wurde mit ausdrücklicher Nutzerfreigabe gezielt beendet; kein laufendes
+Projekt-Backend verblieben. Anschließendes Gate und Wiederanschluss siehe oben.

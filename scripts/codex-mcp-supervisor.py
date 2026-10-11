@@ -1,8 +1,10 @@
 """Persistent stdio frontend. Python 3.8+, standard library only; no build step."""
 import argparse
 import ctypes
+from contextlib import contextmanager
 from ctypes import wintypes
 import json
+import hashlib
 import os
 from pathlib import Path
 import queue
@@ -16,6 +18,33 @@ ROOT = Path(__file__).resolve().parent.parent
 CONTROL = "timberborn_server_control"
 TOOL = {"name": CONTROL, "description": "Control the project MCP backend while retaining the Codex connection. stop before the human build gate; start only after the developer reports live bereit. Interrupted calls are never replayed. status does not start anything.",
         "inputSchema": {"type": "object", "properties": {"action": {"type": "string", "enum": ["status", "stop", "start"]}}, "required": ["action"], "additionalProperties": False}}
+
+
+def windows_process_birth(pid):
+    # CIM can read creation time even when a reused protected PID denies handles.
+    if not isinstance(pid, int) or isinstance(pid, bool) or pid <= 0:
+        raise RuntimeError("Invalid supervisor PID; refusing build")
+    command = ("$ErrorActionPreference='Stop'; "
+               "$p=Get-CimInstance Win32_Process -Filter 'ProcessId=" + str(pid) + "'; "
+               "if($null -eq $p -or $null -eq $p.CreationDate){throw 'Identity unavailable'}; "
+               "[pscustomobject]@{pid=[int]$p.ProcessId;born=([DateTimeOffset]$p.CreationDate).ToUnixTimeMilliseconds()} | ConvertTo-Json -Compress")
+    executable = Path(os.environ["SystemRoot"]) / "System32/WindowsPowerShell/v1.0/powershell.exe"
+    try:
+        result = subprocess.run([str(executable), "-NoProfile", "-NonInteractive", "-Command", command],
+                                capture_output=True, text=True, timeout=10, check=True,
+                                creationflags=subprocess.CREATE_NO_WINDOW)
+        value = json.loads(result.stdout)
+        if value["pid"] != pid or not isinstance(value["born"], (int, float)):
+            raise ValueError("Invalid identity")
+        return value["born"] / 1000
+    except (OSError, ValueError, KeyError, subprocess.SubprocessError):
+        raise RuntimeError("Cannot verify supervisor process identity; refusing build") from None
+
+
+def protected_pid_was_reused(pid, observed_at):
+    if not isinstance(observed_at, (int, float)):
+        return False
+    return windows_process_birth(pid) > observed_at
 
 
 def alive(pid, observed_at=None):
@@ -33,7 +62,10 @@ def alive(pid, observed_at=None):
     kernel.GetProcessTimes.argtypes = [ctypes.c_void_p] + [ctypes.POINTER(wintypes.FILETIME)] * 4
     handle = kernel.OpenProcess(0x00100000 | 0x1000, False, pid)
     if not handle:
-        if ctypes.get_last_error() == 87:  # invalid PID
+        error = ctypes.get_last_error()
+        if error == 87:  # invalid PID
+            return False
+        if error == 5 and protected_pid_was_reused(pid, observed_at):
             return False
         raise RuntimeError("Cannot verify supervisor process; refusing build")
     try:
@@ -51,14 +83,58 @@ def alive(pid, observed_at=None):
         kernel.CloseHandle(handle)
 
 
-def atomic_json(path, value):
-    temp = path.with_name(path.name + "." + uuid.uuid4().hex + ".tmp")
+@contextmanager
+def lifecycle_file_lock(path):
+    if os.name != "nt":
+        yield
+        return
+    # Same normalized path => same cross-process mutex; readers close before replace.
+    identity = os.path.normcase(str(path.resolve())).encode("utf-8")
+    name = "Local\\TimberbornMcpFile_" + hashlib.sha256(identity).hexdigest()
+    kernel = ctypes.WinDLL("kernel32", use_last_error=True)
+    kernel.CreateMutexW.argtypes = [ctypes.c_void_p, wintypes.BOOL, wintypes.LPCWSTR]
+    kernel.CreateMutexW.restype = wintypes.HANDLE
+    kernel.WaitForSingleObject.argtypes = [wintypes.HANDLE, wintypes.DWORD]
+    kernel.WaitForSingleObject.restype = wintypes.DWORD
+    kernel.ReleaseMutex.argtypes = [wintypes.HANDLE]
+    kernel.CloseHandle.argtypes = [wintypes.HANDLE]
+    handle = kernel.CreateMutexW(None, False, name)
+    if not handle:
+        raise ctypes.WinError(ctypes.get_last_error())
+    acquired = False
     try:
-        temp.write_text(json.dumps(value), encoding="utf-8")
-        os.replace(str(temp), str(path))
+        outcome = kernel.WaitForSingleObject(handle, 5000)
+        if outcome not in (0, 0x80):  # Acquired, including an abandoned owner.
+            raise RuntimeError("Lifecycle file lock unavailable; refusing operation")
+        acquired = True
+        yield
     finally:
-        if temp.exists():
-            temp.unlink()
+        if acquired:
+            kernel.ReleaseMutex(handle)
+        kernel.CloseHandle(handle)
+
+
+@contextmanager
+def shared_text_reader(path):
+    with lifecycle_file_lock(path):
+        with path.open(encoding="utf-8") as stream:
+            yield stream
+
+
+def read_json(path):
+    with shared_text_reader(path) as stream:
+        return json.load(stream)
+
+
+def atomic_json(path, value):
+    with lifecycle_file_lock(path):
+        temp = path.with_name(path.name + "." + uuid.uuid4().hex + ".tmp")
+        try:
+            temp.write_text(json.dumps(value), encoding="utf-8")
+            os.replace(str(temp), str(path))
+        finally:
+            if temp.exists():
+                temp.unlink()
 
 
 def request_stop(runtime, timeout=10):
@@ -71,7 +147,7 @@ def request_stop(runtime, timeout=10):
         pending = []
         for path in runtime.glob("instance-*.json"):
             try:
-                state = json.loads(path.read_text(encoding="utf-8"))
+                state = read_json(path)
                 if alive(state["pid"], state.get("heartbeat")) and (
                         state.get("ticket") != ticket or state.get("running")):
                     pending.append(path.name)
@@ -102,7 +178,7 @@ class Supervisor:
         self.tools = []
         self.catalog = runtime / "tools-cache.json"
         try:
-            cached = json.loads(self.catalog.read_text(encoding="utf-8"))
+            cached = read_json(self.catalog)
             if isinstance(cached, list) and all(isinstance(t, dict) and isinstance(t.get("name"), str) and isinstance(t.get("inputSchema"), dict) and t["name"] != CONTROL for t in cached):
                 self.tools = cached
         except (OSError, ValueError):
@@ -133,14 +209,17 @@ class Supervisor:
             try:
                 with self.lifecycle:
                     if self.gate.exists():
-                        ticket = json.loads(self.gate.read_text(encoding="utf-8"))["ticket"]
+                        ticket = read_json(self.gate)["ticket"]
                         self.stop()
                         self.ticket = ticket
                     self.publish()
             except Exception:
                 # Fail closed if lifecycle storage is unavailable.
-                self.stop()
-                print("Supervisor lifecycle storage unavailable", file=sys.stderr)
+                try:
+                    self.stop(publish=False)
+                except Exception:
+                    print("Supervisor backend stop incomplete; build remains blocked", file=sys.stderr)
+                print("Supervisor lifecycle storage unavailable; no stop acknowledgement", file=sys.stderr)
 
     def reader(self, process):
         try:
@@ -207,7 +286,7 @@ class Supervisor:
                 if client_id is not None:
                     self.client_ids.pop(client_id, None)
 
-    def stop(self):
+    def stop(self, publish=True):
         with self.lifecycle:
             with self.lock:
                 process = self.process
@@ -228,14 +307,16 @@ class Supervisor:
                 if self.reader_thread.is_alive():
                     raise RuntimeError("Backend reader did not stop; lifecycle cleanup incomplete")
                 self.reader_thread = None
-            self.publish()
+            if publish:
+                self.publish()
 
     def start(self, explicit=False):
         with self.lifecycle:
             if self.closed.is_set():
                 raise RuntimeError("Supervisor connection is closing")
             if explicit and self.gate.exists():
-                self.gate.unlink()
+                with lifecycle_file_lock(self.gate):
+                    self.gate.unlink(missing_ok=True)
             if self.gate.exists():
                 return
             if self.process is not None and self.process.poll() is None:
@@ -324,7 +405,8 @@ class Supervisor:
         self.closed.set()
         self.watcher.join(timeout=6)
         self.stop()
-        self.registry.unlink(missing_ok=True)
+        with lifecycle_file_lock(self.registry):
+            self.registry.unlink(missing_ok=True)
 
 
 def main():

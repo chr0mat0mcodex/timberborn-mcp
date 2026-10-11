@@ -20,6 +20,7 @@ public sealed class LargeProjectLedger
         public Receipt Result = new();
         public string Fingerprint = "";
         public double ConfirmationDeadline;
+        public bool PlacementAttempted;
     }
     private readonly Dictionary<string, Entry> entries = new();
     public Receipt? Existing(string id, string fingerprint)
@@ -31,7 +32,10 @@ public sealed class LargeProjectLedger
     public Receipt Start(string id, string key, string fingerprint, int[] order, string[] entityIds)
     {
         var old = Existing(id, fingerprint); if (old is not null) return old;
-        if (entries.Count >= 128 || entries.Values.Any(e => e.Result.State != "completed")) throw new BridgeRejectionException("state_conflict");
+        if (entries.Count >= 128 || entries.Values.Any(e =>
+            e.Result.State != "completed" &&
+            !(e.Result.State == "stopped" && e.Result.Reason == "stop_requested_objects_retained" && !e.PlacementAttempted)))
+            throw new BridgeRejectionException("state_conflict");
         if (!Guid.TryParseExact(id,"D",out var action) || action==Guid.Empty || order.Length is <1 or >32 || entityIds.Length!=order.Length || !order.OrderBy(x=>x).SequenceEqual(Enumerable.Range(0,order.Length)) || entityIds.Distinct().Count()!=entityIds.Length || entityIds.Any(s=>!Guid.TryParseExact(s,"D",out var value)||value==Guid.Empty)) throw new ArgumentException();
         var result = new Receipt { ActionId=id,PlanKey=key,Order=order.ToArray(),EntityIds=entityIds.ToArray(),PartStates=Enumerable.Repeat("pending",order.Length).ToArray() };
         entries.Add(id,new Entry {Result=result,Fingerprint=fingerprint}); return result;
@@ -70,6 +74,7 @@ public sealed class LargeProjectLedger
             }
             if(!preflight(i)) {r.State="stopped";r.Reason="native_step_validation_failed";return r;}
             r.PartStates[i]="unconfirmed"; r.State="waiting";r.Reason="awaiting_order_confirmation";e.ConfirmationDeadline=now+5;
+            e.PlacementAttempted=true;
             place(i); // Commit the attempt before invoking the game, even if it throws.
         }
         catch {r.State=r.PartStates.Any(s=>s=="unconfirmed")?"unconfirmed":"stopped";r.Reason="operation_failed_no_retry";}

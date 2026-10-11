@@ -1,5 +1,52 @@
 # Projektstand
 
+## Live 2026-10-11: Wiederanschluss und wirkungsloser Projektstopp bestanden
+
+Nach erneuter Bereitmeldung Backendstart erfolgreich, Bridge 0.37.0 und neue
+Session bestätigt. Expliziter Stopp vor Bauversuch erzeugt kein Objekt und
+blockiert neuen Auftrag in derselben Sitzung nicht mehr. Neuer Weg fertig und
+zugänglich, Ledger completed; alte ID bleibt stopped. Fünfteiliger Aufbau einer
+zusätzlichen Wohnetage vollständig fertig: Zuweg, Treppe, Plattform, oberer Weg,
+Lodge auf Z5 über bestehendem Haus auf Z4. Plattform-/Hausbaustelle erreichbar,
+fertiger Hauseingang frei, Distriktdistanz 13. Ledger completed; keine allgemeine
+Acht-Ebenen-Abnahme. Tag 473, 19,59375 Uhr pausiert.
+Supervisor-Liveprobe ebenfalls bestanden: Stop bestätigt Backend aus/Gate an,
+Start über dieselbe Verbindung bestätigt Backend an/Gate aus, Bridge und gleiche
+Spielsitzung erneut erreichbar. Kein Codex- oder Spielneustart für diese Probe.
+Frühere Fehler-/Gate-Beschreibungen unten sind historische Zwischenschritte.
+
+## Gate-Korrektur vorbereitet: Windows-Statusdateien (2026-10-11)
+
+Zusätzlicher aktueller Befund: Alte Registrierungen verweisen auf wiederverwendete
+geschützte Windows-Dienst-PIDs. Bei verweigertem Handlezugriff prüft der Starter
+jetzt die CIM-Prozessstartzeit; nur nachgewiesene Wiederverwendung wird ignoriert.
+Identitätsfehler bleiben sperrend. Gezielter Lifecycle-Stopp erreicht damit die
+Bestätigungsprüfung. Verbliebenen alten Vorschaltprozess mit eingefrorenem
+Heartbeat nach ausdrücklicher Nutzerfreigabe und erneuter Identitäts-/Kinderprüfung
+gezielt beendet. Danach Lifecycle-Stopp erfolgreich: Starts gesperrt, kein
+Projekt-Backend vorhanden. Menschliches Build-/Test-Gate weiter ausstehend;
+Client-Verbindung muss anschließend wieder aufgebaut werden.
+
+Erster Fehler: Statusdatei-Ersetzung verweigert, danach zweiter Schreibfehler im
+Fehlerpfad. Nachfolgender Gate-Test bewies, dass FILE_SHARE_DELETE allein den
+Austausch bei offenem Leser nicht ermöglicht. Diese Korrektur wurde ersetzt:
+Benannter Windows-Mutex je normalisiertem Dateipfad serialisiert Lesen,
+Ersetzen und Löschen über Prozesse hinweg, mit fünf Sekunden Sperrzeitlimit.
+Neuer Zweiprozess-Test hält den Leser offen, belegt wartenden Schreiber und
+prüft erfolgreichen Austausch nach Schließen des Lesers. Fehlerpfad stoppt Backend ohne erneutes
+Statusschreiben; keine erfundene Stoppbestätigung und keine Build-Retries.
+Regressionen für konkurrierenden Leser und Schreibfehler ergänzt;
+Quell-/Diffprüfung erfolgt, Ausführung im menschlichen Gate ausstehend.
+Bereits laufende Python-Vorschaltprozesse laden Änderungen erst bei Neustart.
+
+## Vorbereitet, noch nicht abgenommen: wirkungsloser Höhenprojekt-Stopp
+
+Explizit gestoppte Großprojekte ohne jeden Platzierungsversuch sollen neue
+Projekte nicht mehr sperren. Alte IDs bleiben terminal; Teilbauten, automatische
+Fehler und unbestätigte Wirkungen bleiben gesperrt. Code und Regressionstests
+vorbereitet; Build/Tests und gezielter Stop→Neustart-Livepilot am menschlichen
+Gate ausstehend. Details: docs/large-projects-0.37.0.md.
+
 ## 0.37.0 größere Bauvorhaben — Stützenpilot bestanden (2026-10-10)
 
 Aktuell: Nach menschlichem Gate fünfteilige Höhenfolge vollständig gebaut und

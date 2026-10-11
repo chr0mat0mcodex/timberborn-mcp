@@ -3,10 +3,12 @@ import json
 from pathlib import Path
 import queue
 import sys
+import subprocess
 import tempfile
 import threading
 import time
 import unittest
+from unittest.mock import Mock, patch
 
 ROOT = Path(__file__).resolve().parents[2]
 spec = importlib.util.spec_from_file_location("supervisor", ROOT / "scripts/codex-mcp-supervisor.py")
@@ -104,6 +106,69 @@ class LifecycleTests(unittest.TestCase):
             self.assertIsNone(other.process)
         finally:
             other.close()
+
+    @unittest.skipUnless(sys.platform == "win32", "Windows cross-process file mutex")
+    def test_atomic_replace_waits_for_status_reader_in_other_process(self):
+        path = self.runtime / "shared-status.json"
+        module.atomic_json(path, {"ticket": "before"})
+        code = (
+            "import importlib.util,sys; from pathlib import Path; "
+            "spec=importlib.util.spec_from_file_location('supervisor',sys.argv[1]); "
+            "m=importlib.util.module_from_spec(spec); spec.loader.exec_module(m); "
+            "print('ready',flush=True); "
+            "m.atomic_json(Path(sys.argv[2]),{'ticket':'after'})"
+        )
+        child = None
+        try:
+            with module.shared_text_reader(path) as reader:
+                child = subprocess.Popen([sys.executable, "-B", "-c", code,
+                                          str(ROOT / "scripts/codex-mcp-supervisor.py"), str(path)],
+                                         stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
+                                         creationflags=subprocess.CREATE_NO_WINDOW)
+                self.assertEqual("ready", child.stdout.readline().strip())
+                with self.assertRaises(subprocess.TimeoutExpired):
+                    child.communicate(timeout=0.2)
+                self.assertEqual("before", json.load(reader)["ticket"])
+            _, error = child.communicate(timeout=5)
+            self.assertEqual(0, child.returncode, error)
+            self.assertEqual("after", module.read_json(path)["ticket"])
+            self.assertEqual([], list(self.runtime.glob("*.tmp")))
+        finally:
+            if child is not None:
+                if child.poll() is None:
+                    child.kill()
+                child.communicate(timeout=5)
+
+    def test_protected_pid_requires_positive_reuse_evidence(self):
+        with patch.object(module, "windows_process_birth", return_value=200):
+            self.assertTrue(module.protected_pid_was_reused(123, 100))
+            self.assertFalse(module.protected_pid_was_reused(123, 200))
+            self.assertFalse(module.protected_pid_was_reused(123, 300))
+        with patch.object(module, "windows_process_birth") as birth:
+            self.assertFalse(module.protected_pid_was_reused(123, None))
+            birth.assert_not_called()
+        with patch.object(module, "windows_process_birth", side_effect=RuntimeError("unavailable")):
+            with self.assertRaises(RuntimeError):
+                module.protected_pid_was_reused(123, 100)
+
+    def test_storage_failure_stops_backend_without_second_publish(self):
+        self.initialize()
+        child = self.server.process
+        self.server.closed.set()
+        self.server.watcher.join(timeout=3)
+        self.assertFalse(self.server.watcher.is_alive())
+        closed = Mock()
+        closed.wait.side_effect = [False, True]
+        with patch.object(self.server, "closed", closed), \
+                patch.object(self.server, "publish", side_effect=PermissionError("synthetic")) as publish, \
+                patch.object(module, "print") as diagnostic:
+            self.server.watch()
+            self.assertEqual(1, publish.call_count)
+            diagnostic.assert_called()
+        self.assertIsNone(self.server.process)
+        self.assertIsNotNone(child.poll())
+        self.assertTrue(child.stdin.closed)
+        self.assertTrue(child.stdout.closed)
 
     def test_unacknowledged_live_registry_blocks_gate(self):
         import os

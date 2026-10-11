@@ -113,6 +113,59 @@ public sealed class LargeProjectTests
         int count=0;ledger.Advance(Action,0,()=>true,_=>"finished",_=>true,_=>count++);
         Assert.Equal(0,count);Assert.Equal("stopped",ledger.Inspect(Action).State);
     }
+    [Fact]
+    public void ExplicitStopBeforePlacementAllowsNewProjectWithoutRevivingOldIdentity()
+    {
+        var ledger=Ledger();
+        var stopped=ledger.Stop(Action);
+        var next=ledger.Start(District,new string('b',64),"other",[0],[Session]);
+        Assert.Equal("ready",next.State);
+        Assert.Same(stopped,ledger.Start(Action,new string('a',64),"plan",[0,1],stopped.EntityIds));
+        Assert.Throws<BridgeRejectionException>(()=>ledger.Start(Action,new string('b',64),"changed",[0],[Session]));
+        int count=0;
+        Assert.Equal("stopped",ledger.Advance(Action,0,()=>true,_=>"finished",_=>true,_=>count++).State);
+        Assert.Equal(0,count);
+        ledger.Advance(District,0,()=>true,_=>"finished",_=>true,_=>count++);
+        Assert.Equal(1,count);
+    }
+    [Theory]
+    [InlineData("missing")]
+    [InlineData("construction")]
+    [InlineData("finished")]
+    public void StopAfterPlacementAttemptStillBlocksNewProject(string observation)
+    {
+        var ledger=Ledger();
+        int count=0;
+        ledger.Advance(Action,0,()=>true,_=>observation,_=>true,_=>count++);
+        ledger.Advance(Action,1,()=>true,_=>observation,_=>true,_=>count++);
+        ledger.Stop(Action);
+        Assert.Throws<BridgeRejectionException>(()=>ledger.Start(District,new string('b',64),"other",[0],[Session]));
+        int before=count;
+        ledger.Advance(Action,2,()=>true,_=>"finished",_=>true,_=>count++);
+        Assert.Equal(before,count);
+    }
+    [Theory]
+    [InlineData(false,true)]
+    [InlineData(true,false)]
+    public void AutomaticFailureBeforePlacementIsNotReleasedByStop(bool guard,bool valid)
+    {
+        var ledger=Ledger();
+        ledger.Advance(Action,0,()=>guard,_=>"finished",_=>valid,_=>throw new InvalidOperationException());
+        ledger.Stop(Action);
+        Assert.Throws<BridgeRejectionException>(()=>ledger.Start(District,new string('b',64),"other",[0],[Session]));
+    }
+    [Fact]
+    public void StoppedProjectsStillCountTowardsSessionLimit()
+    {
+        var ledger=new LargeProjectLedger();
+        for(int i=1;i<=128;i++)
+        {
+            string id=new Guid(i,0,0,new byte[8]).ToString("D");
+            ledger.Start(id,new string('a',64),"plan",[0],[Session]);
+            ledger.Stop(id);
+        }
+        Assert.Throws<BridgeRejectionException>(()=>ledger.Start(Action,new string('a',64),"plan",[0],[Session]));
+    }
     [Theory]
     [InlineData(false)] [InlineData(true)]
     public void NewToolsUseIndependentBuildingGateAndCorrectMethods(bool enabled)
