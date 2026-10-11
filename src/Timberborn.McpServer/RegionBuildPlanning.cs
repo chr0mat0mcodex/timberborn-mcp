@@ -17,9 +17,17 @@ public static class RegionBuildPlanning
         var schema = JsonNode.Parse(RegionSurveyTools.Reader().InputSchema.GetRawText())!.AsObject();
         schema["properties"]!["maxCandidates"] = new JsonObject {
             ["type"]="integer", ["minimum"]=1, ["maximum"]=4, ["default"]=3 };
+        schema["properties"]!["templates"] = new JsonObject { ["type"]="array",["minItems"]=1,["maxItems"]=8,
+            ["items"]=new JsonObject{["type"]="string",["minLength"]=1,["maxLength"]=160},
+            ["description"]="0.49: gemeinsame Gebäudegruppe in dieser Reihenfolge; Wiederholungen erlaubt. Exklusiv zu template." };
+        var required=schema["required"]!.AsArray();
+        for(int i=required.Count-1;i>=0;i--)if(required[i]?.GetValue<string>()=="template")required.RemoveAt(i);
+        schema["oneOf"]=new JsonArray(
+            new JsonObject{["required"]=new JsonArray("template"),["not"]=new JsonObject{["required"]=new JsonArray("templates")}},
+            new JsonObject{["required"]=new JsonArray("templates"),["not"]=new JsonObject{["required"]=new JsonArray("template")}});
         yield return new Tool { Name=Name, InputSchema=JsonSerializer.SerializeToElement(schema),
             OutputSchema=JsonSerializer.SerializeToElement(new {type="object"}),
-            Description="0.48: Region wie survey_region durchsuchen, anschließend höchstens maxCandidates (1–4, Standard 3) eindeutige Kandidaten gemeinsam mit automatischen Zugangshilfen nativ prüfen. Nur pausiert und mit Bauschalter; temporäre native Vorschauen, kein Bauauftrag. Erst native_preview_passed liefert steps plus planKey für run_large_project; rejected/unchecked sind keine Freigabe. Gründe, Teilberichte, Höhen-/Suchabdeckung und Prüfanzahl bleiben sichtbar. Ein Kandidat ist eine Alternative: nie mehrere alternativ geprüfte Pläne ungeprüft zusammenbauen. Bestehende Grenzen 32 Teile/32×32/acht Höhen; keine Rodung, keine optimale oder vollständige Standortsuche. WorkBuildingId und planBuildings=false hier unzulässig. Start validiert den unveränderten Plan erneut; kein Auftrags-Replay.",
+            Description="0.49: Alternativ templates mit 1–8 Gebäuden als gemeinsamem Plan; maxCandidates gilt dann je Gebäude (insgesamt höchstens 32 Vorschauen). Gemeinsame Wege, greedy in Eingabereihenfolge ohne globale Optimierung. complete/partial/none und unplaced lesen; Teilplan enthält nur die ausgewiesenen Gebäude. Compact standardmäßig, detail=full mit allen Belegen. Mit template weiterhin Einzelalternativen. 0.48: Region wie survey_region durchsuchen, anschließend höchstens maxCandidates (1–4, Standard 3) eindeutige Kandidaten gemeinsam mit automatischen Zugangshilfen nativ prüfen. Nur pausiert und mit Bauschalter; temporäre native Vorschauen, kein Bauauftrag. Erst native_preview_passed liefert steps plus planKey für run_large_project; rejected/unchecked sind keine Freigabe. Gründe, Teilberichte, Höhen-/Suchabdeckung und Prüfanzahl bleiben sichtbar. Ein Kandidat ist eine Alternative: nie mehrere alternativ geprüfte Pläne ungeprüft zusammenbauen. Bestehende Grenzen 32 Teile/32×32/acht Höhen; keine Rodung, keine optimale oder vollständige Standortsuche. WorkBuildingId und planBuildings=false hier unzulässig. Start validiert den unveränderten Plan erneut; kein Auftrags-Replay.",
             Annotations=new(){ReadOnlyHint=false,DestructiveHint=false,IdempotentHint=true,OpenWorldHint=false} };
     }
     public static (SurveyRequest Survey,int MaxCandidates) Parse(JsonElement args)
@@ -41,10 +49,11 @@ public static class RegionBuildPlanning
     public static async Task<JsonObject> Invoke(NativeClient client,JsonElement args,bool enabled,CancellationToken ct)
     {
         if(!enabled)throw new ArgumentException("building_actions_disabled");
+        if(args.TryGetProperty("templates",out _))return await RegionGroupPlanning.Invoke(client,args,ct);
         var (request,max)=Parse(args);
         var initial=await client.Simulation(ct);
         if(initial.SessionId!=request.Session)throw new BridgeRejectionException("stale_session");
-        if(initial.BridgeVersion!="0.48.0")throw new InvalidDataException("regional_planning_requires_048");
+        if(initial.BridgeVersion is not ("0.48.0" or "0.49.0"))throw new InvalidDataException("regional_planning_requires_048");
         if(initial.Data.CurrentSpeed!=0)throw new BridgeRejectionException("state_conflict");
         var survey=await RegionSurvey.Observe(request,new NativeRegionSurveyPort(client),ct);
         var candidates=survey.BuildingCandidates.Concat(survey.AdditionalLevels.SelectMany(l=>l.BuildingCandidates));
@@ -79,7 +88,7 @@ public static class RegionBuildPlanning
                 var step=new LargeProjectStep {Template=request.Template,X=c.Origin.X,Y=c.Origin.Y,Z=c.Origin.Z,Rotation=c.Rotation};
                 var e=await check(step,ct); // Transport/session failures abort; never turn them into a rejected site.
                 if(e.SessionId!=request.Session)throw new BridgeRejectionException("stale_session");
-                if(e.BridgeVersion!="0.48.0")throw new InvalidDataException("regional_planning_requires_048");
+                if(e.BridgeVersion is not ("0.48.0" or "0.49.0"))throw new InvalidDataException("regional_planning_requires_048");
                 var data=JsonNode.Parse(e.Data.GetRawText())!.AsObject();
                 bool ok=data["candidateFound"]!.GetValue<bool>();
                 item["state"]=ok?"native_preview_passed":"rejected";

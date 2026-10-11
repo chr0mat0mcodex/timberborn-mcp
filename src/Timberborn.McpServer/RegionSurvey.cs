@@ -5,7 +5,7 @@ namespace Timberborn.McpServer;
 
 public sealed record SurveyRequest(string Session, string DistrictId, string Template,
     int X, int Y, int Z, int Width, int Height, string? WorkBuildingId = null, bool PlanBuildings = true,
-    bool ScanOtherHeights = true, int MaxHeights = 4, int MaxWindows = 3);
+    bool ScanOtherHeights = true, int MaxHeights = 4, int MaxWindows = 3, int MaxResults = 4);
 public sealed record SurveyRect(int X, int Y, int Z, int Width, int Height);
 public sealed record SurveyWindow(SurveyRect Region, int FreeCells, int VegetationCells, int PathCells);
 public sealed record SurveyCandidate(SurveyRect Region, int Rotation, int OptionIndex,
@@ -45,7 +45,7 @@ public static class RegionSurvey
         BuildBatchState.Id(r.Session); BuildBatchState.Id(r.DistrictId);
         if (r.WorkBuildingId is not null) BuildBatchState.Id(r.WorkBuildingId);
         if (string.IsNullOrWhiteSpace(r.Template) || r.Template.Length > 160 ||
-            r.MaxHeights is < 1 or > 8 || r.MaxWindows is < 1 or > 9 || r.X < 0 || r.Y < 0 || r.Z is < 0 or > 4095 || r.Width is < 1 or > 16 || r.Height is < 1 or > 16 ||
+            r.MaxResults is < 1 or > 32 || r.MaxHeights is < 1 or > 8 || r.MaxWindows is < 1 or > 9 || r.X < 0 || r.Y < 0 || r.Z is < 0 or > 4095 || r.Width is < 1 or > 16 || r.Height is < 1 or > 16 ||
             (long)r.X + r.Width > 4096 || (long)r.Y + r.Height > 4096) throw new ArgumentException();
     }
 
@@ -233,7 +233,7 @@ public static class RegionSurvey
                 ["b"] = "building_or_debris", ["o"] = "other_object_observed_occupied_cell", ["p"] = "finished_path", ["e"] = "existing_entrance",
                 ["~"] = "water_or_contamination", ["h"] = "different_ground_height", ["?"] = "unknown" },
             patches, windows, candidates.OrderBy(c => c.NewPaths).ThenBy(c => c.Origin.Y).ThenBy(c => c.Origin.X)
-                .DistinctBy(c => (c.Origin, c.Rotation)).Take(4).ToArray(), reads, planningCalls, first!.Value, last, false,
+                .DistinctBy(c => (c.Origin, c.Rotation)).Take(r.MaxResults).ToArray(), reads, planningCalls, first!.Value, last, false,
             ["read_only_non_atomic", "rows_y_ascending_columns_x_ascending", "each_level_separate_ground_plane_no_vertical_route_planning",
              "patches_are_not_planting_or_work_range_validation", "moisture_is_current_not_future_irrigation_or_yield",
              "paths_are_not_district_membership_proof", "bounded_coverage_ranked_windows",

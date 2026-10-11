@@ -1,5 +1,22 @@
 # Timberborn MCP
 
+## 0.49.0 — gemeinsame regionale Gebäudegruppe begrenzt live abgenommen
+
+`plan_region_buildings` erweitert: exklusiv zu `template` eine Liste `templates`
+mit 1–8 Gebäuden, Wiederholungen erlaubt. Suche einmal je unterschiedlicher Vorlage,
+gemeinsame native Vorschau nach jeder Ergänzung; Zugangshilfen und Wege gemeinsam
+berechnen. Maximal vier Kandidaten je Gebäude / 32 native Vorschauen insgesamt.
+`complete/partial/none` bezeichnet Planung, nicht Bauabschluss. Unveränderte
+`steps` und `planKey` an `run_large_project` übergeben; fehlende Gebäude stehen
+in `unplaced`. Compact standardmäßig, `detail=full` mit allen Vorschau-Belegen.
+Greedy in Eingabereihenfolge, keine optimale oder vollständige Standortsuche.
+32 Gesamtteile, 32×32 und acht Höhen bleiben. Nach menschlicher Bereitmeldung
+Bridge 0.49.0 bestätigt: drei Bänke plus vier gemeinsame Wegstücke in einem
+Startauftrag fertig und zugänglich, 3,03125 Spielstunden / 8,85 reale Sekunden.
+Teilplan- und belegte Einzelflächenprobe bestanden; Testbauten/Wege entfernt,
+Bestandswege und drei zurückgewonnene Rohstoffstapel erhalten, Endpause bestätigt.
+[Vertrag und Pilot](docs/group-building-plans.md).
+
 Eine eigene Timberborn-Mod und ein lokaler C#-MCP-Server ermöglichen strukturierte
 Beobachtung und kontrollierte Eingriffe über reguläre Spielservices.
 
