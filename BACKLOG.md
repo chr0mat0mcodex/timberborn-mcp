@@ -911,3 +911,12 @@ Auswahl live geprüft; Grenzen und Nachweis stehen in PROJECT_STATE.md.
   hasRecipe=false, aber Grill/Bäckerei können per MCP keine Rezeptwahl erhalten.
   Reguläre auswählbare Rezepte lesen, erwartetes altes Rezept prüfen, neues setzen
   und Wirkung rücklesen; benötigte Zutaten/Brennstoff getrennt anzeigen.
+
+- P1: guard_changed bei Großprojekten aufschlüsseln. Nach fertig beobachtetem
+  Pegel stoppte Zweierprojekt vor Kraftwelle, ohne offene Baustellen/HUD-Alerts.
+  Teilprüfung, betroffene Objekt-/Zugangskoordinaten und Baseline-/Istwerte liefern;
+  lesenden Diagnoseaufruf auch für terminale Projekte ermöglichen. Historischer
+  Wegvergleich erlaubt keine eindeutige Ursachen- oder Verursacherzuordnung.
+  Kontrollierten Neuplanungsabschluss nach bestätigten bestehenden Aufträgen
+  entwickeln, damit ein diagnostizierter Stopp keinen Spielstand-Neuladevorgang
+  erzwingt. Keine automatische Wiederholung unbestätigter Aufträge.

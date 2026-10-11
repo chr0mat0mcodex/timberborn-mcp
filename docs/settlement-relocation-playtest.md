@@ -155,3 +155,23 @@ Oberes Sägewerk erhält eigenes Laufrad; Bau-/Leistungsnachweis noch ausstehend
   am Kartenrand (9,0,2); kein kontaminierter Biber in dieser Statusgruppe.
 - 53 Biber, 54 Betten, keine Obdachlosen. Simulation an Tag 497, 9,3125 Uhr pausiert.
   Bevölkerungsteilziel erreicht, Gebäudeziel 55/157; konfliktfreie Terrassenkürzung offen.
+
+## Fortsetzung: fertiger Pegel, undiagnostischer Schutzstopp
+
+- StreamGauge, VerticalPowerShaft und PaperMill regulär freigeschaltet. Beide
+  Sägewerke wegen voller Bretterpuffer vorläufig pausiert und Pause rückgelesen.
+  Begrenzter Holzlauf brachte zunächst neun freie Stämme; für kleinen Bau unterbrochen.
+- Zweierplan auf trockenem Z6-Plateau nativ gültig, keine verlorenen Verbindungen
+  in Vorschau. Pegel bei (44,13,6) beauftragt, Baustellenzugang buildersReachable=true;
+  nach 20 Spielstunden separat found=true/finished=true. Bau-, kein Wasserfunktionsnachweis.
+- Folgender Advance bei bestätigter Pause stoppte vor weiterer Platzierung mit
+  guard_changed. Kraftwelle separat nicht gefunden, Projekt terminal stopped;
+  keine Wiederholung oder Ausweichprojekt gestartet. Ledger sperrt Folgeprojekte.
+- Keine offenen Baustellen, keine neuen HUD-Alerts. Benachbarte TripleLodge weiter
+  zugänglich, jetzt native Distanz 62. Guard prüft interne Fehler, Bauisolation,
+  Bestandsverbindungen und Vorgänger, nennt aber weder Teilursache noch Zielobjekte.
+  Ursache deshalb nicht behauptet. Gegenüber älterem Bestandsinventar fehlen sechs
+  Wege bei x21..26/y2/z3; Zeitpunkt und Ursachenzusammenhang unbekannt.
+- Abdeckung 56/157, 101 offen. Zuletzt 6 freie Stämme, 38 freie Bretter, 20 Zahnräder.
+  54 belegte Betten, keine freien Betten oder Obdachlosen. Tag 499, 10,84375 Uhr pausiert.
+  Zum Weiterbauen neue Spielsitzung durch Speichern/Neuladen erforderlich; kein Build-Gate.

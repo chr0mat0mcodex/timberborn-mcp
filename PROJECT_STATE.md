@@ -1,5 +1,17 @@
 # Projektstand
 
+## Fortsetzung 2026-10-11: Pegel fertig, Projektstopp diagnostiziert
+
+StreamGauge fertig und separat gelesen: 56/157 reguläre Typen, 101 offen.
+Zweierprojekt vor Kraftwellenauftrag terminal stopped/guard_changed; Kraftwelle
+nicht vorhanden. Keine offenen Baustellen oder neuen HUD-Alerts. Ursache nicht
+eindeutig beobachtbar: Guard liefert keine Teilursache/betroffenen Objekte.
+Weiterer Großprojektstart ist im aktuellen Ledger bis Spielstand-Neuladen gesperrt.
+PaperMill und VerticalPowerShaft freigeschaltet, noch nicht gebaut. Beide Sägewerke
+vorübergehend pausiert, volle Bretterpuffer; zuletzt 6 freie Stämme, 38 freie Bretter,
+20 Zahnräder. 54 belegte Betten, keine freien Betten/Obdachlosen.
+Tag 499, 10,84375 Uhr pausiert. Details im Spieltestjournal.
+
 ## Spieltest-Abschluss und Warnungsbereinigung (2026-10-11)
 
 Korrektur: Terrassenabkürzung störte zwei Bestandszugänge trotz positiver Vorschau.
