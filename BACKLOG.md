@@ -926,3 +926,10 @@ Auswahl live geprüft; Grenzen und Nachweis stehen in PROJECT_STATE.md.
   tatsächlicher Grundriss enthält (41/42,12,6) über niedrigerem Gelände. Herkunft
   der Kandidatenkoordinate und Drehtransformation vereinheitlichen, volle Auflage
   prüfen. Ungeprüfte Suchtreffer nicht als belastbare Bauplätze darstellen.
+
+- P2: Lange Wachstumsläufe effizient begleiten: optionales natives Ereignisziel
+  für erste erntereife markierte Bäume in einem Gebiet und Abschlussbenachrichtigung
+  statt kurzer MCP-Statusabfragen. Feste vom Nutzer gewünschte Laufdauer beibehalten,
+  wenn kein Ereignisziel beauftragt ist. Aktueller Bestandsstopp beweist weder
+  Baumreife noch Ernteursache; Zeitprognosen nur mit ausgewiesenen Annahmen zu
+  Wachstum/Wasserstress und ohne garantierten Ertrag.

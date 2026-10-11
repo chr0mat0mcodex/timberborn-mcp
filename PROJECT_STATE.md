@@ -1,5 +1,18 @@
 # Projektstand
 
+## 2026-10-11: 15 Tage Eichenwachstum vollständig geprüft
+
+Vom Nutzer gewünschter Lauf exakt 360 Spielstunden, automatisch pausiert an
+Tag 519 um 6,71875 Uhr. Eichenstichprobe: zwei lebende reife Bäume mit je acht
+Stämmen, ein abgeernteter Rest und mehrere junge Ersatzpflanzen; andere Eichen
+noch unreif. Keine flächendeckende Reife behauptet. Freie Baustoffe anschließend
+144 Log, 33 Plank, 29 Gear. Oberes Sägewerk und Zahnradwerkstatt wieder aktiv;
+unteres Sägewerk bleibt pausiert. Vier fehlende Fällmarkierungen ergänzt/rückgelesen.
+Gebäudeabdeckung unverändert 59/157. Dusche freigeschaltet und drei ertraglose
+Hindernisse bei (41..43,20,6) entfernt. Gemeinsamer Plan mit Treppe/Podest zeigte
+native_invalid für Dusche: kein Projektstart, keine neue Baustelle. Platzierungsfall
+offen; kein Test-Gate oder Neuladen erforderlich.
+
 ## Neue Sitzung 2026-10-11: drei weitere Typen und funktionierender Tank
 
 VerticalPowerShaft, MediumTank und SuspensionBridge1x1 fertig; alle drei Projekte

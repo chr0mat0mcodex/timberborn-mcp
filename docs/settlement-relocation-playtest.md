@@ -209,3 +209,25 @@ Oberes Sägewerk erhält eigenes Laufrad; Bau-/Leistungsnachweis noch ausstehend
   rückgelesen; deren Erntewirkung noch nicht bestätigt. Unteres Sägewerk und
   Zahnradwerkstatt vorläufig pausiert, oberes Sägewerk läuft.
   Screenshot der unveränderten Spieleransicht betrachtet, nicht gespeichert.
+
+## 15-Tage-Wachstumslauf auf ausdrücklichen Nutzerwunsch
+
+- Dusche für 50 Forschungspunkte freigeschaltet. Zwei abgeerntete Kiefernstümpfe
+  und eine tote Kiefer ohne Ertrag bei (41..43,20,6) regulär entfernt/rückgelesen.
+- Nutzer wünschte 15 Tage Wachstum statt weiterer kurzer Bauläufe. Exakt
+  360 Spielstunden bei Tempo 7, ohne Bestands-Frühstopp; completed/target_reached,
+  overshoot 0, Pause bestätigt. Tag 504, 6,71875 Uhr bis Tag 519, 6,71875 Uhr.
+  Laufzeit etwa 17 Minuten 40 Sekunden real. Keine Unterbrechung des Laufs.
+- Vollständiger Markierungsabgleich: 159 Eichen- und 18 Kiefern-Pflanzplätze.
+  Vier Eichenplätze ohne Fällmarkierung ergänzt und separat rückgelesen.
+  Förster besetzt. Nach knapp fünf Tagen 41 freie Stämme; oberes Sägewerk und
+  Zahnradwerkstatt wieder aktiviert und rückgelesen, unteres weiterhin pausiert.
+- Repräsentative 4×4-Überlappungsstichprobe am Ende: zwei lebende erntereife
+  Eichen mit je acht Stämmen, ein nachweislich abgeernteter Rest, mehrere neue
+  Jungpflanzen und weitere unreife Bäume. Kein Wasserstress in der Stichprobe.
+  Keine Hochrechnung auf vollständige Waldabdeckung. Frei danach 144 Stämme,
+  33 Bretter, 29 Zahnräder; gebundene Bestände getrennt betrachtet.
+- Nachlaufende Duschplanung auf Z6 mit Treppe, Podest und Zugang auf Z7:
+  native_invalid für Dusche, daher kein Start/Auftrag. Podestweg wäre erst nach
+  realer Stütze validierbar; das hebt die unabhängige Duschablehnung nicht auf.
+  Platzierungsursache noch offen, geräumte Fläche bleibt nutzbar. Abdeckung 59/157.
