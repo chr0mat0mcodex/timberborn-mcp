@@ -1,5 +1,13 @@
 # Backlog
 
+## Abgenommen: 0.41.0 Gebäudebezogener Produktionsnachweis
+
+Beauftragter Umfang implementiert: bis acht Manufakturen im bestehenden Lauf,
+Erstzyklusnachweis, eingefrorene Blockadenhistorie und Unterbrechung bei erkannten
+Konfigurationsänderungen. Menschliches Gate und Drei-Fall-Livepilot bestanden.
+[Details](docs/building-production-proof.md). Durchsatzmessung und Produzenten ohne
+Manufactory sind nicht Teil dieses Nachweises.
+
 ## Abgenommen: 0.40.0 Änderungsjournal
 
 Beauftragter erster Umfang implementiert: Gebäude/Wege, Fertigstellung,

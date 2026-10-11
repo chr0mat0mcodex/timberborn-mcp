@@ -66,15 +66,18 @@ public sealed class RecentActionBuffer
         entries.Enqueue(new RecentAction(++sequence,at,hours,kind,source,evidence,id,template,x,y,z,before,after));
         if(entries.Count>Capacity)entries.Dequeue();
     }
-    public RecentActionPage Read(RecentActionsRequest r)
+    public long Latest => sequence;
+    public RecentActionPage Window(long after) => ReadPage(after,Capacity,"all","all");
+    public RecentActionPage Read(RecentActionsRequest r) => ReadPage(r.After,r.Limit,r.Kind,r.Source);
+    private RecentActionPage ReadPage(long? after,int limit,string kind,string source)
     {
-        if(r.After>sequence)throw new BridgeRejectionException("cursor_ahead");
+        if(after>sequence)throw new BridgeRejectionException("cursor_ahead");
         long oldest=entries.Count==0?sequence+1:entries.Peek().Sequence;
-        var eligible=entries.Where(e=>(r.After is null||e.Sequence>r.After.Value)&&
-            (r.Kind=="all"||e.Kind==r.Kind)&&(r.Source=="all"||e.Source==r.Source)).ToArray();
-        var items=r.After is null?eligible.Skip(Math.Max(0,eligible.Length-r.Limit)).ToArray():eligible.Take(r.Limit).ToArray();
-        bool more=r.After is not null&&eligible.Length>items.Length;
+        var eligible=entries.Where(e=>(after is null||e.Sequence>after.Value)&&
+            (kind=="all"||e.Kind==kind)&&(source=="all"||e.Source==source)).ToArray();
+        var items=after is null?eligible.Skip(Math.Max(0,eligible.Length-limit)).ToArray():eligible.Take(limit).ToArray();
+        bool more=after is not null&&eligible.Length>items.Length;
         long next=more?items[items.Length-1].Sequence:sequence;
-        return new RecentActionPage(items,oldest,sequence,next,more,r.After is {} after&&after<oldest-1,Math.Max(0,sequence-Capacity));
+        return new RecentActionPage(items,oldest,sequence,next,more,after is {} cursor&&cursor<oldest-1,Math.Max(0,sequence-Capacity));
     }
 }

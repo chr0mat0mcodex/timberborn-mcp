@@ -15,6 +15,7 @@ public sealed class SimulationRunRequest
     public int MaxRealSeconds { get; private set; }
     public int? StopAtAvailableLogs { get; private set; }
     public ProductionTarget[] GoodTargets { get; private set; } = Array.Empty<ProductionTarget>();
+    public string[] BuildingIds { get; private set; } = Array.Empty<string>();
     public int? StopAtScience { get; private set; }
     public bool Starts => Route is "simulation-run-for" or "simulation-run-until";
     public bool Writes => Route != "simulation-run";
@@ -30,6 +31,7 @@ public sealed class SimulationRunRequest
         if (r.Route == "simulation-run-for" && q["stopAtAvailableLogs"] is not null) keys.Add("stopAtAvailableLogs");
         if (r.Route == "simulation-run-for" && q["goodTargets"] is not null) keys.Add("goodTargets");
         if (r.Route == "simulation-run-for" && q["stopAtScience"] is not null) keys.Add("stopAtScience");
+        if (r.Route == "simulation-run-for" && q["buildingIds"] is not null) keys.Add("buildingIds");
         if (r.Route == "simulation-run-until") keys.AddRange(new[] { "dayNumber", "hour" });
         if (q.Count != keys.Count || q.AllKeys.Any(k => k is null || !keys.Contains(k))) throw new ArgumentException();
         string Read(string key) { var v = q.GetValues(key); if (v is null || v.Length != 1) throw new ArgumentException(); return v[0]; }
@@ -51,6 +53,8 @@ public sealed class SimulationRunRequest
             if (q["stopAtAvailableLogs"] is not null) r.StopAtAvailableLogs = Integer("stopAtAvailableLogs", 1, 1000000);
             if (q["goodTargets"] is not null) r.GoodTargets = ProductionTargets.Parse(Read("goodTargets"));
             if (q["stopAtScience"] is not null) r.StopAtScience = Integer("stopAtScience", 1, 1000000);
+            if(q["buildingIds"] is not null)r.BuildingIds=BuildingProductionProof.ParseIds(Read("buildingIds"));
+            if(r.BuildingIds.Length>0&&(r.StopAtAvailableLogs is not null||r.GoodTargets.Length>0||r.StopAtScience is not null))throw new ArgumentException("building_and_stock_targets_are_exclusive");
             if (r.StopAtAvailableLogs is not null && (r.GoodTargets.Length > 0 || r.StopAtScience is not null))
                 throw new ArgumentException("legacy_and_production_targets_are_exclusive");
         }

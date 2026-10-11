@@ -18,9 +18,11 @@ public sealed class SimulationControl
     private readonly ResourceCountingService resources;
     private readonly ScienceService science;
     private readonly EntityRegistry entities;
-    public SimulationControl(SpeedManager speed, IDayNightCycle time, EventBus events, IGoodService goods, ResourceCountingService resources, ScienceService science, EntityRegistry entities) {
+    private readonly RecentActionsJournal journal;
+    private BuildingProductionObserver? buildingProof;
+    public SimulationControl(SpeedManager speed, IDayNightCycle time, EventBus events, IGoodService goods, ResourceCountingService resources, ScienceService science, EntityRegistry entities, RecentActionsJournal journal) {
         this.speed = speed; this.time = time; this.events = events;
-        this.goods = goods; this.resources = resources; this.science = science; this.entities = entities;
+        this.goods = goods; this.resources = resources; this.science = science; this.entities = entities;this.journal=journal;
         events.Register(this);
     }
     [OnEvent]
@@ -62,16 +64,32 @@ public sealed class SimulationControl
         if (withScience) { try { sample.Science = science.SciencePoints; } catch { sample.Science = null; } }
         return sample;
     }
-    public void Update() => runs.Tick(Hours, speed.CurrentSpeed, wall.Elapsed.TotalSeconds, s => speed.ChangeSpeed(s), speedLocked,
-        runs.StockConditionActive ? AvailableLogs() : null,
-        runs.ActiveProductionRun is { } active ? Sample(active.GoodTargets.Select(t=>t.Good),active.StopAtScience is not null) : null);
-    public void Unload() { events.Unregister(this); runs.Unload(s => speed.ChangeSpeed(s)); }
+    public void Update() {
+        runs.Tick(Hours, speed.CurrentSpeed, wall.Elapsed.TotalSeconds, s => speed.ChangeSpeed(s), speedLocked,
+            runs.StockConditionActive ? AvailableLogs() : null,
+            runs.ActiveProductionRun is { } active ? Sample(active.GoodTargets.Select(t=>t.Good),active.StopAtScience is not null) : null,
+            runs.ActiveBuildingRun is not null ? buildingProof?.Sample() : null);
+        CleanupBuildingProof();
+    }
+    private void CleanupBuildingProof() {
+        if(runs.ActiveBuildingRun is not {} active||active.State=="pausing") {buildingProof?.Dispose();buildingProof=null;}
+    }
+    public void Unload() { buildingProof?.Dispose();buildingProof=null;events.Unregister(this); runs.Unload(s => speed.ChangeSpeed(s)); }
     public object Run(SimulationRunRequest r)
     {
         if (r.Starts && (speedLocked || batchOwner is not null)) throw new BridgeRejectionException("state_conflict");
-        var result = r.Starts ? runs.Start(r, Hours, speed.CurrentSpeed, wall.Elapsed.TotalSeconds, s => speed.ChangeSpeed(s),
-            r.StopAtAvailableLogs is null ? null : AvailableLogs(), production: Sample(r.GoodTargets.Select(t=>t.Good),r.StopAtScience is not null))
-            : r.Route == "simulation-run-cancel" ? runs.Cancel(r.RunId, Hours, speed.CurrentSpeed, wall.Elapsed.TotalSeconds, s => speed.ChangeSpeed(s), speedLocked) : runs.Inspect(r.RunId);
+        SimulationRunStatus result;
+        if(r.Starts) {
+            BuildingProductionObserver? candidate=null;
+            try {
+                if(r.BuildingIds.Length>0)candidate=new BuildingProductionObserver(entities,journal,time,r.BuildingIds);
+                result=runs.Start(r,Hours,speed.CurrentSpeed,wall.Elapsed.TotalSeconds,s=>speed.ChangeSpeed(s),
+                    r.StopAtAvailableLogs is null?null:AvailableLogs(),production:Sample(r.GoodTargets.Select(t=>t.Good),r.StopAtScience is not null),
+                    buildingProduction:candidate?.Sample());
+                buildingProof=candidate;
+            } catch {candidate?.Dispose();throw;}
+        } else result=r.Route=="simulation-run-cancel"?runs.Cancel(r.RunId,Hours,speed.CurrentSpeed,wall.Elapsed.TotalSeconds,s=>speed.ChangeSpeed(s),speedLocked):runs.Inspect(r.RunId);
+        CleanupBuildingProof();
         var payload = Newtonsoft.Json.Linq.JObject.FromObject(result, Newtonsoft.Json.JsonSerializer.Create(new Newtonsoft.Json.JsonSerializerSettings {
             ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() }));
         if (result.HasProductionTargets) {
@@ -89,7 +107,7 @@ public sealed class SimulationControl
         // Compare on the game thread. Never override a newer user speed or unlock a game lock.
         float previous = speed.CurrentSpeed;
         if (speedLocked || previous != request.ExpectedSpeed) throw new ArgumentException("speed_changed");
-        runs.Interrupt();
+        runs.Interrupt();CleanupBuildingProof();
         speed.ChangeSpeed(request.Speed);
         return new { requestedSpeed = request.Speed, previousSpeed = previous,
             matchedImmediately = speed.CurrentSpeed == request.Speed, observation = Observe(),

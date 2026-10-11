@@ -1,5 +1,15 @@
 # Spielanleitung für Agenten
 
+## 0.41: Produktion je Gebäude nachweisen (begrenzt live abgenommen)
+
+Bis acht fertige Manufakturen zuerst per Sammeldiagnose auswählen und konfigurieren.
+Dann einmal `run_simulation_for` mit `buildingIds` und Zeitgrenzen starten.
+Nicht mit Bestands-/Forschungszielen mischen. Native Produktionsabschlüsse werden
+in der Mod gesammelt; keine Agentenaktion je Gebäude. Nach Laufende Gesamtnachweis,
+Teilnachweise und Blockaden getrennt berichten. `targetReached` ist kein
+Produktionsnachweis. Nach Änderungen neuer Lauf; nach unbestätigtem Start nur lesen.
+[Vertrag, Grenzen und Pilot](building-production-proof.md).
+
 ## 0.40.0 — Änderungen seit dem letzten Kontakt
 
 Bei „Überprüf mal meine letzten Aktionen“

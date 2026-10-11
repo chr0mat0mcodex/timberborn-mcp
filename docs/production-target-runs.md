@@ -1,5 +1,12 @@
 # Produktionslauf bis Zielbestand
 
+## Erweiterung 0.41: tatsächliche Produktion je Gebäude
+
+Optionaler, exklusiver Gebäudemodus im selben Lauf: bis acht `buildingIds`,
+Nachweis über native Zyklusabschlüsse statt globale Bestände. Der folgende
+0.37-Bestandsnachweis ist kein Livebeleg für diese neue Funktion.
+[Vertrag und bestandener 0.41-Pilot](building-production-proof.md).
+
 Stand 2026-10-11: Nach menschlichem Gate gezielt live abgenommen.
 Gemeinsamer 0.37.0-Release-Build, keine zweite Modfassung.
 

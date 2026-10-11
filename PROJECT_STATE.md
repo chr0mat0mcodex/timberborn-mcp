@@ -1,5 +1,14 @@
 # Projektstand
 
+## 0.41.0 — Produktionsnachweis begrenzt live abgenommen
+
+Menschliches Gate und drei Livekontrollen bestanden: Grill/Bäckerei gemeinsam
+mit nativen Zyklusabschlüssen; pausiertes Sägewerk ohne falschen Erfolg;
+Konfigurationsänderung an Papierfabrik beendet den Lauf mit Fehler und Pause.
+Historischer Positivbericht unverändert, Papierfabrik wieder aktiviert,
+Simulation pausiert. Achtfachgrenze automatisch, zwei Gebäude gemeinsam live.
+[Vertrag und Nachweisgrenzen](docs/building-production-proof.md).
+
 ## 0.40.0 — Änderungsjournal begrenzt live abgenommen
 
 Menschliches Gate und Abschluss-Livepilot bestanden: 30 Einträge mit Bau/Entfernung,

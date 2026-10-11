@@ -50,6 +50,10 @@ public sealed class RecentActionsJournal
         this.entities=entities;this.events=events;this.speed=speed;this.time=time;
         events.Register(this);
     }
+    public long Latest => buffer.Latest;
+    public long ObservationFailures => failures;
+    public bool TrackingComplete => complete;
+    public RecentActionPage Window(long after)=>buffer.Window(after);
     public void Unload()=>events.Unregister(this);
     public void Update() { if(clock.Elapsed.TotalSeconds<nextScan)return;nextScan=clock.Elapsed.TotalSeconds+1;Capture(); }
     public void BeginMcp(bool reconcile) { if(reconcile)Capture();mcpDepth++; }

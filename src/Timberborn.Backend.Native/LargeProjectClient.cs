@@ -24,7 +24,7 @@ public sealed partial class NativeClient
     {
         try
         {
-            if(e.BridgeVersion is not ("0.37.0" or "0.38.0" or "0.39.0" or "0.40.0")||e.SessionId!=r.Session||e.Data.ValueKind!=JsonValueKind.Object)throw new InvalidDataException();
+            if(e.BridgeVersion is not ("0.37.0" or "0.38.0" or "0.39.0" or "0.40.0" or "0.41.0")||e.SessionId!=r.Session||e.Data.ValueKind!=JsonValueKind.Object)throw new InvalidDataException();
             var d=e.Data;
             var limits=d.GetProperty("limitations");
             if(limits.ValueKind!=JsonValueKind.Array||limits.GetArrayLength()>16||limits.EnumerateArray().Any(v=>v.ValueKind!=JsonValueKind.String||v.GetString() is not {Length:>0 and <=160}))throw new InvalidDataException();

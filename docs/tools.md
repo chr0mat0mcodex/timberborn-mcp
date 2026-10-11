@@ -1,5 +1,15 @@
 # Native MCP-Werkzeuge
 
+## 0.41: Erweiterter Produktionslauf (begrenzt live abgenommen)
+
+`run_simulation_for` nimmt optional `buildingIds` (1–8 eindeutige IDs) entgegen,
+exklusiv zu Güter-/Forschungs-/Holzzielen. `inspect_simulation_run` liefert
+`buildingProduction`, `buildingProductionReached` und `buildingJournalCursor`.
+Nur native Produktionsabschlüsse zählen. Konfigurationsänderungen und fehlende
+Beobachtung invalidieren den Lauf; Zeitgrenzen und Pause bleiben im bisherigen
+Controller. Keine zusätzlichen MCP-Werkzeuge.
+[Vertrag und Nachweisgrenzen](building-production-proof.md).
+
 ## 0.40.0 — Änderungsjournal begrenzt live abgenommen
 
 `inspect_recent_actions(session, limit=32, after?, kind=all, source=all)`:

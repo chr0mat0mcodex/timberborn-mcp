@@ -29,6 +29,7 @@ public static class SimulationRunTools
             if (name == "run_simulation_for") {
                 props["duration"] = new JsonObject { ["type"] = "number", ["minimum"] = 0.000001, ["maximum"] = 672 };
                 props["unit"] = new JsonObject { ["type"] = "string", ["enum"] = new JsonArray("hours", "days", "weeks") };
+                props["buildingIds"]=new JsonObject{["type"]="array",["minItems"]=1,["maxItems"]=8,["uniqueItems"]=true,["items"]=new JsonObject{["type"]="string",["format"]="uuid"}};
                 props["goodTargets"] = new JsonObject { ["type"]="array", ["minItems"]=1, ["maxItems"]=8,
                     ["items"]=new JsonObject { ["type"]="object", ["properties"]=new JsonObject {
                         ["good"]=new JsonObject { ["type"]="string", ["pattern"]="^[A-Za-z0-9._-]{1,160}$" },
@@ -42,8 +43,8 @@ public static class SimulationRunTools
                 props["hour"] = new JsonObject { ["type"] = "number", ["minimum"] = 0, ["exclusiveMaximum"] = 24 };
             }
             yield return new Tool { Name = name,
-                Description = "Begrenzter autonomer Simulationslauf; neue UUID pro Start, aktuelle session/expectedSpeed. for: duration als Obergrenze, optional goodTargets (1–8 eindeutige good/amount) und stopAtScience; ALLE Ziele gleichzeitig aus AvailableStock/SciencePoints. Exklusiv zum kompatiblen stopAtAvailableLogs. Bereits erfüllt: keine Beschleunigung. until: monotoner dayNumber und hour, kein Zyklustag. Maximal 28 Spieltage; maxRealSeconds 30..86400. Mod pausiert selbst. productionTargetsReached mit production_targets_reached belegt das Bestandsziel; production_time_limit nur Zeitablauf. targetReached bleibt Zeitindikator. Fehlende Bestandsbeobachtung stoppt. Diagnose frisch, begrenzt auf aktuelle Manufakturen; eingefrorene terminale Zielbestände sind historische Belege. Keine Reservierung, Ertrags-, Windursachen- oder Liefergarantie. Status/Abbruch mit derselben ID; nach unbestätigtem Start nur lesen, nie wiederholen. Manuelles Tempo unterbricht; kein Entsperren des Spiels. Ein aktiver Lauf, 128 IDs/Sitzung; Abschluss erst mit beobachteter Pause.",
-                InputSchema = JsonSerializer.SerializeToElement(new JsonObject { ["type"] = "object", ["properties"] = props, ["required"] = new JsonArray(props.Where(p => p.Key is not ("stopAtAvailableLogs" or "goodTargets" or "stopAtScience")).Select(p => (JsonNode?)JsonValue.Create(p.Key)).ToArray()), ["additionalProperties"] = false }),
+                Description = "Ab 0.41 optional buildingIds (1–8 eindeutige fertige Manufactory-Gebäude mit gewähltem Rezept), exklusiv zu Güter-/Forschungs-/Holzzielen. Stoppt nach mindestens einem nativen ProductionFinished pro Gebäude; buildingProductionReached und building_production_proven sind der Nachweis, niemals bloßer Bestand/Transport. Bau-/Rezeptvoraussetzungen vor Start geprüft. Rezept-/Pause-/Lager-/Sollpersonaländerungen, Objektverlust oder Journallücke stoppen mit Fehler und Pause. buildingProduction enthält aktuelle und während des Laufs beobachtete Blockaden, terminal eingefroren. Kein Wiederholen unbestätigter Starts. Begrenzter autonomer Simulationslauf; neue UUID pro Start, aktuelle session/expectedSpeed. for: duration als Obergrenze, optional goodTargets (1–8 eindeutige good/amount) und stopAtScience; ALLE Ziele gleichzeitig aus AvailableStock/SciencePoints. Exklusiv zum kompatiblen stopAtAvailableLogs. Bereits erfüllt: keine Beschleunigung. until: monotoner dayNumber und hour, kein Zyklustag. Maximal 28 Spieltage; maxRealSeconds 30..86400. Mod pausiert selbst. productionTargetsReached mit production_targets_reached belegt das Bestandsziel; production_time_limit nur Zeitablauf. targetReached bleibt Zeitindikator. Fehlende Bestandsbeobachtung stoppt. Diagnose frisch, begrenzt auf aktuelle Manufakturen; eingefrorene terminale Zielbestände sind historische Belege. Keine Reservierung, Ertrags-, Windursachen- oder Liefergarantie. Status/Abbruch mit derselben ID; nach unbestätigtem Start nur lesen, nie wiederholen. Manuelles Tempo unterbricht; kein Entsperren des Spiels. Ein aktiver Lauf, 128 IDs/Sitzung; Abschluss erst mit beobachteter Pause.",
+                InputSchema = JsonSerializer.SerializeToElement(new JsonObject { ["type"] = "object", ["properties"] = props, ["required"] = new JsonArray(props.Where(p => p.Key is not ("stopAtAvailableLogs" or "goodTargets" or "stopAtScience" or "buildingIds")).Select(p => (JsonNode?)JsonValue.Create(p.Key)).ToArray()), ["additionalProperties"] = false }),
                 OutputSchema = JsonSerializer.SerializeToElement(options.GetJsonSchemaAsNode(typeof(NativeResult<NativeSimulationRun>))),
                 Annotations = new() { ReadOnlyHint = !write, DestructiveHint = write, IdempotentHint = !write, OpenWorldHint = false } };
         }
@@ -53,7 +54,14 @@ public static class SimulationRunTools
         if (Writes(name) && !enabled) throw new ArgumentException();
         var q = new NameValueCollection();
         foreach (var p in args.EnumerateObject()) {
-            if (p.Name == "goodTargets") {
+            if(p.Name=="buildingIds") {
+                if(p.Value.ValueKind!=JsonValueKind.Array||p.Value.GetArrayLength() is <1 or >8)throw new ArgumentException();
+                var ids=p.Value.EnumerateArray().Select(v=>{
+                    if(v.ValueKind!=JsonValueKind.String||!Guid.TryParseExact(v.GetString(),"D",out var id)||id==Guid.Empty)throw new ArgumentException();return id.ToString("D");
+                }).ToArray();
+                q.Add(p.Name,string.Join(",",ids));
+            }
+            else if (p.Name == "goodTargets") {
                 if (p.Value.ValueKind != JsonValueKind.Array || p.Value.GetArrayLength() is <1 or >8) throw new ArgumentException();
                 var entries = p.Value.EnumerateArray().Select(v => {
                     if (v.ValueKind != JsonValueKind.Object) throw new ArgumentException();
