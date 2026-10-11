@@ -1090,3 +1090,58 @@ Auswahl live geprüft; Grenzen und Nachweis stehen in PROJECT_STATE.md.
   wenn kein Ereignisziel beauftragt ist. Aktueller Bestandsstopp beweist weder
   Baumreife noch Ernteursache; Zeitprognosen nur mit ausgewiesenen Annahmen zu
   Wachstum/Wasserstress und ohne garantierten Ertrag.
+
+## Spieltest 2026-10-11: Rohstoffeinzugsbereich und Kraftzugang
+
+- Rohstoffsuche an Gebäude-Reichweite binden statt an ein einzelnes 8x8-Fenster;
+  lebende, nachwachsende Bäume und abgeerntete Reste getrennt liefern. Harzsammler:
+  erste Suche fand vier, vollständige Reichweite 18 lebende Kiefern. Alle geschützt.
+- Fällschutz nach Baumart über vollständige Reichweite gesammelt anbieten, mit
+  Vorschau der betroffenen Zellen und Rücklesung; Eichen unangetastet lassen.
+- Automatische Zugangsplanung meldet bei gemischtem Werkstatt-/Kraftplan nur
+  no_access_candidate nach erstem Gebäude; fehlgeschlagenes Teil und Arbeitszelle
+  konkret nennen. Bestehende Wege auch jenseits des Sechs-Zellen-Randes einbeziehen.
+- Regionalsuche sollte Kartenrand diagnostizieren statt generischem invalid_argument.
+
+- Produktionsläufe auf Zielbestand beliebiger Güter erweitern: aktuell nur Log
+  als vorzeitiges Bestandsziel. TreatedPlank plus Forschungspunkte müssen durch
+  Zeitläufe und separate Abfragen beobachtet werden. Zielmenge, maximale Spielzeit,
+  Arbeits-/Liefer-/Windblockaden sowie bestätigte Pause gebündelt zurückgeben.
+- Kraftvorschau: rotationMatches=false an einer Welle zur Holzwerkstatt war
+  kein tatsächlicher Anschlussfehler; fertig befanden sich beide im selben Netz.
+  Geometriehinweis präzisieren und gegenüber realem Netzbeleg klar kennzeichnen.
+- Wetterstationspilot: gemeinsame Bauvorschau gültig, Baustelle dennoch nicht
+  erreichbar. Eintrittslose Ziele brauchen vor Auftrag konkrete Bauarbeitszellen
+  und deren Verbindung; ein freier Grundriss genügt nicht. Fehlende Baumöglichkeiten
+  einer Reparatur früh gegen einen einfacheren Standortwechsel abwägen.
+- Ungültige UUID nicht als möglicherweise ausgeführte Aktion melden: lokale
+  Argumentfehler klar vor dem Transport abweisen und als nicht ausgeführt kennzeichnen.
+
+## Nächste MCP-Etappen nach Harzpilot — Planung, noch keine Umsetzung
+
+Nutzerentscheidung 2026-10-11: nach Produktionsnachweis und ersten Folgegebäuden
+stoppen; weiterer Spielausbau pausiert. Reihenfolge:
+
+1. **Bauzugang vor Auftrag und automatische Reparaturplanung.** Für Gebäude ohne
+   Eingang konkrete Baustellenzugänge einschließlich Terrain, Kraftleitungen und
+   Höhenübergängen bewerten. Unvollständige Vorschau als unbekannt ausweisen;
+   kein positives Ergebnis aus bloßer Platzierbarkeit. Reparaturvorschläge als
+   Gesamtplan erzeugen; bei teurem Umweg nahe Alternativstandorte vergleichen.
+   Gate-Nachweis: direkt erreichbare Station, geometrisch gültige aber abgesperrte
+   Station und eine durch Zusatzwege tatsächlich erschlossene Station.
+2. **Produktionslauf bis Zielbestand.** Mehrere frei verfügbare Güter und optional
+   Forschung als Ziele; keine Addition von Produktions-/Transportbeständen.
+   Begrenzte Spiel-/Echtzeit, automatische Pause und knappe Blockadediagnose für
+   Zutaten, Personal, Kapazität, Lieferung und Wind. Nachweis: TreatedPlank-Ziel
+   erreicht, fehlende Zutat benannt, Pause am Ziel; kein Agentenpoll pro Bauteil.
+3. **Große und besondere Harzgebäude.** Die sechs nicht unterstützten Typen zuerst
+   nach Ursache trennen: DirtExcavator, DomedGarden, EarthRecultivator,
+   FountainOfJoy, HallOfAbundance und Mine. Exakte native belegte Zellen statt
+   pauschalem 64-Zellen-Ausschluss prüfen; Sonderform und besondere Standortbindung
+   separat behandeln. Bestehende 32-Teil-/acht-Höhen-Grenzen bleiben, bis gezielt
+   anders beauftragt. Pilot erst ein großer regulärer Typ, dann ein Sonderfall.
+
+Flankierend: kompakte Rohstoffübersicht über die vollständige Arbeitsreichweite,
+artenbezogener Fällschutz und bessere Kraftport-/Argumentfehlerdiagnosen aus
+obigen Befunden. Vor Implementierung konkreten Umfang auswählen; weiterhin ein
+Release-Build und menschliches Testgate. Keine neue Modfassung in dieser Etappe.

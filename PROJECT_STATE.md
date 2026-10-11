@@ -1,5 +1,28 @@
 # Projektstand
 
+## 2026-10-11: Harzveredelung und erste Folgegebäude fertig
+
+Holzwerkstatt auf der trockenen Terrasse (49,13,6), eigene Windturbine, zwei
+Kraftwellen und zwölf Wege in einer autonomen Charge fertig. Native Netzverbindung,
+Besetzung, aktives TreatedPlank-Rezept und tatsächlicher Output separat belegt.
+Zwei kleine Lager für veredelte Planken eingerichtet. 18 lebende Kiefern in der
+vollständigen Harzsammlerreichweite vor Fällung geschützt; zehn ausgewachsen.
+
+Wendeltreppe (47,12,6) und Wetterstation (49,23,6) fertig. Ursprüngliche leere
+Wetterstationsbaustelle mangels Bauzugang entfernt und an vorhandene Straße
+verlegt; keine Rückgewinnungsrohstoffe gelöscht. Alle zugehörigen Ledger frei,
+Spiel an Tag 594 um 2,21875 Uhr pausiert. Zwölf veredelte Planken verbaut,
+Restbestand null, Forschung 92. Versorgung bleibt eingerichtet.
+
+Abdeckung einschließlich Biberstatue, Ressourcenzähler und Harzsammler:
+**72/157 reguläre Typen, 85 noch nicht nachgewiesen**. CSV aktualisiert.
+Nutzerentscheidung nach Pilot: Spielausbau stoppen und MCP-Ausbau planen.
+Alle 18 TreatedPlank-Bautypen würden insgesamt 67.650 Forschungspunkte,
+3.185 veredelte Planken und 2.261 Metallblöcke benötigen; sechs sind technisch
+nicht unterstützt. Nächste Entwicklungsplanung: Bauzugang vor Auftrag,
+zielgesteuerte Produktionsläufe und anschließend große Gebäudefälle.
+Kein Implementierungsauftrag aus dieser Planungsentscheidung; Testgate bleibt.
+
 ## 2026-10-11: Automatische Zugangsplanung — begrenzt live abgenommen
 
 Nach menschlichem Gate/Bereitmeldung und Katalogübernahme: ebener Zweiteiler

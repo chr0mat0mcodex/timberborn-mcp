@@ -8,7 +8,7 @@ BadwaterDome.Folktails,not_yet_verified,2026-10-04
 BadwaterPump.Folktails,not_yet_verified,2026-10-04
 BadwaterRig.Folktails,not_yet_verified,2026-10-04
 Bakery.Folktails,built_finished,2026-10-10
-BeaverStatue.Folktails,not_yet_verified,2026-10-04
+BeaverStatue.Folktails,built_finished,2026-10-11
 Beehive.Folktails,built_finished,2026-10-11
 Bench.Folktails,built_finished,2026-10-04
 BotAssembler.Folktails,not_yet_verified,2026-10-04
@@ -111,7 +111,7 @@ Relay.Folktails,built_finished,2026-10-11
 ReservePile,developer_excluded,2026-10-04
 ReserveTank,developer_excluded,2026-10-04
 ReserveWarehouse,developer_excluded,2026-10-04
-ResourceCounter.Folktails,not_yet_verified,2026-10-04
+ResourceCounter.Folktails,built_finished,2026-10-11
 Roof1x1.Folktails,built_finished,2026-10-11
 Roof1x2.Folktails,built_finished,2026-10-11
 Roof2x2.Folktails,built_finished,2026-10-11
@@ -129,7 +129,7 @@ SmallTank.Folktails,built_finished,2026-10-04
 SmallWarehouse.Folktails,built_finished,2026-10-04
 Smelter.Folktails,not_yet_verified,2026-10-04
 Speaker.Folktails,not_yet_verified,2026-10-04
-SpiralStairs.Folktails,not_yet_verified,2026-10-04
+SpiralStairs.Folktails,built_finished,2026-10-11
 SquareBanner.Folktails,not_yet_verified,2026-10-04
 Stairs.Folktails,built_finished,2026-10-10
 StreamGauge.Folktails,built_finished,2026-10-11
@@ -139,7 +139,7 @@ SuspensionBridge3x1.Folktails,not_yet_verified,2026-10-04
 SuspensionBridge4x1.Folktails,not_yet_verified,2026-10-04
 SuspensionBridge5x1.Folktails,not_yet_verified,2026-10-04
 SuspensionBridge6x1.Folktails,not_yet_verified,2026-10-04
-TappersShack.Folktails,not_yet_verified,2026-10-04
+TappersShack.Folktails,built_finished,2026-10-11
 TeethGrindstone.Folktails,built_finished,2026-10-04
 TerrainBlock.Folktails,not_yet_verified,2026-10-04
 ThrottlingValve.Folktails,not_yet_verified,2026-10-04
@@ -153,11 +153,11 @@ UndergroundPile.Folktails,not_yet_verified,2026-10-04
 VerticalPowerShaft.Folktails,built_finished,2026-10-11
 WaterPump.Folktails,built_finished,2026-10-04
 WaterWheel.Folktails,not_yet_verified,2026-10-04
-WeatherStation.Folktails,not_yet_verified,2026-10-04
+WeatherStation.Folktails,built_finished,2026-10-11
 Weathervane.Folktails,built_finished,2026-10-11
 WindTurbine.Folktails,built_finished,2026-10-11
 WoodFence.Folktails,built_finished,2026-10-11
-WoodWorkshop.Folktails,not_yet_verified,2026-10-04
+WoodWorkshop.Folktails,built_finished,2026-10-11
 ZiplineBeam.Folktails,not_yet_verified,2026-10-04
 ZiplinePylon.Folktails,not_yet_verified,2026-10-04
 ZiplineStation.Folktails,not_yet_verified,2026-10-04
