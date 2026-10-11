@@ -17,23 +17,25 @@ public sealed record ForestryMarkReport(string ActionId, string Fingerprint, str
 
 public static class ForestryTools
 {
-    public const string Inspect = "inspect_forestry", Mark = "mark_forestry";
-    public static bool Handles(string name) => name is Inspect or Mark;
+    public const string Inspect = "inspect_forestry", Mark = "mark_forestry", Protect = "protect_forestry";
+    public static bool Handles(string name) => name is Inspect or Mark or Protect;
+    public static bool Writes(string name) => name is Mark or Protect;
     public static IEnumerable<Tool> Catalog(bool areasEnabled)
     {
         var json = new JsonSerializerOptions(BuildBatchState.Json) { TypeInfoResolver = new DefaultJsonTypeInfoResolver() };
-        foreach (var name in new[] { Inspect, Mark }) {
-            if (name == Mark && !areasEnabled) continue;
-            var schema = json.GetJsonSchemaAsNode(name == Inspect ? typeof(ForestryRequest) : typeof(ForestryMarkRequest)).AsObject();
+        foreach (var name in new[] { Inspect, Mark, Protect }) {
+            if (Writes(name) && !areasEnabled) continue;
+            var schema = json.GetJsonSchemaAsNode(name == Inspect ? typeof(ForestryRequest) : name == Protect ? typeof(ForestryProtectionRequest) : typeof(ForestryMarkRequest)).AsObject();
             schema["type"] = "object";
             yield return new() {
                 Name = name,
                 Description = name == Inspect
-                    ? "Kompakte Holzdiagnose, pausiert, bis 8×8×4: Baumkatalog, Reife, tatsächlichen Fällertrag, Fäll-/Abrissmarkierung und native Arbeitsreichweite zusammenführen. Abgeerntete Reste und unbekannter Fällertrag sind ausgeschlossen; alte 0.35.5-Pakete ohne Ertragsfelder liefern keine Kandidaten. Liefert die ersten 16 Kandidaten mit IDs, Gesamtzahl/Trunkierung, Ausschlusszähler und freie/gesamte Holzbestände. Optional consumerIds (maximal 8) für Personal, Pause und Holz im Gebäudeinventar; keine Verbrauchsrate. Alle internen Seiten begrenzt und vollständig geprüft, nativeReads sichtbar. Kein Ertrags-/Transportnachweis; unbekannte Reichweite liefert keine Kandidaten. Keine Spieländerung."
+                    ? "Pausierte Holzdiagnose. fullRange=true erfasst die gesamte native Arbeitsreichweite auf allen Höhen ohne Regionsparameter; sonst bis 8×8×4. species trennt lebende Bäume, Reste, tote/unbekannte Bäume, Reife, aktuellen Holzertrag und Fällmarkierungen. Vollständige Abdeckung oder Budgetfehler: 2048 Reichweitenzellen, 512 Teilflächen. Bis 16 Fällkandidaten mit Gesamtzahl; Reste/ungewisser Ertrag ausgeschlossen. Holzbestände und optional consumerIds (max. 8) für Personal/Pause/Inventar. nativeReads weist Aufwand aus. Kein Ernte-/Transportnachweis, keine Spieländerung."
+                    : name == Protect ? "Entfernt Fällmarkierungen lebender Bäume einer exakten template über die gesamte native Arbeitsreichweite von workBuildingId. session und actionId erforderlich; maxTrees 1–512 (Standard 256) begrenzt Änderungen, Überschreitung verhindert Teilstart. Frische vollständige Übersicht, Einzelzielprüfung und Rücklesung. Keine Pflanzen/Abrissmarkierungen ändern, keine Fällung/Simulation. Keine dauerhafte Schutzregel. Gleiche actionId liest den Beleg; nach Unterbrechung keine automatische Wiederholung."
                     : "Markiert 1–16 ausdrücklich gewählte Baum-IDs aus inspect_forestry nach frischer regionaler Prüfung für reguläres Fällen. Gleiche actionId liest nur den gespeicherten Beleg, geänderte Parameter abgelehnt. Kein Retry nach unbestätigtem Teilauftrag. Ausführung sequenziell, Teilfortschritt bleibt erhalten; completed bedeutet Markierungen bestätigt, nicht Ernte. Kein Simulationsstart.",
                 InputSchema = JsonSerializer.SerializeToElement(schema),
                 OutputSchema = JsonSerializer.SerializeToElement(json.GetJsonSchemaAsNode(typeof(NativeResult<object>))),
-                Annotations = new() { ReadOnlyHint = name == Inspect, DestructiveHint = name == Mark,
+                Annotations = new() { ReadOnlyHint = name == Inspect, DestructiveHint = Writes(name),
                     IdempotentHint = true, OpenWorldHint = false }
             };
         }
@@ -44,12 +46,13 @@ public static class ForestryTools
 
     public static async Task<JsonObject> Execute(string name, JsonElement args, bool enabled, IForestryPort port, string directory, CancellationToken ct)
     {
-        if (!Handles(name) || name == Mark && !enabled) throw new ArgumentException();
+        if (!Handles(name) || Writes(name) && !enabled) throw new ArgumentException();
         if (name == Inspect) {
             var r = BuildBatchState.Parse<ForestryRequest>(args);
             var report = await ForestrySurvey.Observe(r, port, ct);
             return Wrap(report, r.Session, report.ObservedAtUtc);
         }
+        if (name == Protect) return await ForestryProtection.Execute(args, port, directory, ct);
         var request = BuildBatchState.Parse<ForestryMarkRequest>(args);
         if (request.Region is null || request.TreeIds is not { Length: >= 1 and <= 16 }) throw new ArgumentException();
         ForestrySurvey.Validate(request.Region); BuildBatchState.Id(request.ActionId);
@@ -100,7 +103,7 @@ public static class ForestryTools
         return Wrap(receipt, request.Region.Session, null);
     }
 
-    private static JsonObject Wrap(object report, string session, DateTimeOffset? observed) =>
+    internal static JsonObject Wrap(object report, string session, DateTimeOffset? observed) =>
         JsonSerializer.SerializeToNode(new NativeResult<object>(1, "ok", report,
             new("native", false, session, observed), null), NativeJson.Options)!.AsObject();
 }
@@ -128,4 +131,7 @@ public sealed class NativeForestryPort(NativeClient client) : IForestryPort
     public Task<BridgeEnvelope<NativeAreaChange>> Mark(ForestryRequest r, Position p, CancellationToken ct) =>
         client.SetArea(ManagementRequest.Parse("/agent-api/v1/set-area", Query(("kind", "tree_cutting"), ("operation", "mark"),
             ("resource", ""), ("expectedResource", "unmarked"), ("session", r.Session), ("x", p.X), ("y", p.Y), ("z", p.Z), ("width", 1), ("height", 1))), ct);
+    public Task<BridgeEnvelope<NativeAreaChange>> Protect(ForestryRequest r, Position p, CancellationToken ct) =>
+        client.SetArea(ManagementRequest.Parse("/agent-api/v1/set-area", Query(("kind", "tree_cutting"), ("operation", "remove"),
+            ("resource", ""), ("expectedResource", "marked"), ("session", r.Session), ("x", p.X), ("y", p.Y), ("z", p.Z), ("width", 1), ("height", 1))), ct);
 }

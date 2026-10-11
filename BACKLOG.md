@@ -1,5 +1,16 @@
 # Backlog
 
+## Live abgenommen: vollständige Waldreichweite und artenbezogener Fällschutz
+
+Menschliches Gate und begrenzter Pilot 2026-10-11 bestanden: gesamte Reichweite,
+native Baumidentität statt Försterkategorie, Stümpfe separat, zwei Kiefernmarkierungen
+entfernt bei unveränderten 71 markierten lebenden Eichen. Mengenlimit und Replay
+geprüft; Testmarkierungen vollständig aufgeräumt. Keine dauerhafte Schutzregel.
+Effizienzfolgearbeit: 54 interne Reads pro Vollübersicht und 113 beim Schutz von
+zwei Bäumen. Native Reichweiten-/Pflanzenabfrage und gezielte Schlusskontrolle
+könnten interne Seitenaufrufe sparen; vor Optimierung konkreten Umfang wählen.
+[Vertrag, Grenzen und Nachweis](docs/forestry-range-protection.md).
+
 ## Großbau-Nachweis gesichert; Sondertests zurückgestellt
 
 Bis 512 native Blockeinträge durch Katalog, Baupfade und Zugangsplanung;
@@ -14,8 +25,8 @@ Kein automatischer Kolonieausbau dafür. Testbau und elf Zugangshelfer stehen no
 bei späterem Rückbau Rohstoffe regulär einsammeln, nicht löschen.
 [Umfang und begrenzter Nachweis](docs/large-building-geometry.md).
 
-Livebeobachtung: `find_buildings`-Beschreibung nennt noch 64 Zellen, obwohl der
-neue Transport 512 unterstützt. Bei nächster Quellkorrektur Beschreibung angleichen.
+Livebeobachtung: `find_buildings`-Beschreibung nannte noch 64 Zellen, obwohl der
+neue Transport 512 unterstützt. Korrektur auf 512 mit dem Wald-Gate bereitgestellt.
 Testvorbereitung sollte Forschung, Materialkapazität, freie Arbeitskräfte und
 große freie Grundfläche vor der Pilotwahl gemeinsam bewerten.
 

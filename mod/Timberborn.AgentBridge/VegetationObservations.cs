@@ -5,13 +5,14 @@ using Timberborn.NaturalResources;
 using Timberborn.NaturalResourcesLifecycle;
 using Timberborn.NaturalResourcesMoisture;
 using Timberborn.Cutting;
+using Timberborn.Forestry;
 namespace Timberborn.AgentBridge;
 
 internal static class VegetationObservations
 {
     // Explicit wire names: the game uses Newtonsoft defaults, while MCP uses camelCase.
     public static object? ToPayload(VegetationState? s) => s is null ? null : new { lifeState=s.LifeState, isDying=s.IsDying, waterStress=s.WaterStress, isGrown=s.IsGrown, growthProgress=s.GrowthProgress,
-        cutYieldRemoved=s.CutYieldRemoved, cutIsYielding=s.CutIsYielding, cutYieldGood=s.CutYieldGood, cutYieldAmount=s.CutYieldAmount };
+        cutYieldRemoved=s.CutYieldRemoved, cutIsYielding=s.CutIsYielding, cutYieldGood=s.CutYieldGood, cutYieldAmount=s.CutYieldAmount, isTree=s.IsTree };
     public static VegetationState? Observe(EntityComponent e)
     {
         if(!e.HasComponent<NaturalResource>())return null;
@@ -21,6 +22,6 @@ internal static class VegetationObservations
         bool grows=e.TryGetComponent<Growable>(out var growth);
         var yield = e.TryGetComponent<Cuttable>(out var cuttable) ? cuttable.Yielder : null;
         return new VegetationState(life,dying,waterStress,grows?growth.IsGrown:(bool?)null,grows?growth.GrowthProgress:(float?)null,
-            yield?.IsYieldRemoved, yield?.IsYielding, yield is null ? null : yield.Yield.GoodId, yield is null ? (int?)null : yield.Yield.Amount);
+            yield?.IsYieldRemoved, yield?.IsYielding, yield is null ? null : yield.Yield.GoodId, yield is null ? (int?)null : yield.Yield.Amount, e.HasComponent<TreeComponent>());
     }
 }

@@ -3,14 +3,24 @@ using Timberborn.Bridge.Core;
 
 namespace Timberborn.McpServer;
 
-public sealed record ForestryRequest(string Session, string WorkBuildingId, int X, int Y, int Z,
-    int Width, int Height, int Depth = 1, string[]? ConsumerIds = null);
+public sealed record ForestryRequest(string Session, string WorkBuildingId, int X = 0, int Y = 0, int Z = 0,
+    int Width = 8, int Height = 8, int Depth = 1, string[]? ConsumerIds = null, bool FullRange = false);
 public sealed record ForestryTree(Guid Id, string Template, Position Position);
 public sealed record ForestryConsumer(string Id, string Template, bool Finished, bool? Paused,
     OperationWorkplace? Workplace, int? StoredLogs, string[] Statuses);
 public sealed record ForestryReport(ForestryRequest Region, ForestryTree[] Candidates,
     int TotalCandidates, bool CandidatesTruncated, Dictionary<string, int> Excluded, bool RangeSupported, int NativeReads,
-    DateTimeOffset ObservedAtUtc, int AvailableLogs, int AllLogs, ForestryConsumer[] Consumers, string[] Limitations);
+    DateTimeOffset ObservedAtUtc, int AvailableLogs, int AllLogs, ForestryConsumer[] Consumers, string[] Limitations)
+{
+    public ForestrySpecies[] Species { get; init; } = [];
+    public int RangeCells { get; init; }
+    public int ScannedRegions { get; init; }
+    public string Coverage => Region.FullRange ? "full_native_range" : "requested_region_only";
+    [System.Text.Json.Serialization.JsonIgnore] public NativeRemovalTarget[] ReachableTrees { get; init; } = [];
+    [System.Text.Json.Serialization.JsonIgnore] public HashSet<Position> MarkedCells { get; init; } = [];
+}
+public sealed record ForestrySpecies(string Template, int Total, int Living, int Leftovers, int Dead,
+    int Unknown, int MatureLiving, int CuttableLiving, int CurrentLogYield, int UnknownYield, int MarkedLiving);
 
 public interface IForestryPort
 {
@@ -22,6 +32,7 @@ public interface IForestryPort
     Task<BridgeEnvelope<NativeGoods>> Goods(int offset, CancellationToken ct);
     Task<BridgeEnvelope<NativeOperation>> Operation(string session, string id, CancellationToken ct);
     Task<BridgeEnvelope<NativeAreaChange>> Mark(ForestryRequest r, Position p, CancellationToken ct);
+    Task<BridgeEnvelope<NativeAreaChange>> Protect(ForestryRequest r, Position p, CancellationToken ct) => throw new NotSupportedException();
 }
 
 public static class ForestrySurvey
@@ -44,6 +55,7 @@ public static class ForestrySurvey
         if (t.Kind is not ("vegetation" or "planted") || !templates.Contains(t.Template)) return "not_tree";
         // A mature Growable survives on leftovers. Read the actual cutting yield, not the tree model/life flags.
         var vegetation = t.Vegetation;
+        if (vegetation?.IsTree != true) return vegetation?.IsTree == false ? "not_tree" : "tree_identity_unknown";
         if (vegetation?.CutYieldRemoved == true) return "harvested_leftover";
         if (vegetation is null || vegetation.CutYieldRemoved is null || vegetation.CutIsYielding is null ||
             vegetation.CutYieldGood is null || vegetation.CutYieldAmount is null) return "cut_yield_unknown";
@@ -78,39 +90,54 @@ public static class ForestrySurvey
         var templates = types.Plants.Where(p => p.Kind == "tree_planting").Select(p => p.Resource).ToHashSet(StringComparer.Ordinal);
         var range = new HashSet<Position>(); int? total = null; bool? supported = null; string? source = null;
         for (int offset = 0; ; offset += 32) {
-            if (offset >= 2048) throw new InvalidDataException("forestry_range_bound");
+            if (offset >= 2048) throw new BridgeRejectionException("forestry_budget_exceeded");
             var p = Check(await port.Range(r, offset, ct));
+            if (p.Total > 2048) throw new BridgeRejectionException("forestry_budget_exceeded");
             Page(offset, p.Offset, p.Limit, p.Total, p.Items.Length, p.HasMore, total, 2048);
             if (p.Id != r.WorkBuildingId || supported is not null && (supported != p.Supported || source != p.Source) ||
                 !p.Supported && p.Total != 0) throw new InvalidDataException("forestry_range_changed");
             total = p.Total; supported = p.Supported; source = p.Source;
-            foreach (var cell in p.Items) if (!range.Add(cell)) throw new InvalidDataException("forestry_duplicate_range");
+            foreach (var cell in p.Items) {
+                if (cell.X is < 0 or > 4095 || cell.Y is < 0 or > 4095 || cell.Z is < 0 or > 4095)
+                    throw new InvalidDataException("forestry_invalid_range_cell");
+                if (!range.Add(cell)) throw new InvalidDataException("forestry_duplicate_range");
+            }
             if (!p.HasMore) break;
         }
         var marked = new HashSet<Position>(); total = null;
         for (int offset = 0; ; offset += 32) {
-            if (offset >= 4096) throw new InvalidDataException("forestry_marking_bound");
+            if (offset >= 4096) throw new BridgeRejectionException("forestry_budget_exceeded");
             var p = Check(await port.Cutting(offset, ct));
             if (!p.Supported || p.Kind != "tree_cutting" || p.Total is null) throw new InvalidDataException("forestry_marking_unknown");
+            if (p.Total > 4096) throw new BridgeRejectionException("forestry_budget_exceeded");
             Page(offset, p.Offset, p.Limit, p.Total.Value, p.Items.Length, p.HasMore, total, 4096); total = p.Total;
             foreach (var cell in p.Items) if (cell.Resource != "marked" || !marked.Add(cell.Position))
                 throw new InvalidDataException("forestry_marking_changed");
             if (!p.HasMore) break;
         }
+        if (r.FullRange && supported != true) throw new BridgeRejectionException("forestry_range_unknown");
+        var regions = r.FullRange
+            ? range.Select(p => (X: p.X / 8 * 8, Y: p.Y / 8 * 8, Z: p.Z)).Distinct()
+                .OrderBy(p => p.Z).ThenBy(p => p.Y).ThenBy(p => p.X)
+                .Select(p => r with { X = p.X, Y = p.Y, Z = p.Z, Width = 8, Height = 8, Depth = 1 }).ToArray()
+            : Enumerable.Range(r.Z, r.Depth).Select(z => r with { Z = z, Depth = 1 }).ToArray();
+        if (regions.Length > 512) throw new BridgeRejectionException("forestry_budget_exceeded");
         var trees = new Dictionary<Guid, NativeRemovalTarget>();
-        for (int z = r.Z; z < r.Z + r.Depth; z++) {
+        foreach (var region in regions) {
+            Validate(region);
             total = null; var seen = new HashSet<Guid>();
             for (int offset = 0; ; offset += 32) {
-                if (offset >= 256) throw new InvalidDataException("forestry_tree_bound");
-                var p = Check(await port.Trees(r, z, offset, ct));
+                if (offset >= 256 || reads >= 4096) throw new BridgeRejectionException("forestry_budget_exceeded");
+                var p = Check(await port.Trees(region, region.Z, offset, ct));
                 Page(offset, p.Offset, p.Limit, p.Total, p.Items.Length, p.HasMore, total, 256); total = p.Total;
                 if (p.Kind != "all") throw new InvalidDataException("forestry_target_kind");
                 foreach (var t in p.Items) {
                     if (!seen.Add(t.Id)) throw new InvalidDataException("forestry_duplicate_tree");
                     // Queries report overlapping objects. Only origins inside the requested volume are candidates.
-                    if (t.Position.X < r.X || t.Position.X >= r.X + r.Width || t.Position.Y < r.Y ||
-                        t.Position.Y >= r.Y + r.Height || t.Position.Z != z) continue;
-                    trees.Add(t.Id, t);
+                    if (t.Position.X < region.X || t.Position.X >= region.X + region.Width || t.Position.Y < region.Y ||
+                        t.Position.Y >= region.Y + region.Height || t.Position.Z != region.Z) continue;
+                    if (r.FullRange && !range.Contains(t.Position)) continue;
+                    if (!trees.TryAdd(t.Id, t)) throw new InvalidDataException("forestry_duplicate_tree");
                 }
                 if (!p.HasMore) break;
             }
@@ -138,9 +165,29 @@ public static class ForestrySurvey
             if (reason is null) candidates.Add(new(t.Id, t.Template, t.Position));
             else excluded[reason] = excluded.GetValueOrDefault(reason) + 1;
         }
+        if (r.FullRange && trees.Values.Any(t => (t.Kind is "vegetation" or "planted") &&
+            templates.Contains(t.Template) && t.Vegetation?.IsTree is null))
+            throw new BridgeRejectionException("forestry_tree_identity_unknown");
+        var reachable = trees.Values.Where(t => range.Contains(t.Position) && t.Vegetation?.IsTree == true &&
+            (t.Kind is "vegetation" or "planted") && templates.Contains(t.Template)).ToArray();
+        bool Living(NativeRemovalTarget t) => t.Vegetation is { CutYieldRemoved: false, LifeState: "alive" };
+        bool Leftover(NativeRemovalTarget t) => t.Vegetation?.CutYieldRemoved == true;
+        bool Dead(NativeRemovalTarget t) => t.Vegetation is { CutYieldRemoved: false, LifeState: "dead" };
+        var species = reachable.GroupBy(t => t.Template).OrderBy(g => g.Key, StringComparer.Ordinal)
+            .Select(g => new ForestrySpecies(g.Key, g.Count(), g.Count(Living), g.Count(Leftover), g.Count(Dead),
+                g.Count(t => !Living(t) && !Leftover(t) && !Dead(t)),
+                g.Count(t => Living(t) && t.Vegetation!.IsGrown == true),
+                g.Count(t => Living(t) && t.Vegetation!.CutIsYielding == true),
+                g.Where(t => Living(t) && t.Vegetation is { CutIsYielding: true, CutYieldGood: "Log" })
+                    .Sum(t => Math.Max(0, t.Vegetation!.CutYieldAmount ?? 0)),
+                g.Count(t => t.Vegetation is not { CutYieldRemoved: not null, CutIsYielding: not null,
+                    CutYieldGood: not null, CutYieldAmount: not null }),
+                g.Count(t => Living(t) && marked.Contains(t.Position)))).ToArray();
         return new(r, candidates.Take(16).ToArray(), candidates.Count, candidates.Count > 16,
             excluded, supported == true, reads, observed, logs.AvailableStock, logs.AllStock, consumers.ToArray(),
             ["non_atomic_paused_observation", "native_work_range_not_worker_or_delivery_proof",
-             "tree_catalog_membership_not_guaranteed_log_yield", "stocks_not_additive_no_rate_or_sustainable_yield_claim"]);
+             "tree_catalog_membership_not_guaranteed_log_yield", "stocks_not_additive_no_rate_or_sustainable_yield_claim"])
+        { Species = species, RangeCells = range.Count, ScannedRegions = regions.Length,
+            ReachableTrees = reachable, MarkedCells = marked };
     }
 }

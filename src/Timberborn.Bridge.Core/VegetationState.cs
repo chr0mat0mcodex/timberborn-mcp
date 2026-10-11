@@ -12,10 +12,11 @@ public sealed class VegetationState
     public bool? CutIsYielding { get; }
     public string? CutYieldGood { get; }
     public int? CutYieldAmount { get; }
+    public bool? IsTree { get; }
     public VegetationState(string lifeState, bool? isDying, bool? waterStress, bool? isGrown, float? growthProgress,
-        bool? cutYieldRemoved = null, bool? cutIsYielding = null, string? cutYieldGood = null, int? cutYieldAmount = null)
+        bool? cutYieldRemoved = null, bool? cutIsYielding = null, string? cutYieldGood = null, int? cutYieldAmount = null, bool? isTree = null)
     { LifeState=lifeState; IsDying=isDying; WaterStress=waterStress; IsGrown=isGrown; GrowthProgress=growthProgress;
-      CutYieldRemoved=cutYieldRemoved; CutIsYielding=cutIsYielding; CutYieldGood=cutYieldGood; CutYieldAmount=cutYieldAmount; }
+      CutYieldRemoved=cutYieldRemoved; CutIsYielding=cutIsYielding; CutYieldGood=cutYieldGood; CutYieldAmount=cutYieldAmount; IsTree=isTree; }
     public bool IsTappingCandidate() => LifeState=="alive" && IsDying==false && WaterStress==false && IsGrown==true;
     public bool IsValid() => (LifeState is "alive" or "dead" or "unknown") &&
         (!CutYieldAmount.HasValue || CutYieldAmount.Value >= 0) &&

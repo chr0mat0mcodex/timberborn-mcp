@@ -12,7 +12,7 @@ public sealed class ForestryTests
     private const string TreeId = "22222222-2222-4222-8222-222222222222";
     private static readonly ForestryRequest Request = new(Session, Session, 0, 0, 2, 8, 8, 2);
     private static NativeRemovalTarget Tree => new(Guid.Parse(TreeId), "vegetation", "SyntheticTree", new(2, 2, 2),
-        "demolition_mark", true, false, "unknown", "vegetation", new("alive", false, false, true, 1, false, true, "Log", 2));
+        "demolition_mark", true, false, "unknown", "vegetation", new("alive", false, false, true, 1, false, true, "Log", 2, true));
     private sealed class Port : IForestryPort
     {
         public bool Supported = true, LostAck, BadPage, Stale;
@@ -52,10 +52,10 @@ public sealed class ForestryTests
     [Fact]
     public void Immature_marked_dead_and_unreachable_trees_are_not_candidates() {
         var templates = new HashSet<string> { Tree.Template }; var range = new HashSet<Position> { Tree.Position };
-        Assert.Equal("not_observed_mature", ForestrySurvey.Exclusion(Tree with { Vegetation = new("alive", false, false, false, .5f, false, true, "Log", 2) }, templates, true, range, new HashSet<Position>()));
+        Assert.Equal("not_observed_mature", ForestrySurvey.Exclusion(Tree with { Vegetation = new("alive", false, false, false, .5f, false, true, "Log", 2, true) }, templates, true, range, new HashSet<Position>()));
         Assert.Equal("already_marked", ForestrySurvey.Exclusion(Tree, templates, true, range, range));
         Assert.Equal("outside_range", ForestrySurvey.Exclusion(Tree, templates, true, new HashSet<Position>(), new HashSet<Position>()));
-        Assert.Equal("not_observed_alive", ForestrySurvey.Exclusion(Tree with { Vegetation = new("dead", null, null, true, 1, false, true, "Log", 2) }, templates, true, range, new HashSet<Position>()));
+        Assert.Equal("not_observed_alive", ForestrySurvey.Exclusion(Tree with { Vegetation = new("dead", null, null, true, 1, false, true, "Log", 2, true) }, templates, true, range, new HashSet<Position>()));
     }
 
     [Theory]
@@ -65,7 +65,7 @@ public sealed class ForestryTests
     [InlineData(false, true, "Berries", 2, "no_log_yield")]
     [InlineData(false, false, "Log", 2, "not_currently_cuttable")]
     public void Mature_alive_leftovers_never_become_felling_candidates(bool? removed, bool? yielding, string? good, int? amount, string reason) {
-        var tree = Tree with { Vegetation = new("alive", false, false, true, 1, removed, yielding, good, amount) };
+        var tree = Tree with { Vegetation = new("alive", false, false, true, 1, removed, yielding, good, amount, true) };
         Assert.Equal(reason, ForestrySurvey.Exclusion(tree, new HashSet<string> { tree.Template }, true,
             new HashSet<Position> { tree.Position }, new HashSet<Position>()));
     }
@@ -104,7 +104,11 @@ public sealed class ForestryTests
         Assert.False(writer.Annotations!.ReadOnlyHint);
         Assert.True(writer.Annotations.DestructiveHint);
         Assert.True(writer.Annotations.IdempotentHint);
-        Assert.Equal(2, ForestryTools.Catalog(true).Count());
+        Assert.Equal(3, ForestryTools.Catalog(true).Count());
+        var protection = Assert.Single(ForestryTools.Catalog(true), t => t.Name == ForestryTools.Protect);
+        Assert.False(protection.Annotations!.ReadOnlyHint);
+        Assert.True(protection.Annotations.DestructiveHint);
+        Assert.True(protection.Annotations.IdempotentHint);
         Assert.All(ForestryTools.Catalog(true), t => Assert.Equal("object", t.InputSchema.GetProperty("type").GetString()));
     }
 }

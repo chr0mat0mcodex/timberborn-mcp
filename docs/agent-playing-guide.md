@@ -1,5 +1,23 @@
 # Spielanleitung für Agenten
 
+## Waldreichweite und Fällschutz — begrenzt live abgenommen
+
+Für die Rohstoffsuche eines Arbeitsgebäudes `inspect_forestry` mit `fullRange=true`
+verwenden: komplette native Reichweite auf allen Höhen statt einzelner Fenster.
+`species` trennt lebende Bäume, Stümpfe, tote/unbekannte Zustände, Reife und Ertrag.
+Baumnachweis stammt aus `vegetation.isTree`, nicht allein aus der Försterkategorie;
+Löwenzahn ist dort pflanzbar, aber kein Baum. Fehlender Nachweis blockiert Vollabdeckung.
+`coverage`, `rangeCells`, `scannedRegions` und `nativeReads` prüfen; gekürzte
+Fällkandidaten sind nicht die vollständige Artenzählung. Budgetfehler nicht als
+leere Reichweite interpretieren.
+Für beispielsweise Kiefern `protect_forestry` mit exakter Katalogvorlage, Gebäude,
+Session und neuer Aktions-ID verwenden. Ein Aufruf entfernt die aktuellen
+Fällmarkierungen passender lebender Bäume, einschließlich junger Bäume.
+`completed` und `readbackConfirmed=true` verlangen; Teilfortschritt/unbestätigte
+Ziele zunächst lesen, gleiche ID nicht als neuen Auftrag verwenden. Kein Schutz
+gegen zukünftige Markierungen, keine Harz-/Liefergarantie. Andere Arten, Stümpfe,
+Pflanz- und Abrissmarkierungen unverändert lassen. [Pilot](forestry-range-protection.md).
+
 ## Große Geometrie — regulärer Großbau live belegt
 
 Installiertes Paket über `inspect_build_options.geometryCellCount/maxGeometryCells`

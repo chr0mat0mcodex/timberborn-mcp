@@ -1,5 +1,18 @@
 # Projektstand
 
+## Live abgenommen: vollständige Waldreichweite und artenbezogener Fällschutz
+
+Menschliches Gate einschließlich nativer Baumklassifikation und begrenzter Livetest
+am 2026-10-11 bestanden. 446 Reichweitenzellen, 16 Teilflächen, 54 interne Reads;
+18 lebende Kiefern, sieben Kiefernstümpfe und eine tote Kiefer getrennt. Löwenzahn
+korrekt ausgeschlossen. Zwei räumlich getrennte Kiefermarkierungen in einem
+Schutzaufruf entfernt und rückgelesen; 71 markierte lebende Eichen unverändert.
+Mengenlimit vor Mutation und lesendes Replay bestätigt. Testmarkierungen entfernt,
+keine Bäume/Rohstoffe gelöscht, Spielzeit unverändert und pausiert.
+Keine dauerhafte Schutzregel; vollständiger Schutzaufruf benötigte 113 interne
+Reads. Weitere interne Bündelung bleibt Optimierung, kein weiterer Spielausbau.
+[Vertrag und Nachweis](docs/forestry-range-protection.md).
+
 ## Begrenzt live abgenommen: große Gebäude bis 512 native Blöcke
 
 Menschliches Gate und regulärer DomedGarden-Großbau am 2026-10-11 bestanden:

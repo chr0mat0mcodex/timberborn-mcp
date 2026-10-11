@@ -1,5 +1,16 @@
 # Native MCP-Werkzeuge
 
+## Live abgenommen: gesamte Waldreichweite und Fällschutz
+
+`inspect_forestry`: optional `fullRange=true`; dann genügen `session` und
+`workBuildingId`. Vollständige Artenzählung über die native Reichweite auf allen
+Höhen, explizite Abdeckung und Aufwand; regionale Altparameter bleiben kompatibel.
+`protect_forestry`: `session`, `workBuildingId`, `template`, `actionId`, optional
+`maxTrees` (1–512, Standard 256). Entfernt aktuelle Fällmarkierungen lebender Bäume
+der gewählten Art. Bestehender Flächen-Aktionsschalter, persistenter Teilbeleg,
+Rücklesung und lesendes Replay. Keine dauerhafte Regel, Fällung oder Simulation.
+Menschliches Gate und begrenzter Livetest bestanden. [Nachweis und Grenzen](forestry-range-protection.md).
+
 ## 512-Zellen-Geometrie — begrenzter Großbau-Nachweis
 
 `inspect_build_options` ergänzt `geometryCellCount` und `maxGeometryCells`.
