@@ -29,6 +29,7 @@ public sealed class SimulationRunStatus
     public BuildingProductionState[] BuildingProduction { get; set; } = Array.Empty<BuildingProductionState>();
     public long BuildingJournalCursor { get; set; }
     public bool BuildingProductionReached { get; set; }
+    public bool MeasureProduction { get; set; }
     public bool HasBuildingTargets => BuildingIds.Length>0;
     public bool HasProductionTargets => GoodTargets.Length > 0 || StopAtScience is not null;
 }
@@ -54,6 +55,9 @@ public sealed class SimulationRunController
     public bool HasActiveRun => active is not null;
     public SimulationRunStatus? ActiveBuildingRun => active?.HasBuildingTargets==true?active:null;
     public SimulationRunStatus? ActiveProductionRun => active?.HasProductionTargets == true ? active : null;
+    public bool BuildingObservationNeedsReconcile(double hours,double now) =>
+        active is {HasBuildingTargets:true,MeasureProduction:true} r && r.State!="pausing" &&
+        (hours>=r.TargetGameHours||now-started>=r.MaxRealSeconds);
 
     public SimulationRunStatus Start(SimulationRunRequest r, double hours, float speed, double now, Action<int> changeSpeed, int? availableLogs = null, bool deferSpeedStart = false, ProductionSample? production = null, BuildingProductionSample? buildingProduction = null)
     {
@@ -67,7 +71,7 @@ public sealed class SimulationRunController
         var pending = new SimulationRunStatus { RunId = r.RunId, StartGameHours = hours, TargetGameHours = target,
             ObservedGameHours = hours, RequestedSpeed = r.Speed, ObservedSpeed = speed, MaxRealSeconds = r.MaxRealSeconds,
             StopAtAvailableLogs = r.StopAtAvailableLogs, ObservedAvailableLogs = r.StopAtAvailableLogs is null ? null : availableLogs,
-            GoodTargets = r.GoodTargets.Select(t => new ProductionTargetState { Good=t.Good, Amount=t.Amount }).ToArray(), StopAtScience=r.StopAtScience, BuildingIds=r.BuildingIds };
+            GoodTargets = r.GoodTargets.Select(t => new ProductionTargetState { Good=t.Good, Amount=t.Amount }).ToArray(), StopAtScience=r.StopAtScience, BuildingIds=r.BuildingIds,MeasureProduction=r.MeasureProduction };
         if (pending.HasProductionTargets && !ProductionTargets.Observe(pending, production))
             throw new BridgeRejectionException("state_conflict");
         if(pending.HasBuildingTargets&&BuildingProductionProof.Observe(pending,buildingProduction,true) is not null)throw new BridgeRejectionException("building_proof_observation_unavailable");
@@ -112,7 +116,7 @@ public sealed class SimulationRunController
             if (r.State == "pausing") { pauseAfterUnlock = true; return; }
             r.Reason = "game_speed_locked";
             if (hours < lastHours) BeginPause("failed", "clock_reversed", now, changeSpeed, true);
-            else if (hours >= r.TargetGameHours) BeginPause("completed", r.HasBuildingTargets ? "building_production_time_limit" : r.HasProductionTargets ? "production_time_limit" : "target_reached", now, changeSpeed, true);
+            else if (hours >= r.TargetGameHours) BeginPause("completed", r.MeasureProduction ? "production_measurement_complete" : r.HasBuildingTargets ? "building_production_time_limit" : r.HasProductionTargets ? "production_time_limit" : "target_reached", now, changeSpeed, true);
             else if (now - started >= r.MaxRealSeconds) BeginPause("failed", "real_time_limit", now, changeSpeed, true);
             return;
         }
@@ -145,7 +149,7 @@ public sealed class SimulationRunController
         if(r.HasBuildingTargets) {
             string? failure=BuildingProductionProof.Observe(r,buildingProduction);
             if(failure is not null) {BeginPause("failed",failure,now,changeSpeed);return;}
-            if(r.BuildingProductionReached) {BeginPause("completed","building_production_proven",now,changeSpeed);return;}
+            if(r.BuildingProductionReached&&!r.MeasureProduction) {BeginPause("completed","building_production_proven",now,changeSpeed);return;}
         }
         if (r.HasProductionTargets) {
             if (!ProductionTargets.Observe(r, production)) { BeginPause("failed", "production_observation_unavailable", now, changeSpeed); return; }
@@ -158,7 +162,7 @@ public sealed class SimulationRunController
                 r.StockTargetReached = true; BeginPause("completed", "stock_target_reached", now, changeSpeed); return;
             }
         }
-        if (hours >= r.TargetGameHours) BeginPause("completed", r.HasBuildingTargets ? "building_production_time_limit" : r.HasProductionTargets ? "production_time_limit" : "target_reached", now, changeSpeed);
+        if (hours >= r.TargetGameHours) BeginPause("completed", r.MeasureProduction ? "production_measurement_complete" : r.HasBuildingTargets ? "building_production_time_limit" : r.HasProductionTargets ? "production_time_limit" : "target_reached", now, changeSpeed);
         else if (now - started >= r.MaxRealSeconds) BeginPause("failed", "real_time_limit", now, changeSpeed);
         else if (now - lastProgress >= 120) BeginPause("failed", "simulation_stalled", now, changeSpeed);
     }

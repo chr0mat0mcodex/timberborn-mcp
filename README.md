@@ -5,6 +5,8 @@ Beobachtung und kontrollierte Eingriffe über reguläre Spielservices.
 
 ## Status
 
+**0.44.0 begrenzt live abgenommen:** [Durchsatz und beobachtete Stillstandszeiten](docs/production-throughput.md).
+
 **0.43.0 begrenzt live abgenommen:**
 [gemeinsame Engpassdiagnose](docs/production-bottlenecks.md).
 

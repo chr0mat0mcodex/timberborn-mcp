@@ -1,5 +1,20 @@
 # Spielanleitung für Agenten
 
+## 0.44: über ein Zeitfenster messen (begrenzt live abgenommen)
+
+Für Durchsatz `run_simulation_for` mit buildingIds (maximal acht) und
+measureProduction=true verwenden. Der Lauf endet an der Zeitgrenze statt beim
+ersten Zyklus je Gebäude. Danach measurement unter buildingProduction lesen:
+Zykluszahl, measuredHours, Raten, recipeDerivedProducts und times.
+Äußeres completedCycles bleibt der Erstnachweis 0/1. Zeitfensterabschluss ist
+kein Nachweis, dass jedes Gebäude produziert hat. Pause separat bestätigen.
+Zeitanteile sind beobachtete Schätzungen; unknown/multiple_blockers nicht in
+exakte Ursachen umdeuten. Aktuelle 0.43-Diagnose und eingefrorenen Messbericht
+trennen. Abgeleitete Rezeptmengen sind weder Lagerzuwachs noch Liefermengen.
+Für Vergleiche erst Lauf beenden, dann Einstellungen ändern und neuen Lauf starten.
+Keine enge Pollschleife; bei Fehlern letzte Messabdeckung beachten. Ohne Option
+weiterhin günstigen Erstzyklusnachweis nutzen. [Details](production-throughput.md).
+
 ## 0.43: Engpässe gemeinsam erklären (begrenzt live abgenommen)
 
 `inspect_building_operations` mit `diagnose=true` und höchstens acht IDs verwenden.

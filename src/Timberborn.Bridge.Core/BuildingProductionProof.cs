@@ -8,6 +8,7 @@ public sealed class BuildingProductionState
     public int CompletedCycles { get; set; }
     public double? ProvenGameHours { get; set; }
     public double ObservedGameHours { get; set; }
+    public ProductionMeasurement? Measurement { get; set; }
     public string[] Blockers { get; set; } = Array.Empty<string>();
     public string[] SeenBlockers { get; set; } = Array.Empty<string>();
 }
@@ -39,12 +40,16 @@ public static class BuildingProductionProof
                 initial&&b.CompletedCycles!=0||b.CompletedCycles!=(b.ProvenGameHours is null?0:1)||
                 !Finite(b.ObservedGameHours)||b.ObservedGameHours<status.StartGameHours||b.ObservedGameHours>status.ObservedGameHours||
                 b.ProvenGameHours is {} h&&(!Finite(h)||h<status.StartGameHours||h>b.ObservedGameHours)||
+                (status.MeasureProduction ? b.Measurement is not {} measurement||!ProductionMeasurementTracker.Valid(measurement,b.ObservedGameHours-status.StartGameHours)||
+                    (measurement.CompletedCycles>0)!=(b.CompletedCycles==1)||
+                    initial&&(measurement.CompletedCycles!=0||measurement.MeasuredHours!=0) : b.Measurement is not null)||
                 b.Blockers is null||b.SeenBlockers is null||b.Blockers.Any(x=>!Blockers.Contains(x))||
                 b.SeenBlockers.Any(x=>!Blockers.Contains(x))||b.Blockers.Except(b.SeenBlockers).Any()))
             return "building_proof_observation_unavailable";
         if(!initial && status.BuildingProduction.Where((old,i)=> {
             var next=sample.Buildings[i];
-            return old.Template!=next.Template||old.Recipe!=next.Recipe||old.CompletedCycles>next.CompletedCycles||
+            return status.MeasureProduction&&old.Measurement is {} previous&&!ProductionMeasurementTracker.Follows(previous,next.Measurement!)||
+                old.Template!=next.Template||old.Recipe!=next.Recipe||old.CompletedCycles>next.CompletedCycles||
                 old.ProvenGameHours is not null&&old.ProvenGameHours!=next.ProvenGameHours||
                 old.ObservedGameHours>next.ObservedGameHours||old.SeenBlockers.Except(next.SeenBlockers).Any();
         }).Any())return "building_proof_observation_unavailable";
@@ -52,7 +57,7 @@ public static class BuildingProductionProof
         status.BuildingProduction=sample.Buildings.Select(b=>new BuildingProductionState {
             Id=b.Id,Template=b.Template,Recipe=b.Recipe,CompletedCycles=b.CompletedCycles,
             ProvenGameHours=b.ProvenGameHours,ObservedGameHours=b.ObservedGameHours,
-            Blockers=b.Blockers.ToArray(),SeenBlockers=b.SeenBlockers.ToArray()
+            Blockers=b.Blockers.ToArray(),SeenBlockers=b.SeenBlockers.ToArray(),Measurement=b.Measurement?.Copy()
         }).ToArray();
         status.BuildingJournalCursor=sample.JournalCursor;
         status.BuildingProductionReached=sample.Failure is null&&sample.Buildings.All(b=>b.CompletedCycles==1);

@@ -1,5 +1,15 @@
 # Native MCP-Werkzeuge
 
+## 0.44: Messmodus im Produktionslauf (begrenzt live abgenommen)
+
+`run_simulation_for(..., buildingIds, measureProduction=true)` misst bis duration
+statt zum Erstzyklusabschluss. Maximal acht Gebäude, keine Mischung mit Bestands-
+oder Forschungszielen. `buildingProduction[].measurement` liefert native Zyklen,
+rezeptabgeleitete Mengen/Raten und exklusive beobachtete Zeitanteile in Spielstunden.
+`production_measurement_complete` ist Zeitfensterabschluss; Produktionsnachweis
+bleibt separat. Historische Messung eingefroren, frische Engpassdiagnose weiterhin
+separat datiert. Kein zusätzliches Werkzeug. [Vertrag](production-throughput.md).
+
 ## 0.43: gemeinsame Engpassdiagnose (begrenzt live abgenommen)
 
 `inspect_building_operations(session, ids, diagnose=true, detail?)`: bis acht IDs,

@@ -72,7 +72,7 @@ public sealed class SimulationControl
         runs.Tick(Hours, speed.CurrentSpeed, wall.Elapsed.TotalSeconds, s => speed.ChangeSpeed(s), speedLocked,
             runs.StockConditionActive ? AvailableLogs() : null,
             runs.ActiveProductionRun is { } active ? Sample(active.GoodTargets.Select(t=>t.Good),active.StopAtScience is not null) : null,
-            runs.ActiveBuildingRun is not null ? buildingProof?.Sample() : null);
+            runs.ActiveBuildingRun is not null ? buildingProof?.Sample(runs.BuildingObservationNeedsReconcile(Hours,wall.Elapsed.TotalSeconds)) : null);
         CleanupBuildingProof();
     }
     private void CleanupBuildingProof() {
@@ -86,7 +86,7 @@ public sealed class SimulationControl
         if(r.Starts) {
             BuildingProductionObserver? candidate=null;
             try {
-                if(r.BuildingIds.Length>0)candidate=new BuildingProductionObserver(entities,journal,time,r.BuildingIds);
+                if(r.BuildingIds.Length>0)candidate=new BuildingProductionObserver(entities,journal,time,r.BuildingIds,r.MeasureProduction);
                 result=runs.Start(r,Hours,speed.CurrentSpeed,wall.Elapsed.TotalSeconds,s=>speed.ChangeSpeed(s),
                     r.StopAtAvailableLogs is null?null:AvailableLogs(),production:Sample(r.GoodTargets.Select(t=>t.Good),r.StopAtScience is not null),
                     buildingProduction:candidate?.Sample());

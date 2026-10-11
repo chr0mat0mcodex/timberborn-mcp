@@ -15,7 +15,7 @@ public sealed partial class NativeClient
         if(r.After is {} after)q+="&after="+after.ToString(CultureInfo.InvariantCulture);
         var e=await Get<NativeRecentActions>(q,ct,maxResponseBytes:256*1024);
         var d=e.Data;var p=d.Page;
-        if(e.BridgeVersion is not ("0.40.0" or "0.41.0" or "0.42.0" or "0.43.0")||e.SessionId!=r.Session||d.Capacity!=512||d.MaxObjects!=4096||d.ScanIntervalSeconds!=1||
+        if(e.BridgeVersion is not ("0.40.0" or "0.41.0" or "0.42.0" or "0.43.0" or "0.44.0")||e.SessionId!=r.Session||d.Capacity!=512||d.MaxObjects!=4096||d.ScanIntervalSeconds!=1||
             d.ObservationFailures<0||d.TrackedObjects<0||d.TrackedObjects>d.MaxObjects||d.SupportedKinds is null||
             !d.SupportedKinds.SequenceEqual(RecentActionsRequest.Kinds)||d.Limitations is null||d.Limitations.Any(s=>s is null)||
             p is null||p.Items is null||p.Items.Length>r.Limit||p.Latest<0||p.Latest>9007199254740991L||

@@ -1,5 +1,17 @@
 # Projektstand
 
+## 0.44.0 — Durchsatz und Zeitanteile begrenzt live abgenommen
+
+Nach Korrektur der Fortschrittsbasis bei unveränderter Spielzeit menschliches
+Gate und Zweierpilot bestanden. Zwei Messfenster zu je drei Spielstunden:
+Erfinder vier/fünf native Zyklen; Papierfabrik nach freiem Lager null → zwei
+Zyklen, Lagerstillstand 3 → 0,65625 Stunden. Automatische Pause, unveränderlicher
+Altbericht und mutationsfreie Auswahlfehler bestätigt. Ursprüngliche
+Lagereinstellungen wiederhergestellt; 20 transportierte Papier bleiben erhalten.
+Achtfachumfang automatisch geprüft, zwei Gebäude live. Zeitanteile sind
+beobachtete Schätzungen; Rezeptmengen keine Liefermengen.
+[Vertrag und Abnahmegrenzen](docs/production-throughput.md).
+
 ## 0.43.0 — Engpassdiagnose begrenzt live abgenommen
 
 Auch das abschließende menschliche Gate der Beschreibungskorrektur und die erneute Zweierdiagnose sind bestanden. Der aktualisierte Werkzeugkatalog zeigt korrekte Umlaute. 0.43.0 ist im dokumentierten Umfang abgenommen.
