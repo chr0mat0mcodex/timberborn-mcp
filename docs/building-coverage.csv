@@ -38,8 +38,8 @@ DistrictCrossing.Folktails,not_yet_verified,2026-10-04
 DomedGarden.Folktails,not_yet_verified,2026-10-04
 DoubleDynamite.Folktails,not_yet_verified,2026-10-04
 DoubleFloodgate.Folktails,not_yet_verified,2026-10-04
-DoubleLodge.Folktails,not_yet_verified,2026-10-04
-DoublePlatform.Folktails,not_yet_verified,2026-10-04
+DoubleLodge.Folktails,built_finished,2026-10-11
+DoublePlatform.Folktails,built_finished,2026-10-11
 Dynamite.Folktails,not_yet_verified,2026-10-04
 EarthRecultivator.Folktails,not_yet_verified,2026-10-04
 EfficientFarmHouse.Folktails,built_finished,2026-10-04
@@ -99,11 +99,11 @@ Overhang5x1.Folktails,not_yet_verified,2026-10-04
 Overhang6x1.Folktails,not_yet_verified,2026-10-04
 PaperMill.Folktails,not_yet_verified,2026-10-04
 Path,built_finished,2026-10-04
-Platform.Folktails,not_yet_verified,2026-10-04
+Platform.Folktails,built_finished,2026-10-11
 PoleBanner.Folktails,not_yet_verified,2026-10-04
 PopulationCounter.Folktails,not_yet_verified,2026-10-04
 PowerMeter.Folktails,not_yet_verified,2026-10-04
-PowerShaft.Folktails,not_yet_verified,2026-10-04
+PowerShaft.Folktails,built_finished,2026-10-11
 PowerWheel.Folktails,built_finished,2026-10-04
 PrintingPress.Folktails,not_yet_verified,2026-10-04
 Refinery.Folktails,not_yet_verified,2026-10-04
@@ -117,7 +117,7 @@ Roof1x2.Folktails,not_yet_verified,2026-10-04
 Roof2x2.Folktails,not_yet_verified,2026-10-04
 Roof2x3.Folktails,not_yet_verified,2026-10-04
 Roof3x2.Folktails,not_yet_verified,2026-10-04
-RooftopTerrace.Folktails,not_yet_verified,2026-10-04
+RooftopTerrace.Folktails,built_finished,2026-10-11
 Sauna.Folktails,built_finished,2026-10-05
 Scarecrow.Folktails,not_yet_verified,2026-10-04
 ScavengerFlag.Folktails,built_finished,2026-10-05

@@ -1,5 +1,14 @@
 # Projektstand
 
+## Spieltest 2026-10-11: dreigeschossiger Wohnabschnitt und Dachterrasse
+
+Doppelwohnhaus über bestehender Lodge sowie drei Doppelplattformen und
+Dachterrasse fertiggestellt; Eingänge und jeweilige Projektabschlüsse bestätigt.
+38/157 reguläre Gebäudetypen historisch fertig nachgewiesen, 119 offen; fünf
+Entwicklervorlagen separat ausgeschlossen. Drei neue Typen gebaut, zwei ältere
+Nachweise in CSV nachgetragen. Tag 478, 5,21875 Uhr pausiert. Gesamtziel offen.
+Details: docs/settlement-relocation-playtest.md; neue MCP-Befunde im BACKLOG.
+
 ## Live 2026-10-11: Wiederanschluss und wirkungsloser Projektstopp bestanden
 
 Nach erneuter Bereitmeldung Backendstart erfolgreich, Bridge 0.37.0 und neue

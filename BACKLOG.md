@@ -1,5 +1,93 @@
 # Backlog
 
+## Höhenwohnblock: Livebefunde 2026-10-11
+
+- **P1: Gemischte Träger verständlich prüfen.** Dachterrasse auf vorhandenem
+  Wohnhaus und geplanten Doppelplattformen war in gemeinsamer Vorschau
+  native_invalid, bei fertigen Plattformen anschließend native_valid, Zugang
+  verbunden. Bestand und geplante Träger pro Fundamentzelle aufschlüsseln;
+  native_invalid nicht ohne weitere Evidenz als reines Trägerproblem umdeuten.
+  Kontrollfall: dieselbe Geometrie mit unfertigen/fertigen Trägern und echte
+  Kollision. Ausführungsprüfung weiterhin erst auf real fertigen Trägern.
+- **P1: Höhenprojekte wirkungsabhängig vorantreiben.** Sechs Bauteile erfordern
+  weiterhin separate Advance-, Zugang-, Simulations-, Fertig- und Pauseaufrufe.
+  Begrenzten Ablauf analog zu Bauchargen anbieten: nach realer Fertigstellung
+  früh pausieren, nächsten Teil frisch validieren, genau einmal beauftragen.
+  Abbruch, Nutzeränderung und unbestätigte Wirkung sichtbar halten; keine Replays.
+- **P2: Zugangskosten im 3D-Plan vergleichen.** Doppelwohnhaus am lokalen
+  Treppenkern hat native Distriktdistanz 15; Terrassenbaustelle über oberen
+  Spielerweg 72. Beide erreichbar, aber klarer Umweg. Kürzere Anschlüsse vor
+  Ausführung vorschlagen; Distanz ist keine gemessene Gehzeit.
+
+## Höhenbau nach gestopptem Projekt (2026-10-10)
+
+Enge Korrektur vorbereitet, Gate offen: ausdrücklicher Stopp ohne jeden
+Platzierungsversuch blockiert neue Projekte nicht mehr; alte ID bleibt terminal.
+Teilbau-Abgleich und Abschluss nach tatsächlichen Aufträgen bleiben offen.
+
+- **P1: Bestätigten Projektstopp abschließen, statt Sitzung dauerhaft sperren.**
+  Ein vor dem ersten Bauauftrag gestoppter Abnahmepilot blockiert auch spätere,
+  unabhängige Höhenprojekte. Der aktuelle Hochhausauftrag benötigt deshalb einen
+  manuellen Spielstand-Neuladevorgang. Neues Projekt nach explizitem Abschluss
+  eines nachweislich gestoppten Projekts ermöglichen; alte Aufträge niemals
+  wiederholen. Bereits gebaute Teile und unbestätigte Wirkungen frisch abgleichen.
+  Abnahme: Stopp vor erstem Auftrag und nach Teilbau; danach unabhängiges Projekt
+  möglich, alte ID bleibt terminal; ungeklärte Wirkung blockiert weiterhin.
+
+## Umzug auf Z4 — laufender Spieltest (2026-10-10)
+
+Nutzerauftrag: unten Landwirtschaft/Wald, Wohnen und übrige Betriebe höher;
+zusammenhängendes Viertel und kurze Wege. Verbesserungen nur dokumentieren.
+
+- **P1: Räumen nach Wirkung beenden.** Wohncharge wartet derzeit ein festes
+  48-Stunden-Fenster ab. Stattdessen eigene Räumziele auf tatsächliche Entfernung
+  prüfen, früh stoppen und Bauprüfung fortsetzen. Restziele/Blockade nennen;
+  Spielzeitlimit bleibt Obergrenze. Keine fremden Räumaufträge übernehmen.
+- **P1: Fremdbaustelle verständlich melden.** Eine unabhängige Treppe mit einem
+  fehlenden Brett blockierte trotz gültigem Wohnkandidaten die Projektausführung.
+  Konstruktion-Isolation vor teurer Suche prüfen; konkrete Baustelle und Grund
+  statt generischem state_conflict ausgeben. Räumlich unabhängige Aufträge erst
+  nach belegter Zugangs-/Ressourcenverträglichkeit parallel zulassen.
+- **P1: Straßen und Viertel gemeinsam planen.** Hauptachse, Eingänge, kurze
+  Abzweige, Höhenanschlüsse und spätere Kraftkorridore explizit reservieren.
+  Kandidaten nach zusätzlicher Weglänge, Laufwegen und Flächennutzung bewerten;
+  nicht nur den ersten einzeln gültigen Standort bauen. Straßen erst entfernen,
+  wenn keine verbleibenden Gebäude-/Baustellenzugänge davon abhängen.
+  Konkreter Negativfall: Ein erreichbares Haus am Straßenende belegte selbst
+  den Fortsetzungskorridor und sperrte die bereits geräumte Nordfläche ab.
+  Bestehenden Zugang zu schützen genügt nicht; zukünftige reservierte Achse
+  muss Kandidaten ausschließen. Haus musste für die Erweiterung wieder weichen.
+- **P1: Änderungen seit Cursor.** Spieler bestätigte eigene Eingriffe; sechs
+  neue Weg-/Treppenobjekte und entfernte Minihütte wurden erst durch sieben
+  Bestandsseiten erkannt. Gebaute/entfernte Objekte, Aufträge, Einstellungen und
+  Tempowechsel mit Sequenz, bekannter Quelle und sichtbaren Beobachtungslücken
+  liefern. Chat-Auslöser: „Überprüf mal meine letzten Aktionen“. Unbekannte
+  Urheber nicht als Spieleraktionen ausgeben; vorhandenen Aktionsjournalpunkt
+  damit konkretisieren, kein zusätzlicher isolierter Logdienst.
+- **P2: Aktueller Simulationszustand neben Abschlussbeleg.** Abgeschlossener
+  Lauf meldete bestätigte Pause, Spiel war später wieder bei Tempo 7. Frischen
+  Istzustand getrennt ausgeben; Baucharge bei ausschließlich fehlender Pause
+  ohne Mutation fortsetzbar halten statt terminal neu anlegen zu müssen.
+- **P1: Eingabefehler nicht als unbestätigte Spielaktion tarnen.** Lager-Modus
+  `Accept` statt `accept` wurde vor Auftragsspeicherung abgewiesen, aber als
+  möglicherweise unbestätigte Aktion gemeldet; reine Statuslesung einer fehlenden
+  Charge ebenso. Feld, erlaubte Werte, `mutationAttempted=false` und echten
+  `batch_not_found` ausgeben. Modus als Enum im Schema veröffentlichen.
+- **P2: Lagerumzug bündeln.** Quell-/Ziellager gemeinsam prüfen, kompatibles Gut
+  und Kapazität nennen, Quelle auf Leeren/Ziel auf Beschaffen konfigurieren und
+  tatsächlichen Bestandsabbau beobachten. Abriss erst nach erklärtem Restbestand;
+  keine erfundene automatische Übertragung. Inventarantwort standardmäßig nur
+  belegte Güter plus ausgewähltes Gut liefern, nicht Dutzende Nullbestände.
+- **P1: Vollständigen Fußabdruck gegen Gelände prüfen.** Regionalsuche fand eine
+  Bäckerei mit verbundenem Eingang, deren gedrehter 2×3-Fußabdruck teilweise
+  über die Geländekante ragte. Gemeinsame Vorschau wies sie korrekt ab; anderer
+  Kandidat auf ebener Fläche war gültig. Planer muss alle tragenden Grundzellen
+  filtern, nicht nur den Ursprung. Geometrische Ablehnung verständlich pro Zelle
+  nennen und von Anschluss-/Fremdbaustellenkonflikten unterscheiden.
+
+Zwischenstand: erstes neues Wohnhaus auf Z4 als finished_accessible bestätigt;
+weitere Sechsercharge läuft. Kein abgeschlossener Umzug, keine Codeänderung.
+
 ## MCP-Log und Aufrufeffizienz — konkrete Livebefunde (2026-10-10)
 
 Auf Nutzerauftrag während des 0.37-Stützenpiloten geprüft: aktuelle 32 Logeinträge
