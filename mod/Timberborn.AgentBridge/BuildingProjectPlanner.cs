@@ -36,20 +36,27 @@ public sealed class BuildingProjectPlanner(EntityRegistry entities, SpatialObser
             goals[i]=road[i]&&district.IsOnInstantDistrictRoad(NavigationCoordinateSystem.GridToWorld(p));
         }
         var options=new List<object>();
+        var rejectionReasons=new Dictionary<string,int>();
+        var rejectedSites=new List<object>();
+        void Reject(Vector3Int origin,IEnumerable<string> reasons) {
+            rejectedCandidates++;var codes=reasons.Distinct().ToArray();
+            foreach(var reason in codes) rejectionReasons[reason]=rejectionReasons.TryGetValue(reason,out int n)?n+1:1;
+            if(rejectedSites.Count<4)rejectedSites.Add(new{origin=Vec(origin),rotation=r.Rotation,reasons=codes});
+        }
         for(int i=0;i<count&&options.Count<4;i++) {
             checkedCandidates++;
             var p=Cell(i);var site=Precheck(r.Template,p,r.Rotation);
-            if((string?)site["assessment"]!="requires_game_validation" || site["entrance"] is not JObject entrance) { rejectedCandidates++;continue; }
+            if((string?)site["assessment"]!="requires_game_validation" || site["entrance"] is not JObject entrance) { Reject(p,site["reasons"]!.Values<string>().Where(v=>v is not null).Select(v=>v!).DefaultIfEmpty("entrance_unavailable"));continue; }
             Vector3Int Pos(JToken v)=>new((int)v["x"]!,(int)v["y"]!,(int)v["z"]!);
             var entry=Pos(entrance);var occupied=site["cells"]!.Select(c=>Pos(c["position"]!)).ToArray();
-            if(entry.z!=r.Z||!Inside(entry)||occupied.Any(c=>!Inside(c))) { rejectedCandidates++;continue; }
+            if(entry.z!=r.Z||!Inside(entry)||occupied.Any(c=>!Inside(c))) { Reject(p,new[]{"footprint_or_entrance_outside_search"});continue; }
             int start=(entry.y-r.Y)*r.Width+entry.x-r.X;
             // Public BlockObjectSpec currently exposes one entrance; never
             // synthesize doors. Skip over-budget sites before the option limit.
             var footprint=occupied.Where(c=>c.z==r.Z).Select(c=>(c.y-r.Y)*r.Width+c.x-r.X).Distinct().ToArray();
             var route=FlatRoadSearch.FindWithinRoadBudget(r.Width,r.Height,start,footprint,passable,goals,
                 road,BuildingProjectPilotPolicy.MaxNewRoads);
-            if(route is null) { rejectedCandidates++;continue; }
+            if(route is null) { Reject(p,new[]{"no_ground_route_within_road_budget"});continue; }
             var option=new { origin=Vec(p),rotation=r.Rotation,entrance=Vec(entry),
                 connection=Vec(Cell(route[0])),newRoadCells=route.Where(n=>!road[n]).Select(n=>Vec(Cell(n))).ToArray(),
                 routeCells=route.Select(n=>Vec(Cell(n))).ToArray(),executable=false,
@@ -60,7 +67,7 @@ public sealed class BuildingProjectPlanner(EntityRegistry entities, SpatialObser
             options.Add(payload);
         }
         return new {template=r.Template,districtId=r.DistrictId,origin=Vec(new(r.X,r.Y,r.Z)),width=r.Width,height=r.Height,rotation=r.Rotation,
-            checkedCandidates,rejectedCandidates,totalCandidates=count,searchComplete=checkedCandidates==count,
+            checkedCandidates,rejectedCandidates,rejectionReasons,rejectedSites=rejectedSites.ToArray(),totalCandidates=count,searchComplete=checkedCandidates==count,
             stopReason=checkedCandidates==count?"area_exhausted":"option_limit",options=options.ToArray(),
             limitations=new[]{"candidate_plan_only_not_executable","one_height_one_rotation_ground_paths_only","route_and_footprint_inside_search_area",
                 "public_block_object_spec_single_entrance_only","grid_route_not_native_navigation_proof","new_road_budget_applied_before_option_limit","no_preview_or_build_order","no_persisted_plan_or_execution_token","not_globally_optimal","no_water_or_hazard_safety_verdict"} };

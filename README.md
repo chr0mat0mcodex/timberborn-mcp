@@ -5,6 +5,8 @@ Beobachtung und kontrollierte Eingriffe über reguläre Spielservices.
 
 ## Status
 
+**0.48.0 begrenzt live abgenommen:** [Regionale native Baupläne](docs/regional-building-plans.md).
+
 **0.47.0 begrenzt live abgenommen:** [Günstige Statusabfragen und Warten](docs/lightweight-status-wait.md).
 
 **0.46.0 begrenzt live abgenommen:** [Kompakte Bauprojektberichte](docs/compact-project-reports.md).

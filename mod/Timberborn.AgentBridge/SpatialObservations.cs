@@ -94,8 +94,8 @@ public sealed class SpatialObservations(EntityRegistry entities, TemplateNameMap
         var rotation = new[] { Orientation.Cw0, Orientation.Cw90, Orientation.Cw180, Orientation.Cw270 }[request.Rotation];
         var placement = new Placement(new Vector3Int(request.X, request.Y, request.Z), rotation, FlipMode.Unflipped);
         var geometry = spec.GetBlocks();
-        var positioned = PositionedBlocks.From(geometry, placement);
-        var occupied = positioned.GetOccupiedAndUndergroundBlocks().Take(BuildingPolicy.MaxGeometryCells + 1).ToArray();
+        // Same placed native blocks as LargeProjectService: includes rotation/pivot and sparse geometry.
+        var occupied = spec.GetBlocks(placement).Take(BuildingPolicy.MaxGeometryCells + 1).ToArray();
         if (occupied.Length == 0 || occupied.Length > BuildingPolicy.MaxGeometryCells) throw new ArgumentException("unsupported_geometry");
         var reasons = new HashSet<string>();
         if (!request.GenericBuilding && !Compatible(request.Template)) reasons.Add("wrong_faction");
@@ -112,7 +112,14 @@ public sealed class SpatialObservations(EntityRegistry entities, TemplateNameMap
             if (!inside) reasons.Add("outside_map");
             if (intersects) reasons.Add("object_intersection");
             if (underground && !block.Underground && !block.OptionallyUnderground) reasons.Add("terrain_intersection");
-            if (inside && block.MatterBelow == MatterBelow.Ground && !onGround) reasons.Add("required_ground_missing");
+            if (inside && block.IsFoundationBlock) {
+                bool stackable = p.z > 0 && blocks.GetObjectsAt(p + new Vector3Int(0,0,-1)).Any(other =>
+                    !other.IsPreview && other.IsFinished && other.PositionedBlocks.GetAllBlocks().Any(b =>
+                        b.Coordinates == p + new Vector3Int(0,0,-1) && b.Stackable == BlockStackable.BlockObject));
+                if (block.MatterBelow == MatterBelow.Ground && !onGround) reasons.Add("required_ground_missing");
+                if (block.MatterBelow.ToString() == "GroundOrStackable" && !onGround && !stackable) reasons.Add("required_support_missing");
+                if (block.MatterBelow.ToString() == "Stackable" && !stackable) reasons.Add("required_stackable_missing");
+            }
             return new { position = Vec(p), insideMap = inside, underground, onGround, intersectsObject = intersects,
                 supportRule = block.MatterBelow.ToString() };
         }).ToArray();
@@ -132,7 +139,7 @@ public sealed class SpatialObservations(EntityRegistry entities, TemplateNameMap
             pathAtEntrance, entranceOccupants, costs,
             limitations = new[] { "not_full_game_validator", "no_preview_or_entity_created", "no_district_or_builder_reachability",
                 "public_block_object_spec_single_entrance_only", "path_at_entrance_means_finished_Path_template_only", "entrance_occupants_are_not_traversability", "stairs_and_special_paths_not_classified_as_Path",
-                "stackable_support_not_validated", "no_water_or_hazard_safety_verdict", "global_stock_not_local_delivery" } };
+                "support_observation_not_full_native_validation", "no_water_or_hazard_safety_verdict", "global_stock_not_local_delivery" } };
     }
 
     private bool Compatible(string name) => name == "Path" || faction.Current.Id == "Folktails";

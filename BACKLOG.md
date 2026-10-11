@@ -1,5 +1,18 @@
 # Backlog
 
+## 0.48.0 — regionale native Baupläne begrenzt live abgenommen
+
+Menschliches Gate ausdrücklich bestanden; Bridge 0.48.0 live bestätigt.
+Gedrehte Tank-Geländekante in Vorprüfung, Suche und nativer Vorschau abgelehnt.
+Regionale Positivprobe: vier Kandidaten, zwei nativ geprüft/bestanden, zwei
+ungeprüft; unveränderter Bankplan nach 4,78125 Spielstunden fertig und zugänglich.
+Zusatzwegprobe: zurückgegebene Abhängigkeit Weg → Bank unverändert ausgeführt,
+zwei Teile nach 1,84375 Spielstunden fertig. Beide Projekte frisch diagnostiziert,
+keine verlorenen Anschlüsse, freigegeben. Zwei Testbänke und Testweg entfernt,
+Bestandswege erhalten, keine Rohstoffe gelöscht; Endpause bestätigt.
+Doku und Agentenanleitung aktualisiert. [Vertrag und Grenzen](docs/regional-building-plans.md).
+Keine allgemeine 3D-Standortsuche oder vollständige Bauphasenschutz-Abnahme.
+
 ## 0.47.0 — günstige Statuslesung und begrenztes Warten begrenzt live abgenommen
 
 inspect_simulation_run und inspect_large_project: waitSeconds 0–30, optional after,

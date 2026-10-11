@@ -15,7 +15,7 @@ public sealed record SurveyMoisture(string[] Rows, Dictionary<string, string> Le
 public sealed record SurveyWorkRange(string BuildingId, bool Supported, string Source,
     int ObservedCells, string[] Rows, Dictionary<string, string> Legend, SurveyRect[] MoistEmptyGroundPatches);
 public sealed record SurveyHeight(int Z, int TerrainCells, int ObservedPathCells, bool ObstaclesInspected);
-public sealed record SurveyPlanCoverage(SurveyRect Region, int Rotation, bool SearchComplete, string StopReason);
+public sealed record SurveyPlanCoverage(SurveyRect Region, int Rotation, bool SearchComplete, string StopReason, Dictionary<string,int>? RejectionReasons = null, BuildingPlanRejection[]? RejectedSites = null);
 public sealed record SurveyCoverage(int RefinementReads, bool RefinementBudgetExhausted,
     int UnknownCells, string[] PlanningRows, SurveyPlanCoverage[] Plans, SurveyHeight[] Heights);
 public sealed record SurveyLevel(SurveyRect Region, string[] Rows, SurveyRect[] EmptyGroundPatches,
@@ -220,7 +220,7 @@ public static class RegionSurvey
                 p.Origin != new Position(window.Region.X, window.Region.Y, r.Z) ||
                 p.Width != window.Region.Width || p.Height != window.Region.Height)
                 throw new InvalidDataException("survey_plan_mismatch");
-            coveragePlans.Add(new(window.Region, rotation, p.SearchComplete, p.StopReason));
+            coveragePlans.Add(new(window.Region, rotation, p.SearchComplete, p.StopReason, p.RejectionReasons, p.RejectedSites));
             for (int i = 0; i < p.Options.Length; i++) {
                 var o = p.Options[i];
                 if (o.Executable || string.IsNullOrEmpty(o.PlanKey)) throw new InvalidDataException("survey_invalid_plan");

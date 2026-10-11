@@ -57,12 +57,12 @@ public static class BuildingCapabilityTools
     public static BuildingCapabilityReport Describe(string bridgeVersion, string faction, bool serverEnabled)
     {
         // Exact profile binding: new deployments require explicit review, never a >= version guess.
-        bool generic = bridgeVersion is ("0.35.0" or "0.35.1" or "0.35.2" or "0.35.3" or "0.35.4" or "0.35.5" or "0.36.0" or "0.37.0" or "0.38.0" or "0.39.0" or "0.40.0" or "0.41.0" or "0.42.0" or "0.43.0" or "0.44.0" or "0.45.0" or "0.46.0" or "0.47.0");
+        bool generic = bridgeVersion is ("0.35.0" or "0.35.1" or "0.35.2" or "0.35.3" or "0.35.4" or "0.35.5" or "0.36.0" or "0.37.0" or "0.38.0" or "0.39.0" or "0.40.0" or "0.41.0" or "0.42.0" or "0.43.0" or "0.44.0" or "0.45.0" or "0.46.0" or "0.47.0" or "0.48.0");
         bool known = bridgeVersion is ("0.33.0" or "0.33.1" or "0.34.0") && faction == "Folktails" ||
             generic && faction is ("Folktails" or "IronTeeth");
         bool lodge = bridgeVersion == "0.34.0" || generic;
-        int flatCapacity = bridgeVersion is ("0.35.2" or "0.35.3" or "0.35.4" or "0.35.5" or "0.36.0" or "0.37.0" or "0.38.0" or "0.39.0" or "0.40.0" or "0.41.0" or "0.42.0" or "0.43.0" or "0.44.0" or "0.45.0" or "0.46.0" or "0.47.0") ? BuildingProjectController.MaxProjectsPerSession : 4;
-        int verticalCapacity = bridgeVersion is ("0.35.2" or "0.35.3" or "0.35.4" or "0.35.5" or "0.36.0" or "0.37.0" or "0.38.0" or "0.39.0" or "0.40.0" or "0.41.0" or "0.42.0" or "0.43.0" or "0.44.0" or "0.45.0" or "0.46.0" or "0.47.0") ? VerticalStairRequest.MaxProjectsPerSession :
+        int flatCapacity = bridgeVersion is ("0.35.2" or "0.35.3" or "0.35.4" or "0.35.5" or "0.36.0" or "0.37.0" or "0.38.0" or "0.39.0" or "0.40.0" or "0.41.0" or "0.42.0" or "0.43.0" or "0.44.0" or "0.45.0" or "0.46.0" or "0.47.0" or "0.48.0") ? BuildingProjectController.MaxProjectsPerSession : 4;
+        int verticalCapacity = bridgeVersion is ("0.35.2" or "0.35.3" or "0.35.4" or "0.35.5" or "0.36.0" or "0.37.0" or "0.38.0" or "0.39.0" or "0.40.0" or "0.41.0" or "0.42.0" or "0.43.0" or "0.44.0" or "0.45.0" or "0.46.0" or "0.47.0" or "0.48.0") ? VerticalStairRequest.MaxProjectsPerSession :
             bridgeVersion is ("0.33.1" or "0.34.0" or "0.35.0" or "0.35.1") ? 4 : 1;
         ProjectModeCapability[] modes = known ? [
             new("development_pilot", "execute_building_project_pilot",
@@ -89,13 +89,13 @@ public static class BuildingCapabilityTools
                 "documented_bounded_live_cases_not_current_site_validation", "docs/vertical-warehouse-pilot.md")
         ] : [];
         if (faction != "Folktails") modes = modes.Where(m => m.Tool != "execute_vertical_stair_pilot").ToArray();
-        if(known && bridgeVersion is ("0.37.0" or "0.38.0" or "0.39.0" or "0.40.0" or "0.41.0" or "0.42.0" or "0.43.0" or "0.44.0" or "0.45.0" or "0.46.0" or "0.47.0")) modes=modes.Append(new ProjectModeCapability(
+        if(known && bridgeVersion is ("0.37.0" or "0.38.0" or "0.39.0" or "0.40.0" or "0.41.0" or "0.42.0" or "0.43.0" or "0.44.0" or "0.45.0" or "0.46.0" or "0.47.0" or "0.48.0")) modes=modes.Append(new ProjectModeCapability(
             "large_project_development_pilot", "start_large_project", [], [0,1,2,3], [], 1,32,32,32,32,128,null,[],
             "not_live_proven", "docs/large-projects-0.37.0.md") {
                 MaxOccupiedHeightSpan=8, TemplateSelection="native_catalog_supported_geometry_except_new_districts",
                 EntranceModel="applicable_entrance_and_path_access_no_invented_entranceless_door"
             }).ToArray();
-        if(known && bridgeVersion is ("0.37.0" or "0.38.0" or "0.39.0" or "0.40.0" or "0.41.0" or "0.42.0" or "0.43.0" or "0.44.0" or "0.45.0" or "0.46.0" or "0.47.0")) modes=modes.Append(new ProjectModeCapability(
+        if(known && bridgeVersion is ("0.37.0" or "0.38.0" or "0.39.0" or "0.40.0" or "0.41.0" or "0.42.0" or "0.43.0" or "0.44.0" or "0.45.0" or "0.46.0" or "0.47.0" or "0.48.0")) modes=modes.Append(new ProjectModeCapability(
             "large_project_batch_development_pilot", "run_large_project", [], [0,1,2,3], [], 1,32,32,32,32,128,86400,[],
             "not_live_proven", "docs/autonomous-construction-batches.md") {
                 MaxOccupiedHeightSpan=8, TemplateSelection="native_catalog_supported_geometry_except_new_districts",

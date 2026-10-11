@@ -194,6 +194,7 @@ public sealed class LargeProjectTests
     [InlineData("0.45.0")]
     [InlineData("0.46.0")]
     [InlineData("0.47.0")]
+    [InlineData("0.48.0")]
     public void CapabilityProfileDoesNotInventLiveEvidence(string version)
     {
         var profile=BuildingCapabilityTools.Describe(version,"Folktails",true);

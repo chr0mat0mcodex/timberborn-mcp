@@ -1,5 +1,18 @@
 # Native MCP-Werkzeuge
 
+## 0.48: regionale Baupläne (begrenzt live abgenommen)
+
+Für Suche mit nativ geprüften Bauplanalternativen plan_region_buildings nutzen:
+Survey-Parameter plus maxCandidates=1–4 (Standard 3). Bauschalter erforderlich;
+Vorschau verändert temporär Spielservices, beauftragt aber keinen Bau.
+native_preview_passed liefert steps/planKey für genau einen ausgewählten
+run_large_project-Auftrag. rejected und unchecked niemals als baubar behandeln.
+Alten geometrischen Survey-planKey nicht verwenden. Ungeprüfte Höhen und
+Suchgründe in survey.coverage beachten; null Diagnose bleibt unbekannt.
+Alternativen nicht ungeprüft zusammenführen. Start validiert erneut, keine
+Wiederholung unbestätigter Aufträge. Limits und Testgate bleiben bestehen.
+[Vertrag, Grenzen und Pilot](regional-building-plans.md).
+
 ## 0.47: günstiger Status und Warten (begrenzt live abgenommen)
 
 inspect_simulation_run/inspect_large_project standardmäßig ohne frische Diagnose.
