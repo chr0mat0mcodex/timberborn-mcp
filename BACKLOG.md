@@ -1,5 +1,12 @@
 # Backlog
 
+## Erledigt: interne Wald-Leseaufrufe reduziert
+
+Menschliches Gate und Vergleichspilot bestanden: Übersicht 54→32 (−40,7 %),
+Zweibaum-Schutz 113→40 (−64,6 %). Vollständigkeit, Mengenlimit, Gegenkontrolle und
+Replay unverändert geprüft. Testmarkierungen entfernt, Simulation pausiert.
+[Vertrag und Nachweis](docs/forestry-range-protection.md).
+
 ## Live abgenommen: vollständige Waldreichweite und artenbezogener Fällschutz
 
 Menschliches Gate und begrenzter Pilot 2026-10-11 bestanden: gesamte Reichweite,

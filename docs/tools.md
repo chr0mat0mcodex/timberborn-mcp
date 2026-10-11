@@ -2,6 +2,10 @@
 
 ## Live abgenommen: gesamte Waldreichweite und Fällschutz
 
+Folgeoptimierung live bestanden: interne 256er-Seiten und beim Schutz
+Markierungs-Rücklesung statt zweitem Waldscan. MCP-Parameter unverändert; gemessen
+32 statt 54 `nativeReads` für Übersicht, 40 statt 113 für Zweibaum-Schutz.
+
 `inspect_forestry`: optional `fullRange=true`; dann genügen `session` und
 `workBuildingId`. Vollständige Artenzählung über die native Reichweite auf allen
 Höhen, explizite Abdeckung und Aufwand; regionale Altparameter bleiben kompatibel.

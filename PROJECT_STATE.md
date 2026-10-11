@@ -1,5 +1,15 @@
 # Projektstand
 
+## Live abgenommen: interne Waldabfragen gebündelt
+
+Menschliches Gate und Vergleichspilot 2026-10-11 bestanden: Übersicht 54→32
+native Reads (−40,7 %), Zweibaum-Schutz 113→40 (−64,6 %) bei identischem Bestand.
+256er-Reichweiten-/Markierungsseiten, Katalogwiederverwendung und gezielte
+Schlusslesung; vollständige Zählung und Kontrollen erhalten. Mengenlimit, Replay,
+Entfernung beider Testmarkierungen und unveränderte Eichen bestätigt.
+Spiel pausiert, Spielzeit unverändert, keine Rohstoffe gelöscht.
+[Vertrag und Vergleichsnachweis](docs/forestry-range-protection.md).
+
 ## Live abgenommen: vollständige Waldreichweite und artenbezogener Fällschutz
 
 Menschliches Gate einschließlich nativer Baumklassifikation und begrenzter Livetest

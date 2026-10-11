@@ -1,5 +1,36 @@
 # Vollständige Waldreichweite und artenbezogener Fällschutz
 
+## Live abgenommen: weniger interne Leseaufrufe
+
+Menschliches Gate und Vergleichspilot am 2026-10-11 bestanden. Interne
+Reichweiten- und Markierungsseiten jetzt bis 256 statt 32 Einträge; Gesamtgrenzen
+und Vollständigkeitsprüfungen unverändert. Die nativen Leser `work-range` und
+`areas` erlauben dafür 256; öffentliche MCP-Einzelleser behalten ihr 32er-Schema.
+Baustellen und Güterhistorie behalten auch nativ ihre bisherige Seitengrenze.
+Keine neuen Werkzeuge, kein zusätzlicher Dienst und kein Cache über Aufrufe.
+
+Fällschutz verwendet den bereits gelesenen Vorlagenkatalog der Anfangsübersicht.
+Am Ende liest er ausschließlich alle Fällmarkierungen plus Pause vor/nach dieser
+Lesung. Vergleich mit der gesamten erwarteten Markierungsmenge bleibt erhalten;
+keine erneute Baum-/Güter-/Verbrauchersuche. Vor jedem Schreibaufruf bleiben Pause
+und frische Identität/Lebendzustand des konkreten Baums erforderlich. Teilbeleg,
+verlorene Antwort, Mengenlimit und lesendes Replay bleiben unverändert.
+
+Regressionen im menschlichen Gate: identische vollständige Ergebnisse bei
+32/256, weniger interne Reads, vollständige Schlussmarkierungen ohne Baumscan,
+ungültige Schlussseiten/Pause sowie native Parser- und Transportgrenzen.
+Vergleich am selben Harzsammler bei identischer Spielzeit und identischen
+Arten-/Restzahlen: Übersicht **54 auf 32 Reads (−40,7 %)**; Schutz zweier Kiefern
+**113 auf 40 Reads (−64,6 %)**. Beide Einsparziele (30 %/50 %) erreicht.
+446 Reichweitenzellen und 16 Teilflächen unverändert vollständig erfasst.
+Limit eins vor Mutation abgewiesen, beide Markierungen separat rückgelesen.
+Limit zwei vollständig abgeschlossen, Rücklesung bestätigt, 71 markierte lebende
+Eichen unverändert. Replay liefert den gespeicherten Beleg; abschließende
+Vollzählung bestätigt entfernte Testmarkierungen und unveränderte Artenzahlen.
+Spieltag 628, Stunde 17,0625 und Tempo null unverändert; keine Bäume/Rohstoffe
+entfernt. Einsparung bezieht sich auf native Leseaufrufe, nicht auf eine gemessene
+Laufzeitbeschleunigung. Nichtatomare Beobachtung bleibt als Grenze bestehen.
+
 Stand 2026-10-11: menschliches Gate nach Klassifikationskorrektur und begrenzter
 Abschluss-Livetest bestanden. Bestehende 0.37.0, keine Parallelfassung.
 

@@ -2,6 +2,11 @@
 
 ## Waldreichweite und Fällschutz — begrenzt live abgenommen
 
+Folgeoptimierung live bestanden: intern größere Seiten und gezielte
+Schlussmarkierungslesung. Aufruf unverändert; gemessen 32 statt 54 `nativeReads`
+für Übersicht, 40 statt 113 für zwei Schutzänderungen. Vollständige Zählung und
+Gegenkontrolle bleiben erforderlich.
+
 Für die Rohstoffsuche eines Arbeitsgebäudes `inspect_forestry` mit `fullRange=true`
 verwenden: komplette native Reichweite auf allen Höhen statt einzelner Fenster.
 `species` trennt lebende Bäume, Stümpfe, tote/unbekannte Zustände, Reife und Ertrag.

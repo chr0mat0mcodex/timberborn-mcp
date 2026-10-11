@@ -22,23 +22,24 @@ public sealed class ForestryRangeTests
         public HashSet<Position> Marks;
         public Position[] Cells;
         public int Writes, TreeReads;
+        public int BulkPageSize { get; set; } = 32;
         public int LoseAfter = 1;
-        public bool Supported = true, LostAck, ChangeTarget, ChangeOther, BadPage;
+        public bool Supported = true, LostAck, ChangeTarget, ChangeOther, BadPage, BadCutPage, Unpaused;
         public int? RangeTotal;
         public Port() { Cells = Objects.Take(4).Select(t => t.Position).ToArray(); Marks = Objects.Select(t => t.Position).ToHashSet(); }
         private static Task<BridgeEnvelope<T>> E<T>(T data) => Task.FromResult(new BridgeEnvelope<T>(1, Session, DateTimeOffset.UnixEpoch, "0.37.0", data));
-        public Task<BridgeEnvelope<NativeSimulation>> Simulation(CancellationToken ct) => E(new NativeSimulation(0, 1, 0, 0));
+        public Task<BridgeEnvelope<NativeSimulation>> Simulation(CancellationToken ct) => E(new NativeSimulation(Unpaused ? 1 : 0, 1, 0, 0));
         public Task<BridgeEnvelope<NativeAreaTypes>> Types(CancellationToken ct) => E(new NativeAreaTypes([], [
             new("SyntheticPine", "tree_planting", "Wood", true), new("SyntheticOak", "tree_planting", "Wood", true),
             new("SyntheticHerb", "tree_planting", "Wood", true)], []));
         public Task<BridgeEnvelope<NativeRange>> Range(ForestryRequest r, int offset, CancellationToken ct) {
             var all = Supported ? Cells : [];
-            return E(new NativeRange(Session, Supported, [], offset, 32, RangeTotal ?? all.Length,
-                all.Skip(offset).Take(32).ToArray(), offset + 32 < all.Length, [], "native"));
+            return E(new NativeRange(Session, Supported, [], offset, BulkPageSize, RangeTotal ?? all.Length,
+                all.Skip(offset).Take(BulkPageSize).ToArray(), offset + BulkPageSize < all.Length, [], "native"));
         }
         public Task<BridgeEnvelope<NativeAreas>> Cutting(int offset, CancellationToken ct) {
             var all = Marks.OrderBy(p => p.Z).ThenBy(p => p.Y).ThenBy(p => p.X).Select(p => new NativeAreaCell(p, "marked")).ToArray();
-            return E(new NativeAreas("tree_cutting", true, offset, 32, all.Length, all.Skip(offset).Take(32).ToArray(), offset + 32 < all.Length, []));
+            return E(new NativeAreas("tree_cutting", true, offset, BulkPageSize, BadCutPage ? all.Length + 1 : all.Length, all.Skip(offset).Take(BulkPageSize).ToArray(), offset + BulkPageSize < all.Length, []));
         }
         public Task<BridgeEnvelope<NativeRemovalTargets>> Trees(ForestryRequest r, int z, int offset, CancellationToken ct) {
             TreeReads++;
@@ -86,6 +87,39 @@ public sealed class ForestryRangeTests
         port.Objects[0] = port.Objects[0] with { Vegetation = new("alive", false, false, true, 1, false, true, "Log", 2) };
         var error = await Assert.ThrowsAsync<BridgeRejectionException>(() => ForestrySurvey.Observe(Request, port, TestContext.Current.CancellationToken));
         Assert.Equal("forestry_tree_identity_unknown", error.Code);
+    }
+
+    [Fact]
+    public async Task Bulk_pages_keep_identical_coverage_and_reduce_reads_and_final_check_does_not_scan_trees()
+    {
+        var port = new Port();
+        port.Cells = Enumerable.Range(0, 446).Select(i => new Position(i % 32, i / 32, 2)).ToArray();
+        port.Marks = Enumerable.Range(0, 300).Select(i => new Position(i % 32, i / 32, 2)).ToHashSet();
+        var small = await ForestrySurvey.Observe(Request, port, TestContext.Current.CancellationToken);
+        port.BulkPageSize = 256;
+        var bulk = await ForestrySurvey.Observe(Request, port, TestContext.Current.CancellationToken);
+        Assert.Equal(small.Species, bulk.Species);
+        Assert.Equal(small.Candidates, bulk.Candidates);
+        Assert.Equal(small.RangeCells, bulk.RangeCells);
+        Assert.True(small.MarkedCells.SetEquals(bulk.MarkedCells));
+        Assert.Equal(20, small.NativeReads - bulk.NativeReads); // range 14->2, markings 10->2
+        int treeReads = port.TreeReads;
+        var final = await ForestrySurvey.ReadMarkings(Session, port, TestContext.Current.CancellationToken);
+        Assert.Equal(4, final.NativeReads); // pause + two complete pages + pause
+        Assert.Equal(treeReads, port.TreeReads);
+        Assert.True(port.Marks.SetEquals(final.MarkedCells));
+    }
+
+    [Fact]
+    public async Task Final_marking_read_rejects_unknown_or_invalid_page_size()
+    {
+        var port = new Port { BulkPageSize = 64 };
+        await Assert.ThrowsAsync<InvalidDataException>(() => ForestrySurvey.ReadMarkings(Session, port, TestContext.Current.CancellationToken));
+        Assert.Equal(0, port.Writes);
+        port.BulkPageSize = 256; port.BadCutPage = true;
+        await Assert.ThrowsAsync<InvalidDataException>(() => ForestrySurvey.ReadMarkings(Session, port, TestContext.Current.CancellationToken));
+        port.BadCutPage = false; port.Unpaused = true;
+        await Assert.ThrowsAsync<BridgeRejectionException>(() => ForestrySurvey.ReadMarkings(Session, port, TestContext.Current.CancellationToken));
     }
 
     [Fact]

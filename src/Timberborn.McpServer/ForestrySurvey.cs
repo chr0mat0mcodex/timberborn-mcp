@@ -13,6 +13,7 @@ public sealed record ForestryReport(ForestryRequest Region, ForestryTree[] Candi
     DateTimeOffset ObservedAtUtc, int AvailableLogs, int AllLogs, ForestryConsumer[] Consumers, string[] Limitations)
 {
     public ForestrySpecies[] Species { get; init; } = [];
+    [System.Text.Json.Serialization.JsonIgnore] public HashSet<string> KnownTemplates { get; init; } = [];
     public int RangeCells { get; init; }
     public int ScannedRegions { get; init; }
     public string Coverage => Region.FullRange ? "full_native_range" : "requested_region_only";
@@ -24,6 +25,7 @@ public sealed record ForestrySpecies(string Template, int Total, int Living, int
 
 public interface IForestryPort
 {
+    int BulkPageSize => 32;
     Task<BridgeEnvelope<NativeSimulation>> Simulation(CancellationToken ct);
     Task<BridgeEnvelope<NativeAreaTypes>> Types(CancellationToken ct);
     Task<BridgeEnvelope<NativeRange>> Range(ForestryRequest r, int offset, CancellationToken ct);
@@ -37,6 +39,40 @@ public interface IForestryPort
 
 public static class ForestrySurvey
 {
+    public sealed record MarkingObservation(HashSet<Position> MarkedCells, int NativeReads);
+
+    // Protection needs the complete designation set, not another tree/goods/consumer survey.
+    public static async Task<MarkingObservation> ReadMarkings(string session, IForestryPort port, CancellationToken ct)
+    {
+        int size = port.BulkPageSize, reads = 0;
+        if (size is not (32 or 256)) throw new InvalidDataException("forestry_page_size");
+        string? version = null;
+        T Check<T>(BridgeEnvelope<T> e) {
+            ct.ThrowIfCancellationRequested(); reads++;
+            if (e.SessionId != session || version is not null && version != e.BridgeVersion)
+                throw new BridgeRejectionException("stale_session");
+            version = e.BridgeVersion; return e.Data;
+        }
+        if (Check(await port.Simulation(ct)).CurrentSpeed != 0) throw new BridgeRejectionException("state_conflict");
+        var marked = new HashSet<Position>(); int? total = null;
+        for (int offset = 0; ; offset += size) {
+            if (offset >= 4096) throw new BridgeRejectionException("forestry_budget_exceeded");
+            var p = Check(await port.Cutting(offset, ct));
+            if (p.Total > 4096) throw new BridgeRejectionException("forestry_budget_exceeded");
+            if (!p.Supported || p.Kind != "tree_cutting" || p.Total is null || p.Total < 0 ||
+                p.Offset != offset || p.Limit != size || total is not null && total != p.Total ||
+                p.Items.Length != Math.Min(size, Math.Max(0, p.Total.Value - offset)) ||
+                p.HasMore != (offset + p.Items.Length < p.Total.Value))
+                throw new InvalidDataException("forestry_incomplete_page");
+            total = p.Total;
+            foreach (var cell in p.Items)
+                if (cell.Resource != "marked" || !marked.Add(cell.Position)) throw new InvalidDataException("forestry_marking_changed");
+            if (!p.HasMore) break;
+        }
+        if (Check(await port.Simulation(ct)).CurrentSpeed != 0) throw new BridgeRejectionException("state_conflict");
+        return new(marked, reads);
+    }
+
     public static void Validate(ForestryRequest r)
     {
         BuildBatchState.Id(r.Session); BuildBatchState.Id(r.WorkBuildingId);
@@ -73,6 +109,8 @@ public static class ForestrySurvey
     public static async Task<ForestryReport> Observe(ForestryRequest r, IForestryPort port, CancellationToken ct)
     {
         Validate(r);
+        int bulk = port.BulkPageSize;
+        if (bulk is not (32 or 256)) throw new InvalidDataException("forestry_page_size");
         int reads = 0; string? version = null; DateTimeOffset observed = default;
         T Check<T>(BridgeEnvelope<T> e) {
             ct.ThrowIfCancellationRequested(); reads++;
@@ -80,20 +118,20 @@ public static class ForestrySurvey
                 throw new BridgeRejectionException("stale_session");
             version = e.BridgeVersion; observed = e.ObservedAtUtc; return e.Data;
         }
-        static void Page(int offset, int actualOffset, int limit, int total, int count, bool more, int? previous, int bound) {
-            if (actualOffset != offset || limit != 32 || total < 0 || total > bound || previous is not null && previous != total ||
-                count != Math.Min(32, Math.Max(0, total - offset)) || more != (offset + count < total))
+        static void Page(int offset, int actualOffset, int limit, int total, int count, bool more, int? previous, int bound, int pageSize = 32) {
+            if (actualOffset != offset || limit != pageSize || total < 0 || total > bound || previous is not null && previous != total ||
+                count != Math.Min(pageSize, Math.Max(0, total - offset)) || more != (offset + count < total))
                 throw new InvalidDataException("forestry_incomplete_page");
         }
         if (Check(await port.Simulation(ct)).CurrentSpeed != 0) throw new BridgeRejectionException("state_conflict");
         var types = Check(await port.Types(ct));
         var templates = types.Plants.Where(p => p.Kind == "tree_planting").Select(p => p.Resource).ToHashSet(StringComparer.Ordinal);
         var range = new HashSet<Position>(); int? total = null; bool? supported = null; string? source = null;
-        for (int offset = 0; ; offset += 32) {
+        for (int offset = 0; ; offset += bulk) {
             if (offset >= 2048) throw new BridgeRejectionException("forestry_budget_exceeded");
             var p = Check(await port.Range(r, offset, ct));
             if (p.Total > 2048) throw new BridgeRejectionException("forestry_budget_exceeded");
-            Page(offset, p.Offset, p.Limit, p.Total, p.Items.Length, p.HasMore, total, 2048);
+            Page(offset, p.Offset, p.Limit, p.Total, p.Items.Length, p.HasMore, total, 2048, bulk);
             if (p.Id != r.WorkBuildingId || supported is not null && (supported != p.Supported || source != p.Source) ||
                 !p.Supported && p.Total != 0) throw new InvalidDataException("forestry_range_changed");
             total = p.Total; supported = p.Supported; source = p.Source;
@@ -105,12 +143,12 @@ public static class ForestrySurvey
             if (!p.HasMore) break;
         }
         var marked = new HashSet<Position>(); total = null;
-        for (int offset = 0; ; offset += 32) {
+        for (int offset = 0; ; offset += bulk) {
             if (offset >= 4096) throw new BridgeRejectionException("forestry_budget_exceeded");
             var p = Check(await port.Cutting(offset, ct));
             if (!p.Supported || p.Kind != "tree_cutting" || p.Total is null) throw new InvalidDataException("forestry_marking_unknown");
             if (p.Total > 4096) throw new BridgeRejectionException("forestry_budget_exceeded");
-            Page(offset, p.Offset, p.Limit, p.Total.Value, p.Items.Length, p.HasMore, total, 4096); total = p.Total;
+            Page(offset, p.Offset, p.Limit, p.Total.Value, p.Items.Length, p.HasMore, total, 4096, bulk); total = p.Total;
             foreach (var cell in p.Items) if (cell.Resource != "marked" || !marked.Add(cell.Position))
                 throw new InvalidDataException("forestry_marking_changed");
             if (!p.HasMore) break;
@@ -188,6 +226,6 @@ public static class ForestrySurvey
             ["non_atomic_paused_observation", "native_work_range_not_worker_or_delivery_proof",
              "tree_catalog_membership_not_guaranteed_log_yield", "stocks_not_additive_no_rate_or_sustainable_yield_claim"])
         { Species = species, RangeCells = range.Count, ScannedRegions = regions.Length,
-            ReachableTrees = reachable, MarkedCells = marked };
+            KnownTemplates = templates, ReachableTrees = reachable, MarkedCells = marked };
     }
 }

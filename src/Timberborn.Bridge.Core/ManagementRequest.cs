@@ -35,7 +35,7 @@ public sealed class ManagementRequest
         }
         if(r.Route is "construction" or "areas") {
             if(q.Count!=(r.Route=="construction"?2:3))throw new ArgumentException();
-            r.Offset=Number("offset",0,65535);r.Limit=Number("limit",1,32);
+            r.Offset=Number("offset",0,65535);r.Limit=Number("limit",1,r.Route=="areas"?256:32);
             if(r.Route=="areas"){r.Kind=Text("kind");if(!IsKind(r.Kind))throw new ArgumentException();}return r;
         }
         if(r.Route=="set-area" && q.Count==10){

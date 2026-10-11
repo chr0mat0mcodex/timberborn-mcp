@@ -26,7 +26,7 @@ public sealed class LogisticsRequest
         else {r.Id=Id("id");r.Session=Id("session");}
         if(r.Route=="road-connection")r.ToId=Id("toId");
         if(r.Route=="path-district")r.DistrictId=Id("districtId");
-        if(r.Route is "good-history" or "work-range"){r.Offset=Number("offset",0,65535);r.Limit=Number("limit",1,32);}
+        if(r.Route is "good-history" or "work-range"){r.Offset=Number("offset",0,65535);r.Limit=Number("limit",1,r.Route=="work-range"?256:32);}
         return r;
     }
 }

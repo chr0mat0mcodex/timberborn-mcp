@@ -110,6 +110,7 @@ public static class ForestryTools
 
 public sealed class NativeForestryPort(NativeClient client) : IForestryPort
 {
+    public int BulkPageSize => 256;
     private static NameValueCollection Query(params (string Key, object Value)[] fields) {
         var q = new NameValueCollection();
         foreach (var (key, value) in fields) q[key] = Convert.ToString(value, CultureInfo.InvariantCulture);
@@ -118,9 +119,9 @@ public sealed class NativeForestryPort(NativeClient client) : IForestryPort
     public Task<BridgeEnvelope<NativeSimulation>> Simulation(CancellationToken ct) => client.Simulation(ct);
     public Task<BridgeEnvelope<NativeAreaTypes>> Types(CancellationToken ct) => client.AreaTypes(ct);
     public Task<BridgeEnvelope<NativeRange>> Range(ForestryRequest r, int offset, CancellationToken ct) =>
-        client.WorkRange(LogisticsRequest.Parse("/agent-api/v1/work-range", Query(("session", r.Session), ("id", r.WorkBuildingId), ("offset", offset), ("limit", 32))), ct);
+        client.WorkRange(LogisticsRequest.Parse("/agent-api/v1/work-range", Query(("session", r.Session), ("id", r.WorkBuildingId), ("offset", offset), ("limit", BulkPageSize))), ct);
     public Task<BridgeEnvelope<NativeAreas>> Cutting(int offset, CancellationToken ct) =>
-        client.Areas(ManagementRequest.Parse("/agent-api/v1/areas", Query(("kind", "tree_cutting"), ("offset", offset), ("limit", 32))), ct);
+        client.Areas(ManagementRequest.Parse("/agent-api/v1/areas", Query(("kind", "tree_cutting"), ("offset", offset), ("limit", BulkPageSize))), ct);
     public Task<BridgeEnvelope<NativeRemovalTargets>> Trees(ForestryRequest r, int z, int offset, CancellationToken ct) =>
         client.RemovalTargets(RemovalRequest.Parse("/agent-api/v1/removal-targets", Query(("kind", "all"), ("x", r.X), ("y", r.Y),
             ("z", z), ("width", r.Width), ("height", r.Height), ("depth", 1), ("offset", offset), ("limit", 32))), ct);

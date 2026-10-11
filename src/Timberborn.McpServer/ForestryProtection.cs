@@ -29,11 +29,8 @@ public static class ForestryProtection
             if (old.ActionId != r.ActionId || old.Fingerprint != fingerprint) throw new ArgumentException("forestry_parameters_changed");
             return ForestryTools.Wrap(old, r.Session, null);
         }
-        var catalog = await port.Types(ct);
-        if (catalog.SessionId != r.Session) throw new BridgeRejectionException("stale_session");
-        if (!catalog.Data.Plants.Any(p => p.Kind == "tree_planting" && p.Resource == r.Template))
-            throw new BridgeRejectionException("unknown_tree_template");
         var before = await ForestrySurvey.Observe(region, port, ct);
+        if (!before.KnownTemplates.Contains(r.Template)) throw new BridgeRejectionException("unknown_tree_template");
         var selected = before.ReachableTrees.Where(t => t.Template == r.Template && !t.Marked &&
                 t.Vegetation is { IsTree: true, LifeState: "alive", CutYieldRemoved: false } && before.MarkedCells.Contains(t.Position))
             .OrderBy(t => t.Position.Z).ThenBy(t => t.Position.Y).ThenBy(t => t.Position.X).ToArray();
@@ -42,7 +39,7 @@ public static class ForestryProtection
             selected.Any(t => before.ReachableTrees.Any(other => other.Position == t.Position && other.Id != t.Id)))
             throw new InvalidDataException("overlapping_tree_origins");
         var receipt = new ForestryProtectionReport(r.ActionId, fingerprint, "protecting", selected.Length, 0, null, "",
-            NativeReads: before.NativeReads + 1);
+            NativeReads: before.NativeReads);
         void Save() {
             string temp = path + "." + Guid.NewGuid().ToString("N") + ".tmp";
             try {
@@ -78,7 +75,7 @@ public static class ForestryProtection
                 Save();
             }
             // Confirm all changed cells and detect intervening changes elsewhere; never silently undo human input.
-            var after = await ForestrySurvey.Observe(region, port, ct);
+            var after = await ForestrySurvey.ReadMarkings(r.Session, port, ct);
             receipt = receipt with { NativeReads = receipt.NativeReads + after.NativeReads };
             var expected = new HashSet<Position>(before.MarkedCells);
             expected.ExceptWith(selected.Select(t => t.Position));
