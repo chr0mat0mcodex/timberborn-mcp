@@ -132,14 +132,19 @@ public sealed partial class LargeProjectService(BuildingCatalog catalog, Preview
         // Recheck the proposed entrance against the current district, not only the old plan.
         var sample=roads.Capture();if(!sample.Complete) { validationFailures[actionId]=new {index,reason=sample.Reason}; return false; }
         var preview=previews[index+":"+s.Template];
-        try {preview.Hide();preview.Reposition(Placement(s));preview.RemoveFromPreviewServices();preview.AddToPreviewServices();valid=PreviewAccess(preview.BlockObject,district);}
+        WorkAccessReport? workAccess = null;
+        try {
+            preview.Hide();preview.Reposition(Placement(s));preview.RemoveFromPreviewServices();preview.AddToPreviewServices();
+            workAccess=WorkAccess(s,district,preview.BlockObject.PositionedBlocks.GetAllBlocks(),false);
+            valid=PreviewAccess(preview.BlockObject,district) && workAccess.Allowed;
+        }
         catch {faulted=true;throw;}
         finally {
             try {preview.Hide();}catch {faulted=true;}
             try {preview.RemoveFromPreviewServices();}catch {faulted=true;}
             if(!sample.Before.SequenceEqual(roads.Read(sample,false))||!sample.PreviewBefore.SequenceEqual(roads.Read(sample,true)))faulted=true;
         }
-        if (!valid || faulted) validationFailures[actionId]=new {index,reason=faulted?"preview_restore_failed":"preview_entrance_disconnected",template=s.Template,position=new{x=s.X,y=s.Y,z=s.Z}};
+        if (!valid || faulted) validationFailures[actionId]=new {index,reason=faulted?"preview_restore_failed":workAccess is { Allowed:false }?"construction_work_access_rejected":"preview_entrance_disconnected",template=s.Template,position=new{x=s.X,y=s.Y,z=s.Z},constructionWorkAccess=workAccess};
         return valid&&!faulted;
     }
     private JObject Plan(LargeProjectRequest r, string[]? ownedSites = null)
@@ -163,6 +168,7 @@ public sealed partial class LargeProjectService(BuildingCatalog catalog, Preview
         var existingPorts=existingNodes.SelectMany(n=>n.Transputs).ToLookup(p=>p.Coordinates);
         var active=new List<Preview>();var results=new object[r.Steps.Length];var activeNodes=new List<(int Index,Transput[] Ports)>();var links=new List<object>();
         var deferred=new bool[r.Steps.Length];
+        var workReports=new WorkAccessReport[r.Steps.Length];
         bool eligible=true;bool restored=false;bool[]? withPreview=null;
         try
         {
@@ -187,6 +193,12 @@ public sealed partial class LargeProjectService(BuildingCatalog catalog, Preview
                 if(preview.BlockObject.TryGetComponent<PathSpec>(out var path)) connected=district.IsOnPreviewDistrictRoad(NavigationCoordinateSystem.GridToWorld(preview.BlockObject.TransformCoordinates(path.MainPathCoordinates)));
                 var observed=roads.Read(baseline,true);int lost=RoadProtectionPolicy.LostConnections(baseline.Before,observed).Length;
                 eligible &= (valid||deferred[i]) && connected!=false && lost==0;
+                // Only the current topological prefix is available at this construction stage.
+                // Required road helpers must precede the target through explicit dependencies.
+                workReports[i]=WorkAccess(r.Steps[i],district,
+                    active.Where(p=>!p.BlockObject.TryGetComponent<PathSpec>(out _))
+                        .SelectMany(p=>p.BlockObject.PositionedBlocks.GetAllBlocks()),true);
+                eligible &= workReports[i].Allowed;
                 var geometryPorts=PowerObservations.PreviewPorts(templates[i],preview.BlockObject);
                 object[] ports=PowerObservations.PortData(geometryPorts,true);
                 if(geometryPorts.Length>0)
@@ -199,11 +211,19 @@ public sealed partial class LargeProjectService(BuildingCatalog catalog, Preview
                     activeNodes.Add((i,geometryPorts));
                 }
                 results[i]=new{index=i,template=r.Steps[i].Template,position=PowerObservations.Vec(new(r.Steps[i].X,r.Steps[i].Y,r.Steps[i].Z)),rotation=r.Steps[i].Rotation,dependsOn=r.Steps[i].DependsOn,
-                    placementValid=valid,placementState=deferred[i]?"deferred_native_validation":valid?"native_valid":"native_invalid",previewEntranceConnected=connected,lostConnections=lost,powerPorts=ports,constructionAccess="unknown"};
+                    placementValid=valid,placementState=deferred[i]?"deferred_native_validation":valid?"native_valid":"native_invalid",previewEntranceConnected=connected,lostConnections=lost,powerPorts=ports,constructionAccess="unknown",constructionWorkAccess=workReports[i]};
             }
             // Later parts can invalidate earlier previews too.
             eligible &= active.Select((p,k)=>(p,k)).All(v=>deferred[order[v.k]]||v.p.BlockObject.IsValid()&&validators.IsValid(v.p.BlockObject));
             eligible &= active.All(p=>PreviewAccess(p.BlockObject,district));
+            // Later targets must not cover the work cell or sever the route of an earlier target.
+            var finalObstacles=active.Where(p=>!p.BlockObject.TryGetComponent<PathSpec>(out _))
+                .SelectMany(p=>p.BlockObject.PositionedBlocks.GetAllBlocks()).ToArray();
+            for(int i=0;i<r.Steps.Length;i++)
+            {
+                var finalAccess=WorkAccess(r.Steps[i],district,finalObstacles,true);
+                if(!finalAccess.Allowed) { workReports[i].state="final_work_access_blocked";workReports[i].reachableCells=Array.Empty<object>();eligible=false; }
+            }
             withPreview=roads.Read(baseline,true);
             roads.ObserveConstructionPreview(baseline,active.SelectMany(p=>p.BlockObject.PositionedBlocks.GetAllBlocks()));
         }
@@ -221,7 +241,7 @@ public sealed partial class LargeProjectService(BuildingCatalog catalog, Preview
         var safety=roads.Finish(baseline,withPreview,cells.SelectMany(c=>c).ToArray());
         eligible &= restored&&!faulted&&safety.restored&&safety.lostConnections==0&&!safety.constructionAccessPreview.HasKnownFailure()&&
             (safety.status=="safe"||safety.status=="unknown"&&safety.reasons.SequenceEqual(new[]{"construction_and_road_node_coverage_unproven"}));
-        var result=JObject.FromObject(new{order,parts=results,powerLinks=links.ToArray(),pilotEligible=eligible,regularExecutionAllowed=false,
+        var result=JObject.FromObject(new{accessPolicyVersion=1,order,parts=results,powerLinks=links.ToArray(),pilotEligible=eligible,regularExecutionAllowed=false,
             restored=restored&&!faulted,sessionLocked=faulted,roadProtection=safety,
             limitations=new[]{"explicit_3d_blueprint_not_automatic_terrain_route_search","maximum_32_parts_32x32_eight_occupied_levels","batch_waits_only_for_explicit_dependencies","joint_preview_not_builder_preflight","deferred_native_validation_is_unknown_until_real_supports_finish","entranceless_parts_have_no_invented_door","planned_power_ports_not_live_network_or_supply","new_districts_and_unsupported_catalog_layouts_excluded","no_reservation_or_execution_permission","no_material_delivery_or_production_guarantee"}});
         // Runtime diagnostic counters and cached preview identities are not plan identity.

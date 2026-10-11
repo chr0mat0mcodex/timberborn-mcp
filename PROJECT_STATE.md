@@ -1,5 +1,20 @@
 # Projektstand
 
+## Begrenzt abgenommen: Bauarbeitszugang und automatische Ergänzung
+
+Nach menschlichem Gate am 2026-10-11 begrenzt live geprüft: fehlender Arbeitsweg
+wird abgewiesen, automatische Treppe plus zwei Wege erschließen denselben
+Wetterstationsplatz; echter Bauarbeiterzugang und Fertigstellung belegt. Native Wegprüfung zu freien
+Fundament-Nachbarzellen, erneute Prüfung vor Auftrag, Berücksichtigung späterer
+Planobjekte und konkreter Blockgeometrie; automatische Hilfenplanung mit zwölf
+Zellen Suchrand und zielbezogener Ablehnungsdiagnose, gemeinsamer 0.37.0-Build.
+Native hypothetische Bauarbeiterreichweite bleibt unbekannt, Zugangshilfen behalten
+ihre Laufzeitprüfung. [Abnahme und Grenzen](docs/automatic-access-planning.md).
+Materialwartezeit erforderte nach dem 48-Stunden-Chargenlimit einen separaten
+Produktionslauf. Alle Teile fertig, Ledger freigegeben, belegter Weg als Ziel abgewiesen.
+Testgebäude zurückgebaut; Rückgewinnungsstapel (48,8,6) und drei Sammelzugangshilfen
+bleiben bis zur Sammlung. Spiel pausiert. Überhang und spätere Überbauung noch ungeprüft.
+
 ## 2026-10-11: Harzveredelung und erste Folgegebäude fertig
 
 Holzwerkstatt auf der trockenen Terrasse (49,13,6), eigene Windturbine, zwei

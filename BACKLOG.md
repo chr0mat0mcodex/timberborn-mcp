@@ -1,5 +1,27 @@
 # Backlog
 
+## Beobachtung aus dem Bauzugangspilot: Materialwartezeit und Diagnosepräzision
+
+Die neue Zugangsroute funktioniert auch mit Höhenwechsel. Der Testbau wartet
+danach auf laufende Plankenveredelung. Vor künftigen Abnahmepiloten die benötigten
+Materialien separat prüfen; Zugangserfolg und Materialwartezeit getrennt berichten.
+Weitere Verbesserung: `final_work_access_blocked` derzeit auch dann, wenn schon
+die erste Vorschau keinen Weg hatte. Ursprüngliche Ursache erhalten und spätere
+Blockade nur bei einem tatsächlichen Wechsel ausweisen. Noch nicht umgesetzt.
+
+## Begrenzt abgenommen: Bauarbeitszugang vor Auftrag und automatische Ergänzung
+
+Implementiert: freie Fundament-Nachbarzellen mit konkreter nativer
+Blockgeometrie, Distriktwegprüfung in Vorschau und vor Auftrag, spätere Blockaden,
+automatische Wege/Treppen/Stützen sowie gezielte Fehlerdiagnose. Suchrand zwölf
+Zellen bei unveränderten Budgets. Nach menschlichem Gate: negative Gegenprobe,
+automatische Höhenroute, realer Bauarbeiterzugang, Fertigstellung und belegter
+Bestandsweg geprüft. [Nachweise und Grenzen](docs/automatic-access-planning.md).
+Überhangfall und spätere Überbauung noch nicht separat live geprüft.
+Offen bleiben native hypothetische Baustellenreichweite, automatische Routensuche
+für bereits bestehende Reparaturprojekte und besondere Bauformen. Produktionsziele
+und weitere Gebäudeunterstützung folgen separat; kein autonomer Kolonieausbau.
+
 ## Begrenzt abgenommen 2026-10-11: Gemeinsame Zugangs- und Bauhilfenplanung
 
 Begrenzt live abgenommen: ebener Zweiteiler, Höhen-Sechsteiler und Bestandsweg-Gegenprobe.

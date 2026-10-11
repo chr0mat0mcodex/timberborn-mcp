@@ -1,5 +1,20 @@
 # Native MCP-Werkzeuge
 
+## Bauarbeitszugang mit Policy 1 (begrenzt live abgenommen)
+
+`plan_large_project_access` sucht mit zwölf Zellen Rand und liefert zusätzlich
+`blockedPart`, `phase`, `workCellCount`. Der verschachtelte Plan sowie
+`plan_large_project` liefern `accessPolicyVersion=1` und pro Teil
+`constructionWorkAccess` mit `required`, `state`, `candidateCount`,
+`reachableCells`, `source`, `nativeConstructionProven=false`.
+Status: `road_reachable`, `no_work_cell`, `no_connected_work_cell`,
+`final_work_access_blocked` oder `helper_runtime_check` für Wege/Zugangshilfen.
+Fehlende erforderliche Wegnachweise blockieren Planung und Auftrag. Laufzeitfehler
+`construction_work_access_rejected` enthält denselben Bericht in der Diagnose.
+Keine neuen Aufrufparameter; Teil-/Zeitbudgets bleiben unverändert. Eine erreichbare
+geometrische Arbeitszelle ist keine native hypothetische Baustellenfreigabe.
+[Umfang, Grenzen, Testgate](automatic-access-planning.md).
+
 ## Automatische Zugangsplanung (begrenzt live abgenommen)
 
 `plan_large_project_access` (POST/Baugate, pausiert): explizite Gebäudeziele mit

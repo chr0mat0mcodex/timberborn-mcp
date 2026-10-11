@@ -59,6 +59,13 @@ public sealed partial class NativeClient
                 if(!ValidPlanKey(d.GetProperty("planKey").GetString()??"")||!order.SequenceEqual(LargeProjectRequest.Order(r.Steps)))throw new InvalidDataException();
                 var parts=d.GetProperty("parts").EnumerateArray().ToArray();
                 if(parts.Length!=r.Steps.Length||d.GetProperty("powerLinks").GetArrayLength()>512)throw new InvalidDataException();
+                // Same release can reconnect to an older installed package. Its absent policy is
+                // legacy evidence, never upgraded to a construction-work-cell proof.
+                if(d.TryGetProperty("accessPolicyVersion",out var policy))
+                {
+                    if(policy.GetInt32()!=1)throw new InvalidDataException();
+                    foreach(var part in parts) ConstructionWorkAccessContract.Validate(part.GetProperty("constructionWorkAccess"),d.GetProperty("pilotEligible").GetBoolean());
+                }
                 var safety=d.GetProperty("roadProtection").Deserialize<NativeRoadProtection>(NativeJson.Options);
                 RoadProtectionContract.Validate(safety,false,requireBaseline:true,requireProbeKinds:true,requireConstructionPreview:true,maxCandidateCells:2048);
                 foreach(var link in d.GetProperty("powerLinks").EnumerateArray()) {

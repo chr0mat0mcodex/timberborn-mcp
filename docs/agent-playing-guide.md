@@ -1,5 +1,25 @@
 # Spielanleitung für Agenten
 
+## Bauarbeitszugang: Policy 1 begrenzt live abgenommen
+
+Für neue Gebäude bevorzugt `plan_large_project_access`: Zielgebäude vorgeben,
+Wege/Treppen/Stützen automatisch ergänzen lassen. Bei der neuen Policy muss der
+verschachtelte Plan `accessPolicyVersion=1` melden und jede erforderliche
+`constructionWorkAccess`-Prüfung `road_reachable`. Bei Ablehnung `blockedPart`,
+`phase` und Teilbericht auswerten; keine teilweise erzeugten Schritte bauen.
+Zur Ausführung nur den vollständigen zurückgegebenen Plan samt Schlüssel verwenden.
+Zugangshilfen müssen als Abhängigkeiten vor ihrem Ziel fertig werden; die Mod
+prüft den aktuellen Weganschluss unmittelbar vor jedem Gebäudeauftrag erneut.
+
+`road_reachable` belegt einen Distriktweg zu einer geometrischen Arbeitszelle,
+noch keinen nativen Bauarbeiterzugang. `helper_runtime_check` ist eine ausdrücklich
+ungeprüfte Bauhilfe. Tatsächlichen Baustellenzugang und fertigen Eingang weiterhin
+separat bestätigen; bei Blockade Diagnose/Reparaturablauf verwenden, nicht wiederholen.
+Alte Antworten ohne Policy sind kein Nachweis der neuen Prüfung. Erst nach Gate
+und bestandenem Pilot gemäß [Abnahmeplan](automatic-access-planning.md) als getestet behandeln.
+Temporäre Hilfen nur nach Abschluss und frischer Zugangsprüfung entfernen;
+Rückgewinnungsrohstoffe niemals löschen.
+
 ## Automatische Zugangsplanung — begrenzt live abgenommen
 
 Für vorgegebene Gebäudeziele `plan_large_project_access` verwenden: ergänzt

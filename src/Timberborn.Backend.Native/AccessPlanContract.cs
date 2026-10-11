@@ -28,6 +28,12 @@ public sealed partial class NativeClient
         var cleanup=d.GetProperty("cleanupCandidateIndices").EnumerateArray().Select(v=>v.GetInt32()).ToArray();
         if(cleanup.Length!=cleanup.Distinct().Count()||cleanup.Any(i=>i<request.Steps.Length||i>=steps.Length))throw new InvalidDataException();
         var plan=d.GetProperty("plan");
+        if(d.TryGetProperty("blockedPart",out var blocked))
+        {
+            if(blocked.ValueKind!=JsonValueKind.Null && (found||blocked.GetInt32()<0||blocked.GetInt32()>=steps.Length))throw new InvalidDataException();
+            if(d.GetProperty("phase").GetString() is not ("targets" or "target_geometry" or "finished_entrance" or "construction_work_cell" or "native_joint_preview"))throw new InvalidDataException();
+            if(found && (!plan.TryGetProperty("accessPolicyVersion",out var version)||version.GetInt32()!=1))throw new InvalidDataException();
+        }
         if(found || plan.ValueKind!=JsonValueKind.Null)
         {
             LargeProjectRequest generated;
