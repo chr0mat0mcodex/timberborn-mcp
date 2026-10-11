@@ -1,5 +1,18 @@
 # Projektstand
 
+## 2026-10-11: Automatische Zugangsplanung — begrenzt live abgenommen
+
+Nach menschlichem Gate/Bereitmeldung und Katalogübernahme: ebener Zweiteiler
+in 4,11 Sekunden, Höhen-Sechsteiler in 11,83 Sekunden fertig. Jeweils ein Run;
+Wege, Treppe, Stützen und Abhängigkeiten automatisch ergänzt. Eingänge und
+benachbarte Gebäude separat erreichbar, beide Ledger abgeschlossen.
+Bestandsweg-Gegenprobe ohne Auftrag abgewiesen. Keine pauschale Baustellenvorschau-
+oder 32-Teile-Freigabe. [Nachweise und Grenzen](docs/automatic-access-planning.md).
+
+Sieben Testobjekte rückgebaut; letzter Rohstoffstapel (33,4,4) und sein Testzugang
+(33,5,4) bewusst erhalten. Keine Rohstoffe gelöscht. Spiel pausiert; Restweg erst
+nach nachgewiesener Sammlung entfernen.
+
 ## 2026-10-11: Projektabschluss und Bauzugangsreparatur — begrenzt live abgenommen
 
 Beauftragte Erweiterung im gemeinsamen 0.37.0-Build: frische Projekt-/Material-/

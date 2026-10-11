@@ -1,5 +1,17 @@
 # Spielanleitung für Agenten
 
+## Automatische Zugangsplanung — begrenzt live abgenommen
+
+Für vorgegebene Gebäudeziele `plan_large_project_access` verwenden: ergänzt
+Wege, Treppen, Stützen und Abhängigkeiten im begrenzten Umfeld und prüft den
+Gesamtplan. Nur bei `candidateFound=true` die zurückgegebenen `steps` und
+`plan.planKey` unverändert an `run_large_project` übergeben. Kein Bau im Planaufruf.
+`assessment` und bei Ablehnung `reason` lesen; nicht mit den ursprünglichen,
+unergänzten Schritten starten. Nicht gefundene Route bedeutet keine generelle
+Unbebaubarkeit. Arbeitszelle ist vorgeschlagen, echter Baustellenzugang ungeprüft.
+`cleanupCandidateIndices` nach Fertigstellung erneut auf Bestandszugänge prüfen;
+Rohstoffstapel bleiben erhalten. [Umfang und Dreifall-Pilot](automatic-access-planning.md).
+
 ## Projektabschluss und Reparatur — begrenzter Livetest bestanden
 
 Fünfteilige Zugangsreparatur samt Originalbau, Abschluss und Folgeprojekt in

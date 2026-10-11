@@ -99,3 +99,11 @@ Backend-Stopp bei ausgefallenem Statusschreiben. Alte Vorschaltprozesse laden
 Codeänderungen erst beim Wiederaufbau ihrer Verbindung. Der nachgewiesen hängende
 Altprozess wurde mit ausdrücklicher Nutzerfreigabe gezielt beendet; kein laufendes
 Projekt-Backend verblieben. Anschließendes Gate und Wiederanschluss siehe oben.
+
+Gate-Nachtrag 2026-10-11: Die temporären Dateien des Cross-Process-Austauschtests
+liegen jetzt in einem eigenen Unterverzeichnis. Die bisherige globale `*.tmp`-
+Prüfung erfasste gelegentlich einen regulären parallelen Heartbeat-Schreibvorgang
+der Testfixture. Warteprüfung, erfolgreicher Austausch, Inhalt und restlose
+Bereinigung des getesteten Schreibvorgangs bleiben unverändert geprüft.
+Nur Testisolation geändert, kein Lifecycle-Code und keine Retries. Ausführung
+der Korrektur erfolgte im anschließenden menschlichen Gate vor erneuter Bereitmeldung.

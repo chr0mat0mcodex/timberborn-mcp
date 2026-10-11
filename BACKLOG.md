@@ -1,5 +1,13 @@
 # Backlog
 
+## Begrenzt abgenommen 2026-10-11: Gemeinsame Zugangs- und Bauhilfenplanung
+
+Begrenzt live abgenommen: ebener Zweiteiler, Höhen-Sechsteiler und Bestandsweg-Gegenprobe.
+`plan_large_project_access` ergänzt Wege, Treppen, Stützen und Abhängigkeiten,
+prüft den Gesamtplan nativ und weist mögliche Rückbauhilfen aus. Keine allgemeine
+Vorhersage nativer Baustellenreichweite, globale Standortsuche oder automatische
+Räumung. [Umfang, Budgets und Nachweise](docs/automatic-access-planning.md).
+
 ## Erledigt im begrenzten Pilot 2026-10-11: Projektabschluss, Diagnose, Bauzugangsreparatur
 
 Menschliches Gate und gezielter Livetest bestanden: fünfteilige Reparatur samt

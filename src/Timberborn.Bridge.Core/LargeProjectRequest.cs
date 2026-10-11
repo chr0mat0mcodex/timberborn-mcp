@@ -30,8 +30,8 @@ public sealed class LargeProjectRequest
     public int MaxGameHours { get; private set; }
     public int MaxRealSeconds { get; private set; }
     public LargeProjectStep[] Steps { get; private set; } = Array.Empty<LargeProjectStep>();
-    public static bool Handles(string path) => path is "/agent-api/v1/large-project-plan" or "/agent-api/v1/large-project-start" or "/agent-api/v1/large-project-run" or "/agent-api/v1/large-project-advance" or "/agent-api/v1/large-project-inspect" or "/agent-api/v1/large-project-stop" or "/agent-api/v1/large-project-diagnose" or "/agent-api/v1/large-project-close" or "/agent-api/v1/large-project-plan-repair" or "/agent-api/v1/large-project-run-repair" or "/agent-api/v1/power-network";
-    public static bool Writes(string operation) => operation is "plan" or "start" or "run" or "plan-repair" or "run-repair" or "advance" or "stop" or "close"; // plan uses temporary native previews
+    public static bool Handles(string path) => path is "/agent-api/v1/large-project-plan-access" or "/agent-api/v1/large-project-plan" or "/agent-api/v1/large-project-start" or "/agent-api/v1/large-project-run" or "/agent-api/v1/large-project-advance" or "/agent-api/v1/large-project-inspect" or "/agent-api/v1/large-project-stop" or "/agent-api/v1/large-project-diagnose" or "/agent-api/v1/large-project-close" or "/agent-api/v1/large-project-plan-repair" or "/agent-api/v1/large-project-run-repair" or "/agent-api/v1/power-network";
+    public static bool Writes(string operation) => operation is "plan-access" or "plan" or "start" or "run" or "plan-repair" or "run-repair" or "advance" or "stop" or "close"; // plan uses temporary native previews
 
     public static LargeProjectRequest Parse(string path, NameValueCollection q)
     {
@@ -42,10 +42,10 @@ public sealed class LargeProjectRequest
         var r = new LargeProjectRequest { Operation = operation, Session = Id("session") };
         string[] keys;
         if (operation == "power-network") { r.EntityId = Id("id"); keys = new[] { "session", "id" }; }
-        else if (operation is "plan" or "start" or "run" or "plan-repair" or "run-repair")
+        else if (operation is "plan-access" or "plan" or "start" or "run" or "plan-repair" or "run-repair")
         {
             r.DistrictId = Id("districtId"); r.Steps = Decode(One("steps"));
-            keys = operation is "plan" or "plan-repair" ? new[] { "session", "districtId", "steps" } : new[] { "session", "districtId", "steps", "actionId", "planKey", "mode" };
+            keys = operation is "plan-access" or "plan" or "plan-repair" ? new[] { "session", "districtId", "steps" } : new[] { "session", "districtId", "steps", "actionId", "planKey", "mode" };
             if (operation is "start" or "run" or "run-repair")
             {
                 r.ActionId = Id("actionId"); r.PlanKey = One("planKey");

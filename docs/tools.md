@@ -1,5 +1,14 @@
 # Native MCP-Werkzeuge
 
+## Automatische Zugangsplanung (begrenzt live abgenommen)
+
+`plan_large_project_access` (POST/Baugate, pausiert): explizite Gebäudeziele mit
+`session`, `districtId`, `steps`; ergänzt Wege/Stützen/Folktails-Treppen und
+Abhängigkeiten, danach gemeinsame native Vorschau. Antwort: `candidateFound`,
+`reason`, vollständige `steps`, `plan` mit `planKey`, `assessment` und
+`cleanupCandidateIndices`. Kein Bauauftrag, keine allgemeine Baustellenfreigabe.
+[Grenzen, Ausführungsübergabe und Testfälle](automatic-access-planning.md).
+
 ## Projektwiederherstellung (begrenzter Livetest bestanden)
 
 | Werkzeug | Art | Zweck |

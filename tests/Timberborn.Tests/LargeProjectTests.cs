@@ -171,8 +171,8 @@ public sealed class LargeProjectTests
     public void NewToolsUseIndependentBuildingGateAndCorrectMethods(bool enabled)
     {
         var tools=LargeProjectTools.Catalog(enabled).ToArray();
-        Assert.Equal(enabled?9:3,tools.Length);
-        foreach(var name in new[]{"plan","start","advance","stop"}) {
+        Assert.Equal(enabled?10:3,tools.Length);
+        foreach(var name in new[]{"plan-access","plan","start","advance","stop"}) {
             string path="/agent-api/v1/large-project-"+name;
             Assert.Equal(enabled,BridgeHttpServer.MethodAllowed("POST",path,false,false,enableBuildingPlacement:enabled));
             Assert.False(BridgeHttpServer.MethodAllowed("GET",path,false,true,true,true,enableBuildingPlacement:enabled));

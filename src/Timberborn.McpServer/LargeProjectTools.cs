@@ -10,7 +10,7 @@ namespace Timberborn.McpServer;
 
 public static class LargeProjectTools
 {
-    private static readonly Dictionary<string,string> Operations=new(){["plan_large_project"]="plan",["start_large_project"]="start",["run_large_project"]="run",["advance_large_project"]="advance",["inspect_large_project"]="inspect",["stop_large_project"]="stop",["inspect_power_network"]="power-network",["diagnose_large_project"]="diagnose",["close_large_project"]="close",["plan_large_project_repair"]="plan-repair",["run_large_project_repair"]="run-repair"};
+    private static readonly Dictionary<string,string> Operations=new(){["plan_large_project_access"]="plan-access",["plan_large_project"]="plan",["start_large_project"]="start",["run_large_project"]="run",["advance_large_project"]="advance",["inspect_large_project"]="inspect",["stop_large_project"]="stop",["inspect_power_network"]="power-network",["diagnose_large_project"]="diagnose",["close_large_project"]="close",["plan_large_project_repair"]="plan-repair",["run_large_project_repair"]="run-repair"};
     public static bool Handles(string name)=>Operations.ContainsKey(name);
     public static bool Writes(string name)=>Operations.TryGetValue(name,out var operation)&&LargeProjectRequest.Writes(operation);
     public static IEnumerable<Tool> Catalog(bool enabled, bool speedEnabled = false)
@@ -24,7 +24,7 @@ public static class LargeProjectTools
             if(pair.Value is ("run" or "run-repair")&&!speedEnabled)continue;
             var props=new JsonObject{["session"]=Id()};
             if(pair.Value=="power-network")props["id"]=Id();
-            else if(pair.Value is "plan" or "start" or "run" or "plan-repair" or "run-repair")
+            else if(pair.Value is "plan-access" or "plan" or "start" or "run" or "plan-repair" or "run-repair")
             {
                 props["districtId"]=Id();
                 props["steps"]=new JsonObject{["type"]="array",["minItems"]=1,["maxItems"]=32,["items"]=new JsonObject{
@@ -42,6 +42,7 @@ public static class LargeProjectTools
             else props["actionId"]=Id();
             if(pair.Value is "plan-repair" or "run-repair") props["parentActionId"]=Id();
             string description=pair.Value switch{
+                "plan-access"=>"Pausierte automatische Zugangsergänzung für explizite Gebäudeziele: Wege, Folktails-Treppen und Plattformstützen im begrenzten Umfeld suchen, Abhängigkeiten ergänzen und gemeinsam nativ prüfen. Maximal 32 Teile/acht Höhen, 4096 Suchknoten; bestehender Distriktweg innerhalb sechs Zellen Rand erforderlich. Keine Platzierung. candidateFound nur mit erfolgreicher Gesamtvorschau; steps plus plan.planKey unverändert an run_large_project übergeben. Bauarbeiterzugang bleibt vorgeschlagene Arbeitszelle, kein Vorabnachweis. cleanupCandidateIndices nur nach frischer Zugangsprüfung rückbauen; Rückgewinnungsrohstoffe niemals löschen. Keine automatische Standortverschiebung, Rodung oder optimale Gesamtlösungsgarantie.",
                 "diagnose"=>"Frischer lesender Projektabgleich: erwartete Objekte, Bauzugang, Materialbestand, verlorene Bestandsanschlüsse und fremde Baustellen. Auch terminale Projekte; keine Platzierung, kein Fortschalten. closeEligible/repairEligible gelten nur für diese Beobachtung. Kosten sind kein Restbedarf.",
                 "close"=>"Terminales Projekt bei Pause frisch abgleichen und Ledger freigeben, ohne Objekte zu bauen oder abzureißen. Alle versuchten Teile müssen fertig und zugänglich oder nach bestätigter Beobachtung entfernt sein. Fehlende unbestätigte Aufträge blockieren. Unbeauftragte Teile werden aufgegeben; alte actionId bleibt terminal. Wiederholter Abschluss idempotent.",
                 "plan-repair"=>"Pausierte Reparaturvorschau für ein terminales parentActionId: ausschließlich zusätzliche Wege, Treppen und Plattformen, maximal 32 Teile/acht Höhen. Bekannte Baustellen dieses Projekts dürfen bestehen, fremde Baustellen nicht. Ursprüngliche und heutige Bestandszugänge prüfen. Originalaufträge werden nie wiederholt. Neue Schritte lokal mit dependsOn verknüpfen; vorhandene Träger als Bestand nutzen.",

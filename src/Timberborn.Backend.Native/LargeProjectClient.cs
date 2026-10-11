@@ -9,7 +9,7 @@ public sealed partial class NativeClient
         string route=r.Operation=="power-network"?r.Operation:"large-project-"+r.Operation;
         string query="session="+r.Session;
         if(r.Operation=="power-network")query+="&id="+r.EntityId;
-        else if(r.Operation is "plan" or "start" or "run" or "plan-repair" or "run-repair")
+        else if(r.Operation is "plan-access" or "plan" or "start" or "run" or "plan-repair" or "run-repair")
         {
             query+="&districtId="+r.DistrictId+"&steps="+Uri.EscapeDataString(LargeProjectRequest.Encode(r.Steps));
             if(r.Operation is "start" or "run" or "run-repair")query+="&actionId="+r.ActionId+"&planKey="+r.PlanKey+"&mode=development_pilot";
@@ -28,6 +28,7 @@ public sealed partial class NativeClient
             var d=e.Data;
             var limits=d.GetProperty("limitations");
             if(limits.ValueKind!=JsonValueKind.Array||limits.GetArrayLength()>16||limits.EnumerateArray().Any(v=>v.ValueKind!=JsonValueKind.String||v.GetString() is not {Length:>0 and <=160}))throw new InvalidDataException();
+            if(r.Operation=="plan-access") { ValidateAccessPlan(e,r); return; }
             if(r.Operation is "plan-repair" or "run-repair") { if(d.GetProperty("parentActionId").GetString()!=r.ParentActionId)throw new InvalidDataException(); }
             if(r.Operation=="power-network")
             {

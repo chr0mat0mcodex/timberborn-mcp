@@ -5,6 +5,9 @@ Beobachtung und kontrollierte Eingriffe über reguläre Spielservices.
 
 ## Status
 
+Nach menschlichem Gate begrenzt live abgenommen:
+[automatische Zugangs- und Bauhilfenplanung](docs/automatic-access-planning.md).
+
 Neu nach menschlichem Gate begrenzt live abgenommen:
 [Projektabschluss ohne Ledger-Dauersperre, Blockadediagnose und Bauzugangsreparatur](docs/project-recovery.md).
 

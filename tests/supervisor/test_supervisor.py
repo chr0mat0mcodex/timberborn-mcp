@@ -109,7 +109,11 @@ class LifecycleTests(unittest.TestCase):
 
     @unittest.skipUnless(sys.platform == "win32", "Windows cross-process file mutex")
     def test_atomic_replace_waits_for_status_reader_in_other_process(self):
-        path = self.runtime / "shared-status.json"
+        # The fixture supervisor publishes instance-*.json concurrently. Its
+        # short-lived atomic-write files are not leftovers from this test.
+        atomic_runtime = self.runtime / "atomic-replace"
+        atomic_runtime.mkdir()
+        path = atomic_runtime / "shared-status.json"
         module.atomic_json(path, {"ticket": "before"})
         code = (
             "import importlib.util,sys; from pathlib import Path; "
@@ -132,7 +136,7 @@ class LifecycleTests(unittest.TestCase):
             _, error = child.communicate(timeout=5)
             self.assertEqual(0, child.returncode, error)
             self.assertEqual("after", module.read_json(path)["ticket"])
-            self.assertEqual([], list(self.runtime.glob("*.tmp")))
+            self.assertEqual([], list(atomic_runtime.glob("*.tmp")))
         finally:
             if child is not None:
                 if child.poll() is None:
