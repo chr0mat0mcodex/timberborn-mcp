@@ -5,6 +5,9 @@ Beobachtung und kontrollierte Eingriffe über reguläre Spielservices.
 
 ## Status
 
+Neu nach menschlichem Gate begrenzt live abgenommen:
+[Projektabschluss ohne Ledger-Dauersperre, Blockadediagnose und Bauzugangsreparatur](docs/project-recovery.md).
+
 Neu begrenzt live abgenommen: [autonome Bauchargen](docs/autonomous-construction-batches.md).
 Ein Gesamtplan, alle unabhängigen Aufträge gemeinsam, danach Simulation bis fertig
 oder blockiert; Folgeaufträge ohne Agentenaufruf pro Bauteil. Zwei Piloten mit 14

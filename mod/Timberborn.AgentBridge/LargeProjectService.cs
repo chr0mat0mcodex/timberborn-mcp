@@ -58,8 +58,10 @@ public sealed partial class LargeProjectService(BuildingCatalog catalog, Preview
     }
     public object Handle(LargeProjectRequest r)
     {
+        if(r.Operation is "diagnose" or "close") return Recover(r.ActionId, r.Operation == "close");
+        if(r.Operation=="plan-repair") return PlanRepair(r);
         if(r.Operation=="power-network") return power.Read(r.EntityId);
-        if(r.Operation=="run") return StartBatch(r);
+        if(r.Operation is "run" or "run-repair") return StartBatch(r);
         if(batches.ContainsKey(r.ActionId))
         {
             if(r.Operation=="inspect") return BatchReceipt(r.ActionId);
@@ -89,7 +91,7 @@ public sealed partial class LargeProjectService(BuildingCatalog catalog, Preview
         bool Guard()=>!faulted && ConstructionIsolation.Allows(entities,receipt.EntityIds.Where((_,i)=>receipt.PartStates[i]!="pending")) &&
             RoadProtectionPolicy.LostConnections(job.Baseline.Before,roads.Read(job.Baseline,false)).Length==0 &&
             receipt.Order.Take(receipt.Current).All(i=>Observe(job.Request.Steps[i],receipt.EntityIds[i],district)=="finished");
-        ledger.Advance(r.ActionId,clock.Elapsed.TotalSeconds,Guard,i=>Observe(job.Request.Steps[i],receipt.EntityIds[i],district),i=>Preflight(job.Request.Steps[i],r.Session,district,i),i=>{
+        ledger.Advance(r.ActionId,clock.Elapsed.TotalSeconds,()=>GuardWithEvidence(r.ActionId,Guard),i=>Observe(job.Request.Steps[i],receipt.EntityIds[i],district),i=>Preflight(job.Request.Steps[i],r.Session,district,i,r.ActionId),i=>{
             var step=job.Request.Steps[i];var template=Resolve(step);var spec=template.GetSpec<BlockObjectSpec>();
             placers.GetMatchingPlacer(spec).Place(new EntitySetup.Builder(template.Blueprint).SetId(Guid.Parse(receipt.EntityIds[i])),Placement(step));
         });
@@ -107,7 +109,7 @@ public sealed partial class LargeProjectService(BuildingCatalog catalog, Preview
         var e=entities.Entities.SingleOrDefault(e=>!e.Deleted&&e.EntityId.ToString("D")==id);
         if(e is null)return "missing";if(!e.Initialized)return "pending";
         if(!e.TryGetComponent<BlockObject>(out var b)||b.IsPreview||b.Coordinates!=new Vector3Int(s.X,s.Y,s.Z)||b.Orientation!=Rotation(s.Rotation)||!e.TryGetComponent<TemplateSpec>(out var t)||t.TemplateName!=s.Template)return "mismatch";
-        if(b.IsUnfinished)return e.TryGetComponent<ReachableConstructionSite>(out var site)&&site.IsReachableByBuilders()?"construction":"pending";
+        if(b.IsUnfinished)return e.TryGetComponent<ReachableConstructionSite>(out var site)?site.IsReachableByBuilders()?"construction":"construction_unreachable":"pending";
         if(!b.IsFinished)return "mismatch";
         if(b.HasEntrance && !district.IsOnInstantDistrictRoad(NavigationCoordinateSystem.GridToWorld(b.PositionedEntrance.Coordinates)))return "mismatch";
         if(e.TryGetComponent<PathSpec>(out var path)&&!district.IsOnInstantDistrictRoad(NavigationCoordinateSystem.GridToWorld(b.TransformCoordinates(path.MainPathCoordinates))))return "mismatch";
@@ -117,16 +119,17 @@ public sealed partial class LargeProjectService(BuildingCatalog catalog, Preview
     private bool PreviewAccess(BlockObject b,DistrictCenter district)=>
         (!b.HasEntrance||district.IsOnPreviewDistrictRoad(NavigationCoordinateSystem.GridToWorld(b.PositionedEntrance.Coordinates)))&&
         (!b.TryGetComponent<PathSpec>(out var path)||district.IsOnPreviewDistrictRoad(NavigationCoordinateSystem.GridToWorld(b.TransformCoordinates(path.MainPathCoordinates))));
-    private bool Preflight(LargeProjectStep s,string session,DistrictCenter district,int index)
+    private readonly Dictionary<string, object> validationFailures = new();
+    private bool Preflight(LargeProjectStep s,string session,DistrictCenter district,int index,string actionId)
     {
         Resolve(s);
         var q=new NameValueCollection{{"template",s.Template},{"x",s.X.ToString()},{"y",s.Y.ToString()},{"z",s.Z.ToString()},{"rotation",s.Rotation.ToString()},{"session",session}};
         var evidence=JObject.FromObject(validation.Validate(BridgeRequest.Parse("/agent-api/v1/building-validation",q),out _,out var safety));
         bool valid=(bool?)evidence["valid"]==true && safety.restored && safety.lostConnections==0 && !safety.constructionAccessPreview.HasKnownFailure() &&
             (safety.status=="safe"||safety.status=="unknown"&&safety.reasons.SequenceEqual(new[]{"construction_and_road_node_coverage_unproven"}));
-        if(!valid)return false;
+        if(!valid) { validationFailures[actionId] = new { index, template=s.Template, position=new{x=s.X,y=s.Y,z=s.Z}, reason="native_step_validation_failed", nativeValid=(bool?)evidence["valid"], safety.status, safety.reasons, safety.lostConnections, safety.affected, safety.affectedTruncated, constructionAccess=safety.constructionAccessPreview }; return false; }
         // Recheck the proposed entrance against the current district, not only the old plan.
-        var sample=roads.Capture();if(!sample.Complete)return false;
+        var sample=roads.Capture();if(!sample.Complete) { validationFailures[actionId]=new {index,reason=sample.Reason}; return false; }
         var preview=previews[index+":"+s.Template];
         try {preview.Hide();preview.Reposition(Placement(s));preview.RemoveFromPreviewServices();preview.AddToPreviewServices();valid=PreviewAccess(preview.BlockObject,district);}
         catch {faulted=true;throw;}
@@ -135,11 +138,12 @@ public sealed partial class LargeProjectService(BuildingCatalog catalog, Preview
             try {preview.RemoveFromPreviewServices();}catch {faulted=true;}
             if(!sample.Before.SequenceEqual(roads.Read(sample,false))||!sample.PreviewBefore.SequenceEqual(roads.Read(sample,true)))faulted=true;
         }
+        if (!valid || faulted) validationFailures[actionId]=new {index,reason=faulted?"preview_restore_failed":"preview_entrance_disconnected",template=s.Template,position=new{x=s.X,y=s.Y,z=s.Z}};
         return valid&&!faulted;
     }
-    private JObject Plan(LargeProjectRequest r)
+    private JObject Plan(LargeProjectRequest r, string[]? ownedSites = null)
     {
-        if(faulted||speed.CurrentSpeed!=0||!ConstructionIsolation.Allows(entities))throw new BridgeRejectionException("state_conflict");
+        if(faulted||speed.CurrentSpeed!=0||!ConstructionIsolation.Allows(entities, ownedSites))throw new BridgeRejectionException("state_conflict");
         var district=District(r.DistrictId);var order=LargeProjectRequest.Order(r.Steps);
         var templates=r.Steps.Select(Resolve).ToArray();
         var cells=r.Steps.Select((s,i)=>templates[i].GetSpec<BlockObjectSpec>().GetBlocks(Placement(s)).Take(65).ToArray()).ToArray();
@@ -221,7 +225,7 @@ public sealed partial class LargeProjectService(BuildingCatalog catalog, Preview
             limitations=new[]{"explicit_3d_blueprint_not_automatic_terrain_route_search","maximum_32_parts_32x32_eight_occupied_levels","batch_waits_only_for_explicit_dependencies","joint_preview_not_builder_preflight","deferred_native_validation_is_unknown_until_real_supports_finish","entranceless_parts_have_no_invented_door","planned_power_ports_not_live_network_or_supply","new_districts_and_unsupported_catalog_layouts_excluded","no_reservation_or_execution_permission","no_material_delivery_or_production_guarantee"}});
         // Runtime diagnostic counters and cached preview identities are not plan identity.
         // Start always repeats native validation; this key binds the blueprint and sampled baseline.
-        result["planKey"]=Hash(Fingerprint(r)+"|"+string.Join(",",before.OrderBy(id=>id))+"|"+string.Join(",",beforeStock)+"|"+
+        result["planKey"]=Hash(Fingerprint(r)+"|"+r.ParentActionId+"|"+string.Join(",",before.OrderBy(id=>id))+"|"+string.Join(",",beforeStock)+"|"+
             string.Join(",",baseline.Before.Select(b=>b?"1":"0"))+"|"+eligible);
         return result;
     }

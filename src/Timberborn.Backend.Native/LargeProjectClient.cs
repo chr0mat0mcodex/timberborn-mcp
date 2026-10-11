@@ -9,13 +9,14 @@ public sealed partial class NativeClient
         string route=r.Operation=="power-network"?r.Operation:"large-project-"+r.Operation;
         string query="session="+r.Session;
         if(r.Operation=="power-network")query+="&id="+r.EntityId;
-        else if(r.Operation is "plan" or "start" or "run")
+        else if(r.Operation is "plan" or "start" or "run" or "plan-repair" or "run-repair")
         {
             query+="&districtId="+r.DistrictId+"&steps="+Uri.EscapeDataString(LargeProjectRequest.Encode(r.Steps));
-            if(r.Operation is "start" or "run")query+="&actionId="+r.ActionId+"&planKey="+r.PlanKey+"&mode=development_pilot";
-            if(r.Operation=="run")query+="&speed="+r.Speed+"&maxGameHours="+r.MaxGameHours+"&maxRealSeconds="+r.MaxRealSeconds;
+            if(r.Operation is "start" or "run" or "run-repair")query+="&actionId="+r.ActionId+"&planKey="+r.PlanKey+"&mode=development_pilot";
+            if(r.Operation is "run" or "run-repair")query+="&speed="+r.Speed+"&maxGameHours="+r.MaxGameHours+"&maxRealSeconds="+r.MaxRealSeconds;
         }
         else query+="&actionId="+r.ActionId;
+        if(r.Operation is "plan-repair" or "run-repair")query+="&parentActionId="+r.ParentActionId;
         var e=await Get<JsonElement>(route+"?"+query,ct,LargeProjectRequest.Writes(r.Operation)?HttpMethod.Post:HttpMethod.Get,maxResponseBytes:LargeProjectRequest.MaxResponseBytes);
         ValidateLargeProject(e,r);return e;
     }
@@ -27,6 +28,7 @@ public sealed partial class NativeClient
             var d=e.Data;
             var limits=d.GetProperty("limitations");
             if(limits.ValueKind!=JsonValueKind.Array||limits.GetArrayLength()>16||limits.EnumerateArray().Any(v=>v.ValueKind!=JsonValueKind.String||v.GetString() is not {Length:>0 and <=160}))throw new InvalidDataException();
+            if(r.Operation is "plan-repair" or "run-repair") { if(d.GetProperty("parentActionId").GetString()!=r.ParentActionId)throw new InvalidDataException(); }
             if(r.Operation=="power-network")
             {
                 if(d.GetProperty("id").GetString()!=r.EntityId||!BuildingPolicy.ValidTemplate(d.GetProperty("template").GetString()))throw new InvalidDataException();
@@ -47,10 +49,11 @@ public sealed partial class NativeClient
                 }
                 return;
             }
+            if(r.Operation is "diagnose" or "close") { ValidateRecovery(d,r); return; }
             if(d.GetProperty("regularExecutionAllowed").GetBoolean())throw new InvalidDataException();
             var order=d.GetProperty("order").EnumerateArray().Select(v=>v.GetInt32()).ToArray();
             if(order.Length is <1 or >32||!order.Order().SequenceEqual(Enumerable.Range(0,order.Length)))throw new InvalidDataException();
-            if(r.Operation=="plan")
+            if(r.Operation is "plan" or "plan-repair")
             {
                 if(!ValidPlanKey(d.GetProperty("planKey").GetString()??"")||!order.SequenceEqual(LargeProjectRequest.Order(r.Steps)))throw new InvalidDataException();
                 var parts=d.GetProperty("parts").EnumerateArray().ToArray();
@@ -78,7 +81,7 @@ public sealed partial class NativeClient
             else
             {
                 if(d.TryGetProperty("executionMode",out var mode)&&mode.GetString()=="batch") { ValidateBatchReceipt(d,r,order); return; }
-                if(r.Operation=="run")throw new InvalidDataException();
+                if(r.Operation is "run" or "run-repair")throw new InvalidDataException();
                 if(d.GetProperty("actionId").GetString()!=r.ActionId||!ValidPlanKey(d.GetProperty("planKey").GetString()??"")||r.Operation=="start"&&d.GetProperty("planKey").GetString()!=r.PlanKey)throw new InvalidDataException();
                 var state=d.GetProperty("state").GetString();var ids=d.GetProperty("entityIds").EnumerateArray().Select(v=>v.GetString()).ToArray();var states=d.GetProperty("partStates").EnumerateArray().Select(v=>v.GetString()).ToArray();
                 if(state is not ("ready" or "waiting" or "completed" or "stopped" or "unconfirmed")||ids.Length!=order.Length||states.Length!=order.Length||ids.Distinct().Count()!=ids.Length||ids.Any(s=>!Guid.TryParseExact(s,"D",out var id)||id==Guid.Empty)||states.Any(s=>s is not ("pending" or "unconfirmed" or "construction" or "finished")))throw new InvalidDataException();
@@ -93,7 +96,7 @@ public sealed partial class NativeClient
     }
     private static void ValidateBatchReceipt(JsonElement d,LargeProjectRequest r,int[] order)
     {
-        if(r.Operation is not ("run" or "inspect" or "stop")||d.GetProperty("actionId").GetString()!=r.ActionId||!ValidPlanKey(d.GetProperty("planKey").GetString()??""))throw new InvalidDataException();
+        if(r.Operation is not ("run" or "run-repair" or "inspect" or "stop")||d.GetProperty("actionId").GetString()!=r.ActionId||!ValidPlanKey(d.GetProperty("planKey").GetString()??""))throw new InvalidDataException();
         var state=d.GetProperty("state").GetString();
         if(state is not ("running" or "pausing" or "completed" or "blocked" or "stopped" or "unconfirmed" or "interrupted")||d.GetProperty("reason").GetString() is not {Length:>0 and <=160})throw new InvalidDataException();
         var ids=d.GetProperty("entityIds").EnumerateArray().Select(v=>v.GetString()).ToArray();
@@ -110,7 +113,42 @@ public sealed partial class NativeClient
         if(sim.TargetGameHours<=sim.StartGameHours||sim.TargetGameHours-sim.StartGameHours>672||sim.PauseConfirmed!=(sim.ObservedSpeed==0)||sim.Terminal!=(sim.State is "completed" or "cancelled" or "interrupted" or "failed"))throw new InvalidDataException();
         if(state is "completed" or "blocked" or "stopped" or "unconfirmed" or "interrupted") { if(!sim.Terminal)throw new InvalidDataException(); }
         if(state=="completed"&&(states.Any(s=>s!="finished")||!sim.PauseConfirmed||sim.State!="cancelled"||blocked.ValueKind!=JsonValueKind.Null))throw new InvalidDataException();
-        if(r.Operation=="run"&&(d.GetProperty("planKey").GetString()!=r.PlanKey||!order.SequenceEqual(LargeProjectRequest.Order(r.Steps))||sim.RequestedSpeed!=r.Speed||sim.MaxRealSeconds!=r.MaxRealSeconds||sim.TargetGameHours-sim.StartGameHours!=r.MaxGameHours))throw new InvalidDataException();
+        if(r.Operation is ("run" or "run-repair")&&(d.GetProperty("planKey").GetString()!=r.PlanKey||!order.SequenceEqual(LargeProjectRequest.Order(r.Steps))||sim.RequestedSpeed!=r.Speed||sim.MaxRealSeconds!=r.MaxRealSeconds||sim.TargetGameHours-sim.StartGameHours!=r.MaxGameHours))throw new InvalidDataException();
+    }
+    private static void ValidateRecovery(JsonElement d, LargeProjectRequest r)
+    {
+        if(d.GetProperty("actionId").GetString()!=r.ActionId)throw new InvalidDataException();
+        string? state=d.GetProperty("state").GetString();
+        if(state is not ("ready" or "waiting" or "running" or "pausing" or "completed" or "blocked" or "stopped" or "unconfirmed" or "interrupted"))throw new InvalidDataException();
+        bool released=d.GetProperty("released").GetBoolean(), close=d.GetProperty("closeEligible").GetBoolean(), repair=d.GetProperty("repairEligible").GetBoolean();
+        if(r.Operation=="close")
+        {
+            string? outcome=d.GetProperty("closeOutcome").GetString();
+            if(outcome is not ("released" or "already_released" or "rejected") || released!=(outcome!="rejected") || outcome=="released"&&!close)throw new InvalidDataException();
+        }
+        bool busy=d.GetProperty("busy").GetBoolean(), faulted=d.GetProperty("faulted").GetBoolean();
+        double speed=d.GetProperty("currentSpeed").GetDouble();
+        if(!double.IsFinite(speed)||speed<0 || (close||repair)&&(speed!=0||busy||faulted||state is "ready" or "waiting" or "running" or "pausing") || released&&repair)throw new InvalidDataException();
+        var parts=d.GetProperty("parts").EnumerateArray().ToArray();
+        if(parts.Length is <1 or >32)throw new InvalidDataException();
+        var ids=new HashSet<string>();
+        for(int i=0;i<parts.Length;i++)
+        {
+            var p=parts[i];var id=p.GetProperty("id").GetString();
+            if(p.GetProperty("index").GetInt32()!=i||!Guid.TryParseExact(id,"D",out var parsed)||parsed==Guid.Empty||!ids.Add(id!)||!BuildingPolicy.ValidTemplate(p.GetProperty("template").GetString()))throw new InvalidDataException();
+            CheckVector(p.GetProperty("position"));
+            string recorded=p.GetProperty("recorded").GetString()??"", observed=p.GetProperty("observed").GetString()??"";
+            if(recorded is not ("pending" or "unconfirmed" or "construction" or "finished")||observed is not ("missing" or "initializing" or "identity_mismatch" or "construction" or "construction_unreachable" or "construction_access_unknown" or "finished" or "finished_access_missing" or "district_unavailable"))throw new InvalidDataException();
+            if(p.GetProperty("reason").GetString() is not {Length:>0 and <=160}||close&&!LargeProjectRecoveryPolicy.Resolved(recorded,observed)||repair&&!LargeProjectRecoveryPolicy.Repairable(recorded,observed))throw new InvalidDataException();
+        }
+        if(d.GetProperty("unissuedParts").GetInt32()!=parts.Count(p=>p.GetProperty("recorded").GetString()=="pending"))throw new InvalidDataException();
+        int lost=d.GetProperty("lostConnections").GetInt32();
+        var affected=d.GetProperty("affected").EnumerateArray().ToArray();
+        if(lost<0||affected.Length!=Math.Min(lost,32)||d.GetProperty("affectedTruncated").GetBoolean()!=(lost>32))throw new InvalidDataException();
+        foreach(var a in affected) {CheckVector(a.GetProperty("position"));if(!a.GetProperty("baselineConnected").GetBoolean()||a.GetProperty("currentConnected").GetBoolean())throw new InvalidDataException();}
+        var foreign=d.GetProperty("foreignSites").EnumerateArray().ToArray();
+        if(foreign.Length>32||foreign.Any(v=>!Guid.TryParseExact(v.GetString(),"D",out _))||repair&&foreign.Length!=0)throw new InvalidDataException();
+        _=d.GetProperty("foreignSitesTruncated").GetBoolean();
     }
     private static void CheckPorts(JsonElement ports)
     {

@@ -1,5 +1,18 @@
 # Native MCP-Werkzeuge
 
+## Projektwiederherstellung (begrenzter Livetest bestanden)
+
+| Werkzeug | Art | Zweck |
+| --- | --- | --- |
+| `diagnose_large_project` | Lesen/GET | Frische Teilzustände, Baustellenmaterial, Zugänge und Fehlerbelege |
+| `close_large_project` | Schreiben/POST, Baugate | Geklärtes terminales Ledger freigeben; Restteile aufgeben |
+| `plan_large_project_repair` | Vorschau/POST, Baugate | Zusätzliche Wege/Treppen/Plattformen für `parentActionId` prüfen |
+| `run_large_project_repair` | Schreiben/POST, Bau- und Tempogate | Eigene Reparaturcharge mit festem Budget; Originalaufträge nicht wiederholen |
+
+Sessionbindung, frischer Zustandsabgleich, fremde Baustellen ausgeschlossen.
+`closeOutcome` entscheidet über den Abschluss, nicht allein Transportstatus `ok`.
+[Vertrag und Testfälle](project-recovery.md).
+
 ## Autonome Gesamtcharge (begrenzter Livetest bestanden)
 
 `run_large_project` (POST, Bau- **und** Tempofreigabe): gleicher expliziter Plan

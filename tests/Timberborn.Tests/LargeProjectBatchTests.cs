@@ -26,16 +26,18 @@ public sealed class LargeProjectBatchTests
         public readonly string[] Observations;
         public readonly LargeProjectRequest Request;
         public bool Guard = true;
+        public bool RepairedSitesFinished = true;
         public int InvalidPart = -1, ThrowPart = -1;
         public float Speed;
         private double now, hours;
         private bool locked;
         public LargeProjectBatch.Receipt Receipt => Batch.Inspect();
-        public Pilot(int count = 3, bool dependency = false)
+        public Pilot(int count = 3, bool dependency = false, bool repair = false)
         {
             var args=Arguments(count);
             if(dependency) {var steps=LargeProjectRequest.Decode(args["steps"]!);steps[1].DependsOn=[0];args["steps"]=LargeProjectRequest.Encode(steps);}
-            Request=LargeProjectRequest.Parse("/agent-api/v1/large-project-run",args);
+            if(repair) args["parentActionId"]="55555555-5555-5555-5555-555555555555";
+            Request=LargeProjectRequest.Parse("/agent-api/v1/large-project-"+(repair?"run-repair":"run"),args);
             Batch=new(Request,"synthetic",Enumerable.Range(1,count).Select(i=>new Guid(i,0,0,new byte[8]).ToString("D")).ToArray());
             Observations=Enumerable.Repeat("construction",count).ToArray();
             Runs.Start(SimulationRunRequest.Parse("/agent-api/v1/simulation-run-for",new() {
@@ -48,7 +50,7 @@ public sealed class LargeProjectBatchTests
             Runs.Tick(hours,Speed,now,Change,locked);
             Batch.Tick(now,Runs.Inspect(ActionId),locked,()=>Guard,i=>Observations[i],i=>i!=InvalidPart,
                 i=> {Orders.Add(i);SpeedsAtOrder.Add(Speed);if(i==ThrowPart)throw new InvalidOperationException();},
-                ()=>Runs.Cancel(ActionId,hours,Speed,now,Change,locked),()=>Runs.BeginDeferred(ActionId,now,Change));
+                ()=>Runs.Cancel(ActionId,hours,Speed,now,Change,locked),()=>Runs.BeginDeferred(ActionId,now,Change),()=>RepairedSitesFinished);
         }
     }
     [Fact]
@@ -64,6 +66,37 @@ public sealed class LargeProjectBatchTests
         p.Tick(2.25,2);Assert.Equal("completed",p.Receipt.State);
         Assert.True(p.Receipt.Simulation.PauseConfirmed);Assert.Equal(new[]{7,0},p.SpeedCommands);
         p.Tick(3,2);Assert.Equal(32,p.Orders.Count);
+    }
+    [Fact]
+    public void RepairCompletionWaitsForOriginalSitesWithoutRepeatingHelpers()
+    {
+        var p=new Pilot(1) {RepairedSitesFinished=false};
+        p.Tick(0.25);p.Observations[0]="finished";p.Tick(1,1);
+        Assert.Equal("running",p.Receipt.State);
+        Assert.Equal("awaiting_repaired_sites",p.Receipt.Reason);
+        p.Tick(2,2);Assert.Single(p.Orders);
+        p.RepairedSitesFinished=true;p.Tick(3,3);p.Tick(3.25,3);
+        Assert.Equal("completed",p.Receipt.State);Assert.Single(p.Orders);
+        Assert.True(p.Receipt.Simulation.PauseConfirmed);
+    }
+    [Fact]
+    public void UnreachableSiteIsConfirmedConstructionWithSpecificBlockReason()
+    {
+        var p=new Pilot(1);p.Tick(0.25);
+        p.Observations[0]="construction_unreachable";p.Tick(1,1);
+        Assert.Equal("construction",p.Receipt.PartStates[0]);
+        p.Tick(6,2);p.Tick(6.25,2);
+        Assert.Equal("blocked",p.Receipt.State);Assert.Equal("builders_unreachable",p.Receipt.Reason);
+        Assert.Equal(0,p.Receipt.BlockedPart);Assert.Single(p.Orders);
+    }
+    [Fact]
+    public void RepairWaitingStillHonorsOriginalTimeBudget()
+    {
+        var p=new Pilot(1) {RepairedSitesFinished=false};
+        p.Tick(0.25);p.Observations[0]="finished";p.Tick(1,1);
+        p.Tick(2,24);p.Tick(2.25,24);
+        Assert.Equal("blocked",p.Receipt.State);Assert.Equal("game_time_limit",p.Receipt.Reason);
+        Assert.Single(p.Orders);
     }
     [Fact]
     public void IndependentPartsStartTogetherAndSupportSuccessorDispatchesOnFinish()
@@ -231,14 +264,27 @@ public sealed class LargeProjectBatchTests
         await Assert.ThrowsAsync<HttpRequestException>(()=>client.LargeProject(p.Request,TestContext.Current.CancellationToken));
         Assert.Equal(2,handler.Calls);
     }
-    private sealed class BatchHandler(JsonObject data):HttpMessageHandler
+    [Fact]
+    public async Task RepairRouteBindsParentAndUsesSameBoundedDispatcher()
+    {
+        var p=new Pilot(repair:true);p.Tick(0.25);
+        var data=Data(p);data["parentActionId"]=p.Request.ParentActionId;
+        var handler=new BatchHandler(data,true);
+        using var client=new NativeClient(new(8081,new string('a',64)),handler);
+        await client.LargeProject(p.Request,TestContext.Current.CancellationToken);
+        Assert.Equal(1,handler.Calls);
+        data["parentActionId"]=Session;
+        Assert.Throws<InvalidDataException>(()=>Validate(data,p.Request));
+    }
+    private sealed class BatchHandler(JsonObject data,bool repair=false):HttpMessageHandler
     {
         public int Calls;public bool Fail;
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,CancellationToken ct)
         {
             Calls++;
             Assert.Equal(HttpMethod.Post,request.Method);
-            Assert.Equal("/agent-api/v1/large-project-run",request.RequestUri!.AbsolutePath);
+            Assert.Equal("/agent-api/v1/large-project-"+(repair?"run-repair":"run"),request.RequestUri!.AbsolutePath);
+            if(repair)Assert.Contains("&parentActionId=55555555-5555-5555-5555-555555555555",request.RequestUri.Query);
             Assert.Contains("&speed=7&maxGameHours=24&maxRealSeconds=30",request.RequestUri.Query);
             Assert.Contains("steps=",request.RequestUri.Query);
             Assert.Equal("Bearer",request.Headers.Authorization!.Scheme);

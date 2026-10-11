@@ -1,5 +1,31 @@
 # Spielanleitung für Agenten
 
+## Projektabschluss und Reparatur — begrenzter Livetest bestanden
+
+Fünfteilige Zugangsreparatur samt Originalbau, Abschluss und Folgeprojekt in
+derselben Sitzung geprüft. Belegte Wegzelle und fremde Baustelle abgewiesen:
+
+- `diagnose_large_project` liest aktuelle Objektidentität, Bauzugang, Material-
+  bereitschaft und betroffene Bestandsverbindungen. `lastGuardFailure` bzw.
+  `lastValidationFailure` sind historische Fehlerbelege, andere Werte frisch.
+- Terminales Projekt bei Pause mit `close_large_project` abschließen.
+  Ausschließlich `closeOutcome=released/already_released` bestätigt Freigabe;
+  `rejected` anhand der Diagnose klären. Restteile werden aufgegeben, nicht gebaut.
+  Unbekannte Wirkungen nie durch eine neue ID umgehen.
+- Fehlender Bauzugang: Projekt stoppen, terminalen Zustand und Pause nachlesen,
+  dann `plan_large_project_repair` mit `parentActionId` und zusätzlichen Wegen,
+  Treppen/Plattformen. Bekannte Originalbaustellen sind erlaubter Bestand;
+  keine fremden Baustellen oder verschachtelten Reparaturen einschließen.
+- `run_large_project_repair` mit neuer ID, frischem Plan und festem Budget einmal
+  starten. Die Charge wartet auch auf beauftragte Originalteile; keine Wiederholung
+  ursprünglicher Platzierungen. Danach Originalprojekt schließen, Rest frisch planen.
+- Temporäre Bauten einschließlich Straßen anschließend gezielt entfernen und
+  rücklesen. Dauerhafte Gebäudezugänge zuvor prüfen. Rückgewinnungsstapel nicht
+  mit `remove_debris` löschen: Rohstoffe erhalten und regulär einsammeln lassen;
+  nötige Zugänge bis zur Sammlung belassen. Nach menschlichem Eingriff frisch lesen.
+
+Grenzen und konkreter Pilot: [Projektwiederherstellung](project-recovery.md).
+
 ## Autonome Gesamtpläne — begrenzter Livetest bestanden
 
 Für vorbereitete Gesamtpläne `plan_large_project` → **einmal `run_large_project`** verwenden.

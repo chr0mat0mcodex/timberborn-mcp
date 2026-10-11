@@ -1,5 +1,19 @@
 # Backlog
 
+## Erledigt im begrenzten Pilot 2026-10-11: Projektabschluss, Diagnose, Bauzugangsreparatur
+
+Menschliches Gate und gezielter Livetest bestanden: fünfteilige Reparatur samt
+Originalbau fertig, Folgeprojekt ohne Neuladen, zwei negative Kontrollfälle.
+`diagnose_large_project` trennt frische Identität, Bauzugang, Materialbereitschaft,
+Bestandsverluste und fremde Baustellen; letzte Guard-/Vorprüfungsfehler separat.
+`close_large_project` gibt geklärte terminale Ledger frei, ohne ursprüngliche
+Aufträge wiederaufzunehmen. `plan_large_project_repair`/`run_large_project_repair`
+ergänzen begrenzte Bauhilfen und warten auch auf beauftragte Originalteile.
+Keine globale Baustellenfreigabe; Restplan und Rückbau der Hilfen bleiben explizit.
+[Vertrag, Grenzen und Nachweise](docs/project-recovery.md).
+Damit ist der beauftragte Umfang der nachstehenden historischen P1-Einträge
+begrenzt abgenommen. Allgemeine Wegplanung und Rezeptwahl bleiben separat offen.
+
 ## P0 — Dringend: vollständige Baucharge beauftragen, dann bis fertig simulieren
 
 Explizites Umsetzungs-Go vom 2026-10-11: **Begrenzt live abgenommen.** Zwei

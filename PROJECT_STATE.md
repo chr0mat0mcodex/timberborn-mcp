@@ -1,5 +1,22 @@
 # Projektstand
 
+## 2026-10-11: Projektabschluss und Bauzugangsreparatur — begrenzt live abgenommen
+
+Beauftragte Erweiterung im gemeinsamen 0.37.0-Build: frische Projekt-/Material-/
+Zugangsdiagnose, expliziter Ledgerabschluss ohne Replay und begrenzte Reparatur-
+chargen mit eigenen Wegen, Treppen und Plattformen für bekannte Originalbaustellen.
+Vier neue MCP-Werkzeuge; Bau- und Tempogates sowie Sitzung/Eltern-ID gebunden.
+Alte Aufträge bleiben terminal; unbeauftragte Restteile nach Abschluss neu planen.
+Fremde Baustellen und unbestätigte fehlende Wirkungen bleiben gesperrt.
+Regressionsfälle, Transport-/Katalogverträge und Agentenanleitung ergänzt.
+Menschliches Gate und gezielter Livetest bestanden: unerreichbare Turbine konkret
+diagnostiziert, fünfteilige Zugangsreparatur samt Originalbau autonom fertig.
+Abschluss wiederholbar ohne Replay; neues Lager in derselben Sitzung fertig.
+Belegte Wegzelle und fremde Baustelle korrekt abgewiesen. Alle Testledger frei.
+Nach Rückbau durch Agent und Spieler nur drei ursprüngliche Wege im Testbereich.
+Nutzerkorrektur: Rückgewinnungsrohstoffe künftig erhalten, Stapel nicht löschen.
+[Ablauf, konkrete Nachweise und Grenzen](docs/project-recovery.md).
+
 ## 2026-10-11: Autonome Bauchargen — begrenzte Liveabnahme bestanden
 
 Nach ausdrücklichem Go: `run_large_project` implementiert. Die Mod beauftragt
@@ -14,8 +31,10 @@ Zwei ausführende Starts für 14 Teile, kein Advance oder separater Simulationsl
 Beide Lagereingänge separat zugänglich; fertige Turbine separat bestätigt.
 Negativkontrolle auf Hauptweg: elf gefährdete Verbindungen, Start abgewiesen.
 Ein-Stunden-Kontrolle: blocked/game_time_limit mit Pause; abhängiges Lager fehlt
-nachweislich. Eine unfertige Testturbine bleibt, terminales Ledger sperrt weitere
-Großprojekte dieser Sitzung. Spiel pausiert. Keine Liveaussage zu 32 Teilen/acht
+nachweislich. Anschließend alle 15 Testobjekte einschließlich acht Wegzellen
+und sechs Abrissschuttstapel entfernt; Testflächen nachgelesen, Bestandswege
+erhalten. Terminales Ledger sperrt weiterhin weitere Großprojekte dieser Sitzung.
+Spiel pausiert. Keine Liveaussage zu 32 Teilen/acht
 Ebenen, Kraftbetrieb oder Wiederanschluss mitten im aktiven Lauf.
 [Technik, Grenzen und konkreter Pilot](docs/autonomous-construction-batches.md).
 

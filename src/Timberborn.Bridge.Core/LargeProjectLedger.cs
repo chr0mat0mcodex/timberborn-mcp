@@ -13,6 +13,7 @@ public sealed class LargeProjectLedger
         public int[] Order { get; set; } = Array.Empty<int>();
         public string[] EntityIds { get; set; } = Array.Empty<string>();
         public string[] PartStates { get; set; } = Array.Empty<string>();
+        public bool Released { get; set; }
         public bool RegularExecutionAllowed { get; set; }
     }
     private sealed class Entry
@@ -23,7 +24,7 @@ public sealed class LargeProjectLedger
         public bool PlacementAttempted;
     }
     private readonly Dictionary<string, Entry> entries = new();
-    public bool BlocksNewProject => entries.Values.Any(e => e.Result.State != "completed" && !(e.Result.State == "stopped" && e.Result.Reason == "stop_requested_objects_retained" && !e.PlacementAttempted));
+    public bool BlocksNewProject => entries.Values.Any(e => !e.Result.Released && e.Result.State != "completed" && !(e.Result.State == "stopped" && e.Result.Reason == "stop_requested_objects_retained" && !e.PlacementAttempted));
     public Receipt? Existing(string id, string fingerprint)
     {
         if (!entries.TryGetValue(id, out var entry)) return null;
@@ -34,12 +35,21 @@ public sealed class LargeProjectLedger
     {
         var old = Existing(id, fingerprint); if (old is not null) return old;
         if (entries.Count >= 128 || entries.Values.Any(e =>
-            e.Result.State != "completed" &&
+            !e.Result.Released && e.Result.State != "completed" &&
             !(e.Result.State == "stopped" && e.Result.Reason == "stop_requested_objects_retained" && !e.PlacementAttempted)))
             throw new BridgeRejectionException("state_conflict");
         if (!Guid.TryParseExact(id,"D",out var action) || action==Guid.Empty || order.Length is <1 or >32 || entityIds.Length!=order.Length || !order.OrderBy(x=>x).SequenceEqual(Enumerable.Range(0,order.Length)) || entityIds.Distinct().Count()!=entityIds.Length || entityIds.Any(s=>!Guid.TryParseExact(s,"D",out var value)||value==Guid.Empty)) throw new ArgumentException();
         var result = new Receipt { ActionId=id,PlanKey=key,Order=order.ToArray(),EntityIds=entityIds.ToArray(),PartStates=Enumerable.Repeat("pending",order.Length).ToArray() };
         entries.Add(id,new Entry {Result=result,Fingerprint=fingerprint}); return result;
+    }
+    public void Release(string id, string[] observations)
+    {
+        var r = Get(id).Result;
+        if (r.Released) return;
+        if (r.State is not ("completed" or "stopped" or "unconfirmed") || observations.Length != r.PartStates.Length ||
+            observations.Where((s,i)=>!LargeProjectRecoveryPolicy.Resolved(r.PartStates[i],s)).Any())
+            throw new BridgeRejectionException("state_conflict");
+        r.Released = true;
     }
     public Receipt Inspect(string id) => Get(id).Result;
     private Entry Get(string id) => entries.TryGetValue(id,out var entry)?entry:throw new BridgeRejectionException("state_conflict");
@@ -67,6 +77,7 @@ public sealed class LargeProjectLedger
                     if(now>=e.ConfirmationDeadline) {r.State="unconfirmed";r.Reason="order_or_access_unconfirmed";}
                     return r;
                 }
+                if(state=="construction_unreachable") {r.PartStates[i]="construction";r.State=now>=e.ConfirmationDeadline?"stopped":"waiting";r.Reason="builders_unreachable";return r;}
                 if(state=="construction") {r.PartStates[i]="construction";r.State="waiting";r.Reason="awaiting_construction";return r;}
                 if(state!="finished") throw new InvalidOperationException();
                 r.PartStates[i]="finished";

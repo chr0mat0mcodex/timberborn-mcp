@@ -24,13 +24,14 @@ public sealed class LargeProjectRequest
     public string DistrictId { get; private set; } = "";
     public string ActionId { get; private set; } = "";
     public string PlanKey { get; private set; } = "";
+    public string ParentActionId { get; private set; } = "";
     public string EntityId { get; private set; } = "";
     public int Speed { get; private set; }
     public int MaxGameHours { get; private set; }
     public int MaxRealSeconds { get; private set; }
     public LargeProjectStep[] Steps { get; private set; } = Array.Empty<LargeProjectStep>();
-    public static bool Handles(string path) => path is "/agent-api/v1/large-project-plan" or "/agent-api/v1/large-project-start" or "/agent-api/v1/large-project-run" or "/agent-api/v1/large-project-advance" or "/agent-api/v1/large-project-inspect" or "/agent-api/v1/large-project-stop" or "/agent-api/v1/power-network";
-    public static bool Writes(string operation) => operation is "plan" or "start" or "run" or "advance" or "stop"; // plan uses temporary native previews
+    public static bool Handles(string path) => path is "/agent-api/v1/large-project-plan" or "/agent-api/v1/large-project-start" or "/agent-api/v1/large-project-run" or "/agent-api/v1/large-project-advance" or "/agent-api/v1/large-project-inspect" or "/agent-api/v1/large-project-stop" or "/agent-api/v1/large-project-diagnose" or "/agent-api/v1/large-project-close" or "/agent-api/v1/large-project-plan-repair" or "/agent-api/v1/large-project-run-repair" or "/agent-api/v1/power-network";
+    public static bool Writes(string operation) => operation is "plan" or "start" or "run" or "plan-repair" or "run-repair" or "advance" or "stop" or "close"; // plan uses temporary native previews
 
     public static LargeProjectRequest Parse(string path, NameValueCollection q)
     {
@@ -41,16 +42,16 @@ public sealed class LargeProjectRequest
         var r = new LargeProjectRequest { Operation = operation, Session = Id("session") };
         string[] keys;
         if (operation == "power-network") { r.EntityId = Id("id"); keys = new[] { "session", "id" }; }
-        else if (operation is "plan" or "start" or "run")
+        else if (operation is "plan" or "start" or "run" or "plan-repair" or "run-repair")
         {
             r.DistrictId = Id("districtId"); r.Steps = Decode(One("steps"));
-            keys = operation == "plan" ? new[] { "session", "districtId", "steps" } : new[] { "session", "districtId", "steps", "actionId", "planKey", "mode" };
-            if (operation is "start" or "run")
+            keys = operation is "plan" or "plan-repair" ? new[] { "session", "districtId", "steps" } : new[] { "session", "districtId", "steps", "actionId", "planKey", "mode" };
+            if (operation is "start" or "run" or "run-repair")
             {
                 r.ActionId = Id("actionId"); r.PlanKey = One("planKey");
                 if (One("mode") != "development_pilot" || r.PlanKey.Length != 64 || r.PlanKey.Any(c => !(c is >= '0' and <= '9' or >= 'a' and <= 'f'))) throw new ArgumentException("invalid_plan_or_mode");
             }
-            if (operation == "run")
+            if (operation is "run" or "run-repair")
             {
                 int Number(string key, int min, int max) => int.TryParse(One(key), NumberStyles.None, CultureInfo.InvariantCulture, out int n) && n >= min && n <= max ? n : throw new ArgumentException("invalid_" + key);
                 r.Speed = Number("speed", 1, 7);
@@ -61,6 +62,7 @@ public sealed class LargeProjectRequest
             }
         }
         else { r.ActionId = Id("actionId"); keys = new[] { "session", "actionId" }; }
+        if (operation is "plan-repair" or "run-repair") { r.ParentActionId = Id("parentActionId"); keys = keys.Concat(new[] { "parentActionId" }).ToArray(); if (r.ParentActionId == r.ActionId) throw new ArgumentException("repair_identity_conflict"); }
         if (q.Count != keys.Length || q.AllKeys.Any(k => !keys.Contains(k))) throw new ArgumentException("unexpected_project_argument");
         return r;
     }

@@ -1,5 +1,9 @@
 # Autonome Bauchargen — P0 vom 2026-10-11
 
+Folgeerweiterung nach menschlichem Gate begrenzt live abgenommen:
+[expliziter Projektabschluss, Blockadediagnose und Bauzugangsreparatur](project-recovery.md).
+Die nachstehenden Livebefunde beschreiben die bereits getestete Fassung.
+
 Status: **Menschliches Gate und begrenzte Feature-Livepiloten bestanden (2026-10-11).**
 Ergänzung im gemeinsamen 0.37.0-Build, keine Parallelfassung. Frühere manuelle
 Stützenpiloten sind kein Nachweis dieser neuen Ausführung.
@@ -32,8 +36,11 @@ Der alte Ablauf hätte allein 14 Advance-Aufträge, abschließende Bestätigunge
 und getrennte Simulationsläufe benötigt. Die Standortsuche bleibt ein eigener
 Aufwand; die Beschleunigung betrifft die Ausführung vorbereiteter Pläne.
 
-Endzustand: Spiel pausiert, eine absichtlich unfertige Turbinenbaustelle aus der
-Zeitlimitkontrolle bleibt erhalten. Das terminale Testledger blockiert weitere
+Endzustand nach beauftragtem Aufräumen: alle 15 Testobjekte entfernt, darunter
+acht Wegzellen, zwei Plattformen, eine Treppe, zwei Lager und beide Testturbinen.
+Auch sechs entstandene Schuttstapel entfernt. Alle Testflächen separat ohne
+Testobjekte oder Schutt nachgelesen; ursprüngliche Nachbargebäude und Wege erhalten.
+Spiel pausiert. Das terminale Testledger blockiert weiterhin weitere
 Großprojekte dieser Sitzung entsprechend der bestehenden Diagnosegrenze.
 
 Grenzen: 32 Teile/acht belegte Ebenen nicht live ausgeschöpft. MCP-Abbruch mitten

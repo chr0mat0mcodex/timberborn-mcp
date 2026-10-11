@@ -35,7 +35,7 @@ public sealed class LargeProjectBatch
 
     public LargeProjectBatch(LargeProjectRequest request, string fingerprint, string[] entityIds)
     {
-        if (request.Operation != "run" || entityIds.Length != request.Steps.Length || entityIds.Distinct().Count() != entityIds.Length || entityIds.Any(s => !Guid.TryParseExact(s,"D",out var id) || id == Guid.Empty)) throw new ArgumentException();
+        if (request.Operation is not ("run" or "run-repair") || entityIds.Length != request.Steps.Length || entityIds.Distinct().Count() != entityIds.Length || entityIds.Any(s => !Guid.TryParseExact(s,"D",out var id) || id == Guid.Empty)) throw new ArgumentException();
         Fingerprint = fingerprint;
         dependencies = request.Steps.Select(s => s.DependsOn.ToArray()).ToArray();
         deadlines = new double[entityIds.Length];
@@ -46,7 +46,7 @@ public sealed class LargeProjectBatch
     {
         finishState = state; result.State = "pausing"; result.Reason = reason; result.BlockedPart = part;
     }
-    public void Tick(double now, SimulationRunStatus simulation, bool locked, Func<bool> guard, Func<int,string> observe, Func<int,bool> preflight, Action<int> place, Action cancel, Action beginSimulation)
+    public void Tick(double now, SimulationRunStatus simulation, bool locked, Func<bool> guard, Func<int,string> observe, Func<int,bool> preflight, Action<int> place, Action cancel, Action beginSimulation, Func<bool>? completionReady = null)
     {
         if (Terminal) return;
         result.Simulation = simulation;
@@ -70,7 +70,12 @@ public sealed class LargeProjectBatch
                     {
                         currentPart = i;
                         string observed = observe(i);
-                        if (observed is "construction" or "finished") result.PartStates[i] = observed;
+                        if (observed == "construction_unreachable")
+                        {
+                            result.PartStates[i] = "construction"; // Identity confirmed, access is the failure.
+                            if (now >= deadlines[i]) { Finish("blocked", "builders_unreachable", i); break; }
+                        }
+                        else if (observed is "construction" or "finished") result.PartStates[i] = observed;
                         else if (observed == "mismatch") { Finish("blocked", "object_or_access_mismatch", i); break; }
                         else if (observed is "missing" or "pending")
                         {
@@ -90,8 +95,8 @@ public sealed class LargeProjectBatch
                         try { place(i); }
                         catch { Finish("unconfirmed", "placement_failed_no_retry", i); break; }
                     }
-                    if (finishState is null && result.Finished == result.PartStates.Length) Finish("completed", "all_parts_finished_and_access_observed");
-                    else if (finishState is null) result.Reason = "awaiting_construction_and_dependencies";
+                    if (finishState is null && result.Finished == result.PartStates.Length && (completionReady?.Invoke() ?? true)) Finish("completed", "all_parts_finished_and_access_observed");
+                    else if (finishState is null) result.Reason = result.Finished == result.PartStates.Length ? "awaiting_repaired_sites" : "awaiting_construction_and_dependencies";
                     currentPart = null;
                     if (finishState is null && initialDispatch) beginSimulation();
                 }

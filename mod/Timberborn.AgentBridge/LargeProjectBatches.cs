@@ -14,8 +14,8 @@ public sealed partial class LargeProjectService
     private readonly Dictionary<string, LargeProjectBatch> batches = new();
     private string? activeBatch;
     private double nextBatchObservation;
-    private bool BatchesBlockNewProject => batches.Values.Any(b => b.Inspect().State != "completed" && !(b.Inspect().State == "stopped" && b.Inspect().Ordered == 0));
-    private static string BatchFingerprint(LargeProjectRequest r) => Fingerprint(r) + "|" + r.PlanKey + "|" + r.Speed + "|" + r.MaxGameHours + "|" + r.MaxRealSeconds;
+    private bool BatchesBlockNewProject => batches.Values.Any(b => !releasedProjects.Contains(b.Inspect().ActionId) && b.Inspect().State != "completed" && !(b.Inspect().State == "stopped" && b.Inspect().Ordered == 0));
+    private static string BatchFingerprint(LargeProjectRequest r) => Fingerprint(r) + "|" + r.Operation + "|" + r.ParentActionId + "|" + r.PlanKey + "|" + r.Speed + "|" + r.MaxGameHours + "|" + r.MaxRealSeconds;
     private object StartBatch(LargeProjectRequest r)
     {
         if (batches.TryGetValue(r.ActionId, out var existing))
@@ -23,10 +23,10 @@ public sealed partial class LargeProjectService
             if (existing.Fingerprint != BatchFingerprint(r)) throw new BridgeRejectionException("state_conflict");
             return BatchReceipt(r.ActionId); // Same identity never places, restarts or enlarges budgets.
         }
-        if (jobs.ContainsKey(r.ActionId) || activeBatch is not null || ledger.BlocksNewProject || jobs.Count >= 128 || BatchesBlockNewProject)
+        if (jobs.ContainsKey(r.ActionId) || activeBatch is not null || jobs.Count >= 128 || (r.Operation != "run-repair" && (ledger.BlocksNewProject || BatchesBlockNewProject)))
             throw new BridgeRejectionException("state_conflict");
         simulation.RequireBatchAvailable();
-        var plan = Plan(r);
+        var plan = r.Operation == "run-repair" ? PlanRepair(r) : Plan(r);
         if ((string?)plan["planKey"] != r.PlanKey || (bool?)plan["pilotEligible"] != true) throw new BridgeRejectionException("state_conflict");
         var baseline = roads.Capture();
         if (!baseline.Complete) throw new BridgeRejectionException("state_conflict");
@@ -36,6 +36,7 @@ public sealed partial class LargeProjectService
         // Start owns the one simulation controller; no second runner can compete for speed.
         var run = simulation.StartBatch(r);
         batch.Inspect().Simulation = run;
+        if (r.Operation == "run-repair") repairParents.Add(r.ActionId, r.ParentActionId);
         batches.Add(r.ActionId, batch); jobs.Add(r.ActionId, (r, baseline)); activeBatch = r.ActionId;
         nextBatchObservation = 0;
         UpdateBatch(r.ActionId); // Issue the complete ready set while paused, then start simulation.
@@ -53,19 +54,21 @@ public sealed partial class LargeProjectService
         // All delegates run synchronously on Unity's main thread, between simulation ticks.
         // Native previews are removed before any placement, even while the simulation is running.
         batch.Tick(clock.Elapsed.TotalSeconds, simulation.InspectBatch(id), simulation.SpeedLocked,
-            () => !faulted && ConstructionIsolation.Allows(entities, receipt.EntityIds.Where((_, i) => receipt.PartStates[i] != "pending"), allowOwnedInitialization: true) &&
-                RoadProtectionPolicy.LostConnections(job.Baseline.Before, roads.Read(job.Baseline, false)).Length == 0,
+            () => GuardWithEvidence(id, () => !faulted && ConstructionIsolation.Allows(entities, receipt.EntityIds.Where((_, i) => receipt.PartStates[i] != "pending").Concat(RepairOwned(id)), allowOwnedInitialization: true) &&
+                RoadProtectionPolicy.LostConnections(job.Baseline.Before, roads.Read(job.Baseline, false)).Length == 0 && RepairIdentitiesValid(id)),
             i => Observe(job.Request.Steps[i], receipt.EntityIds[i], District(job.Request.DistrictId)),
-            i => Preflight(job.Request.Steps[i], job.Request.Session, District(job.Request.DistrictId), i),
+            i => Preflight(job.Request.Steps[i], job.Request.Session, District(job.Request.DistrictId), i, id),
             i => {
                 var step = job.Request.Steps[i]; var template = Resolve(step); var spec = template.GetSpec<BlockObjectSpec>();
                 placers.GetMatchingPlacer(spec).Place(new EntitySetup.Builder(template.Blueprint).SetId(Guid.Parse(receipt.EntityIds[i])), Placement(step));
-            }, () => simulation.CancelBatch(id), () => simulation.BeginBatch(id));
+            }, () => simulation.CancelBatch(id), () => simulation.BeginBatch(id), () => RepairFinished(id));
         if (batch.Terminal) { simulation.ReleaseBatch(id); if (activeBatch == id) activeBatch = null; }
     }
     private object BatchReceipt(string id)
     {
         var result = JObject.FromObject(batches[id].Inspect(), JsonSerializer.Create(new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() }));
+        result["released"] = releasedProjects.Contains(id);
+        result["parentActionId"] = repairParents.TryGetValue(id, out var parent) ? parent : null;
         result["limitations"] = JArray.FromObject(new[] { "development_pilot_not_complete_construction_preflight", "all_ready_orders_then_autonomous_simulation", "explicit_dependencies_wait_for_real_finish", "inspect_never_dispatches", "bounded_time_not_material_delivery_guarantee", "manual_speed_change_interrupts_without_override", "no_retry_rollback_or_demolition", "ledger_lost_on_game_reload", "power_and_production_read_separately" });
         return result;
     }
