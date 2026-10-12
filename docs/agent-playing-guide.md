@@ -1,5 +1,32 @@
 # Spielanleitung für Agenten
 
+## 0.53.0 - Sammelpflanzung begrenzt live abgenommen
+
+Menschliches Gate bestanden; nativer Pilot am 12. Oktober 2026 bestaetigt.
+Bis acht Rechtecke je 8x8, gemeinsame native Vorpruefung mit Arbeitsreichweite,
+Feuchte und Belegungsart. Zwei Rechtecke mit acht Zellen live geprueft:
+zwei Markierungen gesetzt, vier passende belassen, fremdes Feld und Weg ausgeschlossen.
+Falsche Pflanzenart/Hoehe und veraltete Vorschau abgewiesen; Zustand frisch gelesen.
+Compact/Full gleiche Summen; Testmarkierungen wiederhergestellt, Endpause bestaetigt.
+Nachweis gilt fuer Markierungen, nicht Wachstum; 512-Zellen-Grenze automatisiert
+getestet, nicht als grosser Liveauftrag. Kleine 0.52-Nacharbeiten im Testgate geprueft.
+Offen: praezisere Ausfuehrungsgewissheit bei nativer Ablehnung und weniger Beispiele
+bereits passender Zellen in Compact. Fruehere sporadische Gatefehler bleiben ohne
+bewiesene Ursache. Kein allgemeiner Aquakultur- oder anderer Fraktionsnachweis.
+[Vertrag und Livepilot](planting-batch-0.53.md).
+
+Pflanzablauf ab 0.53: `inspect_area_types` und passende Arbeitsgebaeude bestimmen,
+dann `preview_planting_batch` mit session, neuer jobId (UUID) und rectangles.
+Je Rechteck x/y/z/width/height/resource/workBuildingId; requireMoist standardmaessig
+true. false ist eine bewusste Freigabe trockener/unbekannter Feuchte, niemals eine
+Umgehung von nativer Pflanzpruefung oder Arbeitsreichweite. Geeignete und
+abgewiesene Zellen vor Auftrag beurteilen; bei Bedarf detail=full lesen.
+Exakt dieselben rectangles plus key an `apply_planting_batch`; danach nur
+`inspect_planting_batch`. Bei unconfirmed nicht neu senden, reale Markierungen
+abgleichen. Nach neuer Spielsession keine alten Auftraege wiederholen.
+Erfolg bedeutet Pflanzmarkierung. Gewachsene Pflanzen erst durch getrennte
+Vegetationsbeobachtung nach einem begrenzten Simulationslauf nachweisen.
+
 ## 0.52.0 begrenzt live abgenommen — Flächenräumung und Gruppenbau
 
 Zusammenhängender Hintergrundablauf: Pflanzmarkierungen entfernen, bis 64
@@ -388,7 +415,7 @@ Codex-Lifecycle (live abgenommen): vor der Testübergabe
 bleibt verbunden. Unterbrochene Aufträge nie ungeprüft erneut senden.
 [Einmalige Einrichtung und Grenzen](codex-mcp-supervisor.md).
 
-Stand: letzter dokumentierter Abschluss Bridge 0.52.0; aktualisiert am 12. Oktober 2026.
+Stand: letzter dokumentierter Abschluss Bridge 0.53.0; aktualisiert am 12. Oktober 2026.
 Diese Anleitung beschreibt die vorhandenen MCP-Fähigkeiten. Aktueller Auftrag
 und Projektregeln stehen in [AGENTS.md](../AGENTS.md) und
 [missionsplan.md](../missionsplan.md); das lokale Spiel ist das freigegebene

@@ -53,8 +53,10 @@ public static class ForestryProtection
             } finally { if (File.Exists(temp)) File.Delete(temp); }
         }
         Save();
+        string stage = "precondition";
         try {
             foreach (var tree in selected) {
+                stage = "precondition";
                 receipt = receipt with { NativeReads = receipt.NativeReads + 1 };
                 var sim = await port.Simulation(ct);
                 if (sim.SessionId != r.Session || sim.Data.CurrentSpeed != 0) throw new BridgeRejectionException("state_conflict");
@@ -69,15 +71,19 @@ public static class ForestryProtection
                         t.Vegetation is { IsTree: true, LifeState: "alive", CutYieldRemoved: false }))
                     throw new BridgeRejectionException("forestry_tree_changed");
                 receipt = receipt with { State = "unconfirmed", Unconfirmed = new(tree.Id, tree.Template, tree.Position), Reason = "protection_acknowledgement_pending_no_retry" };
+                stage = "save_pending";
                 Save();
+                stage = "protect_acknowledgement";
                 var e = await port.Protect(region, tree.Position, ct);
                 if (e.SessionId != r.Session || e.Data.Kind != "tree_cutting" || e.Data.Operation != "remove" ||
                     e.Data.Outcome != "applied" || e.Data.Items.Length != 1 || e.Data.Items[0].Position != tree.Position ||
                     e.Data.Items[0].Resource != "unmarked") throw new InvalidDataException("forestry_protection_unconfirmed");
                 receipt = receipt with { State = "protecting", Confirmed = receipt.Confirmed + 1, Unconfirmed = null, Reason = "" };
+                stage = "save_confirmed";
                 Save();
             }
             // Confirm all changed cells and detect intervening changes elsewhere; never silently undo human input.
+            stage = "readback";
             var after = await ForestrySurvey.ReadMarkings(r.Session, port, ct);
             receipt = receipt with { NativeReads = receipt.NativeReads + after.NativeReads };
             var expected = new HashSet<Position>(before.MarkedCells);
@@ -85,12 +91,24 @@ public static class ForestryProtection
             bool matches = expected.SetEquals(after.MarkedCells);
             receipt = receipt with { State = matches ? "completed" : "stopped", ReadbackConfirmed = matches,
                 Reason = matches ? "cutting_removed_other_markings_unchanged_not_persistent_protection" : "cutting_changed_during_protection_read_again" };
+            stage = "save_readback";
             Save();
         } catch (Exception ex) when (ex is IOException or InvalidDataException or ArgumentException or HttpRequestException or OperationCanceledException or JsonException) {
             if (receipt.Unconfirmed is null) receipt = receipt with { State = "stopped",
-                Reason = ex is BridgeRejectionException rejection ? rejection.Code : "precondition_or_readback_failure_no_retry" };
+                // No exception message: it can contain private paths or transport data.
+                Reason = ex is BridgeRejectionException rejection ? rejection.Code :
+                    $"{stage}_{FailureKind(ex)}_{ex.HResult:X8}_no_retry" };
             Save();
         }
         return ForestryTools.Wrap(receipt, r.Session, null);
     }
+
+    private static string FailureKind(Exception ex) => ex switch {
+        InvalidDataException => "invalid_data",
+        IOException => "io",
+        OperationCanceledException => "cancelled",
+        HttpRequestException => "transport",
+        JsonException => "json",
+        _ => "argument"
+    };
 }

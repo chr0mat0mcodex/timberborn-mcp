@@ -69,6 +69,44 @@ class LifecycleTests(unittest.TestCase):
         self.assertIsNotNone(self.server.process)
         self.assertFalse(self.server.gate.exists())
 
+    def test_restart_storage_errors_identify_phase_and_do_not_retry(self):
+        self.initialize()
+        self.assertIn("result", self.control("stop"))
+        original = module.atomic_json
+        failures = []
+
+        def fail_catalog(path, value):
+            if path == self.server.catalog:
+                failures.append(path)
+                raise PermissionError(13, "private_path_must_not_escape")
+            return original(path, value)
+
+        with patch.object(module, "atomic_json", side_effect=fail_catalog), \
+                patch.object(module, "print") as diagnostic:
+            result = self.control("start")
+        self.assertIn("start_catalog_write", result["error"]["message"])
+        self.assertIn("errno=13", result["error"]["message"])
+        self.assertNotIn("private_path", json.dumps(result))
+        diagnostic.assert_called()
+        self.assertEqual(1, len(failures))
+        self.assertIsNone(self.server.process)
+        self.assertIsNone(self.server.reader_thread)
+
+    def test_start_publish_failure_is_not_retried_during_cleanup(self):
+        self.server.closed.set()
+        self.server.watcher.join(timeout=3)
+        self.assertFalse(self.server.watcher.is_alive())
+        # Suppress only the watcher; start still observes an open connection.
+        with patch.object(self.server.closed, "is_set", return_value=False), \
+                patch.object(self.server, "publish", side_effect=[None, PermissionError(13, "private_status")]) as publish, \
+                patch.object(module, "print"):
+            result = self.control("start")
+        self.assertIn("start_status_write", result["error"]["message"])
+        self.assertNotIn("private_status", json.dumps(result))
+        self.assertEqual(2, publish.call_count)  # Initial stop + final start; no cleanup write.
+        self.assertIsNone(self.server.process)
+        self.assertIsNone(self.server.reader_thread)
+
     def test_pending_action_is_failed_without_replay(self):
         self.initialize()
         result = queue.Queue()

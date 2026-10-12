@@ -1,5 +1,20 @@
 # Backlog
 
+## 0.53.0 - Sammelpflanzung begrenzt live abgenommen
+
+Menschliches Gate bestanden; nativer Pilot am 12. Oktober 2026 bestaetigt.
+Bis acht Rechtecke je 8x8, gemeinsame native Vorpruefung mit Arbeitsreichweite,
+Feuchte und Belegungsart. Zwei Rechtecke mit acht Zellen live geprueft:
+zwei Markierungen gesetzt, vier passende belassen, fremdes Feld und Weg ausgeschlossen.
+Falsche Pflanzenart/Hoehe und veraltete Vorschau abgewiesen; Zustand frisch gelesen.
+Compact/Full gleiche Summen; Testmarkierungen wiederhergestellt, Endpause bestaetigt.
+Nachweis gilt fuer Markierungen, nicht Wachstum; 512-Zellen-Grenze automatisiert
+getestet, nicht als grosser Liveauftrag. Kleine 0.52-Nacharbeiten im Testgate geprueft.
+Offen: praezisere Ausfuehrungsgewissheit bei nativer Ablehnung und weniger Beispiele
+bereits passender Zellen in Compact. Fruehere sporadische Gatefehler bleiben ohne
+bewiesene Ursache. Kein allgemeiner Aquakultur- oder anderer Fraktionsnachweis.
+[Vertrag und Livepilot](docs/planting-batch-0.53.md).
+
 ## 0.52.0 begrenzt live abgenommen — Flächenräumung und Gruppenbau
 
 Zusammenhängender Hintergrundablauf: Pflanzmarkierungen entfernen, bis 64
@@ -32,7 +47,7 @@ Zweiergruppe samt Treppe/zwei Wegen autonom fertig: 3,65625 Spielstunden,
 Fünf Testobjekte entfernt, keine Rohstoffe gelöscht, Endpause bestätigt.
 [Vertrag und Abnahmepilot](docs/group-search-0.51.md).
 
-Stand: 2026-10-12, nach begrenzter Liveabnahme von **0.52.0**.
+Stand: 2026-10-12, nach begrenzter Liveabnahme von **0.53.0**.
 Diese Liste trennt noch offene Fähigkeiten von abgeschlossenen Teilumfängen.
 Vorschläge sind keine Implementierungsfreigabe. Test-Gate unverändert:
 [Entwicklungsablauf](DEVELOPMENT_WORKFLOW.md).
@@ -46,7 +61,7 @@ Alle bisherigen Beobachtungen bleiben im [historischen Backlog](BACKLOG_HISTORY.
 | B02 | Reservierungen und Gesamtplanung | 0.51: bis acht Ausschlussvolumen für einen Gruppenplan vorhanden. Offen: dauerhafte Reservierungen, planübergreifende Korridore und Suchabdeckung; keine globale Siedlungsoptimierung. |
 | B03 | Kraft- und Höhenrouten planen | Ports, Netze, explizite Höhenpläne und Zugangshilfen existieren. Offen: allgemeine automatische Routenauswahl, Alternativstandorte und kombinierte Versorgungslayouts mit getrenntem Geometrie-/Netz-/Betriebsnachweis. |
 | B04 | Flächenumwidmung in Gruppenpläne integrieren | 0.52 begrenzt live abgenommen: eine Fläche bis 8×8 → Räumung → gemeinsame Gruppe. Rohstoffstapel ignoriert, keine Löschung. Größere/mehrere Flächen bleiben offen. |
-| B05 | Flächenvorprüfung und Sammelpflanzung | Konkrete blockierte Zellen/Belegungsarten vor Flächenaktionen, begrenzte Mehrrechteck-Aufträge sowie Feuchte mit tatsächlicher Arbeitsreichweite verbinden. 0.50-Belegungskontext ersetzt keine native Pflanzprüfung. |
+| B05 | Flächenvorprüfung und Sammelpflanzung | 0.53 begrenzt abgenommen: Zweiflaechenpilot, Ausschluesse und veraltete Vorschau bestanden. Wachstum/Aquakultur nicht nachgewiesen. |
 | B06 | Projekte über Sitzungswechsel wiederaufnehmen | Wiederanschluss innerhalb derselben Spielsession funktioniert. Offen: gespeicherte Absichten nach Neuladen mit realen Objekten abgleichen; alte Aktionen nicht blind wiederholen. |
 | B07 | Produktionsketten planen | Rezeptwahl, gemeinsame Einrichtung, Engpässe und Produktionsläufe existieren. Offen: Zutatenquellen, Lager/Transport, Personal und Kraft bereits vor Bau als gemeinsamen Ausbauplan berücksichtigen. |
 | B08 | Weitere Produktions- und Wirkungsnachweise | Produktionsnachweis bisher für Manufactory. Weitere Produzenten und reale Effektzellen/aktive Ziele etwa des Bienenstocks separat erschließen; Reichweite ist kein Wirkungsnachweis. |
@@ -126,8 +141,19 @@ nicht aus dem Versionsnamen automatisch als abgenommen behandeln.
 ## Folgebeobachtungen aus 0.52
 
 - Compact ist im Zweierpilot 92,2 % kleiner (67.790 auf 5.268 JSON-Zeichen),
-  enthält aber noch viele leere Produktionsfelder im Räumlauf. Weiter kürzen.
+  enthält aber noch viele leere Produktionsfelder im Räumlauf. In 0.53 gekuerzt; automatischer Nachweis im bestandenen Gate.
 - Ungültige jobId wurde korrekt vor Transport abgewiesen; die allgemeine
-  Fehlermeldung verschweigt jedoch die konkrete UUID-Anforderung. Diagnose verbessern.
+  Fehlermeldung verschweigt jedoch die konkrete UUID-Anforderung. Feste Hinweise in 0.53 implementiert und im Gate geprueft.
 - B12 bleibt: neue Werkzeuge wurden erst nach Codex-Neustart verfügbar,
   obwohl der Vorschaltprozess bereits den aktuellen Katalog meldete.
+
+## Nacharbeiten aus dem 0.53-Livepilot
+
+- Native Ablehnung planting_preview_changed vor Mutation wird im MCP noch als
+  execution=unconfirmed gemeldet. Konservativ, aber ungenau; gesicherten
+  Ablehnungsnachweis gesondert abbilden, echte Transportunsicherheit erhalten.
+- Compact nimmt already_marked-Zellen in excludedExamples auf: beim Achtzellenpilot
+  2372 statt 2880 JSON-Zeichen (17,6 Prozent kleiner). Passende Zellen nur zaehlen,
+  Beispiele fuer entscheidungsrelevante Blockaden reservieren.
+- MCP-Aufrufe bleiben seriell: parallele Leser werden sofort abgewiesen. Die neue
+  feste Argumentdiagnose nennt den laufenden Aufruf korrekt; keine Warteschlange.

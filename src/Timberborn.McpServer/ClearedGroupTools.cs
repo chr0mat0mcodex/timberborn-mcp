@@ -66,7 +66,7 @@ public sealed class ClearedGroupTools(IClearedGroupPort port,string directory) :
     {
         if(!Handles(name) || !enabled && name is Plan or Start)throw new ArgumentException("cleared_group_actions_disabled");
         if(name==Plan) {
-            var request=BuildBatchState.Parse<ClearedGroupPreview>(args);if(request.Spec is null)throw new ArgumentException();
+            var request=ArgumentDiagnostics.Parse<ClearedGroupPreview>(args);if(request.Spec is null)throw new ArgumentException();
             ClearedGroupPolicy.Validate(request.Spec);Detail(request.Detail);
             if(Active)throw new ArgumentException("cleared_group_active");
             await port.RequirePaused(request.Spec,ct);var observation=await port.Observe(request.Spec,true,ct);await port.RequirePaused(request.Spec,ct);
@@ -81,10 +81,10 @@ public sealed class ClearedGroupTools(IClearedGroupPort port,string directory) :
         string session,id,detail;
         ClearedGroupStart? start=null;
         if(name==Start) {
-            start=BuildBatchState.Parse<ClearedGroupStart>(args);if(start.Spec is null)throw new ArgumentException();
+            start=ArgumentDiagnostics.Parse<ClearedGroupStart>(args);if(start.Spec is null)throw new ArgumentException();
             ClearedGroupPolicy.Validate(start.Spec);session=start.Spec.Session;id=start.Spec.JobId;detail=start.Detail;
             if(start.ClearanceKey is null || start.ClearanceKey.Length!=64 || start.ClearanceKey.Any(c=>!char.IsAsciiHexDigit(c)))throw new ArgumentException("invalid_clearance_key");
-        } else {var h=BuildBatchState.Parse<ClearedGroupHandle>(args);session=h.Session;id=h.JobId;detail=h.Detail;}
+        } else {var h=ArgumentDiagnostics.Parse<ClearedGroupHandle>(args);session=h.Session;id=h.JobId;detail=h.Detail;}
         Detail(detail);BuildBatchState.Id(session);BuildBatchState.Id(id);
         JsonObject? node;lock(sync)node=running?.Spec.Session==session && running.Spec.JobId==id?snapshot?.DeepClone().AsObject():null;
         node??=Read(session,id);
@@ -133,6 +133,7 @@ public sealed class ClearedGroupTools(IClearedGroupPort port,string directory) :
         return Wrap(session,node);
     }
     public static void Compact(JsonObject node) {
+        if(node["clearanceRun"] is JsonObject run)RunReportPresentation.Compact(run);
         if(node["observation"] is JsonObject o) {
             node["observedObjects"]=o["objects"] is JsonArray objects?objects.Count:0;node.Remove("observation");
         }

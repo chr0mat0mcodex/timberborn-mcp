@@ -24,7 +24,7 @@ public sealed class ForestryRangeTests
         public int Writes, TreeReads;
         public int BulkPageSize { get; set; } = 32;
         public int LoseAfter = 1;
-        public bool Supported = true, LostAck, ChangeTarget, ChangeOther, BadPage, BadCutPage, Unpaused;
+        public bool Supported = true, LostAck, ChangeTarget, ChangeOther, BadPage, BadCutPage, Unpaused, FailReadback;
         public int? RangeTotal;
         public Port() { Cells = Objects.Take(4).Select(t => t.Position).ToArray(); Marks = Objects.Select(t => t.Position).ToHashSet(); }
         private static Task<BridgeEnvelope<T>> E<T>(T data) => Task.FromResult(new BridgeEnvelope<T>(1, Session, DateTimeOffset.UnixEpoch, "0.37.0", data));
@@ -38,6 +38,7 @@ public sealed class ForestryRangeTests
                 all.Skip(offset).Take(BulkPageSize).ToArray(), offset + BulkPageSize < all.Length, [], "native"));
         }
         public Task<BridgeEnvelope<NativeAreas>> Cutting(int offset, CancellationToken ct) {
+            if (FailReadback && Writes > 0) throw new IOException("private_diagnostic_must_not_escape");
             var all = Marks.OrderBy(p => p.Z).ThenBy(p => p.Y).ThenBy(p => p.X).Select(p => new NativeAreaCell(p, "marked")).ToArray();
             return E(new NativeAreas("tree_cutting", true, offset, BulkPageSize, BadCutPage ? all.Length + 1 : all.Length, all.Skip(offset).Take(BulkPageSize).ToArray(), offset + BulkPageSize < all.Length, []));
         }
@@ -156,7 +157,9 @@ public sealed class ForestryRangeTests
             var request = new ForestryProtectionRequest(Session, Session, "SyntheticPine", Action);
             var args = JsonSerializer.SerializeToElement(request, NativeJson.Options);
             var result = await ForestryTools.Execute(ForestryTools.Protect, args, true, port, dir, TestContext.Current.CancellationToken);
-            Assert.Equal(lostAck ? "unconfirmed" : "completed", result["data"]!["state"]!.GetValue<string>());
+            string expectedState = lostAck ? "unconfirmed" : "completed";
+            Assert.True(result["data"]!["state"]!.GetValue<string>() == expectedState,
+                $"Expected {expectedState}; forestry receipt: {result["data"]!.ToJsonString()}; writes={port.Writes}");
             Assert.Equal(!lostAck, result["data"]!["readbackConfirmed"]!.GetValue<bool>());
             Assert.Equal(lostAck ? 1 : 2, port.Writes);
             foreach (var tree in port.Objects.Skip(2)) Assert.Contains(tree.Position, port.Marks);
@@ -208,6 +211,25 @@ public sealed class ForestryRangeTests
             Assert.Equal("completed", result["data"]!["state"]!.GetValue<string>());
             Assert.Equal(0, result["data"]!["selected"]!.GetValue<int>());
             Assert.Equal(0, noop.Writes);
+        } finally { if (Directory.Exists(dir)) Directory.Delete(dir, true); }
+    }
+
+    [Fact]
+    public async Task Readback_failure_reports_phase_without_private_message_and_never_replays()
+    {
+        var port = new Port { FailReadback = true };
+        string dir = Path.Combine(Path.GetTempPath(), "forestry-range-" + Guid.NewGuid().ToString("N"));
+        try {
+            var args = JsonSerializer.SerializeToElement(new ForestryProtectionRequest(Session, Session, "SyntheticPine", Action), NativeJson.Options);
+            var result = await ForestryTools.Execute(ForestryTools.Protect, args, true, port, dir, TestContext.Current.CancellationToken);
+            Assert.Equal("stopped", result["data"]!["state"]!.GetValue<string>());
+            Assert.StartsWith("readback_io_", result["data"]!["reason"]!.GetValue<string>());
+            Assert.DoesNotContain("private_diagnostic", result.ToJsonString());
+            Assert.Equal(2, result["data"]!["confirmed"]!.GetValue<int>());
+            Assert.False(result["data"]!["readbackConfirmed"]!.GetValue<bool>());
+            var replay = await ForestryTools.Execute(ForestryTools.Protect, args, true, port, dir, TestContext.Current.CancellationToken);
+            Assert.Equal(result["data"]!.ToJsonString(), replay["data"]!.ToJsonString());
+            Assert.Equal(2, port.Writes);
         } finally { if (Directory.Exists(dir)) Directory.Delete(dir, true); }
     }
 

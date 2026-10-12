@@ -137,6 +137,20 @@ def atomic_json(path, value):
                 temp.unlink()
 
 
+@contextmanager
+def lifecycle_step(stage):
+    try:
+        yield
+    except Exception as error:
+        # Fixed stage names and numeric OS codes only; never paths or config.
+        kind = "os_error" if isinstance(error, OSError) else "operation_error"
+        codes = " ".join("{}={}".format(name, value) for name in ("errno", "winerror")
+                         for value in (getattr(error, name, None),) if isinstance(value, int))
+        detail = "Supervisor {} failed: {}{}".format(stage, kind, " " + codes if codes else "")
+        print(detail, file=sys.stderr)
+        raise RuntimeError(detail) from error
+
+
 def request_stop(runtime, timeout=10):
     runtime.mkdir(parents=True, exist_ok=True)
     ticket = uuid.uuid4().hex
@@ -315,14 +329,16 @@ class Supervisor:
             if self.closed.is_set():
                 raise RuntimeError("Supervisor connection is closing")
             if explicit and self.gate.exists():
-                with lifecycle_file_lock(self.gate):
+                with lifecycle_step("start_gate_release"), lifecycle_file_lock(self.gate):
                     self.gate.unlink(missing_ok=True)
             if self.gate.exists():
                 return
             if self.process is not None and self.process.poll() is None:
                 return
-            self.stop()
-            self.process = subprocess.Popen(self.command, cwd=str(ROOT), env=self.env,
+            with lifecycle_step("start_previous_cleanup"):
+                self.stop()
+            with lifecycle_step("start_spawn"):
+                self.process = subprocess.Popen(self.command, cwd=str(ROOT), env=self.env,
                                             stdin=subprocess.PIPE, stdout=subprocess.PIPE,
                                             stderr=None, text=True, encoding="utf-8", bufsize=1,
                                             creationflags=subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0)
@@ -343,14 +359,21 @@ class Supervisor:
                 self.tools = listing["result"]["tools"]
                 if any(t["name"] == CONTROL for t in self.tools):
                     raise RuntimeError("Lifecycle tool name collision")
-                atomic_json(self.catalog, self.tools)
+                with lifecycle_step("start_catalog_write"):
+                    atomic_json(self.catalog, self.tools)
                 if self.gate.exists():
                     self.stop()
-                self.publish()
+                with lifecycle_step("start_status_write"):
+                    self.publish()
                 if self.initialized:
                     self.send({"jsonrpc": "2.0", "method": "notifications/tools/list_changed"})
             except Exception:
-                self.stop()
+                # Storage may be the original failure. Stop the owned child
+                # without another write masking that error or acknowledging a gate.
+                try:
+                    self.stop(publish=False)
+                except Exception:
+                    print("Supervisor start cleanup incomplete; build remains blocked", file=sys.stderr)
                 raise
 
     def handle(self, request):
@@ -398,7 +421,13 @@ class Supervisor:
             self.send({"jsonrpc": "2.0", "id": ident, "result": result})
         except Exception as error:
             # Only controlled errors are returned; no paths/configuration contents.
-            detail = str(error) if isinstance(error, (RuntimeError, ValueError)) else "Supervisor operation failed; see local diagnostics"
+            if isinstance(error, (RuntimeError, ValueError)):
+                detail = str(error)
+            else:
+                detail = "Supervisor operation failed: {} errno={} winerror={}".format(
+                    "os_error" if isinstance(error, OSError) else "operation_error",
+                    getattr(error, "errno", None), getattr(error, "winerror", None))
+                print(detail, file=sys.stderr)
             self.send({"jsonrpc": "2.0", "id": ident, "error": {"code": -32000, "message": detail}})
 
     def close(self):

@@ -9,12 +9,14 @@ MCP-Livetest. Keine historische Kolonie oder konkreter Spielstand erforderlich.
 
 ## Aktueller Auftrag
 
-0.52 Flächenräumung und gemeinsamer Gruppenbau ist begrenzt live abgenommen.
-Nächste Erweiterung nach dem bereinigten Backlog auswählen. [Vertrag](docs/cleared-building-groups-0.52.md).
+0.53 Sammelpflanzung begrenzt live abgenommen; menschliches Gate bestanden.
+Zwei Rechtecke, Ausschluesse und veraltete Vorschau getestet; Testmarkierungen
+wiederhergestellt, Spiel pausiert. [Nachweise und Grenzen](docs/planting-batch-0.53.md).
+Naechste Erweiterung anhand BACKLOG.md auswaehlen, keinen Kolonieaufbau fortsetzen.
 
 ## Technischer Stand
 
-Letzter dokumentierter Abschluss: **0.52.0**, begrenzt live abgenommen.
+Letzter dokumentierter Abschluss: **0.53.0**, begrenzt live abgenommen.
 Gruppenplanung bis acht Gebäude mit gemeinsamer Flächenbeobachtung,
 Rückwärtssuche und bis acht Ausschlussvolumen für den konkreten Plan.
 Grenzen: 32 Teile, 32×32, acht belegte Höhen; höchstens 32 native Vorschauen und

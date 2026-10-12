@@ -1,5 +1,20 @@
 # Timberborn MCP
 
+## 0.53.0 - Sammelpflanzung begrenzt live abgenommen
+
+Menschliches Gate bestanden; nativer Pilot am 12. Oktober 2026 bestaetigt.
+Bis acht Rechtecke je 8x8, gemeinsame native Vorpruefung mit Arbeitsreichweite,
+Feuchte und Belegungsart. Zwei Rechtecke mit acht Zellen live geprueft:
+zwei Markierungen gesetzt, vier passende belassen, fremdes Feld und Weg ausgeschlossen.
+Falsche Pflanzenart/Hoehe und veraltete Vorschau abgewiesen; Zustand frisch gelesen.
+Compact/Full gleiche Summen; Testmarkierungen wiederhergestellt, Endpause bestaetigt.
+Nachweis gilt fuer Markierungen, nicht Wachstum; 512-Zellen-Grenze automatisiert
+getestet, nicht als grosser Liveauftrag. Kleine 0.52-Nacharbeiten im Testgate geprueft.
+Offen: praezisere Ausfuehrungsgewissheit bei nativer Ablehnung und weniger Beispiele
+bereits passender Zellen in Compact. Fruehere sporadische Gatefehler bleiben ohne
+bewiesene Ursache. Kein allgemeiner Aquakultur- oder anderer Fraktionsnachweis.
+[Vertrag und Livepilot](docs/planting-batch-0.53.md).
+
 ## 0.52.0 begrenzt live abgenommen — Flächenräumung und Gruppenbau
 
 Zusammenhängender Hintergrundablauf: Pflanzmarkierungen entfernen, bis 64
@@ -70,7 +85,7 @@ Beobachtung und kontrollierte Eingriffe über reguläre Spielservices.
 
 ## Status
 
-Aktueller dokumentierter Abschluss: **0.52.0**. Die folgenden
+Aktueller dokumentierter Abschluss: **0.53.0**. Die folgenden
 Versionsabschnitte sind historische Teilabnahmen, keine parallel aktuellen Stände.
 Offene Fähigkeiten stehen im [Backlog](BACKLOG.md).
 

@@ -2,7 +2,7 @@
 
 ## Einordnung zum aktuellen Stand
 
-Letzter dokumentierter Abschluss: 0.52.0. Neuere feature-spezifische Nachweise
+Letzter dokumentierter Abschluss: 0.53.0. Neuere feature-spezifische Nachweise
 stehen im [Projektstand](../../PROJECT_STATE.md) und den verlinkten Fachverträgen.
 Die historischen Nachweise unten sind keine pauschale Abnahme neuer Fraktionen,
 Karten oder Spielversionen.

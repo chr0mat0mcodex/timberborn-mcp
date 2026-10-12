@@ -107,3 +107,23 @@ der Testfixture. Warteprüfung, erfolgreicher Austausch, Inhalt und restlose
 Bereinigung des getesteten Schreibvorgangs bleiben unverändert geprüft.
 Nur Testisolation geändert, kein Lifecycle-Code und keine Retries. Ausführung
 der Korrektur erfolgte im anschließenden menschlichen Gate vor erneuter Bereitmeldung.
+
+## Offene Gate-Diagnose in 0.53
+
+Der menschliche Stop/Start-Test scheiterte am erneuten Start mit einer generischen
+Fehlermeldung. Die darin versprochene lokale Diagnose wurde bisher nicht geschrieben;
+die ursprüngliche Betriebssystemursache ist deshalb nicht nachgewiesen.
+Startphasen Gate-Freigabe, vorheriger Prozessabschluss, Prozesserzeugung,
+Katalogspeicherung und Statusspeicherung liefern jetzt feste Phasennamen und
+numerische Betriebssystemfehler nach stderr und im Fehlerergebnis, ohne Pfade
+oder Konfigurationsinhalte. Scheitert der Start nach Prozesserzeugung, beendet
+der Fehlerpfad das Backend ohne erneutes Statusschreiben; ein solcher zweiter
+Speicherfehler darf die ursprüngliche Ursache nicht verdecken.
+Zwei vorbereitete Regressionen erzwingen Katalog- bzw. Statusschreibfehler und
+prüfen Diagnose, Prozessbereinigung und ausbleibende Schreibwiederholung.
+Statisch geprüft; menschliche Ausführung und Abnahme noch offen. Kein Nachweis,
+dass die unbekannte Ursache des gemeldeten Startfehlers damit behoben ist.
+
+Nachtrag: menschliches Gate anschliessend bestanden; expliziter Backendstart
+und Bridgekontakt 0.53.0 live bestaetigt. Die urspruengliche sporadische Ursache
+bleibt unbekannt; kein neuer Nachweis eines provozierten Speicherfehlers live.

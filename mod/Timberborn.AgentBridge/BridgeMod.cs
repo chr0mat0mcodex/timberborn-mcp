@@ -27,7 +27,7 @@ public sealed class BridgeConfigurator : Configurator
         Bind<BuildingObservations>().AsSingleton(); Bind<ConstructionAccessPreview>().AsSingleton();
         Bind<WorkforceObservations>().AsSingleton();
         Bind<WorkplaceStaffing>().AsSingleton();
-        Bind<PriorityAndConstruction>().AsSingleton(); Bind<AreaManagement>().AsSingleton(); Bind<RemovalManagement>().AsSingleton();
+        Bind<PriorityAndConstruction>().AsSingleton(); Bind<AreaManagement>().AsSingleton(); Bind<PlantingBatchService>().AsSingleton(); Bind<RemovalManagement>().AsSingleton();
         Bind<RoadProtection>().AsSingleton(); Bind<SiteValidation>().AsSingleton();
         Bind<BuildingProjectExecution>().AsSingleton(); Bind<VerticalStairExecution>().AsSingleton(); Bind<PilotPlacement>().AsSingleton();
         Bind<SimulationControl>().AsSingleton();
@@ -37,7 +37,7 @@ public sealed class BridgeConfigurator : Configurator
 
 public sealed class BridgeMod(Timberborn.CameraSystem.CameraService cameraService, ResourceCountingService resources, PopulationService population,
     EntityRegistry entities, ITerrainService terrain, IThreadSafeWaterMap water, ISoilMoistureService soilMoisture, IGoodService goods,
-    ModRepository mods, SpatialObservations spatial, SiteValidation validation, PilotPlacement placement, BuildingObservations buildings, SimulationControl simulation, WorkforceObservations workforce, WorkplaceStaffing staffing, PriorityAndConstruction management, AreaManagement areas, RemovalManagement removal, BuildingCatalog catalog, BuildingSettings settings, ActivityLog activityLog, ActivityLogWindow activityWindow, Research research, EconomyObservations economy, LogisticsObservations logistics, DiagnosticsObservations diagnostics, ProductionGraph productionGraph, SelectionObservations selection, BuildingProjectPlanner projectPlanner, BuildingProjectExecution projectExecution, VerticalStairExecution verticalStairExecution, LargeProjectService largeProjects, RecentActionsJournal journal, BuildingConfigurationService configuration)
+    ModRepository mods, SpatialObservations spatial, SiteValidation validation, PilotPlacement placement, BuildingObservations buildings, SimulationControl simulation, WorkforceObservations workforce, WorkplaceStaffing staffing, PriorityAndConstruction management, AreaManagement areas, PlantingBatchService plantingBatch, RemovalManagement removal, BuildingCatalog catalog, BuildingSettings settings, ActivityLog activityLog, ActivityLogWindow activityWindow, Research research, EconomyObservations economy, LogisticsObservations logistics, DiagnosticsObservations diagnostics, ProductionGraph productionGraph, SelectionObservations selection, BuildingProjectPlanner projectPlanner, BuildingProjectExecution projectExecution, VerticalStairExecution verticalStairExecution, LargeProjectService largeProjects, RecentActionsJournal journal, BuildingConfigurationService configuration)
     : ILoadableSingleton, IUnloadableSingleton, IUpdatableSingleton
 {
     private readonly MainThreadQueue queue = new();
@@ -84,12 +84,12 @@ public sealed class BridgeMod(Timberborn.CameraSystem.CameraService cameraServic
             screenshots=host.AddComponent<ScreenshotCapture>();
         }
         var data=await screenshots.Capture(request.Screenshot,cameraService);
-        return JsonConvert.SerializeObject(new { schemaVersion=1,sessionId,observedAtUtc=DateTimeOffset.UtcNow,bridgeVersion="0.52.0",data });
+        return JsonConvert.SerializeObject(new { schemaVersion=1,sessionId,observedAtUtc=DateTimeOffset.UtcNow,bridgeVersion="0.53.0",data });
     }
     private string Observe(BridgeRequest request)
     {
         if(request.LargeProject is not null && request.Session!=sessionId)throw new BridgeRejectionException("stale_session");
-        if ((request.Configuration is not null || request.RecentActions is not null || request.BuildingQuery?.Session.Length>0 || request.ProjectExecution is not null || request.VerticalStair is not null || request.ProjectValidation is not null || request.BuildingPlan is not null || request.SimulationRun is not null || request.Diagnostics is not null && request.Diagnostics.Route!="needs" || request.Logistics is not null && request.Logistics.Route!="good-history" || request.Research?.Write == true || request.Settings is not null || request.Route is "selection" or "alert-targets" or "building-validation" or "building-placement" or "site-validation" or "path-placement" or "lodge-placement" or "building" or "simulation-speed" or "workplace-staffing" or "priority" or "set-priority" or "set-area" or "remove-object") && request.Session != sessionId) throw new BridgeRejectionException("stale_session");
+        if ((request.PlantingBatch is not null || request.Configuration is not null || request.RecentActions is not null || request.BuildingQuery?.Session.Length>0 || request.ProjectExecution is not null || request.VerticalStair is not null || request.ProjectValidation is not null || request.BuildingPlan is not null || request.SimulationRun is not null || request.Diagnostics is not null && request.Diagnostics.Route!="needs" || request.Logistics is not null && request.Logistics.Route!="good-history" || request.Research?.Write == true || request.Settings is not null || request.Route is "selection" or "alert-targets" or "building-validation" or "building-placement" or "site-validation" or "path-placement" or "lodge-placement" or "building" or "simulation-speed" or "workplace-staffing" or "priority" or "set-priority" or "set-area" or "remove-object") && request.Session != sessionId) throw new BridgeRejectionException("stale_session");
         object RecordActivity()
         {
             var a=request.Activity!;
@@ -99,6 +99,7 @@ public sealed class BridgeMod(Timberborn.CameraSystem.CameraService cameraServic
         using var journalScope=journal.Scope(request.Route);
         object data = request.Route switch
         {
+            "planting-preview" or "planting-apply" or "planting-status" => plantingBatch.Handle(request.PlantingBatch!),
             "configure-buildings" or "building-configuration" => configuration.Handle(request.Configuration!),
             "recent-actions" => journal.Read(request.RecentActions!),
             "large-project" => largeProjects.Handle(request.LargeProject!),
@@ -130,7 +131,7 @@ public sealed class BridgeMod(Timberborn.CameraSystem.CameraService cameraServic
             _ => throw new ArgumentException("invalid_request")
         };
         return JsonConvert.SerializeObject(new { schemaVersion = 1, sessionId, observedAtUtc = DateTimeOffset.UtcNow,
-            bridgeVersion = "0.52.0", data });
+            bridgeVersion = "0.53.0", data });
     }
     private object Snapshot()
     {
