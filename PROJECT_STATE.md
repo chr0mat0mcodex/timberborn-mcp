@@ -1,5 +1,16 @@
 # Projektstand
 
+## 0.54.0 - Pflanzen- und Flaechenjournal begrenzt live abgenommen
+
+Menschliches Gate und Abschluss-Livetest am 12. Oktober 2026 bestanden.
+Pflanz-/Faellmarkierungen, reale Pflanzenwechsel und Baum-/Stumpfunterscheidung
+mit ehrlicher Herkunft; Compact/Full, Filter und Cursor live bestaetigt.
+Menschliche Eingriffe bleiben unknown. Neue Sitzung startet ohne Altbestands-
+ereignisse; alte Session wird abgewiesen. Produktionsregression bestanden.
+Grenzen: abgetastete Zustandswechsel, keine lueckenlose Ereignis-/Erntehistorie.
+[Vertrag und Livebelege](docs/spatial-journal-0.54.md).
+
+
 ## 0.53-Nacharbeiten abgeschlossen
 
 Menschliches Gate und gezielter Livetest am 12. Oktober 2026 bestanden.

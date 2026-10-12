@@ -1,5 +1,16 @@
 # Timberborn MCP
 
+## 0.54.0 - Pflanzen- und Flaechenjournal begrenzt live abgenommen
+
+Menschliches Gate und Abschluss-Livetest am 12. Oktober 2026 bestanden.
+Pflanz-/Faellmarkierungen, reale Pflanzenwechsel und Baum-/Stumpfunterscheidung
+mit ehrlicher Herkunft; Compact/Full, Filter und Cursor live bestaetigt.
+Menschliche Eingriffe bleiben unknown. Neue Sitzung startet ohne Altbestands-
+ereignisse; alte Session wird abgewiesen. Produktionsregression bestanden.
+Grenzen: abgetastete Zustandswechsel, keine lueckenlose Ereignis-/Erntehistorie.
+[Vertrag und Livebelege](docs/spatial-journal-0.54.md).
+
+
 ## 0.53.0 - Sammelpflanzung begrenzt live abgenommen
 
 Menschliches Gate bestanden; nativer Pilot am 12. Oktober 2026 bestaetigt.
@@ -85,7 +96,7 @@ Beobachtung und kontrollierte Eingriffe über reguläre Spielservices.
 
 ## Status
 
-Aktueller dokumentierter Abschluss: **0.53.0**. Die folgenden
+Aktueller dokumentierter Abschluss: **0.54.0**. Die folgenden
 Versionsabschnitte sind historische Teilabnahmen, keine parallel aktuellen Stände.
 Offene Fähigkeiten stehen im [Backlog](BACKLOG.md).
 

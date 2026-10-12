@@ -16,6 +16,10 @@ using Timberborn.TemplateSystem;
 using Timberborn.TimeSystem;
 using Timberborn.Workshops;
 using Timberborn.WorkSystem;
+using Timberborn.Planting;
+using Timberborn.Forestry;
+using Timberborn.NaturalResources;
+using Timberborn.Cutting;
 namespace Timberborn.AgentBridge;
 
 // Public events plus bounded reconciliation. No UI hooks, private reflection or save data.
@@ -26,6 +30,15 @@ public sealed class RecentActionsJournal
     private readonly SpeedManager speed;
     private readonly IDayNightCycle time;
     private readonly RecentActionBuffer buffer=new();
+    // Production proof retains its building-only cursor and overflow budget.
+    private readonly RecentActionBuffer proofBuffer=new();
+    private readonly SpatialJournal spatial=new();
+    private readonly PlantingService planting;
+    private readonly TreeCuttingArea cutting;
+    private readonly TemplateService templates;
+    private bool spatialComplete;
+    private long spatialFailures;
+    private DateTimeOffset? spatialStartedAt,spatialLastScanAt;
     private readonly Dictionary<Guid,State> states=new();
     private readonly Stopwatch clock=Stopwatch.StartNew();
     private double nextScan;
@@ -45,21 +58,22 @@ public sealed class RecentActionsJournal
         public int X=x,Y=y,Z=z;
         public Dictionary<string,string> Values=values;
     }
-    public RecentActionsJournal(EntityRegistry entities,EventBus events,SpeedManager speed,IDayNightCycle time)
+    public RecentActionsJournal(EntityRegistry entities,EventBus events,SpeedManager speed,IDayNightCycle time,PlantingService planting,TreeCuttingArea cutting,TemplateService templates)
     {
         this.entities=entities;this.events=events;this.speed=speed;this.time=time;
+        this.planting=planting;this.cutting=cutting;this.templates=templates;
         events.Register(this);
     }
-    public long Latest => buffer.Latest;
+    public long Latest => proofBuffer.Latest;
     public long ObservationFailures => failures;
     public bool TrackingComplete => complete;
-    public RecentActionPage Window(long after)=>buffer.Window(after);
+    public RecentActionPage Window(long after)=>proofBuffer.Window(after);
     public void Unload()=>events.Unregister(this);
     public void Update() { if(clock.Elapsed.TotalSeconds<nextScan)return;nextScan=clock.Elapsed.TotalSeconds+1;Capture(); }
     public void BeginMcp(bool reconcile) { if(reconcile)Capture();mcpDepth++; }
     public void EndMcp(bool reconcile) { try { if(reconcile)Capture(); } finally {mcpDepth--;} }
     public IDisposable Scope(string route)=>new McpScope(this,route is
-        "planting-apply" or "configure-buildings" or "large-project" or "building-project-execution" or "vertical-stair-execution" or
+        "set-area" or "planting-apply" or "configure-buildings" or "large-project" or "building-project-execution" or "vertical-stair-execution" or
         "building-placement" or "path-placement" or "lodge-placement" or "remove-object" or
         "set-building-paused" or "set-storage-good" or "set-storage-mode" or "set-building-recipe" or
         "workplace-staffing" or "simulation-speed" or "simulation-run-for" or "simulation-run-until" or "simulation-run-cancel");
@@ -85,8 +99,11 @@ public sealed class RecentActionsJournal
         }
         return new State(e.EntityId.ToString("D"),t.TemplateName,b.Coordinates.x,b.Coordinates.y,b.Coordinates.z,v);
     }
-    private void Add(string kind,string evidence,State? s,string? before,string? after)=>
-        buffer.Add(DateTimeOffset.UtcNow,Hours,kind,Source,evidence,s?.Id,s?.Template,s?.X,s?.Y,s?.Z,before,after);
+    private void Add(string kind,string evidence,State? s,string? before,string? after) {
+        var at=DateTimeOffset.UtcNow;var hours=Hours;
+        buffer.Add(at,hours,kind,Source,evidence,s?.Id,s?.Template,s?.X,s?.Y,s?.Z,before,after);
+        proofBuffer.Add(at,hours,kind,Source,evidence,s?.Id,s?.Template,s?.X,s?.Y,s?.Z,before,after);
+    }
     private void Track(Guid id,State current,string evidence)
     {
         if(states.TryGetValue(id,out var previous)) {
@@ -95,7 +112,33 @@ public sealed class RecentActionsJournal
         } else Add("object_added",evidence,current,null,current.Values["finished"]=="true"?"finished":"construction");
         states[id]=current;
     }
-    public void Capture()=>Guard(()=>{
+    public void Capture() {
+        CaptureBuildings();
+        if(!started)return;
+        var at=DateTimeOffset.UtcNow;
+        try {spatial.Capture(SpatialSnapshot(),buffer,at,Hours,spatialComplete?Source:"unknown");spatialComplete=true;spatialStartedAt??=at;}
+        catch {spatialFailures++;spatialComplete=false;}
+        spatialLastScanAt=DateTimeOffset.UtcNow;
+    }
+    private IEnumerable<SpatialJournalState> SpatialSnapshot() {
+        var plantNames=templates.GetAll<PlantableSpec>().Select(p=>p.TemplateName).Take(257).ToArray();
+        if(plantNames.Length>256)throw new InvalidOperationException("spatial_plant_catalog_limit");
+        var plantTemplates=new HashSet<string>(plantNames);
+        int examined=0;
+        foreach(var e in entities.Entities) {
+            if(++examined>100000)throw new InvalidOperationException("spatial_registry_limit");
+            if(!e.Initialized||e.Deleted||!e.HasComponent<NaturalResource>()||!e.TryGetComponent<BlockObject>(out var b)||b.IsPreview||!e.TryGetComponent<TemplateSpec>(out var t))continue;
+            if(!plantTemplates.Contains(t.TemplateName))continue;
+            bool? removed=e.TryGetComponent<Cuttable>(out var cut)?cut.Yielder?.IsYieldRemoved:(bool?)null;
+            string id=e.EntityId.ToString("D");var p=b.Coordinates;
+            yield return new SpatialJournalState("plant/"+id,"plant",id,t.TemplateName,p.x,p.y,p.z,SpatialJournal.PlantState(e.HasComponent<TreeComponent>(),removed));
+        }
+        foreach(var p in planting.PlantingCoordinates)
+            yield return new SpatialJournalState($"planting/{p.x}/{p.y}/{p.z}","planting_designation",null,null,p.x,p.y,p.z,planting.GetResourceAt(p));
+        foreach(var p in cutting.CuttingArea)
+            yield return new SpatialJournalState($"cutting/{p.x}/{p.y}/{p.z}","cutting_designation",null,null,p.x,p.y,p.z,"marked");
+    }
+    private void CaptureBuildings()=>Guard(()=>{
         var snapshot=new Dictionary<Guid,State>();int examined=0;bool full=true;
         foreach(var e in entities.Entities) {
             if(++examined>MaxRegistryEntries) {full=false;break;}
@@ -137,11 +180,13 @@ public sealed class RecentActionsJournal
         Capture();
         var page=buffer.Read(r);
         var payload=new {capacity=RecentActionBuffer.Capacity,startedAtUtc=startedAt,lastScanAtUtc=lastScanAt,
-            trackingComplete=complete,observationFailures=failures,trackedObjects=states.Count,
+            trackingComplete=complete&&spatialComplete,observationFailures=failures+spatialFailures,trackedObjects=states.Count,
+            spatialTrackingComplete=spatialComplete,spatialObservationFailures=spatialFailures,trackedSpatialEntries=spatial.Count,maxSpatialEntries=SpatialJournal.MaxEntries,
+            spatialStartedAtUtc=spatialStartedAt,spatialLastScanAtUtc=spatialLastScanAt,
             maxObjects=MaxObjects,scanIntervalSeconds=1,page,
             supportedKinds=RecentActionsRequest.Kinds,
             limitations=new[]{"sources_mcp_or_unknown_only_no_human_attribution","settings_sampled_intermediate_changes_may_be_missed","registry_scan_capped_at_20000_entries",
-                "buildings_and_paths_only_no_plants_area_marks_or_research","object_removed_is_observed_disappearance_not_demolition_order",
+                "plants_and_area_marks_sampled_no_research","spatial_snapshot_capped_at_65536_entries_and_100000_registry_objects","plant_disappearance_not_proof_of_harvest_or_demolition","plant_state_tree_stump_or_unknown_not_growth_or_yield","object_removed_is_observed_disappearance_not_demolition_order",
                 "object_added_may_be_finished_or_construction_not_command_receipt","no_history_before_startedAt_or_across_session",
                 "delayed_mcp_effects_may_have_unknown_source","finished_change_does_not_prove_operating_or_access",
                 "trackingComplete_means_last_scan_within_limits_not_complete_action_history","failure_count_is_cumulative_read_gap_and_failures_together"}};

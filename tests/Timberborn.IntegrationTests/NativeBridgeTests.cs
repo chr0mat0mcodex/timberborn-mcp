@@ -129,7 +129,7 @@ public sealed class NativeBridgeTests
                             "map" => new NativeMap(new(r.X, r.Y, r.Z), 1, 1, 1,
                                 [new(r.X, r.Y, r.Z, false, true, 2, 0.5f, 0, true)], ["synthetic_test"]),
                             "workforce" => new NativeWorkforce("entities_with_worker_component", r.Offset, r.Limit, 0, 0, 0, [], false, ["synthetic_test"]),
-                            "recent-actions" when r.Session==session => new NativeRecentActions(512,DateTimeOffset.UnixEpoch,DateTimeOffset.UnixEpoch,true,0,0,4096,1,new([],1,0,0,false,false,0),RecentActionsRequest.Kinds,["synthetic_test"]),
+                            "recent-actions" when r.Session==session => new NativeRecentActions(512,DateTimeOffset.UnixEpoch,DateTimeOffset.UnixEpoch,true,0,0,4096,1,new([],1,0,0,false,false,0),RecentActionsRequest.LegacyKinds,["synthetic_test"]),
                             "building-search" => new BuildingSearch(r.BuildingQuery!.Offset,r.BuildingQuery.Limit,0,[],false,1,["synthetic_test"]),
                             "building-operations" when r.Session==session => new OperationBatch(r.BuildingQuery!.Ids.Select(id=>new OperationBatchItem(id,"not_found",null)).ToArray(),1,["synthetic_test"]),
                             "objects" => new NativeObjects("buildings_and_paths", r.Offset, r.Limit, 0, [], false, ["synthetic_test"]),

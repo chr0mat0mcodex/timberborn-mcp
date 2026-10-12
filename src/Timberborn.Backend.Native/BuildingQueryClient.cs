@@ -17,7 +17,7 @@ public sealed partial class NativeClient
         if(r.HasBounds)q+=$"&x={r.X}&y={r.Y}&z={r.Z}&width={r.Width}&height={r.Height}&depth={r.Depth}";
         var e=await Get<BuildingSearch>("building-search?"+q,ct,maxResponseBytes:1024*1024);
         var d=e.Data;
-        if(e.BridgeVersion is not ("0.39.0" or "0.40.0" or "0.41.0" or "0.42.0" or "0.43.0" or "0.44.0" or "0.45.0" or "0.46.0" or "0.47.0" or "0.48.0" or "0.49.0" or "0.50.0" or "0.51.0" or "0.52.0" or "0.53.0") || d.Items is null || d.Limitations is null || d.NativeReads!=1 ||
+        if(e.BridgeVersion is not ("0.39.0" or "0.40.0" or "0.41.0" or "0.42.0" or "0.43.0" or "0.44.0" or "0.45.0" or "0.46.0" or "0.47.0" or "0.48.0" or "0.49.0" or "0.50.0" or "0.51.0" or "0.52.0" or "0.53.0" or "0.54.0") || d.Items is null || d.Limitations is null || d.NativeReads!=1 ||
             d.Offset!=r.Offset||d.Limit!=r.Limit||d.Total<0||d.Items.Length!=Math.Min(r.Limit,Math.Max(0,d.Total-r.Offset))||
             d.HasMore!=((long)r.Offset+d.Items.Length<d.Total))throw new InvalidDataException("Invalid building search page");
         foreach(var item in d.Items) {
@@ -38,7 +38,7 @@ public sealed partial class NativeClient
     {
         var e=await Get<OperationBatch>($"building-operations?session={r.Session}&ids={Uri.EscapeDataString(string.Join(",",r.Ids))}{(r.Diagnose?"&diagnose=true":"")}",ct,maxResponseBytes:2*1024*1024);
         var d=e.Data;
-        if(e.BridgeVersion is not ("0.39.0" or "0.40.0" or "0.41.0" or "0.42.0" or "0.43.0" or "0.44.0" or "0.45.0" or "0.46.0" or "0.47.0" or "0.48.0" or "0.49.0" or "0.50.0" or "0.51.0" or "0.52.0" or "0.53.0")||e.SessionId!=r.Session||d.Items is null||d.Limitations is null||d.NativeReads!=1||d.Items.Length!=r.Ids.Length)
+        if(e.BridgeVersion is not ("0.39.0" or "0.40.0" or "0.41.0" or "0.42.0" or "0.43.0" or "0.44.0" or "0.45.0" or "0.46.0" or "0.47.0" or "0.48.0" or "0.49.0" or "0.50.0" or "0.51.0" or "0.52.0" or "0.53.0" or "0.54.0")||e.SessionId!=r.Session||d.Items is null||d.Limitations is null||d.NativeReads!=1||d.Items.Length!=r.Ids.Length)
             throw new InvalidDataException("Invalid operation batch");
         var items=new List<OperationBatchItem>();
         for(int i=0;i<r.Ids.Length;i++) {

@@ -1,5 +1,9 @@
 # 0.40.0 — Änderungsjournal
 
+0.54-Erweiterung begrenzt live abgenommen: [Pflanzen/Flaechen,
+Gruppierung und neue Nachweisgrenzen](spatial-journal-0.54.md). Die folgenden
+Angaben zur ersten Fassung und ihrer Abnahme sind historisch.
+
 ## Begrenzt live abgenommen 2026-10-11
 
 Nach menschlichem Gate Paket `agent-bridge-0.40.0-20261011-214613-482c1f73`

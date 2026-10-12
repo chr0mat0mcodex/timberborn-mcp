@@ -48,7 +48,7 @@ public sealed class RecentActionsTests
         Assert.True(RecentActionsTools.Reader().Annotations!.ReadOnlyHint);
     }
     private static NativeRecentActions Data()=>new(512,DateTimeOffset.UnixEpoch,DateTimeOffset.UnixEpoch,true,0,0,4096,1,
-        new([new(1,DateTimeOffset.UnixEpoch,12,"speed","unknown","event",null,null,null,null,null,"0","1")],1,1,1,false,false,0),RecentActionsRequest.Kinds,[]);
+        new([new(1,DateTimeOffset.UnixEpoch,12,"speed","unknown","event",null,null,null,null,null,"0","1")],1,1,1,false,false,0),RecentActionsRequest.LegacyKinds,[]);
     [Theory]
     [InlineData("ok")][InlineData("session")][InlineData("cursor")][InlineData("gap")][InlineData("source")][InlineData("order")][InlineData("filter")]
     public async Task TransportValidatesSessionCursorAttributionAndFilters(string defect) {

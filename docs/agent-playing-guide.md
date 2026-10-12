@@ -1,11 +1,30 @@
 # Spielanleitung für Agenten
 
+## 0.54.0 - Pflanzen- und Flaechenjournal begrenzt live abgenommen
+
+Menschliches Gate und Abschluss-Livetest am 12. Oktober 2026 bestanden.
+Pflanz-/Faellmarkierungen, reale Pflanzenwechsel und Baum-/Stumpfunterscheidung
+mit ehrlicher Herkunft; Compact/Full, Filter und Cursor live bestaetigt.
+Menschliche Eingriffe bleiben unknown. Neue Sitzung startet ohne Altbestands-
+ereignisse; alte Session wird abgewiesen. Produktionsregression bestanden.
+Grenzen: abgetastete Zustandswechsel, keine lueckenlose Ereignis-/Erntehistorie.
+[Vertrag und Livebelege](spatial-journal-0.54.md).
+
+
 0.53-Nacharbeiten live abgenommen: Bestaetigte Ablehnung einer veralteten
 Pflanzvorschau meldet not_executed; danach frisch vorpruefen und entscheiden.
 Andere Unsicherheit weiterhin nur lesend klaeren. Compact zaehlt passende
 Markierungen und zeigt Beispiele nur bei weiteren Blockaden. Full bleibt komplett.
 
 
+
+Bei "Ueberpruef mal meine letzten Aktionen" ab 0.54 auch page.groups lesen:
+Gruppen sind nach Rasterkachel/Hoehe und gleichem Zustandswechsel gebuendelt,
+keine ausgefuellten Rechtecke. Cursor/Limit zaehlen Rohereignisse. Bei Bedarf
+mit demselben after/limit/Filter detail=full lesen. Markierung, reale Pflanze,
+Stumpf und Erntewirkung unterscheiden. source=unknown nicht als Mensch ausgeben.
+spatialTrackingComplete und spatialObservationFailures zusaetzlich beachten;
+bei Luecken frisch beobachten. Keine automatischen Ruecknahmen.
 
 ## 0.53.0 - Sammelpflanzung begrenzt live abgenommen
 
@@ -422,7 +441,7 @@ Codex-Lifecycle (live abgenommen): vor der Testübergabe
 bleibt verbunden. Unterbrochene Aufträge nie ungeprüft erneut senden.
 [Einmalige Einrichtung und Grenzen](codex-mcp-supervisor.md).
 
-Stand: letzter dokumentierter Abschluss Bridge 0.53.0; aktualisiert am 12. Oktober 2026.
+Stand: letzter dokumentierter Abschluss Bridge 0.54.0; aktualisiert am 12. Oktober 2026.
 Diese Anleitung beschreibt die vorhandenen MCP-Fähigkeiten. Aktueller Auftrag
 und Projektregeln stehen in [AGENTS.md](../AGENTS.md) und
 [missionsplan.md](../missionsplan.md); das lokale Spiel ist das freigegebene

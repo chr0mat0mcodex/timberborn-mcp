@@ -1,5 +1,16 @@
 # Backlog
 
+## 0.54.0 - Pflanzen- und Flaechenjournal begrenzt live abgenommen
+
+Menschliches Gate und Abschluss-Livetest am 12. Oktober 2026 bestanden.
+Pflanz-/Faellmarkierungen, reale Pflanzenwechsel und Baum-/Stumpfunterscheidung
+mit ehrlicher Herkunft; Compact/Full, Filter und Cursor live bestaetigt.
+Menschliche Eingriffe bleiben unknown. Neue Sitzung startet ohne Altbestands-
+ereignisse; alte Session wird abgewiesen. Produktionsregression bestanden.
+Grenzen: abgetastete Zustandswechsel, keine lueckenlose Ereignis-/Erntehistorie.
+[Vertrag und Livebelege](docs/spatial-journal-0.54.md).
+
+
 ## 0.53.0 - Sammelpflanzung begrenzt live abgenommen
 
 Menschliches Gate bestanden; nativer Pilot am 12. Oktober 2026 bestaetigt.
@@ -65,10 +76,10 @@ Alle bisherigen Beobachtungen bleiben im [historischen Backlog](BACKLOG_HISTORY.
 | B06 | Projekte über Sitzungswechsel wiederaufnehmen | Wiederanschluss innerhalb derselben Spielsession funktioniert. Offen: gespeicherte Absichten nach Neuladen mit realen Objekten abgleichen; alte Aktionen nicht blind wiederholen. |
 | B07 | Produktionsketten planen | Rezeptwahl, gemeinsame Einrichtung, Engpässe und Produktionsläufe existieren. Offen: Zutatenquellen, Lager/Transport, Personal und Kraft bereits vor Bau als gemeinsamen Ausbauplan berücksichtigen. |
 | B08 | Weitere Produktions- und Wirkungsnachweise | Produktionsnachweis bisher für Manufactory. Weitere Produzenten und reale Effektzellen/aktive Ziele etwa des Bienenstocks separat erschließen; Reichweite ist kein Wirkungsnachweis. |
-| B09 | Änderungsjournal erweitern | 0.40 erfasst Gebäude/Wege, Konfiguration und Tempo. Offen: Pflanzen, Flächen, Forschung und belegbare Herkunft; beobachtete Änderung nicht automatisch dem Menschen zuschreiben. |
+| B09 | Weitere Journaldaten | Pflanzen/Stuempfe und Flaechenmarkierungen mit 0.54 begrenzt live abgenommen. Forschung weiterhin offen; keine automatische Zuschreibung zum Menschen. |
 | B10 | Agentenlog verbessern | Aktionsgewissheit und kompakte Fachberichte existieren. `inspect_agent_log` hat weiterhin maximal 32 von 128 Einträgen. Offen: Cursor, Filter, sichtbare Lücken, Projekt-/Laufkorrelation und aussagekräftige Effekte; kein Ersatz für das Spieländerungsjournal. |
 | B11 | Agenten-UI im Spiel | Screenshot mit Kamerametadaten und „schau mal“ existieren. Offen: „Zeigen“-Button nimmt die Ansicht beim Klick auf, begrenzte Aufbewahrung und Abhol-/Fehlerstatus. Aktive Benachrichtigung ist ein separat zu definierender Umfang. |
-| B12 | Weitere Effizienz und Diagnosequalität | Noch große Werkzeugantworten/-beschreibungen gezielt messen, veralteten Clientkatalog erkennbar machen, unnötige interne Reads reduzieren. Compact/Full und günstiges Warten sind bereits vorhanden. |
+| B12 | Weitere Effizienz und Diagnosequalität | Noch große Werkzeugantworten/-beschreibungen gezielt messen, veralteten Clientkatalog erkennbar machen, unnötige interne Reads reduzieren. 0.54-Pilot: kleine Journalgruppen adaptiv darstellen; sechs Ereignisse mit vier Gruppen sparen nur 5 von 1555 page-Zeichen. Compact/Full und günstiges Warten sind bereits vorhanden. |
 | B13 | Optionale Koloniebeobachtung | Geburten/Todesfälle im Intervall, Familienwohnungen, tatsächliche Wohlbefindensursachen und historisches Bauregister. Kein fortlaufender Auftrag, alle Gebäude oder eine bestimmte Bevölkerung zu erreichen. |
 
 B01 plus begrenzte Korridore aus B02 sind mit 0.51 im beauftragten Umfang erledigt.
@@ -115,7 +126,7 @@ in den Dokumentationsabschluss. Lokale Änderungen bleiben erhalten.
 | Gruppenpläne, gemeinsame Wege, native Kandidaten | 0.48–0.50; [effiziente Gruppenplanung](docs/efficient-group-planning.md). Die drei Folgepunkte aus 0.49 sind damit im vereinbarten Umfang erledigt. |
 | Kompakte Ergebnisse, Ausführungsgewissheit, günstiges Warten | 0.45–0.47; [Aktionsberichte](docs/action-results-and-run-reports.md), [Projektberichte](docs/compact-project-reports.md), [Status/Warten](docs/lightweight-status-wait.md). |
 | Rezepte, Gebäudesuche, gemeinsame Konfiguration, Produktion und Engpässe | 0.38–0.44; [Projektstand](PROJECT_STATE.md). Keine automatische Produktionskettenplanung. |
-| Spieländerungsjournal | 0.40; [Vertrag](docs/recent-actions-journal.md). Erweiterungen siehe B09. |
+| Spieländerungsjournal | 0.40, Pflanzen/Flaechen mit [0.54](docs/spatial-journal-0.54.md); [Vertrag](docs/recent-actions-journal.md). Erweiterungen siehe B09. |
 | Autonome Baucharge, Abschluss, Diagnose und Zugangsergänzung | [Chargen](docs/autonomous-construction-batches.md), [Reparatur](docs/project-recovery.md), [Zugangsplanung](docs/automatic-access-planning.md). Kein vollständiger Navigationsschutz. |
 | Waldreichweite, Stümpfe, artenbezogener Fällschutz und weniger Reads | [Waldnachweis](docs/forestry-range-protection.md). Fällschutz ist keine dauerhafte Schutzregel gegen spätere Eingriffe. |
 | Screenshot und persistenter Codex-Vorschaltprozess | [Screenshot](docs/screenshot-0.36.0.md), [Lifecycle](docs/codex-mcp-supervisor.md). UI-Button bleibt B11. |

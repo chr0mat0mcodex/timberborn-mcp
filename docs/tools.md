@@ -1,5 +1,16 @@
 # Native MCP-Werkzeuge
 
+## 0.54.0 - Pflanzen- und Flaechenjournal begrenzt live abgenommen
+
+Menschliches Gate und Abschluss-Livetest am 12. Oktober 2026 bestanden.
+Pflanz-/Faellmarkierungen, reale Pflanzenwechsel und Baum-/Stumpfunterscheidung
+mit ehrlicher Herkunft; Compact/Full, Filter und Cursor live bestaetigt.
+Menschliche Eingriffe bleiben unknown. Neue Sitzung startet ohne Altbestands-
+ereignisse; alte Session wird abgewiesen. Produktionsregression bestanden.
+Grenzen: abgetastete Zustandswechsel, keine lueckenlose Ereignis-/Erntehistorie.
+[Vertrag und Livebelege](spatial-journal-0.54.md).
+
+
 0.53-Nacharbeiten live abgenommen: Bestaetigte Ablehnung einer veralteten
 Pflanzvorschau meldet not_executed; danach frisch vorpruefen und entscheiden.
 Andere Unsicherheit weiterhin nur lesend klaeren. Compact zaehlt passende
@@ -315,7 +326,7 @@ kommt vom persistenten Codex-Vorschaltprozess, nicht aus der Spiel-Bridge.
 Stop sperrt das Backend vor dem menschlichen Gate; Start erst nach `live bereit`.
 [Einrichtung, Fehlerverhalten und Abnahme](codex-mcp-supervisor.md).
 
-Letzter dokumentierter Abschluss: Bridge 0.53.0, begrenzt live abgenommen.
+Letzter dokumentierter Abschluss: Bridge 0.54.0, begrenzt live abgenommen.
 Paket-/Abnahmestand: [PROJECT_STATE.md](../PROJECT_STATE.md).
 Praktischer Ablauf: [Spielanleitung für Agenten](agent-playing-guide.md).
 Historische Versionsabschnitte unten sind keine allgemeine Baufreigabe;

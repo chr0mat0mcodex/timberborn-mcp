@@ -9,7 +9,9 @@ public sealed class RecentActionsRequest
     public int Limit { get; private set; } = 32;
     public string Kind { get; private set; } = "all";
     public string Source { get; private set; } = "all";
-    public static readonly string[] Kinds = { "object_added", "object_removed", "finished", "paused", "recipe", "storage_good", "storage_mode", "speed", "demolition_marked", "workers" };
+    public static readonly string[] LegacyKinds = { "object_added", "object_removed", "finished", "paused", "recipe", "storage_good", "storage_mode", "speed", "demolition_marked", "workers" };
+    public static readonly string[] SpatialKinds = { "plant_added", "plant_removed", "plant_state", "planting_designation", "cutting_designation" };
+    public static readonly string[] Kinds = LegacyKinds.Concat(SpatialKinds).ToArray();
     public static bool ValidSource(string source) => source is "unknown" or "mcp";
     public static RecentActionsRequest Parse(NameValueCollection q)
     {

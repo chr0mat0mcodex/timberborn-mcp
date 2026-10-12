@@ -11,7 +11,7 @@ public sealed partial class NativeClient
         if(checkedRequest.JobId!=r.JobId||checkedRequest.Session!=r.Session)throw new ArgumentException();
         string suffix=string.Join("&",query.AllKeys.Select(k=>Uri.EscapeDataString(k!)+"="+Uri.EscapeDataString(query[k]!)));
         var e=await Get<BuildingConfigurationResult>(route+"?"+suffix,ct,r.Write?HttpMethod.Post:HttpMethod.Get);
-        if(e.BridgeVersion is not ("0.42.0" or "0.43.0" or "0.44.0" or "0.45.0" or "0.46.0" or "0.47.0" or "0.48.0" or "0.49.0" or "0.50.0" or "0.51.0" or "0.52.0" or "0.53.0")||e.SessionId!=r.Session)throw new InvalidDataException();
+        if(e.BridgeVersion is not ("0.42.0" or "0.43.0" or "0.44.0" or "0.45.0" or "0.46.0" or "0.47.0" or "0.48.0" or "0.49.0" or "0.50.0" or "0.51.0" or "0.52.0" or "0.53.0" or "0.54.0")||e.SessionId!=r.Session)throw new InvalidDataException();
         BuildingConfigurationContract.Validate(e.Data,checkedRequest);
         return e;
     }
