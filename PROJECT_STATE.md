@@ -1,5 +1,12 @@
 # Projektstand
 
+Aktueller Abschluss: **0.50.0** (`fdbc42a`), begrenzt live abgenommen.
+Diese Datei enthält darunter datierte Abnahmen und historische Zwischenstände.
+Ältere „Gate offen“, „aktueller Auftrag“ und „nächster Schritt“-Aussagen gelten
+nur für ihren damaligen Abschnitt, nicht als heutige Arbeitsanweisung.
+Offene Arbeit ausschließlich im [bereinigten Backlog](BACKLOG.md); lokale
+unabgenommene Änderungen siehe [Dokumentationsprüfung](docs/documentation-audit-2026-10-12.md).
+
 ## 0.50.0 — effizientere Gruppenplanung begrenzt live abgenommen
 
 Gemeinsame Flächendaten innerhalb eines Gruppenaufrufs, frische Pause-/Sessiongrenzen

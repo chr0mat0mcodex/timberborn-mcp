@@ -8,7 +8,8 @@ Livetest vor; er führt keine Vollkette und keine Mod-Installation selbst aus.
 
 ## Ablauf pro Feature
 
-Bauentwicklung folgt missionsplan.md (A–E). Bericht/Diagnose erweitert keine
+Bauentwicklung berücksichtigt die Nachweisziele des historischen missionsplan.md
+(A–E abgeschlossen im begrenzten Umfang); neue Pakete stehen in BACKLOG.md. Bericht/Diagnose erweitert keine
 Baufreigabe. Vor dem Gate aktive Änderungen von zurückgestellten Entwürfen trennen;
 ungeprüfte Erweiterungen nicht beiläufig mitdeployen. Für MCP-only-Auswertungen
 kann die Spiel-Bridge unverändert bleiben; trotzdem menschliches Test-Gate und
@@ -67,8 +68,8 @@ und niemals ausgegeben oder versioniert.
 - Der projektgenaue MCP-Stopp unmittelbar vor dem Gate ist ausdrücklich beauftragt.
   Keine allgemeinen dotnet-/Codex-Abschüsse und keine anderen Ausgabeverzeichnisse.
   Das menschliche Skript behält seinen eigenen Prozessstopp als zusätzliche Sicherung.
-- Kein Commit/Push ohne bestätigten erfolgreichen Skriptlauf und erfolgreichen
-  Abschluss-Livetest.
+- Kein Feature-Commit/Push ohne bestätigten erfolgreichen Skriptlauf und
+  erfolgreichen Abschluss-Livetest. Ausnahme für reine Dokumentationspflege siehe unten.
 
 ## Vorprüfung vor der Übergabe
 
@@ -81,6 +82,16 @@ und niemals ausgegeben oder versioniert.
   automatische Wiederholung oder zusätzliche Buildvariante durch den Agenten.
 - Ausgeführte Prüfungen und vorbereitete Tests getrennt benennen. Änderungen sind
   bis zum erfolgreichen Gate und fachlichen Livetest nicht abgenommen.
+
+## Reine Dokumentations- und Regelpflege
+
+Ausdrücklich freigegeben am 2026-10-12: Änderungen ausschließlich an Dokumentation
+oder freigegebenen Agentenregeln dürfen nach Inhalts-, Diff- und Linkprüfung
+separat committed und gepusht werden. Kein Build, MCP-Stopp, Deploy oder Livetest
+nur für diese Pflege. Änderungen an Code, Tests, Build, Konfiguration oder
+Laufzeitverhalten fallen nicht unter diese Ausnahme. Experimentelle oder noch
+nicht abgenommene Implementierungen nicht im Dokumentations-Commit mitnehmen.
+Freigabepflichten für dauerhafte Regeländerungen bleiben bestehen.
 
 ## Git-Sicherung
 

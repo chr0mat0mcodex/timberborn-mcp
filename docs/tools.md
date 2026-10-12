@@ -261,7 +261,8 @@ kommt vom persistenten Codex-Vorschaltprozess, nicht aus der Spiel-Bridge.
 Stop sperrt das Backend vor dem menschlichen Gate; Start erst nach `live bereit`.
 [Einrichtung, Fehlerverhalten und Abnahme](codex-mcp-supervisor.md).
 
-Verifizierte Bridge: 0.35.0, generischer ebener Projektpilot begrenzt live geprüft.
+Letzter dokumentierter Abschluss: Bridge 0.50.0, begrenzt live abgenommen.
+Paket-/Abnahmestand: [PROJECT_STATE.md](../PROJECT_STATE.md).
 Praktischer Ablauf: [Spielanleitung für Agenten](agent-playing-guide.md).
 Historische Versionsabschnitte unten sind keine allgemeine Baufreigabe;
 aktueller Auftrag folgt ../missionsplan.md.

@@ -1,9 +1,8 @@
 # Eigene Agent Bridge installieren und MCP starten
 
-Aktueller Entwicklungsstand: **0.26.0 mit bis zu vier neuen Wegen im Bauprojekt-Pilot**.
-Der aktuelle Vertrag beschreibt Planung, Vorschau, schrittweise Ausführung und
-Rückprüfung; ein dreifacher Anschluss ist live belegt.
-[Vertrag und Grenzen](building-project-execution-proposal.md).
+Letzter dokumentierter Abschluss: **0.50.0**, begrenzt live abgenommen.
+[Projektstand](../PROJECT_STATE.md) und [Gruppenplanung](efficient-group-planning.md).
+Lokale Änderungen sind nicht allein durch dieselbe Versionsnummer abgenommen.
 Die Bridge wird gegen Timberborn 1.1.2.4 gebaut. Private Konfiguration bleibt bei
 Updates erhalten. Zeit-, Diagnose- und Bauwerkzeuge sind im Werkzeugkatalog beschrieben.
 Benötigt wird ausschließlich unsere eigene Spielmod; `RequiredMods` ist leer.
@@ -18,8 +17,8 @@ MCP-Server und Mod sind zwei getrennte Prozesse/Komponenten. Kein More-HTTP-API-
 Im Repository:
 
 ```powershell
-pwsh -NoProfile -File ./scripts/verify.ps1
-pwsh -NoProfile -File ./scripts/build-native-bridge.ps1 `
+# Menschliches Entwickler-Gate bei beendetem Spiel:
+pwsh -NoProfile -File ./scripts/prepare-human-live-test.ps1 `
   -TimberbornManagedDir '<Spielverzeichnis>/Timberborn_Data/Managed'
 ```
 
@@ -110,7 +109,7 @@ Der Zugriff erfolgt über den MCP-Server und dessen private Konfigurationsdatei.
 
 Im Spiel rechts unten **MCP-Log** öffnen. reasoning ist eine verpflichtende kurze Absicht
 für den Spieler; das Fenster und die Aufzeichnung benötigen keinen neuen Aktionsschalter.
-[Log-Vertrag](activity-log.md), [Fehlercodes](bridge-errors.md).
+[Agentenlog im Werkzeugkatalog](tools.md), [Fehlercodes](bridge-errors.md).
 
 ```powershell
 pwsh -NoProfile -File ./scripts/verify.ps1 `

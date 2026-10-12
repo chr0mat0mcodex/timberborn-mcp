@@ -1,5 +1,10 @@
 # Mission: Timberborn über MCP steuerbar machen
 
+Einordnung 2026-10-12: historischer Etappenplan A–E, im begrenzten Umfang
+abgeschlossen. Aktueller Releaseabschluss: 0.50.0; [Projektstand](PROJECT_STATE.md).
+Die folgenden Zwischenstände sind keine aktuelle Aufgabenreihenfolge. Neue
+Fähigkeiten und verbliebene Nachweislücken stehen im [Backlog](BACKLOG.md).
+
 ## Abschluss Phase E
 
 Phase E ist am 2026-10-03 mit Bridge 0.35.1 im vereinbarten begrenzten Umfang

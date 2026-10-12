@@ -65,7 +65,7 @@ allein aus Markierung oder laufendem Holzfällerjob abgeleitet.
 
 Endstand: Tag 435, 19,40625 Uhr, Tempo 0, Baufolge fertig. Sägewerk bleibt pausiert.
 Sieben konkrete Log-/Effizienzvorschläge mit Belegen und Abnahmekriterien im
-[Backlog](../BACKLOG.md#mcp-log-und-aufrufeffizienz--konkrete-livebefunde-2026-10-10).
+[Backlog](../BACKLOG_HISTORY.md#mcp-log-und-aufrufeffizienz--konkrete-livebefunde-2026-10-10).
 Keine Rohlogs gespeichert. Begrenzter Stützenpilot bestanden; keine pauschale
 Abnahme aller Vorlagen, acht real gebauter Ebenen oder aller Kraftdrehungen.
 Fachlicher Release-Nachweis damit abgeschlossen. Die folgenden Gate-Abschnitte

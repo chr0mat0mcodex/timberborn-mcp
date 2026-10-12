@@ -1,6 +1,13 @@
 # Technische Übergabe
 
-## Stand
+## Aktueller Einstieg
+
+Letzter dokumentierter Abschluss: 0.50.0 (`fdbc42a`); [Projektstand](../PROJECT_STATE.md),
+[offene Arbeit](../BACKLOG.md), [Lifecycle und Gate](../DEVELOPMENT_WORKFLOW.md).
+Lokale Änderungen separat prüfen. Die folgenden Abschnitte sind historische
+Übergaben und enthalten keine heute offenen Gate-Aufträge.
+
+## Historischer Stand bis Phase E
 
 Phase E ist mit 0.35.1 im vereinbarten begrenzten Umfang abgeschlossen.
 [Abschluss](../missionsplan.md#abschluss-phase-e), offene eigenständige

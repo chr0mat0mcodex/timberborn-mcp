@@ -38,6 +38,11 @@ Beobachtung und kontrollierte Eingriffe über reguläre Spielservices.
 
 ## Status
 
+Aktueller dokumentierter Abschluss: **0.50.0** (`fdbc42a`). Die folgenden
+Versionsabschnitte sind historische Teilabnahmen, keine parallel aktuellen Stände.
+Offene Fähigkeiten stehen im [Backlog](BACKLOG.md).
+
+
 **0.48.0 begrenzt live abgenommen:** [Regionale native Baupläne](docs/regional-building-plans.md).
 
 **0.47.0 begrenzt live abgenommen:** [Günstige Statusabfragen und Warten](docs/lightweight-status-wait.md).
@@ -78,7 +83,7 @@ einschließlich realem Stützenbau bestanden. Implementierte Grenzen: 32 Bauteil
 und acht belegte Höhenebenen; dazu Kraftanschlussdiagnose. Keine pauschale
 Abnahme aller Bauteile oder Kraftdrehungen.
 
-Vorheriger Release-Stand: Bridge 0.36.0. Explizite Screenshots der
+Historischer Screenshot-Release: Bridge 0.36.0. Explizite Screenshots der
 Spielansicht inklusive Kameraposition/Höhe, Richtung und Bildweite sind begrenzt
 live geprüft; Bilddaten werden als MCP-Bildblock mit Größenlimit ausgegeben.
 [Abnahme und Grenzen](docs/screenshot-0.36.0.md).
@@ -159,8 +164,8 @@ erteilt keinen Änderungsauftrag. Details und Grenzen im [Projektstand](PROJECT_
 
 Aktueller Schwerpunkt: Gebäude bauen, ohne bestehende Wege/Zugänge zu verlieren,
 und den neuen Zugang während Bau und nach Fertigstellung nachweisen. Beides ist
-teilweise, noch nicht allgemein gelöst. Der freigegebene [Etappenplan](missionsplan.md)
-beginnt mit einheitlicher Bauprüfung und Baustellenzugang, nicht größerem Bauumfang.
+teilweise, noch nicht allgemein gelöst. Der historische [Etappenplan](missionsplan.md) ist im begrenzten Umfang
+abgeschlossen; nächste Erweiterungen stehen im [Backlog](BACKLOG.md).
 
 - Zustands-, Güter-, Personal-, Bau-, Forschungs- und Flächenabfragen
 - Produktions-, Zugangs- und Versorgungsdiagnosen
@@ -174,8 +179,8 @@ Fremdmods und keine Screenshot- oder Eingabesteuerung.
 ## Einstieg
 
 ```powershell
-pwsh -NoProfile -File ./scripts/verify.ps1
-pwsh -NoProfile -File ./scripts/build-native-bridge.ps1 -TimberbornManagedDir '<Spielverzeichnis>/Timberborn_Data/Managed'
+# Durch den menschlichen Entwickler bei beendetem Spiel ausführen:
+pwsh -NoProfile -File ./scripts/prepare-human-live-test.ps1 -TimberbornManagedDir '<Spielverzeichnis>/Timberborn_Data/Managed'
 ```
 
 Weitere Informationen: [Einstieg](START_HERE.md), [Projektstand](PROJECT_STATE.md),

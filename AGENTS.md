@@ -51,7 +51,11 @@ Schutz anderer Projekte/Systemdateien und nachvollziehbare Git-Checkpoints bleib
    Wiederholung der vollständigen Kette.
 5. Git-Commit und Push erfolgen ausschließlich nach erfolgreichem Skriptlauf und
    bestandenem feature-spezifischem Livetest. Unfertige oder nur statisch geprüfte
-   Änderungen bleiben uncommitted.
+   Änderungen bleiben uncommitted. Ausnahme: reine Dokumentations-/Regelpflege
+   ohne Änderungen an Code, Tests, Build, Konfiguration oder Laufzeitverhalten darf
+   nach Inhalts-, Diff- und Linkprüfung separat committed und gepusht werden.
+   Dafür kein Build, MCP-Stopp oder erneuter Livetest; Freigabepflichten für
+   dauerhafte Regeländerungen bleiben bestehen.
 
 ## Einstieg
 
@@ -60,37 +64,27 @@ Schutz anderer Projekte/Systemdateien und nachvollziehbare Git-Checkpoints bleib
 - Architekturentscheidungen stehen in docs/architecture/decisions.md, getestete Versionen in docs/compatibility/timberborn.md.
 - Historische Planungsabschnitte sind keine aktuelle Zustandsbeschreibung. Aussagen gegen Dateien und Git prüfen.
 
-## Aktueller Missionsschwerpunkt
+## Dauerhafte Entwicklungsprinzipien
 
-- 0.37.0: beauftragter Erweiterungsumfang sind explizite Baupläne mit höchstens
-  32 Teilen, 32×32 Grundfläche und acht belegten Höhenebenen einschließlich
-  Gebäudevolumen. Ablauf und Pilot: `docs/large-projects-0.37.0.md`.
-  `advance_large_project` erteilt höchstens einen Auftrag, nach tatsächlicher
-  Fertigstellung aller Vorgänger. `inspect` ist nur Ledger-Lesung. Kraftgeometrie,
-  reale Netzverbindung und Betrieb getrennt nachweisen. Keine allgemeine Freigabe
-  aus `pilotEligible`; Gate und Commitregeln bleiben unverändert.
-  Beauftragte P0-Ergänzung vom 2026-10-11: `run_large_project` übernimmt einen
-  Gesamtplan autonom in der Mod; unabhängige Aufträge gemeinsam, explizite
-  Abhängigkeiten automatisch nach Fertigstellung. Kein Advance pro Teil.
-  Begrenzter Livetest mit fünf und neun Teilen bestanden; Ablauf und Grenzen:
-  `docs/autonomous-construction-batches.md`. Die Einzelschrittregel oben gilt
-  weiterhin für den manuellen Altmodus.
-
-- Maßgeblicher Etappenplan seit 2026-10-03: [missionsplan.md](missionsplan.md).
-  Zuerst bestehende Wege/Gebäude-/Baustellenzugänge erhalten und Zugang neuer
-  Gebäude während Bau und nach Fertigstellung nachweisen; erst danach Umfang
-  (Vorlagen, Weglängen, freie Höhenplanung) erweitern.
-- Reihenfolge A–E einhalten: gemeinsamer Bauprüfbericht, Baustellenlücke,
-  vollständiger kleiner Gebäudeablauf, vertikaler Gebäudeanschluss, Breitenausbau.
-  Mehr Werkzeuge oder längere Wege ersetzen keinen Nachweis der beiden Bauziele.
-- Geometrie, Distriktanschluss, Bauarbeiterzugang und fertiger Gebäudezugang
-  getrennt bewerten. unknown ist weder sicher noch unerreichbar. Pflichtprüfungen
-  mit unbekanntem Ergebnis blockieren reguläre Ausführung; Entwicklungspiloten
-  mit ausdrücklich ausgewiesenen Lücken sind kein allgemeiner Sicherheitsnachweis.
-- `completed` eines Pilots nicht als fertiges, erreichbar geprüftes Gebäude
-  darstellen. Lieferung, Besetzung und Betrieb sind separate Aussagen.
-- Ungeprüfter Vier-Wege-Ausbau ist zurückgestellt und lokal separat gesichert.
-  Nicht beiläufig in Etappe A deployen oder seine Version als verifiziert nennen.
+- Aktueller Release- und Abnahmestand: [PROJECT_STATE.md](PROJECT_STATE.md).
+  Offene Aufgaben und zurückgestellte Experimente: [BACKLOG.md](BACKLOG.md).
+  [missionsplan.md](missionsplan.md) dokumentiert den historischen Abschluss
+  von A–E und dessen Nachweisgrenzen, keine erneut abzuarbeitende Reihenfolge.
+- Für jedes Baufeature Geometrie, Distriktanschluss, Bauarbeiterzugang und
+  fertigen Gebäudezugang getrennt bewerten. Bestehende Wege und Zugänge sowie
+  Auswirkungen während der Bauphasen berücksichtigen. Mehr Werkzeuge oder
+  größere Limits ersetzen diese Nachweise nicht.
+- unknown ist weder sicher noch unerreichbar. Pflichtprüfungen mit unbekanntem
+  Ergebnis blockieren reguläre Ausführung; ausdrücklich begrenzte Entwicklungspiloten
+  sind kein allgemeiner Sicherheitsnachweis. pilotEligible ist keine allgemeine Freigabe.
+- Auftrag, Fertigstellung, Zugang, Lieferung, Besetzung und Betrieb getrennt
+  belegen. Kraftgeometrie, tatsächliche Netzverbindung und Produktion sind
+  ebenfalls unterschiedliche Nachweise.
+- Aktuelle Werkzeuggrenzen, Ausführungsmodi und Abnahmeumfänge aus Schema,
+  Fähigkeitsbericht und Fachvertrag lesen. Historische Einzelschrittregeln nicht
+  auf autonome Chargen übertragen; keine pauschale Freigabe aus Versionsnummern.
+- Zurückgestellte Entwürfe oder lokale Experimente nicht beiläufig ausliefern
+  oder als abgenommen darstellen. Vor Wiederaufnahme Nutzen und aktuellen Stand prüfen.
 
 - Ziel ist eine funktionierende MCP-Steuerung für Timberborn: Zustandsdaten, Entscheidungsgrundlagen und programmierte Eingriffe implementieren und praktisch prüfen. Analyse nur so weit betreiben, wie sie die nächste sinnvolle Umsetzung oder Fehlerklärung unterstützt.
 - Tatsächliches Spielen ist derzeit nachrangig. Prototypen und Live-Tests dienen gezielt dem Nachweis einer konkreten Fähigkeit oder der Klärung einer Lücke; keinen autonomen Kolonieaufbau als Standard-Fortsetzung betreiben.
@@ -121,5 +115,5 @@ Schutz anderer Projekte/Systemdateien und nachvollziehbare Git-Checkpoints bleib
 ## GitHub-Sicherung
 
 - Der Nutzer hat Veröffentlichung und regelmäßige Pushes dieses Projekts nach chr0mat0mcodex/timberborn-mcp ausdrücklich beauftragt.
-- Erst nach erfolgreichem menschlichem Skriptlauf und bestandenem Abschluss-Livetest eines Features gezielt committen und zum eingerichteten origin pushen; Ablauf und Grenzen stehen in DEVELOPMENT_WORKFLOW.md.
+- Feature-Code erst nach erfolgreichem menschlichem Skriptlauf und bestandenem Abschluss-Livetest gezielt committen und zu origin pushen. Reine Dokumentations-/Regelpflege darf nach der oben genannten Prüfung separat gesichert werden; Ablauf und Grenzen stehen in DEVELOPMENT_WORKFLOW.md.
 - Diese Regel gilt während der Projektarbeit. Sie richtet keinen Hintergrunddienst oder Zeitplan ein.

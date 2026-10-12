@@ -341,7 +341,7 @@ Codex-Lifecycle (live abgenommen): vor der Testübergabe
 bleibt verbunden. Unterbrochene Aufträge nie ungeprüft erneut senden.
 [Einmalige Einrichtung und Grenzen](codex-mcp-supervisor.md).
 
-Stand: Bridge 0.36.0; aktualisiert am 10. Oktober 2026.
+Stand: letzter dokumentierter Abschluss Bridge 0.50.0; aktualisiert am 12. Oktober 2026.
 Diese Anleitung beschreibt die vorhandenen MCP-Fähigkeiten. Aktueller Auftrag
 und Projektregeln stehen in [AGENTS.md](../AGENTS.md) und
 [missionsplan.md](../missionsplan.md); das lokale Spiel ist das freigegebene
@@ -408,9 +408,9 @@ zulässige Vorlagen werden im tatsächlichen Spielkatalog ermittelt.
    relevante Bestandsanschlüsse anschließend erneut lesen. Automatische Pause
    und erreichtes Zeitziel prüfen. Betrieb oder Lagerbelegung separat behandeln.
 
-### Aktuelle technische Grenzen
+### Technische Grenzen des ebenen Einzelprojektmodus
 
-- Suchfläche maximal 8x8, Objektgeometrie maximal 64 Zellen, eine Drehung und
+- Suchfläche maximal 8x8, Objektgeometrie maximal 512 native Blockeinträge, eine Drehung und
   eine Bodenwegebene pro Anfrage; Grundriss und gesamte Route innerhalb der Suche.
 - Höchstens vier neue Bodenwege und vier Projekte nacheinander pro Sitzung.
   Neues Projekt erst nach abgeschlossenem Vorgänger und fertigen Baustellen.

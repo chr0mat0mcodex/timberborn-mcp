@@ -16,5 +16,6 @@ Start: [Einstieg](../START_HERE.md) · [Projektstand](../PROJECT_STATE.md) ·
 - [Kompatibilität und Nachweise](compatibility/timberborn.md)
 
 Fachdokumente beschreiben Schnittstellen, Grenzen und überprüfbare Eigenschaften.
-Konkrete Spielstände, Bauorte, Kolonieziele und historische Testverläufe wurden
-bewusst entfernt.
+Datierte Testverläufe sind historische Belege, keine aktuellen Spielaufträge.
+Offene Arbeit steht im [Backlog](../BACKLOG.md); frühere Beobachtungen bleiben
+im [Archiv](../BACKLOG_HISTORY.md). [Konsistenzprüfung](documentation-audit-2026-10-12.md).

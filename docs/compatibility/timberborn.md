@@ -1,5 +1,12 @@
 # Kompatibilität und Nachweise
 
+## Einordnung zum aktuellen Stand
+
+Letzter dokumentierter Abschluss: 0.50.0. Neuere feature-spezifische Nachweise
+stehen im [Projektstand](../../PROJECT_STATE.md) und den verlinkten Fachverträgen.
+Die historischen Nachweise unten sind keine pauschale Abnahme neuer Fraktionen,
+Karten oder Spielversionen.
+
 ## Versionsabschluss 0.37.0
 
 Am 2026-10-11 abgeschlossen: [Releaseumfang und Nachweisgrenzen](../releases/0.37.0.md).
