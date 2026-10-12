@@ -1,5 +1,18 @@
 # 0.53 - Flächenvorprüfung und Sammelpflanzung
 
+## 0.53-Nacharbeiten abgeschlossen
+
+Menschliches Gate und gezielter Livetest am 12. Oktober 2026 bestanden.
+Native Ablehnung planting_preview_changed meldet not_executed; anschliessende
+frische Vorpruefung bestaetigt unveraenderte Markierungen. Transportunsicherheit
+und andere Konflikte bleiben unconfirmed (automatische Gegenproben im Gate).
+Compact laesst rein passende Zellbeispiele weg: 1165 statt 2929 JSON-Zeichen,
+60,2 Prozent kleiner bei gleichem Schluessel und gleichen Summen. Zusatzblockaden
+bleiben sichtbar; Full vollstaendig. Testmarkierung wiederhergestellt, alle acht
+Zellen frisch nachgelesen, Endpause bestaetigt. Keine Pflanzen oder Stapel entfernt.
+
+
+
 Status: menschliches Gate bestanden, Mod installiert; am 12. Oktober 2026
 begrenzt live abgenommen. Werkzeugkatalog nach Codex-Neustart verfuegbar.
 
@@ -22,8 +35,7 @@ begrenzt live abgenommen. Werkzeugkatalog nach Codex-Neustart verfuegbar.
 - Acht Rechtecke/512 Zellen, Teilfehler und Sessionwechsel automatisch getestet;
   keine pauschale Liveabnahme aller Pflanzen, Fraktionen oder Aquakultur.
 - 0.52-Nacharbeiten durch menschliches Gate geprueft; kein weiterer Raeumbaupilot.
-- Offene Nacharbeiten: konservatives unconfirmed bei gesicherter nativer Ablehnung,
-  zu viele already_marked-Beispiele in Compact. Siehe BACKLOG.md.
+- Die damals offenen Nacharbeiten sind inzwischen abgenommen (Nachweis oben).
 
 ## Vertrag
 

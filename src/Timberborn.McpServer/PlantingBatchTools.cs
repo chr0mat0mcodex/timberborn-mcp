@@ -62,7 +62,12 @@ public static class PlantingBatchTools
             reasons=d.Cells.SelectMany(c=>c.Reasons).GroupBy(s=>s).Select(g=>new{reason=g.Key,cells=g.Count()}).ToArray()},NativeJson.Options);
         node["evidence"]=d.Outcome=="preview"?"native_preflight_not_planting":"designation_receipt_not_growth";
         node["detailAvailable"]="full";
-        if(detail!="full") {node.Remove("cells");node["excludedExamples"]=JsonSerializer.SerializeToNode(d.Cells.Where(c=>!c.Eligible).Take(8),NativeJson.Options);node["excludedExamplesTruncated"]=d.Cells.Count(c=>!c.Eligible)>8;}
+        if(detail!="full") {
+            // A matching designation alone needs no example, but keep additional blockers.
+            var examples=d.Cells.Where(c=>!c.Eligible && (c.Result!="already_marked" || c.Reasons.Any(r=>r!="already_marked"))).ToArray();
+            node.Remove("cells");node["excludedExamples"]=JsonSerializer.SerializeToNode(examples.Take(8),NativeJson.Options);
+            node["excludedExamplesTruncated"]=examples.Length>8;
+        }
         return JsonSerializer.SerializeToNode(new NativeResult<JsonObject>(1,"ok",node,new("native",false,e.SessionId,e.ObservedAtUtc),null),NativeJson.Options)!.AsObject();
     }
 }

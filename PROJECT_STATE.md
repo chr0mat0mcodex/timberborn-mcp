@@ -1,5 +1,18 @@
 # Projektstand
 
+## 0.53-Nacharbeiten abgeschlossen
+
+Menschliches Gate und gezielter Livetest am 12. Oktober 2026 bestanden.
+Native Ablehnung planting_preview_changed meldet not_executed; anschliessende
+frische Vorpruefung bestaetigt unveraenderte Markierungen. Transportunsicherheit
+und andere Konflikte bleiben unconfirmed (automatische Gegenproben im Gate).
+Compact laesst rein passende Zellbeispiele weg: 1165 statt 2929 JSON-Zeichen,
+60,2 Prozent kleiner bei gleichem Schluessel und gleichen Summen. Zusatzblockaden
+bleiben sichtbar; Full vollstaendig. Testmarkierung wiederhergestellt, alle acht
+Zellen frisch nachgelesen, Endpause bestaetigt. Keine Pflanzen oder Stapel entfernt.
+
+
+
 ## 0.53.0 - Sammelpflanzung begrenzt live abgenommen
 
 Menschliches Gate bestanden; nativer Pilot am 12. Oktober 2026 bestaetigt.
@@ -10,9 +23,9 @@ Falsche Pflanzenart/Hoehe und veraltete Vorschau abgewiesen; Zustand frisch gele
 Compact/Full gleiche Summen; Testmarkierungen wiederhergestellt, Endpause bestaetigt.
 Nachweis gilt fuer Markierungen, nicht Wachstum; 512-Zellen-Grenze automatisiert
 getestet, nicht als grosser Liveauftrag. Kleine 0.52-Nacharbeiten im Testgate geprueft.
-Offen: praezisere Ausfuehrungsgewissheit bei nativer Ablehnung und weniger Beispiele
-bereits passender Zellen in Compact. Fruehere sporadische Gatefehler bleiben ohne
-bewiesene Ursache. Kein allgemeiner Aquakultur- oder anderer Fraktionsnachweis.
+Nacharbeiten zu Ablehnungsstatus und Compact ebenfalls live abgenommen.
+Fruehere sporadische Gatefehler bleiben ohne bewiesene Ursache.
+Kein allgemeiner Aquakultur- oder anderer Fraktionsnachweis.
 [Vertrag und Livepilot](docs/planting-batch-0.53.md).
 
 ## 0.52.0 begrenzt live abgenommen — Flächenräumung und Gruppenbau

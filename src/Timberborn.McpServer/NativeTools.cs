@@ -193,12 +193,17 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
             string code = ex is BridgeRejectionException rejection ? rejection.Code : ex is ArgumentException ? "invalid_argument" : ex is UnauthorizedAccessException ? "authentication_failed"
                 : ex is JsonException or InvalidDataException ? "backend_incompatible" : "backend_unavailable";
             bool action = name==PlantingBatchTools.Apply || ClearedGroupTools.Writes(name) || name == RegionBuildPlanning.Name || LargeProjectTools.Writes(name) || ForestryTools.Writes(name) || BuildBatchTools.Handles(name) || BuildingCompletionTools.Handles(name) || WorkflowTools.Handles(name) || BuildingConfigurationTools.Writes(name) || SimulationRunTools.Writes(name) || BuildingSettingsTools.Writes(name) || name is "unlock_building" or "place_building" or "place_path" or "place_lodge" or "set_simulation_speed" or "set_workplace_staffing" or "set_building_priority" or "set_area" or "demolish_building" or "remove_planted" or "remove_vegetation" or "remove_debris";
-            string execution=dispatch.WriteAttempts>0?"unconfirmed":action||code=="invalid_argument"?"not_executed":"not_applicable";
+            // This exact native rejection occurs before the planting ledger or first mutation.
+            // Never infer non-execution from arbitrary HTTP conflicts or transport failures.
+            bool plantingRejected=name==PlantingBatchTools.Apply && dispatch.WriteAttempts==1 &&
+                ex is BridgeRejectionException { Code: "planting_preview_changed" };
+            string execution=plantingRejected?"not_executed":dispatch.WriteAttempts>0?"unconfirmed":action||code=="invalid_argument"?"not_executed":"not_applicable";
             string message=execution switch {
                 "not_executed"=>"Nicht ausgeführt: kein schreibender Spielauftrag an den Transport übergeben. Ursache korrigieren; kein automatisches Retry.",
                 "unconfirmed"=>"Schreibender Spielauftrag an den Transport übergeben; Ausgang unbestätigt. Nur lesend klären, niemals automatisch wiederholen.",
                 _=>"Leseabfrage fehlgeschlagen. Parameter, Spielzustand, Verbindung oder Antwortdaten prüfen."
             };
+            if(plantingRejected)message="Nicht ausgeführt: native Vorprüfung hat die veraltete Pflanzvorschau vor jeder Änderung abgewiesen. Frische Vorschau lesen und neu beurteilen; kein automatisches Retry.";
             if(ArgumentDiagnostics.Hint(ex) is { } hint)message+=" "+hint;
             return (JsonObject)JsonSerializer.SerializeToNode(new NativeResult<object>(1, "error", null,
                 new("native", false, null, null), new(code,message,code=="backend_unavailable"&&!action&&dispatch.WriteAttempts==0,execution)), NativeJson.Options)!;

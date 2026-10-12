@@ -10,9 +10,9 @@ Falsche Pflanzenart/Hoehe und veraltete Vorschau abgewiesen; Zustand frisch gele
 Compact/Full gleiche Summen; Testmarkierungen wiederhergestellt, Endpause bestaetigt.
 Nachweis gilt fuer Markierungen, nicht Wachstum; 512-Zellen-Grenze automatisiert
 getestet, nicht als grosser Liveauftrag. Kleine 0.52-Nacharbeiten im Testgate geprueft.
-Offen: praezisere Ausfuehrungsgewissheit bei nativer Ablehnung und weniger Beispiele
-bereits passender Zellen in Compact. Fruehere sporadische Gatefehler bleiben ohne
-bewiesene Ursache. Kein allgemeiner Aquakultur- oder anderer Fraktionsnachweis.
+Nacharbeiten zu Ablehnungsstatus und Compact ebenfalls live abgenommen.
+Fruehere sporadische Gatefehler bleiben ohne bewiesene Ursache.
+Kein allgemeiner Aquakultur- oder anderer Fraktionsnachweis.
 [Vertrag und Livepilot](docs/planting-batch-0.53.md).
 
 ## 0.52.0 begrenzt live abgenommen — Flächenräumung und Gruppenbau

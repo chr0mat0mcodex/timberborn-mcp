@@ -1,5 +1,18 @@
 # Einstieg
 
+## 0.53-Nacharbeiten abgeschlossen
+
+Menschliches Gate und gezielter Livetest am 12. Oktober 2026 bestanden.
+Native Ablehnung planting_preview_changed meldet not_executed; anschliessende
+frische Vorpruefung bestaetigt unveraenderte Markierungen. Transportunsicherheit
+und andere Konflikte bleiben unconfirmed (automatische Gegenproben im Gate).
+Compact laesst rein passende Zellbeispiele weg: 1165 statt 2929 JSON-Zeichen,
+60,2 Prozent kleiner bei gleichem Schluessel und gleichen Summen. Zusatzblockaden
+bleiben sichtbar; Full vollstaendig. Testmarkierung wiederhergestellt, alle acht
+Zellen frisch nachgelesen, Endpause bestaetigt. Keine Pflanzen oder Stapel entfernt.
+
+
+
 ## Maßgebliche Arbeitsweise
 
 Das Spiel ist ein austauschbares Testsystem. Maßgeblich sind [AGENTS.md](AGENTS.md)

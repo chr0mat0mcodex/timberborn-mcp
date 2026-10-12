@@ -1,5 +1,12 @@
 # Native MCP-Werkzeuge
 
+0.53-Nacharbeiten live abgenommen: Bestaetigte Ablehnung einer veralteten
+Pflanzvorschau meldet not_executed; danach frisch vorpruefen und entscheiden.
+Andere Unsicherheit weiterhin nur lesend klaeren. Compact zaehlt passende
+Markierungen und zeigt Beispiele nur bei weiteren Blockaden. Full bleibt komplett.
+
+
+
 ## 0.53.0 - Sammelpflanzung begrenzt live abgenommen
 
 Menschliches Gate bestanden; nativer Pilot am 12. Oktober 2026 bestaetigt.
@@ -10,9 +17,9 @@ Falsche Pflanzenart/Hoehe und veraltete Vorschau abgewiesen; Zustand frisch gele
 Compact/Full gleiche Summen; Testmarkierungen wiederhergestellt, Endpause bestaetigt.
 Nachweis gilt fuer Markierungen, nicht Wachstum; 512-Zellen-Grenze automatisiert
 getestet, nicht als grosser Liveauftrag. Kleine 0.52-Nacharbeiten im Testgate geprueft.
-Offen: praezisere Ausfuehrungsgewissheit bei nativer Ablehnung und weniger Beispiele
-bereits passender Zellen in Compact. Fruehere sporadische Gatefehler bleiben ohne
-bewiesene Ursache. Kein allgemeiner Aquakultur- oder anderer Fraktionsnachweis.
+Nacharbeiten zu Ablehnungsstatus und Compact ebenfalls live abgenommen.
+Fruehere sporadische Gatefehler bleiben ohne bewiesene Ursache.
+Kein allgemeiner Aquakultur- oder anderer Fraktionsnachweis.
 [Vertrag und Livepilot](planting-batch-0.53.md).
 
 ## 0.52.0 begrenzt live abgenommen — Flächenräumung und Gruppenbau

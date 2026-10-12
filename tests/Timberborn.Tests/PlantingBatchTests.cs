@@ -153,6 +153,49 @@ public sealed class PlantingBatchTests
         response=await tools.Invoke(PlantingBatchTools.Preview,JsonSerializer.SerializeToElement(missing),TestContext.Current.CancellationToken);
         Assert.Contains("x, y, z",response["error"]!["message"]!.GetValue<string>());Assert.Equal(0,h.Reads);
     }
+    [Fact] public void CompactSkipsMatchingOnlyCellsButKeepsAdditionalBlockers() {
+        var r=Request();var d=new PlantingBatchController().Handle(r,new Fake());
+        foreach(var cell in d.Cells) {
+            cell.Eligible=false;cell.Existing=cell.Resource;cell.Result="already_marked";cell.Reasons=["already_marked"];
+        }
+        var e=new BridgeEnvelope<PlantingBatchReport>(1,r.Session,DateTimeOffset.UtcNow,"0.53.0",d);
+        var compact=PlantingBatchTools.Present(e,"compact");
+        Assert.Empty(compact["data"]!["excludedExamples"]!.AsArray());
+        Assert.False(compact["data"]!["excludedExamplesTruncated"]!.GetValue<bool>());
+        foreach(var cell in d.Cells.Take(9)) {cell.Reachable=false;cell.Reasons=["already_marked","outside_work_range"];}
+        compact=PlantingBatchTools.Present(e,"compact");var full=PlantingBatchTools.Present(e,"full");
+        Assert.Equal(8,compact["data"]!["excludedExamples"]!.AsArray().Count);
+        Assert.True(compact["data"]!["excludedExamplesTruncated"]!.GetValue<bool>());
+        Assert.Equal(64,full["data"]!["cells"]!.AsArray().Count);
+        Assert.True(JsonNode.DeepEquals(compact["data"]!["summary"],full["data"]!["summary"]));
+    }
+    [Theory]
+    [InlineData("preview_changed","not_executed")]
+    [InlineData("other_conflict","unconfirmed")]
+    [InlineData("malformed","unconfirmed")]
+    [InlineData("lost","unconfirmed")]
+    public async Task OnlyConfirmedStalePreviewRejectionProvesNoPlanting(string mode,string execution) {
+        var r=Request();using var h=new RejectingHandler(mode);
+        using var tools=new NativeTools(new NativeClient(new(8081,new string('a',64)),h),enableAreas:true);
+        var args=JsonSerializer.SerializeToElement(new PlantingApply(r.Session,r.JobId,r.Rectangles,new string('a',64)),NativeJson.Options);
+        var result=await tools.Invoke(PlantingBatchTools.Apply,args,TestContext.Current.CancellationToken);
+        Assert.Equal(execution,result["error"]!["execution"]!.GetValue<string>());
+        Assert.False(result["error"]!["retryable"]!.GetValue<bool>());Assert.Equal(1,h.Calls);
+        if(mode=="preview_changed") {
+            Assert.Equal("planting_preview_changed",result["error"]!["code"]!.GetValue<string>());
+            Assert.Contains("native Vorprüfung",result["error"]!["message"]!.GetValue<string>());
+        }
+    }
+    private sealed class RejectingHandler(string mode):HttpMessageHandler {
+        public int Calls;
+        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,CancellationToken ct) {
+            Calls++;Assert.Equal(HttpMethod.Post,request.Method);
+            if(mode=="lost")throw new HttpRequestException();
+            string body=mode=="preview_changed"?"{\"error\":\"planting_preview_changed\"}":
+                mode=="other_conflict"?"{\"error\":\"state_conflict\"}":"{\"error\":\"planting_preview_changed\",\"unexpected\":true}";
+            return Task.FromResult(new HttpResponseMessage(HttpStatusCode.Conflict){Content=new StringContent(body)});
+        }
+    }
     private sealed class Handler(PlantingBatchRequest r):HttpMessageHandler
     {
         public int Reads;

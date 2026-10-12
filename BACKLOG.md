@@ -10,9 +10,9 @@ Falsche Pflanzenart/Hoehe und veraltete Vorschau abgewiesen; Zustand frisch gele
 Compact/Full gleiche Summen; Testmarkierungen wiederhergestellt, Endpause bestaetigt.
 Nachweis gilt fuer Markierungen, nicht Wachstum; 512-Zellen-Grenze automatisiert
 getestet, nicht als grosser Liveauftrag. Kleine 0.52-Nacharbeiten im Testgate geprueft.
-Offen: praezisere Ausfuehrungsgewissheit bei nativer Ablehnung und weniger Beispiele
-bereits passender Zellen in Compact. Fruehere sporadische Gatefehler bleiben ohne
-bewiesene Ursache. Kein allgemeiner Aquakultur- oder anderer Fraktionsnachweis.
+Nacharbeiten zu Ablehnungsstatus und Compact ebenfalls live abgenommen.
+Fruehere sporadische Gatefehler bleiben ohne bewiesene Ursache.
+Kein allgemeiner Aquakultur- oder anderer Fraktionsnachweis.
 [Vertrag und Livepilot](docs/planting-batch-0.53.md).
 
 ## 0.52.0 begrenzt live abgenommen — Flächenräumung und Gruppenbau
@@ -149,11 +149,8 @@ nicht aus dem Versionsnamen automatisch als abgenommen behandeln.
 
 ## Nacharbeiten aus dem 0.53-Livepilot
 
-- Native Ablehnung planting_preview_changed vor Mutation wird im MCP noch als
-  execution=unconfirmed gemeldet. Konservativ, aber ungenau; gesicherten
-  Ablehnungsnachweis gesondert abbilden, echte Transportunsicherheit erhalten.
-- Compact nimmt already_marked-Zellen in excludedExamples auf: beim Achtzellenpilot
-  2372 statt 2880 JSON-Zeichen (17,6 Prozent kleiner). Passende Zellen nur zaehlen,
-  Beispiele fuer entscheidungsrelevante Blockaden reservieren.
-- MCP-Aufrufe bleiben seriell: parallele Leser werden sofort abgewiesen. Die neue
-  feste Argumentdiagnose nennt den laufenden Aufruf korrekt; keine Warteschlange.
+Am 12. Oktober 2026 abgeschlossen: Bestaetigte native Vorschau-Ablehnung meldet
+not_executed; Compact reduziert passende Markierungen auf Summen. Menschliches
+Gate und gezielter Livetest bestanden; Full bleibt vollstaendig.
+Weiter offen: MCP-Aufrufe sind seriell, parallele Leser werden sofort abgewiesen.
+Die feste Argumentdiagnose nennt den laufenden Aufruf; keine Warteschlange.
