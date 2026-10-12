@@ -19,15 +19,25 @@ public static class RegionBuildPlanning
             ["type"]="integer", ["minimum"]=1, ["maximum"]=4, ["default"]=3 };
         schema["properties"]!["templates"] = new JsonObject { ["type"]="array",["minItems"]=1,["maxItems"]=8,
             ["items"]=new JsonObject{["type"]="string",["minLength"]=1,["maxLength"]=160},
-            ["description"]="0.49: gemeinsame Gebäudegruppe in dieser Reihenfolge; Wiederholungen erlaubt. Exklusiv zu template." };
+            ["description"]="0.51: gemeinsame Gebäudegruppe mit begrenzter Rückwärtssuche; Wiederholungen erlaubt. Exklusiv zu template." };
+        schema["properties"]!["searchBudget"]=new JsonObject{["type"]="integer",["minimum"]=1,["maximum"]=32,["default"]=32};
+        var areaProperties=new JsonObject();
+        foreach(string key in new[]{"x","y","z","width","height","depth"})areaProperties[key]=new JsonObject{
+            ["type"]="integer",["minimum"]=key is "x" or "y" or "z"?0:1,
+            ["maximum"]=key is "x" or "y" or "z"?4095:key=="depth"?8:32};
+        schema["properties"]!["reservedAreas"]=new JsonObject{["type"]="array",["maxItems"]=8,
+            ["items"]=new JsonObject{["type"]="object",["additionalProperties"]=false,["properties"]=areaProperties,
+                ["required"]=new JsonArray("x","y","z","width","height","depth")}};
         var required=schema["required"]!.AsArray();
         for(int i=required.Count-1;i>=0;i--)if(required[i]?.GetValue<string>()=="template")required.RemoveAt(i);
         schema["oneOf"]=new JsonArray(
-            new JsonObject{["required"]=new JsonArray("template"),["not"]=new JsonObject{["required"]=new JsonArray("templates")}},
+            new JsonObject{["required"]=new JsonArray("template"),["not"]=new JsonObject{["anyOf"]=new JsonArray(
+                new JsonObject{["required"]=new JsonArray("templates")},new JsonObject{["required"]=new JsonArray("searchBudget")},
+                new JsonObject{["required"]=new JsonArray("reservedAreas")})}},
             new JsonObject{["required"]=new JsonArray("templates"),["not"]=new JsonObject{["required"]=new JsonArray("template")}});
         yield return new Tool { Name=Name, InputSchema=JsonSerializer.SerializeToElement(schema),
             OutputSchema=JsonSerializer.SerializeToElement(new {type="object"}),
-            Description="0.50: gemeinsame Flächenbeobachtung pro Gruppenaufruf; readMetrics nennt echte Reads und Cachetreffer. Vollbelegungs-Kollisionen vorher filtern, andere Schichten nativ prüfen. occupations nennt Art/Quelle der Belegung (Bestand ist Regionskontext, kein erfundener Ablehnungsgrund); filterSummary nennt geplante Blockierer. Kompakt begrenzte Beispiele mit total/truncated, full alle Belege. 0.49: Alternativ templates mit 1–8 Gebäuden als gemeinsamem Plan; maxCandidates gilt dann je Gebäude (insgesamt höchstens 32 Vorschauen). Gemeinsame Wege, greedy in Eingabereihenfolge ohne globale Optimierung. complete/partial/none und unplaced lesen; Teilplan enthält nur die ausgewiesenen Gebäude. Compact standardmäßig, detail=full mit allen Belegen. Mit template weiterhin Einzelalternativen. 0.48: Region wie survey_region durchsuchen, anschließend höchstens maxCandidates (1–4, Standard 3) eindeutige Kandidaten gemeinsam mit automatischen Zugangshilfen nativ prüfen. Nur pausiert und mit Bauschalter; temporäre native Vorschauen, kein Bauauftrag. Erst native_preview_passed liefert steps plus planKey für run_large_project; rejected/unchecked sind keine Freigabe. Gründe, Teilberichte, Höhen-/Suchabdeckung und Prüfanzahl bleiben sichtbar. Ein Kandidat ist eine Alternative: nie mehrere alternativ geprüfte Pläne ungeprüft zusammenbauen. Bestehende Grenzen 32 Teile/32×32/acht Höhen; keine Rodung, keine optimale oder vollständige Standortsuche. WorkBuildingId und planBuildings=false hier unzulässig. Start validiert den unveränderten Plan erneut; kein Auftrags-Replay.",
+            Description="0.51: Regionale Bauplanung mit template für Einzelalternativen oder templates für bis acht gemeinsame Gebäude. Gruppen: begrenzte Rückwärtssuche, searchBudget 1–32 native Vorschauen (Standard 32), höchstens 256 Suchzustände; maxCandidates 1–4 je Erweiterungszustand. Auswahl: mehr Wunschgebäude, danach weniger neue Wege, danach weniger Zugangshilfen. reservedAreas: bis acht harte Ausschlussvolumen, keine neuen Gebäude/Wege/Stützen darin; bestehende Wege dürfen weiter genutzt werden. Nur dieser Plan, keine dauerhafte Reservierung. complete/partial/none, unplaced, score und Suchgrenzen beachten; keine globale Optimalität. Gemeinsame Flächendaten und native Belegungsfilter; occupations ist Bestandskontext, kein erfundener Ablehnungsgrund. Compact standardmäßig, detail=full enthält alle Versuche. Nur pausiert mit Bauschalter; temporäre native Vorschauen, kein Bauauftrag. Ausschließlich zurückgegebene steps/planKey unverändert an run_large_project; Zugang und Fertigstellung separat prüfen. 32 Teile/32×32/acht Höhen; keine Rodung. workBuildingId und planBuildings=false unzulässig. searchBudget/reservedAreas nur mit templates.",
             Annotations=new(){ReadOnlyHint=false,DestructiveHint=false,IdempotentHint=true,OpenWorldHint=false} };
     }
     public static (SurveyRequest Survey,int MaxCandidates) Parse(JsonElement args)
@@ -53,7 +63,7 @@ public static class RegionBuildPlanning
         var (request,max)=Parse(args);
         var initial=await client.Simulation(ct);
         if(initial.SessionId!=request.Session)throw new BridgeRejectionException("stale_session");
-        if(initial.BridgeVersion is not ("0.48.0" or "0.49.0" or "0.50.0"))throw new InvalidDataException("regional_planning_requires_048");
+        if(initial.BridgeVersion is not ("0.48.0" or "0.49.0" or "0.50.0" or "0.51.0"))throw new InvalidDataException("regional_planning_requires_048");
         if(initial.Data.CurrentSpeed!=0)throw new BridgeRejectionException("state_conflict");
         var survey=await RegionSurvey.Observe(request,new NativeRegionSurveyPort(client),ct);
         var candidates=survey.BuildingCandidates.Concat(survey.AdditionalLevels.SelectMany(l=>l.BuildingCandidates));
@@ -88,7 +98,7 @@ public static class RegionBuildPlanning
                 var step=new LargeProjectStep {Template=request.Template,X=c.Origin.X,Y=c.Origin.Y,Z=c.Origin.Z,Rotation=c.Rotation};
                 var e=await check(step,ct); // Transport/session failures abort; never turn them into a rejected site.
                 if(e.SessionId!=request.Session)throw new BridgeRejectionException("stale_session");
-                if(e.BridgeVersion is not ("0.48.0" or "0.49.0" or "0.50.0"))throw new InvalidDataException("regional_planning_requires_048");
+                if(e.BridgeVersion is not ("0.48.0" or "0.49.0" or "0.50.0" or "0.51.0"))throw new InvalidDataException("regional_planning_requires_048");
                 var data=JsonNode.Parse(e.Data.GetRawText())!.AsObject();
                 bool ok=data["candidateFound"]!.GetValue<bool>();
                 item["state"]=ok?"native_preview_passed":"rejected";

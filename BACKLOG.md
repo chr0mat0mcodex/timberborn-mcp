@@ -1,6 +1,26 @@
 # Backlog
 
-Stand: 2026-10-12, nach begrenzter Liveabnahme von **0.50.0** (`fdbc42a`).
+## 0.51.0 — Gruppen-Rückwärtssuche begrenzt live abgenommen
+
+`plan_region_buildings` erweitert Gruppen um begrenzte Rückwärtssuche und
+`reservedAreas` (bis acht Ausschlussvolumen). `searchBudget` 1–32 native Vorschauen,
+Standard 32; höchstens 256 Suchzustände einschließlich Kandidatenprüfungen.
+`maxCandidates` 1–4 gilt pro Erweiterungszustand. Bewertung: mehr Wunschgebäude,
+danach weniger neue Wege, danach weniger Zugangshilfen. Bestätigter bester
+Teilplan bleibt bei Budgetende erhalten; keine globale Optimalitätsbehauptung.
+Native Prüfung hält auch neue Wege/Treppen/Stützen aus den Volumen heraus.
+Bestehende Wege bleiben nutzbar; Reservierungen gelten nur für den zurückgegebenen
+Plan. Keine dauerhaften Siedlungsreservierungen. Compact/Full erhalten denselben
+Plan und Suchstatus. Grenzen acht Gebäude/32 Teile/32×32/acht Höhen unverändert.
+Nach menschlichem Gate live bestätigt: Rücksprung senkt einen Viererplan von
+13 auf zehn Hilfsteile. Ziel-/Wegeausschluss und Höhenkontrolle bestanden.
+Zweiergruppe samt Treppe/zwei Wegen autonom fertig: 3,65625 Spielstunden,
+10,72 reale Sekunden; Zugänge und null Bestandsverluste bestätigt. Compact
+61.686 → 11.944 JSON-Zeichen (80,6 % kleiner), gleicher Plan/Schlüssel/Suchstatus.
+Fünf Testobjekte entfernt, keine Rohstoffe gelöscht, Endpause bestätigt.
+[Vertrag und Abnahmepilot](docs/group-search-0.51.md).
+
+Stand: 2026-10-12, nach begrenzter Liveabnahme von **0.51.0**.
 Diese Liste trennt noch offene Fähigkeiten von abgeschlossenen Teilumfängen.
 Vorschläge sind keine Implementierungsfreigabe. Test-Gate unverändert:
 [Entwicklungsablauf](DEVELOPMENT_WORKFLOW.md).
@@ -10,8 +30,8 @@ Alle bisherigen Beobachtungen bleiben im [historischen Backlog](BACKLOG_HISTORY.
 
 | ID | Verbesserung | Vorhandene Grundlage und noch offener Umfang |
 | --- | --- | --- |
-| B01 | Bessere Standortwahl | 0.50 teilt Flächendaten und filtert native Belegungskollisionen. Offen: begrenzte Rückwärtssuche, alternative Reihenfolgen und Vergleich ganzer Gruppenpläne statt ausschließlich Greedy-Auswahl. |
-| B02 | Reservierungen und Gesamtplanung | Freizuhaltende Wege, Höhenzugänge, Kraftkorridore und spätere Gebäudegrundflächen gemeinsam führen. Dauerhafte Reservierungen und Suchabdeckung fehlen; keine globale Siedlungsoptimierung behaupten. |
+| B01 | Bessere Standortwahl | 0.51: begrenzte Rückwärtssuche, Vergleich ganzer Pläne und Auslassen blockierender Wünsche abgenommen. Offen: alternative Zielreihenfolgen und breitere Suche; keine globale Optimalität. |
+| B02 | Reservierungen und Gesamtplanung | 0.51: bis acht Ausschlussvolumen für einen Gruppenplan vorhanden. Offen: dauerhafte Reservierungen, planübergreifende Korridore und Suchabdeckung; keine globale Siedlungsoptimierung. |
 | B03 | Kraft- und Höhenrouten planen | Ports, Netze, explizite Höhenpläne und Zugangshilfen existieren. Offen: allgemeine automatische Routenauswahl, Alternativstandorte und kombinierte Versorgungslayouts mit getrenntem Geometrie-/Netz-/Betriebsnachweis. |
 | B04 | Flächenumwidmung in Gruppenpläne integrieren | Vegetationsbatches und Räumwartephasen existieren. Offen: Anbaufläche → Räumung → gemeinsame Gebäudegruppe als zusammenhängender Ablauf; Arbeitszeiten berücksichtigen, Rohstoffstapel erhalten. |
 | B05 | Flächenvorprüfung und Sammelpflanzung | Konkrete blockierte Zellen/Belegungsarten vor Flächenaktionen, begrenzte Mehrrechteck-Aufträge sowie Feuchte mit tatsächlicher Arbeitsreichweite verbinden. 0.50-Belegungskontext ersetzt keine native Pflanzprüfung. |
@@ -24,8 +44,8 @@ Alle bisherigen Beobachtungen bleiben im [historischen Backlog](BACKLOG_HISTORY.
 | B12 | Weitere Effizienz und Diagnosequalität | Noch große Werkzeugantworten/-beschreibungen gezielt messen, veralteten Clientkatalog erkennbar machen, unnötige interne Reads reduzieren. Compact/Full und günstiges Warten sind bereits vorhanden. |
 | B13 | Optionale Koloniebeobachtung | Geburten/Todesfälle im Intervall, Familienwohnungen, tatsächliche Wohlbefindensursachen und historisches Bauregister. Kein fortlaufender Auftrag, alle Gebäude oder eine bestimmte Bevölkerung zu erreichen. |
 
-Empfehlung für das nächste abgegrenzte Paket: **B01 plus begrenzte Korridore aus B02**.
-Konkrete Suchbudgets, Reservierungsdauer und Pilot vor Umsetzung festlegen.
+B01 plus begrenzte Korridore aus B02 sind mit 0.51 im beauftragten Umfang erledigt.
+Nächster sinnvoller Vorschlag: B04 (Flächenumwidmung und Gruppenbau); noch nicht beauftragt.
 
 ## Offene Folgearbeiten nach Phase E
 
@@ -78,3 +98,15 @@ in den Dokumentationsabschluss. Lokale Änderungen bleiben erhalten.
 [Prüfbericht 2026-10-12](docs/documentation-audit-2026-10-12.md): korrigierte
 Altstände und die anschließend getroffenen Nutzerentscheidungen. Lokale Hermes-/Budgetänderungen
 nicht aus dem Versionsnamen automatisch als abgenommen behandeln.
+
+## Folgebeobachtungen aus 0.51
+
+- Suchbudget wirkt: 32 Vorschauen statt Greedy-Frühabschluss; Viererplan spart drei
+  Hilfsteile. Das feste Tiefensuchbudget kann frühere Wünsche lange festhalten.
+  Breitere Zielreihenfolge nur bei gemessenem Nutzen, keine automatische Budgeterhöhung.
+- Die native Bauzugangsplanung kann für kleine Gruppen weite Umwege erzeugen.
+  Gesamtplan-Kosten sichtbar lassen; Rückwärtssuche garantiert keine kürzeste Route.
+- Ein zu schmales Suchfenster ergab keine Kandidaten, die größere Kontrollfläche
+  funktionierte. Suchabdeckung nicht mit Reservierungsablehnung verwechseln.
+- Client zeigte nach Neustart noch die 0.50-Werkzeugbeschreibung, Backend nahm
+  0.51-Parameter korrekt an. Katalog-Veraltungsdiagnose bleibt B12.

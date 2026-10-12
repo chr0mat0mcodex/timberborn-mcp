@@ -8,6 +8,9 @@ public sealed partial class NativeClient
     private static void ValidateAccessPlan(BridgeEnvelope<JsonElement> envelope,LargeProjectRequest request)
     {
         var d=envelope.Data; bool found=d.GetProperty("candidateFound").GetBoolean();
+        if(request.ReservedAreas.Length>0 && (envelope.BridgeVersion!="0.51.0" ||
+            d.GetProperty("reservedAreasKey").GetString()!=ReservedArea.Encode(request.ReservedAreas) ||
+            found && !d.GetProperty("reservedAreasClear").GetBoolean()))throw new InvalidDataException("reserved_area_evidence_missing");
         string? reason=d.GetProperty("reason").GetString();
         if(reason is not {Length:>0 and <=160} || found!=(reason=="candidate"))throw new InvalidDataException();
         var steps=d.GetProperty("steps").Deserialize<LargeProjectStep[]>(NativeJson.Options)??throw new InvalidDataException();

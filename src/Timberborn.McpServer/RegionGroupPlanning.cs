@@ -6,17 +6,28 @@ using Timberborn.Bridge.Core;
 
 namespace Timberborn.McpServer;
 
-// Bounded greedy selection. Every accepted addition replaces the entire joint preview.
+// Shared observation and presentation for bounded group planning.
 public static class RegionGroupPlanning
 {
-    public static (SurveyRequest Survey, string[] Templates, int Budget) Parse(JsonElement args)
+    public static (SurveyRequest Survey, string[] Templates, int Budget, int SearchBudget, ReservedArea[] Reserved) Parse(JsonElement args)
     {
         if(args.ValueKind!=JsonValueKind.Object)throw new ArgumentException();
-        var clean=new JsonObject();var seen=new HashSet<string>();string[]? templates=null;
+        var clean=new JsonObject();var seen=new HashSet<string>();string[]? templates=null;int searchBudget=32;ReservedArea[] reserved=[];
         foreach(var p in args.EnumerateObject()) {
             if(!seen.Add(p.Name))throw new ArgumentException("duplicate_argument");
             if(p.Name=="template")throw new ArgumentException("template_and_templates_exclusive");
-            if(p.Name=="templates") {
+            if(p.Name=="searchBudget") {
+                if(p.Value.ValueKind!=JsonValueKind.Number || !p.Value.TryGetInt32(out searchBudget) || searchBudget is <1 or >32)throw new ArgumentException("search_budget_1_to_32");
+            } else if(p.Name=="reservedAreas") {
+                if(p.Value.ValueKind!=JsonValueKind.Array || p.Value.GetArrayLength()>8)throw new ArgumentException("invalid_reserved_areas");
+                foreach(var area in p.Value.EnumerateArray()) {
+                    string[] keys=["x","y","z","width","height","depth"];
+                    if(area.ValueKind!=JsonValueKind.Object || area.EnumerateObject().Count()!=6 ||
+                        keys.Any(k=>!area.TryGetProperty(k,out var v) || v.ValueKind!=JsonValueKind.Number || !v.TryGetInt32(out _)))
+                        throw new ArgumentException("invalid_reserved_areas");
+                }
+                reserved=BuildBatchState.Parse<ReservedArea[]>(p.Value);ReservedArea.Validate(reserved);
+            } else if(p.Name=="templates") {
                 if(p.Value.ValueKind!=JsonValueKind.Array)throw new ArgumentException("templates_1_to_8");
                 var values=p.Value.EnumerateArray().ToArray();
                 if(values.Length is <1 or >8 || values.Any(v=>v.ValueKind!=JsonValueKind.String ||
@@ -27,15 +38,15 @@ public static class RegionGroupPlanning
         if(templates is null)throw new ArgumentException("templates_required");
         clean["template"]=templates[0];
         var (survey,budget)=RegionBuildPlanning.Parse(JsonSerializer.SerializeToElement(clean));
-        return(survey with{MaxResults=32},templates,budget);
+        return(survey with{MaxResults=32},templates,budget,searchBudget,reserved);
     }
 
     public static async Task<JsonObject> Invoke(NativeClient client,JsonElement args,CancellationToken ct)
     {
-        var (request,templates,budget)=Parse(args);
+        var (request,templates,budget,searchBudget,reserved)=Parse(args);
         var start=await client.Simulation(ct);
         if(start.SessionId!=request.Session)throw new BridgeRejectionException("stale_session");
-        if(start.BridgeVersion!="0.50.0")throw new InvalidDataException("shared_group_planning_requires_050");
+        if(start.BridgeVersion!="0.51.0")throw new InvalidDataException("group_search_requires_051");
         if(start.Data.CurrentSpeed!=0)throw new BridgeRejectionException("state_conflict");
         var surveys=new Dictionary<string,RegionSurveyReport>(StringComparer.Ordinal);
         var choices=new Dictionary<string,SurveyCandidate[]>(StringComparer.Ordinal);
@@ -45,9 +56,10 @@ public static class RegionGroupPlanning
             surveys.Add(template,survey);
             choices.Add(template,survey.BuildingCandidates.Concat(survey.AdditionalLevels.SelectMany(l=>l.BuildingCandidates)).ToArray());
         }
-        var report=await Plan(request,templates,budget,choices,async (steps,token)=>{
+        var report=await RegionGroupSearch.Plan(request,templates,budget,searchBudget,reserved,choices,async (steps,token)=>{
             var q=new NameValueCollection{{"session",request.Session},{"districtId",request.DistrictId},
                 {"steps",LargeProjectRequest.Encode(steps)}};
+            if(reserved.Length>0)q.Add("reservedAreas",ReservedArea.Encode(reserved));
             return await client.LargeProject(LargeProjectRequest.Parse("/agent-api/v1/large-project-plan-access",q),token);
         },ct);
         var end=await client.Simulation(ct);
@@ -66,82 +78,6 @@ public static class RegionGroupPlanning
             new("native",false,request.Session,end.ObservedAtUtc),null),NativeJson.Options)!.AsObject();
     }
 
-    public static async Task<JsonObject> Plan(SurveyRequest request,string[] templates,int budget,
-        IReadOnlyDictionary<string,SurveyCandidate[]> choices,
-        Func<LargeProjectStep[],CancellationToken,Task<BridgeEnvelope<JsonElement>>> check,CancellationToken ct)
-    {
-        if(templates.Length is <1 or >8 || budget is <1 or >4)throw new ArgumentException();
-        var targets=new List<LargeProjectStep>();var selected=new JsonArray();var unplaced=new JsonArray();
-        var attempts=new JsonArray();JsonObject? final=null;int calls=0,filtered=0;
-        var selectedGeometry=new List<(int InputIndex,string Template,SurveyCandidate Candidate)>();
-        for(int index=0;index<templates.Length;index++) {
-            ct.ThrowIfCancellationRequested();
-            string template=templates[index];
-            // Exact target duplicates cannot succeed; do not spend native budget on them.
-            var candidates=choices[template].OrderBy(c=>c.NewPaths).ThenBy(c=>Math.Abs(c.Origin.Z-request.Z))
-                .ThenBy(c=>c.Origin.Z).ThenBy(c=>c.Origin.Y).ThenBy(c=>c.Origin.X).ThenBy(c=>c.Rotation)
-                .DistinctBy(c=>(c.Origin,c.Rotation)).Where(c=>!targets.Any(t=>t.Template==template &&
-                    t.X==c.Origin.X && t.Y==c.Origin.Y && t.Z==c.Origin.Z && t.Rotation==c.Rotation)).ToArray();
-            bool accepted=false;int tried=0,skipped=0;string reason="no_search_candidate";
-            foreach(var c in candidates) {
-                ct.ThrowIfCancellationRequested();
-                var blockers=selectedGeometry.Select(g=>new{g.InputIndex,g.Template,g.Candidate,cells=ConflictingCells(c,g.Candidate)})
-                    .Where(g=>g.cells.Length>0).ToArray();
-                if(blockers.Length>0) {
-                    skipped++;filtered++;reason="overlap_selected_target_occupation";
-                    attempts.Add(new JsonObject{["inputIndex"]=index,["origin"]=JsonSerializer.SerializeToNode(c.Origin,NativeJson.Options),
-                        ["rotation"]=c.Rotation,["state"]="filtered",["reason"]=reason,["phase"]="native_occupation_overlap",
-                        ["occupations"]=JsonSerializer.SerializeToNode(blockers.Select(g=>new{kind="planned_building",
-                            occupation="native_intersection_profile",inputIndex=g.InputIndex,template=g.Template,cells=g.cells,
-                            candidateLayers=(c.CellOccupations ?? []).Where(v=>g.cells.Contains(v.Position)).Select(v=>v.Occupation).Distinct().ToArray(),
-                            blockingLayers=(g.Candidate.CellOccupations ?? []).Where(v=>g.cells.Contains(v.Position)).Select(v=>v.Occupation).Distinct().ToArray()}),NativeJson.Options)});
-                    continue;
-                }
-                if(tried>=budget)break;
-                tried++;
-                var target=new LargeProjectStep{Template=template,X=c.Origin.X,Y=c.Origin.Y,Z=c.Origin.Z,Rotation=c.Rotation};
-                var proposed=targets.Append(target).ToArray();
-                try { LargeProjectRequest.Parse("/agent-api/v1/large-project-plan-access",new NameValueCollection{
-                    {"session",request.Session},{"districtId",request.DistrictId},{"steps",LargeProjectRequest.Encode(proposed)}}); }
-                catch(ArgumentException ex) {
-                    reason=ex.Message;
-                    attempts.Add(new JsonObject{["inputIndex"]=index,["origin"]=JsonSerializer.SerializeToNode(c.Origin,NativeJson.Options),
-                        ["rotation"]=c.Rotation,["state"]="rejected",["reason"]=reason,["phase"]="request_limits"});
-                    continue;
-                }
-                calls++;
-                var e=await check(proposed,ct);
-                if(e.SessionId!=request.Session)throw new BridgeRejectionException("stale_session");
-                if(e.BridgeVersion is not ("0.49.0" or "0.50.0"))throw new InvalidDataException("group_planning_requires_049");
-                var data=JsonNode.Parse(e.Data.GetRawText())!.AsObject();
-                bool ok=data["candidateFound"]!.GetValue<bool>();reason=data["reason"]!.GetValue<string>();
-                attempts.Add(new JsonObject{["inputIndex"]=index,["origin"]=JsonSerializer.SerializeToNode(c.Origin,NativeJson.Options),
-                    ["rotation"]=c.Rotation,["state"]=ok?"native_preview_passed":"rejected",["reason"]=reason,
-                    ["phase"]=data["phase"]?.DeepClone(),["blockedPart"]=data["blockedPart"]?.DeepClone(),
-                    ["observedAtUtc"]=JsonValue.Create(e.ObservedAtUtc),["evidence"]=data.DeepClone()});
-                if(!ok)continue;
-                if(data["plan"]?["pilotEligible"]?.GetValue<bool>()!=true || data["plan"]?["restored"]?.GetValue<bool>()!=true ||
-                    data["steps"] is not JsonArray || data["plan"]?["planKey"] is null)
-                    throw new InvalidDataException("regional_preview_incomplete");
-                selected.Add(new JsonObject{["inputIndex"]=index,["template"]=template,["stepIndex"]=targets.Count});
-                targets.Add(target);selectedGeometry.Add((index,template,c));
-                final=data;accepted=true;break;
-            }
-            if(!accepted)unplaced.Add(new JsonObject{["inputIndex"]=index,["template"]=template,["reason"]=reason,
-                ["attempted"]=tried,["filtered"]=skipped,["unchecked"]=candidates.Length-tried-skipped,["budgetExhausted"]=candidates.Length>tried+skipped});
-        }
-        return new JsonObject{["session"]=request.Session,["districtId"]=request.DistrictId,["mode"]="group",
-            ["state"]=targets.Count==templates.Length?"complete":targets.Count==0?"none":"partial",
-            ["requested"]=templates.Length,["planned"]=targets.Count,["selected"]=selected,["unplaced"]=unplaced,
-            ["nativeValidationCalls"]=calls,["filteredCandidates"]=filtered,["attempts"]=attempts,["jointPlan"]=final,
-            ["steps"]=final?["steps"]?.DeepClone(),["planKey"]=final?["plan"]?["planKey"]?.DeepClone(),
-            ["cleanupCandidateIndices"]=final?["cleanupCandidateIndices"]?.DeepClone(),["regularExecutionAllowed"]=false,
-            ["limitations"]=new JsonArray("greedy_input_order_no_backtracking","search_not_complete_map_coverage",
-                "partial_plan_excludes_unplaced_buildings","native_preview_not_actual_builder_or_production_proof",
-                "no_candidate_does_not_mean_unbuildable","native_validation_errors_abort_without_retry",
-                "start_requires_fresh_native_revalidation")};
-    }
-
     public static Position[] ConflictingCells(SurveyCandidate candidate,SurveyCandidate selected)
     {
         var conflicts=new HashSet<Position>();
@@ -158,8 +94,9 @@ public static class RegionGroupPlanning
 
     public static void Compact(JsonObject data)
     {
+        if(data["search"] is not null)RegionGroupSearch.Compact(data);
         // The one executable plan stays intact; earlier previews are not executable alternatives.
-        if(data["attempts"] is JsonArray attempts)
+        if(data["attempts"] is JsonArray attempts && data["search"] is null)
         {
             var skipped=new JsonArray();
             foreach(var group in attempts.OfType<JsonObject>().Where(a=>a["state"]?.GetValue<string>()=="filtered")

@@ -1,5 +1,32 @@
 # Spielanleitung für Agenten
 
+## 0.51.0 — Gruppen-Rückwärtssuche begrenzt live abgenommen
+
+`plan_region_buildings` erweitert Gruppen um begrenzte Rückwärtssuche und
+`reservedAreas` (bis acht Ausschlussvolumen). `searchBudget` 1–32 native Vorschauen,
+Standard 32; höchstens 256 Suchzustände einschließlich Kandidatenprüfungen.
+`maxCandidates` 1–4 gilt pro Erweiterungszustand. Bewertung: mehr Wunschgebäude,
+danach weniger neue Wege, danach weniger Zugangshilfen. Bestätigter bester
+Teilplan bleibt bei Budgetende erhalten; keine globale Optimalitätsbehauptung.
+Native Prüfung hält auch neue Wege/Treppen/Stützen aus den Volumen heraus.
+Bestehende Wege bleiben nutzbar; Reservierungen gelten nur für den zurückgegebenen
+Plan. Keine dauerhaften Siedlungsreservierungen. Compact/Full erhalten denselben
+Plan und Suchstatus. Grenzen acht Gebäude/32 Teile/32×32/acht Höhen unverändert.
+Nach menschlichem Gate live bestätigt: Rücksprung senkt einen Viererplan von
+13 auf zehn Hilfsteile. Ziel-/Wegeausschluss und Höhenkontrolle bestanden.
+Zweiergruppe samt Treppe/zwei Wegen autonom fertig: 3,65625 Spielstunden,
+10,72 reale Sekunden; Zugänge und null Bestandsverluste bestätigt. Compact
+61.686 → 11.944 JSON-Zeichen (80,6 % kleiner), gleicher Plan/Schlüssel/Suchstatus.
+Fünf Testobjekte entfernt, keine Rohstoffe gelöscht, Endpause bestätigt.
+[Vertrag und Abnahmepilot](group-search-0.51.md).
+
+Für Gruppen zuerst Plan lesen: `selected` ordnet Wunschindex und Schrittindex zu;
+`unplaced` enthält ausgelassene Wünsche, nicht ausführbare Platzhalter. `score`,
+`search.stopReason` und `searchSummary` erklären die beste geprüfte Auswahl.
+`complete` bedeutet vollständig geplant, nicht fertig gebaut. Nur zurückgegebene
+`steps`/`planKey` unverändert ausführen. Nach Umplanung oder neuen Reservierungen
+neu planen. Teilplan nicht stillschweigend um ausgelassene Gebäude ergänzen.
+
 ## 0.50.0 — effizientere Gruppenplanung begrenzt live abgenommen
 
 Gemeinsame Flächendaten innerhalb eines Gruppenaufrufs, frische Pause-/Sessiongrenzen
@@ -341,7 +368,7 @@ Codex-Lifecycle (live abgenommen): vor der Testübergabe
 bleibt verbunden. Unterbrochene Aufträge nie ungeprüft erneut senden.
 [Einmalige Einrichtung und Grenzen](codex-mcp-supervisor.md).
 
-Stand: letzter dokumentierter Abschluss Bridge 0.50.0; aktualisiert am 12. Oktober 2026.
+Stand: letzter dokumentierter Abschluss Bridge 0.51.0; aktualisiert am 12. Oktober 2026.
 Diese Anleitung beschreibt die vorhandenen MCP-Fähigkeiten. Aktueller Auftrag
 und Projektregeln stehen in [AGENTS.md](../AGENTS.md) und
 [missionsplan.md](../missionsplan.md); das lokale Spiel ist das freigegebene

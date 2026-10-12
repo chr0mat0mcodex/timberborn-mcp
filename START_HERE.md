@@ -9,11 +9,12 @@ MCP-Livetest. Keine historische Kolonie oder konkreter Spielstand erforderlich.
 
 ## Technischer Stand
 
-Letzter dokumentierter Abschluss: **0.50.0**, begrenzt live abgenommen und als
-`fdbc42a` gepusht. Gruppenplanung bis acht Gebäude, gemeinsame Wege/Flächendaten,
-native Belegungsfilter und Compact/Full. Grenzen: 32 Teile, 32×32, acht belegte
-Höhen; keine globale Standortoptimierung oder pauschale Katalogabnahme.
-[Nachweis](docs/efficient-group-planning.md).
+Letzter dokumentierter Abschluss: **0.51.0**, begrenzt live abgenommen.
+Gruppenplanung bis acht Gebäude mit gemeinsamer Flächenbeobachtung,
+Rückwärtssuche und bis acht Ausschlussvolumen für den konkreten Plan.
+Grenzen: 32 Teile, 32×32, acht belegte Höhen; höchstens 32 native Vorschauen und
+256 Suchzustände. Keine globale Optimalität oder dauerhaften Reservierungen.
+[Nachweis](docs/group-search-0.51.md).
 
 Aktuellen Laufzeitstand nach Wiederanschluss aus `timberborn_status` und Session
 lesen. Die Versionsnummer allein beweist nicht den Abnahmestatus lokaler Änderungen.

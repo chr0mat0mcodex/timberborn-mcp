@@ -27,7 +27,7 @@ public sealed class RegionGroupPlanningTests
     public async Task EightRepeatedBuildingsUseCumulativePreviewAndOneSharedRoad()
     {
         var sizes=new List<int>();
-        var r=await RegionGroupPlanning.Plan(Request,Enumerable.Repeat("Synthetic",8).ToArray(),3,Choices(8),(s,_)=>{
+        var r=await RegionGroupGreedyBaseline.Plan(Request,Enumerable.Repeat("Synthetic",8).ToArray(),3,Choices(8),(s,_)=>{
             sizes.Add(s.Length);return Task.FromResult(Reply(s));
         },TestContext.Current.CancellationToken);
         Assert.Equal(Enumerable.Range(1,8),sizes);Assert.Equal("complete",r["state"]!.GetValue<string>());
@@ -39,7 +39,7 @@ public sealed class RegionGroupPlanningTests
     [Fact]
     public async Task RejectedAdditionKeepsLastValidJointPlanAndReportsPartial()
     {
-        var r=await RegionGroupPlanning.Plan(Request,["Synthetic","Synthetic"],1,Choices(3),
+        var r=await RegionGroupGreedyBaseline.Plan(Request,["Synthetic","Synthetic"],1,Choices(3),
             (s,_)=>Task.FromResult(Reply(s,s.Length==1)),TestContext.Current.CancellationToken);
         Assert.Equal("partial",r["state"]!.GetValue<string>());
         Assert.Equal(1,r["planned"]!.GetValue<int>());Assert.Equal(2,r["steps"]!.AsArray().Count);
@@ -50,22 +50,22 @@ public sealed class RegionGroupPlanningTests
     public async Task GlobalBudgetIs32AndEmptySearchMakesNoPreview()
     {
         int calls=0;
-        var r=await RegionGroupPlanning.Plan(Request,Enumerable.Repeat("Synthetic",8).ToArray(),4,Choices(8),
+        var r=await RegionGroupGreedyBaseline.Plan(Request,Enumerable.Repeat("Synthetic",8).ToArray(),4,Choices(8),
             (s,_)=>{calls++;return Task.FromResult(Reply(s,false));},TestContext.Current.CancellationToken);
         Assert.Equal(32,calls);Assert.Equal("none",r["state"]!.GetValue<string>());Assert.Null(r["planKey"]);
-        await RegionGroupPlanning.Plan(Request,["Synthetic"],4,Choices(0),(_,_)=>throw new InvalidOperationException(),TestContext.Current.CancellationToken);
+        await RegionGroupGreedyBaseline.Plan(Request,["Synthetic"],4,Choices(0),(_,_)=>throw new InvalidOperationException(),TestContext.Current.CancellationToken);
     }
     [Fact]
     public async Task DifferentTemplatesSharePlanAndExtentRejectionDoesNotDispatch()
     {
         var choices=Choices(1);choices["Other"]=[Candidate(1) with{Origin=new(1,2,20)}];
         int calls=0;
-        var r=await RegionGroupPlanning.Plan(Request,["Synthetic","Other"],1,choices,
+        var r=await RegionGroupGreedyBaseline.Plan(Request,["Synthetic","Other"],1,choices,
             (s,_)=>{calls++;return Task.FromResult(Reply(s));},TestContext.Current.CancellationToken);
         Assert.Equal(1,calls);Assert.Equal("partial",r["state"]!.GetValue<string>());
         Assert.Equal("project_extent_limit",r["unplaced"]![0]!["reason"]!.GetValue<string>());
         choices["Other"]=[Candidate(1)];
-        var complete=await RegionGroupPlanning.Plan(Request,["Synthetic","Other"],1,choices,
+        var complete=await RegionGroupGreedyBaseline.Plan(Request,["Synthetic","Other"],1,choices,
             (s,_)=>Task.FromResult(Reply(s)),TestContext.Current.CancellationToken);
         Assert.Equal("Other",complete["steps"]![1]!["template"]!.GetValue<string>());
         Assert.Equal("complete",complete["state"]!.GetValue<string>());
@@ -74,23 +74,23 @@ public sealed class RegionGroupPlanningTests
     public async Task TransportSessionAndIncompleteEvidenceAbortWithoutRetry()
     {
         int calls=0;
-        await Assert.ThrowsAsync<HttpRequestException>(()=>RegionGroupPlanning.Plan(Request,["Synthetic"],4,Choices(8),
+        await Assert.ThrowsAsync<HttpRequestException>(()=>RegionGroupGreedyBaseline.Plan(Request,["Synthetic"],4,Choices(8),
             (_,_)=>{calls++;throw new HttpRequestException();},TestContext.Current.CancellationToken));
         Assert.Equal(1,calls);
-        await Assert.ThrowsAsync<BridgeRejectionException>(()=>RegionGroupPlanning.Plan(Request,["Synthetic"],4,Choices(8),
+        await Assert.ThrowsAsync<BridgeRejectionException>(()=>RegionGroupGreedyBaseline.Plan(Request,["Synthetic"],4,Choices(8),
             (s,_)=>Task.FromResult(Reply(s) with{SessionId="33333333-3333-4333-8333-333333333333"}),TestContext.Current.CancellationToken));
-        await Assert.ThrowsAsync<InvalidDataException>(()=>RegionGroupPlanning.Plan(Request,["Synthetic"],4,Choices(8),(s,_)=>{
+        await Assert.ThrowsAsync<InvalidDataException>(()=>RegionGroupGreedyBaseline.Plan(Request,["Synthetic"],4,Choices(8),(s,_)=>{
             var e=Reply(s);var n=JsonNode.Parse(e.Data.GetRawText())!;n["plan"]!["restored"]=false;
             return Task.FromResult(e with{Data=JsonSerializer.SerializeToElement(n)});
         },TestContext.Current.CancellationToken));
         using var stop=new CancellationTokenSource();stop.Cancel();
-        await Assert.ThrowsAnyAsync<OperationCanceledException>(()=>RegionGroupPlanning.Plan(Request,["Synthetic"],4,Choices(8),
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(()=>RegionGroupGreedyBaseline.Plan(Request,["Synthetic"],4,Choices(8),
             (_,_)=>throw new InvalidOperationException(),stop.Token));
     }
     [Fact]
     public async Task CompactPreservesExecutablePlanWithoutMutatingFullEvidence()
     {
-        var data=await RegionGroupPlanning.Plan(Request,["Synthetic","Synthetic"],3,Choices(2),
+        var data=await RegionGroupGreedyBaseline.Plan(Request,["Synthetic","Synthetic"],3,Choices(2),
             (s,_)=>Task.FromResult(Reply(s)),TestContext.Current.CancellationToken);
         var envelope=new JsonObject{["status"]="ok",["data"]=data};
         var before=envelope.ToJsonString();
@@ -111,7 +111,7 @@ public sealed class RegionGroupPlanningTests
         var free=Candidate(2) with{SolidCells=[new(2,2,3)]};
         var choices=new Dictionary<string,SurveyCandidate[]>{{"Synthetic",[first,overlap,free]}};
         int calls=0;
-        var r=await RegionGroupPlanning.Plan(Request,["Synthetic","Synthetic"],1,choices,
+        var r=await RegionGroupGreedyBaseline.Plan(Request,["Synthetic","Synthetic"],1,choices,
             (s,_)=>{calls++;return Task.FromResult(Reply(s));},TestContext.Current.CancellationToken);
         Assert.Equal(2,calls);Assert.Equal("complete",r["state"]!.GetValue<string>());
         Assert.Equal(1,r["filteredCandidates"]!.GetValue<int>());
@@ -123,7 +123,7 @@ public sealed class RegionGroupPlanningTests
         Assert.Equal(2,r["steps"]![1]!["x"]!.GetValue<int>());
         choices["Synthetic"]=[first,overlap with{SolidCells=null},free];
         calls=0;
-        var unknown=await RegionGroupPlanning.Plan(Request,["Synthetic","Synthetic"],1,choices,
+        var unknown=await RegionGroupGreedyBaseline.Plan(Request,["Synthetic","Synthetic"],1,choices,
             (s,_)=>{calls++;return Task.FromResult(Reply(s,s.Length==1));},TestContext.Current.CancellationToken);
         Assert.Equal(2,calls);Assert.Equal(0,unknown["filteredCandidates"]!.GetValue<int>());
         Assert.Equal("partial",unknown["state"]!.GetValue<string>());
@@ -134,7 +134,7 @@ public sealed class RegionGroupPlanningTests
         var choices=new Dictionary<string,SurveyCandidate[]>{{"Synthetic",[
             Candidate(0) with{SolidCells=[new(0,2,3)]},
             Candidate(0) with{Origin=new(0,2,4),SolidCells=[new(0,2,4)]}]}};
-        var r=await RegionGroupPlanning.Plan(Request,["Synthetic","Synthetic"],1,choices,
+        var r=await RegionGroupGreedyBaseline.Plan(Request,["Synthetic","Synthetic"],1,choices,
             (s,_)=>Task.FromResult(Reply(s)),TestContext.Current.CancellationToken);
         Assert.Equal("complete",r["state"]!.GetValue<string>());Assert.Equal(0,r["filteredCandidates"]!.GetValue<int>());
     }

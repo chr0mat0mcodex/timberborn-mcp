@@ -1,5 +1,25 @@
 # Native MCP-Werkzeuge
 
+## 0.51.0 — Gruppen-Rückwärtssuche begrenzt live abgenommen
+
+`plan_region_buildings` erweitert Gruppen um begrenzte Rückwärtssuche und
+`reservedAreas` (bis acht Ausschlussvolumen). `searchBudget` 1–32 native Vorschauen,
+Standard 32; höchstens 256 Suchzustände einschließlich Kandidatenprüfungen.
+`maxCandidates` 1–4 gilt pro Erweiterungszustand. Bewertung: mehr Wunschgebäude,
+danach weniger neue Wege, danach weniger Zugangshilfen. Bestätigter bester
+Teilplan bleibt bei Budgetende erhalten; keine globale Optimalitätsbehauptung.
+Native Prüfung hält auch neue Wege/Treppen/Stützen aus den Volumen heraus.
+Bestehende Wege bleiben nutzbar; Reservierungen gelten nur für den zurückgegebenen
+Plan. Keine dauerhaften Siedlungsreservierungen. Compact/Full erhalten denselben
+Plan und Suchstatus. Grenzen acht Gebäude/32 Teile/32×32/acht Höhen unverändert.
+Nach menschlichem Gate live bestätigt: Rücksprung senkt einen Viererplan von
+13 auf zehn Hilfsteile. Ziel-/Wegeausschluss und Höhenkontrolle bestanden.
+Zweiergruppe samt Treppe/zwei Wegen autonom fertig: 3,65625 Spielstunden,
+10,72 reale Sekunden; Zugänge und null Bestandsverluste bestätigt. Compact
+61.686 → 11.944 JSON-Zeichen (80,6 % kleiner), gleicher Plan/Schlüssel/Suchstatus.
+Fünf Testobjekte entfernt, keine Rohstoffe gelöscht, Endpause bestätigt.
+[Vertrag und Abnahmepilot](group-search-0.51.md).
+
 ## 0.50.0 — effizientere Gruppenplanung begrenzt live abgenommen
 
 Gemeinsame Flächendaten innerhalb eines Gruppenaufrufs, frische Pause-/Sessiongrenzen
@@ -261,7 +281,7 @@ kommt vom persistenten Codex-Vorschaltprozess, nicht aus der Spiel-Bridge.
 Stop sperrt das Backend vor dem menschlichen Gate; Start erst nach `live bereit`.
 [Einrichtung, Fehlerverhalten und Abnahme](codex-mcp-supervisor.md).
 
-Letzter dokumentierter Abschluss: Bridge 0.50.0, begrenzt live abgenommen.
+Letzter dokumentierter Abschluss: Bridge 0.51.0, begrenzt live abgenommen.
 Paket-/Abnahmestand: [PROJECT_STATE.md](../PROJECT_STATE.md).
 Praktischer Ablauf: [Spielanleitung für Agenten](agent-playing-guide.md).
 Historische Versionsabschnitte unten sind keine allgemeine Baufreigabe;

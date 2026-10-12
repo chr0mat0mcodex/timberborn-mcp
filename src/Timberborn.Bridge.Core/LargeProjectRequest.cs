@@ -29,6 +29,7 @@ public sealed class LargeProjectRequest
     public int Speed { get; private set; }
     public int MaxGameHours { get; private set; }
     public int MaxRealSeconds { get; private set; }
+    public ReservedArea[] ReservedAreas { get; private set; } = Array.Empty<ReservedArea>();
     public LargeProjectStep[] Steps { get; private set; } = Array.Empty<LargeProjectStep>();
     public static bool Handles(string path) => path is "/agent-api/v1/large-project-plan-access" or "/agent-api/v1/large-project-plan" or "/agent-api/v1/large-project-start" or "/agent-api/v1/large-project-run" or "/agent-api/v1/large-project-advance" or "/agent-api/v1/large-project-inspect" or "/agent-api/v1/large-project-stop" or "/agent-api/v1/large-project-diagnose" or "/agent-api/v1/large-project-close" or "/agent-api/v1/large-project-plan-repair" or "/agent-api/v1/large-project-run-repair" or "/agent-api/v1/power-network";
     public static bool Writes(string operation) => operation is "plan-access" or "plan" or "start" or "run" or "plan-repair" or "run-repair" or "advance" or "stop" or "close"; // plan uses temporary native previews
@@ -63,6 +64,9 @@ public sealed class LargeProjectRequest
         }
         else { r.ActionId = Id("actionId"); keys = new[] { "session", "actionId" }; }
         if (operation is "plan-repair" or "run-repair") { r.ParentActionId = Id("parentActionId"); keys = keys.Concat(new[] { "parentActionId" }).ToArray(); if (r.ParentActionId == r.ActionId) throw new ArgumentException("repair_identity_conflict"); }
+        if(operation=="plan-access" && q.GetValues("reservedAreas") is not null) {
+            r.ReservedAreas=ReservedArea.Decode(One("reservedAreas"));keys=keys.Concat(new[]{"reservedAreas"}).ToArray();
+        }
         if (q.Count != keys.Length || q.AllKeys.Any(k => !keys.Contains(k))) throw new ArgumentException("unexpected_project_argument");
         return r;
     }

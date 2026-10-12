@@ -106,4 +106,21 @@ public sealed class AccessPlanningTests
         payload["candidateFound"]=false;payload["steps"]![0]!["x"]=8;
         Assert.Throws<InvalidDataException>(()=>NativeClient.ValidateLargeProject(Envelope(),Request()));
     }
+    [Fact]
+    public void ReservationEvidenceMustMatchRequestEvenForFailedNativeSearch()
+    {
+        var q=new NameValueCollection{{"session",Session},{"districtId",District},{"steps",LargeProjectRequest.Encode([Part()])},
+            {"reservedAreas","1,1,1,1,1,1"}};
+        var request=LargeProjectRequest.Parse("/agent-api/v1/large-project-plan-access",q);
+        var payload=JsonSerializer.SerializeToNode(new{candidateFound=false,reason="reserved_area",steps=new[]{Part()},plan=(object?)null,
+            assessment=new{requestedParts=1,generatedParts=0,visitedNodes=0,regularExecutionAllowed=false,constructionAccess="unproven_until_live_construction"},
+            cleanupCandidateIndices=Array.Empty<int>(),limitations=new[]{"bounded_search"},reservedAreasKey="1,1,1,1,1,1",reservedAreasClear=false},NativeJson.Options)!.AsObject();
+        BridgeEnvelope<JsonElement> Envelope()=>new(1,Session,DateTimeOffset.UnixEpoch,"0.51.0",JsonSerializer.SerializeToElement(payload,NativeJson.Options));
+        NativeClient.ValidateLargeProject(Envelope(),request);
+        payload["reservedAreasKey"]="";
+        Assert.Throws<InvalidDataException>(()=>NativeClient.ValidateLargeProject(Envelope(),request));
+        payload.Remove("reservedAreasKey");
+        Assert.Throws<InvalidDataException>(()=>NativeClient.ValidateLargeProject(Envelope(),request));
+    }
+
 }

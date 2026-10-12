@@ -56,10 +56,11 @@ public sealed partial class LargeProjectService
         bool Supported(Vector3Int p)=>terrain.OnGround(p) || p.z>0&&blocks.GetObjectsAt(p+new Vector3Int(0,0,-1)).Any(b=>!b.IsPreview&&b.IsFinished&&
             b.PositionedBlocks.GetAllBlocks().Any(c=>c.Coordinates==p+new Vector3Int(0,0,-1)&&c.Stackable==BlockStackable.BlockObject));
         bool Same(LargeProjectStep a,LargeProjectStep b)=>a.Template==b.Template&&a.X==b.X&&a.Y==b.Y&&a.Z==b.Z&&a.Rotation==b.Rotation;
+        bool Reserved(LargeProjectStep s)=>Geometry(s).Any(c=>request.ReservedAreas.Any(a=>a.Contains(c.Coordinates.x,c.Coordinates.y,c.Coordinates.z)));
         bool Clear(LargeProjectStep s,IEnumerable<LargeProjectStep> additional)
         {
             var shape=Geometry(s);
-            return shape.Length is >0 and <=BuildingPolicy.MaxGeometryCells && shape.All(c=>Inside(new(c.Coordinates.x,c.Coordinates.y,c.Coordinates.z))&&
+            return !Reserved(s) && shape.Length is >0 and <=BuildingPolicy.MaxGeometryCells && shape.All(c=>Inside(new(c.Coordinates.x,c.Coordinates.y,c.Coordinates.z))&&
                 (!terrain.Underground(c.Coordinates)||c.Underground||c.OptionallyUnderground)&&
                 !blocks.GetObjectsAt(c.Coordinates).Any(b=>!b.IsPreview&&b.IsIntersecting(c))&&
                 !steps.Concat(additional).Where(other=>!Same(s,other)).Any(other=>Geometry(other).Any(c.IsIntersecting)));
@@ -151,6 +152,7 @@ public sealed partial class LargeProjectService
             blockedPart=index; phase="target_geometry"; workCellCount=0;
             var s=steps[index]; var template=Resolve(s); var spec=template.GetSpec<BlockObjectSpec>();
             if(template.HasSpec<PathSpec>()) {reason="explicit_path_target_use_manual_plan";break;}
+            if(Reserved(s)) {reason="reserved_area";break;}
             if(!Clear(s,Array.Empty<LargeProjectStep>())) {reason="target_intersects_existing_or_planned_object";break;}
             var support=new List<LargeProjectStep>();
             if(!Supports(s,support)){reason="unsupported_target_foundation";break;}
@@ -196,7 +198,7 @@ public sealed partial class LargeProjectService
             }
             catch(ArgumentException){reason="generated_plan_extent_or_dependency_limit";}
         }
-        return new {candidateFound=reason=="candidate",reason,blockedPart,phase,workCellCount,steps=steps.Select(s=>new{template=s.Template,x=s.X,y=s.Y,z=s.Z,rotation=s.Rotation,dependsOn=s.DependsOn}).ToArray(),plan,
+        return new {reservedAreasKey=ReservedArea.Encode(request.ReservedAreas),reservedAreasClear=!steps.Any(Reserved),candidateFound=reason=="candidate",reason,blockedPart,phase,workCellCount,steps=steps.Select(s=>new{template=s.Template,x=s.X,y=s.Y,z=s.Z,rotation=s.Rotation,dependsOn=s.DependsOn}).ToArray(),plan,
             assessment=new{requestedParts=request.Steps.Length,generatedParts=steps.Count-request.Steps.Length,visitedNodes=visited,
                 region=new{minX,minY,minZ,maxX,maxY,maxZ},parts=reports.ToArray(),constructionAccess="unproven_until_live_construction",regularExecutionAllowed=false},
             cleanupCandidateIndices=Enumerable.Range(request.Steps.Length,steps.Count-request.Steps.Length).Where(i=>!permanent.Contains(i)).Reverse().ToArray(),

@@ -141,5 +141,6 @@ Abwesenheit, erhaltene Bestandswege und zwei erhaltene RecoveredGoodStack-Objekt
 Endpause bestätigt. Acht Gebäude, unbekannte Masken und kompatible Schichten
 werden durch Gate-Regressionen abgesichert, nicht als zusätzliche Liveproben ausgegeben.
 
-Offen: keine globale Standortoptimierung oder Rückwärtssuche. Regionsbelegung
+Stand 0.50: keine globale Standortoptimierung oder Rückwärtssuche.
+Rückwärtssuche ist mit [0.51](group-search-0.51.md) begrenzt live abgenommen. Regionsbelegung
 ist weiterhin Kontext, nicht automatisch die konkrete Ursache jeder Ablehnung.
