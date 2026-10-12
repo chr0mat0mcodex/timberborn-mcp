@@ -6,6 +6,7 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using Timberborn.BlockObjectTools;
 using Timberborn.BlockSystem;
+using Timberborn.RecoveredGoodSystem;
 using Timberborn.Bridge.Core;
 using Timberborn.Buildings;
 using Timberborn.BuildingsReachability;
@@ -183,7 +184,7 @@ public sealed partial class LargeProjectService(BuildingCatalog catalog, Preview
                 active.Add(preview);preview.Hide();preview.Reposition(Placement(r.Steps[i]));
                 if(!preview.BlockObject.IsPreview||preview.BlockObject.AddedToService)throw new InvalidOperationException("unexpected_preview_state");
                 bool valid=preview.BlockObject.IsValid()&&validators.IsValid(preview.BlockObject);
-                bool collision=cells[i].Any(c=>blocks.GetObjectsAt(c.Coordinates).Any(b=>!b.IsPreview&&b.IsIntersecting(c)))||
+                bool collision=cells[i].Any(c=>blocks.GetObjectsAt(c.Coordinates).Any(b=>!b.IsPreview&&!b.HasComponent<RecoveredGoodStack>()&&b.IsIntersecting(c)))||
                     Enumerable.Range(0,cells.Length).Where(j=>j!=i).Any(j=>cells[i].Any(c=>cells[j].Any(c.IsIntersecting)));
                 deferred[i]=LargeProjectSupportPolicy.CanDefer(valid,collision,r.Steps[i].DependsOn,
                     cells[i].Where(c=>c.IsFoundationBlock).Select(c=>new LargeProjectSupportPolicy.Cell{X=c.Coordinates.x,Y=c.Coordinates.y,Z=c.Coordinates.z,MatterBelow=c.MatterBelow.ToString()}).ToArray(),

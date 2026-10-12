@@ -15,6 +15,7 @@ public sealed class ManagementRequest
     public string ExpectedResource { get; private set; } = "";
     public int X { get; private set; } public int Y { get; private set; } public int Z { get; private set; }
     public int Width { get; private set; } public int Height { get; private set; }
+    public bool BoundedArea { get; private set; }
     public int Offset { get; private set; } public int Limit { get; private set; }
     public static bool IsPriority(string value) => value is "VeryLow" or "Low" or "Normal" or "High" or "VeryHigh";
     public static bool IsKind(string value) => value is "tree_cutting" or "crops" or "tree_planting" or "tapping";
@@ -34,7 +35,10 @@ public sealed class ManagementRequest
             return r;
         }
         if(r.Route is "construction" or "areas") {
-            if(q.Count!=(r.Route=="construction"?2:3))throw new ArgumentException();
+            r.BoundedArea = r.Route=="areas" && q["x"] is not null;
+            if(q.Count!=(r.Route=="construction"?2:r.BoundedArea?8:3))throw new ArgumentException();
+            if(r.BoundedArea) { r.X=Number("x",0,4095);r.Y=Number("y",0,4095);r.Z=Number("z",0,4095);r.Width=Number("width",1,8);r.Height=Number("height",1,8);
+                if(r.X+r.Width>4096 || r.Y+r.Height>4096)throw new ArgumentException(); }
             r.Offset=Number("offset",0,65535);r.Limit=Number("limit",1,r.Route=="areas"?256:32);
             if(r.Route=="areas"){r.Kind=Text("kind");if(!IsKind(r.Kind))throw new ArgumentException();}return r;
         }

@@ -65,6 +65,27 @@ public sealed class ActionExecutionTests
         Assert.Equal("not_applicable",result["error"]!["execution"]!.GetValue<string>());
         Assert.True(result["error"]!["retryable"]!.GetValue<bool>());
     }
+    [Fact]
+    public async Task ContendingActionIsNotQueuedAndCancellationDoesNotReleaseAnotherCallsGate()
+    {
+        using var h=new Reply{Mode="waiting"};using var tools=Tools(h);
+        var pending=tools.Invoke("set_simulation_speed",Speed(),TestContext.Current.CancellationToken);
+        try {
+            await h.Entered.Task.WaitAsync(TestContext.Current.CancellationToken);
+            using var cancel=new CancellationTokenSource();cancel.Cancel();
+            var cancelled=await tools.Invoke("set_simulation_speed",Speed(),cancel.Token);
+            Assert.Equal("not_executed",cancelled["error"]!["execution"]!.GetValue<string>());
+            var contending=await tools.Invoke("set_simulation_speed",Speed(),TestContext.Current.CancellationToken);
+            Assert.Equal("not_executed",contending["error"]!["execution"]!.GetValue<string>());
+            Assert.False(contending["error"]!["retryable"]!.GetValue<bool>());
+            Assert.Equal(1,h.Calls);
+        } finally {h.Release.TrySetResult(true);await pending;}
+        Assert.Equal("unconfirmed",(await pending)["error"]!["execution"]!.GetValue<string>());
+        h.Mode="malformed";
+        var next=await tools.Invoke("set_simulation_speed",Speed(),TestContext.Current.CancellationToken);
+        Assert.Equal("unconfirmed",next["error"]!["execution"]!.GetValue<string>());
+        Assert.Equal(2,h.Calls);
+    }
     private sealed class Reply:HttpMessageHandler
     {
         public string Mode="malformed";

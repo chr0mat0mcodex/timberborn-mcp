@@ -41,16 +41,16 @@ public static class RegionGroupPlanning
         return(survey with{MaxResults=32},templates,budget,searchBudget,reserved);
     }
 
-    public static async Task<JsonObject> Invoke(NativeClient client,JsonElement args,CancellationToken ct)
+    public static async Task<JsonObject> Invoke(NativeClient client,JsonElement args,CancellationToken ct,IRegionSurveyPort? surveyPort=null)
     {
         var (request,templates,budget,searchBudget,reserved)=Parse(args);
         var start=await client.Simulation(ct);
         if(start.SessionId!=request.Session)throw new BridgeRejectionException("stale_session");
-        if(start.BridgeVersion!="0.51.0")throw new InvalidDataException("group_search_requires_051");
+        if(start.BridgeVersion is not ("0.51.0" or "0.52.0"))throw new InvalidDataException("group_search_requires_051");
         if(start.Data.CurrentSpeed!=0)throw new BridgeRejectionException("state_conflict");
         var surveys=new Dictionary<string,RegionSurveyReport>(StringComparer.Ordinal);
         var choices=new Dictionary<string,SurveyCandidate[]>(StringComparer.Ordinal);
-        var shared=new SharedRegionSurveyPort(new NativeRegionSurveyPort(client));
+        var shared=new SharedRegionSurveyPort(surveyPort ?? new NativeRegionSurveyPort(client));
         foreach(var template in templates.Distinct(StringComparer.Ordinal)) {
             var survey=await RegionSurvey.Observe(request with{Template=template},shared,ct);
             surveys.Add(template,survey);

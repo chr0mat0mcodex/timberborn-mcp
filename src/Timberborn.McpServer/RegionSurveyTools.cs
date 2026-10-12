@@ -45,7 +45,7 @@ public static class RegionSurveyTools
     }
 }
 
-public sealed class NativeRegionSurveyPort(NativeClient client) : IRegionSurveyPort
+public sealed class NativeRegionSurveyPort(NativeClient client, SurveyRect? areaBounds=null) : IRegionSurveyPort
 {
     private static NameValueCollection Query(params (string Key, object Value)[] fields)
     {
@@ -62,8 +62,11 @@ public sealed class NativeRegionSurveyPort(NativeClient client) : IRegionSurveyP
             ("width", r.Width), ("height", r.Height), ("depth", 1))), ct);
     public Task<BridgeEnvelope<NativeObjects>> Objects(int offset, CancellationToken ct) =>
         client.Objects(BridgeRequest.Parse("/agent-api/v1/objects", Query(("offset", offset), ("limit", 32))), ct);
-    public Task<BridgeEnvelope<NativeAreas>> Areas(string kind, int offset, CancellationToken ct) =>
-        client.Areas(ManagementRequest.Parse("/agent-api/v1/areas", Query(("kind", kind), ("offset", offset), ("limit", 32))), ct);
+    public Task<BridgeEnvelope<NativeAreas>> Areas(string kind, int offset, CancellationToken ct) {
+        var q=Query(("kind",kind),("offset",offset),("limit",32));
+        if(areaBounds is {} r) {q["x"]=r.X.ToString(CultureInfo.InvariantCulture);q["y"]=r.Y.ToString(CultureInfo.InvariantCulture);q["z"]=r.Z.ToString(CultureInfo.InvariantCulture);q["width"]=r.Width.ToString(CultureInfo.InvariantCulture);q["height"]=r.Height.ToString(CultureInfo.InvariantCulture);}
+        return client.Areas(ManagementRequest.Parse("/agent-api/v1/areas",q),ct);
+    }
     public Task<BridgeEnvelope<NativeRemovalTargets>> Targets(SurveyRect r, int offset, CancellationToken ct) =>
         client.RemovalTargets(RemovalRequest.Parse("/agent-api/v1/removal-targets", Query(("kind", "all"),
             ("x", r.X), ("y", r.Y), ("z", r.Z), ("width", r.Width), ("height", r.Height), ("depth", 1),

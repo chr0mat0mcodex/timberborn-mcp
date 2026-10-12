@@ -25,7 +25,7 @@ public sealed class RemovalRequest
         var r=new RemovalRequest{Route=path.Substring("/agent-api/v1/".Length),Kind=Text("kind"),X=Num("x",0,4095),Y=Num("y",0,4095),Z=Num("z",0,4095)};
         if(r.Route=="removal-targets") {
             if(q.Count!=9 || (r.Kind!="all"&&!IsKind(r.Kind)))throw new ArgumentException();
-            r.Width=Num("width",1,8);r.Height=Num("height",1,8);r.Depth=Num("depth",1,4);r.Offset=Num("offset",0,65535);r.Limit=Num("limit",1,32);
+            r.Width=Num("width",1,8);r.Height=Num("height",1,8);r.Depth=Num("depth",1,4);r.Offset=Num("offset",0,65535);r.Limit=Num("limit",1,256);
         } else {
             if(q.Count!=9||!IsKind(r.Kind))throw new ArgumentException();
             r.Id=Id("id");r.Session=Id("session");r.Template=Text("template");r.Operation=Text("operation");

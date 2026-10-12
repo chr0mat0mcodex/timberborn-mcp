@@ -1,5 +1,17 @@
 # Native MCP-Werkzeuge
 
+## 0.52.0 begrenzt live abgenommen — Flächenräumung und Gruppenbau
+
+Zusammenhängender Hintergrundablauf: Pflanzmarkierungen entfernen, bis 64
+Vegetationsziele räumen, auf echte Fertigstellung warten, frisch gemeinsam planen
+und bis acht Gebäude samt Wegen autonom bauen. Eine Fläche bis 8×8 auf einer Höhe;
+Rohstoffstapel ignorieren und niemals löschen. Zeitlimits, keine automatische
+Wiederholung nach Unsicherheit/Neustart. Compact/Full und lokale Statusabfrage.
+Menschliches Gate bestanden; 0.52.0 am 12. Oktober 2026 begrenzt live abgenommen.
+Räumbudget-Stopp, autonome Zweiergruppe, Pflanzmarkierungen und Bau auf
+einer Rohstoffstapel-Zelle bestätigt; Testbauten entfernt, Endpause belegt.
+[Vertrag und Abnahmepilot](cleared-building-groups-0.52.md).
+
 ## 0.51.0 — Gruppen-Rückwärtssuche begrenzt live abgenommen
 
 `plan_region_buildings` erweitert Gruppen um begrenzte Rückwärtssuche und
@@ -281,7 +293,7 @@ kommt vom persistenten Codex-Vorschaltprozess, nicht aus der Spiel-Bridge.
 Stop sperrt das Backend vor dem menschlichen Gate; Start erst nach `live bereit`.
 [Einrichtung, Fehlerverhalten und Abnahme](codex-mcp-supervisor.md).
 
-Letzter dokumentierter Abschluss: Bridge 0.51.0, begrenzt live abgenommen.
+Letzter dokumentierter Abschluss: Bridge 0.52.0, begrenzt live abgenommen.
 Paket-/Abnahmestand: [PROJECT_STATE.md](../PROJECT_STATE.md).
 Praktischer Ablauf: [Spielanleitung für Agenten](agent-playing-guide.md).
 Historische Versionsabschnitte unten sind keine allgemeine Baufreigabe;

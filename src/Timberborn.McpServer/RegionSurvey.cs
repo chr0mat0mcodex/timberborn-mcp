@@ -235,7 +235,7 @@ public static class RegionSurvey
         if (Check(await port.Simulation(ct)).CurrentSpeed != 0) throw new BridgeRejectionException("state_conflict");
         var report = new RegionSurveyReport(r.Template, new(r.X, r.Y, r.Z, r.Width, r.Height), rows,
             new() { ["."] = "unflooded_ground_no_observed_obstacle", ["v"] = "vegetation", ["c"] = "plant_or_designation",
-                ["b"] = "building_or_debris", ["o"] = "other_object_observed_occupied_cell", ["p"] = "finished_path", ["e"] = "existing_entrance",
+                ["b"] = "building", ["d"] = "movable_resource_pile", ["o"] = "other_object_observed_occupied_cell", ["p"] = "finished_path", ["e"] = "existing_entrance",
                 ["~"] = "water_or_contamination", ["h"] = "different_ground_height", ["?"] = "unknown" },
             patches, windows, candidates.OrderBy(c => c.NewPaths).ThenBy(c => c.Origin.Y).ThenBy(c => c.Origin.X)
                 .DistinctBy(c => (c.Origin, c.Rotation)).Take(r.MaxResults).ToArray(), reads, planningCalls, first!.Value, last, false,
@@ -324,7 +324,7 @@ public static class RegionSurvey
                 if (uncertain?.Contains((x, y)) == true) label = '?';
                 if (designations.Contains(pos)) label = 'c';
                 foreach (var t in targets.Where(t => t.OverlapCells is { } cells ? cells.Contains(pos) : t.Position == pos))
-                    label = t.Kind switch { "vegetation" when label == '.' => 'v', "planted" => 'c', "debris" => 'b', "other" when t.OverlapCells is not null => 'o', _ => label };
+                    label = t.Kind switch { "vegetation" when label == '.' => 'v', "planted" => 'c', "debris" => 'd', "other" when t.OverlapCells is not null => 'o', _ => label };
                 if (occupied.Contains((x, y))) label = 'b';
                 if (paths.Contains((x, y))) label = 'p';
                 if (entrances.Contains((x, y)) && !paths.Contains((x, y))) label = 'e';
@@ -357,7 +357,7 @@ public static class RegionSurvey
         var options = new List<SurveyWindow>();
         foreach (int y in Starts(r.Height, h)) foreach (int x in Starts(r.Width, w)) {
             var cells = Enumerable.Range(y, h).SelectMany(yy => rows[yy].Substring(x, w)).ToArray();
-            var window = new SurveyWindow(new(r.X + x, r.Y + y, r.Z, w, h), cells.Count(c => c == '.'), cells.Count(c => c == 'v'), cells.Count(c => c == 'p'));
+            var window = new SurveyWindow(new(r.X + x, r.Y + y, r.Z, w, h), cells.Count(c => c is '.' or 'd'), cells.Count(c => c == 'v'), cells.Count(c => c == 'p'));
             if (window.FreeCells > 0 && window.PathCells > 0) options.Add(window);
         }
         var selected = new List<SurveyWindow>(); var covered = new HashSet<(int X, int Y)>();

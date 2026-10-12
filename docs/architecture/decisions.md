@@ -44,3 +44,13 @@ automatisch wiederholt.
 
 Bauprojekte bleiben mehrstufig: Suche, Vorschau, schrittweise Ausführung und
 Statusabgleich. Wegschutz und Bauarbeiterzugang sind eigene Nachweispflichten.
+
+## 0.52 — begrenzter MCP-Dispatcher für Räumung und Gruppenplanung
+
+Die Standortsuche bleibt im bestehenden MCP-Planer. Ein begrenzter asynchroner
+Dispatcher verbindet reguläre Flächen-/Räumaktionen, deren tatsächliches Ende und
+die anschließende frische Gruppenplanung. Die Mod behält Simulation und autonome
+Bauausführung samt eigenen Zeitlimits. So ist kein zweiter nativer Standortplaner
+und kein Agentenaufruf pro Teil nötig. Checkpoints vor Mutationen, kein Replay
+nach Neustart; Ausfallgrenzen und begrenzter Live-Nachweis im
+[Featurevertrag](../cleared-building-groups-0.52.md).

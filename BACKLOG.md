@@ -1,5 +1,17 @@
 # Backlog
 
+## 0.52.0 begrenzt live abgenommen — Flächenräumung und Gruppenbau
+
+Zusammenhängender Hintergrundablauf: Pflanzmarkierungen entfernen, bis 64
+Vegetationsziele räumen, auf echte Fertigstellung warten, frisch gemeinsam planen
+und bis acht Gebäude samt Wegen autonom bauen. Eine Fläche bis 8×8 auf einer Höhe;
+Rohstoffstapel ignorieren und niemals löschen. Zeitlimits, keine automatische
+Wiederholung nach Unsicherheit/Neustart. Compact/Full und lokale Statusabfrage.
+Menschliches Gate bestanden; 0.52.0 am 12. Oktober 2026 begrenzt live abgenommen.
+Räumbudget-Stopp, autonome Zweiergruppe, Pflanzmarkierungen und Bau auf
+einer Rohstoffstapel-Zelle bestätigt; Testbauten entfernt, Endpause belegt.
+[Vertrag und Abnahmepilot](docs/cleared-building-groups-0.52.md).
+
 ## 0.51.0 — Gruppen-Rückwärtssuche begrenzt live abgenommen
 
 `plan_region_buildings` erweitert Gruppen um begrenzte Rückwärtssuche und
@@ -20,7 +32,7 @@ Zweiergruppe samt Treppe/zwei Wegen autonom fertig: 3,65625 Spielstunden,
 Fünf Testobjekte entfernt, keine Rohstoffe gelöscht, Endpause bestätigt.
 [Vertrag und Abnahmepilot](docs/group-search-0.51.md).
 
-Stand: 2026-10-12, nach begrenzter Liveabnahme von **0.51.0**.
+Stand: 2026-10-12, nach begrenzter Liveabnahme von **0.52.0**.
 Diese Liste trennt noch offene Fähigkeiten von abgeschlossenen Teilumfängen.
 Vorschläge sind keine Implementierungsfreigabe. Test-Gate unverändert:
 [Entwicklungsablauf](DEVELOPMENT_WORKFLOW.md).
@@ -33,7 +45,7 @@ Alle bisherigen Beobachtungen bleiben im [historischen Backlog](BACKLOG_HISTORY.
 | B01 | Bessere Standortwahl | 0.51: begrenzte Rückwärtssuche, Vergleich ganzer Pläne und Auslassen blockierender Wünsche abgenommen. Offen: alternative Zielreihenfolgen und breitere Suche; keine globale Optimalität. |
 | B02 | Reservierungen und Gesamtplanung | 0.51: bis acht Ausschlussvolumen für einen Gruppenplan vorhanden. Offen: dauerhafte Reservierungen, planübergreifende Korridore und Suchabdeckung; keine globale Siedlungsoptimierung. |
 | B03 | Kraft- und Höhenrouten planen | Ports, Netze, explizite Höhenpläne und Zugangshilfen existieren. Offen: allgemeine automatische Routenauswahl, Alternativstandorte und kombinierte Versorgungslayouts mit getrenntem Geometrie-/Netz-/Betriebsnachweis. |
-| B04 | Flächenumwidmung in Gruppenpläne integrieren | Vegetationsbatches und Räumwartephasen existieren. Offen: Anbaufläche → Räumung → gemeinsame Gebäudegruppe als zusammenhängender Ablauf; Arbeitszeiten berücksichtigen, Rohstoffstapel erhalten. |
+| B04 | Flächenumwidmung in Gruppenpläne integrieren | 0.52 begrenzt live abgenommen: eine Fläche bis 8×8 → Räumung → gemeinsame Gruppe. Rohstoffstapel ignoriert, keine Löschung. Größere/mehrere Flächen bleiben offen. |
 | B05 | Flächenvorprüfung und Sammelpflanzung | Konkrete blockierte Zellen/Belegungsarten vor Flächenaktionen, begrenzte Mehrrechteck-Aufträge sowie Feuchte mit tatsächlicher Arbeitsreichweite verbinden. 0.50-Belegungskontext ersetzt keine native Pflanzprüfung. |
 | B06 | Projekte über Sitzungswechsel wiederaufnehmen | Wiederanschluss innerhalb derselben Spielsession funktioniert. Offen: gespeicherte Absichten nach Neuladen mit realen Objekten abgleichen; alte Aktionen nicht blind wiederholen. |
 | B07 | Produktionsketten planen | Rezeptwahl, gemeinsame Einrichtung, Engpässe und Produktionsläufe existieren. Offen: Zutatenquellen, Lager/Transport, Personal und Kraft bereits vor Bau als gemeinsamen Ausbauplan berücksichtigen. |
@@ -45,7 +57,7 @@ Alle bisherigen Beobachtungen bleiben im [historischen Backlog](BACKLOG_HISTORY.
 | B13 | Optionale Koloniebeobachtung | Geburten/Todesfälle im Intervall, Familienwohnungen, tatsächliche Wohlbefindensursachen und historisches Bauregister. Kein fortlaufender Auftrag, alle Gebäude oder eine bestimmte Bevölkerung zu erreichen. |
 
 B01 plus begrenzte Korridore aus B02 sind mit 0.51 im beauftragten Umfang erledigt.
-Nächster sinnvoller Vorschlag: B04 (Flächenumwidmung und Gruppenbau); noch nicht beauftragt.
+B04 ist als 0.52 im begrenzten Umfang live abgenommen. Mehrere oder größere Räumflächen bleiben offen.
 
 ## Offene Folgearbeiten nach Phase E
 
@@ -110,3 +122,12 @@ nicht aus dem Versionsnamen automatisch als abgenommen behandeln.
   funktionierte. Suchabdeckung nicht mit Reservierungsablehnung verwechseln.
 - Client zeigte nach Neustart noch die 0.50-Werkzeugbeschreibung, Backend nahm
   0.51-Parameter korrekt an. Katalog-Veraltungsdiagnose bleibt B12.
+
+## Folgebeobachtungen aus 0.52
+
+- Compact ist im Zweierpilot 92,2 % kleiner (67.790 auf 5.268 JSON-Zeichen),
+  enthält aber noch viele leere Produktionsfelder im Räumlauf. Weiter kürzen.
+- Ungültige jobId wurde korrekt vor Transport abgewiesen; die allgemeine
+  Fehlermeldung verschweigt jedoch die konkrete UUID-Anforderung. Diagnose verbessern.
+- B12 bleibt: neue Werkzeuge wurden erst nach Codex-Neustart verfügbar,
+  obwohl der Vorschaltprozess bereits den aktuellen Katalog meldete.

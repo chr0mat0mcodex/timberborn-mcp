@@ -7,6 +7,7 @@ using Timberborn.Coordinates;
 using Timberborn.EntitySystem;
 using Timberborn.GameFactionSystem;
 using Timberborn.ResourceCountingSystem;
+using Timberborn.RecoveredGoodSystem;
 using Timberborn.ScienceSystem;
 using Timberborn.TemplateSystem;
 using Timberborn.TerrainSystem;
@@ -108,7 +109,7 @@ public sealed class SpatialObservations(EntityRegistry entities, TemplateNameMap
             bool inside = terrain.Contains(p) && blocks.Contains(p);
             bool underground = inside && terrain.Underground(p);
             bool onGround = inside && terrain.OnGround(p);
-            bool intersects = inside && blocks.GetObjectsAt(p).Any(other => !other.IsPreview && other.IsIntersecting(block));
+            bool intersects = inside && blocks.GetObjectsAt(p).Any(other => !other.IsPreview && !other.HasComponent<RecoveredGoodStack>() && other.IsIntersecting(block));
             if (!inside) reasons.Add("outside_map");
             if (intersects) reasons.Add("object_intersection");
             if (underground && !block.Underground && !block.OptionallyUnderground) reasons.Add("terrain_intersection");

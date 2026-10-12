@@ -67,7 +67,7 @@ public static class ResponsePresentation
         if (args.ValueKind != JsonValueKind.Object) throw new ArgumentException("Expected object");
         // These tools own their detail contract: search skips native geometry work,
         // and batch returns a typed compact/full view after validating raw evidence.
-        if (BuildingQueryTools.Handles(name)) return (args, false);
+        if (BuildingQueryTools.Handles(name) || ClearedGroupTools.Handles(name)) return (args, false);
         bool seen = false, full = false;
         using var stream = new MemoryStream();
         using (var writer = new Utf8JsonWriter(stream)) {

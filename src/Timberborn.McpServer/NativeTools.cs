@@ -11,6 +11,8 @@ namespace Timberborn.McpServer;
 
 public sealed class NativeTools(NativeClient client, bool enableValidation = false, bool enablePlacement = false, bool enableLodgePlacement = false, bool enableSpeedControl = false, bool enableStaffing = false, bool enablePriorities = false, bool enableAreas = false, bool enableRemoval = false, bool enableBuildingPlacement = false, bool enableBuildingSettings = false, bool enableResearch = false) : IDisposable
 {
+    private readonly ClearedGroupTools clearedGroups = new(new NativeClearedGroupPort(client), Path.Combine(AppContext.BaseDirectory,".local","cleared-groups"));
+    private readonly SemaphoreSlim callGate = new(1,1);
     public static IReadOnlyList<Tool> Catalog(bool enableValidation = false, bool enablePlacement = false, bool enableLodgePlacement = false, bool enableSpeedControl = false, bool enableStaffing = false, bool enablePriorities = false, bool enableAreas = false, bool enableRemoval = false, bool enableBuildingPlacement = false, bool enableBuildingSettings = false, bool enableResearch = false)
     {
         var options = new JsonSerializerOptions(NativeJson.Options) { TypeInfoResolver = new DefaultJsonTypeInfoResolver() };
@@ -79,16 +81,24 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
                     : "Liest Erreichbarkeit, Bridge-Version und aktuelle Spielsitzung der eigenen Mod. Dieser Aufruf ist lesend; der Teststarter aktiviert alle vorhandenen Aktionsgruppen. Die bestehende MCP-Verbindung des Clients verwenden; für Spielaufgaben keine zusätzlichen Startskripte oder dotnet-Prozesse starten. stdio wird vom Client verwaltet und erlaubt keinen nachträglichen Anschluss an einen separat gestarteten Prozess. backend_unavailable ist kein Beleg für einen defekten MCP-Prozess; Spiel, Mod und Ladezustand prüfen. Kein Fallback auf Fremdmods.",
                 InputSchema = JsonSerializer.SerializeToElement(input), OutputSchema = JsonSerializer.SerializeToElement(options.GetJsonSchemaAsNode(result)),
                 Annotations = new() { ReadOnlyHint = !action, DestructiveHint = action, IdempotentHint = !action, OpenWorldHint = false } };
-        }).Concat(BuildingQueryTools.Catalog()).Concat(SimulationRunTools.Catalog(enableSpeedControl)).Concat(BuildingConfigurationTools.Catalog(enableBuildingSettings && enableStaffing && enableSpeedControl)).Concat(ManagementTools.Catalog(enablePriorities, enableAreas)).Concat(RemovalTools.Catalog(enableRemoval)).Concat(BuildingTools.Catalog(enableBuildingPlacement)).Concat(BuildingSettingsTools.Catalog(enableBuildingSettings)).Concat(ResearchTools.Catalog(enableResearch)).Concat(EconomyTools.Catalog()).Concat(LogisticsTools.Catalog()).Concat(DiagnosticsTools.Catalog()).Append(RecentActionsTools.Reader()).Append(ActivityTools.Reader()).Append(ProductionGraphTools.Reader()).Append(SelectionTools.Reader()).Append(ScreenshotTools.Reader()).Append(BuildingCapabilityTools.Reader()).Append(ColonyOverviewTools.Reader()).Append(RegionSurveyTools.Reader()).Concat(RegionBuildPlanning.Catalog(enableBuildingPlacement)).Concat(ForestryTools.Catalog(enableAreas)).Concat(WorkflowTools.Catalog(enableRemoval, enableBuildingPlacement)).Concat(BuildingCompletionTools.Catalog(enableBuildingPlacement && enableSpeedControl)).Concat(BuildBatchTools.Catalog(enableBuildingPlacement && enableSpeedControl)).Concat(LargeProjectTools.Catalog(enableBuildingPlacement, enableSpeedControl)).Select(ActivityTools.WithReasoning).ToArray();
+        }).Concat(BuildingQueryTools.Catalog()).Concat(SimulationRunTools.Catalog(enableSpeedControl)).Concat(BuildingConfigurationTools.Catalog(enableBuildingSettings && enableStaffing && enableSpeedControl)).Concat(ManagementTools.Catalog(enablePriorities, enableAreas)).Concat(RemovalTools.Catalog(enableRemoval)).Concat(BuildingTools.Catalog(enableBuildingPlacement)).Concat(BuildingSettingsTools.Catalog(enableBuildingSettings)).Concat(ResearchTools.Catalog(enableResearch)).Concat(EconomyTools.Catalog()).Concat(LogisticsTools.Catalog()).Concat(DiagnosticsTools.Catalog()).Append(RecentActionsTools.Reader()).Append(ActivityTools.Reader()).Append(ProductionGraphTools.Reader()).Append(SelectionTools.Reader()).Append(ScreenshotTools.Reader()).Append(BuildingCapabilityTools.Reader()).Append(ColonyOverviewTools.Reader()).Append(RegionSurveyTools.Reader()).Concat(RegionBuildPlanning.Catalog(enableBuildingPlacement)).Concat(ForestryTools.Catalog(enableAreas)).Concat(WorkflowTools.Catalog(enableRemoval, enableBuildingPlacement)).Concat(BuildingCompletionTools.Catalog(enableBuildingPlacement && enableSpeedControl)).Concat(BuildBatchTools.Catalog(enableBuildingPlacement && enableSpeedControl)).Concat(LargeProjectTools.Catalog(enableBuildingPlacement, enableSpeedControl)).Concat(ClearedGroupTools.Catalog(enableBuildingPlacement && enableSpeedControl && enableRemoval && enableAreas)).Select(ActivityTools.WithReasoning).ToArray();
     }
     public async Task<JsonObject> Invoke(string name, JsonElement args, CancellationToken ct)
     {
         using var dispatch=new NativeDispatchTrace();
+        bool ownsGate=false;
         JsonObject Wrap<T>(BridgeEnvelope<T> envelope) => (JsonObject)JsonSerializer.SerializeToNode(
             new NativeResult<T>(1, "ok", envelope.Data, new("native", false, envelope.SessionId, envelope.ObservedAtUtc), null), NativeJson.Options)!;
         try
         {
+            // Admission belongs to the same result boundary as native dispatch.
+            // Reject contention instead of queuing an action behind an unknown result.
+            ownsGate=await callGate.WaitAsync(0,ct);
+            if(!ownsGate)throw new ArgumentException("another_call_in_progress_not_queued");
             args=ActivityTools.WithoutReasoning(args);
+            if(ClearedGroupTools.Handles(name))return await clearedGroups.Invoke(name,args,enableBuildingPlacement && enableSpeedControl && enableRemoval && enableAreas,ct);
+            if(clearedGroups.Active && Catalog(true,true,true,true,true,true,true,true,true,true,true).Any(t=>t.Name==name && t.Annotations?.ReadOnlyHint!=true))
+                throw new ArgumentException("cleared_group_owns_dispatch_stop_or_wait");
             if (StatusWaitTools.Handles(name)) return await StatusWaitTools.Invoke(client,name,args,ct);
             if(LargeProjectTools.Handles(name)) return await LargeProjectTools.Invoke(client,name,args,enableBuildingPlacement,ct,enableSpeedControl);
             if (name==RecentActionsTools.Name) return await RecentActionsTools.Invoke(client,args,ct);
@@ -181,7 +191,7 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
         {
             string code = ex is BridgeRejectionException rejection ? rejection.Code : ex is ArgumentException ? "invalid_argument" : ex is UnauthorizedAccessException ? "authentication_failed"
                 : ex is JsonException or InvalidDataException ? "backend_incompatible" : "backend_unavailable";
-            bool action = name == RegionBuildPlanning.Name || LargeProjectTools.Writes(name) || ForestryTools.Writes(name) || BuildBatchTools.Handles(name) || BuildingCompletionTools.Handles(name) || WorkflowTools.Handles(name) || BuildingConfigurationTools.Writes(name) || SimulationRunTools.Writes(name) || BuildingSettingsTools.Writes(name) || name is "unlock_building" or "place_building" or "place_path" or "place_lodge" or "set_simulation_speed" or "set_workplace_staffing" or "set_building_priority" or "set_area" or "demolish_building" or "remove_planted" or "remove_vegetation" or "remove_debris";
+            bool action = ClearedGroupTools.Writes(name) || name == RegionBuildPlanning.Name || LargeProjectTools.Writes(name) || ForestryTools.Writes(name) || BuildBatchTools.Handles(name) || BuildingCompletionTools.Handles(name) || WorkflowTools.Handles(name) || BuildingConfigurationTools.Writes(name) || SimulationRunTools.Writes(name) || BuildingSettingsTools.Writes(name) || name is "unlock_building" or "place_building" or "place_path" or "place_lodge" or "set_simulation_speed" or "set_workplace_staffing" or "set_building_priority" or "set_area" or "demolish_building" or "remove_planted" or "remove_vegetation" or "remove_debris";
             string execution=dispatch.WriteAttempts>0?"unconfirmed":action||code=="invalid_argument"?"not_executed":"not_applicable";
             string message=execution switch {
                 "not_executed"=>"Nicht ausgeführt: kein schreibender Spielauftrag an den Transport übergeben. Ursache korrigieren; kein automatisches Retry.",
@@ -191,6 +201,7 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
             return (JsonObject)JsonSerializer.SerializeToNode(new NativeResult<object>(1, "error", null,
                 new("native", false, null, null), new(code,message,code=="backend_unavailable"&&!action&&dispatch.WriteAttempts==0,execution)), NativeJson.Options)!;
         }
+        finally { if(ownsGate)callGate.Release(); }
     }
     public async Task<JsonObject> InvokeLogged(string name,JsonElement args,CancellationToken ct)
     {
@@ -206,7 +217,7 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
             if(result["error"]?["execution"]?.GetValue<string>()=="unconfirmed")state="unconfirmed";
             if(BuildingConfigurationTools.Handles(name) && (result["data"]?["outcome"]?.GetValue<string>()=="partial" || result["data"]?["proofState"]?.GetValue<string>()=="unconfirmed"))state="unconfirmed";
             if(name=="unlock_building" && result["data"]?["outcome"]?.GetValue<string>() is "cost_changed" or "unavailable" or "insufficient_points" or "not_unlockable")state="rejected";
-            if(LargeProjectTools.Handles(name) && result["data"]?["state"]?.GetValue<string>()=="unconfirmed")state="unconfirmed";
+            if((LargeProjectTools.Handles(name) || ClearedGroupTools.Handles(name)) && result["data"]?["state"]?.GetValue<string>()=="unconfirmed")state="unconfirmed";
             return result;
         } catch(OperationCanceledException){state="cancelled";throw;}
         finally {
@@ -216,5 +227,5 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
             } else Console.Error.WriteLine("Ingame MCP activity log unavailable for this call.");
         }
     }
-    public void Dispose() => client.Dispose();
+    public void Dispose() {clearedGroups.Dispose();client.Dispose();}
 }

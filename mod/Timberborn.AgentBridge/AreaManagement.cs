@@ -33,6 +33,7 @@ public sealed class AreaManagement(TreeCuttingArea cutting, PlantingService plan
         var pineStates=entities.Entities.Where(e=>e.Initialized&&!e.Deleted&&e.HasComponent<TreeComponent>()&&e.TryGetComponent<TemplateSpec>(out var t)&&t.TemplateName=="Pine"&&e.TryGetComponent<BlockObject>(out var b)&&!b.IsPreview&&!cutting.IsInCuttingArea(b.Coordinates)).Select(e=>new{position=e.GetComponent<BlockObject>().Coordinates,state=VegetationObservations.Observe(e)}).Where(p=>p.state?.IsTappingCandidate()==true).GroupBy(p=>p.position).ToDictionary(g=>g.Key,g=>g.First().state!);
         var catalog=Plants().ToDictionary(p=>p.TemplateName,p=>Kind(p));
         var coordinates=(r.Kind=="tapping"?pineStates.Keys.AsEnumerable():r.Kind=="tree_cutting"?cutting.CuttingArea:planting.PlantingCoordinates.Where(p=>catalog.TryGetValue(planting.GetResourceAt(p),out var k)&&k==r.Kind))
+            .Where(p=>!r.BoundedArea || p.x>=r.X && p.x<r.X+r.Width && p.y>=r.Y && p.y<r.Y+r.Height && p.z==r.Z)
             .OrderBy(p=>p.z).ThenBy(p=>p.y).ThenBy(p=>p.x).ToArray();
         var items=coordinates.Skip(r.Offset).Take(r.Limit).Select(p=>new{position=Vec(p),resource=State(p,r.Kind),vegetation=r.Kind=="tapping"?VegetationObservations.ToPayload(pineStates[p]):null}).ToArray();
         return new{kind=r.Kind,supported=true,offset=r.Offset,limit=r.Limit,total=(int?)coordinates.Length,items,hasMore=r.Offset+items.Length<coordinates.Length,

@@ -7,9 +7,14 @@ und der unveränderte [Entwicklungsablauf](DEVELOPMENT_WORKFLOW.md): Agent entwi
 und prüft Quelltext/Diff; der Mensch testet, baut und installiert; danach gezielter
 MCP-Livetest. Keine historische Kolonie oder konkreter Spielstand erforderlich.
 
+## Aktueller Auftrag
+
+0.52 Flächenräumung und gemeinsamer Gruppenbau ist begrenzt live abgenommen.
+Nächste Erweiterung nach dem bereinigten Backlog auswählen. [Vertrag](docs/cleared-building-groups-0.52.md).
+
 ## Technischer Stand
 
-Letzter dokumentierter Abschluss: **0.51.0**, begrenzt live abgenommen.
+Letzter dokumentierter Abschluss: **0.52.0**, begrenzt live abgenommen.
 Gruppenplanung bis acht Gebäude mit gemeinsamer Flächenbeobachtung,
 Rückwärtssuche und bis acht Ausschlussvolumen für den konkreten Plan.
 Grenzen: 32 Teile, 32×32, acht belegte Höhen; höchstens 32 native Vorschauen und

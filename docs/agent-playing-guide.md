@@ -1,5 +1,25 @@
 # Spielanleitung für Agenten
 
+## 0.52.0 begrenzt live abgenommen — Flächenräumung und Gruppenbau
+
+Zusammenhängender Hintergrundablauf: Pflanzmarkierungen entfernen, bis 64
+Vegetationsziele räumen, auf echte Fertigstellung warten, frisch gemeinsam planen
+und bis acht Gebäude samt Wegen autonom bauen. Eine Fläche bis 8×8 auf einer Höhe;
+Rohstoffstapel ignorieren und niemals löschen. Zeitlimits, keine automatische
+Wiederholung nach Unsicherheit/Neustart. Compact/Full und lokale Statusabfrage.
+Menschliches Gate bestanden; 0.52.0 am 12. Oktober 2026 begrenzt live abgenommen.
+Räumbudget-Stopp, autonome Zweiergruppe, Pflanzmarkierungen und Bau auf
+einer Rohstoffstapel-Zelle bestätigt; Testbauten entfernt, Endpause belegt.
+[Vertrag und Abnahmepilot](cleared-building-groups-0.52.md).
+
+Für 0.52: `plan_cleared_building_group` mit neuer jobId als UUID und konkreter spec lesen;
+bei passender Räumvorschau genau diese spec/clearanceKey einmal starten. Danach
+`inspect_cleared_building_group`, kein Advance je Pflanze/Gebäude. Für Belege
+`detail=full` am selben Job lesen. Zeitbudget passend zu Arbeitsschichten wählen.
+Bei interrupted/unconfirmed native runId/actionId abgleichen, keine neue jobId als
+Wiederholung. Rohstoffstapel dürfen im Baugebiet bleiben; Spiel verschiebt sie.
+Teilplan nach Räumung ist kein Auftrag: Lage/Zugänge prüfen und neu entscheiden.
+
 ## 0.51.0 — Gruppen-Rückwärtssuche begrenzt live abgenommen
 
 `plan_region_buildings` erweitert Gruppen um begrenzte Rückwärtssuche und
@@ -368,7 +388,7 @@ Codex-Lifecycle (live abgenommen): vor der Testübergabe
 bleibt verbunden. Unterbrochene Aufträge nie ungeprüft erneut senden.
 [Einmalige Einrichtung und Grenzen](codex-mcp-supervisor.md).
 
-Stand: letzter dokumentierter Abschluss Bridge 0.51.0; aktualisiert am 12. Oktober 2026.
+Stand: letzter dokumentierter Abschluss Bridge 0.52.0; aktualisiert am 12. Oktober 2026.
 Diese Anleitung beschreibt die vorhandenen MCP-Fähigkeiten. Aktueller Auftrag
 und Projektregeln stehen in [AGENTS.md](../AGENTS.md) und
 [missionsplan.md](../missionsplan.md); das lokale Spiel ist das freigegebene
