@@ -222,8 +222,10 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
             (session,saveName)=>fileLog?.Write("activity_started",displayName,"running",callId:id,session:session,correlations:references,reasoning:detail.Reasoning,summary:detail.Summary,saveName:saveName));
         string state="error";
         string? errorCode=null;
+        string outcomeSummary=ActivityOutcome.Handles(name)?"Kein bestätigtes Ergebnis verfügbar.":"";
         try {
             var result=await Invoke(name,args,ct);
+            outcomeSummary=ActivityOutcome.Describe(name,result);
             errorCode=result["error"]?["code"]?.GetValue<string>();
             references=ActivityCorrelation.Merge(references,ActivityCorrelationTools.Result(name,result));
             state=result["status"]?.GetValue<string>()=="error"?(BridgeRejectionException.IsCode(result["error"]?["code"]?.GetValue<string>())?"rejected":"error"):result["data"]?["outcome"]?.GetValue<string>() is "applied" or "rejected" or "unconfirmed" ? result["data"]!["outcome"]!.GetValue<string>() : "ok";
@@ -235,9 +237,9 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
             return result;
         } catch(OperationCanceledException){state="cancelled";throw;}
         finally {
-            fileLog?.Write("call_finished",displayName,state,errorCode,id,logSession,references,reasoning:detail.Reasoning,summary:detail.Summary);
+            fileLog?.Write("call_finished",displayName,state,errorCode,id,logSession,references,reasoning:detail.Reasoning,summary:detail.Summary,outcomeSummary:outcomeSummary);
             if(logSession is not null) {
-                var logged=await client.TryRecordActivity(id,displayName,state,logSession,"","",references);
+                var logged=await client.TryRecordActivity(id,displayName,state,logSession,"","",references,outcomeSummary:outcomeSummary);
                 if(logged is null) {
                     fileLog?.Write("telemetry_failed",displayName,code:"completion_unavailable",callId:id);
                     Console.Error.WriteLine("MCP activity completion could not be recorded; do not retry the action.");

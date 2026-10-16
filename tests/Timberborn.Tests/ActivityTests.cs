@@ -137,6 +137,8 @@ public sealed class ActivityTests
             Assert.Equal(handler.Session,completed.RootElement.GetProperty("session").GetString());
             Assert.Equal("applied",completed.RootElement.GetProperty("state").GetString());
             Assert.Equal("Synthetischer Logtest",completed.RootElement.GetProperty("reasoning").GetString());
+            Assert.Equal("Gebäude pausiert – Zustand bestätigt.",completed.RootElement.GetProperty("outcomeSummary").GetString());
+            Assert.Equal("Gebäude pausiert – Zustand bestätigt.",handler.Outcome);
             Assert.Equal(1,handler.ActionCalls);Assert.Equal(0,log.FailedWrites);
         } finally {if(Directory.Exists(folder))Directory.Delete(folder,true);}
     }
@@ -159,7 +161,7 @@ public sealed class ActivityTests
         Assert.Equal("ok", result["status"]!.GetValue<string>());
         Assert.Empty(result["data"]!["items"]!.AsArray());
     }
-    [Theory] [InlineData("0.55.0","{}")] [InlineData("0.56.0","{}")] [InlineData("0.57.0","{}")] [InlineData("0.54.0","{\"limit\":1}")]
+    [Theory] [InlineData("0.55.0","{}")] [InlineData("0.56.0","{}")] [InlineData("0.57.0","{}")] [InlineData("0.58.0","{}")] [InlineData("0.54.0","{\"limit\":1}")]
     public async Task MissingPageMetadataIsNeverInvented(string version,string json)
     {
         using var client=new NativeClient(new(8081,new string('a',64)),new ActivityReadHandler(version));
@@ -180,12 +182,13 @@ public sealed class ActivityTests
     }
     private sealed class ActivityHandler:HttpMessageHandler
     {
-        public string Session=Guid.NewGuid().ToString();public Guid Id=Guid.NewGuid();public List<string> States=new();public int ActionCalls;public bool FailCompletion;
+        public string Session=Guid.NewGuid().ToString();public Guid Id=Guid.NewGuid();public List<string> States=new();public int ActionCalls;public bool FailCompletion;public string Outcome="";
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,CancellationToken ct)
         {
             object data;
             if(request.RequestUri!.AbsolutePath.EndsWith("/activity")) {
                 var query=System.Web.HttpUtility.ParseQueryString(request.RequestUri.Query);var state=query["state"]!;States.Add(state);
+                if(request.Headers.TryGetValues("X-Agent-Outcome",out var outcome))Outcome=ActivityRequest.Decode(outcome.Single(),400);
                 Assert.Equal(HttpMethod.Post,request.Method);Assert.Null(request.Content);
                 Assert.DoesNotContain("reasoning",request.RequestUri.Query);
                 if(state=="running")Assert.Equal("",query["session"]);else Assert.Equal(Session,query["session"]);

@@ -130,14 +130,15 @@ public sealed class ActivityCorrelationTests
         Assert.Throws<ArgumentException>(()=>Query(run:"invalid"));
     }
 
-    [Theory] [InlineData("0.56.0")] [InlineData("0.57.0")]
+    [Theory] [InlineData("0.56.0")] [InlineData("0.57.0")] [InlineData("0.58.0")]
     public async Task ResultReferenceCrossesHeaderAndSurvivesReadback(string version)
     {
         var handler=new Handler(version);using var client=new NativeClient(new(8081,new string('a',64)),handler);
         Assert.Equal(Parent,await client.TryRecordActivity(Project,"run_large_project","running","","Synthetisch.","",[Ref("project",Project)]));
-        Assert.Equal(Parent,await client.TryRecordActivity(Project,"run_large_project","ok",Parent,"","",[Ref("run",Run,"result")]));
+        Assert.Equal(Parent,await client.TryRecordActivity(Project,"run_large_project","ok",Parent,"","",[Ref("run",Run,"result")],outcomeSummary:"Synthetischer Ergebnisbeleg."));
         var result=await ActivityTools.Read(client,JsonSerializer.SerializeToElement(new{projectId=Project,runId=Run}),TestContext.Current.CancellationToken);
         var entry=Assert.Single(result["data"]!["items"]!.AsArray());
+        Assert.Equal("Synthetischer Ergebnisbeleg.",entry!["outcomeSummary"]!.GetValue<string>());
         Assert.Contains(entry!["correlations"]!.AsArray(),item=>item!["kind"]!.GetValue<string>()=="run"&&item["source"]!.GetValue<string>()=="result");
         Assert.Contains("Ergebnis",ActivityCorrelation.Display(Ref("run",Run,"result")));
     }
@@ -167,6 +168,7 @@ public sealed class ActivityCorrelationTests
                 query.Add("reasoning",ActivityRequest.Decode(request.Headers.GetValues("X-Agent-Reasoning").Single(),600));
                 query.Add("summary",ActivityRequest.Decode(request.Headers.GetValues("X-Agent-Summary").Single(),400));
                 if(request.Headers.TryGetValues("X-Agent-Correlation",out var header))query.Add("correlation",ActivityRequest.Decode(header.Single(),600));
+                if(request.Headers.TryGetValues("X-Agent-Outcome",out var outcome))query.Add("outcomeSummary",ActivityRequest.Decode(outcome.Single(),400));
                 data=new NativeActivityAck(Log.Record(ActivityRequest.Parse(query),DateTimeOffset.UnixEpoch));
             } else if(request.RequestUri.AbsolutePath.EndsWith("/activity-log"))data=Log.Read(ActivityLogQuery.Parse(query),false,false);
             else {ActionCalls++;throw new InvalidOperationException("unexpected_game_request");}

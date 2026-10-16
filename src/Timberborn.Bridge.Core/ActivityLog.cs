@@ -11,6 +11,7 @@ public sealed class ActivityRequest
     public string Session { get; private set; } = "";
     public string Reasoning { get; private set; } = "";
     public string Summary { get; private set; } = "";
+    public string OutcomeSummary { get; private set; } = "";
     public ActivityCorrelation[] Correlations { get; private set; } = Array.Empty<ActivityCorrelation>();
     public static bool IsState(string state) => state is "running" or "ok" or "applied" or "rejected" or "unconfirmed" or "error" or "cancelled";
     public static string Decode(string? encoded, int limit)
@@ -29,9 +30,11 @@ public sealed class ActivityRequest
     public static ActivityRequest Parse(NameValueCollection q)
     {
         string Read(string key) { var values=q.GetValues(key); if(values is null || values.Length!=1)throw new ArgumentException();return values[0]!; }
-        if(q.AllKeys.Any(k=>k is not ("id" or "tool" or "state" or "session" or "reasoning" or "summary" or "correlation")))throw new ArgumentException();
+        if(q.AllKeys.Any(k=>k is not ("id" or "tool" or "state" or "session" or "reasoning" or "summary" or "correlation" or "outcomeSummary")))throw new ArgumentException();
         var r=new ActivityRequest { Id=Read("id"), Tool=Read("tool"), State=Read("state"), Session=Read("session"),
             Reasoning=Clean(Read("reasoning"),600), Summary=Clean(Read("summary"),400) };
+        if(q.GetValues("outcomeSummary") is not null)r.OutcomeSummary=Clean(Read("outcomeSummary"),400);
+        if(r.State=="running" && r.OutcomeSummary.Length>0)throw new ArgumentException("premature_activity_outcome");
         if(q.GetValues("correlation") is not null)r.Correlations=ActivityCorrelation.Decode(Read("correlation"));
         if(!Guid.TryParseExact(r.Id,"D",out var id)||id==Guid.Empty || r.Tool.Length is <1 or >80 ||
             r.Tool.Any(c=>!(c is >= 'a' and <= 'z' or >= '0' and <= '9' or '_')) || !IsState(r.State) ||
@@ -40,7 +43,7 @@ public sealed class ActivityRequest
     }
 }
 
-public sealed class ActivityEntry(string id, string tool, string state, string reasoning, string summary, DateTimeOffset startedAtUtc, DateTimeOffset updatedAtUtc, long sequence = 0, ActivityCorrelation[]? correlations = null)
+public sealed class ActivityEntry(string id, string tool, string state, string reasoning, string summary, DateTimeOffset startedAtUtc, DateTimeOffset updatedAtUtc, long sequence = 0, ActivityCorrelation[]? correlations = null, string outcomeSummary = "")
 {
     public ActivityCorrelation[]? Correlations { get; } = correlations;
     public long Sequence { get; } = sequence;
@@ -49,6 +52,7 @@ public sealed class ActivityEntry(string id, string tool, string state, string r
     public string State { get; } = state;
     public string Reasoning { get; } = reasoning;
     public string Summary { get; } = summary;
+    public string OutcomeSummary { get; } = outcomeSummary;
     public DateTimeOffset StartedAtUtc { get; } = startedAtUtc;
     public DateTimeOffset UpdatedAtUtc { get; } = updatedAtUtc;
 }
@@ -63,7 +67,7 @@ public sealed class ActivityLog
     private long evictedThrough;
     public long Revision { get; private set; }
     public ActivityEntry[] Snapshot()=>entries.ToArray();
-    public static object Payload(ActivityEntry e)=>new { id=e.Id, tool=e.Tool, state=e.State, reasoning=e.Reasoning, summary=e.Summary, startedAtUtc=e.StartedAtUtc, updatedAtUtc=e.UpdatedAtUtc, sequence=e.Sequence,
+    public static object Payload(ActivityEntry e)=>new { id=e.Id, tool=e.Tool, state=e.State, reasoning=e.Reasoning, summary=e.Summary, outcomeSummary=e.OutcomeSummary, startedAtUtc=e.StartedAtUtc, updatedAtUtc=e.UpdatedAtUtc, sequence=e.Sequence,
         correlations=(e.Correlations??Array.Empty<ActivityCorrelation>()).Select(ActivityCorrelation.Payload).ToArray() };
     public void Clear(){entries.Clear();epoch=Guid.NewGuid().ToString("N");sequence=0;evictedThrough=0;Revision++;}
     public object Read(ActivityLogQuery query, bool windowVisible, bool uiAttached)
@@ -100,7 +104,7 @@ public sealed class ActivityLog
             var old=entries[index];
             if(old.State!="running" || old.Tool!=r.Tool)return false;
             var correlations=ActivityCorrelation.Merge(old.Correlations??Array.Empty<ActivityCorrelation>(),r.Correlations);
-            entries[index]=new(old.Id,old.Tool,r.State,old.Reasoning,old.Summary,old.StartedAtUtc,now,old.Sequence,correlations);
+            entries[index]=new(old.Id,old.Tool,r.State,old.Reasoning,old.Summary,old.StartedAtUtc,now,old.Sequence,correlations,r.OutcomeSummary);
         }
         Revision++;return true;
     }

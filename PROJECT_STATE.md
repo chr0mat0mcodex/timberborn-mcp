@@ -1,5 +1,23 @@
 # Projektstand
 
+## 0.58.0 — Ergebniszeilen begrenzt live abgenommen
+
+Verständliche Ergebniszeilen für einzelne Gebäudeeinstellungen, Simulationsläufe
+und Pflanzchargen in MCP, Ingame-Anzeige und Dateilogs implementiert. Absicht,
+Aufrufstatus und bestätigte Wirkung getrennt; kein Wachstums-/Betriebsnachweis aus
+bloßen Aufträgen. Nach menschlicher Bereitmeldung Bridge 0.58 bestätigt; Pause,
+Ein-Stunden-Lauf und Pflanzbeleg (1 gesetzt, 2 vorhanden, 1 ausgeschlossen) live
+geprüft. Elf Ergebnisbelege in beiden Dateilogs identisch, keine Schreibverluste.
+Mensch bestätigt alle Ergebniszeilen als vollständig und gut lesbar. [Umfang und Livepilot](docs/agent-log-outcomes-0.58.md).
+
+Versionspflege vor dem Gate: `docs/agent-playing-guide.md` und die lokale Vorlage
+`docs/hermes-skill/SKILL.md` für 0.55–0.58 aktualisiert. Paging/Filter, Korrelation,
+Dateilogs, Autostart und Ergebnisbelege ergänzt; veraltete aktuelle Versionsangaben
+und pauschale Budgetaussagen ersetzt. 0.58 ist im beschriebenen Umfang abgenommen. Nur eine
+projektbezogene Spielskillvorlage vorhanden; allgemeine Entwicklungs-Skills
+benötigen hierfür keine versionsspezifischen Spielanweisungen. Hermes-Vorlage
+weiterhin nicht installiert oder als Integration abgenommen.
+
 ## 0.57.0 — Dateilogs und Anzeige begrenzt live abgenommen
 
 2026-10-16: Menschliches Gate und Abschluss-Livetest bestanden. Neue Logdateien je

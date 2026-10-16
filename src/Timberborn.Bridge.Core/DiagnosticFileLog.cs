@@ -31,7 +31,7 @@ public sealed class DiagnosticFileLog
         return safe.Length==0?"unbekannter-spielstand":safe;
     }
     public void Write(string eventName,string? operation=null,string? state=null,string? code=null,string? callId=null,string? session=null,
-        IEnumerable<ActivityCorrelation>? correlations=null,string? reasoning=null,string? summary=null,string? saveName=null)
+        IEnumerable<ActivityCorrelation>? correlations=null,string? reasoning=null,string? summary=null,string? saveName=null,string? outcomeSummary=null)
     {
         lock(sync) {
             sequence++;
@@ -49,6 +49,7 @@ public sealed class DiagnosticFileLog
                     @event=Label(eventName),operation=operation is null?null:Label(operation),state=state is null?null:Label(state),
                     code=code is null?null:Label(code),callId=Identity(callId),session=identity,saveName=file.Name,
                     reasoning=reasoning is null?null:ActivityRequest.Clean(reasoning,600),summary=summary is null?null:ActivityRequest.Clean(summary,400),
+                    outcomeSummary=outcomeSummary is null?null:ActivityRequest.Clean(outcomeSummary,400),
                     correlations=refs,failedWrites=FailedWrites};
                 string line=serialize(record);
                 if(line.IndexOfAny(new[]{'\r','\n'})>=0)throw new InvalidDataException("multiline_log_record");

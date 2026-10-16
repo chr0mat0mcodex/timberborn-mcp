@@ -1,5 +1,76 @@
 # Spielanleitung für Agenten
 
+## Aktueller Stand: 0.58 begrenzt live abgenommen
+
+Stand 16. Oktober 2026: 0.55–0.58 sind im dokumentierten Umfang live abgenommen.
+0.58: Gebäudepause, Ein-Stunden-Lauf und Pflanzbeleg live geprüft; Mensch bestätigt die Ergebniszeilen.
+Beim Einstieg installierte Bridge und aktuelles Werkzeugschema lesen; vorbereitete
+Funktionen nicht allein aufgrund dieser Anleitung als verfügbar behandeln.
+[Projektstand](../PROJECT_STATE.md) · [0.58-Vertrag](agent-log-outcomes-0.58.md).
+
+## Agentenlog lesen: Cursor, Filter und Bezüge ab 0.55/0.56
+
+`inspect_agent_log` liest den sitzungslokalen Aufrufpuffer: höchstens 128 Aufrufe,
+pro Seite `limit` 1–32, neueste Startsequenz zuerst. `tool` und `state` filtern
+vor der Seitengröße. `nextCursor` nur mit denselben Filtern weitergeben; bei
+`hasMore=false` ist die aktuelle Trefferfolge ausgeschöpft. Neue Aufrufe verschieben
+Folgeblätter nicht. Status und nachträglich ergänzte Bezüge bleiben veränderlich:
+kein eingefrorener Snapshot. Der Logleser kann sich selbst als laufend enthalten.
+
+`gapDetected`/`unavailableBeforeCursor` melden verdrängte ältere Einträge vor
+Filtern, nicht die Anzahl verlorener Filtertreffer. Null Lücken heißt nicht,
+dass nie Telemetrie verloren ging. Löschen/Neuladen macht alte Cursor ungültig;
+dann neu beginnen, keinen alten Cursor auf die neue Sitzung übertragen.
+
+Ab 0.56 zusätzlich `projectId` und `runId`, alle Filter gelten gemeinsam mit UND.
+`projectId` trifft auch Elternprojekte. `correlations` unterscheiden `request`
+(angefragt) und `result` (vom Fachbericht geliefert). Auch eine abgewiesene Anfrage
+kann eine Kennung tragen; weder Bezug noch Status beweisen Bauabschluss oder Wirkung.
+Keine Zuordnung aus beliebigen Gebäude-, Job- oder Action-IDs erfinden. Neu ergänzte
+Bezüge hinter einer schon gelesenen Grenze erfordern bei Bedarf eine frische Suche.
+[Pagingvertrag](agent-log-pagination-0.55.md) · [Korrelationsumfang](agent-log-correlation-0.56.md).
+
+## Ingame-Anzeige und Dateilogs ab 0.57
+
+Das Fenster „MCP-Aufrufe“ über „MCP-Log“ öffnen. Es zeigt Werkzeug, Status,
+Parameterzusammenfassung und lesbare Aufrufbegründung. Die in 0.56 ergänzten
+Projekt-/Laufkennungszeilen sind seit 0.57 wieder entfernt; strukturierte Bezüge
+bleiben über MCP und in Dateilogs verfügbar. Der Aufrufstatus allein erklärt keine
+Wirkung: „Erfolgreich“ kann eine erfolgreiche Leseabfrage bedeuten.
+
+Lokale JSON-Zeilenlogs liegen unter `%LOCALAPPDATA%\TimberbornMcp\Logs\bridge`
+und `...\mcp`. Pro Laden eine neue Datei mit Kolonie-/Spielstandname und UTC-Zeitstempel;
+MCP-Sitzungsdatei ab erstem bestätigten Kontakt, zusätzlich ein Prozesslog.
+Keine Größenbegrenzung, Rotation oder automatische Löschung. Neustart/Neuladen
+setzt alte Dateien nicht fort. Bei Diagnose gezielt Komponente, Zeit und Session
+wählen, nicht sämtliche wachsenden Dateien vollständig einlesen. Activity-Aufrufkennung
+verknüpft beide Komponenten; `failedWrites`/Sequenz können Schreibverluste zeigen.
+Logs bleiben lokal und werden nicht committed. Kein vollständiges Unity-/stderr-
+Abbild und kein Ersatz für das Spieländerungsjournal. [Dateilogvertrag](file-diagnostics-0.57.md).
+
+## Ergebniszeilen ab 0.58 — begrenzt live abgenommen
+
+`outcomeSummary` ergänzt nach Aufrufabschluss eine eigene Zeile „Ergebnis:“ ingame
+und in beiden Dateilogs. Bei älteren Bridges/anderen Werkzeugen kann sie leer sein;
+leerer Text bedeutet keinen nachgewiesenen Erfolg. Nicht als MCP-Argument senden.
+
+- Einzelne Gebäudeeinstellungen: geändert, bereits passend oder unbestätigt.
+  `inspect_building_settings` meldet den gelesenen Pausenzustand. Freigabe oder
+  Rezeptwahl beweist keinen Betrieb. Bei unbestätigtem Ausgang nur lesend klären.
+- Simulationsstart ist kein Abschluss. Startbeleg bleibt historisch; mit derselben
+  Laufkennung `inspect_simulation_run` lesen. Dessen Ergebniszeile unterscheidet
+  laufend/beendet/abgebrochen/unterbrochen/Fehler, verstrichene Spielzeit und Pause.
+  Zeitlimit oder abgeschlossenes Messfenster beweist kein Produktionsziel.
+- Pflanzchargen: Vorschau setzt nichts. Apply-Beleg zählt gesetzte, bereits
+  vorhandene, ausgeschlossene, unbestätigte und nicht versuchte Markierungen.
+  Statusbeleg ist historisch, kein neuer Auftrag oder aktueller Wachstumsnachweis.
+  Auch eine wieder gelieferte Apply-Quittung bedeutet keine erneute Ausführung.
+
+Ergebniszeilen verdichten validierte Fachberichte; für Entscheidungen bei Unsicherheit
+weiterhin deren strukturierte Nachweise verwenden. Kein automatisches Nachführen alter
+Startzeilen, keine zusätzlichen Hintergrundabfragen. Sammelkonfiguration und andere
+Auftragsfamilien erhalten in diesem Teil noch keine Ergebniszeilen.
+
 ## 0.54.0 - Pflanzen- und Flaechenjournal begrenzt live abgenommen
 
 Menschliches Gate und Abschluss-Livetest am 12. Oktober 2026 bestanden.
@@ -440,8 +511,11 @@ Codex-Lifecycle (live abgenommen): vor der Testübergabe
 `action=start`, dann Spielstatus und aktuelle Session prüfen. Der Vorschaltprozess
 bleibt verbunden. Unterbrochene Aufträge nie ungeprüft erneut senden.
 [Einmalige Einrichtung und Grenzen](codex-mcp-supervisor.md).
+Das menschliche Vorbereitungsskript startet seit 0.57 nach erfolgreichen Tests,
+Installation und Paketprüfung Timberborn automatisch. Spielstand laden und
+`live bereit` bleiben menschliche Schritte; der Agent startet das Gate nicht selbst.
 
-Stand: letzter dokumentierter Abschluss Bridge 0.54.0; aktualisiert am 12. Oktober 2026.
+Stand: letzter dokumentierter Abschluss Bridge 0.58.0; aktualisiert am 16. Oktober 2026.
 Diese Anleitung beschreibt die vorhandenen MCP-Fähigkeiten. Aktueller Auftrag
 und Projektregeln stehen in [AGENTS.md](../AGENTS.md) und
 [missionsplan.md](../missionsplan.md); das lokale Spiel ist das freigegebene

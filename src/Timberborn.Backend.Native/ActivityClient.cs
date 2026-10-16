@@ -20,13 +20,14 @@ public sealed partial class NativeClient
         if(query.RunId.Length>0)args.Add("runId="+query.RunId);
         return Get<NativeActivityLog>("activity-log?"+string.Join("&",args),ct);
     }
-    public async Task<string?> TryRecordActivity(string id,string tool,string state,string session,string reasoning,string summary,ActivityCorrelation[]? correlations=null,Action<string,string?>? sessionObserved=null)
+    public async Task<string?> TryRecordActivity(string id,string tool,string state,string session,string reasoning,string summary,ActivityCorrelation[]? correlations=null,Action<string,string?>? sessionObserved=null,string outcomeSummary="")
     {
         // Telemetry must not retry actions or turn a successful action into a failure.
         using var timeout=new CancellationTokenSource(TimeSpan.FromMilliseconds(1500));
         try {
             var headers=new Dictionary<string,string> { ["X-Agent-Reasoning"]=Convert.ToBase64String(Encoding.UTF8.GetBytes(reasoning)),
                 ["X-Agent-Summary"]=Convert.ToBase64String(Encoding.UTF8.GetBytes(summary)) };
+            if(outcomeSummary.Length>0)headers["X-Agent-Outcome"]=Convert.ToBase64String(Encoding.UTF8.GetBytes(ActivityRequest.Clean(outcomeSummary,400)));
             if(correlations is {Length:>0})headers["X-Agent-Correlation"]=Convert.ToBase64String(Encoding.UTF8.GetBytes(ActivityCorrelation.Encode(correlations)));
             var result=await Get<NativeActivityAck>($"activity?id={id}&tool={Uri.EscapeDataString(tool)}&state={state}&session={session}",timeout.Token,HttpMethod.Post,headers);
             if(result.Data.Accepted)sessionObserved?.Invoke(result.SessionId,result.Data.SaveName);

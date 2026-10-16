@@ -89,7 +89,7 @@ public sealed class BridgeMod(Timberborn.CameraSystem.CameraService cameraServic
         fileLog.Write("request_started",request.Route,"running",callId:callId,session:sessionId,correlations:request.Activity?.Correlations);
         try {
             var result=await ObserveCoreAsync(request);
-            if(request.Activity is {} activity)fileLog.Write("activity_received",activity.Tool,activity.State,callId:activity.Id,session:sessionId,correlations:activity.Correlations,reasoning:activity.Reasoning,summary:activity.Summary);
+            if(request.Activity is {} activity)fileLog.Write("activity_received",activity.Tool,activity.State,callId:activity.Id,session:sessionId,correlations:activity.Correlations,reasoning:activity.Reasoning,summary:activity.Summary,outcomeSummary:activity.OutcomeSummary);
             fileLog.Write("request_finished",request.Route,"returned",callId:callId,session:sessionId,correlations:request.Activity?.Correlations);
             return result;
         } catch(Exception ex) {
@@ -106,7 +106,7 @@ public sealed class BridgeMod(Timberborn.CameraSystem.CameraService cameraServic
             screenshots=host.AddComponent<ScreenshotCapture>();
         }
         var data=await screenshots.Capture(request.Screenshot,cameraService);
-        return JsonConvert.SerializeObject(new { schemaVersion=1,sessionId,observedAtUtc=DateTimeOffset.UtcNow,bridgeVersion="0.57.0",data });
+        return JsonConvert.SerializeObject(new { schemaVersion=1,sessionId,observedAtUtc=DateTimeOffset.UtcNow,bridgeVersion="0.58.0",data });
     }
     private string Observe(BridgeRequest request)
     {
@@ -153,7 +153,7 @@ public sealed class BridgeMod(Timberborn.CameraSystem.CameraService cameraServic
             _ => throw new ArgumentException("invalid_request")
         };
         return JsonConvert.SerializeObject(new { schemaVersion = 1, sessionId, observedAtUtc = DateTimeOffset.UtcNow,
-            bridgeVersion = "0.57.0", data });
+            bridgeVersion = "0.58.0", data });
     }
     private object Snapshot()
     {
