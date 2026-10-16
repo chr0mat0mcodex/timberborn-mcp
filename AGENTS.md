@@ -66,6 +66,15 @@ Schutz anderer Projekte/Systemdateien und nachvollziehbare Git-Checkpoints bleib
 
 ## Dauerhafte Entwicklungsprinzipien
 
+- **Anleitung und Skills gehören zu jeder neuen Version.** Vor der Testübergabe
+  `docs/agent-playing-guide.md` und die projektbezogenen Skills für spielende
+  Agenten prüfen, um neue Fähigkeiten erweitern und bei geänderten Abläufen,
+  Parametern, Grenzen oder Fehlerbehandlung überarbeiten. Veraltete Aussagen
+  ersetzen, nicht nur neue Abschnitte anhängen. Beim Versionsabschluss die
+  tatsächlichen Livebelege und verbleibenden Grenzen nachtragen. Im Projektstand
+  kurz festhalten, welche Anleitung/Skills aktualisiert wurden oder weshalb für
+  eine geprüfte Datei keine fachliche Änderung nötig war. Zurückgestellte
+  Skillentwürfe durch diese Pflege nicht automatisch freigeben oder installieren.
 - Aktueller Release- und Abnahmestand: [PROJECT_STATE.md](PROJECT_STATE.md).
   Offene Aufgaben und zurückgestellte Experimente: [BACKLOG.md](BACKLOG.md).
   [missionsplan.md](missionsplan.md) dokumentiert den historischen Abschluss

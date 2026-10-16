@@ -17,7 +17,13 @@ gezielter MCP-Livetest. Erfolgsnachweis nennt fachliche Aussage und deren Grenze
 nicht nur Werkzeugaufruf oder erfolgreiche Paketierung.
 
 1. **Agent: Umsetzung und Quellprüfung.** Klar abgegrenzte Änderung implementieren,
-   relevante Tests ergänzen, Quellcode und Diff gezielt prüfen. Keine eigenen
+   relevante Tests ergänzen, Quellcode und Diff gezielt prüfen. Zu jeder neuen
+   Version die [Anleitung für den spielenden Agenten](docs/agent-playing-guide.md)
+   und die projektbezogenen Spielskills fachlich mitführen: neue Fähigkeiten
+   ergänzen, geänderte Abläufe/Parameter/Grenzen/Fehlerbehandlung überarbeiten und
+   widersprüchliche Alttexte ersetzen. Noch ungeprüfte Fähigkeiten als solche
+   kennzeichnen. Geprüfte Dateien und Änderungen beziehungsweise begründeten
+   Nichtänderungsbedarf knapp im Projektstand vermerken. Keine eigenen
    Build-/Testläufe; keine alternative Debug- oder Parallelausgabe.
 2. **Agent: Testübergabe.** Erwarteten fachlichen Nachweis, bekannte Grenzen und
    den Aufruf des menschlichen Skripts nennen. Vorher
@@ -40,7 +46,8 @@ nicht nur Werkzeugaufruf oder erfolgreiche Paketierung.
    Ergebnis und relevante Grenze berichten. Bei Fehlschlag gezielt diagnostizieren;
    keine automatische Vollketten-Wiederholung.
 6. **Agent: Abschluss.** Nur wenn Skript und feature-spezifischer Livetest
-   erfolgreich waren: Dokumentation knapp aktualisieren, committen und zu `origin`
+   erfolgreich waren: Anleitung und Spielskills mit tatsächlichen Livebelegen und
+   verbleibenden Grenzen abgleichen, Dokumentation knapp aktualisieren, committen und zu `origin`
    pushen.
 
 ## Skriptoptionen
