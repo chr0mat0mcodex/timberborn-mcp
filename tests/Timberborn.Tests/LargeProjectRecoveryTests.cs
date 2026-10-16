@@ -52,7 +52,7 @@ public sealed class LargeProjectRecoveryTests
         ledger.Release(Parent,["missing","missing"]);
         ledger.Start(Child,new string('b',64),"new",[0],[Child]);
         ledger.Advance(Parent,10,()=>true,_=>"finished",_=>true,_=>placements++);
-        Assert.Equal(1,placements);
+        Assert.Equal(2,placements);
         Assert.Equal("stopped",ledger.Inspect(Parent).State);
     }
 
@@ -62,6 +62,7 @@ public sealed class LargeProjectRecoveryTests
         var ledger=new LargeProjectLedger();
         ledger.Start(Parent,new string('a',64),"original",[0],[Entity]);
         ledger.Advance(Parent,0,()=>true,_=>"missing",_=>true,_=>throw new InvalidOperationException());
+        ledger.Advance(Parent,6,()=>true,_=>"missing",_=>true,_=>throw new InvalidOperationException());
         Assert.Throws<BridgeRejectionException>(()=>ledger.Release(Parent,["missing"]));
         ledger.Release(Parent,["finished"]);
         Assert.False(ledger.BlocksNewProject);

@@ -1,10 +1,17 @@
 # Backlog
 
-## Höchste Priorität — B15: Gesamtstruktur als gemeinsame Bauauftragscharge
+## B15: Gesamtstruktur — 0.63 mit dokumentierter Grenze abgeschlossen
 
-**P0 / maximale Priorität, Nutzerauftrag vom 16. Oktober 2026.** Nächster
-Implementierungsschwerpunkt vor den übrigen offenen Backlog-Erweiterungen.
-Hier beauftragt ist die Aufnahme und Priorisierung; Umsetzung steht noch aus.
+**Ursprünglich P0, Nutzerauftrag vom 16. Oktober 2026.** Abschluss am 17. Oktober
+mit ausdrücklicher Nutzerfreigabe der unten dokumentierten Nachweisgrenze.
+Menschliches Gate bestanden; kein offener Implementierungsblocker dieses Umfangs.
+Ebener Gesamtauftrag, Zeitlimit, Reparaturabschluss und Schema-2-Gebäudecharge live
+belegt; manueller Höhenstart setzt auch oberen Weg auf unfertiger Plattform sofort.
+Separater Vertikalpilot nach erneutem Gate mit fünf gemeinsamen Aufträgen bestanden;
+ebener Dreiteilepilot fertig, konkrete Identitätsablehnung und Objektverlust ohne
+Replay geprüft. Teilablehnung mitten im Durchgang nur synthetisch im Gate belegt;
+begrenzter Versionsabschluss ausdrücklich vom Nutzer freigegeben. Zusätzlicher
+nativer Livefehler und vollständiger Höhenfertigbau bleiben weitere Nachweise.
 
 Gewünschter Ablauf: **Plan machen → einmal Go → komplette Struktur als
 Bauaufträge platzieren → Baufortschritt verfolgen → erfolgreich beenden, wenn
@@ -20,14 +27,17 @@ jedem einzelnen Element auf dessen Fertigstellung, bevor es das nächste setzt.
 - **Ein Go für die ganze Platzierungsphase:** Alle vom Spiel zulässigen Teile
   unmittelbar als Bauaufträge einreichen. Interne API-Aufrufe dürfen technisch
   sequenziell sein; zwischen ihnen keine Baufortschrittswartezeiten, keine
-  Agentenrunde und keine erneute Einzelbestätigung. Noch fehlendes Baumaterial
+  Agentenrunde und keine erneute Einzelbestätigung. Klarstellung des Nutzers:
+  erst sämtliche Aufträge einreichen, DANACH prüfen; auch keine Material-,
+  Zugangs- oder Initialisierungsprüfungen zwischen den Platzierungen. Noch fehlendes Baumaterial
   ist kein Grund, weitere vom Spiel erlaubte Baustellen zurückzuhalten.
 - **Echte Spielgrenzen konkret zurückmelden:** Verlangt das Spiel für ein Teil
   tatsächlich eine fertiggestellte Stütze, Räumung oder andere Vorleistung,
   dies als belegte Ausnahme mit betroffenem Teil und Abhängigkeit ausweisen.
   Keine pauschale Serialisierung des gesamten Vorhabens daraus ableiten.
-  Später zulässige Teile innerhalb desselben Auftrags nachreichen und separat
-  ausweisen; technisch mögliche gemeinsame Platzierung bleibt der Standard.
+  Keine vorsorglichen Fertigstellungsbarrieren aus dependsOn ableiten. Erst alle
+  Teile versuchen; tatsächliche native Ablehnungen danach konkret ausweisen.
+  Unbestätigte Aufträge niemals automatisch wiederholen.
 - **Ein Platzierungsbericht:** Pro Teil geplant / platziert / abgewiesen /
   zurückgestellt / unbestätigt mit Objektzuordnung, Koordinaten, konkretem
   nativen Fehler und erforderlicher Korrektur. Teilerfolg offen ausweisen;
@@ -122,7 +132,7 @@ Alle bisherigen Beobachtungen bleiben im [historischen Backlog](BACKLOG_HISTORY.
 
 | ID | Verbesserung | Vorhandene Grundlage und noch offener Umfang |
 | --- | --- | --- |
-| B15 — **P0** | **Gesamtstruktur gemeinsam platzieren, dann bis Fertigstellung verfolgen** | **Höchste Priorität.** Ein Plan, ein Go, alle zulässigen Baustellen in einer Platzierungsphase; konkrete Teilfehler und gemeinsamer Bauabschluss. Vollständiger Auftrag und Abnahme oben. |
+| B15 — **0.63 abgeschlossen** | **Gesamtstruktur gemeinsam platzieren, dann bis Fertigstellung verfolgen** | Ein Plan, ein Go, gemeinsame Platzierungsphase und Bauabschluss. Menschliches Gate und begrenzte Liveabnahme bestanden; Teilablehnung mitten im Durchgang nur synthetisch geprüft, ausdrücklich akzeptiert. Umfang und Grenzen oben. |
 | B01 | Bessere Standortwahl | 0.51: begrenzte Rückwärtssuche, Vergleich ganzer Pläne und Auslassen blockierender Wünsche abgenommen. Offen: alternative Zielreihenfolgen und breitere Suche; keine globale Optimalität. |
 | B02 | Reservierungen und Gesamtplanung | 0.51: bis acht Ausschlussvolumen für einen Gruppenplan vorhanden. Offen: dauerhafte Reservierungen, planübergreifende Korridore und Suchabdeckung; keine globale Siedlungsoptimierung. |
 | B03 | Kraft- und Höhenrouten planen | Ports, Netze, explizite Höhenpläne und Zugangshilfen existieren. Offen: allgemeine automatische Routenauswahl, Alternativstandorte und kombinierte Versorgungslayouts mit getrenntem Geometrie-/Netz-/Betriebsnachweis. |
@@ -156,6 +166,24 @@ Alle bisherigen Beobachtungen bleiben im [historischen Backlog](BACKLOG_HISTORY.
   bleibt eine konkrete offene Gefahr. Objektposition, nativer Countdown, erwartete
   Geländeöffnung und Freisetzung hochliegenden Wassers zusammenführen. Der 0.62-
   Gefahrenkopf erkennt Restwasser, aber prognostiziert diese Explosion nicht.
+  Umsetzung nach Nutzer-Go: native Radiuszellen, hypothetischer Vor/Nach-Geländevergleich
+  und kompakte Kern–Faulwasser–Ziel–Schutzketten implementiert; Gate bestanden,
+  kompakte Vorwarnung bei neun Kernen live belegt. Schutzquerschnitt beim Bergkern
+  unvollständig, Vor-/Nach-Schwelle unverändert. Warnung samt soweit möglichen
+  Eindämmungsvorschlägen gemäß Nutzerpräzisierung am 17. Oktober abgenommen;
+  vollständiger Schutzbau und Ereignisvergleich sind Folgearbeiten, keine Abnahmeblocker.
+  Countdown, endgültige Wirkungszone und Einsturz bleiben ungeprüft.
+  Historischer Recheck vor der Erweiterung: vollständige Terrainabdeckung und alle 501 Spezialobjekte
+  gelesen; neun `UnstableCore` werden nur als `special_or_unknown` geführt. Compact
+  warnt vor hochliegendem kontaminiertem Restwasser, verknüpft die Kerne aber nicht
+  mit einem Durchbruch. **Konkreter B14-Folgeauftrag:** native Kernzustände und
+  belegbare Wirkungszellen ermitteln; Szenario vor/nach Geländeöffnung vergleichen,
+  betroffenen Speicher, Kontamination, Zuflussrinne und Zielgewässer verbinden.
+  Compact muss Kernposition, Auslöser/Frist (sonst ausdrücklich unbekannt), bedrohtes
+  Gewässer und vorab prüfbare Schutz-/Umleitungsstellen zeigen. Ohne belegten
+  Explosionsradius keine erfundene Öffnung. Abnahme: noch geschlossene Sperre,
+  Faulwasser dahinter, Teich darunter; Warnung vor Auslösung, danach Routenvergleich.
+  Bildorientierung ist ohne Kamerabezug keine sichere Objektzuordnung.
 - **Kollisionsdiagnose:** precheck_building nennt belegte Zellen, aber keine
   verursachenden Objekt-IDs/-typen; erschwert gezielte Räumung und Standortwahl.
 - **Kraftplanung:** Generator-/Verbraucher-Verbindung als explizites Planungsziel;
@@ -174,7 +202,7 @@ Alle bisherigen Beobachtungen bleiben im [historischen Backlog](BACKLOG_HISTORY.
 
 ### B14 — Strategische Sicht statt isolierter Kartenausschnitte
 
-Positive Terraforming-Optionen implementiert, Gate und begrenzter Livepilot bestanden: begrenzte 3×3-Reservoirsuche mit zwei Ebenen Absenkung, Höhlen-/Seitenwand-/Objektprüfung, geometrischem Volumen und expliziten Zufluss-/Kontaminationsblockaden. Freie Beckenformen, echte Vorratsreichweite, Nachfüll-/Abflussplanung und Bewässerungswirkung bleiben offen. B15 bleibt P0.
+Positive Terraforming-Optionen implementiert, Gate und begrenzter Livepilot bestanden: begrenzte 3×3-Reservoirsuche mit zwei Ebenen Absenkung, Höhlen-/Seitenwand-/Objektprüfung, geometrischem Volumen und expliziten Zufluss-/Kontaminationsblockaden. Freie Beckenformen, echte Vorratsreichweite, Nachfüll-/Abflussplanung und Bewässerungswirkung bleiben offen. B15 ist mit 0.63 im oben dokumentierten Umfang abgeschlossen.
 
 Compact/Full-Nachtrag live geprüft: Bedrohung und Gegenmaßnahmen im Standard, vollständige Inventur/Geometrie nur in full. Gemeinsame Maßnahmen und offene Prüfpunkte ohne Wiederholung.
 

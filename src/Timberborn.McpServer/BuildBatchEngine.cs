@@ -31,6 +31,9 @@ public sealed class BuildBatchEngine(IBuildBatchPort port, Action<BuildBatchJob>
     public async Task<bool> Step(BuildBatchJob j, CancellationToken ct)
     {
         if (j.Terminal) return false;
+        if (j.SchemaVersion == 2 && port is IStructureBatchPort structure &&
+            j.State is "planning" or "pending_build" or "building")
+            return await StructureStep(j, structure, ct);
         var s = j.ActiveSpec;
         switch (j.State) {
             case "planning": {
@@ -150,5 +153,43 @@ public sealed class BuildBatchEngine(IBuildBatchPort port, Action<BuildBatchJob>
             default: throw new InvalidDataException("unknown_batch_state");
         }
         save(j); return false;
+    }
+
+    private async Task<bool> StructureStep(BuildBatchJob j, IStructureBatchPort structure, CancellationToken ct)
+    {
+        if (j.State == "planning") {
+            if (!await Paused(j, ct)) { save(j); return false; }
+            j.StructurePlan = await structure.PlanStructure(j.ActiveSpec, ct);
+            if (j.StructurePlan["state"]?.GetValue<string>() != "complete") {
+                if (!j.ClearanceUsed && j.Spec.Clearing != "none") j.State="discovering";
+                else NextRegionOrStop(j,"no_candidate_in_authorized_region");
+                save(j); return false;
+            }
+            Checkpoint(j,"pending_build");
+            try { j.StructureReceipt=await structure.Structure(j,"run",ct); }
+            catch (BridgeRejectionException ex) { Stop(j,ex.Code); save(j); return false; }
+            j.State="building"; save(j);
+            return true;
+        }
+        // A pending submission is recovered only by inspecting its stable action ID.
+        j.StructureReceipt=await structure.Structure(j,"inspect",ct);
+        string? state=j.StructureReceipt["state"]?.GetValue<string>();
+        j.State="building";
+        j.Reason=j.StructureReceipt["reason"]?.GetValue<string>() ?? "unknown_structure_state";
+        if (state=="completed") {
+            await structure.ConfigureStructure(j,save,ct);
+            j.Finished.Clear();
+            foreach(var selection in j.StructurePlan!["selected"]!.AsArray()) {
+                int input=selection!["inputIndex"]!.GetValue<int>(), part=selection["stepIndex"]!.GetValue<int>();
+                var step=j.StructurePlan["steps"]![part]!;
+                j.Finished.Add(new(input,j.StructureActionId,j.Spec.Items[input].Template,
+                    new(step["x"]!.GetValue<int>(),step["y"]!.GetValue<int>(),step["z"]!.GetValue<int>()),
+                    "finished_accessible",j.RegionIndex));
+            }
+            j.Index=j.Finished.Count;
+            j.State=j.Index==j.Spec.Items.Length?"completed":"stopped";
+            j.Reason=j.State=="completed"?"whole_structure_finished":"incomplete_structure";
+        } else if(state is "blocked" or "stopped" or "unconfirmed" or "interrupted") Stop(j,j.Reason);
+        save(j); return !j.Terminal;
     }
 }

@@ -51,12 +51,13 @@ public static class ProjectReportPresentation
     private static void Ledger(JsonObject data)
     {
         if (data["partStates"] is not JsonArray states || data["entityIds"] is not JsonArray ids) return;
-        var pending = 0; var construction = 0; var finished = 0; var unconfirmed = 0;
+        var pending = 0; var construction = 0; var finished = 0; var unconfirmed = 0; var rejected = 0;
         foreach (var state in states) switch (state?.GetValue<string>()) {
             case "pending": pending++; break;
             case "construction": construction++; break;
             case "finished": finished++; break;
             case "unconfirmed": unconfirmed++; break;
+            case "rejected": rejected++; break;
         }
         var blocked = new JsonArray();
         if (data["blockedPart"] is JsonNode blockedIndex) {
@@ -65,7 +66,7 @@ public static class ProjectReportPresentation
         }
         data["summary"] = new JsonObject {
             ["evidence"] = "recorded_project_state_not_fresh_access", ["planned"] = states.Count,
-            ["attempted"] = states.Count - pending, ["confirmedPlaced"] = construction + finished,
+            ["attempted"] = states.Count - pending, ["rejected"] = rejected, ["confirmedPlaced"] = construction + finished,
             ["finishedAccessRecorded"] = finished, ["construction"] = construction,
             ["unconfirmed"] = unconfirmed, ["pending"] = pending,
             // Empty means no indexed blocker supplied, not that the project is unblocked.
@@ -75,9 +76,12 @@ public static class ProjectReportPresentation
         var activeParts = new JsonArray();
         for (int i = 0; i < states.Count; i++)
             if (states[i]?.GetValue<string>() != "finished" || data["blockedPart"]?.GetValue<int>() == i)
-                activeParts.Add(new JsonObject { ["index"] = i, ["id"] = ids[i]?.DeepClone(), ["state"] = states[i]?.DeepClone() });
+                activeParts.Add(data["parts"] is JsonArray parts && parts.Count==states.Count
+                    ? parts[i]!.DeepClone()
+                    : new JsonObject { ["index"] = i, ["id"] = ids[i]?.DeepClone(), ["state"] = states[i]?.DeepClone(), ["reason"]=data["partReasons"]?[i]?.DeepClone() });
         data["attentionParts"] = activeParts;
         data.Remove("entityIds"); data.Remove("partStates");
+        data.Remove("parts"); data.Remove("partReasons"); data.Remove("partExceptionTypes");
         // Plan identity/duplicate counters remain available in Full; actionId identifies this ledger.
         data.Remove("planKey"); data.Remove("ordered"); data.Remove("finished");
         if (data["executionMode"]?.GetValue<string>() == "batch") data.Remove("order");

@@ -1,6 +1,6 @@
 namespace Timberborn.Bridge.Core;
 
-// Only advance can cross the placement boundary. Inspect never places anything.
+// The first dispatch submits every part; subsequent ticks only observe. Inspect never mutates.
 public sealed class LargeProjectLedger
 {
     public sealed class Receipt
@@ -13,6 +13,8 @@ public sealed class LargeProjectLedger
         public int[] Order { get; set; } = Array.Empty<int>();
         public string[] EntityIds { get; set; } = Array.Empty<string>();
         public string[] PartStates { get; set; } = Array.Empty<string>();
+        public string[] PartReasons { get; set; } = Array.Empty<string>();
+        public string?[] PartExceptionTypes { get; set; } = Array.Empty<string?>();
         public bool Released { get; set; }
         public bool RegularExecutionAllowed { get; set; }
     }
@@ -40,6 +42,8 @@ public sealed class LargeProjectLedger
             throw new BridgeRejectionException("state_conflict");
         if (!Guid.TryParseExact(id,"D",out var action) || action==Guid.Empty || order.Length is <1 or >32 || entityIds.Length!=order.Length || !order.OrderBy(x=>x).SequenceEqual(Enumerable.Range(0,order.Length)) || entityIds.Distinct().Count()!=entityIds.Length || entityIds.Any(s=>!Guid.TryParseExact(s,"D",out var value)||value==Guid.Empty)) throw new ArgumentException();
         var result = new Receipt { ActionId=id,PlanKey=key,Order=order.ToArray(),EntityIds=entityIds.ToArray(),PartStates=Enumerable.Repeat("pending",order.Length).ToArray() };
+        result.PartReasons=Enumerable.Repeat("not_submitted",order.Length).ToArray();
+        result.PartExceptionTypes=new string?[order.Length];
         entries.Add(id,new Entry {Result=result,Fingerprint=fingerprint}); return result;
     }
     public void Release(string id, string[] observations)
@@ -67,27 +71,38 @@ public sealed class LargeProjectLedger
         try
         {
             if(!guard()) {r.State="stopped";r.Reason="guard_changed";return r;}
-            int i=r.Order[r.Current];
-            if(r.PartStates[i]!="pending")
+            if(!e.PlacementAttempted)
             {
-                var state=observe(i);
-                if(state=="mismatch") {r.State="stopped";r.Reason="object_or_access_mismatch";return r;}
-                if(state is "missing" or "pending")
+                e.PlacementAttempted=true; e.ConfirmationDeadline=now+5;
+                foreach(int i in r.Order)
                 {
-                    if(now>=e.ConfirmationDeadline) {r.State="unconfirmed";r.Reason="order_or_access_unconfirmed";}
-                    return r;
+                    r.PartStates[i]="unconfirmed";
+                    r.PartReasons[i]="awaiting_order_confirmation";
+                    try { place(i); }
+                    catch (BridgeRejectionException ex) { r.PartStates[i]="rejected";r.PartReasons[i]=ex.Code; }
+                    catch (Exception ex) when(ex is not OutOfMemoryException) { r.PartReasons[i]="placement_failed_no_retry";r.PartExceptionTypes[i]=ex.GetType().Name; }
                 }
-                if(state=="construction_unreachable") {r.PartStates[i]="construction";r.State=now>=e.ConfirmationDeadline?"stopped":"waiting";r.Reason="builders_unreachable";return r;}
-                if(state=="construction") {r.PartStates[i]="construction";r.State="waiting";r.Reason="awaiting_construction";return r;}
-                if(state!="finished") throw new InvalidOperationException();
-                r.PartStates[i]="finished";
-                if(++r.Current==r.Order.Length) {r.State="completed";r.Reason="all_parts_finished_and_access_observed";return r;}
-                i=r.Order[r.Current];
+                r.State="waiting"; r.Reason="awaiting_order_confirmation";
+                return r;
             }
-            if(!preflight(i)) {r.State="stopped";r.Reason="native_step_validation_failed";return r;}
-            r.PartStates[i]="unconfirmed"; r.State="waiting";r.Reason="awaiting_order_confirmation";e.ConfirmationDeadline=now+5;
-            e.PlacementAttempted=true;
-            place(i); // Commit the attempt before invoking the game, even if it throws.
+            foreach(int i in r.Order)
+            {
+                if(r.PartStates[i]=="rejected") continue;
+                var observed=observe(i);
+                r.PartReasons[i]=observed;
+                if(observed is "construction" or "construction_unreachable") r.PartStates[i]="construction";
+                else if(observed=="finished") r.PartStates[i]="finished";
+                else if(observed=="mismatch") { r.State="stopped";r.Reason="object_or_access_mismatch"; }
+                else if(observed is "missing" or "pending") {
+                    if(now>=e.ConfirmationDeadline) {r.State="unconfirmed";r.Reason="order_or_access_unconfirmed";}
+                }
+                else throw new InvalidOperationException();
+            }
+            r.Current=r.PartStates.Count(s=>s=="finished");
+            if(r.State is "stopped" or "unconfirmed") return r;
+            if(r.PartStates.All(s=>s is "finished" or "rejected") && r.Current!=r.Order.Length) {r.State="stopped";r.Reason="partial_structure_rejected_parts";return r;}
+            r.State=r.Current==r.Order.Length?"completed":"waiting";
+            r.Reason=r.State=="completed"?"all_parts_finished_and_access_observed":"awaiting_structure_completion";
         }
         catch {r.State=r.PartStates.Any(s=>s=="unconfirmed")?"unconfirmed":"stopped";r.Reason="operation_failed_no_retry";}
         return r;

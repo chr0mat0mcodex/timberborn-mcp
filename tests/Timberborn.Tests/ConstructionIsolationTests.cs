@@ -49,23 +49,29 @@ public sealed class ConstructionIsolationTests
 
     [Theory]
     [InlineData(false)] [InlineData(true)]
-    public void OwnSiteCanWaitButCannotAuthorizePlacement(bool independentAppears)
+    public void WholeStructureIsSubmittedBeforeObservingIsolationChanges(bool independentAppears)
     {
-        bool previousFinished = false; bool independent = false; int writes = 0;
+        bool finished = false; bool independent = false; int writes = 0; int readinessChecks = 0;
         var controller = new BuildingProjectController();
         var steps = new[] { new BuildingProjectController.Step { Template = "Stairs.Folktails" }, new BuildingProjectController.Step { Template = "Path" } };
         var receipt = controller.Start(Guid.NewGuid(), "synthetic", "key", steps,
             () => ConstructionIsolationPolicy.Allows(true, independent ? [(true, false, true, false)] : []),
-            _ => writes++, _ => "confirmed", s => s == steps[0] || previousFinished ? "ready" : "construction");
-        controller.Tick(0); controller.Tick(1); controller.Tick(2);
-        Assert.Equal("waiting", receipt.State); Assert.Equal(1, writes);
+            _ => writes++, _ => {
+                Assert.Equal(2, writes);
+                return finished ? "finished" : "confirmed";
+            }, _ => { readinessChecks++; return "construction"; });
+        controller.Tick(0);
+        Assert.Equal(2, writes);
+        Assert.Equal(0, readinessChecks);
+        controller.Tick(1);
+        Assert.Equal("ordered", receipt.State);
         Assert.True(ConstructionIsolationPolicy.Allows(true, [(true, false, true, true)]));
         Assert.False(ConstructionIsolationPolicy.Allows(true, [(true, false, true, false)]));
-        independent = independentAppears; previousFinished = true;
+        independent = independentAppears; finished = true;
         controller.Tick(3); controller.Tick(4);
         Assert.Equal(independentAppears ? "stopped" : "completed", receipt.State);
-        Assert.Equal(independentAppears ? 1 : 2, writes);
-        controller.Tick(5); Assert.Equal(independentAppears ? 1 : 2, writes);
+        Assert.Equal(2, writes);
+        controller.Tick(5); Assert.Equal(2, writes);
     }
 
     [Fact]

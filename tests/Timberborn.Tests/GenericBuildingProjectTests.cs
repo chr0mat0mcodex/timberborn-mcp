@@ -49,7 +49,7 @@ public sealed class GenericBuildingProjectTests
         var controller = new BuildingProjectController();
         int writes = 0;
         var receipt = controller.Start(Guid.Parse(Action), "synthetic", "key",
-            [new() { EntityId = Action, Template = template }], () => true, _ => writes++, _ => "confirmed");
+            [new() { EntityId = Action, Template = template }], () => true, _ => writes++, _ => "finished");
         controller.Tick(0); controller.Tick(1);
         Assert.Equal("completed", receipt.State);
         Assert.Same(receipt, controller.Existing(Guid.Parse(Action), "synthetic"));

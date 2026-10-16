@@ -1,5 +1,11 @@
 # Timberborn MCP
 
+**0.63.0 abgeschlossen:** gesamte Struktur zuerst platzieren, danach Probleme
+und Fertigstellung verfolgen; kompakte Vorwarnung vor möglichen Faulwasserdurchbrüchen.
+Menschliches Gate und begrenzte Liveabnahme bestanden. Teilablehnung mitten im
+Platzierungsdurchgang nur synthetisch geprüft; diese Grenze ist ausdrücklich akzeptiert.
+[Releaseumfang](docs/releases/0.63.0.md), [B15-Belege](docs/construction-structures-0.63.md).
+
 Zusätzlich `analysis.terraforming`: bedingte 3×3-Reservoir-Optionen, zwei Ebenen Absenkung, Nutzen und Blockaden kompakt, Zellbelege full. Gate und begrenzter Livepilot bestanden.
 
 Strategischer Scan: `detail="compact"` als Standard für Bedrohung und Gegenmaßnahmen; `detail="full"` für komplette Scanbelege. Gate und Livevergleich bestanden.
@@ -115,7 +121,7 @@ Beobachtung und kontrollierte Eingriffe über reguläre Spielservices.
 
 ## Status
 
-Aktueller dokumentierter Abschluss: **0.62.0**. Die folgenden
+Aktueller dokumentierter Abschluss: **0.63.0**. Die folgenden
 Versionsabschnitte sind historische Teilabnahmen, keine parallel aktuellen Stände.
 Offene Fähigkeiten stehen im [Backlog](BACKLOG.md).
 

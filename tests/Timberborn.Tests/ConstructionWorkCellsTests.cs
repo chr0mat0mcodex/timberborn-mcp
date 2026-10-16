@@ -40,13 +40,13 @@ public sealed class ConstructionWorkCellsTests
     [InlineData("no_connected_work_cell")]
     [InlineData("final_work_access_blocked")]
     [InlineData("helper_runtime_check")]
-    public void MissingRequiredWorkAccessStopsBeforePlacement(string state)
+    public void WorkAccessIsNotRecheckedBetweenStructureOrders(string state)
     {
         var ledger=new LargeProjectLedger();const string id="11111111-1111-1111-1111-111111111111";
         ledger.Start(id,new string('a',64),"fixture",[0],["22222222-2222-2222-2222-222222222222"]);
         int placements=0;
         var receipt=ledger.Advance(id,0,()=>true,_=>"finished",_=>ConstructionWorkCells.Accepts(true,state),_=>placements++);
-        Assert.Equal(0,placements);Assert.Equal("stopped",receipt.State);
+        Assert.Equal(1,placements);Assert.Equal("waiting",receipt.State);
     }
 
     [Fact]

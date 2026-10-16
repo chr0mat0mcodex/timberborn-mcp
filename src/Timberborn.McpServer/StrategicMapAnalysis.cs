@@ -18,7 +18,8 @@ public sealed record StrategicHazard(Position Origin, string Priority, string Ev
     ProtectionCandidate Candidate, string ClosureAssessment, string[] Measures, string[] Unresolved);
 public sealed record StrategicAnalysis(string State, int VoidNodes, int ConnectedVoidNodes, int CoveredColumns,
     int CaveColumns, int TargetVoidNodes, int CandidateCount, TerrainRoute[] Corridors, Position[] HigherGround,
-    string[] Limitations, StrategicHazards? Hazards = null, ReservoirOptions? Terraforming = null);
+    string[] Limitations, StrategicHazards? Hazards = null, ReservoirOptions? Terraforming = null,
+    ExplosionWarnings? Explosions = null);
 
 public static class StrategicMapAnalysis
 {
@@ -32,7 +33,8 @@ public static class StrategicMapAnalysis
     // Minimax terrain pass: the lowest maximum floor along any geometrically connected void route.
     // All voids are retained; a roof is never silently collapsed to a single height field.
     public static StrategicAnalysis Analyze(Position size, IReadOnlyList<StrategicColumn> columns,
-        ProtectedZone target, float? scenarioLevel, CancellationToken ct = default, IReadOnlyList<StrategicObject>? objects = null, bool objectsComplete = false)
+        ProtectedZone target, float? scenarioLevel, CancellationToken ct = default, IReadOnlyList<StrategicObject>? objects = null, bool objectsComplete = false,
+        bool includeDerived = true, IReadOnlySet<Position>? routeThrough = null, IReadOnlySet<Position>? origins = null)
     {
         var nodes = new List<Node>(); var byColumn = new Dictionary<(int,int), List<int>>();
         int caves = 0;
@@ -81,7 +83,22 @@ public static class StrategicMapAnalysis
             .SelectMany(o => byColumn.TryGetValue((o.X,o.Y),out var ids)
                 ? ids.Where(i => nodes[i].Span.Bottom <= o.Z && o.Z < nodes[i].Span.Top)
                 : Enumerable.Empty<int>()).ToHashSet();
-        var candidates = Enumerable.Range(0,nodes.Count).Where(i => distance[i] != int.MaxValue && !InTarget(nodes[i]) &&
+        var throughColumns = (routeThrough ?? new HashSet<Position>()).GroupBy(p=>(p.X,p.Y)).ToDictionary(g=>g.Key,g=>g.Select(p=>p.Z).ToArray());
+        var throughMemo = new Dictionary<int,bool>();
+        bool PassesOpening(int start) {
+            if (routeThrough is null) return true;
+            var chain = new List<int>(); int current=start; bool found=false;
+            while(current>=0) {
+                if(throughMemo.TryGetValue(current,out found)) break;
+                var n=nodes[current]; chain.Add(current);
+                if(throughColumns.TryGetValue((n.X,n.Y),out var levels) && levels.Any(z=>n.Span.Bottom<=z && z<n.Span.Top)) { found=true; break; }
+                current=parent[current];
+            }
+            foreach(int i in chain) throughMemo[i]=found;
+            return found;
+        }
+        var candidates = Enumerable.Range(0,nodes.Count).Where(i => distance[i] != int.MaxValue && !InTarget(nodes[i]) && PassesOpening(i) &&
+            (origins is null || origins.Contains(new(nodes[i].X,nodes[i].Y,nodes[i].Span.Bottom))) &&
             (sourceNodes.Contains(i) || nodes[i].Span.WaterDepth > 0.01f || nodes[i].X == 0 || nodes[i].Y == 0 || nodes[i].X == size.X-1 || nodes[i].Y == size.Y-1)).ToArray();
         float Head(int i) => nodes[i].Span.Bottom + nodes[i].Span.WaterDepth - Math.Max(distance[i],target.Z);
         bool Threat(int i) => nodes[i].Span.WaterDepth > 0.01f && distance[i] != int.MaxValue && Head(i) > 0.01f;
@@ -109,8 +126,10 @@ public static class StrategicMapAnalysis
                 nodes[i].Span.Bottom > Math.Max(target.Z, scenarioLevel ?? target.Z) && nodes[i].Span.WaterDepth <= 0.01f)
             .OrderBy(i => Math.Abs(nodes[i].X-target.X)+Math.Abs(nodes[i].Y-target.Y))
             .GroupBy(i => (nodes[i].X/8,nodes[i].Y/8)).Select(g => Point(g.First())).Take(8).ToArray();
+        var explosions = includeDerived ? ExplosionPlanning.Analyze(size,columns,target,objects ?? [],objectsComplete,ct) : null;
+        if (explosions is { Cores: > 0 }) hazards = hazards with { NextAction="inspect_explosion_chains_and_protect_target_before_detonation" };
         return new("terrain_analysis_complete",nodes.Count,distance.Count(d => d!=int.MaxValue),columns.Count,caves,roots,candidates.Length,routes,higher,Limits,hazards,
-            ReservoirPlanning.Analyze(size,columns,target,objects ?? [],objectsComplete,ct));
+            includeDerived ? ReservoirPlanning.Analyze(size,columns,target,objects ?? [],objectsComplete,ct) : null, explosions);
 
         StrategicHazard Hazard(int start, TerrainRoute route)
         {

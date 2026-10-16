@@ -18,7 +18,7 @@ public interface IBuildBatchPort
     Task<CompletionReport> Completion(BuildBatchJob job, bool advance, CancellationToken ct);
 }
 
-public sealed class NativeBuildBatchPort(NativeClient client) : IBuildBatchPort
+public sealed partial class NativeBuildBatchPort(NativeClient client) : IStructureBatchPort
 {
     private T Check<T>(BuildBatchSpec s, BridgeEnvelope<T> e) {
         if (e.SessionId != s.Session) throw new BridgeRejectionException("stale_session");
@@ -40,7 +40,7 @@ public sealed class NativeBuildBatchPort(NativeClient client) : IBuildBatchPort
             var page = Check(s, await client.BuildingCatalog(BridgeRequest.Parse("/agent-api/v1/building-catalog", Query(("offset", offset), ("limit", 32))), ct));
             var item = page.Items.SingleOrDefault(i => i.Template == s.Items[index].Template);
             if (item is not null) return !item.Available ? "template_disabled" : !item.Unlocked ? "template_locked" :
-                !item.Supported ? "template_unsupported" : item.Costs.Any(c => c.AvailableGlobally < c.Required) ? "materials_missing" : null;
+                !item.Supported ? "template_unsupported" : null;
             if (!page.HasMore) return "template_missing";
         }
         return "catalog_bound_reached";

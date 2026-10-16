@@ -63,10 +63,19 @@ public sealed class LodgeProjectTests
         var steps = Enumerable.Range(0, 4).Select(_ => new BuildingProjectController.Step { Template = "Path" })
             .Append(new BuildingProjectController.Step { Template = "Lodge.Folktails" }).ToArray();
         int writes = 0;
-        var receipt = controller.Start(Guid.Parse(Action), "f", "k", steps, () => true, _ => writes++, _ => "confirmed");
-        for (int tick = 0; tick < 10; tick++) controller.Tick(tick);
-        Assert.Equal("completed", receipt.State);
+        bool finished = false;
+        var receipt = controller.Start(Guid.Parse(Action), "f", "k", steps, () => true, _ => writes++, _ => {
+            Assert.Equal(5, writes);
+            return finished ? "finished" : "confirmed";
+        });
+        controller.Tick(0);
         Assert.Equal(5, writes);
+        controller.Tick(1);
+        Assert.Equal("ordered", receipt.State);
+        Assert.Same(receipt, controller.Start(Guid.Parse(Action), "f", "k", steps, () => true, _ => writes++, _ => "confirmed"));
+        finished = true;
+        controller.Tick(2);
+        Assert.Equal("completed", receipt.State);
         Assert.Same(receipt, controller.Start(Guid.Parse(Action), "f", "k", steps, () => true, _ => writes++, _ => "confirmed"));
         controller.Tick(100); Assert.Equal(5, writes);
         Assert.Throws<BridgeRejectionException>(() => controller.Existing(Guid.Parse(Action), "changed"));

@@ -64,7 +64,42 @@ Umweg oder unvollständigem Querschnitt einen anderen Sperrpunkt untersuchen.
 Keinen Abfluss aufgraben, bevor dessen Auslass und Rückwirkungen belegt sind.
 Ein niedriger Szenariopegel verkleinert den Schutzvorschlag für beobachtetes Wasser nicht.
 `overviewOnly=true` liefert weiterhin keine zielbezogene Gefahrenbewertung.
-Explosionszeit, Ereigniswirkung, zukünftige Pegel und Ankunftszeiten bleiben unbekannt.
+Explosionszeit, tatsächliche Ereigniswirkung, zukünftige Pegel und Ankunftszeiten bleiben unbekannt.
+
+### Instabile Kerne und Faulwasserdurchbruch — 0.63, Warnung im Nutzerumfang abgenommen
+
+Live 17. Oktober: neun Kerne bewertet; Kern (168,130,12) mit Faulwasserherkunft,
+Zielzutritt und Schutzposition schon in Compact sichtbar. Der Schutzquerschnitt
+war unvollständig; Vor-/Nach-Schwelle unverändert. Damit Warnung bestätigt,
+aber weder neu entstandener Durchbruch noch wirksame Schutzanlage nachgewiesen.
+Nutzerabnahme: Frühe Warnung mit nachvollziehbarem Gefahrenweg und soweit möglich
+Eindämmungsvorschlägen genügt. Ein vollständig validierter Bauplan ist keine
+Voraussetzung für diese Warnung; fehlende Nachweise weiter ausdrücklich nennen.
+
+`analysis.explosions` bleibt auch in Compact sichtbar. Zuerst Kernposition,
+`state`, `currentlyBlocked`, `timing`, `chains` und `unresolved` lesen.
+`badwater_breach_to_target_potential` verbindet Kern, beobachteten Speicher,
+Kontamination, Geländeschwelle vor/nach möglicher Öffnung, Zielzutritt und
+Schutzkandidat. Das Zielgebiet ist die angegebene Schutz-/Teichzone, kein
+automatisch identifiziertes Gewässer. Kernposition allein bestimmt keine Gefahr.
+
+Die Bridge liest öffentlichen nativen Radius und Radiuszellen, filtert gegen
+festes Terrain und verändert nichts im Spiel. Die Analyse öffnet diese Zellen
+nur in einer Kopie. Das ist `native_radius_terrain_scenario`: tatsächliche
+Zerstörung, Einstürze, Bauwerkswirkung und Wasserverteilung sind nicht vollständig
+modelliert. Countdown und Ankunftszeit bleiben unbekannt. Ein aktuell blockierter
+Kern ist keine dauerhafte Entwarnung. Unvollständige Daten/Budgets ergeben
+`explosion_risk_unassessed`, niemals eine erfundene Kette oder Sicherheit.
+
+Vor Auslösung Schutzquerschnitt und Krone außerhalb des möglichen Sprengbereichs
+prüfen; `protection_inside_possible_blast_relocate` verwirft den Standort.
+Nur bei `terrain_route_cut_at_observed_level` zur nativen Bauplanung übergehen.
+Material, Bauzugang, Fertigstellung vor Auslösung, alternative Rinnen und Rückstau
+prüfen. Zielzutritt/Wasserentnahme absichern; Umleitung erst mit belegtem sicheren
+Auslass. Compact nennt Kern, Wasserherkunft, Zielzutritt, Schutzposition/-höhe und
+Maßnahmen; `detail=full` ergänzt Route, Radius-Terrainzellen und Querschnitt.
+
+
 
 ## Strategischer Kartenscan 0.62 — begrenzt live abgenommen
 
@@ -283,7 +318,7 @@ Kontrollfall gelang, siehe Abschnitt 0.60. Unbestätigten Start nur lesend klär
 nicht wiederholen. Zeitlimit-/Stopgrund im Kurztext noch allgemein, Fachbericht
 lesen. Andere Teilfehler und längere Räumläufe nicht pauschal abgenommen.
 [Zusatzprotokoll](agent-log-live-tests-0.59.md). Auftragsstatus
-`completed` bei Einzelprojekten bedeutet bestätigte Aufträge, keinen Fertigbau.
+`ordered` bezeichnet ab 0.63 bestätigte Einzelprojekt-Aufträge; `completed` verlangt Fertigbau. Bis 0.62 bezeichnete `completed` lediglich den Auftrag.
 Bauabschlussberichte trennen fertige Bauteile, Gebäudezugang und Zeitbudget.
 `finished_accessible` bestätigt zusätzlich die Pause, keinen Betrieb.
 
@@ -711,27 +746,55 @@ derselben Sitzung geprüft. Belegte Wegzelle und fremde Baustelle abgewiesen:
 
 Grenzen und konkreter Pilot: [Projektwiederherstellung](project-recovery.md).
 
-## Autonome Gesamtpläne — begrenzter Livetest bestanden
+## Gesamtstruktur 0.63 — mit dokumentierter Grenze abgeschlossen
 
-Für vorbereitete Gesamtpläne `plan_large_project` → **einmal `run_large_project`** verwenden.
-Gleiche Planparameter plus `actionId`, `mode=development_pilot`, `speed` (1/3/7),
-`maxGameHours` (1–672) und `maxRealSeconds` (30–86400). Pausiert starten; die Mod
-erteilt alle unabhängigen Aufträge gemeinsam und startet dann die Simulation.
-Echte Stütz-/Zugangsabhängigkeiten mit `dependsOn` angeben; keine künstlichen
-Ketten unabhängiger Gebäude. Zurückgestellte Teile erscheinen in `deferredParts`
-und werden nach Fertigstellung ihrer Abhängigkeiten automatisch beauftragt.
+Live belegt: ebener Gesamtauftrag, Reparaturabschluss, Schema-2-Charge sowie
+manueller Gesamtstart mit Weg auf unfertiger Plattform. Ein unabhängiger Stapel
+wurde trotz materialblockierter Höhenbauteile fertig. Separater Vertikalpilot:
+fünf Teile einschließlich beider oberer Wege gemeinsam bestätigt. Ebener Pilot:
+zwei Wege und Lager gemeinsam beauftragt und fertig/zugänglich nachgewiesen.
+Objektverlust wird ohne Replay gemeldet; geänderter Plan unter belegter ID konkret
+abgewiesen. Teilablehnungen mitten im Durchgang mit ausdrücklicher Nutzerfreigabe nur synthetisch im Gate geprüft;
+fertige Höhennavigation nicht neu live belegt. Versionsabnahme siehe Projektstand.
+Nachbesserung: konkrete Startcodes unterscheiden Pause, Isolation, Distrikt,
+Ledger und Geometrie. Nur explizite Vorauftragsablehnung belegt `not_executed`;
+generischer Konflikt oder Transportverlust bleibt `unconfirmed`, niemals blind wiederholen.
 
-Kein Advance und keine separaten Simulationsläufe pro Bauteil. Optional den Stand
-mit `inspect_large_project` lesen; das Lesen löst nichts aus. `completed` erfordert
-alle fertigen Teile, anwendbare Zugänge und bestätigte Pause. `blockedPart`/`reason`
-erklären Stopps; unbekannte Wirkung nicht erneut beauftragen. Nach MCP-Abbruch
-dieselbe Action-ID lesen, nach Spielneuladen neue Session beachten. Die Mod läuft
-bei MCP-Trennung weiter; Tempowechsel unterbricht, Stop pausiert die Charge.
-[Vertrag und Abnahmeplan](autonomous-construction-batches.md).
+`plan_large_project` → **einmal `run_large_project`**: alle Teile in einem
+Main-Thread-Durchgang platzieren, erst danach Bauzustand und Probleme beobachten.
+Zwischen den Aufträgen gibt es keine Material-, Zugangs-, Initialisierungs- oder
+Fertigstellungsprüfung. `dependsOn` ist nur die topologische Einreichreihenfolge,
+keine Wartebedingung. Auch Treppen, Plattformen, obere Wege, Kraft- und Wasserbau
+werden gemeinsam eingereicht. Ob die installierte Spielversion einen konkreten
+Auftrag tatsächlich angenommen hat, muss die Rückbeobachtung zeigen.
 
-Die folgenden Einzelschritt-Anweisungen beschreiben den manuellen Altmodus.
-Die automatische Standortsuche/Räumung von `start_building_batch` ist weiterhin
-ein separater älterer Ablauf, kein Hintergrunddispatcher für Gesamtpläne.
+Planparameter plus `actionId`, `mode=development_pilot`, `speed` (1/3/7),
+`maxGameHours` (1–672), `maxRealSeconds` (30–86400). Plan und Start pausiert;
+nach gemeinsamer Platzierung läuft die native Simulation automatisch bis zum
+Bauabschluss oder Zeitlimit. Keine Advance-Aufrufe pro Bauteil. Platzierungsfehler
+werden gesammelt; übrige Teile werden trotzdem versucht. Unbestätigte Wirkung
+niemals wiederholen. Bei Fehlern ID, Position, reason und exceptionType auswerten.
+`inspect_large_project` bleibt lesend, `diagnose=true` ergänzt frische Material-/
+Zugangsdiagnose. `completed` verlangt alle Teile fertig und Zugang beobachtet,
+beim autonomen Lauf zusätzlich bestätigte Pause. Kraft/Produktion separat prüfen.
+
+Neue `start_building_batch`-Chargen planen die Gebäude gemeinsam samt Zugang
+und starten einen solchen Gesamtauftrag. Zusatzregionen sind alternative
+Standorte für die ganze Gruppe. Räumung erfolgt bei Bedarf vor der Bauphase.
+`constructionHours` ist jetzt ein gemeinsames Budget. Nach Ende per
+`advance_building_batch` den lokalen Beleg und optionale Lagerkonfiguration
+abschließen. Alte Schema-1-Journale behalten ihren alten Fortsetzungsvertrag.
+
+Ebene und vertikale Baupiloten platzieren ebenfalls alle Teile vor Beobachtung:
+`ordered` = bestätigte Aufträge, `completed` = alle Teile fertig. Ihre einfachen
+Startwerkzeuge besitzen kein eigenes Simulationsbudget; für autonomes Tempo und
+Abschluss den Gesamtplan über `run_large_project` verwenden. `start_large_project`
+platziert jetzt sofort und beobachtet automatisch, ohne selbst Tempo zu setzen.
+Einzelplatzierungen bleiben Einzelaktionen und können als Teile eines Gesamtplans
+zusammengefasst werden. [Vertrag/Pilot](construction-structures-0.63.md).
+
+Die folgenden ausdrücklich versionierten Altabschnitte dokumentieren frühere
+Abnahmen. Ihre Einzelschritt- und Auftrags-completed-Semantik gilt nicht für 0.63.
 
 ## Erweiterung 0.37.0: größere Bauvorhaben (begrenzter Livepilot bestanden)
 
@@ -771,7 +834,7 @@ Das menschliche Vorbereitungsskript startet seit 0.57 nach erfolgreichen Tests,
 Installation und Paketprüfung Timberborn automatisch. Spielstand laden und
 `live bereit` bleiben menschliche Schritte; der Agent startet das Gate nicht selbst.
 
-Stand: letzter dokumentierter Abschluss Bridge 0.62.0; aktualisiert am 16. Oktober 2026.
+Stand: letzter dokumentierter Abschluss Bridge 0.63.0; aktualisiert am 17. Oktober 2026.
 Diese Anleitung beschreibt die vorhandenen MCP-Fähigkeiten. Aktueller Auftrag
 und Projektregeln stehen in [AGENTS.md](../AGENTS.md) und
 [missionsplan.md](../missionsplan.md); das lokale Spiel ist das freigegebene

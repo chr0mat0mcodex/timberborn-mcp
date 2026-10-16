@@ -125,3 +125,15 @@ Nächste vorgeschlagene Pakete:
 Güter/Wohnraum/Positionen haben geringere Unsicherheit, 3D-Karte mittlere und Bauvorschau/Platzierung die höchste.
 Der Erkenntnisgewinn rechtfertigt die eigene Schnittstelle, aber noch keine Zusage vollständiger Spielsteuerung.
 Nächste Freigabe betrifft Punkt 1/2; in diesem Schritt wurden nur Recherche und Planung ausgeführt.
+
+### Öffentliche Explosionsmetadaten — 17. Oktober 2026
+
+Vorhandener Metadatenleser bestätigt `UnstableCore.ExplosionRadius/InnerRadius/ExplosionCenter`,
+`UnstableCoreExplosionBlocker.ExplosionBlocked` und
+`ExplosionOutcomeGatherer.GetAffectedTilesPerRadius(Vector3, Single)`.
+Die neue Beobachtung verwendet ausschließlich diese lesbaren Daten, keine
+`Activate`, `Explode`, `Register`- oder Terrainmutatoren. Maximal vier
+Radiusabfragen je Kachel, Radius höchstens 32, höchstens 8192 Terrainzellen pro
+Kern; Überschreitung bleibt ausdrücklich unvollständig. Keine privaten Felder,
+Methodenkörperanalyse oder neue Abhängigkeit. Dienstauflösung, Nebenwirkungsfreiheit
+und Radius-Szenario gegen tatsächliche Ereignisse sind noch live nachzuweisen.

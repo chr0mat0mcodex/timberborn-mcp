@@ -48,8 +48,8 @@ public sealed class LargeProjectBatchTests
         {
             now=time;hours=gameHours;locked=isLocked;
             Runs.Tick(hours,Speed,now,Change,locked);
-            Batch.Tick(now,Runs.Inspect(ActionId),locked,()=>Guard,i=>Observations[i],i=>i!=InvalidPart,
-                i=> {Orders.Add(i);SpeedsAtOrder.Add(Speed);if(i==ThrowPart)throw new InvalidOperationException();},
+            Batch.Tick(now,Runs.Inspect(ActionId),locked,()=>Guard,i=>Observations[i],
+                i=> {Orders.Add(i);SpeedsAtOrder.Add(Speed);if(i==InvalidPart)throw new BridgeRejectionException("template_locked");if(i==ThrowPart)throw new InvalidOperationException();},
                 ()=>Runs.Cancel(ActionId,hours,Speed,now,Change,locked),()=>Runs.BeginDeferred(ActionId,now,Change),()=>RepairedSitesFinished);
         }
     }
@@ -70,87 +70,91 @@ public sealed class LargeProjectBatchTests
     [Fact]
     public void RepairCompletionWaitsForOriginalSitesWithoutRepeatingHelpers()
     {
-        var p=new Pilot(1) {RepairedSitesFinished=false};
+        var p=new Pilot(1, repair:true) {RepairedSitesFinished=false};
         p.Tick(0.25);p.Observations[0]="finished";p.Tick(1,1);
         Assert.Equal("running",p.Receipt.State);
         Assert.Equal("awaiting_repaired_sites",p.Receipt.Reason);
+        Assert.Null(p.Receipt.BlockedPart);
+        Assert.Equal(7f,p.Speed);
+        Assert.Equal(new[]{7},p.SpeedCommands);
         p.Tick(2,2);Assert.Single(p.Orders);
         p.RepairedSitesFinished=true;p.Tick(3,3);p.Tick(3.25,3);
         Assert.Equal("completed",p.Receipt.State);Assert.Single(p.Orders);
         Assert.True(p.Receipt.Simulation.PauseConfirmed);
     }
     [Fact]
-    public void UnreachableSiteIsConfirmedConstructionWithSpecificBlockReason()
+    public void UnreachableSiteIsReportedAfterAllOrdersWithoutStoppingOtherConstruction()
     {
-        var p=new Pilot(1);p.Tick(0.25);
-        p.Observations[0]="construction_unreachable";p.Tick(1,1);
-        Assert.Equal("construction",p.Receipt.PartStates[0]);
-        p.Tick(6,2);p.Tick(6.25,2);
-        Assert.Equal("blocked",p.Receipt.State);Assert.Equal("builders_unreachable",p.Receipt.Reason);
-        Assert.Equal(0,p.Receipt.BlockedPart);Assert.Single(p.Orders);
+        var p=new Pilot();p.Tick(0.25);p.Observations[0]="construction_unreachable";
+        p.Tick(1,1);p.Tick(6,2);
+        Assert.Equal(3,p.Orders.Count);Assert.Equal("running",p.Receipt.State);
+        Assert.Equal("builders_unreachable",p.Receipt.PartReasons[0]);
+        Array.Fill(p.Observations,"finished");p.Tick(7,3);p.Tick(7.25,3);
+        Assert.Equal("completed",p.Receipt.State);
     }
+
     [Fact]
     public void RepairWaitingStillHonorsOriginalTimeBudget()
     {
-        var p=new Pilot(1) {RepairedSitesFinished=false};
+        var p=new Pilot(1, repair:true) {RepairedSitesFinished=false};
         p.Tick(0.25);p.Observations[0]="finished";p.Tick(1,1);
         p.Tick(2,24);p.Tick(2.25,24);
         Assert.Equal("blocked",p.Receipt.State);Assert.Equal("game_time_limit",p.Receipt.Reason);
         Assert.Single(p.Orders);
     }
     [Fact]
-    public void IndependentPartsStartTogetherAndSupportSuccessorDispatchesOnFinish()
+    public void DependenciesOrderSubmissionButNeverWaitForConstruction()
     {
         var p=new Pilot(dependency:true);p.Tick(0.25);
-        Assert.Equal(new[]{0,2},p.Orders);
-        Assert.Equal(new[]{1},p.Receipt.DeferredParts);
-        p.Tick(1);Assert.Equal(new[]{0,2},p.Orders);
-        p.Observations[0]="finished";p.Tick(1.25);
-        Assert.Equal(new[]{0,2,1},p.Orders);
-        Assert.Empty(p.Receipt.DeferredParts);
-        Assert.NotEqual("completed",p.Receipt.State);
+        Assert.Equal(new[]{0,1,2},p.Orders);Assert.Empty(p.Receipt.DeferredParts);
+        Assert.Equal(0,p.Receipt.Finished);p.Tick(1);Assert.Equal(3,p.Orders.Count);
     }
+
     [Fact]
-    public void ReadOnlyInspectionCannotDispatchAndPartFailureCannotReplay()
+    public void PlacementExceptionStillSubmitsRemainingPartsAndNeverReplays()
     {
         var p=new Pilot {ThrowPart=1};
         for(int i=0;i<10;i++)Assert.Equal(0,p.Batch.Inspect().Ordered);
-        p.Tick(0.25);Assert.Equal(new[]{0,1},p.Orders);
-        p.Tick(1);Assert.Equal("unconfirmed",p.Receipt.State);Assert.Equal(1,p.Receipt.BlockedPart);
-        Array.Fill(p.Observations,"finished");p.Tick(2);
-        Assert.Equal(new[]{0,1},p.Orders);Assert.Equal("pending",p.Receipt.PartStates[2]);
+        p.Tick(0.25);Assert.Equal(new[]{0,1,2},p.Orders);
+        Assert.Equal("placement_failed_no_retry",p.Receipt.PartReasons[1]);
+        p.Observations[1]="missing";p.Tick(6);p.Tick(6.25);
+        Assert.Equal("unconfirmed",p.Receipt.State);Assert.Equal(1,p.Receipt.BlockedPart);
+        p.Tick(7);Assert.Equal(3,p.Orders.Count);
     }
-    [Theory]
-    [InlineData(false,-1,"guard_changed",0)]
-    [InlineData(true,1,"native_step_validation_failed",1)]
-    public void FailedGuardOrPreflightStopsRemainingOrders(bool guard,int invalid,string reason,int count)
+
+    [Fact]
+    public void NativeRejectionIsPerPartAndRemainingPartsAreTrackedToCompletion()
     {
-        var p=new Pilot {Guard=guard,InvalidPart=invalid};p.Tick(0.25);p.Tick(1);
-        Assert.Equal("blocked",p.Receipt.State);Assert.Equal(reason,p.Receipt.Reason);Assert.Equal(count,p.Orders.Count);
-        Assert.True(p.Receipt.Simulation.PauseConfirmed);
+        var p=new Pilot {InvalidPart=1};p.Tick(0.25);p.Tick(1);
+        Assert.Equal(new[]{0,1,2},p.Orders);Assert.Equal(2,p.Receipt.Ordered);
+        Assert.Equal("rejected",p.Receipt.PartStates[1]);Assert.Equal("template_locked",p.Receipt.PartReasons[1]);
+        Assert.Equal("running",p.Receipt.State);
+        Array.Fill(p.Observations,"finished");p.Tick(2);p.Tick(2.25);
+        Assert.Equal("blocked",p.Receipt.State);Assert.Equal("partial_structure_rejected_parts",p.Receipt.Reason);
     }
+
     [Theory]
     [InlineData("missing","unconfirmed")]
     [InlineData("pending","unconfirmed")]
     [InlineData("mismatch","blocked")]
-    public void ChangedObjectStopsBeforeDependentPlacement(string observed,string state)
+    public void ChangedObjectIsReportedAfterWholeStructureSubmission(string observed,string state)
     {
         var p=new Pilot(dependency:true);p.Tick(0.25);p.Observations[0]=observed;p.Tick(6);p.Tick(6.25);
-        Assert.Equal(state,p.Receipt.State);Assert.Equal(0,p.Receipt.BlockedPart);Assert.DoesNotContain(1,p.Orders);
+        Assert.Equal(state,p.Receipt.State);Assert.Equal(0,p.Receipt.BlockedPart);Assert.Contains(1,p.Orders);
     }
     [Fact]
     public void StopDuringConstructionPausesOnceAndDoesNotFinishDependentPart()
     {
         var p=new Pilot(dependency:true);p.Tick(0.25);p.Batch.Stop();p.Tick(1);p.Tick(1.25);
         Assert.Equal("stopped",p.Receipt.State);Assert.Equal(new[]{7,0},p.SpeedCommands);
-        p.Batch.Stop();p.Tick(2);Assert.Equal(2,p.Orders.Count);
+        p.Batch.Stop();p.Tick(2);Assert.Equal(3,p.Orders.Count);
     }
     [Fact]
     public void ManualSpeedChangeInterruptsWithoutOverwritingHumanChoice()
     {
         var p=new Pilot(dependency:true);p.Tick(0.25);p.Speed=3;p.Tick(1);
         Assert.Equal("interrupted",p.Receipt.State);Assert.Equal(new[]{7},p.SpeedCommands);Assert.Equal(3,p.Speed);
-        Assert.DoesNotContain(1,p.Orders);
+        Assert.Contains(1,p.Orders);
     }
     [Fact]
     public void HumanInterruptionDuringFinalPauseCannotProduceCompleted()
@@ -165,15 +169,15 @@ public sealed class LargeProjectBatchTests
     {
         var p=new Pilot(dependency:true);p.Tick(0.25);p.Observations[0]="pending";
         p.Tick(1,0,true);p.Tick(10,0,true);p.Tick(10.25);p.Tick(10.5);
-        Assert.Equal("running",p.Receipt.State);Assert.DoesNotContain(1,p.Orders);
+        Assert.Equal("running",p.Receipt.State);Assert.Contains(1,p.Orders);
         p.Observations[0]="finished";p.Tick(10.75);
         Assert.Contains(1,p.Orders);
     }
     [Fact]
-    public void NewWaveWaitsForAllPreviousOrderConfirmationsButNotTheirCompletion()
+    public void UninitializedPartDoesNotPreventOtherPartsBeingSubmitted()
     {
         var p=new Pilot(dependency:true);p.Tick(0.25);p.Observations[0]="finished";p.Observations[2]="pending";
-        p.Tick(1);Assert.DoesNotContain(1,p.Orders);
+        p.Tick(1);Assert.Contains(1,p.Orders);
         p.Observations[2]="construction";p.Tick(1.25);Assert.Contains(1,p.Orders);
     }
     [Fact]
@@ -208,7 +212,7 @@ public sealed class LargeProjectBatchTests
     public void GameLockDefersOrdersAndPausingButNeverExtendsBudget()
     {
         var p=new Pilot(dependency:true);p.Tick(0.25);p.Observations[0]="finished";
-        p.Tick(1,0,true);Assert.DoesNotContain(1,p.Orders);
+        p.Tick(1,0,true);Assert.Contains(1,p.Orders);
         p.Tick(31,0,true);Assert.Equal(new[]{7},p.SpeedCommands);
         p.Tick(32);p.Tick(32.25);
         Assert.Equal("blocked",p.Receipt.State);Assert.Equal(new[]{7,0},p.SpeedCommands);

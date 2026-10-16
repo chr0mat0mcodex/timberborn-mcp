@@ -52,21 +52,17 @@ public sealed class VerticalWarehouseTests
 
     [Theory]
     [InlineData(false)] [InlineData(true)]
-    public void SevenStepWorkflowWaitsAndDoesNotReplay(bool loseConnection)
+    public void SevenStepWorkflowPlacesAllThenTracksActualFinish(bool loseConnection)
     {
-        var controller = new BuildingProjectController();
-        var id = Guid.NewGuid(); int writes = 0; bool connected = true; string ready = "ready";
-        var steps = Templates.Select(t => new BuildingProjectController.Step { Template = t }).ToArray();
-        var receipt = controller.Start(id, "synthetic", "key", steps, () => connected, _ => writes++, _ => "confirmed", _ => ready);
-        for (int tick = 0; tick < 10; tick++) controller.Tick(tick);
-        ready = "construction"; controller.Tick(10); controller.Tick(11);
-        Assert.Equal("waiting", receipt.State); Assert.Equal(5, writes);
-        connected = !loseConnection; ready = "ready";
-        for (int tick = 12; tick < 16; tick++) controller.Tick(tick);
-        Assert.Equal(loseConnection ? "stopped" : "completed", receipt.State);
-        Assert.Equal(loseConnection ? 5 : 7, writes);
-        Assert.Same(receipt, controller.Existing(id, "synthetic")); controller.Tick(17);
-        Assert.Equal(loseConnection ? 5 : 7, writes);
+        var controller=new BuildingProjectController();var id=Guid.NewGuid();
+        int writes=0;bool connected=true, finished=false;
+        var steps=Templates.Select(t=>new BuildingProjectController.Step {Template=t}).ToArray();
+        var receipt=controller.Start(id,"synthetic","key",steps,()=>connected,_=>writes++, _=>finished?"finished":"confirmed");
+        controller.Tick(0);Assert.Equal(7,writes);
+        controller.Tick(1);Assert.Equal("ordered",receipt.State);
+        connected=!loseConnection;finished=true;controller.Tick(2);
+        Assert.Equal(loseConnection?"stopped":"completed",receipt.State);
+        Assert.Equal(7,writes);Assert.Same(receipt,controller.Existing(id,"synthetic"));
     }
 
     [Fact]

@@ -80,14 +80,40 @@ public sealed class LargeProjectStartTests
         } else Assert.Contains("unbestätigt",text);
     }
 
-    private sealed class RejectionHandler(string code) : HttpMessageHandler
+    [Theory]
+    [InlineData("project_start_ledger_conflict",true)]
+    [InlineData("project_start_footprint_changed",true)]
+    [InlineData("project_start_outside_map",true)]
+    [InlineData("project_start_footprint_occupied",true)]
+    [InlineData("project_plan_requires_pause",true)]
+    [InlineData("project_plan_construction_state_unknown",true)]
+    [InlineData("state_conflict",false)]
+    [InlineData("lost",false)]
+    public async Task VerticalStartPreservesSpecificRejectionsWithoutReplaying(string code,bool rejected)
+    {
+        using var handler = new RejectionHandler(code,"/agent-api/v1/vertical-stair-execute");
+        using var tools = new NativeTools(new NativeClient(new(8081,new string('a',64)),handler),enableBuildingPlacement:true);
+        var args = JsonSerializer.SerializeToElement(new {
+            session="11111111-1111-1111-1111-111111111111",
+            districtId="22222222-2222-2222-2222-222222222222",
+            actionId="33333333-3333-3333-3333-333333333333",
+            mode="stair_platform_pilot",x=10,y=10,z=3,rotation=1,upperPathCount=2
+        });
+        var result = await tools.Invoke("execute_vertical_stair_pilot",args,TestContext.Current.CancellationToken);
+        Assert.Equal(rejected?"not_executed":"unconfirmed",result["error"]!["execution"]!.GetValue<string>());
+        Assert.False(result["error"]!["retryable"]!.GetValue<bool>());
+        Assert.Equal(1,handler.Calls);
+        if(rejected) Assert.Equal(code,result["error"]!["code"]!.GetValue<string>());
+    }
+
+    private sealed class RejectionHandler(string code,string path="/agent-api/v1/large-project-run-repair") : HttpMessageHandler
     {
         public int Calls;
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,CancellationToken ct)
         {
             Calls++;
             Assert.Equal(HttpMethod.Post,request.Method);
-            Assert.Equal("/agent-api/v1/large-project-run-repair",request.RequestUri!.AbsolutePath);
+            Assert.Equal(path,request.RequestUri!.AbsolutePath);
             if(code=="lost") throw new HttpRequestException();
             string body=code=="malformed"?"{\"error\":\"project_start_plan_changed\",\"extra\":true}":
                 JsonSerializer.Serialize(new {error=code});

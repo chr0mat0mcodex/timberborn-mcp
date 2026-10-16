@@ -85,13 +85,21 @@ public sealed class MediumWarehouseProjectTests
         var id = Guid.Parse(Action);
         var controller = new BuildingProjectController();
         int writes = 0;
+        bool finished = false;
         var steps = new BuildingProjectController.Step[] {
             new() { EntityId = "44444444-4444-4444-4444-444444444444", Template = "Path" },
             new() { EntityId = Action, Template = "MediumWarehouse.Folktails" } };
-        var receipt = controller.Start(id, "synthetic", "key", steps, () => true, _ => writes++, _ => "confirmed");
-        for (int tick = 0; tick < 4; tick++) controller.Tick(tick);
-        Assert.Equal("completed", receipt.State);
+        var receipt = controller.Start(id, "synthetic", "key", steps, () => true, _ => writes++, _ => {
+            Assert.Equal(2, writes);
+            return finished ? "finished" : "confirmed";
+        });
+        controller.Tick(0);
         Assert.Equal(2, writes);
+        controller.Tick(1);
+        Assert.Equal("ordered", receipt.State);
+        finished = true;
+        controller.Tick(2);
+        Assert.Equal("completed", receipt.State);
         Assert.Same(receipt, controller.Existing(id, "synthetic"));
         controller.Tick(100);
         Assert.Equal(2, writes);

@@ -6,7 +6,7 @@ namespace Timberborn.McpServer;
 public static class StrategicScanPresentation
 {
     public static readonly string[] OptionalFields = ["tiles", "specialObjects", "corridors", "rivers", "sections", "links", "sources",
-        "crossSection", "nearbyTerrainBanks", "requiredChecks", "outlets", "modifiers", "excavationCells"];
+        "crossSection", "nearbyTerrainBanks", "requiredChecks", "outlets", "modifiers", "excavationCells", "route"];
 
     public static void Compact(JsonObject data)
     {
@@ -14,6 +14,14 @@ public static class StrategicScanPresentation
         if(data["analysis"] is JsonObject analysis)
         {
             analysis.Remove("corridors");
+            if(analysis["explosions"]?["priorities"] is JsonArray cores)
+                foreach(var core in cores.OfType<JsonObject>())
+                    if(core["chains"] is JsonArray chains) foreach(var chain in chains.OfType<JsonObject>()) {
+                        chain.Remove("route");
+                        if(chain["protection"] is JsonObject protection) {
+                            protection.Remove("crossSection"); protection.Remove("nearbyTerrainBanks"); protection.Remove("requiredChecks");
+                        }
+                    }
             if(analysis["terraforming"]?["options"] is JsonArray options)
                 foreach(var option in options.OfType<JsonObject>()) option.Remove("excavationCells");
             if(analysis["hazards"] is JsonObject hazards && hazards["priorities"] is JsonArray priorities)

@@ -66,7 +66,7 @@ public sealed class NativeBridgeTests
             if(r.Validation is null)return projectController.Inspect(r.ActionId);
             return projectController.Start(r.ActionId,JsonSerializer.Serialize(r,NativeJson.Options),r.Validation.PlanKey,
                 [new() {EntityId=r.ActionId.ToString("D"),Template="SmallWarehouse.Folktails",X=0,Y=1,Z=1}],
-                ()=>true,_=>projectWrites++,_=>"confirmed"); // Synthetic game port, real controller and transport.
+                ()=>true,_=>projectWrites++,_=>"finished"); // Synthetic game port, real controller and transport.
         }
         using var pumpStop = CancellationTokenSource.CreateLinkedTokenSource(ct);
         var pump = Task.Run(async () =>
@@ -150,7 +150,7 @@ public sealed class NativeBridgeTests
                                 Guid.NewGuid(), "applied", r.Template == "Path", true, ["synthetic_test"])),
                             _ => throw new ArgumentException()
                         };
-                        return JsonSerializer.Serialize(new BridgeEnvelope<object>(1, session, DateTimeOffset.UtcNow, r.SimulationRun is not null ? "0.47.0" : r.RecentActions is not null ? "0.40.0" : r.BuildingQuery is not null ? "0.39.0" : r.ProjectExecution is not null ? "0.26.0" : "0.22.0", data), NativeJson.Options);
+                        return JsonSerializer.Serialize(new BridgeEnvelope<object>(1, session, DateTimeOffset.UtcNow, r.SimulationRun is not null ? "0.47.0" : r.RecentActions is not null ? "0.40.0" : r.BuildingQuery is not null ? "0.39.0" : r.ProjectExecution is not null ? "0.63.0" : "0.22.0", data), NativeJson.Options);
                     });
                     await Task.Delay(5, pumpStop.Token);
                 }

@@ -77,7 +77,7 @@ public sealed partial class LargeProjectService
                 "construction" when (bool?)construction?["isOn"] == false => "construction_paused",
                 "construction" when (bool?)construction?["hasMaterialsToResumeBuilding"] == false => "materials_not_ready",
                 "construction" => "awaiting_builders_or_work",
-                "missing" when recorded[i] == "pending" => "not_ordered",
+                "missing" when recorded[i] is "pending" or "rejected" => "not_ordered",
                 "missing" when recorded[i] == "unconfirmed" => "placement_effect_unconfirmed",
                 "missing" => "previously_observed_object_removed",
                 _ => observed
@@ -91,7 +91,7 @@ public sealed partial class LargeProjectService
             lastValidationFailure=validationFailures.TryGetValue(id, out var failure) ? failure : null,
             faulted, busy, lostConnections=lost.Length, affected, affectedTruncated=lost.Length>32,
             foreignSites=others.Take(32).ToArray(), foreignSitesTruncated=others.Length>32,
-            unissuedParts=recorded.Count(s=>s=="pending"), parts,
+            unissuedParts=recorded.Count(s=>s is "pending" or "rejected"), parts,
             limitations=new[]{"fresh_observation_not_placement","materials_are_total_cost_and_current_stock_not_remaining_delivery","access_and_materials_not_worker_guarantee","close_abandons_unissued_parts_without_demolition","unknown_placement_effects_block_release","ledger_lost_on_game_reload"} });
     }
 

@@ -25,10 +25,10 @@ public static class BuildBatchTools
             yield return new Tool {
                 Name = name,
                 Description = "Standardantwort kompakt mit aktuellem Fortschritt; details=true liefert Such-/Verlaufdetails. " + (name switch {
-                    Start => "Charge von 1–8 Gebäuden: Basisfläche plus optional bis drei additionalRegions, jede höchstens 8×8. Bei fehlendem Standort nächste Fläche in Listenreihenfolge, kein Rücksprung. Frische Bau-/Zugangsprüfung je Gebäude bis finished_accessible. clearing räumt bei Bedarf einmal je Fläche passende natürliche Vegetation; maxClearTargets gilt insgesamt (höchstens 64). Räum-/Baubudgets zusammen höchstens 672 Stunden. Unbestätigter Eingriff, fehlendes Material oder erschöpftes Räumbudget stoppt die ganze Charge. Gleiche batchId liest nur Status, geänderte Parameter abgelehnt. Danach advance, waitSeconds 0–45.",
-                    Advance => "Setzt gespeicherte Baucharge fort: Standortwahl, Räumung, festes Räumzeitfenster und sequenzielle Fertigstellung. Fertige Bauobjekte lösen beim advance eine frühe Pause ihres bestehenden Laufs aus; danach Zugang/Konfiguration prüfen und direkt weiter. constructionHours ist eine Obergrenze. waitSeconds 0–45 begrenzt nur Statuswarten; fertige Übergänge auch bei 0 im selben Aufruf, höchstens 64 insgesamt. Kein Hintergrunddispatcher; zwischen Aufrufen läuft nur ein bereits gestartetes, begrenztes Spielzeitfenster weiter. Unbestätigte Eingriffe werden ausschließlich lesend geklärt.",
+                    Start => "0.63: Plant 1–8 Gebäude gemeinsam in der autorisierten Region samt Wegen und startet genau einen Strukturauftrag. Alle Bauteile werden vor der ersten Baufortschrittsprüfung platziert. Kein Materialbestand als Startsperre. Zusätzliche Regionen sind alternative Gesamtstandorte. Optionale Vegetationsräumung bleibt vorgeschaltet. constructionHours ist ein gemeinsames Baubudget, kein Budget je Gebäude. Ein actionId verfolgt alle Teile bis Fertigbau; bei Fehlern konkrete Einzelzustände, kein Replay. details=true für vollständigen Plan/Beleg.",
+                    Advance => "Liest und aktualisiert denselben Strukturauftrag, ohne einzelne Gebäude nachzuschieben. Die native Mod verfolgt den Bau autonom. Nach Gesamtfertigstellung optionale Anfangskonfiguration abschließen. Alte Journale (Schema 1) behalten ihren ursprünglichen Fortsetzungsvertrag. waitSeconds 0–45.",
                     Inspect => "Liest ausschließlich den lokalen gespeicherten Chargenstatus, keinen aktuellen Spielzustand. checkpointOnly=true. Zur Fortsetzung advance verwenden.",
-                    _ => "Stoppt weitere Aufträge dieser Charge dauerhaft. Ein bereits gestarteter Spielzeitlauf läuft bis zu seinem festen Budget und pausiert dann; kein sofortiger Spielstopp."
+                    _ => "Stoppt die Charge dauerhaft. Schema 2 fordert beim nativen Strukturauftrag Pause an; Beleg anschließend über inspect_large_project lesen. Bei alten Schema-1-Chargen läuft ein vorhandenes Zeitfenster bis zum festen Budget weiter. Keine Wiederholung verlorener Stop-Antworten."
                 }),
                 InputSchema = JsonSerializer.SerializeToElement(input),
                 OutputSchema = JsonSerializer.SerializeToElement(json.GetJsonSchemaAsNode(typeof(NativeResult<object>))),
@@ -60,13 +60,16 @@ public static class BuildBatchTools
             if (job is null) {
                 if (request.Batch.Clearing != "none" && !removalEnabled) throw new ArgumentException("removal_disabled");
                 if (store.HasActive(handle.Session)) throw new ArgumentException("another_batch_active");
-                job = new() { Spec = request.Batch, Fingerprint = BuildBatchState.Fingerprint(request.Batch) };
+                job = new() { Spec = request.Batch, Fingerprint = BuildBatchState.Fingerprint(request.Batch), SchemaVersion = port is IStructureBatchPort ? 2 : 1 };
                 store.Save(job); created = true;
             }
         }
         if (job is null) throw new ArgumentException("batch_not_found");
         if (name == Stop && !job.Terminal) {
             job.State = "cancelled"; job.DispatchStopped = true; job.Reason = "dispatch_stopped_existing_run_keeps_its_budget"; store.Save(job);
+            if(job.SchemaVersion==2 && job.StructureReceipt is not null && port is IStructureBatchPort structure)
+                job.StructureReceipt=await structure.Structure(job,"stop",ct);
+            store.Save(job);
         }
         NativeFault? fault = null;
         if ((created || name == Advance) && !job.Terminal) {
@@ -116,6 +119,18 @@ public static class BuildBatchTools
                 suggestedPollSeconds = job.Terminal ? 0 : 10,
                 clearanceRunId = job.ClearanceRun?.RunId,
                 detailsAvailable = true };
+        }
+        if(job.SchemaVersion==2) {
+            var receipt=job.StructureReceipt?.DeepClone().AsObject();
+            if(receipt is not null && !handle.Details) ProjectReportPresentation.Compact("inspect_large_project",receipt);
+            report=new { batchId=job.Spec.BatchId, actionId=job.StructureActionId, job.State, job.Reason,
+                job.UpdatedAtUtc, checkpointOnly=true, total=job.Spec.Items.Length, construction=receipt,
+                region=job.Region, job.PreviousRegions,
+                plan=handle.Details?job.StructurePlan:null,
+                unplaced=job.StructurePlan?["unplaced"],
+                nextAction=job.Terminal?"done_or_diagnose_structure":"inspect_large_project_for_live_progress",
+                configurationPending=job.State!="completed" && job.Spec.Items.Any(i=>i.InitialStorageGood is not null || i.InitialStorageMode is not null),
+                detailsAvailable=true };
         }
         return JsonSerializer.SerializeToNode(new NativeResult<object>(1, fault is null ? "ok" : "error", report,
             new("native", false, job.Spec.Session, null), fault), NativeJson.Options)!.AsObject();

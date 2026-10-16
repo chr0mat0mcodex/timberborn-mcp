@@ -1,5 +1,113 @@
 # Projektstand
 
+## Versionsabschluss 0.63.0 — 17. Oktober 2026
+
+Menschliches Gate und begrenzte B15-Liveprüfungen bestanden. Nutzer hat den
+Abschluss mit dokumentierter Grenze ausdrücklich freigegeben: native Teilablehnung
+mitten im synchronen Platzierungsdurchgang nur synthetisch im Gate geprüft,
+nicht live provoziert. Keine neue Abnahme fertiger Höhennavigation.
+Explosionsvorwarnung mit möglichen Eindämmungsvorschlägen ebenfalls abgenommen.
+[Releaseumfang](docs/releases/0.63.0.md), [B15-Belege](docs/construction-structures-0.63.md).
+Anleitung, Werkzeugdokumentation, Kompatibilität und lokaler Hermes-Skillentwurf
+aktualisiert; Skill bleibt zurückgestellt. Keine Codeänderung nach bestandenem Gate.
+
+## Darstellungshinweis geklärt — Nutzerentwarnung
+
+Nach den B15-Liveprüfungen meldet der Nutzer leere Ebenen und eine auffällige
+Spielansicht. Versionsabschluss war vorübergehend zurückgestellt. Simulation
+bei Tag 48, Stunde 13,9375 pausiert; keine weiteren Testeingriffe.
+Erste lesende Prüfung: 24 Gebäude ohne Wege vorhanden, darunter Wohnhäuser,
+Pumpen, Erfinder und Lager. Testregion 8×8 über drei Höhen besitzt weiterhin
+durchgehendes Terrain bis Höhe 3. Gelesener Player.log-Ausschnitt enthält keine
+Exception. Das ist kein vollständiger Integritätsnachweis und schließt eine
+Mod-/Darstellungsstörung nicht aus. Keine direkte Save-Dateibearbeitung erfolgt;
+Ingame-Testplatzierungen und gezielter Rückbau sind oben im B15-Nachweis dokumentiert.
+Nutzer anschließend: „stop, passt alles, weiter im test“. Untersuchung damit
+beendet; kein bestätigter Schaden. B15-Abnahme fortgesetzt.
+
+## Erweiterung 0.63: Explosionsketten — Warnung im Nutzerumfang abgenommen
+
+Menschliches Gate bestanden, Bridge 0.63.0 in neuer Session bestätigt (17. Oktober).
+Frischer Standard-Compact-Scan: 64/64 Kacheln, 65536 Spalten, Objektinventar komplett,
+neun Kerne bewertet. Kern (168,130,12) schon vor beobachteter Auslösung mit
+`badwater_breach_to_target_potential`, Radius 2 und 14 hypothetisch geöffneten
+Terrainzellen sichtbar. Faulwasser (168,126,11), Kontamination ungefähr 1,
+Pegel 11.084, Zielzutritt (124,148,2). Compact enthält Schutzposition (177,120,11),
+Krone 13 sowie Maßnahmen für Sperrprüfung außerhalb des Sprengbereichs,
+Zielzutritt/Wasserentnahme und sichere Umleitung. Full desselben Scans ergänzt
+Route/Querschnitt; Route ist ausdrücklich gekürzt. Simulation lief auf Tempo 7;
+keine Explosion, Geländeänderung oder Schutzbauten durch diesen Test ausgelöst.
+
+**Abgenommen am 17. Oktober gemäß Nutzerpräzisierung:** frühe Vorwarnung mit
+nachvollziehbarem Gefahrenweg und soweit möglich Eindämmungsvorschlägen genügt.
+Ein vollständig validierter Schutzbau ist keine Abnahmevoraussetzung.
+Vorwarnung und Compact/Full-Ausgabe live belegt; wirksamer Schutzbau nicht behauptet. Schutzquerschnitt `cross_section_incomplete`; keine Bauvalidierung.
+Beim genannten Kern bleibt die Schwelle vor/nach Szenario 11, daher nur
+`existing_connection_may_worsen`, kein belegter neu entstandener Durchbruch.
+Kern (157,186,0) zeigt dagegen eine Szenarioschwelle 6 auf 2. Countdown,
+tatsächliche Ereigniswirkung, Einstürze, Bauwerkswirkung, Wasserverteilung und
+Zuordnung des Zielgebiets zum konkreten Teich bleiben begrenzt/unbewiesen.
+Vollständige Schutzbauplanung und Ereignisvergleich bleiben mögliche Folgearbeiten,
+keine Blocker dieser Warnungsabnahme. B15-Abschluss mit Grenze oben dokumentiert.
+Anleitung und lokaler, zurückgestellter Hermes-Skillentwurf mit Livegrenze ergänzt.
+
+## 0.63 / B15 — Gate bestanden, begrenzte Livebelege vom 17. Oktober
+
+Menschliches Gate bestanden; native Bridge 0.63.0 und aktuelle Session bestätigt.
+Zwei Lager mit einem Go als reale Baustellen beobachtet, beide vor Fertigstellung.
+Bei pausiertem Distriktzentrum blieb Lieferung aus; Lauf stoppte korrekt am
+12-Stunden-Limit mit bestätigter Pause. Nach Aktivierung des Zentrums schloss ein
+Reparaturauftrag einschließlich Originalbauten erfolgreich ab. Frische Diagnose
+und Einzelabfragen bestätigen beide Lager fertig/zugänglich; Originalledger freigegeben.
+Neue Schema-2-Charge: zwei Lager und ein automatisch ergänzter Weg als ein
+Strukturauftrag; alle drei fertig/zugänglich, bestätigte Pause, lokales Journal
+mit `whole_structure_finished` synchronisiert. Kein Einzelteil-Dispatch.
+
+Zusatzpilot: nach Plattformfreischaltung über `start_large_project` vier Teile
+mit einem Start beauftragt und frisch bestätigt: Treppe, Plattform, oberer Weg
+auf unfertiger Plattform und unabhängiger Stapel. Nach sechs Spielstunden war
+der Stapel fertig/zugänglich; Höhenbauteile blieben korrekt materialblockiert,
+kein falscher Gesamtabschluss. Drei unfertige Testteile kontrolliert entfernt,
+Diagnose bestätigte Rückbau und fertigen Stapel, Ledger freigegeben.
+
+Nach Diagnose-Nachbesserung menschliches Gate erneut bestanden. Separater
+`execute_vertical_stair_pilot`: fünf Teile sofort eingereicht, danach alle fünf
+`confirmed`, Gesamtstatus `ordered`. Beide oberen Wege liegen bereits auf
+unfertigen Plattformen. Kein Fertigbaunachweis der Höhenstruktur: 16 Bretter fehlen,
+alle fünf Testteile anschließend zurückgebaut. Späterer Pilotstatus korrekt
+`stopped/guard_changed`, kein falscher Bauabschluss. Frühere Startablehnung in der
+neuen Sitzung nicht reproduziert; damalige Ursache bleibt unbewiesen.
+Negativkontrolle geänderter Plan unter belegter ID: `project_start_ledger_conflict`,
+`not_executed`, keine zusätzlichen Baustellen. Konkrete Fehlerweitergabe live belegt.
+
+Ebener Pilot: zwei Wege und Lager mit einem Start, zunächst `ordered`, nach vier
+Spielstunden alle drei `finished`, Gesamtstatus `completed`; Lager separat fertig
+und distriktverbunden bestätigt. Fehlerpilot über manuellen Großprojektstart:
+zwei Lager gemeinsam bestätigt, eines gezielt entfernt. Meldung `unconfirmed`,
+Teilgrund `missing`, Diagnose `previously_observed_object_removed`; kein Replay.
+Restlager fertig, Ledger nach frischem Abgleich freigegeben. Null offene Baustellen,
+Tempo 7 separat bestätigt.
+
+Akzeptierte Nachweisgrenze: native Ablehnung mitten im Platzierungsdurchgang
+ist synthetisch im bestandenen Gate geprüft, nicht live provoziert. Kein behaupteter
+Livebeleg dafür oder für fertige Höhennavigation. Nutzer hat den begrenzten
+Versionsabschluss ausdrücklich freigegeben. Kein Code nach Gate geändert.
+
+Fortsetzung nach Nutzerentwarnung: `develop_building_project` live bestanden,
+Lager nach 2,3125 Spielstunden fertig/zugänglich, Pause bestätigt; separate
+Projektabfrage `completed` und Lagerkonfiguration `Log/accept` zurückgelesen.
+Räum-/Gruppenworkflow auf bereits freier Fläche bestanden: ein Lager über native
+Gesamtcharge fertig/zugänglich, Pause und automatische Ledgerfreigabe bestätigt
+(`group_finished_access_checked_and_released`). Keine neue Abnahme von
+Vegetationsräumung. Ein Start bei inzwischen laufendem
+Tempo wurde vor jedem Schreibauftrag abgewiesen; Pause frisch bestätigt und
+neue Vorschau vor dem tatsächlich angelegten Job gelesen.
+
+Die damalige fehlende Kern-Verknüpfung wurde durch die oben abgenommene
+Explosionswarnung ersetzt; historische Grenzen sind kein aktueller Blocker.
+Anleitung und lokaler Hermes-Skillentwurf bleiben auf 0.63-Semantik mit offenen
+Livegrenzen; Skill bleibt zurückgestellt. [Vertrag und Pilot](docs/construction-structures-0.63.md).
+
 ## Versionsabschluss 0.62.0 — 16. Oktober 2026
 
 Menschliches Test-/Build-/Installationsgate bestanden; Abschluss-Liveprüfungen

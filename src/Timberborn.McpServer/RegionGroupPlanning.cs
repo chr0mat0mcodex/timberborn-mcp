@@ -41,12 +41,12 @@ public static class RegionGroupPlanning
         return(survey with{MaxResults=32},templates,budget,searchBudget,reserved);
     }
 
-    public static async Task<JsonObject> Invoke(NativeClient client,JsonElement args,CancellationToken ct,IRegionSurveyPort? surveyPort=null)
+    public static async Task<JsonObject> Invoke(NativeClient client,JsonElement args,CancellationToken ct,IRegionSurveyPort? surveyPort=null, int[]? allowedRotations=null)
     {
         var (request,templates,budget,searchBudget,reserved)=Parse(args);
         var start=await client.Simulation(ct);
         if(start.SessionId!=request.Session)throw new BridgeRejectionException("stale_session");
-        if(start.BridgeVersion is not ("0.51.0" or "0.52.0" or "0.53.0" or "0.54.0" or "0.55.0" or "0.56.0" or "0.57.0" or "0.58.0" or "0.59.0" or "0.60.0" or "0.61.0" or "0.62.0"))throw new InvalidDataException("group_search_requires_051");
+        if(start.BridgeVersion is not ("0.51.0" or "0.52.0" or "0.53.0" or "0.54.0" or "0.55.0" or "0.56.0" or "0.57.0" or "0.58.0" or "0.59.0" or "0.60.0" or "0.61.0" or "0.62.0" or "0.63.0"))throw new InvalidDataException("group_search_requires_051");
         if(start.Data.CurrentSpeed!=0)throw new BridgeRejectionException("state_conflict");
         var surveys=new Dictionary<string,RegionSurveyReport>(StringComparer.Ordinal);
         var choices=new Dictionary<string,SurveyCandidate[]>(StringComparer.Ordinal);
@@ -54,7 +54,7 @@ public static class RegionGroupPlanning
         foreach(var template in templates.Distinct(StringComparer.Ordinal)) {
             var survey=await RegionSurvey.Observe(request with{Template=template},shared,ct);
             surveys.Add(template,survey);
-            choices.Add(template,survey.BuildingCandidates.Concat(survey.AdditionalLevels.SelectMany(l=>l.BuildingCandidates)).ToArray());
+            choices.Add(template,survey.BuildingCandidates.Concat(survey.AdditionalLevels.SelectMany(l=>l.BuildingCandidates)).Where(c=>allowedRotations is null || allowedRotations.Contains(c.Rotation)).ToArray());
         }
         var report=await RegionGroupSearch.Plan(request,templates,budget,searchBudget,reserved,choices,async (steps,token)=>{
             var q=new NameValueCollection{{"session",request.Session},{"districtId",request.DistrictId},

@@ -27,15 +27,15 @@ public sealed class LargeProjectSupportTests
         Assert.False(LargeProjectSupportPolicy.CanDefer(false,false,[0],[],[Support()]));
     }
     [Fact]
-    public void DeferredPlanNeverBypassesFreshExecutionValidation()
+    public void SupportPlanDoesNotInstallPerPartExecutionBarriers()
     {
         var ledger=new LargeProjectLedger();const string id="11111111-1111-1111-1111-111111111111";
         ledger.Start(id,new string('a',64),"synthetic",[0,1],["22222222-2222-2222-2222-222222222222","33333333-3333-3333-3333-333333333333"]);
         var placed=new List<int>();
         ledger.Advance(id,0,()=>true,_=>"finished",_=>true,placed.Add);
         var result=ledger.Advance(id,1,()=>true,_=>"finished",_=>false,placed.Add);
-        Assert.Equal("stopped",result.State);
-        Assert.Equal("native_step_validation_failed",result.Reason);
-        Assert.Equal(new[]{0},placed);
+        Assert.Equal("completed",result.State);
+        Assert.Equal("all_parts_finished_and_access_observed",result.Reason);
+        Assert.Equal(new[]{0,1},placed);
     }
 }

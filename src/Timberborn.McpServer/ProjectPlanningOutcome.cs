@@ -3,7 +3,7 @@ namespace Timberborn.McpServer;
 public static class ProjectPlanningOutcome
 {
     public static bool Handles(string name) => name is "plan_large_project" or "plan_large_project_access" or
-        "plan_large_project_repair" or "start_large_project" or "run_large_project" or "run_large_project_repair";
+        "plan_large_project_repair" or "start_large_project" or "run_large_project" or "run_large_project_repair" or "execute_vertical_stair_pilot";
 
     public static string Describe(string? code) => "Vorprüfung abgewiesen; kein neuer Bauauftrag durch diesen Aufruf. " + (code switch {
         "project_plan_requires_pause" => "Bauplanung benötigt eine pausierte Simulation.",

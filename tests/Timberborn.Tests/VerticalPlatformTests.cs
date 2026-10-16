@@ -7,70 +7,24 @@ namespace Timberborn.Tests;
 
 public sealed class VerticalPlatformTests
 {
-    [Fact]
-    public void ConstructionWaitResumesOnlyAfterReadinessWithoutReplay()
-    {
-        var controller = new BuildingProjectController();
-        var steps = new[] { new BuildingProjectController.Step { Template = "Stairs.Folktails" },
-            new BuildingProjectController.Step { Template = "Path" } };
-        int writes = 0;
-        string ready = "ready";
-        var receipt = controller.Start(Guid.NewGuid(), "synthetic", "key", steps, () => true,
-            _ => writes++, _ => "confirmed", _ => ready);
-        controller.Tick(0); controller.Tick(1);
-        ready = "construction"; controller.Tick(2); controller.Tick(100);
-        Assert.Equal("waiting", receipt.State);
-        Assert.Equal("awaiting_construction_finished", receipt.Reason);
-        Assert.Equal("pending", steps[1].State);
-        Assert.Equal(1, writes);
-        ready = "pause"; controller.Tick(101);
-        Assert.Equal("awaiting_pause", receipt.Reason);
-        Assert.Equal(1, writes);
-        ready = "ready"; controller.Tick(102); controller.Tick(103);
-        Assert.Equal("completed", receipt.State);
-        Assert.Equal(2, writes);
-    }
-
     [Theory]
-    [InlineData("construction", false, "construction_phase_timeout")]
-    [InlineData("ready", false, "construction_phase_timeout")]
-    [InlineData("mismatch", false, "dependency_mismatch")]
-    [InlineData("ready", true, "guard_changed")]
-    public void WaitingStopsWithoutPlacement(string readiness, bool loseGuard, string reason)
+    [InlineData(false)] [InlineData(true)]
+    public void WholeVerticalStructureSubmitsBeforeAnyObservation(bool rejectMiddle)
     {
-        var controller = new BuildingProjectController();
-        int writes = 0; bool guard = true; string ready = "construction";
-        var receipt = controller.Start(Guid.NewGuid(), "synthetic", "key",
-            [new BuildingProjectController.Step { Template = "Stairs.Folktails" }],
-            () => guard, _ => writes++, _ => "confirmed", _ => ready);
-        controller.Tick(0);
-        ready = readiness; guard = !loseGuard;
-        controller.Tick(readiness == "mismatch" || loseGuard ? 1 : 300);
-        Assert.Equal("stopped", receipt.State);
-        Assert.Equal(reason, receipt.Reason);
-        Assert.Equal(0, writes);
-        controller.Tick(301);
-        Assert.Equal(0, writes);
-    }
-
-    [Fact]
-    public void ControllerConfirmsFiveStepPlatformSequenceWithoutReplay()
-    {
-        var controller = new BuildingProjectController();
-        var templates = new[] { "Stairs.Folktails", "Platform.Folktails", "Path", "Platform.Folktails", "Path" };
-        var steps = templates.Select((template, index) => new BuildingProjectController.Step {
-            EntityId = Guid.NewGuid().ToString("D"), Template = template, X = index, Y = 10, Z = 3 }).ToArray();
-        var placed = new List<string>();
-        var id = Guid.NewGuid();
-        var receipt = controller.Start(id, "synthetic", new string('a', 64), steps,
-            () => true, step => placed.Add(step.EntityId), _ => "confirmed");
-        for (int tick = 0; tick < 10; tick++) controller.Tick(tick);
-        Assert.Equal("completed", receipt.State);
-        Assert.All(receipt.Steps, step => Assert.Equal("confirmed", step.State));
-        Assert.Equal(steps.Select(step => step.EntityId), placed);
-        Assert.Same(receipt, controller.Existing(id, "synthetic"));
-        controller.Tick(11);
-        Assert.Equal(5, placed.Count);
+        var controller=new BuildingProjectController();
+        string[] templates=["Stairs.Folktails","Platform.Folktails","Path","Platform.Folktails","Path"];
+        var steps=templates.Select(t=>new BuildingProjectController.Step {Template=t}).ToArray();
+        int writes=0, reads=0;bool finished=false;
+        var receipt=controller.Start(Guid.NewGuid(),"synthetic","key",steps,()=>true,
+            _=>{writes++;Assert.Equal(0,reads);if(rejectMiddle && writes==2)throw new BridgeRejectionException("template_locked");},
+            _=>{reads++;return finished?"finished":"confirmed";},
+            _=>throw new InvalidOperationException("Per-part readiness must not run"));
+        controller.Tick(0);Assert.Equal(5,writes);Assert.Equal(0,reads);
+        controller.Tick(1);Assert.Equal("ordered",receipt.State);
+        finished=true;controller.Tick(2);
+        Assert.Equal(rejectMiddle?"stopped":"completed",receipt.State);
+        if(rejectMiddle)Assert.Equal("template_locked",steps[1].Reason);
+        controller.Tick(3);Assert.Equal(5,writes);
     }
 
     private static NameValueCollection Query() => new() {

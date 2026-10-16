@@ -54,6 +54,12 @@ public sealed partial class LargeProjectService
     }
     public void Update()
     {
+        // Legacy start handles now submit once and monitor automatically too.
+        foreach (var job in jobs.ToArray()) {
+            if(batches.ContainsKey(job.Key) || ledger.Inspect(job.Key).State is "completed" or "stopped" or "unconfirmed") continue;
+            Handle(LargeProjectRequest.Parse("/agent-api/v1/large-project-advance", new System.Collections.Specialized.NameValueCollection {
+                ["session"]=job.Value.Request.Session, ["actionId"]=job.Key }));
+        }
         if (activeBatch is not { } id || clock.Elapsed.TotalSeconds < nextBatchObservation) return;
         nextBatchObservation = clock.Elapsed.TotalSeconds + 0.25;
         UpdateBatch(id);
@@ -67,7 +73,6 @@ public sealed partial class LargeProjectService
             () => GuardWithEvidence(id, () => !faulted && ConstructionIsolation.Allows(entities, receipt.EntityIds.Where((_, i) => receipt.PartStates[i] != "pending").Concat(RepairOwned(id)), allowOwnedInitialization: true) &&
                 RoadProtectionPolicy.LostConnections(job.Baseline.Before, roads.Read(job.Baseline, false)).Length == 0 && RepairIdentitiesValid(id)),
             i => Observe(job.Request.Steps[i], receipt.EntityIds[i], District(job.Request.DistrictId)),
-            i => Preflight(job.Request.Steps[i], job.Request.Session, District(job.Request.DistrictId), i, id),
             i => {
                 var step = job.Request.Steps[i]; var template = Resolve(step); var spec = template.GetSpec<BlockObjectSpec>();
                 placers.GetMatchingPlacer(spec).Place(new EntitySetup.Builder(template.Blueprint).SetId(Guid.Parse(receipt.EntityIds[i])), Placement(step));
@@ -79,7 +84,22 @@ public sealed partial class LargeProjectService
         var result = JObject.FromObject(batches[id].Inspect(), JsonSerializer.Create(new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() }));
         result["released"] = releasedProjects.Contains(id);
         result["parentActionId"] = repairParents.TryGetValue(id, out var parent) ? parent : null;
-        result["limitations"] = JArray.FromObject(new[] { "development_pilot_not_complete_construction_preflight", "all_ready_orders_then_autonomous_simulation", "explicit_dependencies_wait_for_real_finish", "inspect_never_dispatches", "bounded_time_not_material_delivery_guarantee", "manual_speed_change_interrupts_without_override", "no_retry_rollback_or_demolition", "ledger_lost_on_game_reload", "power_and_production_read_separately" });
+        var receipt = batches[id].Inspect();
+        var steps = jobs[id].Request.Steps;
+        result["parts"] = JArray.FromObject(steps.Select((s, i) => new {
+            index = i, id = receipt.EntityIds[i], template = s.Template,
+            position = new { x = s.X, y = s.Y, z = s.Z }, state = receipt.PartStates[i],
+            reason = receipt.PartReasons[i], exceptionType = receipt.PartExceptionTypes[i], dependsOn = s.DependsOn,
+            nextAction = receipt.PartStates[i] switch {
+                "rejected" => "correct_part_and_plan_new_job_after_diagnosis",
+                "unconfirmed" => "inspect_identity_do_not_repeat",
+                "pending" => "await_required_dependency_within_same_job",
+                "construction" => "check_materials_workers_and_access",
+                _ => "none"
+            }
+        }));
+        result["lastValidationFailure"] = validationFailures.TryGetValue(id, out var failure) ? JToken.FromObject(failure) : null;
+        result["limitations"] = JArray.FromObject(new[] { "development_pilot_not_complete_construction_preflight", "all_orders_before_observation", "dependencies_are_submission_order_not_finish_barriers", "inspect_never_dispatches", "bounded_time_not_material_delivery_guarantee", "manual_speed_change_interrupts_without_override", "no_retry_rollback_or_demolition", "ledger_lost_on_game_reload", "power_and_production_read_separately" });
         return result;
     }
 }

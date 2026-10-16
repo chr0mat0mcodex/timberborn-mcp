@@ -23,7 +23,7 @@ public sealed class VerticalSequentialTests
         var controller = new BuildingProjectController(capacity);
         int writes = 0, expectedWrites = 0;
         BuildingProjectController.Receipt Start(int i) => controller.Start(Id(i + 1), $"f{i}", "key",
-            Steps(i % 4), () => true, _ => writes++, _ => "confirmed", _ => "ready");
+            Steps(i % 4), () => true, _ => writes++, _ => "finished", _ => "ready");
         var receipts = new List<BuildingProjectController.Receipt>();
         double tick = 0;
         for (int i = 0; i < capacity; i++)
@@ -49,8 +49,8 @@ public sealed class VerticalSequentialTests
     {
         var controller = new BuildingProjectController(VerticalStairRequest.MaxProjectsPerSession);
         var receipt = controller.Start(Id(1), "first", "key", Steps(3), () => uncertain,
-            _ => throw new InvalidOperationException(), _ => "confirmed", _ => "ready");
-        controller.Tick(0);
+            _ => throw new InvalidOperationException(), _ => "pending", _ => "ready");
+        controller.Tick(0);controller.Tick(6);
         Assert.Equal(uncertain ? "unconfirmed" : "stopped", receipt.State);
         Assert.Throws<BridgeRejectionException>(() => controller.Existing(Id(2), "next"));
         Assert.Same(receipt, controller.Existing(Id(1), "first"));
@@ -61,9 +61,9 @@ public sealed class VerticalSequentialTests
     {
         var controller = new BuildingProjectController(VerticalStairRequest.MaxProjectsPerSession);
         var receipt = controller.Start(Id(1), "first", "key", Steps(3), () => true,
-            _ => throw new InvalidOperationException(), _ => "confirmed", _ => "construction");
+            _ => throw new InvalidOperationException(), _ => "finished", _ => "construction");
         controller.Tick(0);
-        Assert.Equal("waiting", receipt.State);
+        Assert.Equal("running", receipt.State);
         Assert.Throws<BridgeRejectionException>(() => controller.Existing(Id(2), "next"));
         var fresh = new BuildingProjectController(VerticalStairRequest.MaxProjectsPerSession);
         Assert.Throws<BridgeRejectionException>(() => fresh.Inspect(Id(1)));
@@ -71,10 +71,10 @@ public sealed class VerticalSequentialTests
     }
 
     [Fact]
-    public void CompletedOrderDoesNotBypassConstructionIsolationBeforeNextProject()
+    public void CompletedStructureDoesNotBypassConstructionIsolationBeforeNextProject()
     {
         var controller = new BuildingProjectController(VerticalStairRequest.MaxProjectsPerSession);
-        var receipt = controller.Start(Id(1), "first", "key", Steps(0), () => true, _ => { }, _ => "confirmed");
+        var receipt = controller.Start(Id(1), "first", "key", Steps(0), () => true, _ => { }, _ => "finished");
         controller.Tick(0); controller.Tick(1);
         Assert.Equal("completed", receipt.State);
         Assert.Null(controller.Existing(Id(2), "next")); // Ledger readiness is not building readiness.

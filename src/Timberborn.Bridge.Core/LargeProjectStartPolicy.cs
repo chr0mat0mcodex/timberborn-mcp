@@ -6,6 +6,8 @@ public static class LargeProjectStartPolicy
 {
     public static bool IsPreDispatchCode(string? code) => code is
         "project_start_busy" or "project_start_capacity" or "project_start_identity_conflict" or
+        "project_start_ledger_conflict" or "project_start_footprint_changed" or
+        "project_start_outside_map" or "project_start_footprint_occupied" or
         "project_start_unresolved" or "project_start_simulation_unavailable" or
         "project_start_plan_changed" or "project_start_ineligible" or
         "project_start_baseline_unavailable" or "project_start_entity_conflict" or

@@ -1,7 +1,7 @@
 namespace Timberborn.Bridge.Core;
 
 // Game-thread controller. The simulation owner supplies bounded time and pause confirmation.
-// Inspect has no effects; Tick alone dispatches each dependency-ready part exactly once.
+// Submit the entire structure in one game-thread pass, then observe it. Never replay a placement.
 public sealed class LargeProjectBatch
 {
     public sealed class Receipt
@@ -15,15 +15,16 @@ public sealed class LargeProjectBatch
         public int[] Order { get; set; } = Array.Empty<int>();
         public string[] EntityIds { get; set; } = Array.Empty<string>();
         public string[] PartStates { get; set; } = Array.Empty<string>();
+        public string[] PartReasons { get; set; } = Array.Empty<string>();
+        public string?[] PartExceptionTypes { get; set; } = Array.Empty<string?>();
         public int[] DeferredParts { get; set; } = Array.Empty<int>();
-        public int Ordered => PartStates.Count(s => s != "pending");
+        public int Ordered => PartStates.Count(s => s is "unconfirmed" or "construction" or "finished");
         public int Finished => PartStates.Count(s => s == "finished");
         public bool RegularExecutionAllowed { get; set; }
         public SimulationRunStatus Simulation { get; set; } = new();
     }
 
     private readonly Receipt result;
-    private readonly int[][] dependencies;
     private readonly double[] deadlines;
     private string? finishState;
     private bool cancelRequested;
@@ -37,16 +38,16 @@ public sealed class LargeProjectBatch
     {
         if (request.Operation is not ("run" or "run-repair") || entityIds.Length != request.Steps.Length || entityIds.Distinct().Count() != entityIds.Length || entityIds.Any(s => !Guid.TryParseExact(s,"D",out var id) || id == Guid.Empty)) throw new ArgumentException();
         Fingerprint = fingerprint;
-        dependencies = request.Steps.Select(s => s.DependsOn.ToArray()).ToArray();
         deadlines = new double[entityIds.Length];
-        result = new Receipt { ActionId = request.ActionId, PlanKey = request.PlanKey, Order = LargeProjectRequest.Order(request.Steps), EntityIds = entityIds.ToArray(), PartStates = Enumerable.Repeat("pending", entityIds.Length).ToArray(), DeferredParts = Enumerable.Range(0,entityIds.Length).Where(i=>dependencies[i].Length>0).ToArray() };
+        result = new Receipt { ActionId = request.ActionId, PlanKey = request.PlanKey, Order = LargeProjectRequest.Order(request.Steps), EntityIds = entityIds.ToArray(), PartStates = Enumerable.Repeat("pending", entityIds.Length).ToArray(), PartReasons = Enumerable.Repeat("not_submitted", entityIds.Length).ToArray(), DeferredParts = Array.Empty<int>() };
+        result.PartExceptionTypes = new string?[entityIds.Length];
     }
     public void Stop() { if (!Terminal && finishState is null) Finish("stopped", "stop_requested_objects_retained"); }
     private void Finish(string state, string reason, int? part = null)
     {
         finishState = state; result.State = "pausing"; result.Reason = reason; result.BlockedPart = part;
     }
-    public void Tick(double now, SimulationRunStatus simulation, bool locked, Func<bool> guard, Func<int,string> observe, Func<int,bool> preflight, Action<int> place, Action cancel, Action beginSimulation, Func<bool>? completionReady = null)
+    public void Tick(double now, SimulationRunStatus simulation, bool locked, Func<bool> guard, Func<int,string> observe, Action<int> place, Action cancel, Action beginSimulation, Func<bool>? completionReady = null)
     {
         if (Terminal) return;
         result.Simulation = simulation;
@@ -66,44 +67,58 @@ public sealed class LargeProjectBatch
                 if (!guard()) Finish("blocked", "guard_changed");
                 else
                 {
-                    foreach (int i in result.Order.Where(i => result.PartStates[i] != "pending"))
+                    if (initialDispatch)
+                    {
+                        // No observation, preview, material/access test, frame yield or build wait
+                        // between orders. dependsOn determines submission order, not finish waits.
+                        foreach (int i in result.Order.Where(i => result.PartStates[i] == "pending"))
+                        {
+                            result.PartStates[i] = "unconfirmed"; deadlines[i] = now + 5;
+                            result.PartReasons[i] = "awaiting_order_confirmation";
+                            try { place(i); }
+                            catch (BridgeRejectionException ex) {
+                                result.PartStates[i] = "rejected"; result.PartReasons[i] = ex.Code;
+                            }
+                            catch (Exception ex) when (ex is not OutOfMemoryException) {
+                                // Unknown side effects never authorize a retry. Other orders still submit.
+                                result.PartReasons[i] = "placement_failed_no_retry";
+                                result.PartExceptionTypes[i] = ex.GetType().Name;
+                            }
+                        }
+                    }
+                    else foreach (int i in result.Order.Where(i => result.PartStates[i] is "unconfirmed" or "construction" or "finished"))
                     {
                         currentPart = i;
                         string observed = observe(i);
-                        if (observed == "construction_unreachable")
-                        {
-                            result.PartStates[i] = "construction"; // Identity confirmed, access is the failure.
-                            if (now >= deadlines[i]) { Finish("blocked", "builders_unreachable", i); break; }
+                        if (observed == "construction_unreachable") {
+                            result.PartStates[i] = "construction";
+                            result.PartReasons[i] = "builders_unreachable";
                         }
-                        else if (observed is "construction" or "finished") result.PartStates[i] = observed;
-                        else if (observed == "mismatch") { Finish("blocked", "object_or_access_mismatch", i); break; }
-                        else if (observed is "missing" or "pending")
-                        {
-                            if (now >= deadlines[i]) { Finish("unconfirmed", "order_or_access_unconfirmed", i); break; }
+                        else if (observed is "construction" or "finished") {
+                            result.PartStates[i] = observed;
+                            result.PartReasons[i] = observed == "finished" ? "finished_access_observed" : "awaiting_materials_and_workers";
+                        }
+                        else if (observed == "mismatch") {
+                            result.PartReasons[i] = "object_or_access_mismatch";
+                            Finish("blocked", "object_or_access_mismatch", i);
+                        }
+                        else if (observed is "missing" or "pending") {
+                            if (now >= deadlines[i]) {
+                                result.PartReasons[i] = "order_or_access_unconfirmed";
+                                Finish("unconfirmed", "order_or_access_unconfirmed", i);
+                            }
                         }
                         else throw new InvalidOperationException();
                     }
-                    // No wait per part. A single tick can issue all 32 independent orders.
-                    if (finishState is null && !result.PartStates.Contains("unconfirmed"))
-                    foreach (int i in result.Order.Where(i => result.PartStates[i] == "pending"))
-                    {
-                        currentPart = i;
-                        if (dependencies[i].Any(d => result.PartStates[d] != "finished")) continue;
-                        if (!preflight(i)) { Finish("blocked", "native_step_validation_failed", i); break; }
-                        result.PartStates[i] = "unconfirmed"; deadlines[i] = now + 5;
-                        // Record BEFORE crossing the placement boundary; exceptions cannot cause replay.
-                        try { place(i); }
-                        catch { Finish("unconfirmed", "placement_failed_no_retry", i); break; }
-                    }
                     if (finishState is null && result.Finished == result.PartStates.Length && (completionReady?.Invoke() ?? true)) Finish("completed", "all_parts_finished_and_access_observed");
-                    else if (finishState is null) result.Reason = result.Finished == result.PartStates.Length ? "awaiting_repaired_sites" : "awaiting_construction_and_dependencies";
+                    else if (finishState is null && result.PartStates.Contains("rejected") && result.PartStates.All(s => s is "finished" or "rejected")) Finish("blocked", "partial_structure_rejected_parts", Array.IndexOf(result.PartStates, "rejected"));
+                    else if (finishState is null) result.Reason = result.Finished == result.PartStates.Length ? "awaiting_repaired_sites" : "awaiting_structure_completion";
                     currentPart = null;
                     if (finishState is null && initialDispatch) beginSimulation();
                 }
             }
             catch { Finish("blocked", "observation_or_validation_failed", currentPart); }
         }
-        result.DeferredParts = result.Order.Where(i => result.PartStates[i] == "pending" && dependencies[i].Any(d => result.PartStates[d] != "finished")).ToArray();
         if (finishState is null) return;
         if (!cancelRequested && !simulation.Terminal) { cancelRequested = true; cancel(); }
         if (simulation.Terminal)

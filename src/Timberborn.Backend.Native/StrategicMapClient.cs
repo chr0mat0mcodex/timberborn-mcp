@@ -4,7 +4,10 @@ namespace Timberborn.Backend.Native;
 
 public sealed record StrategicSpan(int Bottom, int Top, float WaterDepth, float Contamination);
 public sealed record StrategicColumn(int X, int Y, StrategicSpan[] Spans);
-public sealed record StrategicObject(Guid Id, string Template, int X, int Y, int Z, string Kind, bool Finished);
+public sealed record StrategicObject(Guid Id, string Template, int X, int Y, int Z, string Kind, bool Finished,
+    StrategicExplosion? Explosion = null);
+public sealed record StrategicExplosion(float Radius, float InnerRadius, bool Blocked, string Evidence,
+    Position[] TerrainCells, bool Complete, string Timing);
 public sealed record StrategicWeather(int Cycle, int CycleDay, float PartialCycleDay, bool Hazardous,
     string SelectedHazard, int TemperateDays, int HazardousDays, int HazardousStartCycleDay, int CycleLengthDays);
 public sealed record StrategicSourceModifier(string Type, float CurrentMultiplier);
@@ -23,7 +26,7 @@ public sealed partial class NativeClient
             throw new ArgumentException("invalid_strategic_map_request");
         var result = await Get<StrategicTile>($"strategic-map?session={id:D}&tile={tile}", ct,
             maxResponseBytes: StrategicMapRequest.MaxResponseBytes);
-        if (result.BridgeVersion != "0.62.0") throw new InvalidDataException("strategic_map_requires_062");
+        if (result.BridgeVersion is not ("0.62.0" or "0.63.0")) throw new InvalidDataException("strategic_map_requires_062");
         if (result.SessionId != session) throw new BridgeRejectionException("stale_session");
         ValidateStrategicTile(result.Data, tile);
         return result;
@@ -63,6 +66,14 @@ public sealed partial class NativeClient
         if(d.SourcesComplete && (!d.RegistryComplete || d.Sources is null))
             throw new InvalidDataException("strategic_sources_incomplete");
         bool InvalidPoint(Position? p)=>p is null || p.X<0 || p.Y<0 || p.Z<0 || p.X>=d.MapSize.X || p.Y>=d.MapSize.Y || p.Z>=d.MapSize.Z;
+        foreach (var o in d.Objects.Where(o => o.Explosion is not null)) {
+            var e = o.Explosion!;
+            if (!float.IsFinite(e.Radius) || e.Radius is < 0 or > 128 || !float.IsFinite(e.InnerRadius) ||
+                e.InnerRadius < 0 || e.InnerRadius > e.Radius || e.TerrainCells is null || e.TerrainCells.Length > 8192 ||
+                e.TerrainCells.Any(InvalidPoint) || e.TerrainCells.Distinct().Count() != e.TerrainCells.Length ||
+                e.Evidence != "native_radius_terrain_scenario" || e.Timing != "unknown")
+                throw new InvalidDataException("strategic_invalid_explosion");
+        }
         if(d.Sources is {} sources && (sources.Length>512 || sources.Select(s=>s?.Id).Distinct().Count()!=sources.Length || sources.Any(s=>
             s is null || s.Id==Guid.Empty || InvalidPoint(s.Anchor) || s.Anchor.X<d.X || s.Anchor.X>=d.X+d.Width || s.Anchor.Y<d.Y || s.Anchor.Y>=d.Y+d.Height ||
             s.Outlets is null || s.Outlets.Length>64 || s.Outlets.Any(InvalidPoint) ||

@@ -61,16 +61,16 @@ public sealed class LargeProjectTests
         return ledger;
     }
     [Fact]
-    public void SuccessorWaitsForActualFinishAndEachAdvancePlacesAtMostOne()
+    public void WholeStructurePlacesBeforeFirstConstructionObservation()
     {
         var ledger=Ledger();var placed=new List<int>();string observation="construction";
         LargeProjectLedger.Receipt Advance(double time)=>ledger.Advance(Action,time,()=>true,_=>observation,_=>true,placed.Add);
         Assert.Equal("ready",ledger.Inspect(Action).State);
-        Advance(0);Assert.Equal(new[]{0},placed);
-        Advance(1);Advance(100);Assert.Equal(new[]{0},placed);
+        Advance(0);Assert.Equal(new[]{0,1},placed);
+        Advance(1);Advance(100);Assert.Equal(new[]{0,1},placed);
         Assert.Equal("construction",ledger.Inspect(Action).PartStates[0]);
         observation="finished";Advance(101);Assert.Equal(new[]{0,1},placed);
-        Assert.NotEqual("completed",ledger.Inspect(Action).State);
+        Assert.Equal("completed",ledger.Inspect(Action).State);
         Assert.Equal("completed",Advance(102).State);
         Advance(103);Assert.Equal(2,placed.Count);
     }
@@ -79,9 +79,9 @@ public sealed class LargeProjectTests
     {
         var ledger=Ledger();int calls=0;
         void Place(int _) {calls++;throw new InvalidOperationException();}
-        Assert.Equal("unconfirmed",ledger.Advance(Action,0,()=>true,_=>"missing",_=>true,Place).State);
-        ledger.Advance(Action,10,()=>true,_=>"finished",_=>true,Place);
-        Assert.Equal(1,calls);
+        Assert.Equal("waiting",ledger.Advance(Action,0,()=>true,_=>"missing",_=>true,Place).State);
+        ledger.Advance(Action,10,()=>true,_=>"missing",_=>true,Place);
+        Assert.Equal(2,calls);
         Assert.Throws<BridgeRejectionException>(()=>ledger.Start(District,new string('a',64),"other",[0],[Session]));
     }
     [Theory]
@@ -93,15 +93,15 @@ public sealed class LargeProjectTests
         var ledger=Ledger();int count=0;
         ledger.Advance(Action,0,()=>true,_=>observed,_=>true,_=>count++);
         Assert.Equal(expected,ledger.Advance(Action,6,()=>true,_=>observed,_=>true,_=>count++).State);
-        Assert.Equal(1,count);
+        Assert.Equal(2,count);
     }
     [Theory]
     [InlineData(false,true)] [InlineData(true,false)]
     public void GuardAndFreshValidationStopBeforePlacement(bool guard,bool valid)
     {
         var ledger=Ledger();int count=0;
-        Assert.Equal("stopped",ledger.Advance(Action,0,()=>guard,_=>"finished",_=>valid,_=>count++).State);
-        Assert.Equal(0,count);
+        Assert.Equal(guard?"waiting":"stopped",ledger.Advance(Action,0,()=>guard,_=>"finished",_=>valid,_=>count++).State);
+        Assert.Equal(guard?2:0,count);
     }
     [Fact]
     public void StopAndDuplicateIdentityNeverCreateOrders()
@@ -137,7 +137,6 @@ public sealed class LargeProjectTests
         var ledger=Ledger();
         int count=0;
         ledger.Advance(Action,0,()=>true,_=>observation,_=>true,_=>count++);
-        ledger.Advance(Action,1,()=>true,_=>observation,_=>true,_=>count++);
         ledger.Stop(Action);
         Assert.Throws<BridgeRejectionException>(()=>ledger.Start(District,new string('b',64),"other",[0],[Session]));
         int before=count;

@@ -14,6 +14,8 @@ public sealed class BuildingProjectController
         public int Z { get; set; }
         public int Rotation { get; set; }
         public string State { get; set; } = "pending";
+        public string Reason { get; set; } = "not_submitted";
+        public string? ExceptionType { get; set; }
     }
     public sealed class Receipt
     {
@@ -24,18 +26,15 @@ public sealed class BuildingProjectController
         public Step[] Steps { get; set; } = Array.Empty<Step>();
         public bool ConstructionPreflightProven { get; set; }
         public InitialStorageConfiguration? InitialConfiguration { get; set; }
-        public string[] Limitations { get; set; } = new[] { "development_pilot_only", "construction_preflight_unproven", "no_automatic_retry_or_rollback", "placed_objects_retained", "ledger_lost_on_session_end", "completed_means_order_and_access_confirmed_not_construction_finished" };
+        public string[] Limitations { get; set; } = new[] { "development_pilot_only", "construction_preflight_unproven", "no_automatic_retry_or_rollback", "placed_objects_retained", "ledger_lost_on_session_end", "completed_means_all_parts_finished_and_access_observed" };
     }
     private Receipt? receipt;
     private readonly Dictionary<Guid, (string Fingerprint, Receipt Receipt)> ledger = new();
     private readonly int capacity;
-    private int index;
     private double deadline;
     private Func<bool>? guard;
     private Action<Step>? place;
     private Func<Step, string>? confirm;
-    private Func<Step, string>? readiness;
-    private double? waitDeadline;
     public BuildingProjectController(int capacity = 1)
     {
         if (capacity is < 1 or > MaxProjectsPerSession) throw new ArgumentOutOfRangeException(nameof(capacity));
@@ -49,7 +48,7 @@ public sealed class BuildingProjectController
             return entry.Receipt;
         }
         // A failed or unconfirmed project must be diagnosed, never bypassed with
-        // another ID. completed confirms orders/access, not construction finish.
+        // another ID. completed requires every part finished and accessible.
         if (ledger.Count >= capacity || receipt is not null && receipt.State != "completed")
             throw new BridgeRejectionException("state_conflict");
         return null;
@@ -58,7 +57,7 @@ public sealed class BuildingProjectController
         ? entry.Receipt : throw new BridgeRejectionException("state_conflict");
     public Receipt Start(Guid id, string requestFingerprint, string planKey, Step[] steps,
         Func<bool> check, Action<Step> placement, Func<Step, string> confirmation,
-        Func<Step, string>? beforePlacement = null)
+        Func<Step, string>? beforePlacement = null) // Legacy callback retained for callers; never used as a per-part barrier.
     {
         var existing = Existing(id, requestFingerprint); if (existing is not null) return existing;
         bool singleStair = steps.Length == 1 && steps[0].Template == "Stairs.Folktails";
@@ -69,51 +68,43 @@ public sealed class BuildingProjectController
         bool platformProject = steps.Select(s => s.Template).SequenceEqual(new[] { "Stairs.Folktails", "Platform.Folktails", "Path", "Platform.Folktails", "Path" });
         bool verticalWarehouseProject = steps.Select(s => s.Template).SequenceEqual(new[] { "Stairs.Folktails", "Platform.Folktails", "Path", "Platform.Folktails", "Path", "Platform.Folktails", "SmallWarehouse.Folktails" });
         if (steps.Length is < 1 or > 7 || (!singleStair && !stairWithUpperPaths && !flatBuildingProject && !platformProject && !verticalWarehouseProject)) throw new ArgumentException();
-        guard = check; place = placement; confirm = confirmation; readiness = beforePlacement;
-        index = 0; deadline = 0; waitDeadline = null;
+        guard = check; place = placement; confirm = confirmation;
+        deadline = 0;
         receipt = new Receipt { ActionId = id.ToString("D"), PlanKey = planKey, Steps = steps };
         ledger.Add(id, (requestFingerprint, receipt));
         return receipt;
     }
     public void Tick(double now)
     {
-        if (receipt is null || receipt.State is not ("running" or "waiting")) return;
-        var step = receipt.Steps[index];
+        if (receipt is null || receipt.State is not ("running" or "ordered")) return;
         try
         {
             if (!guard!()) { Stop("guard_changed"); return; }
-            if (step.State == "pending")
+            if (receipt.Steps.Any(s => s.State == "pending"))
             {
-                if (readiness is not null)
-                {
-                    if (waitDeadline.HasValue && now >= waitDeadline.Value) { Stop("construction_phase_timeout"); return; }
-                    string ready = readiness(step);
-                    if (ready is "construction" or "pause")
-                    {
-                        waitDeadline ??= now + 300;
-                        receipt.State = "waiting";
-                        receipt.Reason = ready == "construction" ? "awaiting_construction_finished" : "awaiting_pause";
-                        return;
-                    }
-                    if (ready != "ready") { Stop("dependency_mismatch"); return; }
-                    waitDeadline = null;
-                    receipt.State = "running";
-                    receipt.Reason = "";
-                }
-                step.State = "unconfirmed"; // Commit before crossing the game mutation boundary.
                 deadline = now + 5;
-                place!(step);
-                return; // Never place and confirm in the same frame.
+                foreach (var step in receipt.Steps)
+                {
+                    step.State = "unconfirmed"; step.Reason = "awaiting_order_confirmation";
+                    try { place!(step); }
+                    catch (BridgeRejectionException ex) { step.State = "rejected"; step.Reason = ex.Code; }
+                    catch (Exception ex) when (ex is not OutOfMemoryException) { step.Reason = "placement_failed_no_retry"; step.ExceptionType = ex.GetType().Name; }
+                }
+                return; // Observe only after the entire submission pass and game initialization.
             }
-            string evidence = confirm!(step);
-            if (evidence == "confirmed")
+            foreach (var step in receipt.Steps.Where(s => s.State != "rejected"))
             {
-                step.State = "confirmed";
-                if (++index == receipt.Steps.Length) { receipt.State = "completed"; receipt.Reason = "order_and_access_confirmed"; }
+                string evidence = confirm!(step);
+                if (evidence is "confirmed" or "finished") { step.State = evidence; step.Reason = evidence; }
+                else if (evidence == "mismatch") { step.Reason = "object_mismatch"; Stop("object_mismatch"); }
+                else if (step.State == "unconfirmed" && now >= deadline) { step.Reason = "confirmation_timeout"; Stop("confirmation_timeout"); }
             }
-            else if (evidence == "mismatch" || now >= deadline) Stop(evidence == "mismatch" ? "object_mismatch" : "confirmation_timeout");
+            if (receipt.State is "stopped" or "unconfirmed") return;
+            if (receipt.Steps.All(s => s.State == "finished")) { receipt.State = "completed"; receipt.Reason = "all_parts_finished_and_access_observed"; }
+            else if (receipt.Steps.All(s => s.State is "finished" or "rejected")) { Stop("partial_structure_rejected_parts"); }
+            else if (receipt.Steps.All(s => s.State is "confirmed" or "finished" or "rejected")) { receipt.State = "ordered"; receipt.Reason = "awaiting_structure_completion"; }
         }
-        catch { Stop("operation_unconfirmed"); }
+        catch (Exception ex) when (ex is not OutOfMemoryException) { Stop("observation_failed"); }
     }
     private void Stop(string reason)
     {

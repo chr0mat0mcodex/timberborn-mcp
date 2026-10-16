@@ -86,14 +86,12 @@ public sealed partial class LargeProjectService(BuildingCatalog catalog, Preview
             if(entities.Entities.Any(e=>ids.Contains(e.EntityId.ToString("D"))))throw new BridgeRejectionException("state_conflict");
             ledger.Start(r.ActionId,r.PlanKey,Fingerprint(r),LargeProjectRequest.Order(r.Steps),ids);
             jobs.Add(r.ActionId,(r,baseline));
-            return Receipt(r.ActionId); // start records a plan; advance performs at most one order.
+            // Fall through: submit the whole structure before returning the start receipt.
         }
         var job=jobs.TryGetValue(r.ActionId,out var stored)?stored:throw new BridgeRejectionException("state_conflict");
-        if(speed.CurrentSpeed!=0)throw new BridgeRejectionException("state_conflict");
         var receipt=ledger.Inspect(r.ActionId);var district=District(job.Request.DistrictId);
-        bool Guard()=>!faulted && ConstructionIsolation.Allows(entities,receipt.EntityIds.Where((_,i)=>receipt.PartStates[i]!="pending")) &&
-            RoadProtectionPolicy.LostConnections(job.Baseline.Before,roads.Read(job.Baseline,false)).Length==0 &&
-            receipt.Order.Take(receipt.Current).All(i=>Observe(job.Request.Steps[i],receipt.EntityIds[i],district)=="finished");
+        bool Guard()=>!faulted && ConstructionIsolation.Allows(entities,receipt.EntityIds.Where((_,i)=>receipt.PartStates[i]!="pending"), allowOwnedInitialization:true) &&
+            RoadProtectionPolicy.LostConnections(job.Baseline.Before,roads.Read(job.Baseline,false)).Length==0;
         ledger.Advance(r.ActionId,clock.Elapsed.TotalSeconds,()=>GuardWithEvidence(r.ActionId,Guard),i=>Observe(job.Request.Steps[i],receipt.EntityIds[i],district),i=>Preflight(job.Request.Steps[i],r.Session,district,i,r.ActionId),i=>{
             var step=job.Request.Steps[i];var template=Resolve(step);var spec=template.GetSpec<BlockObjectSpec>();
             placers.GetMatchingPlacer(spec).Place(new EntitySetup.Builder(template.Blueprint).SetId(Guid.Parse(receipt.EntityIds[i])),Placement(step));
@@ -104,7 +102,10 @@ public sealed partial class LargeProjectService(BuildingCatalog catalog, Preview
     {
         var r=ledger.Inspect(id);
         var result=JObject.FromObject(r,JsonSerializer.Create(new JsonSerializerSettings{ContractResolver=new CamelCasePropertyNamesContractResolver()}));
-        result["limitations"]=JArray.FromObject(new[]{"development_pilot_not_complete_construction_preflight","advance_one_order_only_when_paused","all_previous_parts_must_be_finished","inspect_never_places_or_advances","simulation_requires_separate_bounded_run","stopped_or_unconfirmed_never_replayed","no_rollback_or_automatic_demolition","ledger_lost_on_game_reload","power_and_production_read_separately"});
+        var steps=jobs[id].Request.Steps;
+        result["parts"]=JArray.FromObject(steps.Select((s,i)=>new {index=i,id=r.EntityIds[i],template=s.Template,
+            position=new{x=s.X,y=s.Y,z=s.Z},state=r.PartStates[i],reason=r.PartReasons[i],exceptionType=r.PartExceptionTypes[i]}));
+        result["limitations"]=JArray.FromObject(new[]{"development_pilot_not_complete_construction_preflight","whole_structure_submitted_before_observation","dependencies_order_submission_not_completion","inspect_never_places_or_advances","simulation_requires_separate_bounded_run","stopped_or_unconfirmed_never_replayed","no_rollback_or_automatic_demolition","ledger_lost_on_game_reload","power_and_production_read_separately"});
         return result;
     }
     private string Observe(LargeProjectStep s,string id,DistrictCenter district)
@@ -246,7 +247,7 @@ public sealed partial class LargeProjectService(BuildingCatalog catalog, Preview
             (safety.status=="safe"||safety.status=="unknown"&&safety.reasons.SequenceEqual(new[]{"construction_and_road_node_coverage_unproven"}));
         var result=JObject.FromObject(new{accessPolicyVersion=1,order,parts=results,powerLinks=links.ToArray(),pilotEligible=eligible,regularExecutionAllowed=false,
             restored=restored&&!faulted,sessionLocked=faulted,roadProtection=safety,
-            limitations=new[]{"explicit_3d_blueprint_not_automatic_terrain_route_search","maximum_32_parts_32x32_eight_occupied_levels","batch_waits_only_for_explicit_dependencies","joint_preview_not_builder_preflight","deferred_native_validation_is_unknown_until_real_supports_finish","entranceless_parts_have_no_invented_door","planned_power_ports_not_live_network_or_supply","new_districts_and_unsupported_catalog_layouts_excluded","no_reservation_or_execution_permission","no_material_delivery_or_production_guarantee"}});
+            limitations=new[]{"explicit_3d_blueprint_not_automatic_terrain_route_search","maximum_32_parts_32x32_eight_occupied_levels","dependencies_order_submission_not_completion","joint_preview_not_builder_preflight","deferred_native_validation_is_unknown_until_real_supports_finish","entranceless_parts_have_no_invented_door","planned_power_ports_not_live_network_or_supply","new_districts_and_unsupported_catalog_layouts_excluded","no_reservation_or_execution_permission","no_material_delivery_or_production_guarantee"}});
         // Runtime diagnostic counters and cached preview identities are not plan identity.
         // Start always repeats native validation; this key binds the blueprint and sampled baseline.
         result["planKey"]=Hash(Fingerprint(r)+"|"+r.ParentActionId+"|"+string.Join(",",before.OrderBy(id=>id))+"|"+string.Join(",",beforeStock)+"|"+

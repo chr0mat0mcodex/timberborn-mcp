@@ -140,7 +140,7 @@ public static class BuildingCompletionTools
         var start = startJson.Deserialize<NativeResult<BuildingStartResult>>(NativeJson.Options)!;
         NativeResult<CompletionReport>? finish = null;
         NativeFault? followupFault = null;
-        if (start.Status == "ok" && start.Data is { RequestSubmitted: true, Execution.State: "completed" or "running" }) {
+        if (start.Status == "ok" && start.Data is { RequestSubmitted: true, Execution.State: "completed" or "ordered" or "running" }) {
             try {
                 var result = await Execute(parsed.Completion, client.BuildingProjectExecution, client.Building, client.BuildingAccess,
                     client.BuildingSettings, client.SimulationRun, client.Simulation, Task.Delay, ct);
@@ -189,7 +189,7 @@ public static class BuildingCompletionTools
         if (run is not null && r.Advance && (run.RequestedSpeed != r.Speed || run.MaxRealSeconds != r.MaxRealSeconds ||
             Math.Abs(run.TargetGameHours - run.StartGameHours - r.DurationHours) > 0.0000001))
             return Result("budget_conflict", "inspect", new("state_conflict", "Vorhandenes Zeitbudget stimmt nicht überein; keine Änderung.", false));
-        if (p.State != "completed" || p.Steps.Any(s => s.State != "confirmed"))
+        if (p.State is not ("ordered" or "completed") || p.Steps.Any(s => s.State is not ("confirmed" or "finished")))
             return Result(p.State == "running" ? "awaiting_order" : "order_stopped", "inspect");
 
         async Task Observe()
@@ -224,7 +224,7 @@ public static class BuildingCompletionTools
         if (retained == false) return Result("configuration_changed", "diagnose");
         if (run is null && Finished() && speed == 0) return Result("finished_accessible", "done");
         if (run is null && r.Advance) {
-            if (steps[^1].Finished == true || a?.BuildersReachable != true || steps.Take(steps.Count - 1).Any(s => s.Finished != true))
+            if (a?.BuildersReachable != true && steps[^1].Finished != true || version!="0.63.0" && (steps[^1].Finished == true || steps.Take(steps.Count - 1).Any(s => s.Finished != true)))
                 return Result("access_unproven", "diagnose");
             if (speed != 0) return Result("not_paused", "diagnose");
             var start = new NameValueCollection(runQuery) { ["duration"] = r.DurationHours.ToString(CultureInfo.InvariantCulture),

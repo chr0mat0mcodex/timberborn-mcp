@@ -5,6 +5,28 @@ description: Timberborn über die vorhandene Hermes-MCP-Verbindung steuern; Test
 
 # Timberborn in Hermes
 
+## Gesamtstruktur 0.63 — mit dokumentierter Grenze abgeschlossen
+
+Ebener Gesamtauftrag, Reparatur, Schema-2-Charge und manueller Höhen-Gesamtstart
+mit Weg auf unfertiger Plattform live belegt. Separater Vertikalpilot bestätigt
+fünf gemeinsame Aufträge; ebener Dreiteilepilot vollständig fertig. Objektverlust
+ohne Replay und konkrete Vorauftragsablehnung live geprüft. Ablehnung mitten im
+Durchgang mit ausdrücklicher Nutzerfreigabe nur synthetisch im Gate belegt, fertige Höhennavigation nicht neu geprüft:
+nur explizite Ablehnung bedeutet `not_executed`; generischer Konflikt oder
+Transportverlust bleibt `unconfirmed` und wird ausschließlich lesend geklärt.
+
+Ein Plan, ein Go: `run_large_project` reicht alle Bauteile in einem Durchgang ein,
+erst danach werden Probleme und Fertigstellung geprüft. `dependsOn` ordnet nur
+die Einreichung; keine Fertigstellungsbarriere. Ebene/vertikale Piloten und neue
+Gebäudechargen verwenden ebenfalls gemeinsame Platzierung. `ordered` ist kein
+Fertigbau; `completed` verlangt alle Teile fertig. Native Fehler, Koordinaten,
+IDs und unbestätigte Wirkung behalten; unbekannte Platzierungen nie wiederholen.
+Autonomes Tempo und Zeitbudget über `run_large_project`, Status über
+`inspect_large_project`, frische Blockaden mit `diagnose=true`. Einzelstarts ohne
+Simulationsbudget starten nicht eigenmächtig die Zeit. Alte Schema-1-Chargen
+bleiben kompatibel. Details: [Bauvertrag](../construction-structures-0.63.md).
+Dieser lokale Skillentwurf wird durch die Pflege nicht installiert/freigegeben.
+
 ## Positive Terraforming-Optionen — begrenzt live geprüft
 
 Der vollständige Zielscan liefert zusätzlich `analysis.terraforming`: bis zu drei
@@ -69,7 +91,42 @@ Umweg oder unvollständigem Querschnitt einen anderen Sperrpunkt untersuchen.
 Keinen Abfluss aufgraben, bevor dessen Auslass und Rückwirkungen belegt sind.
 Ein niedriger Szenariopegel verkleinert den Schutzvorschlag für beobachtetes Wasser nicht.
 `overviewOnly=true` liefert weiterhin keine zielbezogene Gefahrenbewertung.
-Explosionszeit, Ereigniswirkung, zukünftige Pegel und Ankunftszeiten bleiben unbekannt.
+Explosionszeit, tatsächliche Ereigniswirkung, zukünftige Pegel und Ankunftszeiten bleiben unbekannt.
+
+### Instabile Kerne und Faulwasserdurchbruch — 0.63, Warnung im Nutzerumfang abgenommen
+
+Live 17. Oktober: neun Kerne bewertet; Kern (168,130,12) mit Faulwasserherkunft,
+Zielzutritt und Schutzposition schon in Compact sichtbar. Der Schutzquerschnitt
+war unvollständig; Vor-/Nach-Schwelle unverändert. Damit Warnung bestätigt,
+aber weder neu entstandener Durchbruch noch wirksame Schutzanlage nachgewiesen.
+Nutzerabnahme: Frühe Warnung mit nachvollziehbarem Gefahrenweg und soweit möglich
+Eindämmungsvorschlägen genügt. Ein vollständig validierter Bauplan ist keine
+Voraussetzung für diese Warnung; fehlende Nachweise weiter ausdrücklich nennen.
+
+`analysis.explosions` bleibt auch in Compact sichtbar. Zuerst Kernposition,
+`state`, `currentlyBlocked`, `timing`, `chains` und `unresolved` lesen.
+`badwater_breach_to_target_potential` verbindet Kern, beobachteten Speicher,
+Kontamination, Geländeschwelle vor/nach möglicher Öffnung, Zielzutritt und
+Schutzkandidat. Das Zielgebiet ist die angegebene Schutz-/Teichzone, kein
+automatisch identifiziertes Gewässer. Kernposition allein bestimmt keine Gefahr.
+
+Die Bridge liest öffentlichen nativen Radius und Radiuszellen, filtert gegen
+festes Terrain und verändert nichts im Spiel. Die Analyse öffnet diese Zellen
+nur in einer Kopie. Das ist `native_radius_terrain_scenario`: tatsächliche
+Zerstörung, Einstürze, Bauwerkswirkung und Wasserverteilung sind nicht vollständig
+modelliert. Countdown und Ankunftszeit bleiben unbekannt. Ein aktuell blockierter
+Kern ist keine dauerhafte Entwarnung. Unvollständige Daten/Budgets ergeben
+`explosion_risk_unassessed`, niemals eine erfundene Kette oder Sicherheit.
+
+Vor Auslösung Schutzquerschnitt und Krone außerhalb des möglichen Sprengbereichs
+prüfen; `protection_inside_possible_blast_relocate` verwirft den Standort.
+Nur bei `terrain_route_cut_at_observed_level` zur nativen Bauplanung übergehen.
+Material, Bauzugang, Fertigstellung vor Auslösung, alternative Rinnen und Rückstau
+prüfen. Zielzutritt/Wasserentnahme absichern; Umleitung erst mit belegtem sicheren
+Auslass. Compact nennt Kern, Wasserherkunft, Zielzutritt, Schutzposition/-höhe und
+Maßnahmen; `detail=full` ergänzt Route, Radius-Terrainzellen und Querschnitt.
+
+
 
 ## Strategischer Scan 0.62 — begrenzt live abgenommen
 
@@ -251,7 +308,7 @@ aktuell geladenen Werkzeugschema erkennen, nicht allein an der Bridge-Version.
   Späterer unabhängiger Kontrollfall erfolgreich, siehe Abschnitt 0.60. Vor Retry
   lesend klären und Ablehnungsursache diagnostizieren, nicht mit neuer ID umgehen.
   Andere Teilfehler und lange Räumläufe nicht pauschal abgenommen. Ergebniszeilen für
-  Einzelprojekte, Bauchargen, Großprojekte und Räum-/Baugruppen. Auftrags-`completed` ist kein Fertigbau.
+  Einzelprojekte, Bauchargen, Großprojekte und Räum-/Baugruppen. Bis 0.62 ist Auftrags-`completed` kein Fertigbau; ab 0.63 heißen angenommene Aufträge `ordered`, `completed` verlangt Fertigbau.
   Bauabschluss `finished_accessible` belegt Fertigbau/Zugang/Pause, keinen Betrieb.
   Chargen zählen Gebäude; Großprojekte Bauteile einschließlich Wege/Hilfsbauten.
   Gespeicherte Stände sind keine frische Zugangsprüfung; Diagnose/Close prüfen

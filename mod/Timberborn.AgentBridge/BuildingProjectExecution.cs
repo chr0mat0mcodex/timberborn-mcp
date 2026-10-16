@@ -17,7 +17,7 @@ namespace Timberborn.AgentBridge;
 
 public sealed class BuildingProjectExecution(SiteValidation validation, RoadProtection roads,
     BuildingCatalog catalog, BlockObjectPlacerService placers, EntityRegistry entities,
-    IBlockService blocks, SpeedManager speed, BuildingSettings settings)
+    SpeedManager speed, BuildingSettings settings)
 {
     private readonly BuildingProjectController controller = new(capacity: BuildingProjectController.MaxProjectsPerSession);
     private readonly System.Diagnostics.Stopwatch clock = System.Diagnostics.Stopwatch.StartNew();
@@ -30,7 +30,7 @@ public sealed class BuildingProjectExecution(SiteValidation validation, RoadProt
             var configuration = item.Receipt.InitialConfiguration!;
             var query = new System.Collections.Specialized.NameValueCollection {
                 ["id"] = item.Receipt.ActionId, ["session"] = item.Session };
-            configuration.Tick(item.Receipt.State,
+            configuration.Tick(item.Receipt.State == "ordered" ? "completed" : item.Receipt.State,
                 () => settings.ReadInitialStorage(BuildingSettingsRequest.Parse("/agent-api/v1/building-settings", query)),
                 (key, expected, value) => {
                     var q = new System.Collections.Specialized.NameValueCollection(query);
@@ -77,40 +77,23 @@ public sealed class BuildingProjectExecution(SiteValidation validation, RoadProt
             EntityId = id.ToString("D"), Template = template, X = (int)cell["x"]!, Y = (int)cell["y"]!, Z = (int)cell["z"]!, Rotation = rotation };
         var steps = cells.Select(c => Step(c, "Path", Guid.NewGuid(), 0)).Concat(new[] {
             Step(option["origin"]!, p.Template, request.ActionId, p.Rotation) }).ToArray();
-        bool Guard() => speed.CurrentSpeed == 0 &&
-            ConstructionIsolation.Allows(entities, steps.Where(s => s.State != "pending").Select(s => s.EntityId)) &&
-            RoadProtectionPolicy.LostConnections(baseline.Before, roads.Read(baseline, false)).Length == 0 &&
-            steps.Where(s => s.State == "confirmed").All(s => Confirm(s, district) == "confirmed");
-        var receipt = controller.Start(request.ActionId, fingerprint, r.PlanKey, steps, Guard, step => Place(step, request.Session),
+        bool Guard() =>
+            ConstructionIsolation.Allows(entities, steps.Where(s => s.State != "pending").Select(s => s.EntityId), allowOwnedInitialization: true) &&
+            RoadProtectionPolicy.LostConnections(baseline.Before, roads.Read(baseline, false)).Length == 0;
+        var receipt = controller.Start(request.ActionId, fingerprint, r.PlanKey, steps, Guard, step => Place(step),
             step => Confirm(step, district));
         if (request.HasInitialConfiguration) {
             receipt.InitialConfiguration = new InitialStorageConfiguration { Good = request.InitialStorageGood, Mode = request.InitialStorageMode };
             configurations.Add((receipt, request.Session));
         }
+        controller.Tick(clock.Elapsed.TotalSeconds);
         return Payload(receipt);
     }
-    private void Place(BuildingProjectController.Step step, string session)
+    private void Place(BuildingProjectController.Step step)
     {
-        // Confirmed paths are already finished; no independent or prior open site
-        // may exist at the next mutation boundary, even when preview says unknown.
-        if (!ConstructionIsolation.Allows(entities)) throw new InvalidOperationException();
-        // Recheck the current game geometry and known road losses immediately before
-        // each mutation; user edits between frames must not bypass validation.
-        var query = new System.Collections.Specialized.NameValueCollection {
-            ["template"] = step.Template, ["x"] = step.X.ToString(), ["y"] = step.Y.ToString(), ["z"] = step.Z.ToString(),
-            ["rotation"] = step.Rotation.ToString(), ["session"] = session };
-        var check = JObject.FromObject(validation.Validate(BridgeRequest.Parse("/agent-api/v1/building-validation", query), out _, out var protection));
-        if ((bool?)check["valid"] != true || protection.status != "unknown" || !protection.restored ||
-            protection.lostConnections != 0 || protection.constructionAccessPreview.HasKnownFailure() ||
-            !protection.reasons.SequenceEqual(new[] { "construction_and_road_node_coverage_unproven" }))
-            throw new InvalidOperationException();
         var template = catalog.Resolve(step.Template);
         var spec = template.GetSpec<BlockObjectSpec>();
         var placement = new Placement(Position(step), Rotation(step), FlipMode.Unflipped);
-        var footprint = spec.GetBlocks(placement).Take(BuildingPolicy.MaxGeometryCells + 1).ToArray();
-        if (footprint.Length is < 1 or > BuildingPolicy.MaxGeometryCells || entities.Entities.Any(e => e.EntityId.ToString("D") == step.EntityId) ||
-            footprint.Any(c => !blocks.Contains(c.Coordinates) || blocks.GetObjectsAt(c.Coordinates).Any(b => !b.IsPreview && b.IsIntersecting(c))))
-            throw new InvalidOperationException();
         placers.GetMatchingPlacer(spec).Place(new EntitySetup.Builder(template.Blueprint).SetId(Guid.Parse(step.EntityId)), placement);
     }
     private string Confirm(BuildingProjectController.Step step, DistrictCenter district)
@@ -120,12 +103,12 @@ public sealed class BuildingProjectExecution(SiteValidation validation, RoadProt
         if (!entity.TryGetComponent<BlockObject>(out var block) || block.IsPreview || block.Coordinates != Position(step) ||
             block.Orientation != Rotation(step) || !entity.TryGetComponent<TemplateSpec>(out var actual) || actual.TemplateName != step.Template)
             return "mismatch";
-        if (step.Template == "Path") return block.IsFinished && district.IsOnInstantDistrictRoad(NavigationCoordinateSystem.GridToWorld(Position(step))) ? "confirmed" : "pending";
+        if (step.Template == "Path") return block.IsFinished && district.IsOnInstantDistrictRoad(NavigationCoordinateSystem.GridToWorld(Position(step))) ? "finished" : "pending";
         if (!block.HasEntrance || !district.IsOnInstantDistrictRoad(NavigationCoordinateSystem.GridToWorld(block.PositionedEntrance.Coordinates)))
             return "pending";
         // Some catalogue objects are legitimately placed finished. Never demand
         // a construction-site component for those, or mark construction finished.
-        if (block.IsFinished) return "confirmed";
+        if (block.IsFinished) return "finished";
         return block.IsUnfinished && entity.TryGetComponent<ReachableConstructionSite>(out var site) &&
             site.IsReachableByBuilders() ? "confirmed" : "pending";
     }

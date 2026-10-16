@@ -1,5 +1,22 @@
 # Native MCP-Werkzeuge
 
+## 0.63 / B15 — Gesamtauftrag, mit dokumentierter Grenze abgeschlossen
+
+Alle Teile eines Plans werden in einem Game-Thread-Durchgang platziert; erst
+anschließend folgen Zustands-/Problembewertung und Bauüberwachung. Keine
+Material-, Zugangs- oder Fertigstellungsbarriere zwischen Aufträgen.
+`dependsOn` ordnet nur die Einreichung. Teilfehler verhindern die übrigen
+Platzierungsversuche nicht. Unbestätigte Wirkung wird nie wiederholt.
+
+Großprojekte, Reparatur-/Räumgruppen, ebene und vertikale Piloten sowie neue
+Gebäudechargen verwenden diese Semantik. `run_large_project` übernimmt außerdem
+Tempo und begrenzte Bauzeit; einfache Startpiloten ändern kein Tempo.
+`ordered` ist Auftragsbeleg, `completed` tatsächlicher Gesamtfertigbau.
+Alte Schema-1-Chargenjournale bleiben kompatibel.
+[Vertrag und Abnahme](construction-structures-0.63.md). Teilablehnung mitten im
+Platzierungsdurchgang nur synthetisch im Gate geprüft; vom Nutzer als Grenze akzeptiert.
+
+
 Zusätzlich `analysis.terraforming`: bedingte 3×3-Reservoir-Optionen, zwei Ebenen Absenkung, Nutzen und Blockaden kompakt, Zellbelege full. Gate und begrenzter Livepilot bestanden.
 
 Strategischer Scan: `detail="compact"` als Standard für Bedrohung und Gegenmaßnahmen; `detail="full"` für komplette Scanbelege. Gate und Livevergleich bestanden.
@@ -337,8 +354,8 @@ fordert eine Pause an. Keine Advance-Aufrufe pro Teil. [Details](autonomous-cons
 | Werkzeug | Art | Zweck |
 | --- | --- | --- |
 | `plan_large_project` | Vorschau/POST | Expliziter Plan bis 32 Teile, 32×32 und acht belegte Höhen, Abhängigkeiten und Kraftgeometrie |
-| `start_large_project` | Schreiben/POST | Frisch validierten Plan registrieren, noch kein Auftrag |
-| `advance_large_project` | Schreiben/POST | Fertigstellung prüfen, höchstens einen Folgeauftrag erteilen |
+| `start_large_project` | Schreiben/POST | Ab 0.63 gesamten frisch validierten Plan sofort beauftragen |
+| `advance_large_project` | Schreiben/POST | Gesamtprojekt beobachten; Start hat bereits alle Aufträge eingereicht |
 | `inspect_large_project` | Lesen/GET | Gespeicherte Projektquittung, keine Fortschrittsaktualisierung |
 | `stop_large_project` | Schreiben/POST | Folgeaufträge stoppen, Objekte behalten |
 | `inspect_power_network` | Lesen/GET | Echte Ports, Netzmitglieder und Leistung des angegebenen Objekts |
@@ -493,8 +510,7 @@ Benötigt Suchparameter, optionIndex, planKey, session, actionId und
 je Sitzung; ab 0.31.4 höchstens vier Aufträge nacheinander, neue ID nur nach
 completed und tatsächlicher Fertigstellung bisheriger Baustellen. Unabhängige
 offene Baustellen verhindern den Start. stopped/unconfirmed sperren weitere Projekte. Alte ID+Parameter lesen
-nur das gespeicherte Ergebnis, geänderte Parameter werden abgewiesen. completed
-ist keine Fertigstellung; vor weiteren Bauvorhaben reale Objekte neu prüfen.
+nur das gespeicherte Ergebnis, geänderte Parameter werden abgewiesen. Bis 0.62 bedeutet completed keine Fertigstellung; ab 0.63 bezeichnet ordered den Auftrag und completed den Fertigbau.
 `inspect_building_project` liest session/actionId ohne Schreibfreigabe.
 
 running/completed/stopped/unconfirmed und Schritt-IDs erlauben gezielten Abgleich.
@@ -562,3 +578,11 @@ Native overlapCells lokalisieren Rampen/Hindernisse. Bei älteren Bridges ohne
 Geometrie begrenzte Verfeinerung; verbleibendes unknown samt Budgetflag beachten.
 planBuildings=false/workBuildingId behalten die einzelne angefragte Ebene.
 Beide zuvor übersehenen Gebiete live geprüft: [Umfang und Nachweise](regional-survey.md).
+
+### 0.63-Erweiterung: Vor-Explosionswarnung (im Nutzerumfang abgenommen)
+
+`scan_strategic_map` ergänzt bei Zielzone `analysis.explosions`: native Kernradius-
+Terrainöffnung als Szenario, beobachtetes Wasser/Faulwasser, Vor-/Nach-Schwelle,
+Zielzutritt und Schutzkandidaten. Compact behält diese Kette und Maßnahmen.
+Full enthält Route und Geometrie. Keine Auslösung, kein Countdown und keine
+vollständige Zerstörungs-/Flutprognose; unbekannte Geometrie bleibt sichtbare Gefahr.

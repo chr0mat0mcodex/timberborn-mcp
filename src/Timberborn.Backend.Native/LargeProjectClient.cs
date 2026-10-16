@@ -25,7 +25,7 @@ public sealed partial class NativeClient
     {
         try
         {
-            if(e.BridgeVersion is not ("0.37.0" or "0.38.0" or "0.39.0" or "0.40.0" or "0.41.0" or "0.42.0" or "0.43.0" or "0.44.0" or "0.45.0" or "0.46.0" or "0.47.0" or "0.48.0" or "0.49.0" or "0.50.0" or "0.51.0" or "0.52.0" or "0.53.0" or "0.54.0" or "0.55.0" or "0.56.0" or "0.57.0" or "0.58.0" or "0.59.0" or "0.60.0" or "0.61.0" or "0.62.0")||e.SessionId!=r.Session||e.Data.ValueKind!=JsonValueKind.Object)throw new InvalidDataException();
+            if(e.BridgeVersion is not ("0.37.0" or "0.38.0" or "0.39.0" or "0.40.0" or "0.41.0" or "0.42.0" or "0.43.0" or "0.44.0" or "0.45.0" or "0.46.0" or "0.47.0" or "0.48.0" or "0.49.0" or "0.50.0" or "0.51.0" or "0.52.0" or "0.53.0" or "0.54.0" or "0.55.0" or "0.56.0" or "0.57.0" or "0.58.0" or "0.59.0" or "0.60.0" or "0.61.0" or "0.62.0" or "0.63.0")||e.SessionId!=r.Session||e.Data.ValueKind!=JsonValueKind.Object)throw new InvalidDataException();
             var d=e.Data;
             var limits=d.GetProperty("limitations");
             if(limits.ValueKind!=JsonValueKind.Array||limits.GetArrayLength()>16||limits.EnumerateArray().Any(v=>v.ValueKind!=JsonValueKind.String||v.GetString() is not {Length:>0 and <=160}))throw new InvalidDataException();
@@ -93,10 +93,10 @@ public sealed partial class NativeClient
                 if(r.Operation is "run" or "run-repair")throw new InvalidDataException();
                 if(d.GetProperty("actionId").GetString()!=r.ActionId||!ValidPlanKey(d.GetProperty("planKey").GetString()??"")||r.Operation=="start"&&d.GetProperty("planKey").GetString()!=r.PlanKey)throw new InvalidDataException();
                 var state=d.GetProperty("state").GetString();var ids=d.GetProperty("entityIds").EnumerateArray().Select(v=>v.GetString()).ToArray();var states=d.GetProperty("partStates").EnumerateArray().Select(v=>v.GetString()).ToArray();
-                if(state is not ("ready" or "waiting" or "completed" or "stopped" or "unconfirmed")||ids.Length!=order.Length||states.Length!=order.Length||ids.Distinct().Count()!=ids.Length||ids.Any(s=>!Guid.TryParseExact(s,"D",out var id)||id==Guid.Empty)||states.Any(s=>s is not ("pending" or "unconfirmed" or "construction" or "finished")))throw new InvalidDataException();
+                if(state is not ("ready" or "waiting" or "completed" or "stopped" or "unconfirmed")||ids.Length!=order.Length||states.Length!=order.Length||ids.Distinct().Count()!=ids.Length||ids.Any(s=>!Guid.TryParseExact(s,"D",out var id)||id==Guid.Empty)||states.Any(s=>s is not ("pending" or "unconfirmed" or "construction" or "finished" or "rejected")))throw new InvalidDataException();
                 int current=d.GetProperty("current").GetInt32();
-                if(current<0||current>order.Length||order.Take(current).Any(i=>states[i]!="finished")||order.Skip(current+1).Any(i=>states[i]!="pending")||state=="completed"&&(current!=order.Length||states.Any(s=>s!="finished")))throw new InvalidDataException();
-                if(current==order.Length&&state!="completed"||state=="ready"&&(current!=0||states.Any(s=>s!="pending"))||state=="waiting"&&states[order[current]] is not ("unconfirmed" or "construction"))throw new InvalidDataException();
+                if(current<0||current>order.Length||e.BridgeVersion!="0.63.0"&&(order.Take(current).Any(i=>states[i]!="finished")||order.Skip(current+1).Any(i=>states[i]!="pending"))||state=="completed"&&(current!=order.Length||states.Any(s=>s!="finished")))throw new InvalidDataException();
+                if(current==order.Length&&state!="completed"||state=="ready"&&(current!=0||states.Any(s=>s!="pending"))||state=="waiting"&&e.BridgeVersion!="0.63.0"&&states[order[current]] is not ("unconfirmed" or "construction"))throw new InvalidDataException();
                 if(r.Operation=="start"&&!order.SequenceEqual(LargeProjectRequest.Order(r.Steps)))throw new InvalidDataException();
             }
         }
@@ -110,8 +110,8 @@ public sealed partial class NativeClient
         if(state is not ("running" or "pausing" or "completed" or "blocked" or "stopped" or "unconfirmed" or "interrupted")||d.GetProperty("reason").GetString() is not {Length:>0 and <=160})throw new InvalidDataException();
         var ids=d.GetProperty("entityIds").EnumerateArray().Select(v=>v.GetString()).ToArray();
         var states=d.GetProperty("partStates").EnumerateArray().Select(v=>v.GetString()).ToArray();
-        if(ids.Length!=order.Length||states.Length!=order.Length||ids.Distinct().Count()!=ids.Length||ids.Any(s=>!Guid.TryParseExact(s,"D",out var id)||id==Guid.Empty)||states.Any(s=>s is not ("pending" or "unconfirmed" or "construction" or "finished")))throw new InvalidDataException();
-        if(d.GetProperty("ordered").GetInt32()!=states.Count(s=>s!="pending")||d.GetProperty("finished").GetInt32()!=states.Count(s=>s=="finished"))throw new InvalidDataException();
+        if(ids.Length!=order.Length||states.Length!=order.Length||ids.Distinct().Count()!=ids.Length||ids.Any(s=>!Guid.TryParseExact(s,"D",out var id)||id==Guid.Empty)||states.Any(s=>s is not ("pending" or "unconfirmed" or "construction" or "finished" or "rejected")))throw new InvalidDataException();
+        if(d.GetProperty("ordered").GetInt32()!=states.Count(s=>s is "unconfirmed" or "construction" or "finished")||d.GetProperty("finished").GetInt32()!=states.Count(s=>s=="finished"))throw new InvalidDataException();
         var deferred=d.GetProperty("deferredParts").EnumerateArray().Select(v=>v.GetInt32()).ToArray();
         if(deferred.Length>order.Length||deferred.Distinct().Count()!=deferred.Length||deferred.Any(i=>i<0||i>=order.Length||states[i]!="pending"))throw new InvalidDataException();
         var blocked=d.GetProperty("blockedPart");
@@ -147,10 +147,10 @@ public sealed partial class NativeClient
             if(p.GetProperty("index").GetInt32()!=i||!Guid.TryParseExact(id,"D",out var parsed)||parsed==Guid.Empty||!ids.Add(id!)||!BuildingPolicy.ValidTemplate(p.GetProperty("template").GetString()))throw new InvalidDataException();
             CheckVector(p.GetProperty("position"));
             string recorded=p.GetProperty("recorded").GetString()??"", observed=p.GetProperty("observed").GetString()??"";
-            if(recorded is not ("pending" or "unconfirmed" or "construction" or "finished")||observed is not ("missing" or "initializing" or "identity_mismatch" or "construction" or "construction_unreachable" or "construction_access_unknown" or "finished" or "finished_access_missing" or "district_unavailable"))throw new InvalidDataException();
+            if(recorded is not ("pending" or "unconfirmed" or "construction" or "finished" or "rejected")||observed is not ("missing" or "initializing" or "identity_mismatch" or "construction" or "construction_unreachable" or "construction_access_unknown" or "finished" or "finished_access_missing" or "district_unavailable"))throw new InvalidDataException();
             if(p.GetProperty("reason").GetString() is not {Length:>0 and <=160}||close&&!LargeProjectRecoveryPolicy.Resolved(recorded,observed)||repair&&!LargeProjectRecoveryPolicy.Repairable(recorded,observed))throw new InvalidDataException();
         }
-        if(d.GetProperty("unissuedParts").GetInt32()!=parts.Count(p=>p.GetProperty("recorded").GetString()=="pending"))throw new InvalidDataException();
+        if(d.GetProperty("unissuedParts").GetInt32()!=parts.Count(p=>p.GetProperty("recorded").GetString() is "pending" or "rejected"))throw new InvalidDataException();
         int lost=d.GetProperty("lostConnections").GetInt32();
         var affected=d.GetProperty("affected").EnumerateArray().ToArray();
         if(lost<0||affected.Length!=Math.Min(lost,32)||d.GetProperty("affectedTruncated").GetBoolean()!=(lost>32))throw new InvalidDataException();

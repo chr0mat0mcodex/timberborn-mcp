@@ -21,7 +21,7 @@ public sealed partial class NativeClient
         string suffix = string.Join("&", query.AllKeys.Select(k => Uri.EscapeDataString(k!) + "=" + Uri.EscapeDataString(query[k]!)));
         var e = await Get<NativeSimulationRun>(r.Route + "?" + suffix, ct, r.Writes ? HttpMethod.Post : HttpMethod.Get, maxResponseBytes:2*1024*1024);
         var d = e.Data;
-        if (!r.Diagnose && (e.BridgeVersion is not ("0.47.0" or "0.48.0" or "0.49.0" or "0.50.0" or "0.51.0" or "0.52.0" or "0.53.0" or "0.54.0" or "0.55.0" or "0.56.0" or "0.57.0" or "0.58.0" or "0.59.0" or "0.60.0" or "0.61.0" or "0.62.0") || d.CurrentBuildingOperations is not null ||
+        if (!r.Diagnose && (e.BridgeVersion is not ("0.47.0" or "0.48.0" or "0.49.0" or "0.50.0" or "0.51.0" or "0.52.0" or "0.53.0" or "0.54.0" or "0.55.0" or "0.56.0" or "0.57.0" or "0.58.0" or "0.59.0" or "0.60.0" or "0.61.0" or "0.62.0" or "0.63.0") || d.CurrentBuildingOperations is not null ||
             d.BottleneckState is not null || d.BottleneckObservedGameHours is not null ||
             d.ProductionDiagnostics is not null || d.DiagnosticsObservedGameHours is not null))
             throw new InvalidDataException("Lightweight status requires supported lightweight status without diagnostics");
@@ -34,7 +34,7 @@ public sealed partial class NativeClient
             d.Reason == "stock_target_reached" && !d.StockTargetReached)
             throw new InvalidDataException("Invalid stock condition receipt");
         bool terminal = d.State is "completed" or "cancelled" or "interrupted" or "failed";
-        if (e.BridgeVersion is not ("0.22.0" or "0.23.0" or "0.23.1" or "0.23.2" or "0.24.0" or "0.24.1" or "0.25.0" or "0.26.0" or "0.27.0" or "0.28.0" or "0.28.1" or "0.29.0" or "0.29.1" or "0.29.2" or "0.29.3" or "0.30.0" or "0.31.0" or "0.31.1" or "0.31.2" or "0.31.3" or "0.31.4" or "0.32.0" or "0.32.1" or "0.33.0" or "0.33.1" or "0.34.0" or "0.35.0" or "0.35.1" or "0.35.2" or "0.35.3" or "0.35.4" or "0.35.5" or "0.36.0" or "0.37.0" or "0.38.0" or "0.39.0" or "0.40.0" or "0.41.0" or "0.42.0" or "0.43.0" or "0.44.0" or "0.45.0" or "0.46.0" or "0.47.0" or "0.48.0" or "0.49.0" or "0.50.0" or "0.51.0" or "0.52.0" or "0.53.0" or "0.54.0" or "0.55.0" or "0.56.0" or "0.57.0" or "0.58.0" or "0.59.0" or "0.60.0" or "0.61.0" or "0.62.0") || e.SessionId != r.Session || d.RunId != r.RunId ||
+        if (e.BridgeVersion is not ("0.22.0" or "0.23.0" or "0.23.1" or "0.23.2" or "0.24.0" or "0.24.1" or "0.25.0" or "0.26.0" or "0.27.0" or "0.28.0" or "0.28.1" or "0.29.0" or "0.29.1" or "0.29.2" or "0.29.3" or "0.30.0" or "0.31.0" or "0.31.1" or "0.31.2" or "0.31.3" or "0.31.4" or "0.32.0" or "0.32.1" or "0.33.0" or "0.33.1" or "0.34.0" or "0.35.0" or "0.35.1" or "0.35.2" or "0.35.3" or "0.35.4" or "0.35.5" or "0.36.0" or "0.37.0" or "0.38.0" or "0.39.0" or "0.40.0" or "0.41.0" or "0.42.0" or "0.43.0" or "0.44.0" or "0.45.0" or "0.46.0" or "0.47.0" or "0.48.0" or "0.49.0" or "0.50.0" or "0.51.0" or "0.52.0" or "0.53.0" or "0.54.0" or "0.55.0" or "0.56.0" or "0.57.0" or "0.58.0" or "0.59.0" or "0.60.0" or "0.61.0" or "0.62.0" or "0.63.0") || e.SessionId != r.Session || d.RunId != r.RunId ||
             d.State is not ("starting" or "running" or "pausing" or "completed" or "cancelled" or "interrupted" or "failed") ||
             d.Reason is not ("production_measurement_complete" or "building_production_proven" or "building_production_time_limit" or "building_configuration_changed" or "building_unavailable" or "building_proof_observation_unavailable" or "building_proof_journal_gap" or "awaiting_speed" or "advancing" or "game_speed_locked" or "target_reached" or "stock_target_reached" or "stock_observation_unavailable" or "production_targets_reached" or "production_time_limit" or "production_observation_unavailable" or "speed_changed" or "pause_unconfirmed" or "speed_unconfirmed" or "clock_reversed" or "real_time_limit" or "simulation_stalled" or "cancel_requested" or "explicit_speed_change" or "session_ended_pause_unconfirmed" or "speed_command_failed") ||
             new[] { d.StartGameHours, d.TargetGameHours, d.ObservedGameHours, d.ElapsedGameHours, d.OvershootHours, d.ElapsedRealSeconds }.Any(n => !double.IsFinite(n) || n < 0) ||
@@ -69,7 +69,7 @@ public sealed partial class NativeClient
                 e=e with{Data=d with{CurrentBuildingOperations=batch with{Items=items.ToArray()}}};
             }
         } else if(d.CurrentBuildingOperations is not null||d.BottleneckObservedGameHours is not null||
-            e.BridgeVersion is ("0.43.0" or "0.44.0" or "0.45.0" or "0.46.0" or "0.47.0" or "0.48.0" or "0.49.0" or "0.50.0" or "0.51.0" or "0.52.0" or "0.53.0" or "0.54.0" or "0.55.0" or "0.56.0" or "0.57.0" or "0.58.0" or "0.59.0" or "0.60.0" or "0.61.0" or "0.62.0")&&r.Route=="simulation-run"&&r.Diagnose&&(d.BuildingIds?.Length??0)>0)
+            e.BridgeVersion is ("0.43.0" or "0.44.0" or "0.45.0" or "0.46.0" or "0.47.0" or "0.48.0" or "0.49.0" or "0.50.0" or "0.51.0" or "0.52.0" or "0.53.0" or "0.54.0" or "0.55.0" or "0.56.0" or "0.57.0" or "0.58.0" or "0.59.0" or "0.60.0" or "0.61.0" or "0.62.0" or "0.63.0")&&r.Route=="simulation-run"&&r.Diagnose&&(d.BuildingIds?.Length??0)>0)
             throw new InvalidDataException("Missing current bottleneck state");
         return e;
     }

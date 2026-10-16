@@ -2,6 +2,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Text.Json.Nodes;
 using Timberborn.Backend.Native;
 using Timberborn.Bridge.Core;
 
@@ -23,6 +24,10 @@ public sealed record BatchRegionExit(int RegionIndex, string Reason, bool Cleara
 public sealed class BuildBatchJob
 {
     public int SchemaVersion { get; set; } = 1;
+    public JsonObject? StructurePlan { get; set; }
+    public JsonObject? StructureReceipt { get; set; }
+    public List<string> ConfigurationAttempts { get; set; } = [];
+    public string StructureActionId => BuildBatchState.DerivedId(Spec, "structure");
     public required BuildBatchSpec Spec { get; init; }
     public required string Fingerprint { get; init; }
     public string State { get; set; } = "planning";
@@ -121,14 +126,19 @@ public sealed class BuildBatchStore(string directory)
             job.PreviousClearTargets > job.Spec.MaxClearTargets)
             throw new InvalidDataException("invalid_batch_regions_checkpoint");
         var active = job.ActiveSpec;
-        if (job.SchemaVersion != 1 || job.Spec.Session != session || job.Spec.BatchId != id || job.Fingerprint != BuildBatchState.Fingerprint(job.Spec) ||
+        if(job.SchemaVersion==2 &&
+            (job.ConfigurationAttempts is null || job.ConfigurationAttempts.Count>job.Spec.Items.Length*2 ||
+             job.State is ("pending_build" or "building" or "completed") &&
+             (job.StructurePlan?["state"]?.GetValue<string>()!="complete" || job.StructurePlan["steps"] is not JsonArray || job.StructurePlan["selected"] is not JsonArray)))
+            throw new InvalidDataException("invalid_structure_checkpoint");
+        if (job.SchemaVersion is not (1 or 2) || job.Spec.Session != session || job.Spec.BatchId != id || job.Fingerprint != BuildBatchState.Fingerprint(job.Spec) ||
             job.Index < 0 || job.Index > job.Spec.Items.Length || job.Finished is null || job.Finished.Count != job.Index ||
             job.Targets is null || job.Targets.Length + job.PreviousClearTargets > job.Spec.MaxClearTargets || job.RemovalCursor < 0 || job.RemovalCursor > job.Targets.Length ||
             job.State is not ("planning" or "discovering" or "marking" or "pending_mark" or "verify_clearance" or "pending_clearance_run" or "clearance_wait" or "pending_build" or "building" or "pending_build_run" or "pending_build_pause" or "completed" or "stopped" or "cancelled"))
             throw new InvalidDataException("invalid_batch_journal");
         if (job.Search is null || job.State == "pending_mark" && job.RemovalCursor >= job.Targets.Length ||
             job.State == "completed" && job.Index != job.Spec.Items.Length ||
-            job.State is "pending_build" or "pending_build_run" or "pending_build_pause" or "building" && (job.Selection is null || job.Index >= job.Spec.Items.Length) ||
+            job.SchemaVersion == 1 && job.State is ("pending_build" or "pending_build_run" or "pending_build_pause" or "building") && (job.Selection is null || job.Index >= job.Spec.Items.Length) ||
             job.Targets.Select(t => t.Id).Distinct().Count() != job.Targets.Length ||
             job.Targets.Any(t => t.Kind != "vegetation" || !t.CanDelete || t.Mode != "demolition_mark" ||
                 t.Position.X < active.X || t.Position.X >= active.X + active.Width ||

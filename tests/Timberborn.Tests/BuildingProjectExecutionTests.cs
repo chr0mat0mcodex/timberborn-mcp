@@ -57,25 +57,25 @@ public sealed class BuildingProjectExecutionTests
     public void DelayedNavigationAndDuplicateNeverRepeatPlacement()
     {
         var c=new BuildingProjectController();int writes=0;bool ready=false;
-        var result=c.Start(Id,"fingerprint","key",Steps(),()=>true,_=>writes++,_=>ready?"confirmed":"pending");
-        c.Tick(0);Assert.Equal(1,writes);c.Tick(1);Assert.Equal(1,writes);
+        var result=c.Start(Id,"fingerprint","key",Steps(),()=>true,_=>writes++,_=>ready?"finished":"pending");
+        c.Tick(0);Assert.Equal(2,writes);c.Tick(1);Assert.Equal(2,writes);
         Assert.Same(result,c.Existing(Id,"fingerprint"));
         Assert.Throws<BridgeRejectionException>(()=>c.Existing(Id,"different"));
         Assert.Throws<BridgeRejectionException>(()=>c.Existing(Guid.NewGuid(),"fingerprint"));
-        ready=true;c.Tick(2);Assert.Equal(1,writes);c.Tick(3);Assert.Equal(2,writes);
+        ready=true;c.Tick(2);Assert.Equal(2,writes);c.Tick(3);Assert.Equal(2,writes);
         c.Tick(4);Assert.Equal("completed",result.State);c.Tick(100);Assert.Equal(2,writes);
     }
     [Fact]
-    public void FourRoadProjectCompletesEachConfirmedStepInOrder()
+    public void FourRoadProjectCompletesAfterAllPartsAreFinished()
     {
         var steps=Enumerable.Range(0,4).Select(_=>new BuildingProjectController.Step {
             EntityId=Guid.NewGuid().ToString("D"),Template="Path" }).Append(new BuildingProjectController.Step {
                 EntityId=Id.ToString("D"),Template="SmallWarehouse.Folktails" }).ToArray();
         var c=new BuildingProjectController();int writes=0;
-        var receipt=c.Start(Id,"f","k",steps,()=>true,_=>writes++,_=>"confirmed");
+        var receipt=c.Start(Id,"f","k",steps,()=>true,_=>writes++,_=>"finished");
         for(int tick=0;tick<10;tick++)c.Tick(tick);
         Assert.Equal("completed",receipt.State);Assert.Equal(5,writes);
-        Assert.All(receipt.Steps,s=>Assert.Equal("confirmed",s.State));
+        Assert.All(receipt.Steps,s=>Assert.Equal("finished",s.State));
     }
     [Theory]
     [InlineData(4)]
@@ -87,7 +87,7 @@ public sealed class BuildingProjectExecutionTests
         var ids = Enumerable.Range(1, capacity + 1).Select(i => Guid.Parse($"00000000-0000-0000-0000-{i:D12}")).ToArray();
         BuildingProjectController.Receipt Start(int i) => c.Start(ids[i], $"f{i}", "key",
             [new() { EntityId = ids[i].ToString("D"), Template = "SmallWarehouse.Folktails" }],
-            () => true, _ => writes++, _ => "confirmed");
+            () => true, _ => writes++, _ => "finished");
         var first = Start(0);
         Assert.Throws<BridgeRejectionException>(() => Start(1));
         for (int i = 0; i < capacity; i++)
@@ -109,8 +109,8 @@ public sealed class BuildingProjectExecutionTests
     {
         var c = new BuildingProjectController(BuildingProjectController.MaxProjectsPerSession);
         var r = c.Start(Id, "f", "k", Steps(), () => uncertain,
-            _ => throw new InvalidOperationException(), _ => "confirmed");
-        c.Tick(0);
+            _ => throw new InvalidOperationException(), _ => "pending");
+        c.Tick(0);c.Tick(6);
         Assert.Equal(uncertain ? "unconfirmed" : "stopped", r.State);
         Assert.Throws<BridgeRejectionException>(() => c.Existing(Guid.NewGuid(), "new"));
         Assert.Same(r, c.Inspect(Id));
@@ -120,41 +120,50 @@ public sealed class BuildingProjectExecutionTests
     public void LedgerCapacityIsExplicitlyBounded(int capacity) =>
         Assert.Throws<ArgumentOutOfRangeException>(() => new BuildingProjectController(capacity));
     [Fact]
-    public void TimeoutRetainsUnconfirmedPathAndNeverStartsBuilding()
+    public void TimeoutRetainsAllSubmittedPartsWithoutReplay()
     {
         var c=new BuildingProjectController();int writes=0;
         var r=c.Start(Id,"f","k",Steps(),()=>true,_=>writes++,_=>"pending");
         c.Tick(0);c.Tick(5);c.Tick(10);
         Assert.Equal("unconfirmed",r.State);Assert.Equal("confirmation_timeout",r.Reason);
-        Assert.Equal("pending",r.Steps[1].State);Assert.Equal(1,writes);
+        Assert.Equal("unconfirmed",r.Steps[1].State);Assert.Equal(2,writes);
     }
     [Theory]
-    [InlineData(false)] [InlineData(true)]
-    public void PauseOrRoadGuardChangeStopsBeforeNextMutation(bool afterPath)
+    [InlineData(0, "stopped", "pending", 0)]
+    [InlineData(1, "unconfirmed", "unconfirmed", 2)]
+    [InlineData(2, "stopped", "confirmed", 2)]
+    public void GuardChangePreservesSubmissionEvidenceAndNeverReplays(
+        int ticksBeforeGuardChange, string expectedState, string expectedStepState, int expectedWrites)
     {
         var c=new BuildingProjectController();bool guard=true;int writes=0;
         var r=c.Start(Id,"f","k",Steps(),()=>guard,_=>writes++,_=>"confirmed");
-        if(afterPath) { c.Tick(0);c.Tick(1); }
+        for(int tick=0;tick<ticksBeforeGuardChange;tick++) c.Tick(tick);
         guard=false;c.Tick(2);c.Tick(3);
-        Assert.Equal("stopped",r.State);Assert.Equal(afterPath?1:0,writes);
+        Assert.Equal(expectedState,r.State);Assert.Equal(expectedWrites,writes);
         Assert.Equal("guard_changed",r.Reason);
+        Assert.All(r.Steps,step=>Assert.Equal(expectedStepState,step.State));
+        guard=true;
+        Assert.Same(r,c.Start(Id,"f","k",Steps(),()=>guard,_=>writes++,_=>"finished"));
+        c.Tick(4);
+        Assert.Equal(expectedState,r.State);Assert.Equal(expectedWrites,writes);
+        Assert.Throws<BridgeRejectionException>(()=>c.Existing(Guid.NewGuid(),"new"));
     }
     [Fact]
     public void ThrowingPlacementConsumesAttemptAndCannotReplay()
     {
         var c=new BuildingProjectController();int writes=0;
-        var r=c.Start(Id,"f","k",Steps(),()=>true,_=>{writes++;throw new InvalidOperationException();},_=>"confirmed");
-        c.Tick(0);c.Tick(1);
-        Assert.Equal("unconfirmed",r.State);Assert.Equal(1,writes);
-        Assert.Same(r,c.Start(Id,"f","k",Steps(),()=>true,_=>writes++,_=>"confirmed"));
-        c.Tick(2);Assert.Equal(1,writes);
+        var r=c.Start(Id,"f","k",Steps(),()=>true,_=>{writes++;throw new InvalidOperationException();},_=>"pending");
+        c.Tick(0);c.Tick(6);
+        Assert.Equal("unconfirmed",r.State);Assert.Equal(2,writes);
+        Assert.Same(r,c.Start(Id,"f","k",Steps(),()=>true,_=>writes++,_=>"finished"));
+        c.Tick(2);Assert.Equal(2,writes);
     }
     [Fact]
     public void WrongObjectStopsImmediately()
     {
         var c=new BuildingProjectController();int writes=0;
         var r=c.Start(Id,"f","k",Steps(),()=>true,_=>writes++,_=>"mismatch");
-        c.Tick(0);c.Tick(0.1);Assert.Equal("object_mismatch",r.Reason);Assert.Equal(1,writes);
+        c.Tick(0);c.Tick(0.1);Assert.Equal("object_mismatch",r.Reason);Assert.Equal(2,writes);
     }
     [Fact]
     public void LedgerIsSessionLocalAndAbsentStatusDoesNotCreateWork()
@@ -168,7 +177,7 @@ public sealed class BuildingProjectExecutionTests
         var q=new NameValueCollection { ["session"]="11111111-1111-1111-1111-111111111111",["districtId"]="22222222-2222-2222-2222-222222222222",["actionId"]=Id.ToString("D"),["mode"]="stair_with_upper_paths_pilot",["x"]="3",["y"]="4",["z"]="5",["rotation"]="1",["upperPathCount"]="2" };
         var request=VerticalStairRequest.Parse(true,q);Assert.Equal(2,request.UpperPathCount);
         var steps=new[] { new BuildingProjectController.Step { EntityId=Id.ToString("D"),Template="Stairs.Folktails" },new BuildingProjectController.Step { EntityId=Guid.NewGuid().ToString("D"),Template="Path" },new BuildingProjectController.Step { EntityId=Guid.NewGuid().ToString("D"),Template="Path" } };
-        var c=new BuildingProjectController();int writes=0;var receipt=c.Start(Id,"vertical","key",steps,()=>true,_=>writes++,_=>"confirmed");
+        var c=new BuildingProjectController();int writes=0;var receipt=c.Start(Id,"vertical","key",steps,()=>true,_=>writes++,_=>"finished");
         for(int tick=0;tick<6;tick++)c.Tick(tick);Assert.Equal("completed",receipt.State);Assert.Equal(3,writes);
         q["upperPathCount"]="0";Assert.Throws<ArgumentException>(()=>VerticalStairRequest.Parse(true,q));
     }
