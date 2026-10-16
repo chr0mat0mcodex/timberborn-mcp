@@ -9,7 +9,7 @@ public static class ActivityOutcome
     private static string? Text(JsonNode? node,string key)=>node?[key] is JsonValue v&&v.TryGetValue<string>(out var text)?text:null;
     private static bool? Flag(JsonNode? node,string key)=>node?[key] is JsonValue v&&v.TryGetValue<bool>(out var flag)?flag:null;
     private static int? Count(JsonNode? node,string key)=>node?[key] is JsonValue v&&v.TryGetValue<int>(out var n)&&n>=0?n:null;
-    public static bool Handles(string name)=>name is "inspect_building_settings" or "set_building_paused" or "set_storage_good" or "set_storage_mode" or "set_farm_priority" or "set_farm_crop" or "set_building_recipe" or "run_simulation_for" or "run_simulation_until" or "inspect_simulation_run" or "cancel_simulation_run" || PlantingBatchTools.Handles(name);
+    public static bool Handles(string name)=>name is "inspect_building_settings" or "set_building_paused" or "set_storage_good" or "set_storage_mode" or "set_farm_priority" or "set_farm_crop" or "set_building_recipe" or "run_simulation_for" or "run_simulation_until" or "inspect_simulation_run" or "cancel_simulation_run" || PlantingBatchTools.Handles(name) || BuildingActivityOutcome.Handles(name);
     public static string Describe(string name,JsonObject result)
     {
         try {return DescribeCore(name,result);}
@@ -26,6 +26,7 @@ public static class ActivityOutcome
             _=>"Kein bestätigtes Ergebnis verfügbar."
         };
         if(Text(result,"status")!="ok" || result["data"] is not JsonObject d)return "Kein bestätigtes Ergebnis verfügbar.";
+        if(BuildingActivityOutcome.Handles(name))return BuildingActivityOutcome.Describe(name,d);
         if(PlantingBatchTools.Handles(name))return Planting(name,d);
         if(name is "run_simulation_for" or "run_simulation_until" or "inspect_simulation_run" or "cancel_simulation_run")return Simulation(d);
         if(name=="inspect_building_settings")return Flag(d["pause"],"paused") switch {

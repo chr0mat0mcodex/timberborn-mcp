@@ -130,7 +130,7 @@ public sealed class ActivityCorrelationTests
         Assert.Throws<ArgumentException>(()=>Query(run:"invalid"));
     }
 
-    [Theory] [InlineData("0.56.0")] [InlineData("0.57.0")] [InlineData("0.58.0")]
+    [Theory] [InlineData("0.56.0")] [InlineData("0.57.0")] [InlineData("0.58.0")] [InlineData("0.59.0")]
     public async Task ResultReferenceCrossesHeaderAndSurvivesReadback(string version)
     {
         var handler=new Handler(version);using var client=new NativeClient(new(8081,new string('a',64)),handler);

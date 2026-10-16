@@ -1,5 +1,23 @@
 # Projektstand
 
+## 0.59.0 — Bau-Ergebniszeilen begrenzt live abgenommen
+
+Einzelprojekte, Bauchargen, große Projekte und Räum-/Baugruppen erhalten lesbare
+Ergebniszeilen, auch ingame und in beiden Dateilogs. Auftrag, Fertigbau, Zugang,
+gespeicherter Beleg und frische Prüfung bleiben getrennt. Keine zusätzlichen
+Spielabfragen. [Umfang und Livebelege](docs/agent-log-building-outcomes-0.59.md).
+Nach menschlicher Bereitmeldung installierte Bridge 0.59 und neue Sitzung bestätigt.
+Ein Lager-Einzelprojekt und eine Ein-Gebäude-Charge bis fertig/zugänglich geprüft;
+Auftrag, unfertiger Zwischenstand und Abschluss korrekt getrennt. Zehn Bau-Belege
+in MCP- und Bridge-Dateilogs identisch, keine Schreibverluste. Mensch bestätigt
+beide Ergebniszeilen vollständig lesbar. Großprojekte, Räumgruppen und Stoppfälle
+bleiben synthetische Gate-Nachweise; keine pauschale Live-Abnahme aller Varianten.
+
+Versionspflege: `docs/agent-playing-guide.md` und `docs/hermes-skill/SKILL.md`
+auf Umfang und begrenzte Live-Abnahme ergänzt und bisherige Ausschlüsse präzisiert.
+Die Hermes-Spielskillvorlage bleibt uninstalliert und als Integration unabgenommen.
+Allgemeine Entwicklungsskills benötigen keine neuen spielbezogenen Regeln.
+
 ## 0.58.0 — Ergebniszeilen begrenzt live abgenommen
 
 Verständliche Ergebniszeilen für einzelne Gebäudeeinstellungen, Simulationsläufe

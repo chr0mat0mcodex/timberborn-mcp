@@ -7,8 +7,8 @@ description: Timberborn über die vorhandene Hermes-MCP-Verbindung steuern; Test
 
 ## Stand und Geltung
 
-Fachlich aktualisiert am 16. Oktober 2026: Projektstand 0.58 begrenzt live
-abgenommen: Gebäudepause, Ein-Stunden-Lauf und Pflanzbeleg, lesbare Ergebniszeilen bestätigt.
+Fachlich aktualisiert am 16. Oktober 2026: Projektstand 0.59 begrenzt live
+abgenommen: Gebäudepause, Ein-Stunden-Lauf, Pflanzbeleg sowie Bau-Einzelprojekt und Baucharge; Ergebniszeilen lesbar bestätigt.
 Diese lokale Hermes-Skillvorlage bleibt ein zurückgestellter Integrationsentwurf.
 Die Dokumentationspflege bestätigt weder Hermes-Kompatibilität noch Installation.
 Installierte Version, geladene Werkzeuge und echte Rückgaben sind maßgeblich.
@@ -60,7 +60,7 @@ spielseitige Budgets nicht zurück.
 
 ## Flächen und Bauchargen effizient verwenden
 
-Abgenommener Projektstand: Bridge 0.58.0 im jeweiligen Fachumfang; MCP-only-Erweiterungen zusätzlich am
+Abgenommener Projektstand: Bridge 0.59.0 im jeweiligen Fachumfang; MCP-only-Erweiterungen zusätzlich am
 aktuell geladenen Werkzeugschema erkennen, nicht allein an der Bridge-Version.
 
 - `inspect_colony_overview` bündelt Bevölkerung, Betten und Bedürfnisse; nur drei
@@ -87,7 +87,7 @@ aktuell geladenen Werkzeugschema erkennen, nicht allein an der Bridge-Version.
   `checkpointOnly` bedeutet gespeicherte Beobachtung. Mehrere alternative
   Baukandidaten können überlappen und sind keine gemeinsame Chargenkapazität.
 
-## Aufruflog und Ergebnisbelege (0.55–0.58)
+## Aufruflog und Ergebnisbelege (0.55–0.59)
 
 - `inspect_agent_log`: höchstens 128 Aufrufe im aktuellen Sitzungspuffer,
   `limit` 1–32. Mit `nextCursor` und unveränderten `tool`/`state`/`projectId`/`runId`-
@@ -116,6 +116,18 @@ aktuell geladenen Werkzeugschema erkennen, nicht allein an der Bridge-Version.
   `inspect_planting_batch` liefert einen historischen Beleg. Startzeilen werden
   beim späteren Ende eines Laufs nicht automatisch umgeschrieben; dessen Status
   mit derselben Kennung lesen. Keine zusätzlichen Schreibaufträge für Logtexte.
+- 0.59 begrenzt live abgenommen: Einzelprojekt und Ein-Gebäude-Charge, beide
+  ingame lesbar bestätigt. Weitere Varianten nur synthetisch geprüft. Ergebniszeilen für
+  Einzelprojekte, Bauchargen, Großprojekte und Räum-/Baugruppen. Auftrags-`completed` ist kein Fertigbau.
+  Bauabschluss `finished_accessible` belegt Fertigbau/Zugang/Pause, keinen Betrieb.
+  Chargen zählen Gebäude; Großprojekte Bauteile einschließlich Wege/Hilfsbauten.
+  Gespeicherte Stände sind keine frische Zugangsprüfung; Diagnose/Close prüfen
+  frisch, Räum-/Baugruppen liefern weiter gespeicherte Belege. Projektfreigabe
+  kann offene Teile aufgeben. Stopp einer Baucharge lässt vorhandenes Laufbudget
+  bestehen; angefragter Gruppenstopp ist noch kein Abschluss. Vorschau erteilt
+  keine Aufträge. Fehlende Angaben nicht als null fertige Teile interpretieren.
+  Dieselbe Kennung weiter lesend prüfen, keine unbestätigten Aufträge wiederholen.
+  Fachumfang: `docs/agent-log-building-outcomes-0.59.md` im Projekt.
 - Für tatsächliche Spieländerungen das Spieländerungsjournal und Fachabfragen
   nutzen. Aufrufstatus, Absicht und bestätigte Wirkung sind verschiedene Aussagen.
   Keine Wiederholung bei `unconfirmed`; strukturierten Fachbericht lesend klären.

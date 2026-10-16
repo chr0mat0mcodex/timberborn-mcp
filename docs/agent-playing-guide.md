@@ -1,8 +1,8 @@
 # Spielanleitung für Agenten
 
-## Aktueller Stand: 0.58 begrenzt live abgenommen
+## Aktueller Stand: 0.59 begrenzt live abgenommen
 
-Stand 16. Oktober 2026: 0.55–0.58 sind im dokumentierten Umfang live abgenommen.
+Stand 16. Oktober 2026: 0.55–0.59 sind im dokumentierten Umfang live abgenommen.
 0.58: Gebäudepause, Ein-Stunden-Lauf und Pflanzbeleg live geprüft; Mensch bestätigt die Ergebniszeilen.
 Beim Einstieg installierte Bridge und aktuelles Werkzeugschema lesen; vorbereitete
 Funktionen nicht allein aufgrund dieser Anleitung als verfügbar behandeln.
@@ -48,6 +48,27 @@ verknüpft beide Komponenten; `failedWrites`/Sequenz können Schreibverluste zei
 Logs bleiben lokal und werden nicht committed. Kein vollständiges Unity-/stderr-
 Abbild und kein Ersatz für das Spieländerungsjournal. [Dateilogvertrag](file-diagnostics-0.57.md).
 
+## Bau-Ergebniszeilen 0.59 — begrenzt live abgenommen
+
+Einzelprojekt und Ein-Gebäude-Charge live geprüft; Ingame-Lesbarkeit bestätigt.
+Weitere Varianten bleiben synthetische Gate-Nachweise. Auftragsstatus
+`completed` bei Einzelprojekten bedeutet bestätigte Aufträge, keinen Fertigbau.
+Bauabschlussberichte trennen fertige Bauteile, Gebäudezugang und Zeitbudget.
+`finished_accessible` bestätigt zusätzlich die Pause, keinen Betrieb.
+
+Bauchargen nennen fertig/zugänglich belegte Gebäude als gespeicherten Stand.
+Großprojekte zählen Bauteile einschließlich Wege/Hilfsbauten; bestätigte Platzierung,
+Fertigbau und unbestätigte/offene Teile bleiben getrennt. `inspect_large_project`
+liefert gespeicherte Nachweise; Diagnose/Close prüfen frisch. Projektfreigabe kann
+noch offene Teile aufgeben. Räum-/Baugruppen geben gespeicherte Belege wieder;
+„Stopp angefragt“ ist kein abgeschlossener Stopp. Bei `stop_building_batch` behält
+ein bestehender Simulationslauf sein Budget. Nie aus einer Ergebniszeile allein
+Pause, Produktion oder allgemeine Bausicherheit ableiten.
+
+Für Fortschritt dieselbe Projekt-/Chargenkennung lesen; alte Startzeilen werden
+nicht automatisch aktualisiert. Keine Wiederholung unbestätigter Aufträge.
+[Werkzeugumfang und Test-Gate](agent-log-building-outcomes-0.59.md).
+
 ## Ergebniszeilen ab 0.58 — begrenzt live abgenommen
 
 `outcomeSummary` ergänzt nach Aufrufabschluss eine eigene Zeile „Ergebnis:“ ingame
@@ -68,7 +89,7 @@ leerer Text bedeutet keinen nachgewiesenen Erfolg. Nicht als MCP-Argument senden
 
 Ergebniszeilen verdichten validierte Fachberichte; für Entscheidungen bei Unsicherheit
 weiterhin deren strukturierte Nachweise verwenden. Kein automatisches Nachführen alter
-Startzeilen, keine zusätzlichen Hintergrundabfragen. Sammelkonfiguration und andere
+Startzeilen, keine zusätzlichen Hintergrundabfragen. Sammelkonfiguration und übrige
 Auftragsfamilien erhalten in diesem Teil noch keine Ergebniszeilen.
 
 ## 0.54.0 - Pflanzen- und Flaechenjournal begrenzt live abgenommen
@@ -515,7 +536,7 @@ Das menschliche Vorbereitungsskript startet seit 0.57 nach erfolgreichen Tests,
 Installation und Paketprüfung Timberborn automatisch. Spielstand laden und
 `live bereit` bleiben menschliche Schritte; der Agent startet das Gate nicht selbst.
 
-Stand: letzter dokumentierter Abschluss Bridge 0.58.0; aktualisiert am 16. Oktober 2026.
+Stand: letzter dokumentierter Abschluss Bridge 0.59.0; aktualisiert am 16. Oktober 2026.
 Diese Anleitung beschreibt die vorhandenen MCP-Fähigkeiten. Aktueller Auftrag
 und Projektregeln stehen in [AGENTS.md](../AGENTS.md) und
 [missionsplan.md](../missionsplan.md); das lokale Spiel ist das freigegebene
