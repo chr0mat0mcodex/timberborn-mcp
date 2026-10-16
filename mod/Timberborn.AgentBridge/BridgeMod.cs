@@ -37,15 +37,21 @@ public sealed class BridgeConfigurator : Configurator
 
 public sealed class BridgeMod(Timberborn.CameraSystem.CameraService cameraService, ResourceCountingService resources, PopulationService population,
     EntityRegistry entities, ITerrainService terrain, IThreadSafeWaterMap water, ISoilMoistureService soilMoisture, IGoodService goods,
-    ModRepository mods, SpatialObservations spatial, SiteValidation validation, PilotPlacement placement, BuildingObservations buildings, SimulationControl simulation, WorkforceObservations workforce, WorkplaceStaffing staffing, PriorityAndConstruction management, AreaManagement areas, PlantingBatchService plantingBatch, RemovalManagement removal, BuildingCatalog catalog, BuildingSettings settings, ActivityLog activityLog, ActivityLogWindow activityWindow, Research research, EconomyObservations economy, LogisticsObservations logistics, DiagnosticsObservations diagnostics, ProductionGraph productionGraph, SelectionObservations selection, BuildingProjectPlanner projectPlanner, BuildingProjectExecution projectExecution, VerticalStairExecution verticalStairExecution, LargeProjectService largeProjects, RecentActionsJournal journal, BuildingConfigurationService configuration)
+    ModRepository mods, SpatialObservations spatial, SiteValidation validation, PilotPlacement placement, BuildingObservations buildings, SimulationControl simulation, WorkforceObservations workforce, WorkplaceStaffing staffing, PriorityAndConstruction management, AreaManagement areas, PlantingBatchService plantingBatch, RemovalManagement removal, BuildingCatalog catalog, BuildingSettings settings, ActivityLog activityLog, ActivityLogWindow activityWindow, Research research, EconomyObservations economy, LogisticsObservations logistics, DiagnosticsObservations diagnostics, ProductionGraph productionGraph, SelectionObservations selection, BuildingProjectPlanner projectPlanner, BuildingProjectExecution projectExecution, VerticalStairExecution verticalStairExecution, LargeProjectService largeProjects, RecentActionsJournal journal, BuildingConfigurationService configuration, Timberborn.GameSaveRuntimeSystem.GameLoader gameLoader)
     : ILoadableSingleton, IUnloadableSingleton, IUpdatableSingleton
 {
     private readonly MainThreadQueue queue = new();
     private readonly string sessionId = Guid.NewGuid().ToString("D");
     private BridgeHttpServer? server;
+    private string logSaveName="neues-spiel";
     private ScreenshotCapture? screenshots;
+    private readonly DiagnosticFileLog fileLog=new(DiagnosticFileLog.DefaultDirectory("bridge"),"bridge",
+        value=>JsonConvert.SerializeObject(value),()=>Debug.LogWarning("[Timberborn Agent Bridge] File diagnostics unavailable; records may be missing."));
     public void Load()
     {
+        var loadedSave=gameLoader.LoadedSave;
+        logSaveName=loadedSave is null?"neues-spiel":loadedSave.SettlementReference.SettlementName+"--"+loadedSave.SaveName;
+        fileLog.Write("bridge_loading",session:sessionId,saveName:logSaveName);
         string stage = "locate_configuration";
         try
         {
@@ -61,10 +67,12 @@ public sealed class BridgeMod(Timberborn.CameraSystem.CameraService cameraServic
                 (bool?)config["enableValidation"] == true, (bool?)config["enablePlacement"] == true, (bool?)config["enableLodgePlacement"] == true, (bool?)config["enableSpeedControl"] == true, (bool?)config["enableStaffing"] == true, (bool?)config["enablePriorities"] == true, (bool?)config["enableAreas"] == true, (bool?)config["enableRemoval"] == true, (bool?)config["enableBuildingPlacement"] == true, (bool?)config["enableBuildingSettings"] == true, (bool?)config["enableResearch"] == true);
             stage = "start_listener";
             server.Start();
+            fileLog.Write("bridge_ready",session:sessionId);
             Debug.Log("[Timberborn Agent Bridge] Endpoint ready on loopback; actions require explicit opt-in.");
         }
         catch (Exception ex)
         {
+            fileLog.Write("bridge_load_failed",code:stage,session:sessionId);
             server?.Dispose(); server = null;
             Debug.LogError($"[Timberborn Agent Bridge] Start failed at {stage}: {ex.GetType().Name}. No game changes performed.");
         }
@@ -75,8 +83,22 @@ public sealed class BridgeMod(Timberborn.CameraSystem.CameraService cameraServic
         finally {journal.EndMcp(false);}
         queue.PumpAsync(ObserveAsync);
     }
-    public void Unload() { if(screenshots is not null) { screenshots.Cancel(); UnityEngine.Object.Destroy(screenshots.gameObject); } journal.Unload(); simulation.Unload(); server?.Dispose(); queue.Dispose(); }
+    public void Unload() { fileLog.Write("bridge_unloading",session:sessionId); if(screenshots is not null) { screenshots.Cancel(); UnityEngine.Object.Destroy(screenshots.gameObject); } journal.Unload(); simulation.Unload(); server?.Dispose(); queue.Dispose(); }
     private async System.Threading.Tasks.Task<string> ObserveAsync(BridgeRequest request) {
+        var callId=request.Activity?.Id??Guid.NewGuid().ToString("D");
+        fileLog.Write("request_started",request.Route,"running",callId:callId,session:sessionId,correlations:request.Activity?.Correlations);
+        try {
+            var result=await ObserveCoreAsync(request);
+            if(request.Activity is {} activity)fileLog.Write("activity_received",activity.Tool,activity.State,callId:activity.Id,session:sessionId,correlations:activity.Correlations,reasoning:activity.Reasoning,summary:activity.Summary);
+            fileLog.Write("request_finished",request.Route,"returned",callId:callId,session:sessionId,correlations:request.Activity?.Correlations);
+            return result;
+        } catch(Exception ex) {
+            string code=ex is BridgeRejectionException rejection?rejection.Code:ex is ArgumentException?"invalid_request":ex is OperationCanceledException?"cancelled":"observation_failed";
+            fileLog.Write("request_failed",request.Route,"error",code,callId,sessionId,request.Activity?.Correlations);
+            throw;
+        }
+    }
+    private async System.Threading.Tasks.Task<string> ObserveCoreAsync(BridgeRequest request) {
         if(request.Screenshot is null) return Observe(request);
         if(request.Session!=sessionId) throw new BridgeRejectionException("stale_session");
         if(screenshots is null) {
@@ -84,7 +106,7 @@ public sealed class BridgeMod(Timberborn.CameraSystem.CameraService cameraServic
             screenshots=host.AddComponent<ScreenshotCapture>();
         }
         var data=await screenshots.Capture(request.Screenshot,cameraService);
-        return JsonConvert.SerializeObject(new { schemaVersion=1,sessionId,observedAtUtc=DateTimeOffset.UtcNow,bridgeVersion="0.56.0",data });
+        return JsonConvert.SerializeObject(new { schemaVersion=1,sessionId,observedAtUtc=DateTimeOffset.UtcNow,bridgeVersion="0.57.0",data });
     }
     private string Observe(BridgeRequest request)
     {
@@ -94,7 +116,7 @@ public sealed class BridgeMod(Timberborn.CameraSystem.CameraService cameraServic
         {
             var a=request.Activity!;
             if(a.State!="running" && a.Session!=sessionId)throw new ArgumentException("stale_activity_session");
-            return new { accepted=activityLog.Record(a,DateTimeOffset.UtcNow) };
+            return new { accepted=activityLog.Record(a,DateTimeOffset.UtcNow), saveName=logSaveName };
         }
         using var journalScope=journal.Scope(request.Route);
         object data = request.Route switch
@@ -131,7 +153,7 @@ public sealed class BridgeMod(Timberborn.CameraSystem.CameraService cameraServic
             _ => throw new ArgumentException("invalid_request")
         };
         return JsonConvert.SerializeObject(new { schemaVersion = 1, sessionId, observedAtUtc = DateTimeOffset.UtcNow,
-            bridgeVersion = "0.56.0", data });
+            bridgeVersion = "0.57.0", data });
     }
     private object Snapshot()
     {

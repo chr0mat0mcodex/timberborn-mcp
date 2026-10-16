@@ -75,7 +75,7 @@ public static class RegionGroupSearch
                     calls++;tried[index]++;
                     var e=await check(steps,ct);
                     if(e.SessionId!=request.Session)throw new BridgeRejectionException("stale_session");
-                    if(e.BridgeVersion is not ("0.51.0" or "0.52.0" or "0.53.0" or "0.54.0" or "0.55.0" or "0.56.0"))throw new InvalidDataException("group_search_requires_051");
+                    if(e.BridgeVersion is not ("0.51.0" or "0.52.0" or "0.53.0" or "0.54.0" or "0.55.0" or "0.56.0" or "0.57.0"))throw new InvalidDataException("group_search_requires_051");
                     data=JsonNode.Parse(e.Data.GetRawText())!.AsObject();
                     bool ok=data["candidateFound"]!.GetValue<bool>();
                     if(ok && (data["plan"]?["pilotEligible"]?.GetValue<bool>()!=true || data["plan"]?["restored"]?.GetValue<bool>()!=true ||

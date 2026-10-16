@@ -57,8 +57,6 @@ public sealed class ActivityLogWindow(UILayout layout, ActivityLog log) : ILoada
             row.Add(Text($"{e.StartedAtUtc.ToLocalTime():HH:mm:ss}  {e.Tool}",13));
             string state=e.State switch {"running"=>"Läuft / Abschluss noch unbestätigt", "ok"=>"Erfolgreich", "applied"=>"Angewendet", "rejected"=>"Abgewiesen", "unconfirmed"=>"Unbestätigt – Zustand prüfen", "cancelled"=>"Abgebrochen", _=>"Fehler – Zustand prüfen"};
             row.Add(Text(state));
-            foreach(var correlation in e.Correlations??Array.Empty<ActivityCorrelation>())
-                row.Add(Text(ActivityCorrelation.Display(correlation),11));
             if(e.Summary.Length>0)row.Add(Text(e.Summary,11));
             row.Add(Text(e.Reasoning.Length>0?"Begründung: "+e.Reasoning:"Keine Begründung mitgegeben.",12));
             scroll.Add(row);

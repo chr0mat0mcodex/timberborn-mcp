@@ -9,7 +9,7 @@ using Timberborn.Bridge.Core;
 
 namespace Timberborn.McpServer;
 
-public sealed class NativeTools(NativeClient client, bool enableValidation = false, bool enablePlacement = false, bool enableLodgePlacement = false, bool enableSpeedControl = false, bool enableStaffing = false, bool enablePriorities = false, bool enableAreas = false, bool enableRemoval = false, bool enableBuildingPlacement = false, bool enableBuildingSettings = false, bool enableResearch = false) : IDisposable
+public sealed class NativeTools(NativeClient client, bool enableValidation = false, bool enablePlacement = false, bool enableLodgePlacement = false, bool enableSpeedControl = false, bool enableStaffing = false, bool enablePriorities = false, bool enableAreas = false, bool enableRemoval = false, bool enableBuildingPlacement = false, bool enableBuildingSettings = false, bool enableResearch = false, DiagnosticFileLog? fileLog=null) : IDisposable
 {
     private readonly ClearedGroupTools clearedGroups = new(new NativeClearedGroupPort(client), Path.Combine(AppContext.BaseDirectory,".local","cleared-groups"));
     private readonly SemaphoreSlim callGate = new(1,1);
@@ -217,11 +217,15 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
         // Unknown names are never allowed to inject arbitrary text into the game log.
         var displayName=name.Length is >0 and <=80 && name.All(c=>c is >= 'a' and <= 'z' or >= '0' and <= '9' or '_')?name:"unknown_tool";
         var references=ActivityCorrelationTools.Request(name,args);
-        var logSession=await client.TryRecordActivity(id,displayName,"running","",detail.Reasoning,detail.Summary,references);
+        fileLog?.Write("call_started",displayName,"running",callId:id,correlations:references,reasoning:detail.Reasoning,summary:detail.Summary);
+        var logSession=await client.TryRecordActivity(id,displayName,"running","",detail.Reasoning,detail.Summary,references,
+            (session,saveName)=>fileLog?.Write("activity_started",displayName,"running",callId:id,session:session,correlations:references,reasoning:detail.Reasoning,summary:detail.Summary,saveName:saveName));
         string state="error";
+        string? errorCode=null;
         try {
             var result=await Invoke(name,args,ct);
-            references=ActivityCorrelationTools.Result(name,result);
+            errorCode=result["error"]?["code"]?.GetValue<string>();
+            references=ActivityCorrelation.Merge(references,ActivityCorrelationTools.Result(name,result));
             state=result["status"]?.GetValue<string>()=="error"?(BridgeRejectionException.IsCode(result["error"]?["code"]?.GetValue<string>())?"rejected":"error"):result["data"]?["outcome"]?.GetValue<string>() is "applied" or "rejected" or "unconfirmed" ? result["data"]!["outcome"]!.GetValue<string>() : "ok";
             if(result["error"]?["execution"]?.GetValue<string>()=="unconfirmed")state="unconfirmed";
             if(BuildingConfigurationTools.Handles(name) && (result["data"]?["outcome"]?.GetValue<string>()=="partial" || result["data"]?["proofState"]?.GetValue<string>()=="unconfirmed"))state="unconfirmed";
@@ -231,10 +235,17 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
             return result;
         } catch(OperationCanceledException){state="cancelled";throw;}
         finally {
+            fileLog?.Write("call_finished",displayName,state,errorCode,id,logSession,references,reasoning:detail.Reasoning,summary:detail.Summary);
             if(logSession is not null) {
                 var logged=await client.TryRecordActivity(id,displayName,state,logSession,"","",references);
-                if(logged is null)Console.Error.WriteLine("MCP activity completion could not be recorded; do not retry the action.");
-            } else Console.Error.WriteLine("Ingame MCP activity log unavailable for this call.");
+                if(logged is null) {
+                    fileLog?.Write("telemetry_failed",displayName,code:"completion_unavailable",callId:id);
+                    Console.Error.WriteLine("MCP activity completion could not be recorded; do not retry the action.");
+                }
+            } else {
+                fileLog?.Write("telemetry_failed",displayName,code:"start_unavailable",callId:id);
+                Console.Error.WriteLine("Ingame MCP activity log unavailable for this call.");
+            }
         }
     }
     public void Dispose() {clearedGroups.Dispose();client.Dispose();}

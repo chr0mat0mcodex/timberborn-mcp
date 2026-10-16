@@ -130,10 +130,10 @@ public sealed class ActivityCorrelationTests
         Assert.Throws<ArgumentException>(()=>Query(run:"invalid"));
     }
 
-    [Fact]
-    public async Task ResultReferenceCrossesHeaderAndSurvivesReadback()
+    [Theory] [InlineData("0.56.0")] [InlineData("0.57.0")]
+    public async Task ResultReferenceCrossesHeaderAndSurvivesReadback(string version)
     {
-        var handler=new Handler();using var client=new NativeClient(new(8081,new string('a',64)),handler);
+        var handler=new Handler(version);using var client=new NativeClient(new(8081,new string('a',64)),handler);
         Assert.Equal(Parent,await client.TryRecordActivity(Project,"run_large_project","running","","Synthetisch.","",[Ref("project",Project)]));
         Assert.Equal(Parent,await client.TryRecordActivity(Project,"run_large_project","ok",Parent,"","",[Ref("run",Run,"result")]));
         var result=await ActivityTools.Read(client,JsonSerializer.SerializeToElement(new{projectId=Project,runId=Run}),TestContext.Current.CancellationToken);
@@ -156,7 +156,7 @@ public sealed class ActivityCorrelationTests
         Assert.Single(result["data"]!["items"]!.AsArray());
         Assert.Contains("angefragt",ActivityCorrelation.Display(Assert.Single(entry.Correlations!)));
     }
-    private sealed class Handler:HttpMessageHandler
+    private sealed class Handler(string version="0.56.0"):HttpMessageHandler
     {
         public ActivityLog Log=new();public int ActionCalls;
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,CancellationToken ct)
@@ -171,7 +171,7 @@ public sealed class ActivityCorrelationTests
             } else if(request.RequestUri.AbsolutePath.EndsWith("/activity-log"))data=Log.Read(ActivityLogQuery.Parse(query),false,false);
             else {ActionCalls++;throw new InvalidOperationException("unexpected_game_request");}
             return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK){Content=new StringContent(JsonSerializer.Serialize(
-                new BridgeEnvelope<object>(1,Parent,DateTimeOffset.UnixEpoch,"0.56.0",data),NativeJson.Options))});
+                new BridgeEnvelope<object>(1,Parent,DateTimeOffset.UnixEpoch,version,data),NativeJson.Options))});
         }
     }
 }

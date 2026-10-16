@@ -10,7 +10,7 @@ $ErrorActionPreference = 'Stop'
 $preparationWatch = [Diagnostics.Stopwatch]::StartNew()
 $preparationPhase = 'Vorbereitung'
 Write-Host "`nTIMBERBORN  |  Live-Test vorbereiten" -ForegroundColor Cyan
-Write-Host 'Tests > Paket > Installation > Prüfung  |  Abbruch beim ersten Fehler' -ForegroundColor DarkGray
+Write-Host 'Tests > Paket > Installation > Prüfung > Spielstart  |  Abbruch beim ersten Fehler' -ForegroundColor DarkGray
 
 function Get-NormalizedPath([string]$Path, [string]$Label) {
     if (-not (Test-Path -LiteralPath $Path -PathType Container)) { throw "$Label existiert nicht: $Path" }
@@ -62,6 +62,9 @@ try {
     }
     Stop-LocalMcpServers $taskRoot
     $managedDir = Get-NormalizedPath $TimberbornManagedDir 'Timberborn Managed-Verzeichnis'
+    $gameDir = Split-Path (Split-Path $managedDir -Parent) -Parent
+    $gameExe = Join-Path $gameDir 'Timberborn.exe'
+    if (-not (Test-Path -LiteralPath $gameExe -PathType Leaf)) { throw "Timberborn.exe fehlt: $gameExe" }
     $modsDir = Get-NormalizedPath $ModsRoot 'Mods-Verzeichnis'
     $targetDir = Join-Path $modsDir 'TimberbornAgentBridge'
     Assert-ChildPath $targetDir $modsDir 'Zielordner'
@@ -122,7 +125,10 @@ try {
     Write-Host ''
     Write-TimberbornStatus 'BEREIT' ("Tests bestanden, Mod installiert, {0} Dateien geprüft. Gesamt: {1:n1} s" -f $packageFiles.Count, $preparationWatch.Elapsed.TotalSeconds) Green
     if (Test-Path -LiteralPath $previousInstall) { Write-Host "  Sicherung: $previousInstall" -ForegroundColor DarkGray }
-    Write-Host '  Jetzt Timberborn starten, Spielstand laden und "live bereit" schreiben.' -ForegroundColor Cyan
+    $preparationPhase = 'Spielstart (Tests und Installation bereits erfolgreich)'
+    Start-Process -FilePath $gameExe -WorkingDirectory $gameDir -ErrorAction Stop
+    Write-TimberbornStatus 'OK' 'Timberborn-Start angefordert.'
+    Write-Host '  Jetzt Spielstand laden und "live bereit" schreiben.' -ForegroundColor Cyan
 } catch {
     Write-Host ''
     Write-TimberbornStatus 'ABGEBROCHEN' ("{0} nach {1:n1} s. Kein automatischer Neustart." -f $preparationPhase, $preparationWatch.Elapsed.TotalSeconds) Red

@@ -17,9 +17,9 @@ public sealed partial class NativeClient
         if(r.After is {} after)q+="&after="+after.ToString(CultureInfo.InvariantCulture);
         var e=await Get<NativeRecentActions>(q,ct,maxResponseBytes:256*1024);
         var d=e.Data;var p=d.Page;
-        if(e.BridgeVersion is not ("0.40.0" or "0.41.0" or "0.42.0" or "0.43.0" or "0.44.0" or "0.45.0" or "0.46.0" or "0.47.0" or "0.48.0" or "0.49.0" or "0.50.0" or "0.51.0" or "0.52.0" or "0.53.0" or "0.54.0" or "0.55.0" or "0.56.0")||e.SessionId!=r.Session||d.Capacity!=512||d.MaxObjects!=4096||d.ScanIntervalSeconds!=1||
+        if(e.BridgeVersion is not ("0.40.0" or "0.41.0" or "0.42.0" or "0.43.0" or "0.44.0" or "0.45.0" or "0.46.0" or "0.47.0" or "0.48.0" or "0.49.0" or "0.50.0" or "0.51.0" or "0.52.0" or "0.53.0" or "0.54.0" or "0.55.0" or "0.56.0" or "0.57.0")||e.SessionId!=r.Session||d.Capacity!=512||d.MaxObjects!=4096||d.ScanIntervalSeconds!=1||
             d.ObservationFailures<0||d.TrackedObjects<0||d.TrackedObjects>d.MaxObjects||d.SupportedKinds is null||
-            !d.SupportedKinds.SequenceEqual(e.BridgeVersion is ("0.54.0" or "0.55.0" or "0.56.0")?RecentActionsRequest.Kinds:RecentActionsRequest.LegacyKinds)||d.Limitations is null||d.Limitations.Any(s=>s is null)||
+            !d.SupportedKinds.SequenceEqual(e.BridgeVersion is ("0.54.0" or "0.55.0" or "0.56.0" or "0.57.0")?RecentActionsRequest.Kinds:RecentActionsRequest.LegacyKinds)||d.Limitations is null||d.Limitations.Any(s=>s is null)||
             p is null||p.Items is null||p.Items.Length>r.Limit||p.Latest<0||p.Latest>9007199254740991L||
             p.OldestAvailable!=Math.Max(1,p.Latest-511)||p.Dropped!=Math.Max(0,p.Latest-512)||
             p.NextCursor<0||p.NextCursor>p.Latest||r.After>p.Latest||
@@ -28,7 +28,7 @@ public sealed partial class NativeClient
             (!p.HasMore&&p.NextCursor!=p.Latest)||
             (d.TrackingComplete&&(d.StartedAtUtc is null||d.LastScanAtUtc is null))||
             (d.StartedAtUtc is null&&(p.Latest!=0||d.TrackedObjects!=0))||d.StartedAtUtc>e.ObservedAtUtc||d.LastScanAtUtc>e.ObservedAtUtc||d.LastScanAtUtc<d.StartedAtUtc)throw new InvalidDataException("Invalid recent actions page");
-        if(e.BridgeVersion is ("0.54.0" or "0.55.0" or "0.56.0") && (d.SpatialTrackingComplete is null||d.SpatialObservationFailures is null or <0||
+        if(e.BridgeVersion is ("0.54.0" or "0.55.0" or "0.56.0" or "0.57.0") && (d.SpatialTrackingComplete is null||d.SpatialObservationFailures is null or <0||
             d.TrackedSpatialEntries is null or <0 or >SpatialJournal.MaxEntries||d.MaxSpatialEntries!=SpatialJournal.MaxEntries||
             d.ObservationFailures<d.SpatialObservationFailures||d.TrackingComplete&&d.SpatialTrackingComplete!=true||
             d.SpatialTrackingComplete==true&&(d.SpatialStartedAtUtc is null||d.SpatialLastScanAtUtc is null)||

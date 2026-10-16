@@ -10,6 +10,12 @@ using Timberborn.Backend.Fake;
 using Timberborn.Backend.MoreHttpApi;
 using Timberborn.Backend.Native;
 using Timberborn.McpServer;
+using Timberborn.Bridge.Core;
+
+var fileLog=new DiagnosticFileLog(DiagnosticFileLog.DefaultDirectory("mcp"),"mcp",value=>JsonSerializer.Serialize(value),
+    ()=>Console.Error.WriteLine("MCP file diagnostics unavailable; records may be missing."));
+fileLog.Write("server_starting");
+try {
 
 var backendName = Environment.GetEnvironmentVariable("TIMBERBORN_BACKEND") ?? "more-http-api";
 var scenario = Environment.GetEnvironmentVariable("TIMBERBORN_FAKE_SCENARIO") ?? "healthy";
@@ -40,7 +46,7 @@ ITimberbornReadBackend? backend = backendName switch
     _ => throw new InvalidOperationException("Unbekanntes Backend.")
 };
 using var native = backendName == "native" ? new NativeTools(new NativeClient(NativeConfiguration.Load(
-    Environment.GetEnvironmentVariable("TIMBERBORN_NATIVE_CONFIG") ?? throw new InvalidOperationException("TIMBERBORN_NATIVE_CONFIG fehlt."))), validationEnabled, placementEnabled, lodgePlacementEnabled, speedControlEnabled, staffingEnabled, prioritiesEnabled, areasEnabled, removalEnabled, buildingPlacementEnabled, buildingSettingsEnabled, researchEnabled) : null;
+    Environment.GetEnvironmentVariable("TIMBERBORN_NATIVE_CONFIG") ?? throw new InvalidOperationException("TIMBERBORN_NATIVE_CONFIG fehlt."))), validationEnabled, placementEnabled, lodgePlacementEnabled, speedControlEnabled, staffingEnabled, prioritiesEnabled, areasEnabled, removalEnabled, buildingPlacementEnabled, buildingSettingsEnabled, researchEnabled,fileLog) : null;
 var service = backend is null ? null : new ObservationService(backend);
 var actions = backend is null ? null : new BuildingActionService(backend, (ITimberbornWriteBackend)backend);
 var tools = native is null ? ToolCatalog.Create(writesEnabled) : NativeTools.Catalog(validationEnabled, placementEnabled, lodgePlacementEnabled, speedControlEnabled, staffingEnabled, prioritiesEnabled, areasEnabled, removalEnabled, buildingPlacementEnabled, buildingSettingsEnabled, researchEnabled).Select(ResponsePresentation.Describe).ToArray();
@@ -59,11 +65,11 @@ builder.Services.AddMcpServer().WithStdioServerTransport()
         bool full = false;
         if (native is not null) {
             try { (arguments, full) = ResponsePresentation.ReadRequest(request.Name, arguments); }
-            catch (ArgumentException) { throw new McpProtocolException("Nicht ausgeführt: detail muss compact oder full sein und vom Werkzeug unterstützt werden.", McpErrorCode.InvalidParams); }
+            catch (ArgumentException) { fileLog.Write("request_rejected",request.Name,"error","invalid_detail"); throw new McpProtocolException("Nicht ausgeführt: detail muss compact oder full sein und vom Werkzeug unterstützt werden.", McpErrorCode.InvalidParams); }
         }
         JsonElement backendArguments;
         try { backendArguments = ActivityTools.RequireReasoning(arguments); }
-        catch (ArgumentException) { throw new McpProtocolException("Nicht ausgeführt: reasoning ist erforderlich: nicht leere Begründung, maximal 600 Zeichen.", McpErrorCode.InvalidParams); }
+        catch (ArgumentException) { fileLog.Write("request_rejected",request.Name,"error","invalid_reasoning"); throw new McpProtocolException("Nicht ausgeführt: reasoning ist erforderlich: nicht leere Begründung, maximal 600 Zeichen.", McpErrorCode.InvalidParams); }
         var result = native is not null ? await native.InvokeLogged(request.Name, arguments, ct)
             : request.Name == "set_building_paused"
                 ? await actions!.InvokeAsync(backendArguments, ct)
@@ -72,4 +78,5 @@ builder.Services.AddMcpServer().WithStdioServerTransport()
         return ResponsePresentation.ToToolResult(native is null ? result : ResponsePresentation.Present(request.Name, result, full));
     });
 try { await builder.Build().RunAsync(); }
-finally { (backend as IDisposable)?.Dispose(); }
+finally { fileLog.Write("server_stopping"); (backend as IDisposable)?.Dispose(); }
+} catch(Exception) {fileLog.Write("server_failed",code:"startup_or_host_failure");throw;}

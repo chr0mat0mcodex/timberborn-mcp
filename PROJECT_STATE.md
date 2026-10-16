@@ -1,5 +1,14 @@
 # Projektstand
 
+## 0.57.0 — Dateilogs und Anzeige begrenzt live abgenommen
+
+2026-10-16: Menschliches Gate und Abschluss-Livetest bestanden. Neue Logdateien je
+Laden mit Kolonie-/Spielstandname und UTC-Zeitstempel; keine Rotation/Größenlimits.
+Leseaufruf, synthetische Ablehnung, Begründung und Korrelation in beiden Logs
+bestätigt, keine gemeldeten Schreibverluste. Erneutes Laden erzeugt neue Session
+und Dateien; bisherige Inhalte erhalten. Mensch bestätigt entfernte Ingame-
+Korrelationskennungen und automatischen Spielstart am erfolgreichen Skriptende.
+[Umfang und Grenzen](docs/file-diagnostics-0.57.md).
 ## 0.56.0 — Projekt-/Laufkorrelation begrenzt live abgenommen
 
 2026-10-16: Explizite Projekt-, Elternprojekt- und Laufbezüge mit Herkunft

@@ -110,6 +110,37 @@ public sealed class ActivityTests
         Assert.False(BridgeHttpServer.MethodAllowed("POST","/agent-api/v1/set-building-paused",false,false));
     }
     [Fact]
+    public async Task FileLogFailureDoesNotRepeatOrFailSuccessfulAction()
+    {
+        string blocked=Path.GetTempFileName();
+        try {
+            var log=new DiagnosticFileLog(blocked,"mcp",value=>JsonSerializer.Serialize(value));
+            var handler=new ActivityHandler();using var tools=new NativeTools(new NativeClient(new(8081,new string('a',64)),handler),enableBuildingSettings:true,fileLog:log);
+            var result=await tools.InvokeLogged("set_building_paused",JsonSerializer.SerializeToElement(new{id=handler.Id,session=handler.Session,paused=true,expectedPaused=false,reasoning="Synthetischer Logging-Ausfall."}),TestContext.Current.CancellationToken);
+            Assert.Equal("ok",result["status"]!.GetValue<string>());Assert.Equal(1,handler.ActionCalls);
+            Assert.Equal(3,log.FailedWrites);Assert.Equal(new[]{"running","applied"},handler.States);
+        } finally {File.Delete(blocked);}
+    }
+    [Fact]
+    public async Task FileLogUsesSaveNameFromActivityAcknowledgement()
+    {
+        string folder=Path.Combine(Path.GetTempPath(),"synthetic-session-log-"+Guid.NewGuid().ToString("N"));
+        try {
+            var handler=new ActivityHandler();
+            var log=new DiagnosticFileLog(folder,"mcp",value=>JsonSerializer.Serialize(value));
+            using var tools=new NativeTools(new NativeClient(new(8081,new string('a',64)),handler),enableBuildingSettings:true,fileLog:log);
+            await tools.InvokeLogged("set_building_paused",JsonSerializer.SerializeToElement(new {id=handler.Id,paused=true,expectedPaused=false,session=handler.Session,reasoning="Synthetischer Logtest"}),TestContext.Current.CancellationToken);
+            string file=Assert.Single(Directory.GetFiles(folder,"mcp_Synthetische Kolonie--Testsave_*.log"));
+            var records=File.ReadAllLines(file);
+            Assert.Collection(records,line=>Assert.Contains("activity_started",line),line=>Assert.Contains("call_finished",line));
+            using var completed=JsonDocument.Parse(records[1]);
+            Assert.Equal(handler.Session,completed.RootElement.GetProperty("session").GetString());
+            Assert.Equal("applied",completed.RootElement.GetProperty("state").GetString());
+            Assert.Equal("Synthetischer Logtest",completed.RootElement.GetProperty("reasoning").GetString());
+            Assert.Equal(1,handler.ActionCalls);Assert.Equal(0,log.FailedWrites);
+        } finally {if(Directory.Exists(folder))Directory.Delete(folder,true);}
+    }
+    [Fact]
     public void GamePayloadUsesExplicitWireNamesWithoutSerializerNamingPolicy()
     {
         var now=DateTimeOffset.UtcNow;
@@ -128,7 +159,7 @@ public sealed class ActivityTests
         Assert.Equal("ok", result["status"]!.GetValue<string>());
         Assert.Empty(result["data"]!["items"]!.AsArray());
     }
-    [Theory] [InlineData("0.55.0","{}")] [InlineData("0.56.0","{}")] [InlineData("0.54.0","{\"limit\":1}")]
+    [Theory] [InlineData("0.55.0","{}")] [InlineData("0.56.0","{}")] [InlineData("0.57.0","{}")] [InlineData("0.54.0","{\"limit\":1}")]
     public async Task MissingPageMetadataIsNeverInvented(string version,string json)
     {
         using var client=new NativeClient(new(8081,new string('a',64)),new ActivityReadHandler(version));
@@ -159,7 +190,7 @@ public sealed class ActivityTests
                 Assert.DoesNotContain("reasoning",request.RequestUri.Query);
                 if(state=="running")Assert.Equal("",query["session"]);else Assert.Equal(Session,query["session"]);
                 if(FailCompletion&&state!="running")return Task.FromResult(new HttpResponseMessage(HttpStatusCode.ServiceUnavailable));
-                data=new NativeActivityAck(true);
+                data=new NativeActivityAck(true,"Synthetische Kolonie--Testsave");
             } else {
                 ActionCalls++;Assert.EndsWith("/set-building-paused",request.RequestUri.AbsolutePath);
                 var observed=new NativeBuildingSettings(Id,"WaterPump.Folktails",new(1,2,3),true,new(true,true),false,null,false,null,["synthetic_test"]);
