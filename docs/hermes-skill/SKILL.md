@@ -17,6 +17,20 @@ Installierte Version, geladene Werkzeuge und echte Rückgaben sind maßgeblich.
 
 ## Reparaturstart ab 0.60 (begrenzt live abgenommen)
 
+Erweiterung 0.61, begrenzt live abgenommen: Die Navigationsprüfung
+zählt nicht mehr alle Kartenobjekte gegen 4.096, sondern begrenzt die tatsächlichen
+Zugangsmesspunkte auf 4.096 und Distriktvergleiche auf 16.384. Alle Baustellen,
+Distrikte, Wege und Zugangsobjekte bleiben Beobachtungsziele.
+Direkte Großprojekt-Vorabweisungen reichen `project_plan_*` samt lesbarem Grund
+durch. Nur mit `execution=not_executed` ist kein neuer Bauauftrag durch diesen
+Aufruf bestätigt; bestehende Aufträge bleiben bestehen. Gemeldete Ursache klären,
+kein automatisches Retry. Bei unconfirmed nur lesen. Installierten Stand prüfen;
+dies ist keine Freigabe oder Installation des Hermes-Entwurfs.
+Live bestätigt: große Karte, Höhenfehler, gefährdeter Bestand, gültiger Umweg
+und konkrete Pausenablehnung ohne Bauauftrag. Mehrfachzugänge und beide
+Objektgrenzen korrigiert. Initialisierung und unbekannter Zustand bleiben
+getrennt von fremden Baustellen. Kein zusätzlicher Bauarbeiter-/Liefernachweis.
+
 Bei konkretem Startfehler und `execution=not_executed` hat dieser direkte
 Großprojekt-/Reparaturstart keinen neuen Bauauftrag erteilt. Vorhandene Aufträge
 bleiben bestehen. `project_start_plan_changed`: frisch lesen und neu planen;

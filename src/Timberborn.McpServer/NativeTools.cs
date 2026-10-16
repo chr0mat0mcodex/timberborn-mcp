@@ -199,7 +199,9 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
                 ex is BridgeRejectionException { Code: "planting_preview_changed" };
             bool projectStartRejected = name is ("run_large_project" or "run_large_project_repair") &&
                 dispatch.WriteAttempts == 1 && ex is BridgeRejectionException && LargeProjectStartPolicy.IsPreDispatchCode(code);
-            string execution=plantingRejected||projectStartRejected?"not_executed":dispatch.WriteAttempts>0?"unconfirmed":action||code=="invalid_argument"?"not_executed":"not_applicable";
+            bool projectPlanningRejected = ProjectPlanningOutcome.Handles(name) && dispatch.WriteAttempts == 1 &&
+                ex is BridgeRejectionException && LargeProjectPlanningPolicy.IsPreDispatchCode(code);
+            string execution=plantingRejected||projectStartRejected||projectPlanningRejected?"not_executed":dispatch.WriteAttempts>0?"unconfirmed":action||code=="invalid_argument"?"not_executed":"not_applicable";
             string message=execution switch {
                 "not_executed"=>"Nicht ausgeführt: kein schreibender Spielauftrag an den Transport übergeben. Ursache korrigieren; kein automatisches Retry.",
                 "unconfirmed"=>"Schreibender Spielauftrag an den Transport übergeben; Ausgang unbestätigt. Nur lesend klären, niemals automatisch wiederholen.",
@@ -207,6 +209,7 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
             };
             if(plantingRejected)message="Nicht ausgeführt: native Vorprüfung hat die veraltete Pflanzvorschau vor jeder Änderung abgewiesen. Frische Vorschau lesen und neu beurteilen; kein automatisches Retry.";
             if(projectStartRejected)message=ProjectStartOutcome.Describe(code)+" Kein automatisches Retry.";
+            if(projectPlanningRejected)message=ProjectPlanningOutcome.Describe(code)+" Kein automatisches Retry.";
             if(ArgumentDiagnostics.Hint(ex) is { } hint)message+=" "+hint;
             return (JsonObject)JsonSerializer.SerializeToNode(new NativeResult<object>(1, "error", null,
                 new("native", false, null, null), new(code,message,code=="backend_unavailable"&&!action&&dispatch.WriteAttempts==0,execution)), NativeJson.Options)!;

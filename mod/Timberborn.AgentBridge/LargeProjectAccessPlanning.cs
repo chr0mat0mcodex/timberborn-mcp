@@ -19,9 +19,10 @@ public sealed partial class LargeProjectService
     // No construction-state inference from finished preview geometry.
     private object PlanAccess(LargeProjectRequest request)
     {
-        if(faulted || speed.CurrentSpeed!=0 || activeBatch is not null || !ConstructionIsolation.Allows(entities))
-            throw new BridgeRejectionException("state_conflict");
-        var district=District(request.DistrictId);
+        LargeProjectPlanningPolicy.RequireAvailable(faulted, speed.CurrentSpeed==0,
+            activeBatch is not null, true);
+        LargeProjectPlanningPolicy.RequireIsolation(ConstructionIsolation.Blocker(entities));
+        var district=District(request.DistrictId, planning: true);
         var steps=request.Steps.Select(s=>new LargeProjectStep {Template=s.Template,X=s.X,Y=s.Y,Z=s.Z,Rotation=s.Rotation,DependsOn=s.DependsOn.ToArray()}).ToList();
         var originals=steps.Select(s=>Resolve(s).GetSpec<BlockObjectSpec>().GetBlocks(Placement(s)).Take(BuildingPolicy.MaxGeometryCells + 1).ToArray()).ToArray();
         if(originals.Any(c=>c.Length is <1 or >BuildingPolicy.MaxGeometryCells)) throw new ArgumentException("project_occupied_extent_limit");
@@ -197,7 +198,8 @@ public sealed partial class LargeProjectService
                     if(failed is not null) { blockedPart=(int?)failed["index"];phase="construction_work_cell"; }
                 }
             }
-            catch(ArgumentException){reason="generated_plan_extent_or_dependency_limit";}
+            // Native rejection codes derive from ArgumentException; do not relabel them as geometry errors.
+            catch(ArgumentException ex) when(ex is not BridgeRejectionException){reason="generated_plan_extent_or_dependency_limit";}
         }
         return new {reservedAreasKey=ReservedArea.Encode(request.ReservedAreas),reservedAreasClear=!steps.Any(Reserved),candidateFound=reason=="candidate",reason,blockedPart,phase,workCellCount,steps=steps.Select(s=>new{template=s.Template,x=s.X,y=s.Y,z=s.Z,rotation=s.Rotation,dependsOn=s.DependsOn}).ToArray(),plan,
             assessment=new{requestedParts=request.Steps.Length,generatedParts=steps.Count-request.Steps.Length,visitedNodes=visited,

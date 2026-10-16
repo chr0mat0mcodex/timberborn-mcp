@@ -20,6 +20,10 @@ public static class ActivityOutcome
     private static string DescribeCore(string name,JsonObject result)
     {
         if(!Handles(name))return "";
+        if(ProjectPlanningOutcome.Handles(name) && Text(result,"status")=="error" &&
+            Text(result["error"],"execution")=="not_executed" &&
+            Timberborn.Bridge.Core.LargeProjectPlanningPolicy.IsPreDispatchCode(Text(result["error"],"code")))
+            return ProjectPlanningOutcome.Describe(Text(result["error"],"code"));
         if(name is ("run_large_project" or "run_large_project_repair") && Text(result,"status")=="error" &&
             Text(result["error"],"execution")=="not_executed" &&
             Timberborn.Bridge.Core.LargeProjectStartPolicy.IsPreDispatchCode(Text(result["error"],"code")))

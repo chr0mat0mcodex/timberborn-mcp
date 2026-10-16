@@ -1,5 +1,21 @@
 # Spielanleitung für Agenten
 
+## Navigationsprüfung 0.61 — begrenzt live abgenommen
+
+Große Karte, Höhenfehler, gefährdeter Bestand und gültiger Umweg live geprüft.
+Pausenfehler als not_executed bestätigt; keine Bauaufträge erteilt.
+Initialisierung und unbekannter Objektzustand sind keine fremden Baustellen.
+
+Die pauschale Grenze von 4.096 Kartenobjekten entfällt. Relevant bleiben alle
+Baustellen, Distrikte, Wege und Zugangsobjekte; 4.096 Zugangsmesspunkte und
+16.384 Distriktvergleiche sind weiterhin Grenzen. Große Karten sind damit nicht
+automatisch vollständig prüfbar. Bauarbeiterzugang und Lieferung separat belegen.
+Bei direkter Großprojektplanung/-start bedeutet ein konkreter `project_plan_*`-
+Fehler mit `not_executed`: kein neuer Bauauftrag durch diesen Aufruf.
+Pause, fremde Baustellen, gesperrten Planer oder gemeldete Navigationsursache
+gezielt klären. `unconfirmed` bleibt ausschließlich lesend zu klären.
+Kein automatisches Retry. [Details und Livebelege](navigation-scope-0.61.md).
+
 ## Reparaturstart 0.60 — begrenzt live abgenommen
 
 0.60 unterscheidet bestätigte Startablehnung und ungewisse Ausführung.

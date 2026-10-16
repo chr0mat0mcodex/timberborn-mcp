@@ -167,7 +167,12 @@ public sealed class SiteValidation(PreviewFactory factory, BlockObjectValidation
                 roads.ObserveConstructionPreview(sample, cells);
             }
         }
-        catch { faulted = true; throw; }
+        catch (Exception ex) {
+            faulted = true;
+            Debug.LogError("[Timberborn Agent Bridge] Building validation failed: " + ex.GetType().Name +
+                " at " + ex.TargetSite?.DeclaringType?.FullName + "." + ex.TargetSite?.Name);
+            throw;
+        }
         finally
         {
             if (preview is not null)

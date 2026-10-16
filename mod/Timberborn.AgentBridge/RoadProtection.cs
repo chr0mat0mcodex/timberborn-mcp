@@ -42,9 +42,24 @@ public sealed class RoadProtection(EntityRegistry entities, ConstructionAccessPr
 
     public Sample Capture()
     {
+        try { return CaptureCore(); }
+        catch (Exception ex) {
+            // Local diagnostics only: no exception message, arguments, paths or entity data.
+            Debug.LogError("[Timberborn Agent Bridge] Navigation capture failed: " + ex.GetType().Name +
+                " at " + ex.TargetSite?.DeclaringType?.FullName + "." + ex.TargetSite?.Name);
+            throw;
+        }
+    }
+
+    private Sample CaptureCore()
+    {
         var sample = new Sample();
-        var all = entities.Entities.Where(e => e.Initialized && !e.Deleted && e.TryGetComponent<BlockObject>(out var b) && !b.IsPreview).Take(4097).ToArray();
-        if (all.Length > 4096) { sample.Reason = "navigation_object_limit"; return sample; }
+        // Scan the complete registry. Vegetation must not consume the access-probe budget.
+        // Keep every unfinished site; construction coverage must not disappear in this filter.
+        var all = RoadProtectionPolicy.CaptureCandidates(entities.Entities, e => e.Initialized && !e.Deleted &&
+            e.TryGetComponent<BlockObject>(out var b) && !b.IsPreview &&
+            RoadProtectionPolicy.NeedsObservation(b.IsUnfinished, e.HasComponent<DistrictCenter>(),
+                e.HasComponent<PathSpec>(), e.GetComponentsAllocating<Accessible>().Any()));
         sample.Districts = all.Where(e => e.GetComponent<BlockObject>().IsFinished && e.HasComponent<DistrictCenter>()).Select(e => e.GetComponent<DistrictCenter>()).ToArray();
         if (sample.Districts.Length is < 1 or > 16) { sample.Reason = "navigation_district_coverage_unknown"; return sample; }
         sample.Construction = construction.Capture(all, sample.Districts);
@@ -71,7 +86,8 @@ public sealed class RoadProtection(EntityRegistry entities, ConstructionAccessPr
             }
         }
         sample.Probes = probes.ToArray();
-        if (probes.Count == 0 || probes.Count * sample.Districts.Length > 16384) { sample.Reason = "navigation_comparison_limit"; return sample; }
+        if (probes.Count == 0) { sample.Reason = "navigation_no_probes"; return sample; }
+        if (probes.Count * sample.Districts.Length > 16384) { sample.Reason = "navigation_comparison_limit"; return sample; }
         sample.Before = Read(sample, false);
         sample.PreviewBefore = Read(sample, true);
         bool matches = sample.Before.SequenceEqual(sample.PreviewBefore);

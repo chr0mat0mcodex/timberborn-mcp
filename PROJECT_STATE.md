@@ -1,5 +1,22 @@
 # Projektstand
 
+## 0.61.0 — Objektgrenzen und Planungsfehler begrenzt live abgenommen
+
+Beide pauschalen 4.096-Kartenobjektgrenzen entfernt: Navigationsauswahl und
+Baustellenisolation. Mehrfache Accessible-Komponenten werden korrekt abgefragt.
+Konkrete Vorbedingungen werden bis MCP und Aktivitätszeile durchgereicht;
+unbestätigte Ausgänge bleiben unconfirmed. Menschliches Gate nach Korrekturen,
+installierte 0.61 und neue Sitzung bestätigt.
+Live: 3.404 Zugangsvergleiche auf der großen Karte, gültige kleine Vorschau,
+Höhenfehler abgelehnt, sieben verlorene Bestandsanschlüsse erkannt, gültiger
+Umweg ohne Zugangsverlust. Vorschauen restauriert, Sitzung nicht gesperrt.
+Pausenfehler bei Tempo 7 als project_plan_requires_pause/not_executed samt
+verständlicher Ergebniszeile bestätigt. Keine Bauaufträge erteilt.
+Reguläre Baufreigabe, Baustellen-/Liefernachweis und Grenzwert-Stresstest
+bleiben ausgeschlossen. Anleitung und lokale Hermes-Spielskillvorlage
+aktualisiert; Hermes-Integration bleibt zurückgestellt. Simulation wieder auf 7.
+[Umfang, Korrekturen und Livebelege](docs/navigation-scope-0.61.md).
+
 ## 0.60.0 — Reparaturstart-Diagnose begrenzt live abgenommen
 
 Der frühere `state_conflict` ist im neuen 0.59-Kontrollfall nicht reproduziert:

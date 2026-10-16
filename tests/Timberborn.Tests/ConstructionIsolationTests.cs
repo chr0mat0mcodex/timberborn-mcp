@@ -7,6 +7,27 @@ namespace Timberborn.Tests;
 
 public sealed class ConstructionIsolationTests
 {
+    [Fact]
+    public void DenseFinishedMapDoesNotHideLateForeignOrUnknownObjects()
+    {
+        var finished = Enumerable.Repeat((true,true,false,false), 10000);
+        Assert.Null(ConstructionIsolationPolicy.Blocker(true,finished));
+        Assert.Equal("foreign_construction",ConstructionIsolationPolicy.Blocker(true,finished.Append((true,false,true,false))));
+        Assert.Null(ConstructionIsolationPolicy.Blocker(true,finished.Append((true,false,true,true))));
+        Assert.Equal("construction_initialization_pending",ConstructionIsolationPolicy.Blocker(true,finished.Append((false,false,false,false))));
+        Assert.Equal("construction_state_unknown",ConstructionIsolationPolicy.Blocker(true,finished.Append((true,false,false,false))));
+        Assert.Equal("construction_inventory_incomplete",ConstructionIsolationPolicy.Blocker(false,finished));
+    }
+
+    [Theory]
+    [InlineData("foreign_construction","project_plan_foreign_construction")]
+    [InlineData("construction_initialization_pending","project_plan_construction_initialization_pending")]
+    [InlineData("construction_inventory_incomplete","project_plan_construction_inventory_incomplete")]
+    [InlineData("construction_state_unknown","project_plan_construction_state_unknown")]
+    [InlineData("private detail","project_plan_construction_state_unknown")]
+    public void IsolationReasonsReachPlanningWithoutInventingForeignSites(string reason,string expected) =>
+        Assert.Equal(expected,Assert.Throws<BridgeRejectionException>(() => LargeProjectPlanningPolicy.RequireIsolation(reason)).Code);
+
     [Theory]
     [InlineData(true, true, false, false, true)]
     [InlineData(true, false, true, false, false)]

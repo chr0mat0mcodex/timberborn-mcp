@@ -7,7 +7,19 @@ public static class ConstructionIsolationPolicy
 {
     public static bool Allows(bool complete,
         IEnumerable<(bool Initialized, bool Finished, bool Unfinished, bool Owned)> objects,
-        bool allowOwnedInitialization = false) =>
-        complete && objects.All(o => allowOwnedInitialization && o.Owned && !o.Initialized ||
-            o.Initialized && o.Finished != o.Unfinished && (o.Finished || o.Owned));
+        bool allowOwnedInitialization = false) => Blocker(complete, objects, allowOwnedInitialization) is null;
+
+    public static string? Blocker(bool complete,
+        IEnumerable<(bool Initialized, bool Finished, bool Unfinished, bool Owned)> objects,
+        bool allowOwnedInitialization = false)
+    {
+        if (!complete) return "construction_inventory_incomplete";
+        foreach (var o in objects) {
+            if (allowOwnedInitialization && o.Owned && !o.Initialized) continue;
+            if (!o.Initialized) return "construction_initialization_pending";
+            if (o.Finished == o.Unfinished) return "construction_state_unknown";
+            if (o.Unfinished && !o.Owned) return "foreign_construction";
+        }
+        return null;
+    }
 }

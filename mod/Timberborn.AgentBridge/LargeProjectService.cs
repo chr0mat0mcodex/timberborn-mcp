@@ -42,10 +42,10 @@ public sealed partial class LargeProjectService(BuildingCatalog catalog, Preview
     private static string Hash(string value) {using var hash=SHA256.Create();return BitConverter.ToString(hash.ComputeHash(Encoding.UTF8.GetBytes(value))).Replace("-","").ToLowerInvariant();}
     private static string Fingerprint(LargeProjectRequest r)=>r.Session+"|"+r.DistrictId+"|"+LargeProjectRequest.Encode(r.Steps);
     private static string EntityId(string action,int index) {using var hash=SHA256.Create();return new Guid(hash.ComputeHash(Encoding.UTF8.GetBytes(action+"|large-project|"+index)).Take(16).ToArray()).ToString("D");}
-    private DistrictCenter District(string id)
+    private DistrictCenter District(string id, bool planning = false)
     {
         var e=entities.Entities.SingleOrDefault(e=>!e.Deleted&&e.Initialized&&e.EntityId.ToString("D")==id);
-        if(e is null || !e.TryGetComponent<DistrictCenter>(out var district) || !e.TryGetComponent<BlockObject>(out var b) || !b.IsFinished || b.IsPreview) throw new BridgeRejectionException("state_conflict");
+        if(e is null || !e.TryGetComponent<DistrictCenter>(out var district) || !e.TryGetComponent<BlockObject>(out var b) || !b.IsFinished || b.IsPreview) throw new BridgeRejectionException(planning ? "project_plan_district_unavailable" : "state_conflict");
         return district;
     }
     private TemplateSpec Resolve(LargeProjectStep step)
@@ -70,7 +70,8 @@ public sealed partial class LargeProjectService(BuildingCatalog catalog, Preview
             if(r.Operation=="stop") { batches[r.ActionId].Stop(); UpdateBatch(r.ActionId); return BatchReceipt(r.ActionId); }
             throw new BridgeRejectionException("state_conflict");
         }
-        if(activeBatch is not null && r.Operation is ("plan" or "start" or "advance")) throw new BridgeRejectionException("state_conflict");
+        if(activeBatch is not null && r.Operation is ("plan" or "start" or "advance"))
+            throw new BridgeRejectionException(r.Operation=="advance" ? "state_conflict" : "project_plan_busy");
         if(r.Operation=="plan") return Plan(r);
         if(r.Operation=="inspect") return Receipt(r.ActionId);
         if(r.Operation=="stop") {ledger.Stop(r.ActionId);return Receipt(r.ActionId);}
@@ -80,7 +81,7 @@ public sealed partial class LargeProjectService(BuildingCatalog catalog, Preview
             if(jobs.Count>=128 || BatchesBlockNewProject)throw new BridgeRejectionException("state_conflict");
             var plan=Plan(r);
             if((string?)plan["planKey"]!=r.PlanKey || (bool?)plan["pilotEligible"]!=true) throw new BridgeRejectionException("state_conflict");
-            var baseline=roads.Capture();if(!baseline.Complete)throw new BridgeRejectionException("state_conflict");
+            var baseline=roads.Capture();LargeProjectPlanningPolicy.RequireBaseline(baseline.Complete, baseline.Reason);
             var ids=Enumerable.Range(0,r.Steps.Length).Select(i=>EntityId(r.ActionId,i)).ToArray();
             if(entities.Entities.Any(e=>ids.Contains(e.EntityId.ToString("D"))))throw new BridgeRejectionException("state_conflict");
             ledger.Start(r.ActionId,r.PlanKey,Fingerprint(r),LargeProjectRequest.Order(r.Steps),ids);
@@ -150,8 +151,9 @@ public sealed partial class LargeProjectService(BuildingCatalog catalog, Preview
     }
     private JObject Plan(LargeProjectRequest r, string[]? ownedSites = null)
     {
-        if(faulted||speed.CurrentSpeed!=0||!ConstructionIsolation.Allows(entities, ownedSites))throw new BridgeRejectionException("state_conflict");
-        var district=District(r.DistrictId);var order=LargeProjectRequest.Order(r.Steps);
+        LargeProjectPlanningPolicy.RequireAvailable(faulted, speed.CurrentSpeed==0, false, true);
+        LargeProjectPlanningPolicy.RequireIsolation(ConstructionIsolation.Blocker(entities, ownedSites));
+        var district=District(r.DistrictId, planning: true);var order=LargeProjectRequest.Order(r.Steps);
         var templates=r.Steps.Select(Resolve).ToArray();
         var cells=r.Steps.Select((s,i)=>templates[i].GetSpec<BlockObjectSpec>().GetBlocks(Placement(s)).Take(BuildingPolicy.MaxGeometryCells + 1).ToArray()).ToArray();
         if(cells.Any(c=>c.Length is <1 or >BuildingPolicy.MaxGeometryCells))throw new ArgumentException("project_occupied_extent_limit");
@@ -159,7 +161,7 @@ public sealed partial class LargeProjectService(BuildingCatalog catalog, Preview
         if(cells.Any(c=>c.Length is <1 or >BuildingPolicy.MaxGeometryCells)||cells.SelectMany(c=>c).Any(c=>!blocks.Contains(c.Coordinates)||c.Coordinates.z-minZ>=8)||
             cells.SelectMany(c=>c).Max(c=>c.Coordinates.x)-cells.SelectMany(c=>c).Min(c=>c.Coordinates.x)>=32||
             cells.SelectMany(c=>c).Max(c=>c.Coordinates.y)-cells.SelectMany(c=>c).Min(c=>c.Coordinates.y)>=32)throw new ArgumentException("project_occupied_extent_limit");
-        var baseline=roads.Capture();if(!baseline.Complete)throw new BridgeRejectionException("state_conflict");
+        var baseline=roads.Capture();LargeProjectPlanningPolicy.RequireBaseline(baseline.Complete, baseline.Reason);
         var before=entities.Entities.Where(e=>!e.Deleted).Select(e=>e.EntityId).ToHashSet();
         var beforeStock=Stocks();
         var existingNodes=entities.Entities.Where(e=>!e.Deleted&&e.Initialized&&e.TryGetComponent<BlockObject>(out var b)&&!b.IsPreview)

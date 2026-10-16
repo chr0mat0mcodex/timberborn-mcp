@@ -39,7 +39,7 @@ public sealed partial class LargeProjectService
         }
         LargeProjectStartPolicy.RequirePlan((string?)plan["planKey"], r.PlanKey, (bool?)plan["pilotEligible"] == true);
         var baseline = roads.Capture();
-        if (!baseline.Complete) throw new BridgeRejectionException("project_start_baseline_unavailable");
+        LargeProjectPlanningPolicy.RequireBaseline(baseline.Complete, baseline.Reason);
         var ids = Enumerable.Range(0, r.Steps.Length).Select(i => EntityId(r.ActionId, i)).ToArray();
         if (entities.Entities.Any(e => ids.Contains(e.EntityId.ToString("D")))) throw new BridgeRejectionException("project_start_entity_conflict");
         var batch = new LargeProjectBatch(r, BatchFingerprint(r), ids);
