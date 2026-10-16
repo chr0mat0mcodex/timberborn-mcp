@@ -23,15 +23,25 @@ public sealed partial class LargeProjectService
             if (existing.Fingerprint != BatchFingerprint(r)) throw new BridgeRejectionException("state_conflict");
             return BatchReceipt(r.ActionId); // Same identity never places, restarts or enlarges budgets.
         }
-        if (jobs.ContainsKey(r.ActionId) || activeBatch is not null || jobs.Count >= 128 || (r.Operation != "run-repair" && (ledger.BlocksNewProject || BatchesBlockNewProject)))
-            throw new BridgeRejectionException("state_conflict");
-        simulation.RequireBatchAvailable();
-        var plan = r.Operation == "run-repair" ? PlanRepair(r) : Plan(r);
-        if ((string?)plan["planKey"] != r.PlanKey || (bool?)plan["pilotEligible"] != true) throw new BridgeRejectionException("state_conflict");
+        if (jobs.ContainsKey(r.ActionId)) throw new BridgeRejectionException("project_start_identity_conflict");
+        if (activeBatch is not null) throw new BridgeRejectionException("project_start_busy");
+        if (jobs.Count >= 128) throw new BridgeRejectionException("project_start_capacity");
+        if (r.Operation != "run-repair" && (ledger.BlocksNewProject || BatchesBlockNewProject))
+            throw new BridgeRejectionException("project_start_unresolved");
+        try { simulation.RequireBatchAvailable(); }
+        catch (BridgeRejectionException ex) when (ex.Code == "state_conflict") {
+            throw new BridgeRejectionException("project_start_simulation_unavailable");
+        }
+        JObject plan;
+        try { plan = r.Operation == "run-repair" ? PlanRepair(r) : Plan(r); }
+        catch (BridgeRejectionException ex) when (ex.Code == "state_conflict") {
+            throw new BridgeRejectionException("project_start_preflight_conflict");
+        }
+        LargeProjectStartPolicy.RequirePlan((string?)plan["planKey"], r.PlanKey, (bool?)plan["pilotEligible"] == true);
         var baseline = roads.Capture();
-        if (!baseline.Complete) throw new BridgeRejectionException("state_conflict");
+        if (!baseline.Complete) throw new BridgeRejectionException("project_start_baseline_unavailable");
         var ids = Enumerable.Range(0, r.Steps.Length).Select(i => EntityId(r.ActionId, i)).ToArray();
-        if (entities.Entities.Any(e => ids.Contains(e.EntityId.ToString("D")))) throw new BridgeRejectionException("state_conflict");
+        if (entities.Entities.Any(e => ids.Contains(e.EntityId.ToString("D")))) throw new BridgeRejectionException("project_start_entity_conflict");
         var batch = new LargeProjectBatch(r, BatchFingerprint(r), ids);
         // Start owns the one simulation controller; no second runner can compete for speed.
         var run = simulation.StartBatch(r);

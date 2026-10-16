@@ -7,11 +7,29 @@ description: Timberborn über die vorhandene Hermes-MCP-Verbindung steuern; Test
 
 ## Stand und Geltung
 
-Fachlich aktualisiert am 16. Oktober 2026: Projektstand 0.59 begrenzt live
-abgenommen: Gebäudepause, Ein-Stunden-Lauf, Pflanzbeleg sowie Bau-Einzelprojekt und Baucharge; Ergebniszeilen lesbar bestätigt.
+Fachlich aktualisiert am 16. Oktober 2026: Projektstand 0.60 begrenzt live
+abgenommen: zusätzlich konkrete Startablehnung und erfolgreicher Reparaturabschluss;
+Ergebniszeilen lesbar bestätigt. Vorherige Nachweise für Gebäudepause, Simulation,
+Pflanzbeleg, Bau-Einzelprojekt und Baucharge bleiben im dokumentierten Umfang gültig.
 Diese lokale Hermes-Skillvorlage bleibt ein zurückgestellter Integrationsentwurf.
 Die Dokumentationspflege bestätigt weder Hermes-Kompatibilität noch Installation.
 Installierte Version, geladene Werkzeuge und echte Rückgaben sind maßgeblich.
+
+## Reparaturstart ab 0.60 (begrenzt live abgenommen)
+
+Bei konkretem Startfehler und `execution=not_executed` hat dieser direkte
+Großprojekt-/Reparaturstart keinen neuen Bauauftrag erteilt. Vorhandene Aufträge
+bleiben bestehen. `project_start_plan_changed`: frisch lesen und neu planen;
+`repair_parent_ineligible`: Elternprojekt diagnostizieren. Andere gemeldete
+Vorbedingungen zuerst klären; keine automatische Wiederholung. Bei `unconfirmed`
+weiterhin nur lesend klären. Die Ergebniszeile erklärt den Grund auch ingame.
+
+Ein zusätzlicher 0.59-Kontrollfall mit stabilen Reparaturvorschauen, erfolgreichem
+Start, Helfer-/Elternabschluss und bestätigter Pause gelang. Der frühere sporadische
+`state_conflict` bleibt ursächlich ungeklärt; keine allgemeine Reparaturfreigabe
+daraus ableiten. Unter 0.60 falscher Planschlüssel ohne Bauauftrag abgewiesen;
+frisch geplanter gültiger Lauf bis Helfer-/Elternabschluss und Freigabe geprüft,
+Pause bestätigt. Zwölf Ergebniszeilen in beiden Dateilogs identisch; Ingame-Lesbarkeit vom Menschen bestätigt. [Befund und Livebelege](../repair-start-0.60.md).
 
 ## Verbindung verwenden
 
@@ -123,7 +141,8 @@ aktuell geladenen Werkzeugschema erkennen, nicht allein an der Bridge-Version.
   aufgegeben. Alle geprüften Ergebniszeilen ingame lesbar bestätigt.
   Zusätzlich Räumgruppe (sechs Stümpfe, danach Lager/Weg), Spielzeitbudgetende und
   stop_building_batch live geprüft. Reparaturvorschau zulässig, Start jedoch
-  state_conflict/unconfirmed: kein erfolgreicher Reparaturabschluss. Vor Retry
+  state_conflict/unconfirmed: in dieser Probe kein erfolgreicher Reparaturabschluss.
+  Späterer unabhängiger Kontrollfall erfolgreich, siehe Abschnitt 0.60. Vor Retry
   lesend klären und Ablehnungsursache diagnostizieren, nicht mit neuer ID umgehen.
   Andere Teilfehler und lange Räumläufe nicht pauschal abgenommen. Ergebniszeilen für
   Einzelprojekte, Bauchargen, Großprojekte und Räum-/Baugruppen. Auftrags-`completed` ist kein Fertigbau.

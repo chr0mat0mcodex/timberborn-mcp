@@ -119,12 +119,15 @@ public sealed partial class LargeProjectService
 
     private JObject PlanRepair(LargeProjectRequest r)
     {
+        if (!jobs.ContainsKey(r.ParentActionId)) throw new BridgeRejectionException("repair_parent_ineligible");
         var report = Diagnose(r.ParentActionId);
-        if ((bool?)report["repairEligible"] != true || jobs[r.ParentActionId].Request.DistrictId != r.DistrictId ||
-            r.Steps.Any(s=>!LargeProjectRecoveryPolicy.AccessHelper(s.Template))) throw new BridgeRejectionException("state_conflict");
+        if ((bool?)report["repairEligible"] != true) throw new BridgeRejectionException("repair_parent_ineligible");
+        if (jobs[r.ParentActionId].Request.DistrictId != r.DistrictId) throw new BridgeRejectionException("repair_district_mismatch");
+        if (r.Steps.Any(s=>!LargeProjectRecoveryPolicy.AccessHelper(s.Template))) throw new BridgeRejectionException("repair_helpers_only");
         // Only the chosen parent may be unresolved. No unrelated ledger or nested repair bypass.
-        if (repairParents.ContainsKey(r.ParentActionId) || jobs.Keys.Any(id=>id!=r.ParentActionId && !releasedProjects.Contains(id) &&
-            State(id)!="completed" && !(State(id)=="stopped" && Recorded(id).All(s=>s=="pending")))) throw new BridgeRejectionException("state_conflict");
+        if (repairParents.ContainsKey(r.ParentActionId)) throw new BridgeRejectionException("repair_nested");
+        if (jobs.Keys.Any(id=>id!=r.ParentActionId && !releasedProjects.Contains(id) &&
+            State(id)!="completed" && !(State(id)=="stopped" && Recorded(id).All(s=>s=="pending")))) throw new BridgeRejectionException("repair_other_project_unresolved");
         var owned = Ids(r.ParentActionId).Where((_,i)=>Recorded(r.ParentActionId)[i]!="pending").ToArray();
         var plan = Plan(r, owned);
         plan["parentActionId"] = r.ParentActionId;

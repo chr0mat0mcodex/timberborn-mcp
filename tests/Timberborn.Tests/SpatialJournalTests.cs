@@ -83,7 +83,7 @@ public sealed class SpatialJournalTests
         var args=JsonSerializer.SerializeToElement(new{session=Session,detail="full"});
         Assert.Equal(args.GetRawText(),ResponsePresentation.ReadRequest(RecentActionsTools.Name,args).Arguments.GetRawText());
     }
-    [Theory] [InlineData("0.54.0")] [InlineData("0.55.0")] [InlineData("0.56.0")] [InlineData("0.57.0")] [InlineData("0.58.0")] [InlineData("0.59.0")]
+    [Theory] [InlineData("0.54.0")] [InlineData("0.55.0")] [InlineData("0.56.0")] [InlineData("0.57.0")] [InlineData("0.58.0")] [InlineData("0.59.0")] [InlineData("0.60.0")]
     public async Task SpatialCoverageRemainsRequiredAcrossVersionChange(string version) {
         var request=RecentActionsRequest.Parse(new NameValueCollection{{"session",Session}});
         using var client=new NativeClient(new(8081,new string('a',64)),new Reply(Data(),version));

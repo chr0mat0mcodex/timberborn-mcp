@@ -13,7 +13,7 @@ public sealed partial class NativeClient
     public async Task<BridgeEnvelope<NativeScreenshot>> Screenshot(ScreenshotRequest r,CancellationToken ct) {
         var e=await Get<NativeScreenshot>($"screenshot?session={r.Session}&maxWidth={r.MaxWidth}&maxHeight={r.MaxHeight}",ct,
             maxResponseBytes:ScreenshotRequest.MaxResponseBytes);
-        if(e.BridgeVersion is not ("0.36.0" or "0.37.0" or "0.38.0" or "0.39.0" or "0.40.0" or "0.41.0" or "0.42.0" or "0.43.0" or "0.44.0" or "0.45.0" or "0.46.0" or "0.47.0" or "0.48.0" or "0.49.0" or "0.50.0" or "0.51.0" or "0.52.0" or "0.53.0" or "0.54.0" or "0.55.0" or "0.56.0" or "0.57.0" or "0.58.0" or "0.59.0")) throw new InvalidDataException("Unsupported screenshot bridge");
+        if(e.BridgeVersion is not ("0.36.0" or "0.37.0" or "0.38.0" or "0.39.0" or "0.40.0" or "0.41.0" or "0.42.0" or "0.43.0" or "0.44.0" or "0.45.0" or "0.46.0" or "0.47.0" or "0.48.0" or "0.49.0" or "0.50.0" or "0.51.0" or "0.52.0" or "0.53.0" or "0.54.0" or "0.55.0" or "0.56.0" or "0.57.0" or "0.58.0" or "0.59.0" or "0.60.0")) throw new InvalidDataException("Unsupported screenshot bridge");
         if(e.SessionId!=r.Session) throw new BridgeRejectionException("stale_session");
         ValidateScreenshot(e.Data,r);
         return e;

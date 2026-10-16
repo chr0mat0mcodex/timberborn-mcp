@@ -1,5 +1,25 @@
 # Projektstand
 
+## 0.60.0 — Reparaturstart-Diagnose begrenzt live abgenommen
+
+Der frühere `state_conflict` ist im neuen 0.59-Kontrollfall nicht reproduziert:
+stabile Vorschau, Reparatur gestartet und abgeschlossen, Elternprojekt frisch
+mit 2/2 fertig/zugänglich freigegeben, Pause bestätigt. Ursache des alten
+Einzelfalls bleibt offen. Keine spekulative Lockerung der Startprüfungen.
+0.60 behebt die pauschale Unbestätigt-Rückmeldung für eindeutig vor dem ersten
+Bauauftrag abgewiesene Starts: konkrete Fehlercodes und lesbarer Grund auch
+ingame. Unsichere Antworten bleiben unconfirmed; kein automatisches Retry.
+Menschliches Gate durchlaufen, installierte 0.60 und neue Sitzung bestätigt.
+Falscher Planschlüssel korrekt als not_executed abgewiesen: kein neuer Weg,
+kein Projektbeleg, unveränderte Spielzeit und Pause. Frisch geplanter gültiger
+Reparaturlauf nach rund 8,34 Spielstunden abgeschlossen; Weg und Elternlager
+frisch fertig/zugänglich, Elternprojekt freigegeben, Pause bestätigt.
+Zwölf Ergebniszeilen in beiden Dateilogs identisch, keine Schreibverluste.
+Mensch bestätigt Ablehnungs- und Reparaturabschlusszeile vollständig und verständlich lesbar.
+Anleitung und lokale Hermes-Spielskillvorlage aktualisiert;
+Hermes-Integration bleibt uninstalliert/unabgenommen.
+[Befund, Grenzen und Livepilot](docs/repair-start-0.60.md).
+
 ## 0.59.0 — Bau-Ergebniszeilen begrenzt live abgenommen
 
 Einzelprojekte, Bauchargen, große Projekte und Räum-/Baugruppen erhalten lesbare

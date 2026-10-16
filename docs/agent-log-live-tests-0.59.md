@@ -1,5 +1,9 @@
 # Zusatzprotokoll 0.59 — 16. Oktober 2026
 
+Nachtrag: Ein späterer unabhängiger Reparaturkontrollfall mit derselben installierten
+0.59 gelang bis Abschluss und Elternfreigabe. Der unten dokumentierte Fehler bleibt
+unverändert belegt und ursächlich ungeklärt. [Nachweis und 0.60-Diagnoseänderung](repair-start-0.60.md).
+
 Native MCP-Liveproben auf dem Westufer des freigegebenen Testspielstands.
 Bridge 0.59, dieselbe Sitzung wie beim vorherigen Großprojekt-/Stoppnachweis.
 Kein neuer Build, keine Installation, keine Speicherung durch den Agenten.

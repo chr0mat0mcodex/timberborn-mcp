@@ -1,6 +1,26 @@
 # Spielanleitung für Agenten
 
-## Aktueller Stand: 0.59 begrenzt live abgenommen
+## Reparaturstart 0.60 — begrenzt live abgenommen
+
+0.60 unterscheidet bestätigte Startablehnung und ungewisse Ausführung.
+Bei `run_large_project_repair`/`run_large_project` bedeutet `not_executed` mit
+konkretem Startfehler: dieser Aufruf hat keinen neuen Bauauftrag erteilt.
+`project_start_plan_changed`: Zustand frisch lesen, Reparaturvorschau neu erstellen
+und fachlich beurteilen. `repair_parent_ineligible`: Elternprojekt diagnostizieren.
+Andere Gründe wie fremdes offenes Projekt, falscher Distrikt oder belegte
+Simulation zuerst klären. Kein automatisches Retry; frühere Aufträge bleiben bestehen.
+Bei `unconfirmed` weiterhin ausschließlich lesend klären, niemals erneut starten.
+Der Grund erscheint als verständliche Ergebniszeile auch ingame und in Dateilogs.
+
+Der ursprüngliche 0.59-Konflikt ist nicht als behoben nachgewiesen. Neuer 0.59-Pilot:
+zwei gleiche Vorschauen mit stabilem Schlüssel, erfolgreicher Reparaturstart,
+Helfer und Elternbaustelle abgeschlossen, Pause und Elternfreigabe bestätigt.
+Kein Nachweis für Reparatur tatsächlich zerstörter Zugänge. Unter 0.60 zusätzlich
+falscher Planschlüssel korrekt ohne Bauauftrag abgewiesen und gültiger Reparatur-
+lauf bis Weg-/Elternabschluss, Pause und Freigabe geprüft. Zwölf Ergebniszeilen
+in beiden Dateilogs identisch. Mensch bestätigt Ablehnungs- und Abschlusszeile vollständig und verständlich lesbar. [Befund und Livebelege](repair-start-0.60.md).
+
+## Abgenommener Stand: 0.59 begrenzt live abgenommen
 
 Stand 16. Oktober 2026: 0.55–0.59 sind im dokumentierten Umfang live abgenommen.
 0.58: Gebäudepause, Ein-Stunden-Lauf und Pflanzbeleg live geprüft; Mensch bestätigt die Ergebniszeilen.
@@ -57,7 +77,8 @@ dann bestätigte Pause. Nach Fertigbau der vorhandenen Baustelle Freigabe mit 3/
 der vierte Auftrag bleibt aufgegeben. Freigabe ist kein vollständiger Fertigbau.
 Zusätzlich live geprüft: Räumgruppe mit sechs Stümpfen, Spielzeitbudgetende und
 separater Bauchargenstopp. Reparaturvorschau erfolgreich, Start mit state_conflict
-abgewiesen; kein Reparaturerfolg belegt. Unbestätigten Start nur lesend klären,
+abgewiesen; in dieser Probe kein Reparaturerfolg belegt. Ein späterer unabhängiger
+Kontrollfall gelang, siehe Abschnitt 0.60. Unbestätigten Start nur lesend klären,
 nicht wiederholen. Zeitlimit-/Stopgrund im Kurztext noch allgemein, Fachbericht
 lesen. Andere Teilfehler und längere Räumläufe nicht pauschal abgenommen.
 [Zusatzprotokoll](agent-log-live-tests-0.59.md). Auftragsstatus
