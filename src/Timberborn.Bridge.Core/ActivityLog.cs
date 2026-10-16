@@ -11,6 +11,7 @@ public sealed class ActivityRequest
     public string Session { get; private set; } = "";
     public string Reasoning { get; private set; } = "";
     public string Summary { get; private set; } = "";
+    public ActivityCorrelation[] Correlations { get; private set; } = Array.Empty<ActivityCorrelation>();
     public static bool IsState(string state) => state is "running" or "ok" or "applied" or "rejected" or "unconfirmed" or "error" or "cancelled";
     public static string Decode(string? encoded, int limit)
     {
@@ -28,9 +29,10 @@ public sealed class ActivityRequest
     public static ActivityRequest Parse(NameValueCollection q)
     {
         string Read(string key) { var values=q.GetValues(key); if(values is null || values.Length!=1)throw new ArgumentException();return values[0]!; }
-        if(q.Count!=6)throw new ArgumentException();
+        if(q.AllKeys.Any(k=>k is not ("id" or "tool" or "state" or "session" or "reasoning" or "summary" or "correlation")))throw new ArgumentException();
         var r=new ActivityRequest { Id=Read("id"), Tool=Read("tool"), State=Read("state"), Session=Read("session"),
             Reasoning=Clean(Read("reasoning"),600), Summary=Clean(Read("summary"),400) };
+        if(q.GetValues("correlation") is not null)r.Correlations=ActivityCorrelation.Decode(Read("correlation"));
         if(!Guid.TryParseExact(r.Id,"D",out var id)||id==Guid.Empty || r.Tool.Length is <1 or >80 ||
             r.Tool.Any(c=>!(c is >= 'a' and <= 'z' or >= '0' and <= '9' or '_')) || !IsState(r.State) ||
             (r.State=="running" ? r.Session!="" : !Guid.TryParseExact(r.Session,"D",out var session)||session==Guid.Empty))throw new ArgumentException();
@@ -38,8 +40,9 @@ public sealed class ActivityRequest
     }
 }
 
-public sealed class ActivityEntry(string id, string tool, string state, string reasoning, string summary, DateTimeOffset startedAtUtc, DateTimeOffset updatedAtUtc, long sequence = 0)
+public sealed class ActivityEntry(string id, string tool, string state, string reasoning, string summary, DateTimeOffset startedAtUtc, DateTimeOffset updatedAtUtc, long sequence = 0, ActivityCorrelation[]? correlations = null)
 {
+    public ActivityCorrelation[]? Correlations { get; } = correlations;
     public long Sequence { get; } = sequence;
     public string Id { get; } = id;
     public string Tool { get; } = tool;
@@ -60,7 +63,8 @@ public sealed class ActivityLog
     private long evictedThrough;
     public long Revision { get; private set; }
     public ActivityEntry[] Snapshot()=>entries.ToArray();
-    public static object Payload(ActivityEntry e)=>new { id=e.Id, tool=e.Tool, state=e.State, reasoning=e.Reasoning, summary=e.Summary, startedAtUtc=e.StartedAtUtc, updatedAtUtc=e.UpdatedAtUtc, sequence=e.Sequence };
+    public static object Payload(ActivityEntry e)=>new { id=e.Id, tool=e.Tool, state=e.State, reasoning=e.Reasoning, summary=e.Summary, startedAtUtc=e.StartedAtUtc, updatedAtUtc=e.UpdatedAtUtc, sequence=e.Sequence,
+        correlations=(e.Correlations??Array.Empty<ActivityCorrelation>()).Select(ActivityCorrelation.Payload).ToArray() };
     public void Clear(){entries.Clear();epoch=Guid.NewGuid().ToString("N");sequence=0;evictedThrough=0;Revision++;}
     public object Read(ActivityLogQuery query, bool windowVisible, bool uiAttached)
     {
@@ -72,17 +76,17 @@ public sealed class ActivityLog
             before=cursor.Before;
         }
         var matches=entries.AsEnumerable().Reverse().Where(e=>e.Sequence<before &&
-            (query.Tool.Length==0||e.Tool==query.Tool) && (query.State.Length==0||e.State==query.State)).ToArray();
+            (query.Tool.Length==0||e.Tool==query.Tool) && (query.State.Length==0||e.State==query.State) && query.Matches(e)).ToArray();
         var page=matches.Take(query.Limit).ToArray();
         bool hasMore=matches.Length>page.Length;
         long unavailableBeforeCursor=Math.Min(before-1,evictedThrough);
         return new { capacity=Capacity, items=page.Select(Payload).ToArray(), revision=Revision, windowVisible, uiAttached,
-            paginationVersion=1, logEpoch=epoch, retainedCount=entries.Count, evictedCount=evictedThrough,
+            paginationVersion=1, correlationVersion=1, logEpoch=epoch, retainedCount=entries.Count, evictedCount=evictedThrough,
             oldestSequence=entries.Count==0 ? (long?)null : entries[0].Sequence,
             newestSequence=entries.Count==0 ? (long?)null : entries[entries.Count-1].Sequence,
             hasMore, nextCursor=hasMore?query.EncodeCursor(epoch,page[page.Length-1].Sequence):null,
             gapDetected=unavailableBeforeCursor>0, unavailableBeforeCursor,
-            tool=query.Tool, state=query.State };
+            tool=query.Tool, state=query.State, projectId=query.ProjectId, runId=query.RunId };
     }
     public bool Record(ActivityRequest r, DateTimeOffset now)
     {
@@ -90,12 +94,13 @@ public sealed class ActivityLog
         if(r.State=="running") {
             if(index>=0)return false;
             if(entries.Count==Capacity){evictedThrough=entries[0].Sequence;entries.RemoveAt(0);}
-            entries.Add(new(r.Id,r.Tool,r.State,r.Reasoning,r.Summary,now,now,++sequence));
+            entries.Add(new(r.Id,r.Tool,r.State,r.Reasoning,r.Summary,now,now,++sequence,r.Correlations));
         } else {
             if(index<0)return false; // Cleared/evicted calls must not reappear.
             var old=entries[index];
             if(old.State!="running" || old.Tool!=r.Tool)return false;
-            entries[index]=new(old.Id,old.Tool,r.State,old.Reasoning,old.Summary,old.StartedAtUtc,now,old.Sequence);
+            var correlations=ActivityCorrelation.Merge(old.Correlations??Array.Empty<ActivityCorrelation>(),r.Correlations);
+            entries[index]=new(old.Id,old.Tool,r.State,old.Reasoning,old.Summary,old.StartedAtUtc,now,old.Sequence,correlations);
         }
         Revision++;return true;
     }

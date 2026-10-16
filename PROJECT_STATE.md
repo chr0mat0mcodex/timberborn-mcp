@@ -1,5 +1,16 @@
 # Projektstand
 
+## 0.56.0 — Projekt-/Laufkorrelation begrenzt live abgenommen
+
+2026-10-16: Explizite Projekt-, Elternprojekt- und Laufbezüge mit Herkunft
+request/result, kombinierte ID-Filter und Anzeige im vorhandenen Ingame-Log
+implementiert. Nach menschlicher Bereitmeldung MCP-Liveproben bestanden:
+Ein-Stunden-Lauf mit Pause, Anfrage-/Ergebnisherkunft, Projektablehnung,
+UND-Filter und Cursorbindung. Mensch bestätigt Ingame-Kennung und Herkunftslabels
+als lesbar. Schließpfad des Vorschaltprozesses ohne unnötiges Statusschreiben
+korrigiert; ursprüngliche Windows-Sperrursache bleibt unbekannt.
+[Umfang, Grenzen und Pilot](docs/agent-log-correlation-0.56.md).
+
 ## 0.55.0 — B10 Agentenlog begrenzt live abgenommen
 
 2026-10-16: Nach xUnit2013-Korrektur menschliche Gate-Freigabe durch `live bereit`;

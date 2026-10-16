@@ -216,10 +216,12 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
         var id=Guid.NewGuid().ToString("D");var detail=ActivityTools.Describe(args);
         // Unknown names are never allowed to inject arbitrary text into the game log.
         var displayName=name.Length is >0 and <=80 && name.All(c=>c is >= 'a' and <= 'z' or >= '0' and <= '9' or '_')?name:"unknown_tool";
-        var logSession=await client.TryRecordActivity(id,displayName,"running","",detail.Reasoning,detail.Summary);
+        var references=ActivityCorrelationTools.Request(name,args);
+        var logSession=await client.TryRecordActivity(id,displayName,"running","",detail.Reasoning,detail.Summary,references);
         string state="error";
         try {
             var result=await Invoke(name,args,ct);
+            references=ActivityCorrelationTools.Result(name,result);
             state=result["status"]?.GetValue<string>()=="error"?(BridgeRejectionException.IsCode(result["error"]?["code"]?.GetValue<string>())?"rejected":"error"):result["data"]?["outcome"]?.GetValue<string>() is "applied" or "rejected" or "unconfirmed" ? result["data"]!["outcome"]!.GetValue<string>() : "ok";
             if(result["error"]?["execution"]?.GetValue<string>()=="unconfirmed")state="unconfirmed";
             if(BuildingConfigurationTools.Handles(name) && (result["data"]?["outcome"]?.GetValue<string>()=="partial" || result["data"]?["proofState"]?.GetValue<string>()=="unconfirmed"))state="unconfirmed";
@@ -230,7 +232,7 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
         } catch(OperationCanceledException){state="cancelled";throw;}
         finally {
             if(logSession is not null) {
-                var logged=await client.TryRecordActivity(id,displayName,state,logSession,"","");
+                var logged=await client.TryRecordActivity(id,displayName,state,logSession,"","",references);
                 if(logged is null)Console.Error.WriteLine("MCP activity completion could not be recorded; do not retry the action.");
             } else Console.Error.WriteLine("Ingame MCP activity log unavailable for this call.");
         }

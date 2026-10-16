@@ -10,7 +10,7 @@ public sealed partial class NativeClient
         if(r.Operation!="status")route+="&rectangles="+E(r.Rows());
         if(r.Operation=="apply")route+="&key="+E(r.Key);
         var e=await Get<PlantingBatchReport>(route,ct,r.Operation=="apply"?HttpMethod.Post:HttpMethod.Get,maxResponseBytes:PlantingBatchRequest.MaxResponseBytes);
-        if(e.BridgeVersion is not ("0.53.0" or "0.54.0" or "0.55.0")||e.SessionId!=r.Session)throw new InvalidDataException("planting_version_or_session");
+        if(e.BridgeVersion is not ("0.53.0" or "0.54.0" or "0.55.0" or "0.56.0")||e.SessionId!=r.Session)throw new InvalidDataException("planting_version_or_session");
         PlantingBatchContract.Validate(e.Data,r);return e;
     }
 }

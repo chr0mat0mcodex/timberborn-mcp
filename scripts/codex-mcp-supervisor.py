@@ -433,7 +433,12 @@ class Supervisor:
     def close(self):
         self.closed.set()
         self.watcher.join(timeout=6)
-        self.stop()
+        # This frontend is leaving, not acknowledging a gate. Stop the owned
+        # child before removing the registry; do not replace a file just to
+        # delete it immediately afterwards (another avoidable Windows lock).
+        self.stop(publish=False)
+        if self.watcher.is_alive():
+            raise RuntimeError("Supervisor watcher did not stop; registry retained")
         with lifecycle_file_lock(self.registry):
             self.registry.unlink(missing_ok=True)
 

@@ -378,6 +378,11 @@ sind unter 0.21.1 live belegt. Nachweise und Grenzen stehen in den Fachdokumente
 - `inspect_research`
 - `inspect_agent_log`
 
+  0.56 begrenzt live abgenommen: `projectId` und `runId` als kombinierte Filter;
+  `correlations` trennt angefragte und im Ergebnis gemeldete Bezüge. Dieselben
+  Kennungen erscheinen im Ingame-Fenster MCP-Aufrufe. Keine Existenz-/Wirkungsgarantie.
+  [Umfang und Gate](agent-log-correlation-0.56.md).
+
   0.55 begrenzt live abgenommen: `limit` 1–32, exakte `tool`-/`state`-Filter und `cursor`.
   `nextCursor` blättert bis zu 128 gespeicherte Aufrufe in Startreihenfolge;
   `gapDetected` und `unavailableBeforeCursor` melden verdrängte ältere Aufrufe

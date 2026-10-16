@@ -14,7 +14,7 @@ public sealed class NativeClearedGroupPort(NativeClient client) : IClearedGroupP
     }
     private static T Check<T>(ClearedGroupSpec s,BridgeEnvelope<T> e) {
         if(e.SessionId!=s.Session)throw new BridgeRejectionException("stale_session");
-        if(e.BridgeVersion is not ("0.52.0" or "0.53.0" or "0.54.0" or "0.55.0"))throw new InvalidDataException("cleared_groups_require_052");return e.Data;
+        if(e.BridgeVersion is not ("0.52.0" or "0.53.0" or "0.54.0" or "0.55.0" or "0.56.0"))throw new InvalidDataException("cleared_groups_require_052");return e.Data;
     }
     public async Task RequirePaused(ClearedGroupSpec s,CancellationToken ct) {
         if(Check(s,await client.Simulation(ct)).CurrentSpeed!=0)throw new BridgeRejectionException("state_conflict");

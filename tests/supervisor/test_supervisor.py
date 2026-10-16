@@ -241,6 +241,32 @@ class LifecycleTests(unittest.TestCase):
         finally:
             other.close()
 
+    def test_close_stops_child_without_republishing_registry(self):
+        self.initialize()
+        child = self.server.process
+        self.server.closed.set()
+        self.server.watcher.join(timeout=6)
+        self.assertFalse(self.server.watcher.is_alive())
+        with patch.object(self.server, "publish", side_effect=PermissionError("synthetic")) as publish:
+            self.server.close()
+            publish.assert_not_called()
+        self.assertIsNone(self.server.process)
+        self.assertIsNotNone(child.poll())
+        self.assertTrue(child.stdin.closed)
+        self.assertTrue(child.stdout.closed)
+        self.assertFalse(self.server.registry.exists())
+        self.assertEqual([], list(self.runtime.glob("*.tmp")))
+
+    def test_close_retains_registry_when_backend_stop_fails(self):
+        self.server.closed.set()
+        self.server.watcher.join(timeout=6)
+        self.assertFalse(self.server.watcher.is_alive())
+        with patch.object(self.server, "stop", side_effect=RuntimeError("synthetic stop failure")) as stop:
+            with self.assertRaisesRegex(RuntimeError, "synthetic stop failure"):
+                self.server.close()
+            stop.assert_called_once_with(publish=False)
+        self.assertTrue(self.server.registry.exists())
+
 
 if __name__ == "__main__":
     unittest.main()

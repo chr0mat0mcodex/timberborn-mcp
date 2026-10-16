@@ -128,7 +128,7 @@ public sealed class ActivityTests
         Assert.Equal("ok", result["status"]!.GetValue<string>());
         Assert.Empty(result["data"]!["items"]!.AsArray());
     }
-    [Theory] [InlineData("0.55.0","{}")] [InlineData("0.54.0","{\"limit\":1}")]
+    [Theory] [InlineData("0.55.0","{}")] [InlineData("0.56.0","{}")] [InlineData("0.54.0","{\"limit\":1}")]
     public async Task MissingPageMetadataIsNeverInvented(string version,string json)
     {
         using var client=new NativeClient(new(8081,new string('a',64)),new ActivityReadHandler(version));

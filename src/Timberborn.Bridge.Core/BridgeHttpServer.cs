@@ -58,9 +58,11 @@ public sealed class BridgeHttpServer : IDisposable
                     (query.GetValues("initialStorageGood") is not null || query.GetValues("initialStorageMode") is not null))
                     throw new BridgeRejectionException("state_conflict");
                 if(request.Url!.AbsolutePath=="/agent-api/v1/activity") {
-                    if(query.AllKeys.Any(k=>k is "reasoning" or "summary"))throw new ArgumentException();
+                    if(query.AllKeys.Any(k=>k is "reasoning" or "summary" or "correlation"))throw new ArgumentException();
                     query.Add("reasoning",ActivityRequest.Decode(request.Headers["X-Agent-Reasoning"],600));
                     query.Add("summary",ActivityRequest.Decode(request.Headers["X-Agent-Summary"],400));
+                    if(request.Headers["X-Agent-Correlation"] is {} correlation)
+                        query.Add("correlation",ActivityRequest.Decode(correlation,600));
                 }
                 json = await queue.Enqueue(BridgeRequest.Parse(request.Url.AbsolutePath, query), deadline.Token).ConfigureAwait(false);
             }
