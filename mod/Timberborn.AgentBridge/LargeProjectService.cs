@@ -100,6 +100,7 @@ public sealed partial class LargeProjectService(BuildingCatalog catalog, Preview
     }
     private object Receipt(string id)
     {
+        if(!jobs.ContainsKey(id)) throw new BridgeRejectionException("project_not_found");
         var r=ledger.Inspect(id);
         var result=JObject.FromObject(r,JsonSerializer.Create(new JsonSerializerSettings{ContractResolver=new CamelCasePropertyNamesContractResolver()}));
         var steps=jobs[id].Request.Steps;
@@ -137,7 +138,7 @@ public sealed partial class LargeProjectService(BuildingCatalog catalog, Preview
         var preview=previews[index+":"+s.Template];
         WorkAccessReport? workAccess = null;
         try {
-            preview.Hide();preview.Reposition(Placement(s));preview.RemoveFromPreviewServices();preview.AddToPreviewServices();
+            preview.Hide();preview.RemoveFromPreviewServices();preview.Reposition(Placement(s));preview.RemoveFromPreviewServices();preview.AddToPreviewServices();
             workAccess=WorkAccess(s,district,preview.BlockObject.PositionedBlocks.GetAllBlocks(),false);
             valid=PreviewAccess(preview.BlockObject,district) && workAccess.Allowed;
         }
@@ -184,19 +185,31 @@ public sealed partial class LargeProjectService(BuildingCatalog catalog, Preview
                     if(previews.Count>=128)throw new InvalidOperationException("project_preview_cache_limit");
                     preview=factory.Create(templates[i].GetSpec<PlaceableBlockObjectSpec>());previews.Add(cacheKey,preview);
                 }
-                active.Add(preview);preview.Hide();preview.Reposition(Placement(r.Steps[i]));
+                // A cached preview must be detached before moving it, not afterwards.
+                active.Add(preview);preview.Hide();preview.RemoveFromPreviewServices();preview.Reposition(Placement(r.Steps[i]));
                 if(!preview.BlockObject.IsPreview||preview.BlockObject.AddedToService)throw new InvalidOperationException("unexpected_preview_state");
                 bool valid=preview.BlockObject.IsValid()&&validators.IsValid(preview.BlockObject);
                 bool collision=cells[i].Any(c=>blocks.GetObjectsAt(c.Coordinates).Any(b=>!b.IsPreview&&!b.HasComponent<RecoveredGoodStack>()&&b.IsIntersecting(c)))||
                     Enumerable.Range(0,cells.Length).Where(j=>j!=i).Any(j=>cells[i].Any(c=>cells[j].Any(c.IsIntersecting)));
+                if(preview.BlockObject.TryGetComponent<PathSpec>(out var ownPath)) {
+                    var node=preview.BlockObject.TransformCoordinates(ownPath.MainPathCoordinates);
+                    // Path nodes are exclusive even when block occupation layers do not intersect.
+                    collision |= blocks.GetObjectsAt(node).Any(b=>!b.IsPreview &&
+                        b.TryGetComponent<PathSpec>(out var existingPath) && b.TransformCoordinates(existingPath.MainPathCoordinates)==node) ||
+                        active.Any(p=>p!=preview && p.BlockObject.TryGetComponent<PathSpec>(out var otherPath) &&
+                            p.BlockObject.TransformCoordinates(otherPath.MainPathCoordinates)==node);
+                }
                 deferred[i]=LargeProjectSupportPolicy.CanDefer(valid,collision,r.Steps[i].DependsOn,
                     cells[i].Where(c=>c.IsFoundationBlock).Select(c=>new LargeProjectSupportPolicy.Cell{X=c.Coordinates.x,Y=c.Coordinates.y,Z=c.Coordinates.z,MatterBelow=c.MatterBelow.ToString()}).ToArray(),
                     r.Steps[i].DependsOn.SelectMany(j=>cells[j].Select(c=>new LargeProjectSupportPolicy.Cell{Step=j,X=c.Coordinates.x,Y=c.Coordinates.y,Z=c.Coordinates.z,Stackable=c.Stackable==BlockStackable.BlockObject})).ToArray());
-                preview.RemoveFromPreviewServices();preview.AddToPreviewServices();
+                // Invalid geometry must never enter the preview navigation grid.
+                bool register=ProjectPreviewPolicy.CanRegister(valid,deferred[i],collision);
+                preview.RemoveFromPreviewServices();
+                if(register) preview.AddToPreviewServices();
                 bool? connected=preview.BlockObject.HasEntrance?district.IsOnPreviewDistrictRoad(NavigationCoordinateSystem.GridToWorld(preview.BlockObject.PositionedEntrance.Coordinates)):(bool?)null;
                 if(preview.BlockObject.TryGetComponent<PathSpec>(out var path)) connected=district.IsOnPreviewDistrictRoad(NavigationCoordinateSystem.GridToWorld(preview.BlockObject.TransformCoordinates(path.MainPathCoordinates)));
                 var observed=roads.Read(baseline,true);int lost=RoadProtectionPolicy.LostConnections(baseline.Before,observed).Length;
-                eligible &= (valid||deferred[i]) && connected!=false && lost==0;
+                eligible &= register && connected!=false && lost==0;
                 // Only the current topological prefix is available at this construction stage.
                 // Required road helpers must precede the target through explicit dependencies.
                 workReports[i]=WorkAccess(r.Steps[i],district,
@@ -215,7 +228,7 @@ public sealed partial class LargeProjectService(BuildingCatalog catalog, Preview
                     activeNodes.Add((i,geometryPorts));
                 }
                 results[i]=new{index=i,template=r.Steps[i].Template,position=PowerObservations.Vec(new(r.Steps[i].X,r.Steps[i].Y,r.Steps[i].Z)),rotation=r.Steps[i].Rotation,dependsOn=r.Steps[i].DependsOn,
-                    placementValid=valid,placementState=deferred[i]?"deferred_native_validation":valid?"native_valid":"native_invalid",previewEntranceConnected=connected,lostConnections=lost,powerPorts=ports,constructionAccess="unknown",constructionWorkAccess=workReports[i]};
+                    placementValid=valid&&!collision,placementState=collision?"native_invalid":deferred[i]?"deferred_native_validation":valid?"native_valid":"native_invalid",placementReason=collision?"geometry_collision":null,previewRegistered=register,previewEntranceConnected=connected,lostConnections=lost,powerPorts=ports,constructionAccess="unknown",constructionWorkAccess=workReports[i]};
             }
             // Later parts can invalidate earlier previews too.
             eligible &= active.Select((p,k)=>(p,k)).All(v=>deferred[order[v.k]]||v.p.BlockObject.IsValid()&&validators.IsValid(v.p.BlockObject));
@@ -231,7 +244,13 @@ public sealed partial class LargeProjectService(BuildingCatalog catalog, Preview
             withPreview=roads.Read(baseline,true);
             roads.ObserveConstructionPreview(baseline,active.SelectMany(p=>p.BlockObject.PositionedBlocks.GetAllBlocks()));
         }
-        catch(Exception ex) {faulted=true;Debug.LogError("AgentBridge large-project preview failed ("+ex.GetType().Name+"): "+ex.Message);throw;}
+        catch(Exception ex) {
+            faulted=true;
+            Debug.LogError("AgentBridge large-project preview failed ("+ex.GetType().Name+") at "+ex.TargetSite?.DeclaringType?.FullName+"."+ex.TargetSite?.Name);
+            // Runtime preview failures must not become request-geometry rejections.
+            // Keep the session locked; cleanup is not proven by this exception.
+            throw new BridgeRejectionException("project_preview_failed");
+        }
         finally
         {
             foreach(var p in active.AsEnumerable().Reverse())
@@ -239,9 +258,12 @@ public sealed partial class LargeProjectService(BuildingCatalog catalog, Preview
                 try {p.Hide();} catch {faulted=true;}
                 try {p.RemoveFromPreviewServices();} catch {faulted=true;}
             }
-            restored=before.SetEquals(entities.Entities.Where(e=>!e.Deleted).Select(e=>e.EntityId))&&beforeStock.SequenceEqual(Stocks())&&baseline.Before.SequenceEqual(roads.Read(baseline,false));
+            try {
+                restored=before.SetEquals(entities.Entities.Where(e=>!e.Deleted).Select(e=>e.EntityId))&&beforeStock.SequenceEqual(Stocks())&&baseline.Before.SequenceEqual(roads.Read(baseline,false))&&baseline.PreviewBefore.SequenceEqual(roads.Read(baseline,true));
+            } catch { faulted=true; throw new BridgeRejectionException("project_preview_failed"); }
             if(!restored)faulted=true;
         }
+        if(faulted) throw new BridgeRejectionException("project_preview_failed");
         var safety=roads.Finish(baseline,withPreview,cells.SelectMany(c=>c).ToArray());
         eligible &= restored&&!faulted&&safety.restored&&safety.lostConnections==0&&!safety.constructionAccessPreview.HasKnownFailure()&&
             (safety.status=="safe"||safety.status=="unknown"&&safety.reasons.SequenceEqual(new[]{"construction_and_road_node_coverage_unproven"}));

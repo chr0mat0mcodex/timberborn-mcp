@@ -49,7 +49,7 @@ public sealed partial class LargeProjectService
 
     private JObject Diagnose(string id)
     {
-        if (!jobs.TryGetValue(id, out var job)) throw new BridgeRejectionException("state_conflict");
+        if (!jobs.TryGetValue(id, out var job)) throw new BridgeRejectionException("project_not_found");
         var recorded = Recorded(id); var ids = Ids(id);
         var observations = Enumerable.Range(0, ids.Length).Select(i => IdentityObservation(id, i)).ToArray();
         var lost = RoadProtectionPolicy.LostConnections(job.Baseline.Before, roads.Read(job.Baseline, false));

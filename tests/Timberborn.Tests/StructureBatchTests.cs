@@ -1,5 +1,7 @@
 using System.Text.Json.Nodes;
+using System.Text.Json;
 using Timberborn.Backend.Native;
+using Timberborn.Bridge.Core;
 using Timberborn.McpServer;
 using Xunit;
 
@@ -11,14 +13,20 @@ public sealed class StructureBatchTests
     {
         public int Submissions, Inspections;
         public bool Finished, LoseResponse;
-        public Task<JsonObject> PlanStructure(BuildBatchSpec s, CancellationToken ct) => Task.FromResult(new JsonObject {
+        public Exception? PlanningFailure, SubmissionFailure;
+        public int PlanningCalls;
+        public Task<JsonObject> PlanStructure(BuildBatchSpec s, CancellationToken ct) {
+            PlanningCalls++;
+            if(PlanningFailure is not null) throw PlanningFailure;
+            return Task.FromResult(new JsonObject {
             ["state"]="complete", ["planKey"]=new string('a',64),
             ["steps"]=new JsonArray(s.Items.Select((item,i)=>(JsonNode)new JsonObject {
                 ["template"]=item.Template,["x"]=s.X+i,["y"]=s.Y,["z"]=s.Z,["rotation"]=0,["dependsOn"]=new JsonArray() }).ToArray()),
             ["selected"]=new JsonArray(s.Items.Select((_,i)=>(JsonNode)new JsonObject { ["inputIndex"]=i,["stepIndex"]=i }).ToArray()) });
+        }
         public Task<JsonObject> Structure(BuildBatchJob j,string operation,CancellationToken ct)
         {
-            if(operation=="run") { Submissions++;Assert.Equal("pending_build",j.State);if(LoseResponse)throw new IOException("synthetic lost acknowledgement"); }
+            if(operation=="run") { Submissions++;Assert.Equal("pending_build",j.State);if(SubmissionFailure is not null)throw SubmissionFailure;if(LoseResponse)throw new IOException("synthetic lost acknowledgement"); }
             else Inspections++;
             return Task.FromResult(new JsonObject { ["state"]=Finished?"completed":"running",["reason"]="synthetic",
                 ["actionId"]=j.StructureActionId });
@@ -75,5 +83,77 @@ public sealed class StructureBatchTests
         Assert.Equal("pending_build",job.State);
         await engine.Step(job,TestContext.Current.CancellationToken);
         Assert.Equal(1,port.Submissions);Assert.Equal(1,port.Inspections);
+    }
+
+    [Theory]
+    [InlineData("project_plan_faulted", false, "not_executed", "planning")]
+    [InlineData("project_preview_failed", false, "unconfirmed", "planning")]
+    [InlineData("project_plan_faulted", true, "not_executed", "pending_build")]
+    [InlineData("project_preview_failed", true, "ledger_required", "pending_build")]
+    public async Task Native_failure_survives_checkpoint_inspect_and_advance_without_replanning(string code,bool submitting,string execution,string stage)
+    {
+        string directory=Path.Combine(Path.GetTempPath(),"batch-failure-fixture-"+Guid.NewGuid().ToString("N"));
+        try {
+            var job=Job();var store=new BuildBatchStore(directory);var port=new Port();
+            if(submitting)port.SubmissionFailure=new BridgeRejectionException(code);
+            else port.PlanningFailure=new BridgeRejectionException(code);
+            var result=await BuildBatchTools.Execute(BuildBatchTools.Start,
+                JsonSerializer.SerializeToElement(new BatchStartRequest(job.Spec,0),NativeJson.Options),true,true,true,store,port,TestContext.Current.CancellationToken);
+            Assert.Equal(code,result["error"]!["code"]!.GetValue<string>());
+            Assert.Equal(execution,result["error"]!["execution"]!.GetValue<string>());
+            Assert.Equal("stopped",result["data"]!["state"]!.GetValue<string>());
+            Assert.Equal(stage,result["data"]!["failure"]!["stage"]!.GetValue<string>());
+            Assert.Equal("reload_game_and_reinspect",result["data"]!["nextAction"]!.GetValue<string>());
+            Assert.Contains(code,ActivityOutcome.Describe(BuildBatchTools.Start,result));
+            Assert.Contains("Phase "+stage,ActivityOutcome.Describe(BuildBatchTools.Start,result));
+            Assert.Contains("reload_game_and_reinspect",ActivityOutcome.Describe(BuildBatchTools.Start,result));
+            foreach(var tool in new[]{BuildBatchTools.Inspect,BuildBatchTools.Advance}) {
+                var read=await BuildBatchTools.Execute(tool,
+                    JsonSerializer.SerializeToElement(new BatchHandle(job.Spec.Session,job.Spec.BatchId,Details:true),NativeJson.Options),
+                    true,true,true,new BuildBatchStore(directory),port,TestContext.Current.CancellationToken);
+                Assert.Equal(code,read["error"]!["code"]!.GetValue<string>());
+                Assert.Equal(stage,read["data"]!["failure"]!["stage"]!.GetValue<string>());
+                Assert.Contains(code,ActivityOutcome.Describe(tool,read));
+                Assert.Contains("Phase "+stage,ActivityOutcome.Describe(tool,read));
+                Assert.Contains("reload_game_and_reinspect",ActivityOutcome.Describe(tool,read));
+            }
+            Assert.Equal(1,port.PlanningCalls);Assert.Equal(submitting?1:0,port.Submissions);Assert.Equal(0,port.Inspections);
+        } finally { if(Directory.Exists(directory))Directory.Delete(directory,true); }
+    }
+
+    [Fact]
+    public async Task Lost_submission_keeps_recovery_checkpoint_and_never_resubmits()
+    {
+        string directory=Path.Combine(Path.GetTempPath(),"batch-lost-fixture-"+Guid.NewGuid().ToString("N"));
+        try {
+            var job=Job();var store=new BuildBatchStore(directory);var port=new Port {LoseResponse=true};
+            var result=await BuildBatchTools.Execute(BuildBatchTools.Start,
+                JsonSerializer.SerializeToElement(new BatchStartRequest(job.Spec,0),NativeJson.Options),true,true,true,store,port,TestContext.Current.CancellationToken);
+            Assert.Equal("pending_build",result["data"]!["state"]!.GetValue<string>());
+            Assert.Equal("ledger_required",result["error"]!["execution"]!.GetValue<string>());
+            Assert.DoesNotContain("synthetic lost acknowledgement",result.ToJsonString());
+            var read=await BuildBatchTools.Execute(BuildBatchTools.Advance,
+                JsonSerializer.SerializeToElement(new BatchHandle(job.Spec.Session,job.Spec.BatchId),NativeJson.Options),true,true,true,store,port,TestContext.Current.CancellationToken);
+            Assert.Equal("ok",read["status"]!.GetValue<string>());
+            Assert.Null(read["data"]!["failure"]);
+            Assert.Equal(1,port.Submissions);Assert.Equal(1,port.Inspections);
+        } finally { if(Directory.Exists(directory))Directory.Delete(directory,true); }
+    }
+
+    [Fact]
+    public async Task Unexpected_planning_failure_does_not_leak_private_text_or_repeat_search()
+    {
+        string directory=Path.Combine(Path.GetTempPath(),"batch-plan-fixture-"+Guid.NewGuid().ToString("N"));
+        try {
+            var job=Job();var store=new BuildBatchStore(directory);var port=new Port {PlanningFailure=new ArgumentException("synthetic private diagnostic")};
+            var result=await BuildBatchTools.Execute(BuildBatchTools.Start,
+                JsonSerializer.SerializeToElement(new BatchStartRequest(job.Spec,0),NativeJson.Options),true,true,true,store,port,TestContext.Current.CancellationToken);
+            Assert.Equal("stopped",result["data"]!["state"]!.GetValue<string>());
+            Assert.Equal("batch_interrupted",result["error"]!["code"]!.GetValue<string>());
+            Assert.DoesNotContain("synthetic private diagnostic",result.ToJsonString());
+            await BuildBatchTools.Execute(BuildBatchTools.Advance,
+                JsonSerializer.SerializeToElement(new BatchHandle(job.Spec.Session,job.Spec.BatchId),NativeJson.Options),true,true,true,store,port,TestContext.Current.CancellationToken);
+            Assert.Equal(1,port.PlanningCalls);Assert.Equal(0,port.Submissions);
+        } finally { if(Directory.Exists(directory))Directory.Delete(directory,true); }
     }
 }

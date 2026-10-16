@@ -1,0 +1,103 @@
+Überlebenspilot und MCP-Verbesserungsvorschläge — 17. Oktober 2026
+
+Auftrag: frei im Testsave spielen, unabhängige Maßnahmen bündeln, Learnings sammeln.
+Laufzeit: native Bridge 0.63.0. Keine Codeänderung, Builds oder Installation.
+
+Beobachteter Verlauf
+- Spieltag 50, 10:15 bis 19:15: neun Spielstunden, fünf erwachsene Biber
+  zu Beginn und Ende, kein kritischer Hunger/Durst und keine aktive Kontamination.
+- Wasser 94 -> 85, Karotten 79 -> 70, Holz 59 -> 60. Globale Bestände,
+  keine geprüfte langfristige Reichweite. Ein freies Bett, kein Nachwuchs beobachtet.
+- Gesamtscan nach Ein-Kachel-Pilot: 64/64 Kacheln, Terrain und Spezialobjekte
+  vollständig; pausiertes Spiel. Dürre, zehn Quellen mit aktueller Stärke null.
+- Zielzone (124,148,2), 8x8, umfasst einen Teil des Pumpenumfelds; keine
+  automatisch identifizierte Teichgrenze und keine vollständige Siedlungsschutzzone.
+- 449 potenzielle kontaminierte Zufluss-Hohlräume, keine 449 unabhängigen Fluten.
+  Keine überflutete Zielzelle im Scan. Neun instabile Kerne bewertet.
+- Kern (157,186,0): hypothetische Geländeöffnung senkt Schwelle von 6 auf 2;
+  kontaminiertes Restwasser bis etwa 4,645. Schutzquerschnitt unvollständig.
+  Kern (103,116,12): separate aktive Meldung 'Explodes soon', Countdown fehlt;
+  im Szenarioscan keine Kette belegt. Das ist keine Entwarnung.
+- Gemeinsamer Auftrag: zwei kleine Tanks plus Karottenlager. Erste Region
+  (119,150,3), 8x8, ohne Kandidat: Full zeigt Objektüberschneidungen und fehlende
+  Bodenroute; Compact enthält dafür leere observedReasons.
+- Zweite Region (112,148,3), 8x8: batch_interrupted bei planning. Ein advance
+  unter derselben Kennung liefert denselben Fehler. Frische Baustellenliste: null.
+  Nativer Projektabruf meldet nur generischen state_conflict.
+- Anschließender expliziter Gesamtplan: project_plan_faulted, nicht ausgeführt.
+  Lokales Player.log meldet 'AgentBridge large-project preview failed' mit
+  ArgumentException: BlockObject auf Path sollte null sein, war aber bereits gesetzt.
+  Das belegt die Fehlerklasse, noch nicht die genaue fehlerhafte Codezeile/Ursache.
+  Keine weiteren Bauversuche, keine Umgehung der Planersperre.
+- Aktive Pumpe: sechs Tagesstunden gemessen, null native Produktionszyklen,
+  sämtliche sechs Stunden als unknown klassifiziert. Diagnose zugleich
+  no_observed_bottleneck; besetzt, freier Puffer, verbunden.
+- Forscher pausiert und vorhandene zweite Pumpe aktiviert. Drei weitere Stunden:
+  null Zyklen, 1,75 Stunden unknown und 1,25 außerhalb der Arbeitszeit.
+  Pumpe erhielt Personal; anfängliches no_assigned_workers ist kein Dauerbefund.
+- Karte zeigt trockene Zellen bei den unteren Pumpengeometriezellen (129,149,2)
+  und (131,149,2), zugleich Restwasser in benachbarten tieferen Hohlräumen.
+  Vermutung: Ansaugstelle trocken/nicht nutzbar. Native Ansaugdiagnose fehlt;
+  Restwasser neben einem Gebäude beweist keine nutzbare Wasserentnahme.
+- Reservepumpe wieder pausiert, Forschung wieder aktiviert, jeweils rückgelesen.
+  Endzustand: Tag 50, 19:15, Tempo 0. Keine neuen Gebäude/Schutzbauten fertiggestellt.
+  Überleben in diesem kurzen Fenster belegt, nachhaltige Versorgung nicht belegt.
+
+Priorisierte Verbesserungen mit Abnahmekriterien
+
+P0 — Vorschaufehler isolieren und Bauplaner wiederherstellbar machen
+  Path/BlockObject-Vorschaulebenszyklus und Aufräumen nach Ausnahme untersuchen.
+  Persistente Sperre mit Ursache, fehlgeschlagener Phase und erforderlichem
+  Recovery-Schritt ausgeben; niemals unbestätigte Schreibaufträge wiederholen.
+  Abnahme: gemeinsamer Tank/Tank/Lager-Plan neben vorhandenen Wegen; gezielte
+  Vorschauausnahme hinterlässt keine Geisterobjekte oder beschädigten Wege.
+  Wiederaufnahme erst nach nachgewiesen sauberem Zustand, sonst klarer Reload-Hinweis.
+
+P0 — Ursprünglichen Fehler durch alle Wrapper erhalten
+  batch_interrupted verschluckt die Ursache; advance hilft hier nicht weiter.
+  Strukturierte causeCode, stage, writeAttempted, cleanupState und recoveryAction
+  liefern. Kein pauschales ledger_required bei eindeutig reinem Planungsfehler.
+  Abnahme: Batchfehler benennt native Planersperre bzw. Originalfehler; fehlendes
+  Projekt wird als project_not_found statt generischem state_conflict erklärt.
+
+P1 — Wasserentnahme wirklich diagnostizieren
+  Native Ansaugzellen, nutzbaren Pegel/Tiefe, Kontamination, Pumpgrenze und
+  Betriebsblockade lesen. 'not ready' darf nicht gleichzeitig als vollständig
+  geklärtes 'no_observed_bottleneck' erscheinen. unknown bleibt sichtbar.
+  Abnahme: trockene, zu flache, verseuchte und funktionierende Entnahme unterscheiden;
+  Messfenster mit tatsächlichen Zyklen und Grenzen der Ursachenklassifikation.
+
+P1 — Überlebensläufe mit unteren Abbruchschwellen
+  Bestehende Läufe können Zeit/Produktionsziele begrenzen, aber keine expliziten
+  Stopps bei niedrigem Wasser/Nahrung, kritischen Bedürfnissen, Kontamination oder
+  gefährlichem Pegel in benannten Zellen ausdrücken. Kurze manuelle Fenster nötig.
+  Abnahme: auf unterschrittene Reserve bzw. ausgelöste Gefahr autonom pausieren,
+  gemessenen Auslöser und verbleibenden Vorrat melden, kein automatisches Fortsetzen.
+
+P1 — Explosionswarnung mit Aktivierungsstatus verbinden
+  Aktive 'Explodes soon'-Meldung und Szenarioscan zusammenführen. Öffentlichen
+  Countdown übernehmen, soweit zuverlässig verfügbar; sonst ausdrücklich unbekannt.
+  Gefahren getrennt nach Dürre/Restwasser/Faulwasser/Explosion darstellen;
+  Schutzstellen erst mit vollständiger Umweg-, Bauphasen- und Zugangsprüfung nutzen.
+
+P2 — Transportkonkurrenz und Bündelung
+  Zwei unabhängige gleichzeitige Leseaufrufe: einer mit invalid_argument abgewiesen,
+  weil anderer MCP-Aufruf läuft. Nach bestätigtem not_executed einzeln erfolgreich.
+  Bounded Queue oder gemeinsamer read_snapshot; alternativ präziser busy-Code
+  mit bekanntem Einreihungs-/Ausführungszustand. Spielaufträge trotzdem gemeinsam
+  platzieren: Transportparallelität ist nicht paralleler Koloniebau.
+
+P2 — Kompakte Diagnose und Nahrungsübersicht
+  Compact muss dominante Ablehnungsgründe der Regionssuche behalten; Full zeigte
+  sie, obwohl observedReasons leer war. Kolonieübersicht mit tatsächlich essbaren
+  Vorräten statt bloß Berries=0; hier bestanden 79 Karotten. Keine erfundenen
+  Reichweiten aus Momentaufnahmen; Verbrauch und lokale Erreichbarkeit getrennt.
+  Gebäude-/Wegsuche: DistrictCenter wird bei includePaths=false ausgeschlossen.
+  Semantik dokumentieren oder Rollenfilter liefern, damit Bauzentrum auffindbar bleibt.
+
+Nächster sinnvoller Schritt
+  Vorschaufehler beheben und menschliches Testgate, anschließend Livepilot für
+  denselben Mehrfachbau. Für unmittelbare Spielfortsetzung vermutlich Save neu laden,
+  neue Session bestätigen und Planerzustand prüfen; Recovery durch Reload wurde in
+  diesem Versuch nicht getestet. Keine Änderung an dauerhaften Agentenregeln.
+  Ursprüngliche Arbeitskopieänderungen unangetastet, keine Rohlogs/Spiel-IDs abgelegt.

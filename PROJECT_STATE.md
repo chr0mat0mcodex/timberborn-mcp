@@ -1,5 +1,23 @@
 # Projektstand
 
+## Bauplaner-Korrektur — 17. Oktober, begrenzt live abgenommen
+
+Überlebenspilot deckte Path-Vorschaufehler, Planersperre und verschluckte
+Chargenursache auf. Vorschau-Registrierung/Kollision und Fehlerweitergabe
+überarbeitet. Nach Korrektur der Meldungspriorität menschliches Gate bestanden.
+Live: belegter Path sauber abgelehnt, wiederholte gemeinsame Vorschauen intakt;
+zwei Tanks, Lager und zwölf Umweg-Wege gemeinsam beauftragt, alle 15 Teile fertig
+und zugänglich. Keine verlorenen Bestandsanschlüsse. Wasser/Carrot und accept
+rückgelesen. Pause bei Tag 51, 14:15; Projekt freigegeben.
+Konkrete Fehler busy/requires_pause/not_found live bestätigt. Native Ausnahme,
+Chargenpersistenz und Quittungsverlust synthetisch im Gate, kein Live-Crash.
+[Änderungen, menschliches Gate und begrenzter Baupilot](docs/planner-repair-2026-10-17.md).
+Spielanleitung und lokaler Hermes-Skillentwurf um den Fehlervertrag ergänzt;
+Entwurf weiterhin zurückgestellt. Laufzeitbasis bleibt 0.63.0; Anleitung/Skill
+um tatsächliche Livebelege und Nachweisgrenzen aktualisiert.
+Nebenbefund: Ingame-Fortschrittstext meldet 0/15 trotz strukturiertem 14/15;
+separates Darstellungsproblem im Backlog, kein fehlender Bauauftrag.
+
 ## Versionsabschluss 0.63.0 — 17. Oktober 2026
 
 Menschliches Gate und begrenzte B15-Liveprüfungen bestanden. Nutzer hat den

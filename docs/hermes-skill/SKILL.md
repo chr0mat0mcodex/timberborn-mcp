@@ -5,6 +5,21 @@ description: Timberborn über die vorhandene Hermes-MCP-Verbindung steuern; Test
 
 # Timberborn in Hermes
 
+## Bauplaner-Korrektur — begrenzt live geprüft
+
+`project_preview_failed` bedeutet Vorschaufehler und unbekannte
+Wiederherstellung; `project_plan_faulted` gesperrter Planer. Spiel neu laden,
+Session/Zustand prüfen, keine automatische Entsperrung oder Auftragswiederholung.
+`project_not_found` bezeichnet eine fehlende native Projektkennung.
+Chargen bewahren `failure.code`, `stage`, `execution`, `recoveryAction` auch kompakt.
+Gestoppte Planung wird durch `advance` nicht wiederholt. `no_build_order` gilt
+nur für diese Planungsphase, nicht für ältere Eingriffe oder bestätigte Bereinigung.
+`pending_build`/`ledger_required` ausschließlich unter derselben Kennung abgleichen.
+Menschliches Gate und 15-Teile-Pilot bestanden: Tank/Tank/Lager plus Umweg fertig
+und zugänglich, Bestandsanschlüsse erhalten. Native Ausnahme/Chargenpersistenz
+nur synthetisch geprüft. Ingame-Fortschrittszähler fehlerhaft; strukturierte
+summary und frische Diagnose nutzen. Der lokale Skill bleibt zurückgestellt.
+
 ## Gesamtstruktur 0.63 — mit dokumentierter Grenze abgeschlossen
 
 Ebener Gesamtauftrag, Reparatur, Schema-2-Charge und manueller Höhen-Gesamtstart

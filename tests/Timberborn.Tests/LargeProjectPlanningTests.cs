@@ -75,6 +75,39 @@ public sealed class LargeProjectPlanningTests
     [InlineData("lost")]
     public async Task AmbiguousResponsesRemainUnconfirmed(string code) => await Check("plan_large_project",code,false);
 
+    [Theory]
+    [InlineData("plan_large_project")]
+    [InlineData("plan_large_project_access")]
+    [InlineData("run_large_project")]
+    public async Task Preview_runtime_error_keeps_its_code_without_claiming_restoration(string tool)
+    {
+        await Check(tool,"project_preview_failed",false);
+    }
+
+    [Fact]
+    public async Task Missing_project_read_preserves_missing_code_and_never_posts()
+    {
+        using var handler=new MissingProjectHandler();
+        using var tools=new NativeTools(new NativeClient(new(8081,new string('a',64)),handler));
+        var result=await tools.Invoke("inspect_large_project",JsonSerializer.SerializeToElement(new {
+            session="11111111-1111-1111-1111-111111111111",
+            actionId="22222222-2222-2222-2222-222222222222",waitSeconds=0
+        }),TestContext.Current.CancellationToken);
+        Assert.Equal("project_not_found",result["error"]!["code"]!.GetValue<string>());
+        Assert.Equal("not_applicable",result["error"]!["execution"]!.GetValue<string>());
+        Assert.Equal(1,handler.Calls);
+    }
+
+    private sealed class MissingProjectHandler : HttpMessageHandler
+    {
+        public int Calls;
+        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,CancellationToken ct) {
+            Calls++;Assert.Equal(HttpMethod.Get,request.Method);
+            return Task.FromResult(new HttpResponseMessage(HttpStatusCode.Conflict) {
+                Content=new StringContent("{\"error\":\"project_not_found\"}") });
+        }
+    }
+
     private static async Task Check(string tool,string code,bool rejected)
     {
         using var handler = new RejectionHandler(code);
@@ -97,6 +130,11 @@ public sealed class LargeProjectPlanningTests
         Assert.Equal(1,handler.Calls);
         Assert.Equal(rejected?"not_executed":"unconfirmed",result["error"]!["execution"]!.GetValue<string>());
         Assert.False(result["error"]!["retryable"]!.GetValue<bool>());
+        if(code=="project_preview_failed") {
+            Assert.Equal(code,result["error"]!["code"]!.GetValue<string>());
+            Assert.Contains("Wiederherstellung unbekannt",result["error"]!["message"]!.GetValue<string>());
+            Assert.Contains("Wiederherstellung unbekannt",ActivityOutcome.Describe(tool,result));
+        }
         if(rejected) {
             Assert.Equal(code,result["error"]!["code"]!.GetValue<string>());
             Assert.Contains(ProjectPlanningOutcome.Describe(code),result["error"]!["message"]!.GetValue<string>());

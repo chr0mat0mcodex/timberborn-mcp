@@ -211,6 +211,8 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
             if(plantingRejected)message="Nicht ausgeführt: native Vorprüfung hat die veraltete Pflanzvorschau vor jeder Änderung abgewiesen. Frische Vorschau lesen und neu beurteilen; kein automatisches Retry.";
             if(projectStartRejected)message=ProjectStartOutcome.Describe(code)+" Kein automatisches Retry.";
             if(projectPlanningRejected)message=ProjectPlanningOutcome.Describe(code)+" Kein automatisches Retry.";
+            if(code=="project_preview_failed")message="Native Bauvorschau fehlgeschlagen; Wiederherstellung unbekannt, Planer gesperrt. Spiel neu laden und Zustand mit neuer Session prüfen; kein automatisches Retry.";
+            if(code=="project_not_found")message="Unter dieser Kennung existiert kein natives Großprojekt in der aktuellen Spielsitzung. Chargenstatus und Planungsfehler prüfen; keine automatische Wiederholung.";
             if(ArgumentDiagnostics.Hint(ex) is { } hint)message+=" "+hint;
             return (JsonObject)JsonSerializer.SerializeToNode(new NativeResult<object>(1, "error", null,
                 new("native", false, null, null), new(code,message,code=="backend_unavailable"&&!action&&dispatch.WriteAttempts==0,execution)), NativeJson.Options)!;

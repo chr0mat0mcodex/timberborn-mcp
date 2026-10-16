@@ -5,6 +5,7 @@ using System.Text.Json.Schema;
 using System.Text.Json.Serialization.Metadata;
 using ModelContextProtocol.Protocol;
 using Timberborn.Backend.Native;
+using Timberborn.Bridge.Core;
 
 namespace Timberborn.McpServer;
 
@@ -71,7 +72,7 @@ public static class BuildBatchTools
                 job.StructureReceipt=await structure.Structure(job,"stop",ct);
             store.Save(job);
         }
-        NativeFault? fault = null;
+        NativeFault? fault = job.Failure is null ? null : FailureFault(job.Failure);
         if ((created || name == Advance) && !job.Terminal) {
             BuildBatchState.Validate(job.Spec, settingsEnabled);
             if (job.Spec.Clearing != "none" && !removalEnabled) throw new ArgumentException("removal_disabled");
@@ -79,6 +80,8 @@ public static class BuildBatchTools
             try {
                 for (int i = 0; i < 64 && !job.Terminal; i++) {
                     bool waiting = await engine.Step(job, ct);
+                    if (job.Failure is not null) { job.Failure=null; store.Save(job); }
+                    fault=null;
                     // waitSeconds limits waiting, not already available state transitions.
                     // Finish/access -> planning -> next order proceeds in the same call;
                     // the 64-transition cap still bounds immediate work, including waitSeconds=0.
@@ -90,11 +93,24 @@ public static class BuildBatchTools
             } catch (Exception ex) when (ex is IOException or InvalidDataException or HttpRequestException or ArgumentException or JsonException or OperationCanceledException) {
                 // The durable write-ahead checkpoint remains authoritative, never automatically retry a write.
                 job = store.Load(handle.Session, handle.BatchId) ?? job;
-                fault = new("batch_interrupted", "Gespeicherten Status prüfen; advance klärt ausstehende Eingriffe lesend. Keine neue batchId als Retry.", false, "ledger_required");
+                string stage=job.State;
+                string code=ex is BridgeRejectionException rejection ? rejection.Code : "batch_interrupted";
+                bool rejectedBeforeOrder=ex is BridgeRejectionException &&
+                    (LargeProjectPlanningPolicy.IsPreDispatchCode(code) || LargeProjectStartPolicy.IsPreDispatchCode(code));
+                bool planning=stage=="planning";
+                string execution=rejectedBeforeOrder ? "not_executed" : planning ? "no_build_order" : "ledger_required";
+                string recovery=code is "project_plan_faulted" or "project_preview_failed" ? "reload_game_and_reinspect" :
+                    planning || rejectedBeforeOrder ? "diagnose_before_new_plan" : "inspect_existing_action_no_replay";
+                job.Failure=new(code,stage,execution,recovery);
+                // A failed read/preview cannot be repaired by replaying the planning loop.
+                // Pending writes keep their checkpoint for read-only ledger reconciliation.
+                if(planning || rejectedBeforeOrder || code=="project_preview_failed") { job.State="stopped"; job.Reason=code; }
+                store.Save(job);
+                fault=FailureFault(job.Failure);
             }
         }
         object report = new { batchId = job.Spec.BatchId, job.State, job.Reason, checkpointOnly = true,
-            job.UpdatedAtUtc, finishedCount = job.Index, total = job.Spec.Items.Length, job.Finished,
+            job.UpdatedAtUtc, failure=job.Failure, finishedCount = job.Index, total = job.Spec.Items.Length, job.Finished,
             currentActionId = job.Index < job.Spec.Items.Length ? job.ActionId : null, job.Selection,
             regionIndex = job.RegionIndex, regionCount = BuildBatchState.Regions(job.Spec).Length,
             region = job.Region, previousRegions = job.PreviousRegions,
@@ -106,7 +122,7 @@ public static class BuildBatchTools
         if (!handle.Details) {
             var current = job.Index < job.Spec.Items.Length && job.Completion?.ActionId == job.ActionId ? job.Completion : null;
             report = new { batchId = job.Spec.BatchId, job.State, job.Reason, checkpointOnly = true, job.UpdatedAtUtc,
-                finishedCount = job.Index, total = job.Spec.Items.Length, regionIndex = job.RegionIndex,
+                failure=job.Failure, finishedCount = job.Index, total = job.Spec.Items.Length, regionIndex = job.RegionIndex,
                 currentActionId = job.Index < job.Spec.Items.Length ? job.ActionId : null,
                 progress = current is null ? null : new { current.Outcome, current.CurrentSpeed,
                     finishedObjects = current.Steps.Count(s => s.Finished == true), totalObjects = current.Steps.Length,
@@ -124,15 +140,23 @@ public static class BuildBatchTools
             var receipt=job.StructureReceipt?.DeepClone().AsObject();
             if(receipt is not null && !handle.Details) ProjectReportPresentation.Compact("inspect_large_project",receipt);
             report=new { batchId=job.Spec.BatchId, actionId=job.StructureActionId, job.State, job.Reason,
-                job.UpdatedAtUtc, checkpointOnly=true, total=job.Spec.Items.Length, construction=receipt,
+                job.UpdatedAtUtc, failure=job.Failure, checkpointOnly=true, total=job.Spec.Items.Length, construction=receipt,
                 region=job.Region, job.PreviousRegions,
                 plan=handle.Details?job.StructurePlan:null,
                 unplaced=job.StructurePlan?["unplaced"],
-                nextAction=job.Terminal?"done_or_diagnose_structure":"inspect_large_project_for_live_progress",
+                nextAction=job.Failure?.RecoveryAction ?? (job.Terminal?"done_or_diagnose_structure":job.StructurePlan is null?"advance_existing_batch":"inspect_large_project_for_live_progress"),
                 configurationPending=job.State!="completed" && job.Spec.Items.Any(i=>i.InitialStorageGood is not null || i.InitialStorageMode is not null),
                 detailsAvailable=true };
         }
         return JsonSerializer.SerializeToNode(new NativeResult<object>(1, fault is null ? "ok" : "error", report,
             new("native", false, job.Spec.Session, null), fault), NativeJson.Options)!.AsObject();
     }
+
+    private static NativeFault FailureFault(BatchFailure failure) => new(failure.Code,
+        failure.Code=="project_preview_failed" ? "Native Bauvorschau fehlgeschlagen; kein Bauauftrag aus der Planung. Wiederherstellung unbekannt, Planer gesperrt. Spiel neu laden und Zustand prüfen; kein Replay." :
+        failure.Code=="project_plan_faulted" ? ProjectPlanningOutcome.Describe(failure.Code) :
+        failure.Execution=="not_executed" ? "Nativer Auftrag vor Ausführung abgewiesen. Fehlercode und Phase prüfen; kein automatisches Retry." :
+        failure.Execution=="no_build_order" ? "Planung abgebrochen; kein Bauauftrag aus dieser Planungsphase. Ursache vor einem neuen Plan klären; keine automatische Fortsetzung." :
+        "Gespeicherten Zustand und bestehende Aktionskennung lesend abgleichen; keinen unbestätigten Auftrag wiederholen.", false,
+        failure.Execution=="no_build_order" ? "unconfirmed" : failure.Execution);
 }

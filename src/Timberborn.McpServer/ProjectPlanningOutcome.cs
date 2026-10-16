@@ -7,7 +7,7 @@ public static class ProjectPlanningOutcome
 
     public static string Describe(string? code) => "Vorprüfung abgewiesen; kein neuer Bauauftrag durch diesen Aufruf. " + (code switch {
         "project_plan_requires_pause" => "Bauplanung benötigt eine pausierte Simulation.",
-        "project_plan_faulted" => "Planer nach einem Vorschaufehler gesperrt; Diagnose prüfen.",
+        "project_plan_faulted" => "Planer nach einem Vorschaufehler gesperrt. Spiel neu laden, neue Session und Zustand prüfen; keine automatische Entsperrung.",
         "project_plan_busy" => "Eine andere Großprojektcharge läuft noch.",
         "project_plan_foreign_construction" => "Fremde Baustellen verhindern die isolierte Bauprüfung.",
         "project_plan_construction_inventory_incomplete" => "Objektbestand für die Baustellenprüfung unvollständig.",

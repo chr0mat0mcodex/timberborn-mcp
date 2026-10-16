@@ -1,5 +1,24 @@
 # Backlog
 
+## Bauplaner und Fehlerweitergabe — begrenzt live abgeschlossen
+
+Priorität P0 aus dem Überlebenspilot vom 17. Oktober. Menschliches Gate und
+15-Teile-Baupilot bestanden; [Nachweise und Grenzen](docs/planner-repair-2026-10-17.md).
+Weitere Überlebens-Learnings stehen in `docs/survival-run-2026-10-17.txt`;
+Wasserdiagnose, Ereignisstopps und Transportqueue sind nicht Teil dieses Fixes.
+
+### Neue Learnings aus dem Baupilot
+
+- Ingame-Fortschrittstext korrigieren: `inspect_large_project` meldete 0/15,
+  strukturierter Bericht dagegen 14/15 fertig. Abnahme: laufende/terminale
+  Chargenberichte korrekt zählen und Ledgerbeobachtung von frischer Diagnose trennen.
+- Eingabeschema und Fehlerdetails präzisieren: unbekannte Vorlage bzw. nicht-UUID
+  als actionId liefern nur `invalid_argument`. Feld und zulässiges Format nennen;
+  UUID-/Enum-/Zahlengrenzen müssen auch in der Client-Werkzeugdarstellung ankommen.
+- Suchbudget bleibt Qualitätsgrenze: acht Vorschauen fanden zwei Gebäude,
+  16 fanden alle drei mit zwölf Umweg-Wegen. Vollständigkeit und Wegkosten
+  getrennt berichten; kein Nachweis einer optimalen Route.
+
 ## B15: Gesamtstruktur — 0.63 mit dokumentierter Grenze abgeschlossen
 
 **Ursprünglich P0, Nutzerauftrag vom 16. Oktober 2026.** Abschluss am 17. Oktober

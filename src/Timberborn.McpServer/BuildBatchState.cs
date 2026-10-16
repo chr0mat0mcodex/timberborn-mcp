@@ -20,6 +20,7 @@ public sealed record BatchSelection(int Rotation, int OptionIndex, string PlanKe
 public sealed record BatchSearch(int Rotation, int Checked, int Rejected, string StopReason);
 public sealed record BatchFinished(int Index, string ActionId, string Template, Position Origin, string Proof, int RegionIndex = 0);
 public sealed record BatchRegionExit(int RegionIndex, string Reason, bool ClearanceUsed, int Targets);
+public sealed record BatchFailure(string Code, string Stage, string Execution, string RecoveryAction);
 
 public sealed class BuildBatchJob
 {
@@ -32,6 +33,7 @@ public sealed class BuildBatchJob
     public required string Fingerprint { get; init; }
     public string State { get; set; } = "planning";
     public string Reason { get; set; } = "";
+    public BatchFailure? Failure { get; set; }
     public int Index { get; set; }
     public int RegionIndex { get; set; }
     public List<BatchRegionExit> PreviousRegions { get; set; } = [];

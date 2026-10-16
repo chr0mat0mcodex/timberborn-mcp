@@ -166,8 +166,7 @@ public sealed class BuildBatchEngine(IBuildBatchPort port, Action<BuildBatchJob>
                 save(j); return false;
             }
             Checkpoint(j,"pending_build");
-            try { j.StructureReceipt=await structure.Structure(j,"run",ct); }
-            catch (BridgeRejectionException ex) { Stop(j,ex.Code); save(j); return false; }
+            j.StructureReceipt=await structure.Structure(j,"run",ct);
             j.State="building"; save(j);
             return true;
         }

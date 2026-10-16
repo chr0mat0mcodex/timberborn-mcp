@@ -1,5 +1,27 @@
 # Spielanleitung für Agenten
 
+## Bauplaner-Korrektur auf 0.63 — begrenzt live geprüft
+
+`project_preview_failed` meldet einen nativen
+Vorschaufehler mit unbewiesener Wiederherstellung; `project_plan_faulted` die
+anschließende Sperre. Spiel neu laden, neue Session prüfen, keinen Bauauftrag
+wiederholen. Die Sperre wird nicht automatisch entfernt. `project_not_found`
+bedeutet, dass die gelesene Projektkennung in dieser Sitzung nicht existiert.
+
+Chargen behalten `failure.code/stage/execution/recoveryAction` in Compact und Full.
+Ein Planungsfehler stoppt die Charge; `advance` plant sie nicht erneut.
+`no_build_order` gilt nur für diese Planungsphase, nicht für ältere Räumarbeiten
+oder eine garantierte Vorschau-Bereinigung. Bei `pending_build`/`ledger_required`
+nur die vorhandene Kennung lesend abgleichen, nie mit neuer Kennung wiederholen.
+`previewRegistered=false`/`native_invalid` ist ein negativer Planungsbefund,
+kein Bauauftrag. [Gate und Nachweisgrenzen](planner-repair-2026-10-17.md).
+Menschliches Gate und ebener 15-Teile-Pilot bestanden: zwei Tanks, Lager und
+zwölf Umweg-Wege fertig/zugänglich, Bestandsanschlüsse erhalten. Native Ausnahme
+und Chargenpersistenz nur synthetisch geprüft, kein neuer Höhenfertigbaunachweis.
+Ingame-Fortschrittszähler derzeit fehlerhaft; strukturierte summary und frische
+Diagnose verwenden. Nach Zeitlimit vorhandene Baustellen diagnostizieren; bei
+geklärtem Zustand nur Simulationszeit ergänzen, nie den Bauauftrag wiederholen.
+
 ## Positive Terraforming-Optionen — begrenzt live geprüft
 
 Der vollständige Zielscan liefert zusätzlich `analysis.terraforming`: bis zu drei

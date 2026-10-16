@@ -20,6 +20,10 @@ public static class ActivityOutcome
     private static string DescribeCore(string name,JsonObject result)
     {
         if(!Handles(name))return "";
+        if(BuildBatchTools.Handles(name) && Text(result,"status")=="error" && result["data"]?["failure"] is JsonObject failure)
+            return "Baucharge: "+Text(failure,"code")+"; Phase "+Text(failure,"stage")+"; nächster Schritt "+Text(failure,"recoveryAction")+".";
+        if(Text(result,"status")=="error" && Text(result["error"],"code") is "project_preview_failed" or "project_not_found")
+            return Text(result["error"],"message") ?? "Native Projektprüfung fehlgeschlagen.";
         if(ProjectPlanningOutcome.Handles(name) && Text(result,"status")=="error" &&
             Text(result["error"],"execution")=="not_executed" &&
             Timberborn.Bridge.Core.LargeProjectPlanningPolicy.IsPreDispatchCode(Text(result["error"],"code")))
