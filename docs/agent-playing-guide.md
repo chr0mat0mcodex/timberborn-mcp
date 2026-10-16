@@ -5,6 +5,15 @@
 Diese Reihenfolge gilt für einen beauftragten Überlebenslauf. Vorhandene Versorgung
 zuerst lesen und nutzen; keine funktionierenden Gebäude doppelt bauen.
 
+**Als Erstes die Karte auf Gefahren scannen.** Wohn- und Versorgungszone abgrenzen
+und Zuflüsse bis zu ihren Quellen bzw. relevanten Engstellen verfolgen, auch
+außerhalb des unmittelbaren Siedlungsumfelds. Besonders Rinnen, tiefe Einschnitte,
+Durchbrüche und Überlaufkanten suchen, die Wasser oder Schlechtwasser in diese
+Zone führen können. Höhen, Abflussmöglichkeiten und gefährliche Spezialobjekte
+einbeziehen. Ungeprüfte Bereiche ausdrücklich unbekannt lassen. Den ersten Scan
+gezielt halten, damit der unmittelbare Versorgungsstart nicht unnötig verzögert wird.
+Erkannte akute Gefahren können die folgende Standard-Baureihenfolge übersteuern.
+
 1. **Wasserpumpe, Beerensammler und Holzfällerfahne in einem Aufwasch planen und
    beauftragen**, einschließlich gemeinsamer Wege und Fällmarkierungen. Unabhängige
    Teile gemeinsam bauen lassen; nur echte Bauabhängigkeiten seriell machen.
@@ -32,6 +41,21 @@ Pegeltrend zu erkennen. Lokale Baugeometrie beweist keine Flutsicherheit.
 Nicht die gesamte Versorgung in einem Becken konzentrieren. Ein Ausweichweg und
 handlungsfähige Bauarbeiter müssen vor der Überflutung verfügbar sein; nach dem
 Ausfall des Distriktzentrums war im Versuch kein Rettungsbau mehr möglich.
+
+**Terraforming und Wasserbau gehören ins Early- und Midgame.** Gefährliche
+Zuflussrinnen rechtzeitig schließen oder umleiten, bevor das Wasser die Siedlung
+erreicht. Dabei einen geeigneten Abfluss erhalten: Eine Sperre kann Wasser
+aufstauen oder über eine andere Kante in die Siedlung drücken. Gelände formen,
+Schutzlinien, Entwässerung, Wasserrückhalt und sichere Höhenzugänge als aktive
+Ausbauziele behandeln, nicht erst als Notmaßnahmen. Je nach tatsächlich
+freigeschalteten Fähigkeiten mit Dämmen, Deichen oder anderen Wasserbauten
+beginnen und später gezielte Geländeänderungen ergänzen. Material, Forschung,
+Bauarbeiterzugang, Bauzeit und Bauzustände bis zur geschlossenen Schutzlinie
+einplanen. Wirkung anschließend an Wasserständen und verbleibenden Zuflüssen
+prüfen; fertige Bauteile allein beweisen keinen Schutz. Nach Ereignissen und
+größeren Eingriffen Gefahrenkarte aktualisieren. Fehlt ein nötiger MCP-Eingriff,
+die konkrete Lücke früh melden und im Backlog festhalten, statt Terraforming
+stillschweigend aus der Strategie zu streichen.
 
 **Personal als knappe Ressource behandeln.** Wasser und Nahrung zuerst besetzen,
 danach Holz und benötigten Transport. Standard-Sollbesetzungen neu gebauter

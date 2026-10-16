@@ -9,6 +9,10 @@ gemeinsamer Bauauftrag, danach Wohnraum + Erfinder, anschließend Bretter.
 Vorratszugriff, Personal, Flutvorsorge und konkrete Diagnosefallen sind destilliert;
 fehlende Fähigkeiten stehen im [Backlog](BACKLOG.md). Reine Dokumentationspflege,
 keine neue Version oder Erweiterung der technischen Liveabnahme.
+Auf Nutzerhinweis ergänzt: initialer Gefährdungsscan auf Zuflussrinnen zur
+Wohn-/Versorgungszone sowie präventives Terraforming und Wasserbau im Early-/Midgame,
+einschließlich Rückstau, Bauphasen und Wirkungsprüfung; benötigte MCP-Fähigkeiten
+im Backlog konkretisiert.
 
 ## 0.61.0 — Objektgrenzen und Planungsfehler begrenzt live abgenommen
 
