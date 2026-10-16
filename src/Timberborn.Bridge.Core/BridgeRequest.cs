@@ -5,6 +5,7 @@ namespace Timberborn.Bridge.Core;
 
 public sealed class BridgeRequest
 {
+    public StrategicMapRequest? StrategicMap { get; private set; }
     public PlantingBatchRequest? PlantingBatch {get;private set;}
     public BuildingConfigurationRequest? Configuration { get; private set; }
     public string Route { get; }
@@ -50,6 +51,7 @@ public sealed class BridgeRequest
 
     public static BridgeRequest Parse(string path, NameValueCollection query)
     {
+        if (path == "/agent-api/v1/strategic-map") { var r = StrategicMapRequest.Parse(query); return new BridgeRequest("strategic-map", session: r.Session) { StrategicMap = r }; }
         if(PlantingBatchRequest.Handles(path)) {var r=PlantingBatchRequest.Parse(path,query);return new BridgeRequest("planting-"+r.Operation,session:r.Session){PlantingBatch=r};}
         if(path=="/agent-api/v1/recent-actions") {var r=RecentActionsRequest.Parse(query);return new BridgeRequest("recent-actions",session:r.Session){RecentActions=r};}
         if(BuildingQueryRequest.Handles(path)) {var r=BuildingQueryRequest.Parse(path,query);return new BridgeRequest(path.Substring("/agent-api/v1/".Length),session:r.Session){BuildingQuery=r};}

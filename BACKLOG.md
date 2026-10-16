@@ -115,6 +115,42 @@ Alle bisherigen Beobachtungen bleiben im [historischen Backlog](BACKLOG_HISTORY.
 
 ### B14 — Strategische Sicht statt isolierter Kartenausschnitte
 
+Ziel präzisiert: allgemeine Mapawareness und Flüssigkeitsübersicht, nicht nur
+Flutschutz einer Zielzone. Kartenweit Quellen, Flussbetten, Tunnel, Becken,
+Verzweigungen, Überläufe und Kartenabflüsse samt Verbindungen darstellen.
+0.62 nach menschlichem Gate begrenzt live abgenommen: zielunabhängiger Flussbericht mit blätterbaren
+Abschnitten/Verbindungen, nativen Quellen-/Wetterdaten und Vergleich zweier Scans.
+Offen: tatsächliche Strömung/Wasserbauwerke, zukünftige Kontamination ohne native
+Regel und verifizierter Wettercountdown. Dürrebeginn mit zehn auf null fallenden
+Quellenstärken und korrekt gemeldeten Differenzen live belegt; Faulwasserflutwechsel
+und spezielle Aktivierungsregeln weiterhin offen.
+Der nächste fachliche Ausbau muss drei getrennte Ebenen liefern:
+- **Mögliche Wege:** Geometrische Verbindungen und Schwellen, auch trockene Rinnen;
+  Richtung nicht allein aus Nachbarschaft ableiten. Wasserbauwerke und deren
+  tatsächliche Einstellungen berücksichtigen oder als unbekannte Barriere melden.
+- **Aktueller Zustand:** Beobachtete Pegel, Wasser/Faulwasser und Mischungen mit
+  gemessener Kontamination je Abschnitt; native Quellentypen und Aktivität.
+  Quellentyp ist nicht automatisch der Flüssigkeitstyp im gesamten verbundenen Netz.
+- **Erwartete Änderung:** Wetter-/Ereignisphase, verbleibende Zeit, belegtes
+  Quellenverhalten und mögliche Ausbreitungswege zusammenführen. Bedingte Szenarien
+  von Prognosen trennen; ohne Durchfluss-/Mischungsnachweis keine Ankunftszeit oder
+  künftige Reinheit behaupten. Unbekannte Wetterdaten ausdrücklich ausweisen.
+Abnahme: zusammenhängendes Flussnetz auch ohne Siedlungsziel, trockener Überlauf,
+getrennte Höhlenstockwerke, Zusammenfluss von Wasser und Faulwasser sowie
+Ereigniswechsel mit nachvollziehbarer Änderung von Quelle und Flüssigkeitszustand.
+
+0.62 ist als erster zusammenhängender Umfang **begrenzt live abgenommen**:
+Livepilot bestätigt Gesamtabdeckung bei Tempo 7 und einen verseuchten Tunnel.
+Quellenhöhen-/Kronenfehler korrigiert und live nachgeprüft. Für den nächsten Ausbau:
+einzelne freie Höhenintervalle gezielt abrufbar machen, vollständige Routen blättern,
+Querschnitte gegen Tunneldecken prüfen und nicht platzierbare Bauhöhen explizit
+kennzeichnen; repräsentative Quellenrouten verdrängen bislang lokale Gefahren.
+Aktueller Umfang: fortsetzbarer Gesamtscan mit freien Höhenintervallen, Spezialobjekten, geometrischen
+Zuflusskorridoren und Sperrquerschnitten. [Vertrag/Pilot](docs/strategic-map-0.62.md).
+Offen bleiben insbesondere native Wasserbauwerks-/Strömungsmodellierung,
+vollständige Gefahrenabdeckung statt repräsentativer Korridore, Wetterprognose,
+globale Änderungsrevision, native Quellklassifikation und reale Schutzwirkung.
+
 - Kartenweite Bestandsaufnahme mit Kartengrenzen, Höhenbereichen und expliziter Suchabdeckung; paginiert bzw. fortsetzbar, kompakte Übersicht mit gezielten Detailabfragen. Untersuchte, veraltete und unbekannte Bereiche unterscheiden. Im laufenden Spiel nutzbar, ohne lange Planungspause.
 - Oberflächen und unterirdische Hohlräume getrennt darstellen: Höhlen, Überhänge, offene Schächte, Eingänge, Rampen, Engstellen und mögliche Übergänge zwischen Höhen. Zusammenhängende Regionen und Verbindungen als Topologie anbieten; geometrische Verbindung, Biberweg, Distriktanschluss und Bauarbeiterzugang getrennt belegen.
 - Spezialobjekte nach nativer Kategorie/Vorlage und Position finden, etwa Wasser-/Schlechtwasserquellen, Ruinen und andere vorhandene Kartenobjekte. Unbekannte Typen sichtbar lassen; keine Namen oder Fähigkeiten erfinden. Eine lokale Abrisszielabfrage mit Kategorie `other` ersetzt diesen Index nicht.

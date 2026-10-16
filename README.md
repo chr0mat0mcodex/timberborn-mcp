@@ -1,5 +1,18 @@
 # Timberborn MCP
 
+## 0.62.0 — Karten-, Quellen- und Flussüberblick begrenzt live abgenommen
+
+Zielunabhängiger Flussüberblick, native Quellenstärke und
+Kontamination, Wetterzustände/Aktivierungsregeln sowie Vergleich zweier Scans.
+Geometrische Verbindungen und beobachtete Flüssigkeit bleiben von Prognosen getrennt.
+
+Fortsetzbarer Gesamtscan bei laufendem Spiel: Höhlen/Überhänge, Spezialobjekte,
+mögliche Zuflussrinnen zur Schutzzone und konkrete Sperrquerschnitte.
+Geometrische Planungshilfe, keine Flutprognose oder automatische Baufreigabe.
+Menschliches Gate und Livepilot einschließlich Dürrewechsel bestanden.
+Faulwasserflutprognose und Wasserbauwerkswirkung bleiben offen.
+[Umfang und Nachweise](docs/strategic-map-0.62.md).
+
 ## 0.54.0 - Pflanzen- und Flaechenjournal begrenzt live abgenommen
 
 Menschliches Gate und Abschluss-Livetest am 12. Oktober 2026 bestanden.

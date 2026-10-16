@@ -5,6 +5,32 @@ description: Timberborn über die vorhandene Hermes-MCP-Verbindung steuern; Test
 
 # Timberborn in Hermes
 
+## Strategischer Scan 0.62 — begrenzt live abgenommen
+
+Allgemeiner Flussüberblick: `overviewOnly=true`, keine Zielkoordinaten erforderlich.
+Nach Gesamtabdeckung `rivers` lesen und Abschnitte/Verbindungen/Quellen mit
+`sectionOffset`/`linkOffset`/`sourceOffset` blättern (32/64/16 je Seite). Native
+Quellenstärke, Kontamination, Auslässe, Modifikatoren und Wetterregeln getrennt von
+örtlicher Flüssigkeit beurteilen. Neue vollständige Scans vor/nach Wetterwechsel
+vergleichen; keine zukünftige Kontamination oder Fließrichtung erfinden.
+Gate und Livepilot einschließlich Dürrebeginn bestanden: zehn Quellen gingen auf
+Stärke null; lokale Restflüssigkeit bleibt getrennt. Faulwasserflutwechsel und
+spezielle Aktivierungsregeln sind noch nicht live belegt.
+
+Wenn im aktuellen Katalog vorhanden: `scan_strategic_map` mit aktueller Session
+und Wohn-/Versorgungszone als x/y/z/width/height beginnen. Ganze Karte wird gelesen;
+mit scanId und identischer Zielzone fortsetzen, zunächst eine Kachel als Pilot.
+Laufende Simulation wird nicht pausiert. Erst vollständige Terrainabdeckung liefert
+geometrische Zuflusskorridore und konkrete Sperrquerschnitte. Alter, Abdeckung und
+Analysestatus beachten; Spezialobjekte über objectOffset blättern.
+Keine Flutprognose oder Baufreigabe: bestehende Wasserbauten nicht modelliert,
+Quellnamen nur Hinweise, acht Korridore nur Beispiele. Szenariopegel ist angenommene
+absolute Rasterhöhe. Vor Maßnahmen lokal frisch prüfen, Umwege und Rückstau
+bewerten und native Bauplanung verwenden. Diese Pflege installiert den Skill nicht.
+Erster Livepilot: Gesamtabdeckung und verseuchter Tunnel bestätigt; Korrekturen
+an Quellenhöhen und Kronenberechnung live nachgeprüft. Tunneldecken lokal prüfen:
+angenommene Krone und Bauhöhe sind keine unter einem Dach platzierbare Blockfolge.
+
 ## Stand und Geltung
 
 Fachlich aktualisiert am 16. Oktober 2026: Projektstand 0.60 begrenzt live

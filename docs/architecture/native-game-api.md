@@ -30,6 +30,21 @@ Erreichbarkeit, Produktionsblockaden und Meldungen bleiben begrenzt.
 
 ## Historische API-Recherche vom 2026-09-19
 
+### Ergänzung 2026-10-16: Quellen und Wetter (0.62 begrenzt live geprüft)
+
+Mit dem vorhandenen Metadatenleser an unveränderten lokalen Bibliotheken bestätigt:
+`WaterSource.Coordinates/SpecifiedStrength/CurrentStrength/Contamination/WaterStrengthModifiers`,
+`IWaterStrengthModifier.GetStrengthModifier()`,
+`HazardousWeatherWaterSourceSpec.ActiveInHazardousWeather`,
+`WeatherService.IsHazardousWeather/TemperateWeatherDuration/HazardousWeatherDuration/HazardousWeatherStartCycleDay/CycleLengthInDays`,
+`HazardousWeatherService.CurrentCycleHazardousWeather.Id` und
+`GameCycleService.Cycle/CycleDay/PartialCycleDay` sind öffentlich.
+Integration über reguläre Game-Dienstinjektion und Quellenkomponenten; kein privater
+Zugriff, keine Methodenkörperanalyse, keine neue Laufzeitabhängigkeit. Namen der
+Stärkemodifikatoren dienen nur der Diagnose, nicht als erfundene Zukunftsregel.
+Quellenwerte und Dürrewechsel sind inzwischen begrenzt live bestätigt; künftige
+Kontamination und allgemeine Countdown-Semantik bleiben ohne Nachweis.
+
 Die folgenden Signaturbefunde und damaligen offenen Fragen erklären den Entwurf.
 Sie sind keine aktuelle Installations-/Funktionsübersicht; spätere Implementierungen
 und Live-Nachweise stehen im Projektstand und Journal.

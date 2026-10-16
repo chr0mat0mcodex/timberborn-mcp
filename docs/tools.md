@@ -1,5 +1,26 @@
 # Native MCP-Werkzeuge
 
+## 0.62 — strategischer Kartenscan, begrenzt live abgenommen
+
+Erweiterung: `overviewOnly=true` ohne Zielkoordinaten liefert `rivers` mit
+Flussabschnitten, geometrischen Verbindungen und nativen Quellen-/Wetterdaten.
+`sectionOffset`/`linkOffset`/`sourceOffset` blättern 32/64/16 Einträge; Gesamtzahlen
+und `more*` beachten. Stärke-/Kontaminationsänderungen gegenüber einem vorherigen
+vollständigen Scan derselben Sitzung werden separat vom Wetterwechsel gemeldet.
+Keine gemessene Fließrichtung, zukünftige Kontamination oder Ankunftszeit;
+Aktivierungsregeln sind keine Garantie des tatsächlichen Ausstoßes.
+
+`scan_strategic_map`: aktuelle Session und Zielzone x/y/z/width/height, optional
+scanId, tilesPerCall (1–8, Standard 4), scenarioWaterLevel (absolute angenommene
+Rasterhöhe) und objectOffset. Ganze Karte in 32×32-Kacheln bis 512×512×64,
+ohne Pause; mit derselben Kennung fortsetzen. Erst vollständige Terrainabdeckung
+liefert bis zu acht geometrische Zuflusskorridore, Geländeschwellen und konkrete
+Sperrquerschnitte. Spezialobjekte seitenweise zu 32. Abdeckung und Zeitspanne lesen;
+fertige Scans historisch, neue Kennung aktualisiert. Kein Wasserbauwerksmodell,
+keine Strömungs-/Flutprognose, kein ausführbarer Bauplan. Zwei Scans je Client,
+15 Minuten Leerlauf. Gate und Livepilot einschließlich Dürrewechsel bestanden;
+Faulwasserflutwechsel noch nicht belegt. [Vertrag und Livebelege](strategic-map-0.62.md).
+
 ## 0.54.0 - Pflanzen- und Flaechenjournal begrenzt live abgenommen
 
 Menschliches Gate und Abschluss-Livetest am 12. Oktober 2026 bestanden.

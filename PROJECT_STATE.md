@@ -1,5 +1,39 @@
 # Projektstand
 
+## 0.62.0 — Karten-, Quellen- und Flussüberblick begrenzt live abgenommen
+
+Menschliches Gate bestanden; Abschluss-Livetest am 16. Oktober 2026 bei Tempo 7.
+`scan_strategic_map` erfasst Terrain/Höhlen und Spezialobjekte kartenweit. Mit
+`overviewOnly=true` ohne Siedlungsziel: blätterbare Flussabschnitte, geometrische
+Verbindungen über nasse/trockene Schwellen, native Quellen und Wetterzustände.
+Mit Zielzone zusätzlich repräsentative Korridore und Schutzkandidaten.
+
+Belegt: 64 Kacheln und 65.536 Spalten; zunächst 444 Abschnitte, 776 Verbindungen,
+zehn native Quellen. Sämtliche Abschnitts-/Kantenseiten ohne Doppelungen gelesen;
+Quellenabdeckung vollständig gemeldet. Sauberer Auslass, verseuchte Höhle und
+höhere trockene Schwelle gegen native Zellwerte bestätigt. Quellenhöhen und
+Kronenkorrektur live nachgeprüft; alte Session korrekt abgewiesen.
+
+Wetterwechsel von gemäßigt zu Dürre: alle zehn Quellen von ihrer jeweiligen
+Stärke auf null, native Dürremodifikatoren von 1 auf 0. Vergleich zum vorherigen
+vollständigen Scan meldet Wetterwechsel und passende Quellendifferenzen; lokale
+Restflüssigkeit bleibt getrennt ausgewiesen. Folgescan 404 Abschnitte/681 Kanten.
+Beobachtungszeiten der zwei zusammenhängenden Vollscans: 2,48 bzw. 3,48 Sekunden.
+
+Grenzen: geometrische Verbindungen, keine gemessene Richtung/Flussphysik;
+Wasserbauwerke nicht modelliert. Kein Nachweis von Faulwasserflutwechseln,
+zukünftiger Kontamination oder allgemeiner Schutzwirkung. Spezielle native
+Aktivierungsregeln waren bei den zehn Quellen nicht vorhanden und bleiben
+unbekannt; keine erfundene Prognose. Wetter-Rohwerte sind kein allgemein
+abgenommener Countdown. Höhlenkronen sind keine ausführbaren Baupläne.
+
+[Vertrag und Livebelege](docs/strategic-map-0.62.md). Spielanleitung,
+Werkzeugreferenz und lokale Hermes-Spielskillvorlage mit Nachweisen/Grenzen
+aktualisiert; Hermes-Integration bleibt zurückgestellt. Öffentliche API-Signaturen
+geprüft, keine privaten Zugriffe/neuen Abhängigkeiten. B12 bleibt: nach neuen
+Werkzeugen/Parametern musste Codex seinen Katalog durch Neustart aktualisieren.
+Fremde Arbeitskopieänderungen bleiben außerhalb des Feature-Checkpoints.
+
 ## Spielversuch 16. Oktober 2026 — beendet, Learnings dokumentiert
 
 Nutzer beendet den Überlebenslauf nach großflächiger verseuchter Überflutung.

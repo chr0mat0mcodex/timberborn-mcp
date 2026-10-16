@@ -1,5 +1,39 @@
 # Spielanleitung für Agenten
 
+## Strategischer Kartenscan 0.62 — begrenzt live abgenommen
+
+Für allgemeine Mapawareness `scan_strategic_map(session, overviewOnly=true)` ohne
+Siedlungsziel verwenden. `rivers` enthält nach vollständigem Scan Abschnitte mit
+lokalen Pegel-/Kontaminationsbereichen, geometrische Verbindungen, Quellen und Wetter.
+Mit `sectionOffset` (32), `linkOffset` (64), `sourceOffset` (16) vollständig blättern.
+Quellenstärke ist kein gemessener Durchfluss, geometrische Kanten keine beobachtete
+Fließrichtung. Aktivierungsregeln und aktuellen Zustand getrennt lesen; zukünftige
+Kontamination bleibt ohne belegte Regel unbekannt. Vor/nach Wetterwechsel jeweils
+neu scannen: Unterschiede zur vorherigen vollständigen Beobachtung derselben Sitzung
+werden ausgewiesen. Gate und Livepilot einschließlich Dürrebeginn bestanden:
+zehn Quellen stellten die Förderung ein, lokale Restflüssigkeit blieb getrennt.
+Faulwasserflutwechsel und spezielle Aktivierungsregeln sind noch nicht live belegt.
+
+`scan_strategic_map(session, x, y, z, width, height)` verwendet die angegebene
+Region als **Schutzzone** und scannt die ganze Karte. Zunächst `tilesPerCall=1`
+für einen kleinen Pilot; mit derselben `scanId` und Zielzone fortsetzen.
+Bei vollständiger Terrainabdeckung folgen mögliche Zuflusskorridore, Spezialobjekte,
+Geländeschwellen und Sperrquerschnitte. Keine Pause erforderlich. `scenarioWaterLevel`
+ist optional eine angenommene absolute Rasterhöhe, kein prognostizierter Pegel.
+`objectOffset` blättert Spezialobjekte; ein neuer Scan ohne Kennung aktualisiert
+den historischen Stand. Abdeckung, Beobachtungsalter und Analysestatus mitlesen.
+
+Pfade und Sperrquerschnitte sind geometrische Planungshilfen. Bestehende Dämme,
+Schleusen und Wasserphysik sind nicht modelliert; Quellnamen nur Vorlagenhinweise.
+Die acht Korridorbeispiele decken nicht alle Gefahren ab. Kandidaten lokal frisch
+prüfen, Alternativzuflüsse/Rückstau untersuchen und erst dann native Bauplanung
+verwenden. Keine Bauaufträge direkt aus dem Scan ableiten. Wassersemantik unter
+Überhängen und Laufzeit zuerst im [Livepilot](strategic-map-0.62.md) prüfen.
+Der erste Livepilot bestätigte Gesamtabdeckung bei Tempo 7 und einen verseuchten
+Tunnel. Die dabei gefundenen Quellenhöhen-/Kronenfehler sind korrigiert und live
+nachgeprüft. Tunneldecken können unter der angenommenen Krone liegen:
+angegebene Bauhöhen keinesfalls als tatsächlich platzierbare Blöcke übernehmen.
+
 ## Überlebensstart und Learnings aus dem Spielversuch vom 16. Oktober 2026
 
 Diese Reihenfolge gilt für einen beauftragten Überlebenslauf. Vorhandene Versorgung
