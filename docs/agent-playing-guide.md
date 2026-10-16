@@ -50,8 +50,13 @@ Abbild und kein Ersatz für das Spieländerungsjournal. [Dateilogvertrag](file-d
 
 ## Bau-Ergebniszeilen 0.59 — begrenzt live abgenommen
 
-Einzelprojekt und Ein-Gebäude-Charge live geprüft; Ingame-Lesbarkeit bestätigt.
-Weitere Varianten bleiben synthetische Gate-Nachweise. Auftragsstatus
+Einzelprojekt, Ein-Gebäude-Charge und Vier-Teile-Großprojekt am anderen Flussufer
+live geprüft; Ingame-Lesbarkeit bestätigt. Gezielter Großprojektstopp belegt
+2/4 fertig plus eine Baustelle und einen nicht erteilten Auftrag. Erst pausing,
+dann bestätigte Pause. Nach Fertigbau der vorhandenen Baustelle Freigabe mit 3/4;
+der vierte Auftrag bleibt aufgegeben. Freigabe ist kein vollständiger Fertigbau.
+Räumgruppen, Reparaturen, Budgeterschöpfung, andere Teilfehler und der separate
+Bauchargenstopp bleiben ohne eigene Liveprobe dieser Ergebniszeilen. Auftragsstatus
 `completed` bei Einzelprojekten bedeutet bestätigte Aufträge, keinen Fertigbau.
 Bauabschlussberichte trennen fertige Bauteile, Gebäudezugang und Zeitbudget.
 `finished_accessible` bestätigt zusätzlich die Pause, keinen Betrieb.
@@ -61,7 +66,9 @@ Großprojekte zählen Bauteile einschließlich Wege/Hilfsbauten; bestätigte Pla
 Fertigbau und unbestätigte/offene Teile bleiben getrennt. `inspect_large_project`
 liefert gespeicherte Nachweise; Diagnose/Close prüfen frisch. Projektfreigabe kann
 noch offene Teile aufgeben. Räum-/Baugruppen geben gespeicherte Belege wieder;
-„Stopp angefragt“ ist kein abgeschlossener Stopp. Bei `stop_building_batch` behält
+„Stopp angefragt“ ist kein abgeschlossener Stopp. Bei `stop_large_project` erst
+`pauseConfirmed=true` und tatsächliches Tempo 0 als Pausennachweis verwenden.
+Bei `stop_building_batch` behält
 ein bestehender Simulationslauf sein Budget. Nie aus einer Ergebniszeile allein
 Pause, Produktion oder allgemeine Bausicherheit ableiten.
 

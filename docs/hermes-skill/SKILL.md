@@ -116,14 +116,20 @@ aktuell geladenen Werkzeugschema erkennen, nicht allein an der Bridge-Version.
   `inspect_planting_batch` liefert einen historischen Beleg. Startzeilen werden
   beim späteren Ende eines Laufs nicht automatisch umgeschrieben; dessen Status
   mit derselben Kennung lesen. Keine zusätzlichen Schreibaufträge für Logtexte.
-- 0.59 begrenzt live abgenommen: Einzelprojekt und Ein-Gebäude-Charge, beide
-  ingame lesbar bestätigt. Weitere Varianten nur synthetisch geprüft. Ergebniszeilen für
+- 0.59 begrenzt live abgenommen: Einzelprojekt, Ein-Gebäude-Charge und
+  Vier-Teile-Großprojekt am Westufer bis 4/4 fertig/zugänglich. Gezielter
+  Großprojektstopp: 2/4 fertig, eine Baustelle, ein nicht erteilter Auftrag;
+  nach Fertigbau der vorhandenen Baustelle Freigabe mit 3/4, letzter Auftrag
+  aufgegeben. Alle geprüften Ergebniszeilen ingame lesbar bestätigt.
+  Räumgruppen, Reparaturen, Budgeterschöpfung, andere Teilfehler und
+  stop_building_batch ohne eigene Liveprobe dieser Ergebniszeilen. Ergebniszeilen für
   Einzelprojekte, Bauchargen, Großprojekte und Räum-/Baugruppen. Auftrags-`completed` ist kein Fertigbau.
   Bauabschluss `finished_accessible` belegt Fertigbau/Zugang/Pause, keinen Betrieb.
   Chargen zählen Gebäude; Großprojekte Bauteile einschließlich Wege/Hilfsbauten.
   Gespeicherte Stände sind keine frische Zugangsprüfung; Diagnose/Close prüfen
   frisch, Räum-/Baugruppen liefern weiter gespeicherte Belege. Projektfreigabe
-  kann offene Teile aufgeben. Stopp einer Baucharge lässt vorhandenes Laufbudget
+  kann offene Teile aufgeben. stop_large_project fordert Pause an; erst
+  pauseConfirmed=true und Tempo 0 bestätigen sie. stop_building_batch lässt vorhandenes Laufbudget
   bestehen; angefragter Gruppenstopp ist noch kein Abschluss. Vorschau erteilt
   keine Aufträge. Fehlende Angaben nicht als null fertige Teile interpretieren.
   Dieselbe Kennung weiter lesend prüfen, keine unbestätigten Aufträge wiederholen.

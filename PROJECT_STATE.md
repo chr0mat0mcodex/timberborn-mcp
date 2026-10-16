@@ -10,8 +10,14 @@ Nach menschlicher Bereitmeldung installierte Bridge 0.59 und neue Sitzung bestä
 Ein Lager-Einzelprojekt und eine Ein-Gebäude-Charge bis fertig/zugänglich geprüft;
 Auftrag, unfertiger Zwischenstand und Abschluss korrekt getrennt. Zehn Bau-Belege
 in MCP- und Bridge-Dateilogs identisch, keine Schreibverluste. Mensch bestätigt
-beide Ergebniszeilen vollständig lesbar. Großprojekte, Räumgruppen und Stoppfälle
-bleiben synthetische Gate-Nachweise; keine pauschale Live-Abnahme aller Varianten.
+beide Ergebniszeilen vollständig lesbar. Ergänzend am Westufer: Vier-Teile-Projekt
+bis 4/4 fertig/zugänglich, Diagnose und Freigabe geprüft. Separater Stoppfall:
+2/4 fertig, eine Baustelle, ein nicht erteilter Auftrag; zunächst Pause angefragt,
+anschließend Pause bestätigt. Nach Fertigbau der vorhandenen Baustelle mit 3/4
+und einem aufgegebenen Auftrag freigegeben. Elf weitere Logtexte in beiden Dateien
+identisch, keine Schreibverluste; Mensch bestätigt Stopp-/Freigabezeilen lesbar.
+Räumgruppen, Reparaturen, andere Teilfehler, Budgeterschöpfung und der separate
+stop_building_batch bleiben ohne eigene Liveprobe der Ergebniszeilen.
 
 Versionspflege: `docs/agent-playing-guide.md` und `docs/hermes-skill/SKILL.md`
 auf Umfang und begrenzte Live-Abnahme ergänzt und bisherige Ausschlüsse präzisiert.

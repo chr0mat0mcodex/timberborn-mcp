@@ -59,8 +59,30 @@ unfertiger Bau, laufende Simulation und schließlich fertig/zugänglich mit Paus
 Eine Ein-Gebäude-Charge von 0/1 bis 1/1 fertig/zugänglich begleitet; spätere
 Statusabfrage korrekt als gespeicherter Beleg bezeichnet. Zehn Bau-Ergebnistexte
 zwischen Agentenlog und beiden Dateilogs übereinstimmend, keine Schreibverluste.
-Ingame-Lesbarkeit vom Menschen bestätigt. Großprojekte, Räumgruppen, Teilfehler,
-Budgeterschöpfung und Stopp bleiben synthetische Gate-Abdeckung, keine Liveprobe.
+Ingame-Lesbarkeit vom Menschen bestätigt.
+
+Ergänzende Abschlussprüfung am 16. Oktober 2026 auf der anderen Flussseite:
+Westlicher Brückenkopf nativ am Distrikt angeschlossen; kein neuer Flussübergang.
+Vier-Teile-Großprojekt aus zwei Anschlusswegen und zwei kleinen Lagern bis 4/4
+fertig und zugänglich begleitet. Gespeicherter Status, frische Diagnose und
+Freigabe liefern die jeweils richtige Nachweisart; Pause bestätigt.
+Separater Vier-Teile-Stoppfall mit expliziter Fertigbau-Abhängigkeit: beim Stopp
+2/4 fertig, eine bestätigte Baustelle, ein Auftrag nicht erteilt. Stopprückgabe
+pausing mit pauseConfirmed=false; erst Folgeabfrage und Tempo 0 bestätigen Pause.
+Nach separatem begrenztem Fertigbauen der vorhandenen Baustelle blieb der letzte
+Auftrag unerledigt. Close gab das Projekt mit 3/4 fertig/zugänglich und einem
+aufgegebenen, nie erteilten Auftrag frei. Keine Wiederholung des gestoppten Projekts.
+Elf zusätzliche Großprojekt-Ergebnistexte in Agentenlog und beiden Dateilogs
+übereinstimmend, keine Schreibverluste. Mensch bestätigt auch lange Stoppzeile
+und 3/4-Freigabezeile vollständig lesbar.
+
+Verbleibende Grenzen: Räum-/Baugruppen, Reparaturprojekte, andere Teilfehler,
+Budgeterschöpfung sowie stop_building_batch bleiben ohne eigene Liveprobe dieser
+Ergebniszeilen. Der hier geprüfte stop_large_project pausiert seinen Lauf;
+das ist nicht auf stop_building_batch übertragbar, dessen vorhandenes Budget
+weiterläuft. Kein Nachweis für Produktion, Belieferung, Kraftnetze oder allgemeine
+Bauphasensicherheit. Bekannter Darstellungsumfang: der angeforderte Stopgrund
+erscheint nach Stillstand noch allgemein als Verweis auf den Fachbericht.
 
 Versionspflege: Spielanleitung und `docs/hermes-skill/SKILL.md` aktualisiert;
 Hermes bleibt eine lokale, nicht installierte und nicht abgenommene Vorlage.
