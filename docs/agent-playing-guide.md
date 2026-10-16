@@ -1,5 +1,64 @@
 # Spielanleitung für Agenten
 
+## Überlebensstart und Learnings aus dem Spielversuch vom 16. Oktober 2026
+
+Diese Reihenfolge gilt für einen beauftragten Überlebenslauf. Vorhandene Versorgung
+zuerst lesen und nutzen; keine funktionierenden Gebäude doppelt bauen.
+
+1. **Wasserpumpe, Beerensammler und Holzfällerfahne in einem Aufwasch planen und
+   beauftragen**, einschließlich gemeinsamer Wege und Fällmarkierungen. Unabhängige
+   Teile gemeinsam bauen lassen; nur echte Bauabhängigkeiten seriell machen.
+   Wasser an der Ansaugstelle, erreichbare reife Beeren und fällbare Bäume prüfen.
+   Für alle drei Besetzung, Zugang und tatsächlichen Ertrag kontrollieren.
+2. **Danach Wohnraum und einen Forscher (Erfinder) aufbauen.** Betten am Bedarf
+   ausrichten und Nachwuchs ermöglichen. Forschung besetzen, sobald die
+   Grundversorgung trägt; keinen Versorgungsarbeiter dafür ersatzlos abziehen.
+3. **Dann Bretter:** Sägewerk und direkt verbundenes Laufrad gemeinsam planen.
+   Zwei Arbeitskräfte sowie Holz für Bau und Verarbeitung einrechnen. Fertigbau,
+   echte Kraftnetzverbindung und erzeugte Bretter getrennt nachweisen. Bei
+   Personalmangel zeitweise fertigen, danach Arbeiter in die Versorgung zurückgeben.
+
+**Vorräte früh absichern.** Passende Wasser-, Nahrungs- und Holzlager einplanen
+und konfigurieren. Erreichbarer Bestand und Verbrauch über Nacht bzw. während
+einer Dürre entscheiden über Ausbau, nicht ein einzelner positiver Lagerwert.
+Ausgabepuffer sind keine zusätzliche Reserve, die zu Gesamtbeständen addiert wird.
+Überflutete Lager können weiter im globalen Bestand stehen; Zugriff separat prüfen.
+Bei vollen Produktionspuffern Transport verbessern statt weitere Produzenten bauen.
+
+**Vor dem Ausbau die Umgebung verstehen.** Ansaugstelle bei Niedrigwasser,
+Wasseroberfläche bei Hochwasser, Kontamination, Zufluss und Abfluss sowie einen
+höheren Ausweichstandort prüfen. Gleiche Messzellen mehrfach lesen, um einen
+Pegeltrend zu erkennen. Lokale Baugeometrie beweist keine Flutsicherheit.
+Nicht die gesamte Versorgung in einem Becken konzentrieren. Ein Ausweichweg und
+handlungsfähige Bauarbeiter müssen vor der Überflutung verfügbar sein; nach dem
+Ausfall des Distriktzentrums war im Versuch kein Rettungsbau mehr möglich.
+
+**Personal als knappe Ressource behandeln.** Wasser und Nahrung zuerst besetzen,
+danach Holz und benötigten Transport. Standard-Sollbesetzungen neu gebauter
+Gebäude prüfen: Der Trägerposten verlangte zunächst fünf Arbeiter bei nur vier
+verbliebenen Erwachsenen. Unproduktive trockene Pumpen und volle Betriebe
+vorübergehend pausieren. Alterung und Nachwuchs berücksichtigen; Rückgang der
+Bevölkerung nicht ohne Beleg Hunger oder Durst zuschreiben.
+
+**Nicht auf scheinbar beruhigende Diagnosen verlassen.** `ready=true` beweist
+weder Wasserförderung noch tatsächlichen Betrieb. Sichtbares `Paused` kann
+`Flooded` verdecken; fehlender Fluttext ist kein Trockenheitsnachweis.
+Bedürfniswarnungen allein sind keine akute Notlage, und gespeicherte Bedürfniswerte
+können trotz bereits ausgefallener Versorgung noch gut aussehen. Bei Warntexten
+mit Platzhaltern keine Frist erfinden. Fehlende Gefahreninformation früh klären.
+
+**Tempo und Planungszeit:** Im Lauf gewünschtes Tempo halten; nur ausdrücklich
+erlaubte Planungspausen nutzen. Baupersonal vor der endgültigen Vorschau einstellen,
+damit eigene Änderungen den Planschlüssel nicht sofort veralten lassen.
+Automatische Bauabschlüsse können pausieren: frisch prüfen, Projekt abschließen
+und das vereinbarte Tempo zeitnah wiederherstellen. Konkrete Ablehnungen
+diagnostizieren; unbestätigte Aufträge niemals blind wiederholen.
+
+Im Versuch gelangen Bretterproduktion, Aufforstung, Reservoirpumpe mit Treppe
+und Trägerposten. Großflächiges verseuchtes Hochwasser legte anschließend die
+Versorgung still; der Nutzer beendete den Lauf. Das ist kein bestandener
+Überlebensnachweis. Benötigte neue MCP-Fähigkeiten stehen im [Backlog](../BACKLOG.md).
+
 ## Navigationsprüfung 0.61 — begrenzt live abgenommen
 
 Große Karte, Höhenfehler, gefährdeter Bestand und gültiger Umweg live geprüft.

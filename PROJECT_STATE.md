@@ -1,5 +1,15 @@
 # Projektstand
 
+## Spielversuch 16. Oktober 2026 — beendet, Learnings dokumentiert
+
+Nutzer beendet den Überlebenslauf nach großflächiger verseuchter Überflutung.
+Kein Überlebenserfolg behauptet. Die [Spielanleitung](docs/agent-playing-guide.md)
+beginnt jetzt mit der Startfolge Wasser + Beerensammler + Holzfällerfahne als
+gemeinsamer Bauauftrag, danach Wohnraum + Erfinder, anschließend Bretter.
+Vorratszugriff, Personal, Flutvorsorge und konkrete Diagnosefallen sind destilliert;
+fehlende Fähigkeiten stehen im [Backlog](BACKLOG.md). Reine Dokumentationspflege,
+keine neue Version oder Erweiterung der technischen Liveabnahme.
+
 ## 0.61.0 — Objektgrenzen und Planungsfehler begrenzt live abgenommen
 
 Beide pauschalen 4.096-Kartenobjektgrenzen entfernt: Navigationsauswahl und

@@ -80,7 +80,47 @@ Alle bisherigen Beobachtungen bleiben im [historischen Backlog](BACKLOG_HISTORY.
 | B10 | Agentenlog verbessern | 0.55: Cursor, Werkzeug-/Statusfilter und Lücken begrenzt live abgenommen. [Vertrag](docs/agent-log-pagination-0.55.md). 0.56: explizite Projekt-/Laufkorrelation mit ID-Filtern begrenzt live abgenommen; Ingame-Anzeige vom Menschen bestätigt. [Umfang](docs/agent-log-correlation-0.56.md). 0.57: Sitzungs-Dateilogs mit Save-Namen, neue Dateien beim Neuladen, vereinfachte Anzeige und automatischer Spielstart begrenzt live abgenommen. [Vertrag](docs/file-diagnostics-0.57.md). 0.58: verständliche Ergebniszeilen für Gebäudeeinstellungen, Simulation und Pflanzchargen begrenzt live abgenommen; Ingame-Lesbarkeit vom Menschen bestätigt. [Umfang](docs/agent-log-outcomes-0.58.md). 0.59: Ergebniszeilen für Bauprojekte und Bauchargen begrenzt live abgenommen (Einzelprojekt, Ein-Gebäude-Charge, Vier-Teile-Großprojekt und gezielter Großprojektstopp am Westufer); Ingame-Lesbarkeit bestätigt. Zusatzproben: Räumgruppe, Spielzeitbudgetende und separater Bauchargenstopp bestanden; Reparaturstart nach gültiger Vorschau mit state_conflict fehlgeschlagen. Neuer 0.59-Kontrollfall erfolgreich, ursprüngliche Ursache weiter offen. 0.60: falscher Planschlüssel korrekt ohne neuen Auftrag abgewiesen, gültiger Reparaturabschluss/Pause/Elternfreigabe live geprüft; zwölf Ergebniszeilen in beiden Dateilogs identisch. Ingame-Lesbarkeit vom Menschen bestätigt; [Befund und Livepilot](docs/repair-start-0.60.md). Zeitlimit-/Stopgrund im Kurztext präzisieren. [Testprotokoll](docs/agent-log-live-tests-0.59.md). [Umfang](docs/agent-log-building-outcomes-0.59.md). Weitere Auftragsfamilien bleiben offen; kein Ersatz für das Spieländerungsjournal. |
 | B11 | Agenten-UI im Spiel | Screenshot mit Kamerametadaten und „schau mal“ existieren. Offen: „Zeigen“-Button nimmt die Ansicht beim Klick auf, begrenzte Aufbewahrung und Abhol-/Fehlerstatus. Aktive Benachrichtigung ist ein separat zu definierender Umfang. |
 | B12 | Weitere Effizienz und Diagnosequalität | Noch große Werkzeugantworten/-beschreibungen gezielt messen, veralteten Clientkatalog erkennbar machen, unnötige interne Reads reduzieren. 0.54-Pilot: kleine Journalgruppen adaptiv darstellen; sechs Ereignisse mit vier Gruppen sparen nur 5 von 1555 page-Zeichen. Compact/Full und günstiges Warten sind bereits vorhanden. |
-| B13 | Optionale Koloniebeobachtung | Geburten/Todesfälle im Intervall, Familienwohnungen, tatsächliche Wohlbefindensursachen und historisches Bauregister. Kein fortlaufender Auftrag, alle Gebäude oder eine bestimmte Bevölkerung zu erreichen. |
+| B13 | Optionale Koloniebeobachtung | Geburten/Todesfälle im Intervall, Altersverteilung, bevorstehendes Erwachsenwerden und altersbedingte Personalengpässe, Familienwohnungen, tatsächliche Wohlbefindensursachen und historisches Bauregister. Prognosen mit Zeitraum, Annahmen und Unsicherheit; freie Betten beweisen keinen gesicherten Nachwuchs. Kein fortlaufender Auftrag, alle Gebäude oder eine bestimmte Bevölkerung zu erreichen. |
+| B14 | Strategische Kartenübersicht und Spezialobjektsuche | Nutzerauftrag vom 2026-10-16: kartenweite, strukturierte Übersicht über Topologie, Höhenlagen, Höhlen, Wasserreservoirs und Spezialobjekte. Vorhanden sind beliebige lokale Koordinatenabfragen bis 8×8×4, regionale Suche bis 16×16 und Spielbilder; keine daraus erschlossene strategische Gesamtkarte. Umfang und Abnahme unten. |
+
+### Spielbetrieb 0.61 — neue konkrete Lücken (2026-10-16)
+
+- **Pumpenquelle fehlt in Betriebsdiagnose:** Beide Ansaugstellen hatten
+  waterDepth=0, während inspect_building_operation keine Quellenblockade meldete.
+  Ansaugzelle, Wasserstand, Verunreinigung und quellenseitige Betriebsbedingung
+  strukturiert ausweisen; fehlende Warnung nicht als Förderfähigkeit behandeln.
+
+- **Planschlüssel nach Zugangsergänzung:** `plan_large_project_access` lieferte
+  einen gültigen Plan; direkter Start bei unveränderter Pause meldete
+  `project_start_plan_changed`. Keine Baustelle entstanden. Frische explizite
+  Gesamtvorschau mit denselben Schritten startete erfolgreich. Cache-/Vorschau-
+  Identitäten als Ursache untersuchen, nicht ohne Beleg behaupten.
+- **Gefahrenanzeige:** Unstable-Core-Alert enthält `{0} days` statt Countdown;
+  Wirkungszone und gefährdete Wasser-/Wegeverbindungen fehlen. Ergänzt B14.
+- **Kollisionsdiagnose:** precheck_building nennt belegte Zellen, aber keine
+  verursachenden Objekt-IDs/-typen; erschwert gezielte Räumung und Standortwahl.
+- **Kraftplanung:** Generator-/Verbraucher-Verbindung als explizites Planungsziel;
+  `rotationMatches=false` bedeutet im belegten Laufradfall keine fehlende reale
+  Verbindung. Portausrichtung, Netzverbindung und Produktion verständlich trennen.
+- **Fortlaufende Simulation:** Bauchargen pausieren zwingend am Abschluss.
+  Optionale ausdrücklich beauftragte Abschlussgeschwindigkeit prüfen, damit
+  Spielbetrieb auf Tempo 7 keinen zusätzlichen Resume-Aufruf braucht.
+- **Gemeinsamer Versorgungsstart (B07):** Wasserpumpe, Beerensammler und
+  Holzfällerfahne einschließlich Wegen, Fällmarkierung, erreichbaren Quellen und
+  Personal in einem Plan vorbereiten. Danach Wohnraum und Erfinder, anschließend
+  Sägewerk mit Kraftversorgung. Fertige Gebäude allein reichen als Abschluss
+  nicht: Förderung, Sammlung und Holzeintrag getrennt nachweisen. Vorhandene
+  Gruppenplanung wiederverwenden; fehlende gemeinsame Quellen-/Personalprüfung
+  ergänzen, keinen neuen Planer allein für diese Reihenfolge schaffen.
+
+### B14 — Strategische Sicht statt isolierter Kartenausschnitte
+
+- Kartenweite Bestandsaufnahme mit Kartengrenzen, Höhenbereichen und expliziter Suchabdeckung; paginiert bzw. fortsetzbar, kompakte Übersicht mit gezielten Detailabfragen. Untersuchte, veraltete und unbekannte Bereiche unterscheiden. Im laufenden Spiel nutzbar, ohne lange Planungspause.
+- Oberflächen und unterirdische Hohlräume getrennt darstellen: Höhlen, Überhänge, offene Schächte, Eingänge, Rampen, Engstellen und mögliche Übergänge zwischen Höhen. Zusammenhängende Regionen und Verbindungen als Topologie anbieten; geometrische Verbindung, Biberweg, Distriktanschluss und Bauarbeiterzugang getrennt belegen.
+- Spezialobjekte nach nativer Kategorie/Vorlage und Position finden, etwa Wasser-/Schlechtwasserquellen, Ruinen und andere vorhandene Kartenobjekte. Unbekannte Typen sichtbar lassen; keine Namen oder Fähigkeiten erfinden. Eine lokale Abrisszielabfrage mit Kategorie `other` ersetzt diesen Index nicht.
+- Wasserflächen und Reservoirs zusammenhängend erfassen: offene oder überdeckte Lage, Oberfläche/Boden, Tiefe, Verschmutzung, Ufer und mögliche Pumpenstandorte. Aktueller Wasserbestand ist keine Garantie für Dürredauer oder erreichbaren Trinkwasserbetrieb.
+- Skalierung an Vegetation und großen Karten prüfen. Livebefund vom 2026-10-16: `navigation_object_limit` in der Einzelvorschau, während Projektplaner nur `state_conflict` meldeten. Globale Objektgrenzen dürfen weder unbemerkt die Abdeckung abschneiden noch den konkreten Ablehnungsgrund verbergen.
+- Kleiner Abnahmepilot: offenes Wasserloch gegenüber überdecktem Wasser, zwei getrennte Höhen mit/ohne Übergang und ein Spezialobjekt außerhalb des Siedlungsumfelds. Übersicht gegen native Detaildaten prüfen; Abdeckung, Aufwand und Grenzen ausweisen, bevor auf die gesamte Karte skaliert wird. Keine Implementierungs- oder Architekturfreigabe durch diesen Backlogeintrag.
 
 B01 plus begrenzte Korridore aus B02 sind mit 0.51 im beauftragten Umfang erledigt.
 B04 ist als 0.52 im begrenzten Umfang live abgenommen. Mehrere oder größere Räumflächen bleiben offen.
@@ -165,3 +205,19 @@ not_executed; Compact reduziert passende Markierungen auf Summen. Menschliches
 Gate und gezielter Livetest bestanden; Full bleibt vollstaendig.
 Weiter offen: MCP-Aufrufe sind seriell, parallele Leser werden sofort abgewiesen.
 Die feste Argumentdiagnose nennt den laufenden Aufruf; keine Warteschlange.
+
+### Pumpengeometrie im automatischen Zugangsplaner (Live 0.61)
+
+- Reservoirpumpe wird von plan_large_project_access mit target_intersects_existing_or_planned_object abgewiesen, ohne Objekt im lokalen Baufeld. Dieselbe Pumpe ist in plan_large_project nativ gueltig; mit expliziter Treppe und Wegen auch verbunden und pilotEligible. Vermutung: unterirdische Any-Zellen werden pauschal als Hindernis behandelt. Mit nativen Supportregeln abgleichen und konkrete Zelle/Objekt/Regel ausgeben.
+- Unbekannte Wegvorlage Path.Folktails ergibt im reinen Planaufruf invalid_argument mit pauschalem execution=unconfirmed ohne konkrete Ursache. Katalogvorlage ist Path. Vor Transport validieren oder native Argumentdiagnose erhalten; lesende Planung und moegliche Vorschauwirkungen von Bauauftrag unterscheiden.
+
+### Hochwasserdiagnose und Ausweichplanung (Live 0.61)
+
+- inspect_building_operation meldet Flooded als Text, assessment.blockers aber nur fehlendes Personal/Arbeitszeit; ueberflutetes Inventar unblocked=false. Native Ueberflutung als expliziten Betriebsblocker abbilden, damit keine falsche Personalreparatur folgt.
+- Globale Vorraete auch bei ueberfluteten Lagern positiv: tatsaechlich erreichbare Trinkwasser-/Nahrungsreserve getrennt ausweisen.
+- Reserven nach Distrikt, Lager-/Produktionsausgabe und tatsächlichem Zugriff aufschlüsseln; unzugängliche, überflutete oder nicht trinkbare Bestände nicht als verfügbare Notreserve zählen. Verbrauchsreichweite aus beobachtetem Verbrauch mit Zeitfenster und Unsicherheit ableiten.
+- Strategische Karte B14 um Flusszufluss/Abfluss, Wasseroberflaechenhoehe, Hoehenprofil, Kontaminationsfront und erreichbare hoehere Ausweichflaechen erweitern. Lokale Baugueltigkeit allein erkennt keine bevorstehende Ueberflutung.
+- Hochwasser-Livebeleg: Paused kann Flooded im sichtbaren Statuslisting verdecken. Direkten nativen Flutzustand unabhaengig von sichtbaren Statusprioritaeten abfragen; fehlender Fluttext beweist keine Betriebsfaehigkeit. Wasserstandtrend an festen Messzellen statt wechselnden Regionen fuer Zu-/Abflussbewertung verwenden.
+- Wetter-/Gefahrenphase, verbleibende Dauer und bekannte Vorwarnzeit strukturiert liefern; unbekannte Dauer explizit kennzeichnen. Dürre, Schlechtwasser und andere native Ereignisse unterscheiden. Keine exakte Flutprognose aus einer einzelnen Tiefenmessung behaupten.
+- Evakuierung und Ausweichdistrikt als fehlende Fähigkeit prüfen: höher gelegenen erreichbaren Standort, sichere Route, Trinkwasser/Nahrung, Unterkünfte und Baupersonal gemeinsam bewerten; native Migration mit tatsächlichem Ankunftsnachweis ermöglichen. Vor Überflutung des Bauzentrums vorbereiten; ein Bauauftrag ohne verfügbare Bauarbeiter ist keine Rettung.
+- Notentwässerung/Quellensteuerung: vorhandene native Bau-, Abriss- und Wassersteuerungsmöglichkeiten mit Voraussetzungen und Wirkungsnachweis erschließen. Im Livefall fehlten MCP-Eingriffe zum Öffnen eines Abflusses bzw. Abstellen der Flutquelle. Regulär erreichbare Maßnahmen von gesonderten Entwicklungs-/Geländeeingriffen unterscheiden; keine vorhandene Fähigkeit oder rechtzeitige Wirkung unterstellen.
