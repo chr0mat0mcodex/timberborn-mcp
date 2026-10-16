@@ -76,9 +76,11 @@ Elf zusätzliche Großprojekt-Ergebnistexte in Agentenlog und beiden Dateilogs
 übereinstimmend, keine Schreibverluste. Mensch bestätigt auch lange Stoppzeile
 und 3/4-Freigabezeile vollständig lesbar.
 
-Verbleibende Grenzen: Räum-/Baugruppen, Reparaturprojekte, andere Teilfehler,
-Budgeterschöpfung sowie stop_building_batch bleiben ohne eigene Liveprobe dieser
-Ergebniszeilen. Der hier geprüfte stop_large_project pausiert seinen Lauf;
+Weitere Zusatzproben: Räum-/Baugruppe, Spielzeitbudgetende und stop_building_batch
+live geprüft; Reparaturstart nach zulässiger Vorschau fehlgeschlagen und weiterhin
+offen. [Zusatzprotokoll mit Ergebnissen und Grenzen](agent-log-live-tests-0.59.md).
+Andere Teilfehler, lange Räumläufe und erfolgreiche Reparaturen bleiben offen.
+Der hier geprüfte stop_large_project pausiert seinen Lauf;
 das ist nicht auf stop_building_batch übertragbar, dessen vorhandenes Budget
 weiterläuft. Kein Nachweis für Produktion, Belieferung, Kraftnetze oder allgemeine
 Bauphasensicherheit. Bekannter Darstellungsumfang: der angeforderte Stopgrund

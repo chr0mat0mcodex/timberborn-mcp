@@ -55,8 +55,12 @@ live geprüft; Ingame-Lesbarkeit bestätigt. Gezielter Großprojektstopp belegt
 2/4 fertig plus eine Baustelle und einen nicht erteilten Auftrag. Erst pausing,
 dann bestätigte Pause. Nach Fertigbau der vorhandenen Baustelle Freigabe mit 3/4;
 der vierte Auftrag bleibt aufgegeben. Freigabe ist kein vollständiger Fertigbau.
-Räumgruppen, Reparaturen, Budgeterschöpfung, andere Teilfehler und der separate
-Bauchargenstopp bleiben ohne eigene Liveprobe dieser Ergebniszeilen. Auftragsstatus
+Zusätzlich live geprüft: Räumgruppe mit sechs Stümpfen, Spielzeitbudgetende und
+separater Bauchargenstopp. Reparaturvorschau erfolgreich, Start mit state_conflict
+abgewiesen; kein Reparaturerfolg belegt. Unbestätigten Start nur lesend klären,
+nicht wiederholen. Zeitlimit-/Stopgrund im Kurztext noch allgemein, Fachbericht
+lesen. Andere Teilfehler und längere Räumläufe nicht pauschal abgenommen.
+[Zusatzprotokoll](agent-log-live-tests-0.59.md). Auftragsstatus
 `completed` bei Einzelprojekten bedeutet bestätigte Aufträge, keinen Fertigbau.
 Bauabschlussberichte trennen fertige Bauteile, Gebäudezugang und Zeitbudget.
 `finished_accessible` bestätigt zusätzlich die Pause, keinen Betrieb.
@@ -69,7 +73,9 @@ noch offene Teile aufgeben. Räum-/Baugruppen geben gespeicherte Belege wieder;
 „Stopp angefragt“ ist kein abgeschlossener Stopp. Bei `stop_large_project` erst
 `pauseConfirmed=true` und tatsächliches Tempo 0 als Pausennachweis verwenden.
 Bei `stop_building_batch` behält
-ein bestehender Simulationslauf sein Budget. Nie aus einer Ergebniszeile allein
+ein bestehender Simulationslauf sein Budget. Live bestätigt: Tempo blieb zunächst
+7, erst das ursprüngliche Budgetende pausierte. Der historische Chargenstand
+blieb 0/2, obwohl eine spätere Einzelbauabfrage 1/1 fertig belegte. Nie aus einer Ergebniszeile allein
 Pause, Produktion oder allgemeine Bausicherheit ableiten.
 
 Für Fortschritt dieselbe Projekt-/Chargenkennung lesen; alte Startzeilen werden

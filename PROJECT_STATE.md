@@ -16,8 +16,13 @@ bis 4/4 fertig/zugänglich, Diagnose und Freigabe geprüft. Separater Stoppfall:
 anschließend Pause bestätigt. Nach Fertigbau der vorhandenen Baustelle mit 3/4
 und einem aufgegebenen Auftrag freigegeben. Elf weitere Logtexte in beiden Dateien
 identisch, keine Schreibverluste; Mensch bestätigt Stopp-/Freigabezeilen lesbar.
-Räumgruppen, Reparaturen, andere Teilfehler, Budgeterschöpfung und der separate
-stop_building_batch bleiben ohne eigene Liveprobe der Ergebniszeilen.
+Zusatzproben: Räum-/Baugruppe mit sechs Stümpfen und 2/2 fertigen Bauteilen,
+Spielzeitbudgetende sowie separater Bauchargenstopp bestanden. 19 weitere
+Ergebnisbelege in beiden Dateien identisch; Ingame-Lesbarkeit bestätigt.
+Reparaturvorschau zulässig, Start jedoch state_conflict/unconfirmed; kein neues
+Projekt/Weg lesend nachweisbar, kein Retry. Reparaturerfolg bleibt offen.
+Zeitlimit-/Stopgrund im Kurztext noch allgemein; Ursache nur im Fachbericht.
+[Zusatzprotokoll und Diagnosegrenzen](docs/agent-log-live-tests-0.59.md).
 
 Versionspflege: `docs/agent-playing-guide.md` und `docs/hermes-skill/SKILL.md`
 auf Umfang und begrenzte Live-Abnahme ergänzt und bisherige Ausschlüsse präzisiert.

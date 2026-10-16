@@ -121,8 +121,11 @@ aktuell geladenen Werkzeugschema erkennen, nicht allein an der Bridge-Version.
   Großprojektstopp: 2/4 fertig, eine Baustelle, ein nicht erteilter Auftrag;
   nach Fertigbau der vorhandenen Baustelle Freigabe mit 3/4, letzter Auftrag
   aufgegeben. Alle geprüften Ergebniszeilen ingame lesbar bestätigt.
-  Räumgruppen, Reparaturen, Budgeterschöpfung, andere Teilfehler und
-  stop_building_batch ohne eigene Liveprobe dieser Ergebniszeilen. Ergebniszeilen für
+  Zusätzlich Räumgruppe (sechs Stümpfe, danach Lager/Weg), Spielzeitbudgetende und
+  stop_building_batch live geprüft. Reparaturvorschau zulässig, Start jedoch
+  state_conflict/unconfirmed: kein erfolgreicher Reparaturabschluss. Vor Retry
+  lesend klären und Ablehnungsursache diagnostizieren, nicht mit neuer ID umgehen.
+  Andere Teilfehler und lange Räumläufe nicht pauschal abgenommen. Ergebniszeilen für
   Einzelprojekte, Bauchargen, Großprojekte und Räum-/Baugruppen. Auftrags-`completed` ist kein Fertigbau.
   Bauabschluss `finished_accessible` belegt Fertigbau/Zugang/Pause, keinen Betrieb.
   Chargen zählen Gebäude; Großprojekte Bauteile einschließlich Wege/Hilfsbauten.
@@ -130,7 +133,11 @@ aktuell geladenen Werkzeugschema erkennen, nicht allein an der Bridge-Version.
   frisch, Räum-/Baugruppen liefern weiter gespeicherte Belege. Projektfreigabe
   kann offene Teile aufgeben. stop_large_project fordert Pause an; erst
   pauseConfirmed=true und Tempo 0 bestätigen sie. stop_building_batch lässt vorhandenes Laufbudget
-  bestehen; angefragter Gruppenstopp ist noch kein Abschluss. Vorschau erteilt
+  bestehen; live Tempo 7 bis zum ursprünglichen Budgetende bestätigt. Historischer
+  Chargenbeleg kann bei 0/2 bleiben, obwohl frische Einzelabfrage 1/1 fertig meldet.
+  Zeitlimit-/Stopursache im Fachbericht lesen, Kurztext noch allgemein.
+  Zusatzprotokoll: `docs/agent-log-live-tests-0.59.md` im Projekt.
+  Angefragter Gruppenstopp ist noch kein Abschluss. Vorschau erteilt
   keine Aufträge. Fehlende Angaben nicht als null fertige Teile interpretieren.
   Dieselbe Kennung weiter lesend prüfen, keine unbestätigten Aufträge wiederholen.
   Fachumfang: `docs/agent-log-building-outcomes-0.59.md` im Projekt.
