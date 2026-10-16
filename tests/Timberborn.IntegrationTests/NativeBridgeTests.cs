@@ -83,7 +83,7 @@ public sealed class NativeBridgeTests
                             if(a.State!="running" && a.Session!=session)throw new ArgumentException();
                             return JsonSerializer.Serialize(new BridgeEnvelope<object>(1,session,DateTimeOffset.UtcNow,"0.22.0",new NativeActivityAck(activityLog.Record(a,DateTimeOffset.UtcNow))),NativeJson.Options);
                         }
-                        if(r.Route=="activity-log")return JsonSerializer.Serialize(new BridgeEnvelope<object>(1,session,DateTimeOffset.UtcNow,"0.22.0",new NativeActivityLog(128,activityLog.Snapshot().Reverse().Take(32).ToArray(),activityLog.Revision,false,false)),NativeJson.Options);
+                        if(r.Route=="activity-log")return JsonSerializer.Serialize(new BridgeEnvelope<object>(1,session,DateTimeOffset.UtcNow,"0.55.0",activityLog.Read(r.ActivityQuery!,false,false)),NativeJson.Options);
                         if(r.Screenshot is not null) {
                             if(r.Session!=session) throw new BridgeRejectionException("stale_session");
                             // Synthetic marker fixture checks transport/metadata, never image rendering.
@@ -311,6 +311,16 @@ public sealed class NativeBridgeTests
             Assert.Equal("ok",entry.GetProperty("state").GetString());
             Assert.Equal("Bauoptionen für den nächsten regulären Auftrag prüfen.",entry.GetProperty("reasoning").GetString());
             Assert.DoesNotContain(token,logResult.StructuredContent.Value.GetRawText());
+            var logPage=await client.CallToolWithReasonAsync("inspect_agent_log",new Dictionary<string,object?>{
+                ["limit"]=1,["tool"]="inspect_agent_log",["state"]="ok"},cancellationToken:ct);
+            Assert.False(logPage.IsError);
+            var pageData=logPage.StructuredContent!.Value.GetProperty("data");
+            Assert.Equal(1,pageData.GetProperty("paginationVersion").GetInt32());
+            Assert.Single(pageData.GetProperty("items").EnumerateArray());
+            Assert.All(pageData.GetProperty("items").EnumerateArray(),item=> {
+                Assert.Equal("inspect_agent_log",item.GetProperty("tool").GetString());
+                Assert.Equal("ok",item.GetProperty("state").GetString());
+            });
             Assert.Equal("WaterPump.Folktails",optionsResult.StructuredContent!.Value.GetProperty("data").GetProperty("items")[0].GetProperty("template").GetString());
             var buildArgs=new Dictionary<string,object?>{["template"]="WaterPump.Folktails",["x"]=1,["y"]=2,["z"]=3,["rotation"]=0};
             Assert.False((await client.CallToolWithReasonAsync("precheck_building",buildArgs,cancellationToken:ct)).IsError);

@@ -2,10 +2,21 @@ using System.Text;
 using Timberborn.Bridge.Core;
 namespace Timberborn.Backend.Native;
 public sealed record NativeActivityAck(bool Accepted);
-public sealed record NativeActivityLog(int Capacity, ActivityEntry[] Items, long Revision, bool WindowVisible, bool UiAttached);
+public sealed record NativeActivityLog(int Capacity, ActivityEntry[] Items, long Revision, bool WindowVisible, bool UiAttached,
+    int? PaginationVersion=null, string? LogEpoch=null, int? RetainedCount=null, long? EvictedCount=null,
+    long? OldestSequence=null, long? NewestSequence=null, bool? HasMore=null, string? NextCursor=null,
+    bool? GapDetected=null, long? UnavailableBeforeCursor=null, string? Tool=null, string? State=null);
 public sealed partial class NativeClient
 {
     public Task<BridgeEnvelope<NativeActivityLog>> Activity(CancellationToken ct)=>Get<NativeActivityLog>("activity-log",ct);
+    public Task<BridgeEnvelope<NativeActivityLog>> Activity(ActivityLogQuery query,CancellationToken ct)
+    {
+        var args=new List<string> { "limit="+query.Limit.ToString(System.Globalization.CultureInfo.InvariantCulture) };
+        if(query.Tool.Length>0)args.Add("tool="+Uri.EscapeDataString(query.Tool));
+        if(query.State.Length>0)args.Add("state="+Uri.EscapeDataString(query.State));
+        if(query.Cursor.Length>0)args.Add("cursor="+Uri.EscapeDataString(query.Cursor));
+        return Get<NativeActivityLog>("activity-log?"+string.Join("&",args),ct);
+    }
     public async Task<string?> TryRecordActivity(string id,string tool,string state,string session,string reasoning,string summary)
     {
         // Telemetry must not retry actions or turn a successful action into a failure.

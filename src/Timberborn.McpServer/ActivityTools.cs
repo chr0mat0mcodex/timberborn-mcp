@@ -12,8 +12,13 @@ public static class ActivityTools
     public static Tool Reader()
     {
         var options=new JsonSerializerOptions(NativeJson.Options){TypeInfoResolver=new DefaultJsonTypeInfoResolver()};
-        return new Tool { Name="inspect_agent_log", Description="Liest die neuesten bis zu 32 von maximal 128 Ingame-MCP-Logeinträgen, neueste zuerst. Begründungen sind vom Agenten mitgegebene kurze Absichten, keine internen Gedankengänge. Nur aktueller Spielstand im Arbeitsspeicher; Log ist Best-Effort-Telemetrie, keine Autorisierung oder garantierte Aktionshistorie. Der eigene laufende Aufruf kann enthalten sein.",
-            InputSchema=JsonSerializer.SerializeToElement(new {type="object",properties=new {},additionalProperties=false}),
+        return new Tool { Name="inspect_agent_log", Description="Liest das Ingame-MCP-Log: limit 1–32 (Standard 32), bis 128 gespeicherte Aufrufe, neueste Startsequenz zuerst. nextCursor mit denselben tool/state-Filtern weitergeben; neue Aufrufe verschieben Folgeseiten nicht. Status wird beim Lesen ausgewertet, kein eingefrorener Snapshot. gapDetected/unavailableBeforeCursor zeigen verdrängte ältere Aufrufe unabhängig vom Filter; Telemetrieausfälle bleiben unbekannt. Cursor nach Löschen/Spielneuladen ungültig. Begründungen sind kurze Absichten, keine internen Gedankengänge. Best-Effort-Telemetrie, kein Wirkungsnachweis. Der eigene laufende Aufruf kann enthalten sein. Paginierung benötigt die aktualisierte Bridge.",
+            InputSchema=JsonSerializer.SerializeToElement(new {type="object",properties=new {
+                limit=new {type="integer",minimum=1,maximum=32,@default=32},
+                cursor=new {type="string",minLength=1,maxLength=180},
+                tool=new {type="string",minLength=1,maxLength=80,pattern="^[a-z0-9_]+$"},
+                state=new {type="string",@enum=new[]{"running","ok","applied","rejected","unconfirmed","error","cancelled"}}
+            },additionalProperties=false}),
             OutputSchema=JsonSerializer.SerializeToElement(options.GetJsonSchemaAsNode(typeof(NativeResult<NativeActivityLog>))),
             Annotations=new(){ReadOnlyHint=true,DestructiveHint=false,IdempotentHint=true,OpenWorldHint=false} };
     }
@@ -62,10 +67,53 @@ public static class ActivityTools
     }
     public static async Task<JsonObject> Read(NativeClient client,JsonElement args,CancellationToken ct)
     {
-        if(args.EnumerateObject().Any())throw new ArgumentException();
-        var e=await client.Activity(ct);var d=e.Data;
-        if(e.BridgeVersion is not ("0.16.0" or "0.17.0" or "0.17.1" or "0.17.2" or "0.18.0" or "0.19.0" or "0.19.1" or "0.19.2" or "0.20.0" or "0.20.1" or "0.21.0" or "0.21.1" or "0.22.0" or "0.23.0" or "0.23.1" or "0.23.2" or "0.24.0" or "0.24.1" or "0.25.0" or "0.26.0" or "0.27.0" or "0.28.0" or "0.28.1" or "0.29.0" or "0.29.1" or "0.29.2" or "0.29.3" or "0.30.0" or "0.31.0" or "0.31.1" or "0.31.2" or "0.31.3" or "0.31.4" or "0.32.0" or "0.32.1" or "0.33.0" or "0.33.1" or "0.34.0" or "0.35.0" or "0.35.1" or "0.35.2" or "0.35.3" or "0.35.4" or "0.35.5" or "0.36.0" or "0.37.0" or "0.38.0" or "0.39.0" or "0.40.0" or "0.41.0" or "0.42.0" or "0.43.0" or "0.44.0" or "0.45.0" or "0.46.0" or "0.47.0" or "0.48.0" or "0.49.0" or "0.50.0" or "0.51.0" or "0.52.0" or "0.53.0" or "0.54.0") || d.Capacity!=128 || d.Items is null || d.Items.Length>32 || d.Revision<0 ||
+        var values=new System.Collections.Specialized.NameValueCollection(StringComparer.Ordinal);
+        if(args.ValueKind!=JsonValueKind.Object)throw new ArgumentException();
+        foreach(var property in args.EnumerateObject()) {
+            if(property.Name=="limit") {
+                if(property.Value.ValueKind!=JsonValueKind.Number || !property.Value.TryGetInt32(out int limit))throw new ArgumentException();
+                values.Add(property.Name,limit.ToString(System.Globalization.CultureInfo.InvariantCulture));
+            } else {
+                if(property.Value.ValueKind!=JsonValueKind.String)throw new ArgumentException();
+                values.Add(property.Name,property.Value.GetString());
+            }
+        }
+        var query=ActivityLogQuery.Parse(values);
+        // Preserve the original no-argument route for older installed bridges.
+        var e=values.Count==0?await client.Activity(ct):await client.Activity(query,ct);var d=e.Data;
+        if(e.BridgeVersion is not ("0.16.0" or "0.17.0" or "0.17.1" or "0.17.2" or "0.18.0" or "0.19.0" or "0.19.1" or "0.19.2" or "0.20.0" or "0.20.1" or "0.21.0" or "0.21.1" or "0.22.0" or "0.23.0" or "0.23.1" or "0.23.2" or "0.24.0" or "0.24.1" or "0.25.0" or "0.26.0" or "0.27.0" or "0.28.0" or "0.28.1" or "0.29.0" or "0.29.1" or "0.29.2" or "0.29.3" or "0.30.0" or "0.31.0" or "0.31.1" or "0.31.2" or "0.31.3" or "0.31.4" or "0.32.0" or "0.32.1" or "0.33.0" or "0.33.1" or "0.34.0" or "0.35.0" or "0.35.1" or "0.35.2" or "0.35.3" or "0.35.4" or "0.35.5" or "0.36.0" or "0.37.0" or "0.38.0" or "0.39.0" or "0.40.0" or "0.41.0" or "0.42.0" or "0.43.0" or "0.44.0" or "0.45.0" or "0.46.0" or "0.47.0" or "0.48.0" or "0.49.0" or "0.50.0" or "0.51.0" or "0.52.0" or "0.53.0" or "0.54.0" or "0.55.0") || d.Capacity!=128 || d.Items is null || d.Items.Length>32 || d.Revision<0 ||
             d.Items.Any(i=>i is null || !ActivityRequest.IsState(i.State) || i.Reasoning is null || i.Summary is null || i.Reasoning.Length>600 || i.Summary.Length>400))throw new InvalidDataException("Invalid activity log");
+        if(e.BridgeVersion=="0.55.0" && d.PaginationVersion is null)throw new InvalidDataException("missing_activity_pagination");
+        if(d.PaginationVersion is not null)ValidatePage(d,query);
+        else if(values.Count>0)throw new InvalidDataException("activity_pagination_not_supported");
         return (JsonObject)JsonSerializer.SerializeToNode(new NativeResult<NativeActivityLog>(1,"ok",d,new("native",false,e.SessionId,e.ObservedAtUtc),null),NativeJson.Options)!;
+    }
+
+    public static void ValidatePage(NativeActivityLog d,ActivityLogQuery query)
+    {
+        if(d.PaginationVersion!=1 || !Guid.TryParseExact(d.LogEpoch,"N",out _) ||
+            d.RetainedCount is null or <0 or >128 || d.EvictedCount is null or <0 or >9007199254740863L ||
+            d.HasMore is null || d.GapDetected is null || d.UnavailableBeforeCursor is null or <0 ||
+            d.Tool!=query.Tool || d.State!=query.State || d.Items.Length>query.Limit || d.Items.Length>d.RetainedCount ||
+            d.GapDetected!=(d.UnavailableBeforeCursor>0) || d.UnavailableBeforeCursor>d.EvictedCount ||
+            (d.EvictedCount>0 && d.RetainedCount!=128) ||
+            (d.RetainedCount==0 ? d.OldestSequence is not null || d.NewestSequence is not null :
+                d.OldestSequence!=d.EvictedCount+1 || d.NewestSequence!=d.EvictedCount+d.RetainedCount))
+            throw new InvalidDataException("invalid_activity_page");
+        long before=(d.NewestSequence??0)+1;
+        if(query.Cursor.Length>0) {
+            var cursor=query.DecodeCursor();
+            if(cursor.Epoch!=d.LogEpoch || cursor.Before>before)throw new InvalidDataException("activity_cursor_mismatch");
+            before=cursor.Before;
+        }
+        if(d.UnavailableBeforeCursor!=Math.Min(before-1,d.EvictedCount!.Value))throw new InvalidDataException("activity_gap_mismatch");
+        foreach(var item in d.Items) {
+            if(item.Sequence<d.OldestSequence || item.Sequence>=before || item.Sequence<=0 ||
+                (query.Tool.Length>0&&item.Tool!=query.Tool) || (query.State.Length>0&&item.State!=query.State))
+                throw new InvalidDataException("invalid_activity_page_order_or_filter");
+            before=item.Sequence;
+        }
+        if(d.HasMore==true ? d.Items.Length!=query.Limit || d.NextCursor!=query.EncodeCursor(d.LogEpoch!,before) : d.NextCursor is not null)
+            throw new InvalidDataException("invalid_activity_next_cursor");
     }
 }

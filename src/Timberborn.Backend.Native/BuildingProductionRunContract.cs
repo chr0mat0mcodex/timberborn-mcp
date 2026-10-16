@@ -5,10 +5,10 @@ public static class BuildingProductionRunContract
 {
     public static void Validate(NativeSimulationRun d,SimulationRunRequest r,string version)
     {
-        if(r.Starts&&r.MeasureProduction!=d.MeasureProduction||d.MeasureProduction&&(version is not ("0.44.0" or "0.45.0" or "0.46.0" or "0.47.0" or "0.48.0" or "0.49.0" or "0.50.0" or "0.51.0" or "0.52.0" or "0.53.0" or "0.54.0")||(d.BuildingIds?.Length??0)==0))
+        if(r.Starts&&r.MeasureProduction!=d.MeasureProduction||d.MeasureProduction&&(version is not ("0.44.0" or "0.45.0" or "0.46.0" or "0.47.0" or "0.48.0" or "0.49.0" or "0.50.0" or "0.51.0" or "0.52.0" or "0.53.0" or "0.54.0" or "0.55.0")||(d.BuildingIds?.Length??0)==0))
             throw new InvalidDataException("invalid_measurement_mode");
         var ids=d.BuildingIds??[];var states=d.BuildingProduction??[];
-        if(version is ("0.41.0" or "0.42.0" or "0.43.0" or "0.44.0" or "0.45.0" or "0.46.0" or "0.47.0" or "0.48.0" or "0.49.0" or "0.50.0" or "0.51.0" or "0.52.0" or "0.53.0" or "0.54.0")&&(d.BuildingIds is null||d.BuildingProduction is null)||ids.Length>8||ids.Distinct().Count()!=ids.Length||
+        if(version is ("0.41.0" or "0.42.0" or "0.43.0" or "0.44.0" or "0.45.0" or "0.46.0" or "0.47.0" or "0.48.0" or "0.49.0" or "0.50.0" or "0.51.0" or "0.52.0" or "0.53.0" or "0.54.0" or "0.55.0")&&(d.BuildingIds is null||d.BuildingProduction is null)||ids.Length>8||ids.Distinct().Count()!=ids.Length||
             ids.Any(id=>!Guid.TryParseExact(id,"D",out var guid)||guid==Guid.Empty)||states.Any(s=>s is null)||
             !states.Select(s=>s.Id).SequenceEqual(ids)||d.BuildingJournalCursor<0||
             r.Starts&&!r.BuildingIds.SequenceEqual(ids)||ids.Length>0&&(d.StopAtAvailableLogs is not null||(d.GoodTargets?.Length??0)>0||d.StopAtScience is not null))

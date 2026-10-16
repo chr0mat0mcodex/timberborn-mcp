@@ -38,8 +38,9 @@ public sealed class ActivityRequest
     }
 }
 
-public sealed class ActivityEntry(string id, string tool, string state, string reasoning, string summary, DateTimeOffset startedAtUtc, DateTimeOffset updatedAtUtc)
+public sealed class ActivityEntry(string id, string tool, string state, string reasoning, string summary, DateTimeOffset startedAtUtc, DateTimeOffset updatedAtUtc, long sequence = 0)
 {
+    public long Sequence { get; } = sequence;
     public string Id { get; } = id;
     public string Tool { get; } = tool;
     public string State { get; } = state;
@@ -54,22 +55,47 @@ public sealed class ActivityLog
 {
     public const int Capacity=128;
     private readonly List<ActivityEntry> entries=new();
+    private string epoch=Guid.NewGuid().ToString("N");
+    private long sequence;
+    private long evictedThrough;
     public long Revision { get; private set; }
     public ActivityEntry[] Snapshot()=>entries.ToArray();
-    public static object Payload(ActivityEntry e)=>new { id=e.Id, tool=e.Tool, state=e.State, reasoning=e.Reasoning, summary=e.Summary, startedAtUtc=e.StartedAtUtc, updatedAtUtc=e.UpdatedAtUtc };
-    public void Clear(){entries.Clear();Revision++;}
+    public static object Payload(ActivityEntry e)=>new { id=e.Id, tool=e.Tool, state=e.State, reasoning=e.Reasoning, summary=e.Summary, startedAtUtc=e.StartedAtUtc, updatedAtUtc=e.UpdatedAtUtc, sequence=e.Sequence };
+    public void Clear(){entries.Clear();epoch=Guid.NewGuid().ToString("N");sequence=0;evictedThrough=0;Revision++;}
+    public object Read(ActivityLogQuery query, bool windowVisible, bool uiAttached)
+    {
+        long before=sequence+1;
+        if(query.Cursor.Length>0) {
+            var cursor=query.DecodeCursor();
+            if(cursor.Epoch!=epoch)throw new BridgeRejectionException("stale_activity_cursor");
+            if(cursor.Before>before)throw new ArgumentException("invalid_activity_cursor");
+            before=cursor.Before;
+        }
+        var matches=entries.AsEnumerable().Reverse().Where(e=>e.Sequence<before &&
+            (query.Tool.Length==0||e.Tool==query.Tool) && (query.State.Length==0||e.State==query.State)).ToArray();
+        var page=matches.Take(query.Limit).ToArray();
+        bool hasMore=matches.Length>page.Length;
+        long unavailableBeforeCursor=Math.Min(before-1,evictedThrough);
+        return new { capacity=Capacity, items=page.Select(Payload).ToArray(), revision=Revision, windowVisible, uiAttached,
+            paginationVersion=1, logEpoch=epoch, retainedCount=entries.Count, evictedCount=evictedThrough,
+            oldestSequence=entries.Count==0 ? (long?)null : entries[0].Sequence,
+            newestSequence=entries.Count==0 ? (long?)null : entries[entries.Count-1].Sequence,
+            hasMore, nextCursor=hasMore?query.EncodeCursor(epoch,page[page.Length-1].Sequence):null,
+            gapDetected=unavailableBeforeCursor>0, unavailableBeforeCursor,
+            tool=query.Tool, state=query.State };
+    }
     public bool Record(ActivityRequest r, DateTimeOffset now)
     {
         int index=entries.FindIndex(e=>e.Id==r.Id);
         if(r.State=="running") {
             if(index>=0)return false;
-            if(entries.Count==Capacity)entries.RemoveAt(0);
-            entries.Add(new(r.Id,r.Tool,r.State,r.Reasoning,r.Summary,now,now));
+            if(entries.Count==Capacity){evictedThrough=entries[0].Sequence;entries.RemoveAt(0);}
+            entries.Add(new(r.Id,r.Tool,r.State,r.Reasoning,r.Summary,now,now,++sequence));
         } else {
             if(index<0)return false; // Cleared/evicted calls must not reappear.
             var old=entries[index];
             if(old.State!="running" || old.Tool!=r.Tool)return false;
-            entries[index]=new(old.Id,old.Tool,r.State,old.Reasoning,old.Summary,old.StartedAtUtc,now);
+            entries[index]=new(old.Id,old.Tool,r.State,old.Reasoning,old.Summary,old.StartedAtUtc,now,old.Sequence);
         }
         Revision++;return true;
     }

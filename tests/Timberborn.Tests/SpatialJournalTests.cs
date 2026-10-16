@@ -83,9 +83,17 @@ public sealed class SpatialJournalTests
         var args=JsonSerializer.SerializeToElement(new{session=Session,detail="full"});
         Assert.Equal(args.GetRawText(),ResponsePresentation.ReadRequest(RecentActionsTools.Name,args).Arguments.GetRawText());
     }
-    private sealed class Reply(NativeRecentActions data):HttpMessageHandler {
+    [Theory] [InlineData("0.54.0")] [InlineData("0.55.0")]
+    public async Task SpatialCoverageRemainsRequiredAcrossVersionChange(string version) {
+        var request=RecentActionsRequest.Parse(new NameValueCollection{{"session",Session}});
+        using var client=new NativeClient(new(8081,new string('a',64)),new Reply(Data(),version));
+        Assert.Equal(3,(await client.RecentActions(request,TestContext.Current.CancellationToken)).Data.Page.Items.Length);
+        using var invalid=new NativeClient(new(8081,new string('a',64)),new Reply(Data() with{SpatialTrackingComplete=null},version));
+        await Assert.ThrowsAsync<InvalidDataException>(()=>invalid.RecentActions(request,TestContext.Current.CancellationToken));
+    }
+    private sealed class Reply(NativeRecentActions data,string version="0.54.0"):HttpMessageHandler {
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,CancellationToken ct)=>
             Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK){Content=new StringContent(JsonSerializer.Serialize(
-                new BridgeEnvelope<NativeRecentActions>(1,Session,DateTimeOffset.UnixEpoch,"0.54.0",data),NativeJson.Options))});
+                new BridgeEnvelope<NativeRecentActions>(1,Session,DateTimeOffset.UnixEpoch,version,data),NativeJson.Options))});
     }
 }

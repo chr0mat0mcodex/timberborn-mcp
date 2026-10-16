@@ -22,6 +22,7 @@ public sealed class BridgeRequest
     public EconomyRequest? Economy { get; private set; }
     public ResearchRequest? Research { get; private set; }
     public ActivityRequest? Activity { get; private set; }
+    public ActivityLogQuery? ActivityQuery { get; private set; }
     public BuildingSettingsRequest? Settings { get; private set; }
     public bool GenericBuilding => Route is "building-precheck" or "building-validation" or "building-placement";
     public RemovalRequest? Removal { get; private set; }
@@ -74,7 +75,7 @@ public sealed class BridgeRequest
         if (path is "/agent-api/v1/research" or "/agent-api/v1/unlock-building") { var r=ResearchRequest.Parse(path.EndsWith("unlock-building"),query); return new BridgeRequest(r.Write?"unlock-building":"research",session:r.Session) { Research=r }; }
         if (path == "/agent-api/v1/activity") return new BridgeRequest("activity") { Activity=ActivityRequest.Parse(query) };
         if (path == "/agent-api/v1/production-graph" && query.Count==0) return new BridgeRequest("production-graph");
-        if (path == "/agent-api/v1/activity-log" && query.Count==0) return new BridgeRequest("activity-log");
+        if (path == "/agent-api/v1/activity-log") return new BridgeRequest("activity-log") { ActivityQuery=ActivityLogQuery.Parse(query) };
         if (BuildingSettingsRequest.Handles(path)) { var r=BuildingSettingsRequest.Parse(path,query); return new BridgeRequest(r.Route, session:r.Session) { Settings=r }; }
         if (RemovalRequest.Handles(path)) { var r=RemovalRequest.Parse(path,query); return new BridgeRequest(r.Route, session:r.Session) { Removal=r }; }
         if (ManagementRequest.Handles(path)) { var m=ManagementRequest.Parse(path,query); return new BridgeRequest(m.Route, session: m.Session) { Management=m }; }

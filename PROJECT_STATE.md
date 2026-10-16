@@ -1,5 +1,15 @@
 # Projektstand
 
+## 0.55.0 — B10 Agentenlog begrenzt live abgenommen
+
+2026-10-16: Nach xUnit2013-Korrektur menschliche Gate-Freigabe durch `live bereit`;
+installierte Bridge 0.55.0 und aktuelle Session bestätigt. Cursor trotz neuer
+Aufrufe ohne Duplikate, Werkzeug-/Statusfilter, Nulltreffer und fremder Cursor
+live geprüft. Frischer Puffer ohne Verdrängung: Lückenangaben korrekt null.
+Überlauf/Löschen sind synthetische Gate-Nachweise, kein zusätzlicher Livebeleg.
+Keine Freigabe zurückgestellter Experimente. Projekt-/Laufkorrelation bleibt offen.
+[Vertrag und Nachweis](docs/agent-log-pagination-0.55.md).
+
 ## 0.54.0 - Pflanzen- und Flaechenjournal begrenzt live abgenommen
 
 Menschliches Gate und Abschluss-Livetest am 12. Oktober 2026 bestanden.

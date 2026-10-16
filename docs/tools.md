@@ -378,6 +378,12 @@ sind unter 0.21.1 live belegt. Nachweise und Grenzen stehen in den Fachdokumente
 - `inspect_research`
 - `inspect_agent_log`
 
+  0.55 begrenzt live abgenommen: `limit` 1–32, exakte `tool`-/`state`-Filter und `cursor`.
+  `nextCursor` blättert bis zu 128 gespeicherte Aufrufe in Startreihenfolge;
+  `gapDetected` und `unavailableBeforeCursor` melden verdrängte ältere Aufrufe
+  vor Filtern. Kein eingefrorener Status-Snapshot und keine vollständige
+  Aktionshistorie. [Vertrag und Gate](agent-log-pagination-0.55.md).
+
 ## Freizugebende Werkzeuge
 
 - `set_workplace_staffing`
