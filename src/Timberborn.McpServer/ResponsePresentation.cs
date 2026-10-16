@@ -8,9 +8,10 @@ namespace Timberborn.McpServer;
 public static class ResponsePresentation
 {
     public static bool Supports(string name) => name is "timberborn_status" or
-        "inspect_building_settings" or "set_storage_good" or "set_storage_mode" or "validate_building" || SimulationRunTools.Handles(name) || ProjectReportPresentation.Supports(name) || name==RegionBuildPlanning.Name;
+        "inspect_building_settings" or "set_storage_good" or "set_storage_mode" or "validate_building" || SimulationRunTools.Handles(name) || ProjectReportPresentation.Supports(name) || name==RegionBuildPlanning.Name || name==StrategicMapTools.Name;
 
     private static string[] OptionalFields(string name) => name switch {
+        StrategicMapTools.Name => StrategicScanPresentation.OptionalFields,
         "inspect_building_settings" => ["limitations", "allowedGoods", "allowedPlants"],
         "set_storage_good" or "set_storage_mode" => ["limitations", "observation"],
         "validate_building" => ["limitations", "candidateCells", "origin", "accesses", "rangeOrigin", "originSource", "accessCells", "source"],
@@ -31,7 +32,9 @@ public static class ResponsePresentation
         }
         input["properties"]!.AsObject()["detail"] = new JsonObject {
             ["type"] = "string", ["enum"] = new JsonArray("compact", "full"), ["default"] = "compact",
-            ["description"] = tool.Name==RegionBuildPlanning.Name
+            ["description"] = tool.Name==StrategicMapTools.Name
+                ? "compact: Bedrohung, betroffenes Ziel, Pegel/Schwelle, Schutzstelle und konkrete Blockaden; gemeinsame Maßnahmen/Grenzen stehen in commonMeasures/commonUnresolved. full: zusätzlich Kachel-, Pfad-, Querschnitt-, Objekt- und Flussseiten. Mit derselben scanId und Zielzone full nachlesen, ohne Neuscan; gemeinsame und individuelle Maßnahmen/Grenzen zusammen lesen."
+                : tool.Name==RegionBuildPlanning.Name
                 ? "compact: gemeinsame Schritte, planKey, fehlende Gebäude und Suchabdeckung. full: zusätzlich vollständige native Belege jeder Vorschau. Planungsdetails beim ersten Aufruf anfordern; kein Bauauftrag. Vollständige/teilweise Planung ist kein Bauabschluss."
                 : ProjectReportPresentation.Supports(tool.Name)
                 ? "compact: Baufortschritt, Nachweisart, konkrete Blockaden und nächster Schritt. full: vollständige native Belege. Bestehende Projekte mit inspect_large_project oder diagnose_large_project und derselben actionId lesen; niemals Aufträge für mehr Details wiederholen. Planungsdetails beim ersten Planaufruf mit full anfordern; Schritte und planKey bleiben auch kompakt erhalten."
@@ -122,6 +125,7 @@ public static class ResponsePresentation
                     foreach (var check in checks.OfType<JsonObject>()) check.Remove("source");
                 break;
         }
+        if(name==StrategicMapTools.Name)StrategicScanPresentation.Compact(data);
         if(name==RegionBuildPlanning.Name)RegionGroupPlanning.Compact(data);
         if(SimulationRunTools.Handles(name))RunReportPresentation.Compact(data);
         if(ProjectReportPresentation.Supports(name))ProjectReportPresentation.Compact(name,data);

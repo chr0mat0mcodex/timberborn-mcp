@@ -1,5 +1,11 @@
 # Timberborn MCP
 
+Zusätzlich `analysis.terraforming`: bedingte 3×3-Reservoir-Optionen, zwei Ebenen Absenkung, Nutzen und Blockaden kompakt, Zellbelege full. Gate und begrenzter Livepilot bestanden.
+
+Strategischer Scan: `detail="compact"` als Standard für Bedrohung und Gegenmaßnahmen; `detail="full"` für komplette Scanbelege. Gate und Livevergleich bestanden.
+
+Gefahrenbewertung einschließlich Restwasser bei ruhenden Quellen live bestätigt: Zielscan liefert `analysis.hazards` mit priorisiertem Restwasser, Schutzquerschnitten und Dach-/Umwegprüfung.
+
 ## 0.62.0 — Karten-, Quellen- und Flussüberblick begrenzt live abgenommen
 
 Zielunabhängiger Flussüberblick, native Quellenstärke und
@@ -109,7 +115,7 @@ Beobachtung und kontrollierte Eingriffe über reguläre Spielservices.
 
 ## Status
 
-Aktueller dokumentierter Abschluss: **0.54.0**. Die folgenden
+Aktueller dokumentierter Abschluss: **0.62.0**. Die folgenden
 Versionsabschnitte sind historische Teilabnahmen, keine parallel aktuellen Stände.
 Offene Fähigkeiten stehen im [Backlog](BACKLOG.md).
 

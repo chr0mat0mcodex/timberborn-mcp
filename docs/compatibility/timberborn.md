@@ -2,7 +2,7 @@
 
 ## Einordnung zum aktuellen Stand
 
-Letzter dokumentierter Abschluss: 0.54.0. Neuere feature-spezifische Nachweise
+Aktueller Bridge-Stand: 0.62.0. Feature-spezifische Nachweise
 stehen im [Projektstand](../../PROJECT_STATE.md) und den verlinkten Fachverträgen.
 Die historischen Nachweise unten sind keine pauschale Abnahme neuer Fraktionen,
 Karten oder Spielversionen.

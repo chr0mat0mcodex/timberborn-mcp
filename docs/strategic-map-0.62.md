@@ -12,7 +12,7 @@ lokale Beobachtung; sie darf nicht auf die gesamte Route übertragen werden.
 
 ### Flussüberblick ohne Siedlungsziel
 
-`scan_strategic_map(session, overviewOnly=true)` benötigt keine Zielkoordinaten.
+`scan_strategic_map(session, overviewOnly=true, detail="full")` benötigt keine Zielkoordinaten.
 Mit derselben Kennung und `overviewOnly=true` fortsetzen. Der fertige Bericht
 enthält unter `rivers` räumliche Abschnitte, Verbindungen und Quellen. `sectionOffset`
 blättert 32 Abschnitte, `linkOffset` 64 Verbindungen und `sourceOffset` 16 Quellen;
@@ -114,7 +114,7 @@ Maximal 524.288 freie Intervalle werden analysiert; Überschreitung liefert eine
 expliziten Analysestopp ohne Empfehlungen. Vollständiger Scan ist keine Garantie
 für erfolgreiche Analyse und erst recht kein Sicherheitsnachweis.
 
-Bis zu acht repräsentative Korridore zu beobachtetem Wasser, Quellvorlagen oder
+In `detail="full"` werden bis zu acht repräsentative Korridore zu beobachtetem Wasser, Quellvorlagen oder
 dem Kartenrand werden ausgegeben. `candidateCount` nennt die Zahl der geometrischen
 Kandidaten vor der Auswahl; die Liste ist kein vollständiges Gefahreninventar.
 Pfade enthalten Wendepunkte, maximal 64 plus Endpunkt; Abschneiden wird gemeldet.
@@ -208,3 +208,132 @@ Wiederholbarer Pilot und Grenzen für weitere Karten:
    automatische Bauausführung aus dem Scan.
 4. Alte Kennung nach Sessionwechsel ablehnen. Einzelfälle, Laufzeit und Grenzen
    protokollieren. Erst dann Featureabschluss/Commit; kein pauschaler Flutschutzbeleg.
+
+## Gefahrenbewertung im Zielscan — begrenzt live abgenommen
+
+`analysis.hazards` zuerst auswerten, danach die Korridorbeispiele. Die Bewertung
+zählt alle erreichbaren nassen Hohlräume und diejenigen mit beobachtetem Pegel
+mehr als 0,01 über Zielhöhe **und** minimaler Geländeschwelle. Kontaminiertes
+Restwasser bleibt auch bei stillstehenden Quellen eine priorisierte Gefahr.
+Die Zähler sind Hohlräume, keine unabhängigen Flutereignisse. Bis zu acht
+repräsentative Gefahren erscheinen unter `priorities`; weitere bleiben im Zähler.
+`target_water_observed` bedeutet bereits beobachtetes Wasser über der Zielhöhe.
+`no_current_head_exceedance_not_safe` ist keine Entwarnung für künftige Ereignisse.
+
+Pro Gefahr: Ursprung, Pegel, Höhenüberschuss, Kontamination, Zielzutritt sowie
+Schutzquerschnitt und angenommene Krone. `closureAssessment` prüft Dachfreiheit,
+Kartenhöhe, vollständige Ufer und geometrische Umwege bei hypothetischer Sperre.
+Nur `terrain_route_cut_at_observed_level` erlaubt den nächsten Schritt **native
+Bauplanung**, keine direkte Ausführung. Dieser Nachweis betrifft einen Ursprung
+bei beobachtetem Pegel; weitere Zuflüsse, Bauwerke, Rückstau, Bauphasen, Material,
+Forschung, Arbeitszugang und Dauer bleiben zu prüfen. Bei Dachkonflikt, offenem
+Umweg oder unvollständigem Querschnitt einen anderen Sperrpunkt untersuchen.
+Keinen Abfluss aufgraben, bevor dessen Auslass und Rückwirkungen belegt sind.
+Ein niedriger Szenariopegel verkleinert den Schutzvorschlag für beobachtetes Wasser nicht.
+`overviewOnly=true` liefert weiterhin keine zielbezogene Gefahrenbewertung.
+Explosionszeit, Ereigniswirkung, zukünftige Pegel und Ankunftszeiten bleiben unbekannt.
+
+Abnahme dieses MCP-only-Nachtrags: menschliches Gate; danach vollständiger Zielscan
+mit gespeichertem Faulwasser und ruhender Quelle. Gefahrenkopf muss trotz Dürre
+erscheinen, Pegel/Schwelle/Zielhöhe lokal bestätigen. Dachkonflikt oder Nebenweg
+muss den einfachen Sperrvorschlag abweisen. Keine behauptete Schutzwirkung ohne
+separaten Bau- und Wirkungsnachweis. Synthetische Regressionen decken trockene
+Quellen vor Restwasser, niedrigen Szenariopegel, Höhlendecke, Umweg, Zielhöhe,
+bereits nasse Zielzone und unvollständige Karte ab. Menschliches Gate anschließend als live bereit übergeben.
+
+Livezwischenstand: vollständiger Zielscan bei Tempo 7, 65.536 Spalten über 9,44
+Sekunden. 9.053 erreichbare nasse Hohlräume, 2.615 potenzielle kontaminierte
+Zuflüsse; acht priorisierte Beispiele und Handlungsbedarf in nextStep.
+Priorisierter Pegel 11,33 bei (95,109,5), lokale Folgemessung 11,32 bei nahezu
+reiner Kontamination. Dachkonflikt bei (131–132,95,5) bestätigt: z=5 frei,
+z=6–8 fest. Hypothetische Krone 13 ist dort kein platzierbarer Sperrplan.
+Andere Ausgaben: geometrischer Schnitt und unvollständiger Querschnitt.
+Kein praktischer Bau-/Flutschutzbeleg. Gemäßigtes Wetter, Quellen aktiv;
+Dürre-/Restwasser-Livefall anschließend bestanden (Abschlussbeleg unten). MCP-Lesungen müssen einzeln
+erfolgen: parallele Detailabfragen werden als busy vor Ausführung abgewiesen.
+
+## Kompakte Scanantwort — live geprüft
+
+`scan_strategic_map` liefert standardmäßig `detail="compact"`: Bedrohung,
+betroffenes Ziel, beobachteter Pegel, minimale Zuflussschwelle, Kontamination,
+Schutzpunkt/Kronenhöhe, konkrete Blockade und nächste Maßnahme. Die vollständigen
+Gefahrenzähler und bis zu acht priorisierte Beispiele bleiben erhalten.
+`hazards.commonMeasures` und `commonUnresolved` gelten für alle Prioritäten;
+individuelle `measures`/`unresolved` ergänzen diese gemeinsamen Angaben.
+Abdeckung, Beobachtungsalter und fachliche Grenzen bleiben sichtbar.
+
+Kacheln, Korridorpfade, Querschnittszellen, Spezialobjekte und die allgemeine
+Fluss-/Quelleninventur stehen in `detail="full"`. Mit identischer Zielzone und
+derselben `scanId` nachlesen: kein erneuter Kartenscan; die bestehende frische
+Sessionprüfung bleibt. `overviewOnly=true` liefert kompakt nur den Flussbericht-
+Überblick mit Zählern/Wetter/Seitengrenzen, keine zielbezogene Gefahrenbewertung.
+Für Inventurseiten full plus entsprechende Offsets verwenden. Fehlende Details
+sind keine leeren Beobachtungen. Fehler bleiben vollständig erhalten.
+
+Abnahme: compact/full desselben abgeschlossenen Scans vergleichen; gleiche Gefahren, Maßnahmen und Blockaden, deutlich weniger JSON-Zeichen. Full muss alle Detailfelder wiedergeben, ohne weitere Terrainlesung. Menschliches Gate und Livevergleich bestanden; keine Agent-Testläufe.
+
+## Positive Terraforming-Optionen — begrenzt live geprüft
+
+Der vollständige Zielscan liefert zusätzlich `analysis.terraforming`: bis zu drei
+räumlich getrennte 3×3-Reservoirkandidaten mit zwei Ebenen Absenkung. Suchgebiet:
+32 Felder um die Zielzone; feste Geometrie, keine erschöpfende Landschaftsplanung.
+Kompakt bleiben Nutzen, Ursprung, Fläche, Aushubtiefe, Zielbodenhöhe, geometrisches
+Zusatzvolumen, Zuflussbeleg, Blockaden und nächste Maßnahme sichtbar. Nur die
+neun `excavationCells` je Kandidat stehen ausschließlich in `detail="full"`.
+
+18 Rasterwürfel Zusatzvolumen sind weder 18 Wassergüter noch eine Reichweite in
+Tagen. Ebene offene Oberfläche erforderlich; ein fester Block bleibt unter dem
+neuen Boden. Höhlen im Aushub/Boden, seitlich offene Beckenwände, Zielzone samt
+Rand und beobachtete Objektanker samt Rand schließen Standorte aus. Objektanker
+ersetzen keine vollständige Belegungs-/Fundamentprüfung. Unvollständige Objekt-
+abdeckung blockiert den Übergang zur Planung. Örtliches Faulwasser und fehlendes
+Wasser über Randhöhe werden als Blockaden ausgewiesen. Sauberes örtliches Wasser
+beweist keine dauerhaft saubere Quelle oder künftige Nachfüllung.
+
+Vor Ausführung native Werkzeug-/Forschungs-, Belegungs-, Zugangs- und Bauphasen-
+prüfung sowie kontrollierte Nachfüllung, Abfluss, Rückstau, Verdunstung und Pumpen-
+nutzung klären. Überregionale Faulwasserpfade aus hazards weiterhin berücksichtigen.
+Keine automatische Grabung; keine erfundenen Kosten oder Bewässerungsreichweiten.
+`overviewOnly=true` bleibt ohne zielbezogene Terraforming-Optionen.
+
+Abnahme: menschliches Gate, danach ein vollständiger Zielscan. Einen Kandidaten anhand Boden, Seitenwand und Wasserzustand lokal prüfen; compact/full müssen dieselbe Geometrie und Blockaden liefern. Negativfälle für Höhle, seitliche Öffnung, Bebauung, Faulwasser, fehlenden Zufluss und unvollständige Abdeckung sind synthetisch vorbereitet. Keine Agent-Testläufe.
+
+### Livebeleg Compact/Full und Reservoir (16. Oktober 2026)
+
+Menschliches Gate bestanden. Gesamtscan: 64 Kacheln, 65.536 Spalten, 2,87 Sekunden
+Beobachtungszeit. Compact 10.434, Full 87.261 JSON-Zeichen: 88,0 Prozent kleiner.
+Identische Scan-ID/Abdeckung; alle acht Gefahren einschließlich Pegel/Schwelle,
+Zielzutritt, Blockade und gemeinsamer plus individueller Maßnahmen abgeglichen.
+Alle drei Reservoir-Optionen stimmen außer den bewusst nur in Full ausgegebenen
+neun Aushubzellen überein. Full erzeugte keine Terrainlesung, eine Sessionlesung.
+
+Reservoir (117,145,3), 3×3, Zielboden 1: lokale 5×5×4-Abfrage bestätigt alle
+25 Spalten bei z=0,1,2 fest, z=3 frei/trocken. Fester Restboden und seitliche
+Wände stimmen mit dem Kandidaten überein. 18 Rasterwürfel sind rechnerisches
+Zusatzvolumen; fehlender Zufluss wird als Blockade erhalten. Keine Grabung oder
+Wasserspeicherung durchgeführt. Tempo 7 blieb bestehen. Zu diesem Zwischenstand war das Wetter gemäßigt;
+Dürre-Abschlussbeleg folgt unten. Keine pauschale Abnahme von Hydraulik,
+Fundamenten, Arbeitszugang oder Speicherleistung.
+
+### Abschlussprüfung 0.62.0
+
+Nach bestandenem menschlichem Gate Dürrephase an Zyklustag 9 beobachtet:
+zehn von zehn nativen Quellen auf Stärke 0, Quellenabdeckung vollständig.
+Vollscan über 65.536 Spalten in 2,67 Sekunden: 7.458 erreichbare nasse Hohlräume,
+1.242 potenzielle kontaminierte Zuflüsse. Gefahrenzustand und Schutzpriorität
+bleiben trotz ruhender Quellen erhalten. Beispiel (168,122,4): Pegel etwa 10,78,
+Kontamination nahezu 1, minimale Geländeschwelle 5. Dachkonflikt am vorgeschlagenen
+Sperrquerschnitt bleibt ausdrücklich blockiert; keine Bauwirkung behauptet.
+
+Zusätzliche Kontrollen: geänderte Zielzone bei bestehender Scan-ID liefert
+strategic_scan_parameters_changed; anschließende gültige Abfrage liest den Cache
+unverändert. overviewOnly kompakt enthält Zähler/Wetter statt Inventurlisten;
+Full derselben Kennung liefert 32 Abschnitte, 64 Links und zehn Quellen, ohne
+Terrain-Neulesung. Damit sind die vorgesehenen lesenden Nachweise abgeschlossen.
+Faktischer Aushub, Speicherung, Nachfüllung und hydraulischer Schutz bleiben
+außerhalb dieses Releaseumfangs. Recheck ohne weiteren Codeänderungsbedarf.
+
+Spezialobjektkontrolle beim Abschluss: neun UnstableCore-Anker vorhanden,
+darunter (103,116,12) und (168,130,12). Positionen sind lesbar, aber nicht mit
+Countdown, Sprengradius, zukünftig geöffneter Geländesperre oder freigesetztem
+Reservoir verknüpft. Restwasserwarnung ist keine Vorhersage dieser Explosionen.

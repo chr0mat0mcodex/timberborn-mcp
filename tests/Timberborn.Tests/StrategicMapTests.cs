@@ -131,6 +131,8 @@ public sealed class StrategicMapTests
         var last=await store.Observe(Request with{ScanId=first.ScanId},Read,TestContext.Current.CancellationToken);
         Assert.True(last.Coverage.TerrainComplete); Assert.False(last.Coverage.Atomic);
         Assert.Equal(128,last.Coverage.ObservedColumns); Assert.NotNull(last.Analysis);
+        Assert.NotNull(last.Analysis.Hazards);
+        Assert.Equal(last.Analysis.Hazards.NextAction,last.NextStep);
         Assert.Equal(new[]{0,1},calls);
         var cached=await store.Observe(Request with{ScanId=first.ScanId},Read,TestContext.Current.CancellationToken);
         Assert.Equal(0,cached.NativeReadsThisCall); Assert.Equal(2,calls.Count);

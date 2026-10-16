@@ -1,5 +1,36 @@
 # Projektstand
 
+## Versionsabschluss 0.62.0 — 16. Oktober 2026
+
+Menschliches Test-/Build-/Installationsgate bestanden; Abschluss-Liveprüfungen
+für Gefahrenbewertung, Compact/Full und Reservoir-Optionen bestanden. Bridge
+bleibt 0.62.0; MCP-Nachträge sind durch den Abschlusscommit eindeutig zugeordnet.
+[Releaseumfang](docs/releases/0.62.0.md), [Vertrag und Belege](docs/strategic-map-0.62.md).
+
+- Dürre aktiv, alle zehn Quellen Stärke null; 7.458 erreichbare nasse Hohlräume,
+  darunter 1.242 potenzielle kontaminierte Zuflüsse. Warnung und konkrete nächste
+  Handlung bleiben erhalten. Höchster Restwasserpegel etwa 10,78, Schwelle 5.
+- Compact/Full derselben Scan-ID: 10.434 / 87.261 JSON-Zeichen, 88,0 Prozent weniger.
+  Gefahren, Maßnahmen, Blockaden und Reservoir-Optionen gleich; keine Terrain-
+  Neulesung bei Full, eine frische Sessionprüfung. Auch overviewOnly geprüft.
+- Reservoir (117,145,3), 3×3, zwei Ebenen Absenkung: Boden und Seiten lokal
+  bestätigt, 18 Rasterwürfel Zusatzvolumen. Fehlender Zufluss ausdrücklich blockiert.
+- Dachkonflikt nativ bestätigt; ungültige Parameteränderung konkret abgewiesen,
+  gültiger Cache danach unverändert lesbar. Tempo 7 unverändert.
+
+Quellen, Schema/Dispatch, Präsentation, Analyse und Regressionstests erneut
+geprüft. Keine Codeänderung nach dem erfolgreichen Gate nötig; keine Agent-
+Builds oder Testläufe. README, Einstieg, Kompatibilitätsübersicht, Fachvertrag,
+Werkzeugreferenz, Spielanleitung und lokale Hermes-Spielskillvorlage abgeglichen;
+keine Installation/Freigabe der zurückgestellten Hermes-Integration.
+
+Grenzen: geometrische Planung, keine hydraulische Flut-/Ankunftsprognose,
+kein automatischer Bau/Aushub, kein Speicherbetriebsnachweis. Wasserbauwerke,
+Ereigniscountdown, Durchbruchprognose, künftige Kontamination und vollständige
+Bauzugangs-/Kostenprüfung bleiben offen. Nächste Priorität: **B15/P0**, komplette
+Struktur gemeinsam als Baustellen platzieren, anschließend Fertigstellung verfolgen.
+Fremde lokale Änderungen und Rohlogs bleiben außerhalb des Abschlusses.
+
 ## 0.62.0 — Karten-, Quellen- und Flussüberblick begrenzt live abgenommen
 
 Menschliches Gate bestanden; Abschluss-Livetest am 16. Oktober 2026 bei Tempo 7.

@@ -1,5 +1,59 @@
 # Backlog
 
+## Höchste Priorität — B15: Gesamtstruktur als gemeinsame Bauauftragscharge
+
+**P0 / maximale Priorität, Nutzerauftrag vom 16. Oktober 2026.** Nächster
+Implementierungsschwerpunkt vor den übrigen offenen Backlog-Erweiterungen.
+Hier beauftragt ist die Aufnahme und Priorisierung; Umsetzung steht noch aus.
+
+Gewünschter Ablauf: **Plan machen → einmal Go → komplette Struktur als
+Bauaufträge platzieren → Baufortschritt verfolgen → erfolgreich beenden, wenn
+alles gebaut ist.** Der Agent beschreibt das gesamte Bauvorhaben; MCP übernimmt
+die gemeinsame Platzierung und meldet konkrete Probleme zurück. Die Biber bauen
+die platzierten Baustellen anschließend nach und nach. MCP wartet nicht nach
+jedem einzelnen Element auf dessen Fertigstellung, bevor es das nächste setzt.
+
+- **Ein Gesamtplan:** Gebäude, Wege, Treppen, Stützen, Kraftverbindungen und
+  Wasserbau einer Struktur gemeinsam beschreiben und prüfen. Geometrie,
+  Distriktanschluss, Bauarbeiterzugang, fertiger Gebäudezugang und Bauphasen
+  getrennt bewerten, einschließlich der Abhängigkeiten innerhalb des Plans.
+- **Ein Go für die ganze Platzierungsphase:** Alle vom Spiel zulässigen Teile
+  unmittelbar als Bauaufträge einreichen. Interne API-Aufrufe dürfen technisch
+  sequenziell sein; zwischen ihnen keine Baufortschrittswartezeiten, keine
+  Agentenrunde und keine erneute Einzelbestätigung. Noch fehlendes Baumaterial
+  ist kein Grund, weitere vom Spiel erlaubte Baustellen zurückzuhalten.
+- **Echte Spielgrenzen konkret zurückmelden:** Verlangt das Spiel für ein Teil
+  tatsächlich eine fertiggestellte Stütze, Räumung oder andere Vorleistung,
+  dies als belegte Ausnahme mit betroffenem Teil und Abhängigkeit ausweisen.
+  Keine pauschale Serialisierung des gesamten Vorhabens daraus ableiten.
+  Später zulässige Teile innerhalb desselben Auftrags nachreichen und separat
+  ausweisen; technisch mögliche gemeinsame Platzierung bleibt der Standard.
+- **Ein Platzierungsbericht:** Pro Teil geplant / platziert / abgewiesen /
+  zurückgestellt / unbestätigt mit Objektzuordnung, Koordinaten, konkretem
+  nativen Fehler und erforderlicher Korrektur. Teilerfolg offen ausweisen;
+  keine vorgetäuschte atomare Alles-oder-nichts-Transaktion und kein blindes
+  Wiederholen unbestätigter Aufträge.
+- **Ein Lauf bis zum tatsächlichen Bauabschluss:** Gesamte Charge unter einer
+  Auftrags-ID beobachten. Fortschritt und Blockaden wie Materialmangel,
+  fehlende Bauarbeiter oder verlorener Zugang gesammelt melden. Erfolgsende
+  erst, wenn alle beauftragten Teile nachweislich fertig sind. Platzierung
+  allein ist kein Abschluss. Abbruch, Zeitlimit und dauerhaft blockierte Teile
+  sind gesonderte End-/Fehlerzustände mit offenem Rest, niemals Erfolg.
+  Zugang, Kraftanschluss und Betrieb zusätzlich getrennt ausweisen.
+
+**Abnahme:** Eine mehrteilige Struktur wird nach einem Go vollständig als
+Baustellen sichtbar, bevor das erste Teil fertig ist; der Agent muss keine
+Elemente einzeln weiterreichen. Ein Kontrollfall mit ungültigem Teil liefert
+einen präzisen Teilfehler und den tatsächlich platzierten Rest. Ein Fall mit
+Materialmangel bleibt nach kompletter Platzierung in Bau und endet erst nach
+Nachschub/Fertigstellung erfolgreich. Native Vorleistungsabhängigkeit und
+unbestätigte Platzierung jeweils separat prüfen.
+
+Bestehende Gruppen-, Großprojekt- und Bauchargenwege auf diesen Ablauf umbauen,
+statt lediglich einen weiteren Wrapper um die bisherige Fertigstellungssequenz
+zu setzen. Verknüpft B02 (Gesamtplanung), B03 (Kraft/Höhen), B07 (Versorgung)
+und B14 (zusammenhängende Schutzstrukturen).
+
 ## 0.54.0 - Pflanzen- und Flaechenjournal begrenzt live abgenommen
 
 Menschliches Gate und Abschluss-Livetest am 12. Oktober 2026 bestanden.
@@ -58,7 +112,7 @@ Zweiergruppe samt Treppe/zwei Wegen autonom fertig: 3,65625 Spielstunden,
 Fünf Testobjekte entfernt, keine Rohstoffe gelöscht, Endpause bestätigt.
 [Vertrag und Abnahmepilot](docs/group-search-0.51.md).
 
-Stand: 2026-10-12, nach begrenzter Liveabnahme von **0.53.0**.
+Stand: 2026-10-16, nach begrenzter Liveabnahme von **0.62.0**.
 Diese Liste trennt noch offene Fähigkeiten von abgeschlossenen Teilumfängen.
 Vorschläge sind keine Implementierungsfreigabe. Test-Gate unverändert:
 [Entwicklungsablauf](DEVELOPMENT_WORKFLOW.md).
@@ -68,6 +122,7 @@ Alle bisherigen Beobachtungen bleiben im [historischen Backlog](BACKLOG_HISTORY.
 
 | ID | Verbesserung | Vorhandene Grundlage und noch offener Umfang |
 | --- | --- | --- |
+| B15 — **P0** | **Gesamtstruktur gemeinsam platzieren, dann bis Fertigstellung verfolgen** | **Höchste Priorität.** Ein Plan, ein Go, alle zulässigen Baustellen in einer Platzierungsphase; konkrete Teilfehler und gemeinsamer Bauabschluss. Vollständiger Auftrag und Abnahme oben. |
 | B01 | Bessere Standortwahl | 0.51: begrenzte Rückwärtssuche, Vergleich ganzer Pläne und Auslassen blockierender Wünsche abgenommen. Offen: alternative Zielreihenfolgen und breitere Suche; keine globale Optimalität. |
 | B02 | Reservierungen und Gesamtplanung | 0.51: bis acht Ausschlussvolumen für einen Gruppenplan vorhanden. Offen: dauerhafte Reservierungen, planübergreifende Korridore und Suchabdeckung; keine globale Siedlungsoptimierung. |
 | B03 | Kraft- und Höhenrouten planen | Ports, Netze, explizite Höhenpläne und Zugangshilfen existieren. Offen: allgemeine automatische Routenauswahl, Alternativstandorte und kombinierte Versorgungslayouts mit getrenntem Geometrie-/Netz-/Betriebsnachweis. |
@@ -81,7 +136,7 @@ Alle bisherigen Beobachtungen bleiben im [historischen Backlog](BACKLOG_HISTORY.
 | B11 | Agenten-UI im Spiel | Screenshot mit Kamerametadaten und „schau mal“ existieren. Offen: „Zeigen“-Button nimmt die Ansicht beim Klick auf, begrenzte Aufbewahrung und Abhol-/Fehlerstatus. Aktive Benachrichtigung ist ein separat zu definierender Umfang. |
 | B12 | Weitere Effizienz und Diagnosequalität | Noch große Werkzeugantworten/-beschreibungen gezielt messen, veralteten Clientkatalog erkennbar machen, unnötige interne Reads reduzieren. 0.54-Pilot: kleine Journalgruppen adaptiv darstellen; sechs Ereignisse mit vier Gruppen sparen nur 5 von 1555 page-Zeichen. Compact/Full und günstiges Warten sind bereits vorhanden. |
 | B13 | Optionale Koloniebeobachtung | Geburten/Todesfälle im Intervall, Altersverteilung, bevorstehendes Erwachsenwerden und altersbedingte Personalengpässe, Familienwohnungen, tatsächliche Wohlbefindensursachen und historisches Bauregister. Prognosen mit Zeitraum, Annahmen und Unsicherheit; freie Betten beweisen keinen gesicherten Nachwuchs. Kein fortlaufender Auftrag, alle Gebäude oder eine bestimmte Bevölkerung zu erreichen. |
-| B14 | Strategische Kartenübersicht und Spezialobjektsuche | Nutzerauftrag vom 2026-10-16: kartenweite, strukturierte Übersicht über Topologie, Höhenlagen, Höhlen, Wasserreservoirs und Spezialobjekte. Vorhanden sind beliebige lokale Koordinatenabfragen bis 8×8×4, regionale Suche bis 16×16 und Spielbilder; keine daraus erschlossene strategische Gesamtkarte. Umfang und Abnahme unten. |
+| B14 | Strategische Kartenübersicht und Spezialobjektsuche | Nutzerauftrag vom 2026-10-16: kartenweite, strukturierte Übersicht über Topologie, Höhenlagen, Höhlen, Wasserreservoirs und Spezialobjekte. 0.62 liefert kartenweiten Terrain-/Quellen-/Flussüberblick, priorisierte Restwassergefahren und bedingte Reservoir-Optionen; Ereignis-/Durchbruchprognosen bleiben offen. Umfang und Abnahme unten. |
 
 ### Spielbetrieb 0.61 — neue konkrete Lücken (2026-10-16)
 
@@ -97,6 +152,10 @@ Alle bisherigen Beobachtungen bleiben im [historischen Backlog](BACKLOG_HISTORY.
   Identitäten als Ursache untersuchen, nicht ohne Beleg behaupten.
 - **Gefahrenanzeige:** Unstable-Core-Alert enthält `{0} days` statt Countdown;
   Wirkungszone und gefährdete Wasser-/Wegeverbindungen fehlen. Ergänzt B14.
+  Nutzerhinweis beim Versionsabschluss: Die Bombe/der instabile Kern auf dem Berg
+  bleibt eine konkrete offene Gefahr. Objektposition, nativer Countdown, erwartete
+  Geländeöffnung und Freisetzung hochliegenden Wassers zusammenführen. Der 0.62-
+  Gefahrenkopf erkennt Restwasser, aber prognostiziert diese Explosion nicht.
 - **Kollisionsdiagnose:** precheck_building nennt belegte Zellen, aber keine
   verursachenden Objekt-IDs/-typen; erschwert gezielte Räumung und Standortwahl.
 - **Kraftplanung:** Generator-/Verbraucher-Verbindung als explizites Planungsziel;
@@ -114,6 +173,17 @@ Alle bisherigen Beobachtungen bleiben im [historischen Backlog](BACKLOG_HISTORY.
   ergänzen, keinen neuen Planer allein für diese Reihenfolge schaffen.
 
 ### B14 — Strategische Sicht statt isolierter Kartenausschnitte
+
+Positive Terraforming-Optionen implementiert, Gate und begrenzter Livepilot bestanden: begrenzte 3×3-Reservoirsuche mit zwei Ebenen Absenkung, Höhlen-/Seitenwand-/Objektprüfung, geometrischem Volumen und expliziten Zufluss-/Kontaminationsblockaden. Freie Beckenformen, echte Vorratsreichweite, Nachfüll-/Abflussplanung und Bewässerungswirkung bleiben offen. B15 bleibt P0.
+
+Compact/Full-Nachtrag live geprüft: Bedrohung und Gegenmaßnahmen im Standard, vollständige Inventur/Geometrie nur in full. Gemeinsame Maßnahmen und offene Prüfpunkte ohne Wiederholung.
+
+Nachtrag live abgenommen einschließlich Dürrefall: Gefahrenkopf über alle erreichbaren
+nassen Hohlräume; Restwasser vor Quellhinweisen, Zielhöhe berücksichtigt;
+priorisierte Schutzstellen mit Dachprüfung und geometrischem Nebenweg-Kontrollfall.
+Weiter offen: Unstable-Core-Countdown/Wirkungszone, Durchbruch- und zeitliche
+Pegel-/Geländeänderungsanalyse, Wasserbauwerkszustände und hydraulische Wirkung.
+
 
 Ziel präzisiert: allgemeine Mapawareness und Flüssigkeitsübersicht, nicht nur
 Flutschutz einer Zielzone. Kartenweit Quellen, Flussbetten, Tunnel, Becken,
@@ -144,7 +214,7 @@ Livepilot bestätigt Gesamtabdeckung bei Tempo 7 und einen verseuchten Tunnel.
 Quellenhöhen-/Kronenfehler korrigiert und live nachgeprüft. Für den nächsten Ausbau:
 einzelne freie Höhenintervalle gezielt abrufbar machen, vollständige Routen blättern,
 Querschnitte gegen Tunneldecken prüfen und nicht platzierbare Bauhöhen explizit
-kennzeichnen; repräsentative Quellenrouten verdrängen bislang lokale Gefahren.
+kennzeichnen. Die Priorisierung gespeicherten Wassers vor trockenen Quellhinweisen ist inzwischen abgenommen.
 Aktueller Umfang: fortsetzbarer Gesamtscan mit freien Höhenintervallen, Spezialobjekten, geometrischen
 Zuflusskorridoren und Sperrquerschnitten. [Vertrag/Pilot](docs/strategic-map-0.62.md).
 Offen bleiben insbesondere native Wasserbauwerks-/Strömungsmodellierung,

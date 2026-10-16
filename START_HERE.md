@@ -33,19 +33,18 @@ MCP-Livetest. Keine historische Kolonie oder konkreter Spielstand erforderlich.
 
 ## Aktueller Auftrag
 
-0.53 Sammelpflanzung begrenzt live abgenommen; menschliches Gate bestanden.
-Zwei Rechtecke, Ausschluesse und veraltete Vorschau getestet; Testmarkierungen
-wiederhergestellt, Spiel pausiert. [Nachweise und Grenzen](docs/planting-batch-0.53.md).
-Naechste Erweiterung anhand BACKLOG.md auswaehlen, keinen Kolonieaufbau fortsetzen.
+Abschluss des strategischen Kartenpakets 0.62 mit Gefahrenbewertung,
+Compact/Full und Reservoir-Optionen. Aktuelle Abnahme und offene Grenzen stehen
+im [Projektstand](PROJECT_STATE.md) und im [Fachvertrag](docs/strategic-map-0.62.md).
+Nächste Entwicklung: B15/P0, komplette Strukturen nach einem Go als gemeinsame
+Bauaufträge platzieren, danach gemeinsam bis Fertigstellung verfolgen.
+Keine automatische Wiederaufnahme historischer Kolonieziele.
 
 ## Technischer Stand
 
-Letzter dokumentierter Abschluss: **0.53.0**, begrenzt live abgenommen.
-Gruppenplanung bis acht Gebäude mit gemeinsamer Flächenbeobachtung,
-Rückwärtssuche und bis acht Ausschlussvolumen für den konkreten Plan.
-Grenzen: 32 Teile, 32×32, acht belegte Höhen; höchstens 32 native Vorschauen und
-256 Suchzustände. Keine globale Optimalität oder dauerhaften Reservierungen.
-[Nachweis](docs/group-search-0.51.md).
+Bridge 0.62.0; MCP-Nachträge derselben Version werden durch Commit und
+feature-spezifische Abnahme unterschieden. Die älteren Abschnitte oben sind
+historische Nachweise, keine aktuelle Aufgabenliste.
 
 Aktuellen Laufzeitstand nach Wiederanschluss aus `timberborn_status` und Session
 lesen. Die Versionsnummer allein beweist nicht den Abnahmestatus lokaler Änderungen.

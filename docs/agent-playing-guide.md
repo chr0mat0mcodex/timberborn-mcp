@@ -1,8 +1,74 @@
 # Spielanleitung für Agenten
 
+## Positive Terraforming-Optionen — begrenzt live geprüft
+
+Der vollständige Zielscan liefert zusätzlich `analysis.terraforming`: bis zu drei
+räumlich getrennte 3×3-Reservoirkandidaten mit zwei Ebenen Absenkung. Suchgebiet:
+32 Felder um die Zielzone; feste Geometrie, keine erschöpfende Landschaftsplanung.
+Kompakt bleiben Nutzen, Ursprung, Fläche, Aushubtiefe, Zielbodenhöhe, geometrisches
+Zusatzvolumen, Zuflussbeleg, Blockaden und nächste Maßnahme sichtbar. Nur die
+neun `excavationCells` je Kandidat stehen ausschließlich in `detail="full"`.
+
+18 Rasterwürfel Zusatzvolumen sind weder 18 Wassergüter noch eine Reichweite in
+Tagen. Ebene offene Oberfläche erforderlich; ein fester Block bleibt unter dem
+neuen Boden. Höhlen im Aushub/Boden, seitlich offene Beckenwände, Zielzone samt
+Rand und beobachtete Objektanker samt Rand schließen Standorte aus. Objektanker
+ersetzen keine vollständige Belegungs-/Fundamentprüfung. Unvollständige Objekt-
+abdeckung blockiert den Übergang zur Planung. Örtliches Faulwasser und fehlendes
+Wasser über Randhöhe werden als Blockaden ausgewiesen. Sauberes örtliches Wasser
+beweist keine dauerhaft saubere Quelle oder künftige Nachfüllung.
+
+Vor Ausführung native Werkzeug-/Forschungs-, Belegungs-, Zugangs- und Bauphasen-
+prüfung sowie kontrollierte Nachfüllung, Abfluss, Rückstau, Verdunstung und Pumpen-
+nutzung klären. Überregionale Faulwasserpfade aus hazards weiterhin berücksichtigen.
+Keine automatische Grabung; keine erfundenen Kosten oder Bewässerungsreichweiten.
+`overviewOnly=true` bleibt ohne zielbezogene Terraforming-Optionen.
+
+## Kompakte Scanantwort — live geprüft
+
+`scan_strategic_map` liefert standardmäßig `detail="compact"`: Bedrohung,
+betroffenes Ziel, beobachteter Pegel, minimale Zuflussschwelle, Kontamination,
+Schutzpunkt/Kronenhöhe, konkrete Blockade und nächste Maßnahme. Die vollständigen
+Gefahrenzähler und bis zu acht priorisierte Beispiele bleiben erhalten.
+`hazards.commonMeasures` und `commonUnresolved` gelten für alle Prioritäten;
+individuelle `measures`/`unresolved` ergänzen diese gemeinsamen Angaben.
+Abdeckung, Beobachtungsalter und fachliche Grenzen bleiben sichtbar.
+
+Kacheln, Korridorpfade, Querschnittszellen, Spezialobjekte und die allgemeine
+Fluss-/Quelleninventur stehen in `detail="full"`. Mit identischer Zielzone und
+derselben `scanId` nachlesen: kein erneuter Kartenscan; die bestehende frische
+Sessionprüfung bleibt. `overviewOnly=true` liefert kompakt nur den Flussbericht-
+Überblick mit Zählern/Wetter/Seitengrenzen, keine zielbezogene Gefahrenbewertung.
+Für Inventurseiten full plus entsprechende Offsets verwenden. Fehlende Details
+sind keine leeren Beobachtungen. Fehler bleiben vollständig erhalten.
+
+## Gefahrenbewertung im Zielscan — begrenzt live abgenommen
+
+`analysis.hazards` zuerst auswerten, danach die Korridorbeispiele. Die Bewertung
+zählt alle erreichbaren nassen Hohlräume und diejenigen mit beobachtetem Pegel
+mehr als 0,01 über Zielhöhe **und** minimaler Geländeschwelle. Kontaminiertes
+Restwasser bleibt auch bei stillstehenden Quellen eine priorisierte Gefahr.
+Die Zähler sind Hohlräume, keine unabhängigen Flutereignisse. Bis zu acht
+repräsentative Gefahren erscheinen unter `priorities`; weitere bleiben im Zähler.
+`target_water_observed` bedeutet bereits beobachtetes Wasser über der Zielhöhe.
+`no_current_head_exceedance_not_safe` ist keine Entwarnung für künftige Ereignisse.
+
+Pro Gefahr: Ursprung, Pegel, Höhenüberschuss, Kontamination, Zielzutritt sowie
+Schutzquerschnitt und angenommene Krone. `closureAssessment` prüft Dachfreiheit,
+Kartenhöhe, vollständige Ufer und geometrische Umwege bei hypothetischer Sperre.
+Nur `terrain_route_cut_at_observed_level` erlaubt den nächsten Schritt **native
+Bauplanung**, keine direkte Ausführung. Dieser Nachweis betrifft einen Ursprung
+bei beobachtetem Pegel; weitere Zuflüsse, Bauwerke, Rückstau, Bauphasen, Material,
+Forschung, Arbeitszugang und Dauer bleiben zu prüfen. Bei Dachkonflikt, offenem
+Umweg oder unvollständigem Querschnitt einen anderen Sperrpunkt untersuchen.
+Keinen Abfluss aufgraben, bevor dessen Auslass und Rückwirkungen belegt sind.
+Ein niedriger Szenariopegel verkleinert den Schutzvorschlag für beobachtetes Wasser nicht.
+`overviewOnly=true` liefert weiterhin keine zielbezogene Gefahrenbewertung.
+Explosionszeit, Ereigniswirkung, zukünftige Pegel und Ankunftszeiten bleiben unbekannt.
+
 ## Strategischer Kartenscan 0.62 — begrenzt live abgenommen
 
-Für allgemeine Mapawareness `scan_strategic_map(session, overviewOnly=true)` ohne
+Für allgemeine Mapawareness `scan_strategic_map(session, overviewOnly=true, detail="full")` ohne
 Siedlungsziel verwenden. `rivers` enthält nach vollständigem Scan Abschnitte mit
 lokalen Pegel-/Kontaminationsbereichen, geometrische Verbindungen, Quellen und Wetter.
 Mit `sectionOffset` (32), `linkOffset` (64), `sourceOffset` (16) vollständig blättern.
@@ -13,6 +79,8 @@ neu scannen: Unterschiede zur vorherigen vollständigen Beobachtung derselben Si
 werden ausgewiesen. Gate und Livepilot einschließlich Dürrebeginn bestanden:
 zehn Quellen stellten die Förderung ein, lokale Restflüssigkeit blieb getrennt.
 Faulwasserflutwechsel und spezielle Aktivierungsregeln sind noch nicht live belegt.
+Korridorpfade, Spezialobjekt- und Flussseiten erfordern `detail="full"`;
+Compact enthält Gefahren und Terraforming-Optionen mit Handlungsbedarf.
 
 `scan_strategic_map(session, x, y, z, width, height)` verwendet die angegebene
 Region als **Schutzzone** und scannt die ganze Karte. Zunächst `tilesPerCall=1`
@@ -703,7 +771,7 @@ Das menschliche Vorbereitungsskript startet seit 0.57 nach erfolgreichen Tests,
 Installation und Paketprüfung Timberborn automatisch. Spielstand laden und
 `live bereit` bleiben menschliche Schritte; der Agent startet das Gate nicht selbst.
 
-Stand: letzter dokumentierter Abschluss Bridge 0.59.0; aktualisiert am 16. Oktober 2026.
+Stand: letzter dokumentierter Abschluss Bridge 0.62.0; aktualisiert am 16. Oktober 2026.
 Diese Anleitung beschreibt die vorhandenen MCP-Fähigkeiten. Aktueller Auftrag
 und Projektregeln stehen in [AGENTS.md](../AGENTS.md) und
 [missionsplan.md](../missionsplan.md); das lokale Spiel ist das freigegebene

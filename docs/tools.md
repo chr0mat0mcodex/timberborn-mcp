@@ -1,8 +1,14 @@
 # Native MCP-Werkzeuge
 
+Zusätzlich `analysis.terraforming`: bedingte 3×3-Reservoir-Optionen, zwei Ebenen Absenkung, Nutzen und Blockaden kompakt, Zellbelege full. Gate und begrenzter Livepilot bestanden.
+
+Strategischer Scan: `detail="compact"` als Standard für Bedrohung und Gegenmaßnahmen; `detail="full"` für komplette Scanbelege. Gate und Livevergleich bestanden.
+
+Gefahrenbewertung einschließlich Restwasser bei ruhenden Quellen live bestätigt: Zielscan liefert `analysis.hazards` mit priorisiertem Restwasser, Schutzquerschnitten und Dach-/Umwegprüfung.
+
 ## 0.62 — strategischer Kartenscan, begrenzt live abgenommen
 
-Erweiterung: `overviewOnly=true` ohne Zielkoordinaten liefert `rivers` mit
+Erweiterung: `overviewOnly=true, detail="full"` ohne Zielkoordinaten liefert `rivers` mit
 Flussabschnitten, geometrischen Verbindungen und nativen Quellen-/Wetterdaten.
 `sectionOffset`/`linkOffset`/`sourceOffset` blättern 32/64/16 Einträge; Gesamtzahlen
 und `more*` beachten. Stärke-/Kontaminationsänderungen gegenüber einem vorherigen
