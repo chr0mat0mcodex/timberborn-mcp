@@ -3,6 +3,12 @@
 Auftrag: frei im Testsave spielen, unabhängige Maßnahmen bündeln, Learnings sammeln.
 Laufzeit: native Bridge 0.63.0. Keine Codeänderung, Builds oder Installation.
 
+Abschluss: Nutzer meldet vollständigen Kolonieverlust und beendet den Lauf.
+Rettungsziel gescheitert. Letzte native Beobachtung Tag 70, 12:15, Tempo 0;
+spätere Endpopulation und Todesursache nicht mehr verifiziert, Bridge unerreichbar.
+Kein erfolgreicher Flutschutz-/Überlebensnachweis. Backend zum Abschluss gestoppt,
+running=false/gate=true bestätigt. Keine weitere Fortsetzung dieses Spielauftrags.
+
 Beobachteter Verlauf
 - Spieltag 50, 10:15 bis 19:15: neun Spielstunden, fünf erwachsene Biber
   zu Beginn und Ende, kein kritischer Hunger/Durst und keine aktive Kontamination.
@@ -95,9 +101,304 @@ P2 — Kompakte Diagnose und Nahrungsübersicht
   Gebäude-/Wegsuche: DistrictCenter wird bei includePaths=false ausgeschlossen.
   Semantik dokumentieren oder Rollenfilter liefern, damit Bauzentrum auffindbar bleibt.
 
+Fortsetzung nach bestandenem Gate und Baupilot
+  Bauplaner/Fehlerweitergabe begrenzt live abgenommen; Nachweis siehe
+  docs/planner-repair-2026-10-17.md. Anschließend weiteres Wohnhaus fertig und
+  zugänglich, neun Betten für sechs Bewohner. Deich regulär für 120 Forschung
+  freigeschaltet. Forschung und trockene Pumpen pausiert, Baupersonal-Soll erhöht.
+  Tag 52: elf zusätzliche Wege fertig und zugänglich; kein verlorener Anschluss
+  beobachtet. Deich noch nicht beauftragt. Vorräte zuletzt 50 Holz, 70 Wasser,
+  87 Karotten. Pause bestätigt; keine nachhaltige Wasserversorgung nachgewiesen.
+
+Weitere Learnings und konkrete Verbesserungen
+  P0: Nutzerreferenz 'hier ein Block schließen' braucht eine native Zielzelle.
+  inspect_selection liefert ohne ausgewähltes Objekt none. Das ausdrücklich
+  angeforderte Spielbild liefert zwar Kameraposition und Ziel auf einer Ebene,
+  aber keinen Gelände-Raytreffer. Kameraziel nicht als Baukoordinate ausgeben.
+  Vorschlag: nativen Kamera-/Cursor-Raytreffer samt Rasterzelle, Oberfläche und
+  Auswahlart lesen. Abnahme auch an Klippen, Höhlen und leerem Gelände.
+  Die vermutete dreizellige Felskerbe ist keine bestätigte Nutzerzielstelle;
+  erneutes Bild zeigte inzwischen eine andere Kameraposition. Markierung erfragt.
+
+  P1: Zugangssuche meldete no_route_in_region mit zunächst null, nach Weganschluss
+  einem besuchten Knoten. Fehlende Startwege, belegte Nachbarn, Höhenhindernisse
+  und erschöpftes Budget getrennt melden; konkrete Hinderniszellen ausgeben.
+  Rodung und Bretterbedarf gehören in einen vollständigen Zugangsplan.
+  Abnahme: ferner Zielblock mit fehlendem Startweg, Baumhindernis und Höhenwechsel.
+
+  P1: Hydrologische Übersicht muss lokalen Durchlass und großen Querschnitt trennen.
+  Viele mögliche Einströmzellen sind nicht ebenso viele unabhängige Flutereignisse.
+  Unterirdisches Restwasser ist kein Oberflächenpegel oder Pumpennachweis.
+  Schutzwirkung erst mit vollständigem Querschnitt und Umgehungswegen behaupten.
+
+  Bewährt: tote abgeerntete Stümpfe werden beim Markieren sofort entfernt;
+  lebende Bäume bleiben Arbeiteraufträge. Bauschritte benötigen frische Vorschau
+  nach Räumung. Forschungsziel stoppte Simulation beim erreichten Budget.
+  Freier Arbeiter allein erhöht das Baupersonal nicht: Arbeitsplatz-Soll prüfen.
+  Parallel laufende Holzarbeit/Forschung/Hausbau sind möglich, MCP-Abfragen
+  weiterhin seriell senden. Keine Rohbilder, Spiel-IDs oder Rohlogs abgelegt.
+
 Nächster sinnvoller Schritt
-  Vorschaufehler beheben und menschliches Testgate, anschließend Livepilot für
-  denselben Mehrfachbau. Für unmittelbare Spielfortsetzung vermutlich Save neu laden,
-  neue Session bestätigen und Planerzustand prüfen; Recovery durch Reload wurde in
-  diesem Versuch nicht getestet. Keine Änderung an dauerhaften Agentenregeln.
-  Ursprüngliche Arbeitskopieänderungen unangetastet, keine Rohlogs/Spiel-IDs abgelegt.
+  Durchlass inzwischen über erneute vom Nutzer angeforderte Ansicht und 3D-Daten
+  lokalisiert: x152/y137..139/z5, drei Zellen breit, Uferhöhe sechs. Drei
+  Sperrblöcke nötig, um diese lokale Kerbe um eine Höhenstufe zu schließen.
+  Keine Aussage über vollständigen Schutz gegen höhere Pegel oder andere Routen.
+
+Fortsetzung bis Tag 58, 05:15
+  Sägewerk und Laufrad samt elf Wegen fertig und zugänglich; tatsächliches
+  Kraftnetz mit 53 Angebot bei 50 Bedarf, besetzt und Bretterbestand belegt.
+  Weitere Zufahrt geräumt und gebaut. Automatischer Höhenplan benötigte zehn
+  Plattformen und zwei Treppen, insgesamt 68 Bretter. Manuell geprüfter gerader
+  Aufstieg mit drei massiven Deichstützen und vier Treppen braucht 16 Bretter
+  und zusätzlich Holz; gemeinsame Vorschau samt Arbeitszugang bestanden.
+  Gesamte Struktur mit 21 Teilen in einem Auftrag platziert, keine Ablehnungen.
+  Frische Diagnose bestätigt alle Identitäten. Ein Sperrblock bei y139 fertig,
+  mittlerer bei y138 fast fertig, nördlicher bei y137 noch ohne Baumaterial.
+  Letzte Abstiegstreppe noch im Bau. Sperre noch NICHT vollständig geschlossen.
+
+  P0: Projektbeobachter stoppt sofort mit object_or_access_mismatch und markiert
+  vorhandene obere Wege als unconfirmed, obwohl ihr fehlender Zugang durch die
+  noch unfertigen unteren Treppen erwartet ist. Diagnose zeigt dagegen
+  finished_access_missing, Einzelabfrage found=true/finished=true. Identitäts-
+  bestätigung von Zugang trennen, Bauphasen berücksichtigen, nur bei tatsächlichem
+  Verlust/unerklärtem Fehler abbrechen. Abnahme: diese vertikale Gesamtstruktur
+  ohne Sofortabbruch bis Fertigbau beobachten; kein Replay der vorhandenen Wege.
+
+  P1: Automatische Zugangssuche benötigt Materialkosten als Auswahlkriterium und
+  massive Stützen als Alternative. Gültiger Weg ist nicht materialgünstiger Weg.
+  Alle Strukturteile dürfen gemeinsam beauftragt werden; native Baustellen auf
+  unfertiger Stütze wurden zunächst isOn=false und nach Unterbaufertigstellung
+  von selbst aktiv. Nicht mit manuell pausierter Baustelle verwechseln.
+
+  P1: Parallel hinzugekommene Försterbaustelle belegte vier für die Treppe gedachte
+  Bretter; vorübergehend pausiert. Gesamtbedarf muss fremde Baustellen, bereits
+  verbautes Material und verfügbare Vorräte unterscheiden. Nur vier Erwachsene
+  waren arbeitsfähig, obwohl fünf Erwachsene gemeldet wurden. Farm vorübergehend
+  pausiert; Mühle und Antrieb nach zusätzlichem Bretterbedarf wieder aktiviert.
+
+  Wiederholte Tempowechsel nach bestätigter Pause unterbrachen Vorschauen und
+  Zeitstarts. Nutzer bestätigte manuelle Tempowechsel; daraus keinen autonomen
+  Tempofehler der Bridge ableiten. Laufbericht-Pause ist historisch, aktuelle
+  Simulation separat lesen. Abgewiesene Läufe mit run_not_found geklärt.
+
+  Akute Grenze: Wasserbestand null bei Tag 58, 05:15, aktuelle Pause bestätigt.
+  Offene Restwasserstelle x127..129/y137..139, Pegel etwa 1,52 über Grund null.
+  Native Pumpenplatzierung x128/y141/z1, Drehung zwei gültig. Grobe Vorprüfung
+  meldet fälschlich terrain_intersection in Any-Zellen; bei z2 fehlt dagegen
+  tatsächliche Unterstützung. Native Validierung und grobe Geometrie trennen.
+  Regulärer Zugang/Bauerhalt nicht bestätigt; laufende Baustellen blockieren
+  isolierte Pumpenplanung mit project_plan_foreign_construction. Native Vorschau
+  während laufender Simulation meldete navigation_preview_baseline_mismatch;
+  keine daraus abgeleitete Ausführungsfreigabe. Menschliche Hilfe für Pumpe und
+  Weg angefragt. Kein längerer Lauf vor Wassersicherung, kein Neubau-Replay.
+  Nächster Schritt: Wasser sichern, letzte Treppe und zwei Sperrblöcke fertigbauen,
+  Zugang und vollständigen lokalen Abschluss frisch prüfen. Learnings sind
+  dokumentiert, aber keine neuen Codeänderungen, Builds oder Gate-Läufe erfolgt.
+
+Nach Nutzerhilfe, Tag 62/63
+  Gleiche Sitzung, manuell fortgeschrittener Spielstand. Alle 21 Teile frisch als
+  fertig und zugänglich bestätigt, insbesondere Sperrblöcke x152/y137..139/z5.
+  Keine verlorenen Bestandsanschlüsse beobachtet, Projekt freigegeben. Abschluss
+  gemeinsam mit Nutzerfortschritt erreicht, nicht als rein autonomer Lauf bewerten.
+  Der historische Projektzustand blieb blocked, obwohl close 21/21 finishedAccessible
+  und released meldete: terminale Ursache und aktuellen Fertigstatus getrennt zeigen.
+
+  Beide alten Pumpen wieder aktiv, besetzt und tatsächliche Produktionszyklen in
+  einem kurzen Messfenster belegt. Keine neue Pumpe gefunden; Art des manuellen
+  Eingriffs nicht aus dem Ergebnis erfinden. Sechs Erwachsene und zwei Kinder.
+  Wasser- und Nahrungsreserve anfangs nahezu leer. Farm war noch pausiert, daher
+  zwei Arbeiter von Mühle/Laufrad auf Farm verlagert, zwei Farmer bestätigt,
+  Ernten vor Pflanzen gesetzt. Mühle und Laufrad pausiert bestätigt.
+  Learning: temporäre Personalumschichtung braucht einen expliziten Rückkehrpunkt
+  und Versorgungsschwellen; mehrtägige manuelle Fortschritte können Reserven
+  aufbrauchen. Versorgung nach fremdem Fortschritt immer frisch prüfen.
+
+  Unmittelbarer Sperrbereich derzeit ohne beobachtetes Faulwasser; lokale
+  Fertigstellung ist kein getesteter Hochwassernachweis für beliebige Pegel und
+  Umgehungsrouten. Weiteren Überlebenslauf erst mit aktuellen Reserven bewerten.
+
+  Abschlussmessung: beide Pumpen je neun Zyklen in acht Spielstunden, zusammen
+  rezeptabgeleitet 18 Wasser. Anschließend 13 Wasser, kein kritischer Durst,
+  aber alle acht Biber mit kritischem Hunger und null Karotten. Alle 48 bekannten
+  Karottenmarkierungen gelesen: vegetation=null; zwei Abfragen mit Filter
+  vegetation ohne Treffer. Daraus zunächst fälschlich leere Felder abgeleitet
+  und Pflanzen zuerst eingestellt. Korrektur: angebaute Pflanzen zählen unter
+  planted, nicht vegetation. Abfrage mit all belegte wachsende Karotten.
+  Alle 48 Bodenstellen feucht, trocken und in nativer Farmreichweite;
+  Farmzugang bestätigt. Kurzfristige Hungerrettung nicht nachgewiesen.
+  MCP-Lücke: Farm-/Erntejobdiagnose statt not_manufactory, Pflanzenreife und
+  konkreter Grund fehlender Pflanz-/Erntearbeit. Kein gesichertes Überleben melden.
+
+Neugeladener Rettungsversuch, Tag 57 bis 60
+  Sechs Erwachsene; Wasser von acht auf null gefallen, zuletzt sechs mit
+  kritischem Durst. Farm aktiviert, ein Arbeiter und Ernten zuerst; reife
+  Karotten mit Filter all belegt. Trockene Alt-Pumpen pausiert, Sägewerk und
+  Laufrad für Treppenmaterial aktiviert, Baupersonal-Soll auf zwei gesetzt.
+  Unfertige Förster-, Treppen- und einzelne Deichaufträge für gemeinsame
+  Neuplanung entfernt. Fertige Bestandsteile erhalten.
+
+  Elfteiliger Rettungsplan nativ gültig: Pumpe x128/y141/z1, Drehung zwei;
+  Zugang über Treppe x127/y149/z2 und sieben Wege bis y142;
+  Deichtreppe x153/y139/z5 und letzter Sperrblock x152/y137/z5.
+  Automatische Zugangssuche lehnte dieselbe Pumpengeometrie fälschlich ab;
+  direkte gemeinsame native Vorschau bestätigte Platzierung und Arbeitszugang.
+  Ausführung NICHT erfolgt: Tempo zwischen Vorschau und Start verändert,
+  project_start_plan_changed mit not_executed, danach project_not_found.
+  Zwischenzeitlich neu gesetzten unfertigen Deichblock ebenfalls entfernt;
+  dieser wurde nicht ersetzt. Diese offene Stelle ausdrücklich übergeben.
+  Nutzer bestätigt eigene Steuerung; Agent beendet konkurrierende Eingriffe.
+
+  P0: Fremde Baustellen blockieren auch dringende Wasserplanung vollständig.
+  Künftig laufende Baustellen in Vorschau einbeziehen oder vorhandene Aufträge
+  übernehmen können. Abbrechen und neu setzen kostet Fortschritt und kann
+  Material verlieren; kein sinnvoller Standardablauf für Notversorgung.
+  P1: Filter planted/vegetation und fehlende Vegetationsdaten bei crop-Areas
+  deutlicher erklären; null ist kein Nachweis eines leeren Felds.
+  P1: Planungsfenster bei paralleler menschlicher Steuerung klar kennzeichnen;
+  Planänderungsfehler sollten den konkret geänderten Zustand nennen.
+
+Erneute Übernahme: Rettungsbau abgeschlossen, Tag 63
+  Elfteiligen Auftrag erfolgreich gesetzt. Bekanntes object_or_access_mismatch
+  an fertigen Wegen hinter unfertiger Treppe erneut reproduziert. Alle elf
+  Identitäten vorhanden; keine Wiederholung. Separate begrenzte Simulationsläufe
+  ermöglichten Fertigbau. Frische Abschlussdiagnose: 11/11 fertig und zugänglich,
+  keine verlorenen Bestandsanschlüsse, Charge freigegeben. Alle drei Sperrblöcke
+  x152/y137..139/z5 einzeln als fertig gelesen. Lokaler Schluss nachgewiesen,
+  kein vollständiger Hochwassernachweis über andere Routen oder höhere Pegel.
+
+  Notpumpe x128/y141/z1 fertig, Distrikt zugewiesen, Eingang frei, Wasserrezept
+  bereit. Betrieb jedoch NICHT nachgewiesen: zwölfstündige Messung null Zyklen
+  wegen fehlender Besetzung. Nach Reduktion des Baupersonals auf eins weiterhin
+  ein arbeitsloser Biber, null freie Stellen; Pumpe meldet Soll eins/Ist null,
+  understaffed=false und overstaffed=true. Sollwechsel auf null blieb unconfirmed
+  mit beobachtetem Soll eins. Anschließender Soll-eins-Aufruf mit erwarteter null
+  wurde abgewiesen; keine erfolgreiche Rücksetzung behaupten. Reguläres
+  Pause/Weiter der Pumpe änderte den Zustand nicht. Zweistündiger Kontrolllauf
+  ebenfalls ohne Zyklus. Kein weiterer blinder Lauf zur Personalheilung.
+
+  P0: Arbeitsplatzinitialisierung frisch gebauter Pumpen untersuchen: rohe
+  Sollwerte, effektive Stellen, WorkerType und Registrierungszustand gemeinsam
+  ausgeben. Widersprüchliche Personalflags nicht als normalen Arbeitermangel
+  behandeln. Schema-/Fehlerweitergabe bei ignorierter Solländerung präzisieren.
+  Ursachennachweis steht aus; native Vorschau als Ursache nicht unterstellen.
+
+  Abschluss: sechs Erwachsene, ein Kind, 67 Wasser, kein kritischer Hunger
+  oder Durst. Alte aktive Pumpe versorgt weiter. Sägewerk/Laufrad nach fertigen
+  Treppen pausiert, Farm aktiv; zweite alte Pumpe bleibt pausiert. Letzter
+  Kurzlauf endete mit bestätigter Pause. Keine Codeänderung oder Gate-Ausführung.
+
+Abgebrochene Fehlplanung an markierter Naturbrücke
+  Markierung strukturiert bei x115/y131/z3 gelesen. Reguläres Fluttor gesperrt,
+  150 Forschung nötig, null vorhanden. Nutzer wählte feste Notsperre als
+  Zwischenlösung. Vier Deichblöcke x114/y130..133/z2 samt abgesenktem Bauweg
+  westlich der Naturbrücke gemeinsam nativ geprüft und gesetzt. Bauzugang gültig,
+  hydraulische Wirkung jedoch NICHT geprüft. Das war ein Planungsfehler:
+  lokale Schließung kann Rückstau und Überflutung über andere Ufer verursachen.
+  Die angebotene Notsperre war ohne diesen Nachweis keine geeignete Alternative.
+
+  Nutzer stoppte den Bau und stellte ausdrücklich die Aufstaugefahr klar.
+  Erste Agentenantwort fokussierte fälschlich nur den kontaminierten Bauweg.
+  Simulation abgebrochen, Pause bestätigt, alle vier unfertigen Deichbaustellen
+  zunächst pausiert und anschließend vollständig entfernt. Bereichssuche danach
+  null Sperrblöcke. Neue Zugangstreppe und drei Wege bleiben vorhanden; keine
+  weitere Bauzeit gestartet. Keine aktive Biberkontamination beobachtet.
+
+  P0-Learning: Geometrie, Arbeitszugang und hydraulische Schutzwirkung sind
+  getrennte Nachweise. Vor Sperre Zufluss, verbleibenden Abfluss, Rückstauraum,
+  Uferhöhen und Überlaufrouten zur Siedlung prüfen. Auch ein geschlossenes
+  regulierbares Tor ersetzt keinen sicheren Abfluss. Ohne hydraulischen Nachweis
+  keine feste Querschnittssperre als sichere Notlösung anbieten oder ausführen.
+
+Fortsetzung Versorgung und Korrektur der Pumpendiagnose
+  Frische Warnungszuordnung identifiziert die neue Notpumpe ausdrücklich als
+  Flooded. Bisherige Arbeitsplatzdiagnose hatte diese Betriebsblockade nicht
+  ausgewiesen. Damit ist ein Fehler der Arbeitsplatzinitialisierung NICHT
+  nachgewiesen; vorherige Hypothese zurückstellen. Bauzugang und Fertigstellung
+  beweisen weder trockenen Betrieb noch Eignung bei späterem Wasserstand.
+  P0: Flooded und andere native Betriebsdeaktivierungen in Operationsdiagnose
+  mitführen, bevor fehlende Arbeiter als primäre Ursache ausgegeben werden.
+  Farm-Soll auf zwei erhöht, Baupersonal auf eins zurückgesetzt. Alle 48
+  Karotten lebend ohne Wasserstress; bevorstehende Ernte strukturiert geprüft.
+  Kurze kontrollierte Zeitfenster bis zur Ernte: Karotten 28 -> 10 -> 15 -> 41.
+  Bestandsziel 40 regulär erreicht, automatische Pause bestätigt. Zwei Farmer
+  und aktive alte Pumpe besetzt. Bevölkerung inzwischen fünf Erwachsene und
+  ein Kind; Verlust eines Erwachsenen beobachtet, Todesursache nicht belegt.
+  Zuletzt keine kritischen Hunger-/Durstwerte und keine aktive Kontamination.
+  Überflutete Notpumpe bleibt ohne Betriebsnachweis; langfristiger hydraulischer
+  Schutz weiterhin offen. Keine neue Flusssperre gebaut.
+
+Schutzplanung nach Nutzerkorrektur
+  Neuer Gesamtscan vollständig 64/64 für Wohn-/Farmzone: mehrere mögliche
+  kontaminierte Zuflüsse und Explosionsszenarien, aber keine hydraulische
+  Abfluss-/Rückstauberechnung. Keine Schutzgarantie aus Geländerouten abgeleitet.
+  Abflussneutrale Reserve auf trockenem Gelände z4 vorbereitet: kleiner Tank
+  x110/y157/z4, Karottenlager x111/y157/z4, Treppe und vier Wege. Gemeinsame
+  native Vorschau gültig; NICHT ausgeführt wegen project_start_unresolved.
+
+  P0-Recoveryfehler: zurückgebautes Brückenprojekt blockiert alle neuen Starts.
+  Auch nach Stop/Close released=false: drei historisch unconfirmed Wege fehlen
+  nach Rückbau und werden als placement_effect_unconfirmed behandelt, obwohl
+  frühere frische Diagnose ihre Existenz bestätigt hatte. Kein Wiederaufbau zur
+  Umgehung. Codezuordnung LargeProjectRecovery.cs bestätigt diese Statusregel.
+  Benötigt nachvollziehbaren Abbruch-/Freigabepfad für bestätigte Entfernung
+  und Übernahme positiver Identitätsbelege unabhängig vom Zugangsstatus.
+  Aktuell Nutzer um Speichern/Neuladen und Pause gebeten; keine Codeänderung.
+
+  Neue Nutzermarkierung: tote Kiefer x145/y122/z3 unter Klippenkante z6..7.
+  Nahbereich und nördlicher Anschluss untersucht: derzeit trocken, kein
+  bestehender Bauweg. Noch kein vollständiger Sperrquerschnitt oder sicherer
+  Abflussnachweis; keinen Einzelblock als erledigten Schutz behaupten.
+  Spiel weiterhin pausiert, fünf Erwachsene/ein Kind, 41 Karotten, 112 Wasser,
+  keine kritischen Hunger-/Durstwerte oder aktive Biberkontamination.
+
+Nach bestätigtem Neuladen: erhöhte Vorräte gebaut
+  Neue Spielsitzung und Pause bestätigt. Reservecharge auf trockenem z4 gesetzt,
+  nach bekanntem Beobachterabbruch separat begrenzt fertiggebaut: sieben von
+  sieben Teilen fertig/zugänglich, close erfolgreich released. Tank auf Water,
+  Lager auf Carrot konfiguriert, jeweils Kapazität 30. Beide zuletzt noch leer;
+  Bau und Konfiguration nicht mit eingelagerter Notreserve verwechseln.
+  Holzfäller war nach Personalverlust unbesetzt. Förster vorübergehend pausiert,
+  nach Fertigbau wieder aktiviert. Farm nach Ernte von Soll zwei auf eins;
+  Umverteilung noch nicht abgeschlossen, pausierter Iststand zwei Farmer und
+  null Förster. Versuch DistrictCenter-Soll null blieb bei eins; Nullannahme
+  nicht als erfolgreich freier Arbeiter gewertet. Mindestbesetzung sichtbar machen.
+
+  Nutzer präzisiert Mauer OBEN auf der Klippenkante. Erste zusammenhängende
+  z6-Kronenvariante zwischen höherem Fels enthält zehn Deichblöcke, 120 Holz
+  ohne Aufstieg. Automatische Zugangssuche no_route_in_region; kein Bauauftrag.
+  Sicherer Abfluss hinter der Mauer nicht belegt; Nutzer um Abflussmarkierung
+  gebeten. Höhere Mauer ist kein Ersatz für fehlenden Rückstau-/Umwegnachweis.
+  Abschluss Tag 67 14:18, pausiert: fünf Erwachsene/ein Kind, 92 Karotten,
+  112 Wasser, vier Holz/vier Bretter, keine kritischen Bedürfnisse. Klippenmauer
+  bleibt offen; erhöhte Vorratsinfrastruktur ist kein vollständiger Flutschutz.
+
+Letzter Klippenzugang und Laufende
+  Die vom Nutzer als Abfluss markierte Auswahl war ein instabiler Kern, kein
+  belegter Wasserabfluss. Nutzer beauftragte dennoch die obere Klippenmauer.
+  Zwölf Wegbäume markiert; acht Stunden ohne Räumfortschritt, weil zwischen
+  Bestandsweg und Wald drei Wasserzellen lagen. Markierung ist kein Zugang.
+  Südliche Landung separat geräumt. Drei offene Plattformen statt massiver
+  Flusssperre geplant; Katalogkosten sechs Bretter je Plattform, insgesamt 18.
+  Sägewerk und Laufrad reaktiviert, Förster vorübergehend pausiert. Nahrung,
+  Wasserpumpe und Holzfäller blieben besetzt. Rückkehr des Försters vor Laufende
+  nicht mehr erfolgt; kein weiterhin aktiver Auftrag zur Personalpflege.
+
+  Acht Teile gemeinsam beauftragt und identifiziert. Beobachter stoppte sofort
+  wegen vorhandener, noch unerreichbarer ferner Landung. Separater begrenzter
+  Fertiglauf brachte zwei Plattformen samt Wegen zum Abschluss; dritte zuletzt
+  vier von sechs Brettern verbaut, Landung noch ohne Zugang. Klippenmauer selbst
+  nicht beauftragt. Keine Stauwirkung eines fertiggestellten Schutzdamms behaupten.
+
+  P0: cancelled/pauseConfirmed im Bauwächter widersprach frisch gelesenem Tempo 7.
+  Explizite Pause wurde frisch bestätigt. Späterer Zeitstart meldete unconfirmed;
+  Lesen derselben Kennung lieferte run_not_found bei tatsächlichem Fortschritt.
+  Pausenauftrag ebenfalls unconfirmed, frisches Lesen bestätigte Tempo 0.
+  Anschließend backend_unavailable. Ursachen offen, keine automatische Wiederholung.
+  Benötigt getrennte Nachweise für Auftrag, Laufregistrierung, Tempo und Pause;
+  Race-/Antwortverlusttests mit denselben Kennungen und ohne Doppelauftrag.
+
+  Letzte Versorgungsstichprobe vor Endmeldung: 65 Karotten, 22 verfügbares Holz,
+  fünf Bretter; frühere Stichprobe sieben Biber ohne kritischen Hunger/Durst.
+  Diese Momentaufnahmen belegen weder die Lage beim Tod noch dessen Ursache.
+  Gesamtergebnis: zu langsamer Zugang und ungelöste MCP-Blockaden; Schutz nicht
+  rechtzeitig hergestellt. Priorisierte Folgearbeit steht im BACKLOG.md.

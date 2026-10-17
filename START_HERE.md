@@ -33,16 +33,15 @@ MCP-Livetest. Keine historische Kolonie oder konkreter Spielstand erforderlich.
 
 ## Aktueller Auftrag
 
-Abschluss des strategischen Kartenpakets 0.62 mit Gefahrenbewertung,
-Compact/Full und Reservoir-Optionen. Aktuelle Abnahme und offene Grenzen stehen
-im [Projektstand](PROJECT_STATE.md) und im [Fachvertrag](docs/strategic-map-0.62.md).
-Nächste Entwicklung: B15/P0, komplette Strukturen nach einem Go als gemeinsame
-Bauaufträge platzieren, danach gemeinsam bis Fertigstellung verfolgen.
+0.63.0 und anschließende Bauplaner-Korrektur sind begrenzt live abgenommen.
+Überlebenslauf nach vom Nutzer gemeldetem Kolonieverlust beendet; Rettungsziel
+nicht erreicht. Aktuelle Nachweise stehen im [Projektstand](PROJECT_STATE.md),
+offene Bauphasen-, Pause- und Recoveryfehler im [Backlog](BACKLOG.md).
 Keine automatische Wiederaufnahme historischer Kolonieziele.
 
 ## Technischer Stand
 
-Bridge 0.62.0; MCP-Nachträge derselben Version werden durch Commit und
+Bridge 0.63.0; MCP-Nachträge derselben Version werden durch Commit und
 feature-spezifische Abnahme unterschieden. Die älteren Abschnitte oben sind
 historische Nachweise, keine aktuelle Aufgabenliste.
 

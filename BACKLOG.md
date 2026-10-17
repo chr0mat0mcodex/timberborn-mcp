@@ -1,5 +1,37 @@
 # Backlog
 
+## Offene Fehler nach beendetem Überlebenslauf (0.63.0)
+
+Kolonieverlust vom Nutzer gemeldet; Schutzmauer nicht fertiggestellt.
+Keine hydraulische Schutz- oder autonome Überlebensabnahme. Priorisierte Folgearbeit:
+
+- **P0 Bauphasen und Identität:** vorhandene Wege hinter unfertigen Plattformen
+  werden als unconfirmed/object_or_access_mismatch gewertet und stoppen den Lauf.
+  Identität unabhängig von aktuellem Zugang bestätigen; erwartete Abhängigkeiten
+  als Bauphase führen. Abnahme: dreiteiliger offener Steg mit Wegen und ferner
+  Landung bis fertig/zugänglich, ohne Replay und ohne sofortigen Fehlstopp.
+- **P0 Pause und Laufregistrierung:** Bauwächter meldete cancelled/pauseConfirmed,
+  frische Simulation dennoch Tempo 7. Später unconfirmed beim Zeitstart, danach
+  run_not_found bei gleichzeitigem Fortschritt; anschließender Pausenauftrag
+  meldete unconfirmed, frische Simulation bestätigte Tempo 0. Ursache offen,
+  kein Beweis eines einzelnen gemeinsamen Defekts. Abnahme: Start/Abbruchrennen
+  und Antwortverlust, auffindbare Laufkennung, frischer Pausenbeleg, kein Replay.
+- **P0 Ledger-Freigabe:** bestätigte, später entfernte Wege blieben unconfirmed
+  und sperrten neue Projekte bis Reload. Positive Identitätsbelege übernehmen;
+  kontrollierten Abschluss nach nachgewiesener Entfernung anbieten. Abnahme:
+  Platzieren, Identität lesen, entfernen, freigeben, Folgeprojekt ohne Reload.
+- **P1 Wasserbau und Versorgung:** sichere Abflussroute, Rückstau und Umgehung
+  getrennt von gültiger Geometrie bewerten. Pumpendiagnose um native Flooded-
+  und Ansaugblockaden ergänzen; Reserve-/Gefahrenstopps für Zeitläufe. Kein
+  Schutzversprechen aus Geländescan oder fertiggestellter Pumpe ableiten.
+- **P1 vollständiger Zugang:** Räumung, offener Wasserübergang, Treppen, Kosten
+  und Bauzeit gemeinsam planen. Plattformen kosteten hier sechs Bretter je Teil;
+  Material aus aktuellem Katalog statt Erinnerungswerten. Markierte Bäume ohne
+  erreichbaren Bauweg räumen sich nicht durch zusätzliche Simulationszeit.
+
+Details und weitere Abnahmekriterien: [Pilotjournal](docs/survival-run-2026-10-17.txt).
+Diese Punkte sind dokumentiert, nicht implementiert oder abgenommen.
+
 ## Bauplaner und Fehlerweitergabe — begrenzt live abgeschlossen
 
 Priorität P0 aus dem Überlebenspilot vom 17. Oktober. Menschliches Gate und

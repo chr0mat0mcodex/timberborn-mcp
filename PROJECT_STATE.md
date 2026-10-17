@@ -1,5 +1,22 @@
 # Projektstand
 
+## Abschluss des Überlebenslaufs — 17. Oktober 2026
+
+Nutzer meldet vollständigen Kolonieverlust und beendet den Lauf. Rettungsziel
+nicht erreicht; Klippenmauer nicht gebaut. Letzte native Beobachtung: Tag 70,
+12:15, Pause bestätigt, zwei von drei offenen Zugangsplattformen fertig.
+Danach Bridge nicht erreichbar; Todesursache und Endpopulation nicht mehr nativ
+verifiziert. Kein weiterer Spielauftrag. Backend gestoppt: running=false, gate=true.
+
+0.63.0 einschließlich Bauplaner-Korrektur bleibt im dokumentierten begrenzten
+Umfang abgenommen (Codecheckpoint `77a258a`). Kein neuer Build, Versionssprung
+oder zusätzlicher Schutz-/Überlebensnachweis. Die neuen Fehler sind offen im
+[Backlog](BACKLOG.md); Verlauf und Learnings im
+[Pilotjournal](docs/survival-run-2026-10-17.txt).
+Releaseabschluss ergänzt; Spielanleitung und lokaler Skillentwurf fachlich
+geprüft: kein neues Werkzeug/Parameter, keine zusätzliche Fähigkeitsfreigabe.
+Vorbestehende Hermes-/Starteränderungen bleiben außerhalb dieses Abschlusses.
+
 ## Bauplaner-Korrektur — 17. Oktober, begrenzt live abgenommen
 
 Überlebenspilot deckte Path-Vorschaufehler, Planersperre und verschluckte
