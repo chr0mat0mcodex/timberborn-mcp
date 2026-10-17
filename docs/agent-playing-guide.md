@@ -1,5 +1,7 @@
 # Spielanleitung für Agenten
 
+Automatische Bauzentrum-/Produzentenauswahl und Vorprüfung vor Strukturstarts bzw. längeren Simulationen sind nach Gate sowie Simulations- und Baupilot begrenzt live abgenommen. Befunde bleiben beratend, Materialmangel sperrt den Start nicht. [Vertrag und Livebelege](automatic-operating-readiness.md).
+
 Gemeinsame Betriebsdiagnose vor längeren Bau-/Simulationsläufen: `inspect_operating_readiness` bündelt ausgewähltes Bauzentrum, Überflutung, Personal und Materialproduzenten mit priorisierten nächsten Schritten. Gate und gezielter Livevergleich bestanden; kein Produktionsnachweis. [Aufruf und Grenzen](operating-readiness.md).
 
 ## Aktueller Nachweisumfang
@@ -218,6 +220,47 @@ Simulationsstart bedeutet `not_executed`: kein neuer Lauf registriert.
 Aktuelles Tempo, `pendingSpeed` und `activeRunId` lesen, dann neu entscheiden;
 kein automatisches Retry. Andere Konflikte/Transportverlust bleiben unbestätigt,
 `run_not_found` allein beweist keine Nichtausführung. [Pilot](releases/0.66.0.md).
+
+## Automatische Vorprüfung vor längeren Läufen
+
+**Gate und begrenzte Liveabnahme bestanden.** Es gilt dieser
+Ablauf zusätzlich zu den nativen Geometrie-/Zugangsprüfungen:
+
+1. Aktuelle Session und geplanten Bezirk bestimmen. Vor einer Bauentscheidung
+   vollständige Kosten einschließlich Zugangshilfen berechnen und
+   `inspect_operating_readiness_auto(session, districtId, materials, reasoning)`
+   lesen. Für Produktionsläufe alternativ `buildingIds` als Bezug übergeben.
+   Die Schreibweise zeigt Parameter, keine ausführbare JSON-Vorlage.
+2. `selection` prüfen: Ist das Zentrum belegt, welcher Bezirk wurde gewählt,
+   welche Gebäude/Güter fehlen wegen Suchgrenzen oder unbekannter Zuordnung?
+   Bei Mehrdeutigkeit Bezirk/Bezugsgebäude präzisieren. Für gezielte Kontrollen
+   bleibt `inspect_operating_readiness` mit expliziten Gebäude-IDs verfügbar.
+3. `diagnosis.nextSteps` gemeinsam mit den Auswahlhinweisen auswerten:
+   Überflutung vor Personalmaßnahmen; Pause, Zutaten, Kraft und Produktplatz
+   getrennt behandeln. Fehlende Produzenten in einer begrenzten Auswahl
+   bedeuten keine bewiesene Abwesenheit in der Kolonie.
+4. Bauentscheidung ausdrücklich anhand der Befunde treffen. Materialmangel
+   verlangt weder 100 Prozent Vorrat noch eine zusätzliche Nutzerfreigabe.
+   Danach den regulären Auftrag einmal senden. Der automatische Startbericht
+   ersetzt diese Entscheidung nicht: Er wird vor dem nativen Start erhoben,
+   aber zusammen mit dessen Antwort zurückgegeben.
+5. Im Startergebnis `operatingPreflight` und den eigentlichen Startbeleg getrennt
+   lesen. Diagnosezustand `observed` bedeutet nicht „betriebsbereit“; bei
+   `unavailable`/`budget_exhausted` fehlen Belege. Nach einem bereits gesendeten
+   Auftrag nur lesend nachprüfen, niemals für bessere Diagnosedetails neu starten.
+
+Automatisch erfasst: alle Strukturstarts einschließlich Reparatur und interner
+Bauchargen/Räumgruppen; Simulations-for ab sechs Spielstunden und jedes until,
+auch interne Fertigbauläufe. Kurze for-Läufe, Status, Cancel und direktes Setzen
+der Spielgeschwindigkeit haben keine automatische Vorprüfung.
+
+`demands` des Strukturstarts enthält die vollen geplanten Kosten, keinen
+Restbedarf. Simulationsziele sind Bestandsziele, keine Baukosten. Ohne positive
+Bedarfsmenge bleibt `coveragePercent` null. Der Werkzeugwert ist das rohe
+Bestand/Bedarf-Verhältnis und kann über 100 Prozent liegen; für die unten
+beschriebene gedeckelte Bauentscheidungsquote pro Gut auf 100 Prozent begrenzen.
+Globale Bestände und Arbeitslose garantieren keine lokale Belieferung/Besetzung.
+Details: [Automatische Betriebsdiagnose](automatic-operating-readiness.md).
 
 ## Materialdeckung und Bauentscheidung
 

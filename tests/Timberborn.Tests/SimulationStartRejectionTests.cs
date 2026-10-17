@@ -69,6 +69,9 @@ public sealed class SimulationStartRejectionTests
                 JsonSerializer.SerializeToElement(fields),TestContext.Current.CancellationToken);
             Assert.Equal(cancel?"unconfirmed":"not_executed",result["error"]!["execution"]!.GetValue<string>());
             Assert.Equal(1,handler.Calls);
+            Assert.Equal(cancel?0:1,handler.PreflightReads);
+            if(cancel) Assert.Null(result["operatingPreflight"]);
+            else Assert.Equal("unavailable",result["operatingPreflight"]![0]!["state"]!.GetValue<string>());
         }
     }
 
@@ -95,6 +98,8 @@ public sealed class SimulationStartRejectionTests
         Assert.Equal(rejected?"not_executed":"unconfirmed",result["error"]!["execution"]!.GetValue<string>());
         Assert.False(result["error"]!["retryable"]!.GetValue<bool>());
         Assert.Equal(1,handler.Calls);
+        Assert.Equal(0,handler.PreflightReads);
+        Assert.Null(result["operatingPreflight"]);
         if(rejected) {
             Assert.Equal(code,result["error"]!["code"]!.GetValue<string>());
             Assert.Equal(SimulationStartOutcome.Describe(code),result["error"]!["message"]!.GetValue<string>());
@@ -104,8 +109,18 @@ public sealed class SimulationStartRejectionTests
     private sealed class Handler(string code,string route="simulation-run-for"):HttpMessageHandler
     {
         public int Calls;
+        public int PreflightReads;
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,CancellationToken ct)
         {
+            if (request.Method == HttpMethod.Get) {
+                Assert.Equal("/agent-api/v1/production-graph",request.RequestUri!.AbsolutePath);
+                Assert.Equal("simulation-run-until",route);
+                Assert.Equal(0,Calls);
+                Assert.Equal(0,PreflightReads);
+                PreflightReads++;
+                // Synthetic unavailable diagnosis: the original start rejection must still survive.
+                return Task.FromResult(new HttpResponseMessage(HttpStatusCode.ServiceUnavailable));
+            }
             Calls++;Assert.Equal(HttpMethod.Post,request.Method);
             Assert.Equal("/agent-api/v1/"+route,request.RequestUri!.AbsolutePath);
             if(code=="lost")throw new HttpRequestException();

@@ -18,6 +18,9 @@ public sealed partial class NativeClient
         // Reparse at the transport boundary; never accept an arbitrary route/query.
         var checkedRequest = SimulationRunRequest.Parse("/agent-api/v1/" + r.Route, query);
         if (checkedRequest.RunId != r.RunId || checkedRequest.Session != r.Session || checkedRequest.Diagnose != r.Diagnose) throw new ArgumentException();
+        if (checkedRequest.Starts && (checkedRequest.Route == "simulation-run-until" || checkedRequest.DurationHours >= 6) && BeforeOperatingRun is { } preflight)
+            await preflight(checkedRequest, null, ct);
+        ct.ThrowIfCancellationRequested();
         string suffix = string.Join("&", query.AllKeys.Select(k => Uri.EscapeDataString(k!) + "=" + Uri.EscapeDataString(query[k]!)));
         var e = await Get<NativeSimulationRun>(r.Route + "?" + suffix, ct, r.Writes ? HttpMethod.Post : HttpMethod.Get, maxResponseBytes:2*1024*1024);
         var d = e.Data;

@@ -1,5 +1,7 @@
 # Einstieg
 
+Aktuelle Arbeit: automatische Betriebsdiagnose und Einbindung vor längeren Läufen **Gate, Auto-Reader, Simulations- und Strukturpilot bestanden**. [Vertrag](docs/automatic-operating-readiness.md) · [Spielablauf](docs/agent-playing-guide.md#automatische-vorprüfung-vor-längeren-läufen). Manuelle Betriebsdiagnose ist bereits begrenzt live abgenommen.
+
 **Stand 0.74.0 mit abgeschlossenen Journal- und Cancel-/Transport-Korrekturen:** Reparaturbedarf wird aus frischen Zugangsbelegen abgeleitet. Materialwarten, Bestandsverlust, unerreichbare Baustelle und Fertigbau sind getrennt live geprüft. Forstjournale verhindern erneute Mutationen bei Wiederaufrufen, auch nach Neuverbindung.
 
 Letzte Abnahme: **28 Supervisor-, 1936 Unit- und 13 Integrationstests**, drei optionale Live-Integrationstests übersprungen. Supervisor-Stop/Start und Forstjournal-Persistenz gezielt live bestätigt. [Belege und Grenzen](docs/releases/0.74.0.md).

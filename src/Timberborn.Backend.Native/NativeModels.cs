@@ -78,7 +78,8 @@ public sealed record NativeFault(string Code, string Message, bool Retryable, st
 public sealed record StatusWatch(string ChangeToken, bool? Changed, string Reason, double WaitedSeconds,
     int StatusReads, int DiagnosticRequests, string DiagnosisState, JsonElement? Diagnosis = null);
 public sealed record NativeResult<T>(int SchemaVersion, string Status, T? Data, NativeMeta Meta, NativeFault? Error,
-    [property: System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)] StatusWatch? Watch = null);
+    [property: System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)] StatusWatch? Watch = null,
+    [property: System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)] JsonElement? OperatingPreflight = null);
 public sealed record NativeSimulation(float CurrentSpeed, int DayNumber, float DayProgress, float HoursPassedToday,
     string? ActiveRunId = null, int? PendingSpeed = null, bool? SpeedLocked = null,
     string? SpeedLockSource = null, string? SpeedLockReason = null, bool? PauseSettled = null);

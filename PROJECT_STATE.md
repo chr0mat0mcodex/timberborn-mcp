@@ -1,5 +1,97 @@
 # Projektstand
 
+## Abschluss 2026-10-18 — automatische Betriebsdiagnose begrenzt live abgenommen
+
+Gate: 1964 Unit- und 13 Integrationstests bestanden, drei optionale Live-Tests
+übersprungen. Separater Auto-Reader nach Client-Neustart verfügbar: Auswahl von
+DistrictCenter und zwei LumberMills ohne IDs; Diagnose bis auf Zeitstempel
+identisch zur manuellen Gegenprobe. Simulation trotz 33 Prozent Deckung und
+blockierter Produktion gestartet, nach sechs Stunden automatisch pausiert.
+
+Baupilot: eine Lodge mit einem neuen Zugangsweg, gemeinsam nativ geplant,
+pilotEligible und Vorschau wiederhergestellt. Vorprüfung im Compact-Startbeleg:
+full_planned_costs_including_helpers, exakt 12 Holz laut Definitionsgraph
+(Lodge 12, Weg 0), vier Holzfäller im angegebenen Bezirk automatisch gewählt.
+Letzte Vorbeobachtung 23:27:14.579 UTC, Startbeleg 23:27:14.703 UTC.
+Beide Aufträge anschließend bestätigt; Weg fertig und zugänglich, Lodge mit
+vollständigem Materialbestand. Nach sechs Stunden/17,73 Echtzeitsekunden Pause,
+Projekt game_time_limit, Lodge weiterhin awaiting_builders_or_work.
+Keine beobachteten Bestandszugangsverluste. Kein aktiver Lauf/Tempoauftrag.
+
+Abgenommen: automatische Auswahl, gemeinsame Diagnose, Kostenübernahme und
+Vorprüfung vor Simulations-/Strukturstart. Materialunterdeckung live am
+Simulationsziel belegt; der Baupilot hatte ausreichendes Holz. Kostenpflichtige
+Zugangshilfen sind synthetisch geprüft, dieser Liveweg war kostenlos.
+Keine Fertigstellungs-, Produktions- oder Liefergarantie aus Bereitschaft.
+Die Lodge bleibt als Baustelle im pausierten Testspiel, das Projekt unreleased;
+vor weiteren Baupiloten frisch diagnostizieren. Kein automatisches Zeitbudgetplus.
+README, Einstieg, Backlog, Werkzeugvertrag und Agentenanleitung aktualisiert.
+Keine Änderungen an globalen Skills oder Wiederaufnahme des Hermes-Experiments.
+
+## Livepilot 2026-10-18 — Simulation bestanden, Restabnahme offen
+
+Menschliches Gate bestanden: 1964 Unit- und 13 Integrationstests; drei optionale
+Live-Integrationstests übersprungen. Builds ohne Warnungen/Fehler.
+Backend über bestehenden Supervisor gestartet, Bridge 0.74.0 bestätigt.
+
+Einmaliger Lauf: sechs Spielstunden, Tempo 7, maximal 30 Echtzeitsekunden,
+Bestandsziel 100 Bretter bei 33 verfügbaren Brettern. Automatische Auswahl fand
+das native DistrictCenter und beide fertigen LumberMills im selben Bezirk;
+Suche vollständig, keine ausgelassenen Kandidaten oder unbekannten Bezirke.
+Vorprüfung meldete 33 Prozent Deckung, 67 fehlende Bretter und blockierte
+Produzenten. Trotzdem Start bestätigt und Fortschritt bei Tempo 7 beobachtet.
+Diagnosebeobachtungen 23:23:26.472–23:23:27.060 UTC, Startbeleg 23:23:27.137 UTC:
+alle Diagnosewerte liegen vor dem Startbeleg.
+
+Einzelabfragen bestätigten Vorlagen und native Bezirkszuordnung. Betriebsdaten
+und Zugangsdaten aller drei Gebäude waren mit dem Vorprüfungsbericht identisch;
+Personalabfrage bestätigte 42 Beschäftigte und fünf Arbeitslose. Alle drei
+Gebäude trocken, Zentrum 4/4 besetzt; eine LumberMill pausiert und unbesetzt,
+die andere mit vollem Ausgang und ohne Kraft. Keine falsche Zugangswarnung.
+
+Abschluss nach genau sechs Spielstunden und 17,72 Echtzeitsekunden:
+completed/production_time_limit, weiterhin 33 Bretter, Materialziel nicht erfüllt.
+Pause bestätigt, Tempo 0, kein aktiver Lauf oder ausstehender Tempoauftrag.
+Das belegt Start trotz Unterdeckung, keine Produktion oder Materiallieferung.
+
+Offen: separater inspect_operating_readiness_auto-Aufruf (im Werkzeugkatalog
+dieser Codex-Sitzung noch nicht verfügbar; Client-Neustart erforderlich) und
+kleiner Strukturpilot mit vollständigen Bau-/Hilfskosten. Deshalb noch kein
+abschließender Feature-Commit/Push. Kein weiterer Build erforderlich, solange
+kein Code geändert wird. Nach Client-Neustart aktuelle Sitzung neu lesen.
+
+## Automatische Betriebsdiagnose — vorbereitet, Gate/Live offen (2026-10-18)
+
+Erster Gate-Lauf für die automatische Variante: 28 Supervisor-Tests bestanden;
+Build durch xUnit2031 im neuen Test abgebrochen. Assert.Single verwendet nun
+den Prädikat-Overload statt vorgeschaltetem Where. Kein Laufzeitcode geändert;
+Folge-Gate: Build erfolgreich; Unit-Suite beim ersten Fehler gestoppt, weil
+eine ältere Start-Testattrappe den neuen Diagnose-GET als POST behandelte.
+Die drei betroffenen Projekt-/Simulationsstart-Testattrappen berücksichtigen nun
+genau einen vorgeschalteten Diagnoseabruf; genau ein Start-POST und unveränderte
+Ablehnungszuordnung bleiben geprüft. Planung, Kurzlauf und Abbruch erwarten
+weiterhin keine Vorprüfung.
+Nächstes Gate: Build ohne Warnungen/Fehler; 1336 Unit-Tests bestanden, dann
+Abbruch im neuen Starttest. Dessen synthetischer 0.74.0-Startbeleg ließ die
+Pflichtlisten buildingIds/buildingProduction aus. Beide sind jetzt explizit leer;
+die native Vertragsprüfung bleibt unverändert. Die gemeinsame Antwort deckt
+Materialmangel, Diagnoseausfall und Kurzlauf ab. Fehler zeigen künftig den
+MCP-Fehlerinhalt; auch der erste lange Lauf im Isolationstest muss erfolgreich sein.
+Erneuter Gate-Nachweis und Livepilot stehen aus.
+
+Auf Nutzerauftrag Anleitung vertieft: konkrete Vorabentscheidung, Auswahlgrenzen,
+Startbericht versus Startbeleg, Diagnoseausfall ohne Auftragswiederholung sowie
+rohe/gedeckelte Deckungsquote erklärt. START_HERE und Werkzeugübersicht verlinkt.
+
+Automatischer Reader und Startintegration: native Bezirkszuordnung, begrenzte
+Produzentensuche, volle Strukturkosten einschließlich Zugangshilfen. Beratender
+Report vor Strukturstarts und Simulationen ab sechs Stunden bzw. absolutem
+Ziel; keine Material-Startsperre. Status/Cancel unverändert ohne Vorprüfung.
+Tests vorbereitet, kein Agent-Build/Testlauf. README, Toolvertrag und
+Agentenanleitung aktualisiert; kein wiederbelebter Hermes-Skill.
+[Vertrag, Grenzen und Pilot](docs/automatic-operating-readiness.md).
+
+
 ## Abschluss 2026-10-18 — Gate und gezielter Livevergleich bestanden
 
 Menschliches Gate: 28 Supervisor-, 1952 Unit- und 13 Integrationstests bestanden;

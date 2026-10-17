@@ -12,6 +12,7 @@ namespace Timberborn.McpServer;
 public sealed class NativeTools(NativeClient client, bool enableValidation = false, bool enablePlacement = false, bool enableLodgePlacement = false, bool enableSpeedControl = false, bool enableStaffing = false, bool enablePriorities = false, bool enableAreas = false, bool enableRemoval = false, bool enableBuildingPlacement = false, bool enableBuildingSettings = false, bool enableResearch = false, DiagnosticFileLog? fileLog=null) : IDisposable
 {
     private readonly ClearedGroupTools clearedGroups = new(new NativeClearedGroupPort(client), Path.Combine(AppContext.BaseDirectory,".local","cleared-groups"));
+    private readonly OperatingPreflight operatingPreflight = new(client);
     private readonly SemaphoreSlim callGate = new(1,1);
     private readonly object admissionLock = new();
     private bool statusWaitInProgress;
@@ -84,9 +85,16 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
                     : "Liest Erreichbarkeit, Bridge-Version und aktuelle Spielsitzung der eigenen Mod. Dieser Aufruf ist lesend; der Teststarter aktiviert alle vorhandenen Aktionsgruppen. Die bestehende MCP-Verbindung des Clients verwenden; für Spielaufgaben keine zusätzlichen Startskripte oder dotnet-Prozesse starten. stdio wird vom Client verwaltet und erlaubt keinen nachträglichen Anschluss an einen separat gestarteten Prozess. backend_unavailable ist kein Beleg für einen defekten MCP-Prozess; Spiel, Mod und Ladezustand prüfen. Kein Fallback auf Fremdmods.",
                 InputSchema = JsonSerializer.SerializeToElement(input), OutputSchema = JsonSerializer.SerializeToElement(options.GetJsonSchemaAsNode(result)),
                 Annotations = new() { ReadOnlyHint = !action, DestructiveHint = action, IdempotentHint = !action, OpenWorldHint = false } };
-        }).Concat(BuildingQueryTools.Catalog()).Concat(SimulationRunTools.Catalog(enableSpeedControl)).Concat(BuildingConfigurationTools.Catalog(enableBuildingSettings && enableStaffing && enableSpeedControl)).Concat(ManagementTools.Catalog(enablePriorities, enableAreas)).Concat(PlantingBatchTools.Catalog(enableAreas)).Concat(RemovalTools.Catalog(enableRemoval)).Concat(BuildingTools.Catalog(enableBuildingPlacement)).Concat(BuildingSettingsTools.Catalog(enableBuildingSettings)).Concat(ResearchTools.Catalog(enableResearch)).Concat(EconomyTools.Catalog()).Concat(LogisticsTools.Catalog()).Concat(DiagnosticsTools.Catalog()).Append(RecentActionsTools.Reader()).Append(ActivityTools.Reader()).Append(ProductionGraphTools.Reader()).Append(SelectionTools.Reader()).Append(ScreenshotTools.Reader()).Append(BuildingCapabilityTools.Reader()).Append(ColonyOverviewTools.Reader()).Append(OperatingReadinessTools.Reader()).Append(RegionSurveyTools.Reader()).Append(StrategicMapTools.Reader()).Concat(RegionBuildPlanning.Catalog(enableBuildingPlacement)).Concat(ForestryTools.Catalog(enableAreas)).Concat(WorkflowTools.Catalog(enableRemoval, enableBuildingPlacement)).Concat(BuildingCompletionTools.Catalog(enableBuildingPlacement && enableSpeedControl)).Concat(BuildBatchTools.Catalog(enableBuildingPlacement && enableSpeedControl)).Concat(LargeProjectTools.Catalog(enableBuildingPlacement, enableSpeedControl)).Concat(ClearedGroupTools.Catalog(enableBuildingPlacement && enableSpeedControl && enableRemoval && enableAreas)).Select(ActivityTools.WithReasoning).ToArray();
+        }).Concat(BuildingQueryTools.Catalog()).Concat(SimulationRunTools.Catalog(enableSpeedControl)).Concat(BuildingConfigurationTools.Catalog(enableBuildingSettings && enableStaffing && enableSpeedControl)).Concat(ManagementTools.Catalog(enablePriorities, enableAreas)).Concat(PlantingBatchTools.Catalog(enableAreas)).Concat(RemovalTools.Catalog(enableRemoval)).Concat(BuildingTools.Catalog(enableBuildingPlacement)).Concat(BuildingSettingsTools.Catalog(enableBuildingSettings)).Concat(ResearchTools.Catalog(enableResearch)).Concat(EconomyTools.Catalog()).Concat(LogisticsTools.Catalog()).Concat(DiagnosticsTools.Catalog()).Append(RecentActionsTools.Reader()).Append(ActivityTools.Reader()).Append(ProductionGraphTools.Reader()).Append(SelectionTools.Reader()).Append(ScreenshotTools.Reader()).Append(BuildingCapabilityTools.Reader()).Append(ColonyOverviewTools.Reader()).Append(OperatingReadinessTools.Reader()).Append(AutoOperatingTools.Reader()).Append(RegionSurveyTools.Reader()).Append(StrategicMapTools.Reader()).Concat(RegionBuildPlanning.Catalog(enableBuildingPlacement)).Concat(ForestryTools.Catalog(enableAreas)).Concat(WorkflowTools.Catalog(enableRemoval, enableBuildingPlacement)).Concat(BuildingCompletionTools.Catalog(enableBuildingPlacement && enableSpeedControl)).Concat(BuildBatchTools.Catalog(enableBuildingPlacement && enableSpeedControl)).Concat(LargeProjectTools.Catalog(enableBuildingPlacement, enableSpeedControl)).Concat(ClearedGroupTools.Catalog(enableBuildingPlacement && enableSpeedControl && enableRemoval && enableAreas)).Select(ActivityTools.WithReasoning).ToArray();
     }
     public async Task<JsonObject> Invoke(string name, JsonElement args, CancellationToken ct)
+    {
+        using var scope = operatingPreflight.Begin();
+        var result = await InvokeCore(name, args, ct);
+        if (scope.Reports.Count > 0) result["operatingPreflight"] = JsonSerializer.SerializeToNode(scope.Reports, NativeJson.Options);
+        return result;
+    }
+    private async Task<JsonObject> InvokeCore(string name, JsonElement args, CancellationToken ct)
     {
         using var dispatch=new NativeDispatchTrace();
         bool ownsGate=false, ownsCancel=false;
@@ -126,6 +134,7 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
             if (name == RegionBuildPlanning.Name) return await RegionBuildPlanning.Invoke(client,args,enableBuildingPlacement,ct);
             if (name == RegionSurveyTools.Name) return await RegionSurveyTools.Invoke(client, args, ct);
             if (name == StrategicMapTools.Name) return await StrategicMapTools.Invoke(client, args, ct);
+            if (name == AutoOperatingTools.Name) return await AutoOperatingTools.Invoke(client, args, ct);
             if (name == OperatingReadinessTools.Name) return await OperatingReadinessTools.Invoke(client, args, ct);
             if (name == ColonyOverviewTools.Name) return await ColonyOverviewTools.Invoke(client, args, ct);
             if (BuildingConfigurationTools.Handles(name)) return await BuildingConfigurationTools.Invoke(client,name,args,enableBuildingSettings && enableStaffing && enableSpeedControl,ct);

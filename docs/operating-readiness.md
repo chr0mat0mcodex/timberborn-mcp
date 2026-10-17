@@ -1,5 +1,7 @@
 # Gemeinsame Betriebsdiagnose (begrenzt live abgenommen)
 
+Automatische Auswahl und Startintegration werden separat ergänzt: [aktueller Entwurf](automatic-operating-readiness.md), Gate/Live noch offen. Die folgenden Nachweise gelten für die manuelle Auswahl.
+
 ## Abschluss 2026-10-18 — Gate und gezielter Livevergleich bestanden
 
 Menschliches Gate: 28 Supervisor-, 1952 Unit- und 13 Integrationstests bestanden;

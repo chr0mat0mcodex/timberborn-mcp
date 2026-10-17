@@ -7,6 +7,8 @@ namespace Timberborn.Backend.Native;
 
 public sealed partial class NativeClient : IDisposable
 {
+    // Optional MCP orchestration observer; native validation and action gates remain authoritative.
+    public Func<SimulationRunRequest?, LargeProjectRequest?, CancellationToken, Task>? BeforeOperatingRun { get; set; }
     private readonly HttpClient client;
     private readonly string token;
     public NativeClient(NativeConfiguration config, HttpMessageHandler? handler = null)

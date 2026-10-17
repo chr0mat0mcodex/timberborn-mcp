@@ -110,7 +110,7 @@ public sealed class LargeProjectPlanningTests
 
     private static async Task Check(string tool,string code,bool rejected)
     {
-        using var handler = new RejectionHandler(code);
+        using var handler = new RejectionHandler(code,!tool.StartsWith("plan_",StringComparison.Ordinal));
         using var tools = new NativeTools(new NativeClient(new(8081,new string('a',64)),handler),
             enableBuildingPlacement:true,enableSpeedControl:true);
         var args = new Dictionary<string,object> {
@@ -128,6 +128,10 @@ public sealed class LargeProjectPlanningTests
         }
         var result=await tools.Invoke(tool,JsonSerializer.SerializeToElement(args),TestContext.Current.CancellationToken);
         Assert.Equal(1,handler.Calls);
+        bool starts = !tool.StartsWith("plan_",StringComparison.Ordinal);
+        Assert.Equal(starts?1:0,handler.PreflightReads);
+        if(starts) Assert.Equal("unavailable",result["operatingPreflight"]![0]!["state"]!.GetValue<string>());
+        else Assert.Null(result["operatingPreflight"]);
         Assert.Equal(rejected?"not_executed":"unconfirmed",result["error"]!["execution"]!.GetValue<string>());
         Assert.False(result["error"]!["retryable"]!.GetValue<bool>());
         if(code=="project_preview_failed") {
@@ -153,11 +157,21 @@ public sealed class LargeProjectPlanningTests
         Assert.NotEqual("known",BuildingCapabilityTools.Describe("99.0.0","Folktails",true).ProfileState);
     }
 
-    private sealed class RejectionHandler(string code) : HttpMessageHandler
+    private sealed class RejectionHandler(string code,bool expectPreflight) : HttpMessageHandler
     {
         public int Calls;
+        public int PreflightReads;
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,CancellationToken ct)
         {
+            if (request.Method == HttpMethod.Get) {
+                Assert.Equal("/agent-api/v1/production-graph",request.RequestUri!.AbsolutePath);
+                Assert.True(expectPreflight);
+                Assert.Equal(0,Calls);
+                Assert.Equal(0,PreflightReads);
+                PreflightReads++;
+                // Synthetic unavailable diagnosis: the original start rejection must still survive.
+                return Task.FromResult(new HttpResponseMessage(HttpStatusCode.ServiceUnavailable));
+            }
             Calls++;
             Assert.Equal(HttpMethod.Post,request.Method);
             if(code=="lost")throw new HttpRequestException();

@@ -1,5 +1,22 @@
 # Native MCP-Werkzeuge
 
+## Automatische Betriebsdiagnose — begrenzt live abgenommen
+
+| Aufruf/Feld | Bedeutung |
+| --- | --- |
+| `inspect_operating_readiness_auto` | Lesende automatische Auswahl; `session` und `reasoning` erforderlich. Optional `districtId`, `buildingIds`, `materials`. |
+| `selection` | Belegter Bezirk/Zentrum, gewählte Produzenten, Suchabdeckung, unbekannte IDs und ausgelassene Güter/Kosten. |
+| `diagnosis` | Gemeinsamer Betriebsbericht für ausgewählte Gebäude; null bedeutet keine entsprechende Beobachtung. |
+| `operatingPreflight` | Optionales Wurzelfeld der Startantwort, auch kompakt; Liste der vor internen Starts erhobenen Berichte. Kein Ersatz für den Startbeleg. |
+
+Strukturstart/-lauf/-reparatur immer mit Vorprüfung; Simulations-for ab sechs
+Spielstunden, until immer. Status und Cancel ohne Vorprüfung. Materialbefunde
+sind beratend. Diagnoseausfall/Zeitbudget ausdrücklich auswerten; bereits
+gesendete Aufträge nicht erneut senden. [Parameter, Grenzen und Pilot](automatic-operating-readiness.md).
+
+
+Automatische Bauzentrum-/Produzentenauswahl und Vorprüfung vor Strukturstarts bzw. längeren Simulationen sind nach Gate sowie Simulations- und Baupilot begrenzt live abgenommen. Befunde bleiben beratend, Materialmangel sperrt den Start nicht. [Vertrag und Livebelege](automatic-operating-readiness.md).
+
 Gemeinsame Betriebsdiagnose vor längeren Bau-/Simulationsläufen: `inspect_operating_readiness` bündelt ausgewähltes Bauzentrum, Überflutung, Personal und Materialproduzenten mit priorisierten nächsten Schritten. Gate und gezielter Livevergleich bestanden; kein Produktionsnachweis. [Aufruf und Grenzen](operating-readiness.md).
 
 ## Aktueller Nachweisumfang

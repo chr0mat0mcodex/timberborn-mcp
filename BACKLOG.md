@@ -1,5 +1,35 @@
 # Backlog
 
+## Abschluss 2026-10-18 — automatische Betriebsdiagnose begrenzt live abgenommen
+
+Gate: 1964 Unit- und 13 Integrationstests bestanden, drei optionale Live-Tests
+übersprungen. Separater Auto-Reader nach Client-Neustart verfügbar: Auswahl von
+DistrictCenter und zwei LumberMills ohne IDs; Diagnose bis auf Zeitstempel
+identisch zur manuellen Gegenprobe. Simulation trotz 33 Prozent Deckung und
+blockierter Produktion gestartet, nach sechs Stunden automatisch pausiert.
+
+Baupilot: eine Lodge mit einem neuen Zugangsweg, gemeinsam nativ geplant,
+pilotEligible und Vorschau wiederhergestellt. Vorprüfung im Compact-Startbeleg:
+full_planned_costs_including_helpers, exakt 12 Holz laut Definitionsgraph
+(Lodge 12, Weg 0), vier Holzfäller im angegebenen Bezirk automatisch gewählt.
+Letzte Vorbeobachtung 23:27:14.579 UTC, Startbeleg 23:27:14.703 UTC.
+Beide Aufträge anschließend bestätigt; Weg fertig und zugänglich, Lodge mit
+vollständigem Materialbestand. Nach sechs Stunden/17,73 Echtzeitsekunden Pause,
+Projekt game_time_limit, Lodge weiterhin awaiting_builders_or_work.
+Keine beobachteten Bestandszugangsverluste. Kein aktiver Lauf/Tempoauftrag.
+
+Abgenommen: automatische Auswahl, gemeinsame Diagnose, Kostenübernahme und
+Vorprüfung vor Simulations-/Strukturstart. Materialunterdeckung live am
+Simulationsziel belegt; der Baupilot hatte ausreichendes Holz. Kostenpflichtige
+Zugangshilfen sind synthetisch geprüft, dieser Liveweg war kostenlos.
+Keine Fertigstellungs-, Produktions- oder Liefergarantie aus Bereitschaft.
+Die Lodge bleibt als Baustelle im pausierten Testspiel, das Projekt unreleased;
+vor weiteren Baupiloten frisch diagnostizieren. Kein automatisches Zeitbudgetplus.
+README, Einstieg, Backlog, Werkzeugvertrag und Agentenanleitung aktualisiert.
+Keine Änderungen an globalen Skills oder Wiederaufnahme des Hermes-Experiments.
+
+[Vertrag und Grenzen](docs/automatic-operating-readiness.md).
+
 Aktueller fachlicher Stand: **0.74.0 plus Cancel-/Transport-Nacharbeit**,
 Gate und begrenzter Livepilot bestanden. Grenzen siehe Abschlussbeleg unten.
 Ältere Versionsabschnitte sind historische Nachweise.

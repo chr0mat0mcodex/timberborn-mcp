@@ -18,6 +18,9 @@ public sealed partial class NativeClient
         else query+="&actionId="+r.ActionId;
         if(r.ReservedAreas.Length>0)query+="&reservedAreas="+Uri.EscapeDataString(ReservedArea.Encode(r.ReservedAreas));
         if(r.Operation is "plan-repair" or "run-repair")query+="&parentActionId="+r.ParentActionId;
+        if (r.Operation is ("start" or "run" or "run-repair") && BeforeOperatingRun is { } preflight)
+            await preflight(null, r, ct);
+        ct.ThrowIfCancellationRequested();
         var e=await Get<JsonElement>(route+"?"+query,ct,LargeProjectRequest.Writes(r.Operation)?HttpMethod.Post:HttpMethod.Get,maxResponseBytes:LargeProjectRequest.MaxResponseBytes);
         ValidateLargeProject(e,r);return e;
     }

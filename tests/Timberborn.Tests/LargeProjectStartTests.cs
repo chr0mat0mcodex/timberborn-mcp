@@ -72,6 +72,8 @@ public sealed class LargeProjectStartTests
         Assert.Equal(rejected?"not_executed":"unconfirmed",result["error"]!["execution"]!.GetValue<string>());
         Assert.False(result["error"]!["retryable"]!.GetValue<bool>());
         Assert.Equal(1,handler.Calls);
+        Assert.Equal(1,handler.PreflightReads);
+        Assert.Equal("unavailable",result["operatingPreflight"]![0]!["state"]!.GetValue<string>());
         var text = ActivityOutcome.Describe("run_large_project_repair",result);
         if(rejected) {
             Assert.Equal(code,result["error"]!["code"]!.GetValue<string>());
@@ -103,14 +105,26 @@ public sealed class LargeProjectStartTests
         Assert.Equal(rejected?"not_executed":"unconfirmed",result["error"]!["execution"]!.GetValue<string>());
         Assert.False(result["error"]!["retryable"]!.GetValue<bool>());
         Assert.Equal(1,handler.Calls);
+        Assert.Equal(0,handler.PreflightReads);
+        Assert.Null(result["operatingPreflight"]);
         if(rejected) Assert.Equal(code,result["error"]!["code"]!.GetValue<string>());
     }
 
     private sealed class RejectionHandler(string code,string path="/agent-api/v1/large-project-run-repair") : HttpMessageHandler
     {
         public int Calls;
+        public int PreflightReads;
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,CancellationToken ct)
         {
+            if (request.Method == HttpMethod.Get) {
+                Assert.Equal("/agent-api/v1/production-graph",request.RequestUri!.AbsolutePath);
+                Assert.Equal("/agent-api/v1/large-project-run-repair",path);
+                Assert.Equal(0,Calls);
+                Assert.Equal(0,PreflightReads);
+                PreflightReads++;
+                // Synthetic unavailable diagnosis: the original start rejection must still survive.
+                return Task.FromResult(new HttpResponseMessage(HttpStatusCode.ServiceUnavailable));
+            }
             Calls++;
             Assert.Equal(HttpMethod.Post,request.Method);
             Assert.Equal(path,request.RequestUri!.AbsolutePath);
