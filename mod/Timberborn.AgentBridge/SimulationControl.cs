@@ -14,6 +14,7 @@ public sealed class SimulationControl
     private readonly IDayNightCycle time;
     private readonly EventBus events;
     private bool speedLocked;
+    private bool speedLockObserved;
     private readonly IGoodService goods;
     private readonly ResourceCountingService resources;
     private readonly ScienceService science;
@@ -26,7 +27,7 @@ public sealed class SimulationControl
         events.Register(this);
     }
     [OnEvent]
-    public void OnSpeedLockChanged(SpeedLockChangedEvent change) => speedLocked = change.IsLocked;
+    public void OnSpeedLockChanged(SpeedLockChangedEvent change) { speedLocked = change.IsLocked; speedLockObserved = true; }
     private readonly SimulationRunController runs = new();
     private readonly DeferredSpeedCommand speedCommand = new();
     private string? batchOwner;
@@ -130,7 +131,11 @@ public sealed class SimulationControl
     }
     public object Observe() => new { currentSpeed = speed.CurrentSpeed, dayNumber = time.DayNumber,
         dayProgress = time.DayProgress, hoursPassedToday = time.HoursPassedToday,
-        activeRunId = runs.ActiveRunId, pendingSpeed = speedCommand.PendingSpeed };
+        activeRunId = runs.ActiveRunId, pendingSpeed = speedCommand.PendingSpeed,
+        speedLocked = speedLockObserved ? (bool?)speedLocked : null,
+        speedLockSource = speedLockObserved ? "speed_lock_changed_event" : "not_observed",
+        speedLockReason = "not_exposed_by_public_api",
+        pauseSettled = speedLockObserved ? (bool?)PauseSettled : null };
 
     public object Set(BridgeRequest request)
     {

@@ -57,12 +57,12 @@ public static class BuildingCapabilityTools
     public static BuildingCapabilityReport Describe(string bridgeVersion, string faction, bool serverEnabled)
     {
         // Exact profile binding: new deployments require explicit review, never a >= version guess.
-        bool generic = bridgeVersion is ("0.35.0" or "0.35.1" or "0.35.2" or "0.35.3" or "0.35.4" or "0.35.5" or "0.36.0" or "0.37.0" or "0.38.0" or "0.39.0" or "0.40.0" or "0.41.0" or "0.42.0" or "0.43.0" or "0.44.0" or "0.45.0" or "0.46.0" or "0.47.0" or "0.48.0" or "0.49.0" or "0.50.0" or "0.51.0" or "0.52.0" or "0.53.0" or "0.54.0" or "0.55.0" or "0.56.0" or "0.57.0" or "0.58.0" or "0.59.0" or "0.60.0" or "0.61.0" or "0.62.0" or "0.63.0" or "0.64.0" or "0.65.0" or "0.66.0");
+        bool generic = bridgeVersion is ("0.35.0" or "0.35.1" or "0.35.2" or "0.35.3" or "0.35.4" or "0.35.5" or "0.36.0" or "0.37.0" or "0.38.0" or "0.39.0" or "0.40.0" or "0.41.0" or "0.42.0" or "0.43.0" or "0.44.0" or "0.45.0" or "0.46.0" or "0.47.0" or "0.48.0" or "0.49.0" or "0.50.0" or "0.51.0" or "0.52.0" or "0.53.0" or "0.54.0" or "0.55.0" or "0.56.0" or "0.57.0" or "0.58.0" or "0.59.0" or "0.60.0" or "0.61.0" or "0.62.0" or "0.63.0" or "0.64.0" or "0.65.0" or "0.66.0" or "0.67.0" or "0.68.0" or "0.69.0" or "0.70.0" or "0.71.0" or "0.72.0");
         bool known = bridgeVersion is ("0.33.0" or "0.33.1" or "0.34.0") && faction == "Folktails" ||
             generic && faction is ("Folktails" or "IronTeeth");
         bool lodge = bridgeVersion == "0.34.0" || generic;
-        int flatCapacity = bridgeVersion is ("0.35.2" or "0.35.3" or "0.35.4" or "0.35.5" or "0.36.0" or "0.37.0" or "0.38.0" or "0.39.0" or "0.40.0" or "0.41.0" or "0.42.0" or "0.43.0" or "0.44.0" or "0.45.0" or "0.46.0" or "0.47.0" or "0.48.0" or "0.49.0" or "0.50.0" or "0.51.0" or "0.52.0" or "0.53.0" or "0.54.0" or "0.55.0" or "0.56.0" or "0.57.0" or "0.58.0" or "0.59.0" or "0.60.0" or "0.61.0" or "0.62.0" or "0.63.0" or "0.64.0" or "0.65.0" or "0.66.0") ? BuildingProjectController.MaxProjectsPerSession : 4;
-        int verticalCapacity = bridgeVersion is ("0.35.2" or "0.35.3" or "0.35.4" or "0.35.5" or "0.36.0" or "0.37.0" or "0.38.0" or "0.39.0" or "0.40.0" or "0.41.0" or "0.42.0" or "0.43.0" or "0.44.0" or "0.45.0" or "0.46.0" or "0.47.0" or "0.48.0" or "0.49.0" or "0.50.0" or "0.51.0" or "0.52.0" or "0.53.0" or "0.54.0" or "0.55.0" or "0.56.0" or "0.57.0" or "0.58.0" or "0.59.0" or "0.60.0" or "0.61.0" or "0.62.0" or "0.63.0" or "0.64.0" or "0.65.0" or "0.66.0") ? VerticalStairRequest.MaxProjectsPerSession :
+        int flatCapacity = bridgeVersion is ("0.35.2" or "0.35.3" or "0.35.4" or "0.35.5" or "0.36.0" or "0.37.0" or "0.38.0" or "0.39.0" or "0.40.0" or "0.41.0" or "0.42.0" or "0.43.0" or "0.44.0" or "0.45.0" or "0.46.0" or "0.47.0" or "0.48.0" or "0.49.0" or "0.50.0" or "0.51.0" or "0.52.0" or "0.53.0" or "0.54.0" or "0.55.0" or "0.56.0" or "0.57.0" or "0.58.0" or "0.59.0" or "0.60.0" or "0.61.0" or "0.62.0" or "0.63.0" or "0.64.0" or "0.65.0" or "0.66.0" or "0.67.0" or "0.68.0" or "0.69.0" or "0.70.0" or "0.71.0" or "0.72.0") ? BuildingProjectController.MaxProjectsPerSession : 4;
+        int verticalCapacity = bridgeVersion is ("0.35.2" or "0.35.3" or "0.35.4" or "0.35.5" or "0.36.0" or "0.37.0" or "0.38.0" or "0.39.0" or "0.40.0" or "0.41.0" or "0.42.0" or "0.43.0" or "0.44.0" or "0.45.0" or "0.46.0" or "0.47.0" or "0.48.0" or "0.49.0" or "0.50.0" or "0.51.0" or "0.52.0" or "0.53.0" or "0.54.0" or "0.55.0" or "0.56.0" or "0.57.0" or "0.58.0" or "0.59.0" or "0.60.0" or "0.61.0" or "0.62.0" or "0.63.0" or "0.64.0" or "0.65.0" or "0.66.0" or "0.67.0" or "0.68.0" or "0.69.0" or "0.70.0" or "0.71.0" or "0.72.0") ? VerticalStairRequest.MaxProjectsPerSession :
             bridgeVersion is ("0.33.1" or "0.34.0" or "0.35.0" or "0.35.1") ? 4 : 1;
         ProjectModeCapability[] modes = known ? [
             new("development_pilot", "execute_building_project_pilot",
@@ -89,19 +89,19 @@ public static class BuildingCapabilityTools
                 "documented_bounded_live_cases_not_current_site_validation", "docs/vertical-warehouse-pilot.md")
         ] : [];
         if (faction != "Folktails") modes = modes.Where(m => m.Tool != "execute_vertical_stair_pilot").ToArray();
-        if(known && bridgeVersion is ("0.37.0" or "0.38.0" or "0.39.0" or "0.40.0" or "0.41.0" or "0.42.0" or "0.43.0" or "0.44.0" or "0.45.0" or "0.46.0" or "0.47.0" or "0.48.0" or "0.49.0" or "0.50.0" or "0.51.0" or "0.52.0" or "0.53.0" or "0.54.0" or "0.55.0" or "0.56.0" or "0.57.0" or "0.58.0" or "0.59.0" or "0.60.0" or "0.61.0" or "0.62.0" or "0.63.0" or "0.64.0" or "0.65.0" or "0.66.0")) modes=modes.Append(new ProjectModeCapability(
+        if(known && bridgeVersion is ("0.37.0" or "0.38.0" or "0.39.0" or "0.40.0" or "0.41.0" or "0.42.0" or "0.43.0" or "0.44.0" or "0.45.0" or "0.46.0" or "0.47.0" or "0.48.0" or "0.49.0" or "0.50.0" or "0.51.0" or "0.52.0" or "0.53.0" or "0.54.0" or "0.55.0" or "0.56.0" or "0.57.0" or "0.58.0" or "0.59.0" or "0.60.0" or "0.61.0" or "0.62.0" or "0.63.0" or "0.64.0" or "0.65.0" or "0.66.0" or "0.67.0" or "0.68.0" or "0.69.0" or "0.70.0" or "0.71.0" or "0.72.0")) modes=modes.Append(new ProjectModeCapability(
             "large_project_development_pilot", "start_large_project", [], [0,1,2,3], [], 1,32,32,32,32,128,null,[],
             "not_live_proven", "docs/large-projects-0.37.0.md") {
                 MaxOccupiedHeightSpan=8, TemplateSelection="native_catalog_supported_geometry_except_new_districts",
                 EntranceModel="applicable_entrance_and_path_access_no_invented_entranceless_door"
             }).ToArray();
-        if(known && bridgeVersion is ("0.37.0" or "0.38.0" or "0.39.0" or "0.40.0" or "0.41.0" or "0.42.0" or "0.43.0" or "0.44.0" or "0.45.0" or "0.46.0" or "0.47.0" or "0.48.0" or "0.49.0" or "0.50.0" or "0.51.0" or "0.52.0" or "0.53.0" or "0.54.0" or "0.55.0" or "0.56.0" or "0.57.0" or "0.58.0" or "0.59.0" or "0.60.0" or "0.61.0" or "0.62.0" or "0.63.0" or "0.64.0" or "0.65.0" or "0.66.0")) modes=modes.Append(new ProjectModeCapability(
+        if(known && bridgeVersion is ("0.37.0" or "0.38.0" or "0.39.0" or "0.40.0" or "0.41.0" or "0.42.0" or "0.43.0" or "0.44.0" or "0.45.0" or "0.46.0" or "0.47.0" or "0.48.0" or "0.49.0" or "0.50.0" or "0.51.0" or "0.52.0" or "0.53.0" or "0.54.0" or "0.55.0" or "0.56.0" or "0.57.0" or "0.58.0" or "0.59.0" or "0.60.0" or "0.61.0" or "0.62.0" or "0.63.0" or "0.64.0" or "0.65.0" or "0.66.0" or "0.67.0" or "0.68.0" or "0.69.0" or "0.70.0" or "0.71.0" or "0.72.0")) modes=modes.Append(new ProjectModeCapability(
             "large_project_batch_development_pilot", "run_large_project", [], [0,1,2,3], [], 1,32,32,32,32,128,86400,[],
             "not_live_proven", "docs/autonomous-construction-batches.md") {
                 MaxOccupiedHeightSpan=8, TemplateSelection="native_catalog_supported_geometry_except_new_districts",
                 EntranceModel="applicable_entrance_and_path_access_no_invented_entranceless_door"
             }).ToArray();
-        if(bridgeVersion is ("0.63.0" or "0.64.0" or "0.65.0" or "0.66.0")) modes=modes.Select(m=>m with {
+        if(bridgeVersion is ("0.63.0" or "0.64.0" or "0.65.0" or "0.66.0" or "0.67.0" or "0.68.0" or "0.69.0" or "0.70.0" or "0.71.0" or "0.72.0")) modes=modes.Select(m=>m with {
             EvidenceSource="not_live_proven_063_submission_semantics", EvidenceReference="docs/construction-structures-0.63.md",
             LiveRotations=[], MaxWaitRealSeconds=m.Tool=="execute_vertical_stair_pilot"?null:m.MaxWaitRealSeconds }).ToArray();
         return new(bridgeVersion, faction, known ? "known" : "unknown", known ? 64 : null, serverEnabled, "not_observed",
@@ -109,7 +109,7 @@ public static class BuildingCapabilityTools
             ["fresh_session_and_action_identity", "template_unlock_and_costs_from_build_catalog",
                 "native_geometry_and_joint_preview", "preserve_sampled_existing_connections",
                 "no_independent_open_construction_sites", "previous_project_completed_and_all_construction_finished",
-                bridgeVersion is ("0.63.0" or "0.64.0" or "0.65.0" or "0.66.0") ? "whole_structure_submission_before_observation" : "finished_connected_predecessors_before_next_placement",
+                bridgeVersion is ("0.63.0" or "0.64.0" or "0.65.0" or "0.66.0" or "0.67.0" or "0.68.0" or "0.69.0" or "0.70.0" or "0.71.0" or "0.72.0") ? "whole_structure_submission_before_observation" : "finished_connected_predecessors_before_next_placement",
                 "pause_before_placement", "actual_builder_access_after_order", "actual_finished_entrance_after_construction"],
             ["profile_is_server_knowledge_bound_to_observed_bridge_and_faction",
                 "mode_rotations_are_request_rotation_stair_rotation_for_vertical_modes",

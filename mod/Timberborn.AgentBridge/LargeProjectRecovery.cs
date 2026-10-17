@@ -70,24 +70,30 @@ public sealed partial class LargeProjectService
         bool resolved = observations.Select((o,i) => LargeProjectRecoveryPolicy.Resolved(recorded[i], o)).All(v => v);
         bool repairable = observations.Select((o,i) => LargeProjectRecoveryPolicy.Repairable(recorded[i], o)).All(v => v);
         var reader = new BuildingObservations(entities);
+        var geometry = job.Request.Steps.Select(s=>Resolve(s).GetSpec<BlockObjectSpec>().GetBlocks(Placement(s)).ToArray()).ToArray();
         var parts = observations.Select((observed,i) => {
             var step = job.Request.Steps[i];
             var details = JObject.FromObject(reader.Observe(Guid.Parse(ids[i])))["details"] as JObject;
             var construction = details?["construction"] as JObject;
+            bool? manuallyPaused = (bool?)details?["operations"]?["pause"]?["paused"];
+            var unfinishedSupports = step.DependsOn.Where(j=>
+                observations[j] is "construction" or "construction_unreachable" or "construction_access_unknown")
+                .Where(j=>geometry[j].Any(c=>c.Stackable==BlockStackable.BlockObject &&
+                    geometry[i].Any(f=>f.IsFoundationBlock && f.Coordinates==c.Coordinates+new Vector3Int(0,0,1))))
+                .ToArray();
             var costs = construction?["materials"]?["buildingCosts"] as JArray;
             var available = costs?.Select(c => { var good = c.Value<string>("id") ?? throw new InvalidOperationException("missing_good_id"); var count = resources.GetGlobalResourceCount(good); return new { id=good, availableStock=count.AvailableStock, allStock=count.AllStock }; }).ToArray();
             string reason = observed switch {
                 "construction_unreachable" => "builders_unreachable",
-                "construction" when (bool?)construction?["isOn"] == false => "construction_paused",
-                "construction" when (bool?)construction?["hasMaterialsToResumeBuilding"] == false => "materials_not_ready",
-                "construction" => "awaiting_builders_or_work",
+                "construction" => LargeProjectRecoveryPolicy.ConstructionReason(manuallyPaused,
+                    (bool?)construction?["isOn"],(bool?)construction?["hasMaterialsToResumeBuilding"],unfinishedSupports.Length>0),
                 "missing" when recorded[i] is "pending" or "rejected" => "not_ordered",
                 "missing" when recorded[i] == "unconfirmed" => "placement_effect_unconfirmed",
                 "missing" => "previously_observed_object_removed",
                 _ => observed
             };
             return new { index = i, id = ids[i], template = step.Template, position = new { x=step.X,y=step.Y,z=step.Z },
-                recorded = recorded[i], observed, reason, construction, availableGoods = available };
+                recorded = recorded[i], observed, reason, manuallyPaused, unfinishedSupportIndices = unfinishedSupports, construction, availableGoods = available };
         }).ToArray();
         return JObject.FromObject(new { actionId=id, state=State(id), released=releasedProjects.Contains(id), currentSpeed=speed.CurrentSpeed,
             closeEligible=ready && resolved, repairEligible=ready && !releasedProjects.Contains(id) && State(id)!="completed" && repairable && others.Length==0,

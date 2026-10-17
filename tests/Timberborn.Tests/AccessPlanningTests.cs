@@ -123,4 +123,92 @@ public sealed class AccessPlanningTests
         Assert.Throws<InvalidDataException>(()=>NativeClient.ValidateLargeProject(Envelope(),request));
     }
 
+    [Theory]
+    [InlineData("0.68.0")]
+    [InlineData("0.69.0")]
+    [InlineData("0.70.0")]
+    [InlineData("0.71.0")]
+    [InlineData("0.72.0")]
+    public void SearchDiagnosticsSurviveCompactAndRejectInventedNativeEvidence(string bridgeVersion)
+    {
+        var point=new{x=2,y=2,z=1};
+        var payload=JsonSerializer.SerializeToNode(new{candidateFound=false,reason="search_budget_exhausted",
+            steps=new[]{new{template="Path",x=1,y=1,z=1,rotation=0,dependsOn=Array.Empty<int>()}},plan=(object?)null,
+            assessment=new{requestedParts=1,generatedParts=0,visitedNodes=2,regularExecutionAllowed=false,constructionAccess="unproven_until_live_construction"},
+            cleanupCandidateIndices=Array.Empty<int>(),limitations=new[]{"bounded_search"},
+            searchDiagnostics=new{version=1,strategy="a_star_geometry",existingSourceCount=1,observedPathCount=1,
+                examinedHeightSources=1,heightExitCount=8,nativeConnectedExits=0,
+                sources=new[]{new{position=point,template="Stairs.Folktails",districtConnected=true,heightExitsExamined=true}},sourcesTruncated=false,
+                heightExits=Enumerable.Range(0,8).Select(_=>new{from=point,to=new{x=3,y=2,z=2},insideRegion=true,nativeConnected=false,
+                    candidateAttempts=0,geometryBlockedAttempts=0,unsupportedAttempts=0}).ToArray(),heightExitsTruncated=false,
+                routes=new[]{new{part=0,phase="finished_entrance",reason="search_budget_exhausted",sourceCount=1,targetCount=1,
+                    visitedStates=2,generatedStates=3,peakOpenStates=2,closestRemainingCost=1,selectedSource=(object?)null,pathParts=0}},
+                evidence="native_existing_edges_and_geometric_candidates_not_build_permission"}})!.AsObject();
+        var diagnostics=payload["searchDiagnostics"]!;
+        if(bridgeVersion!="0.68.0")
+        {
+            diagnostics["version"]=2;diagnostics["connectionGraph"]="instant_road";
+            foreach(var edge in diagnostics["heightExits"]!.AsArray())edge!["generalConnected"]=false;
+        }
+        string graph=bridgeVersion is "0.70.0" or "0.71.0" or "0.72.0"?"instant_road_or_registered_landing":"instant_road";
+        if(bridgeVersion is "0.70.0" or "0.71.0" or "0.72.0")
+        {
+            diagnostics["version"]=3;diagnostics["connectionGraph"]=graph;
+            diagnostics["evidence"]="native_edges_or_registered_landing_not_build_permission";
+            diagnostics["landingPreviewCount"]=0;diagnostics["landingPreviewLimit"]=8;
+            foreach(var edge in diagnostics["heightExits"]!.AsArray())
+            {edge!["landingCandidate"]=false;edge!["previewLandingConnected"]=null;}
+        }
+        BridgeEnvelope<JsonElement> Envelope()=>new(1,Session,DateTimeOffset.UnixEpoch,bridgeVersion,JsonSerializer.SerializeToElement(payload));
+        NativeClient.ValidateLargeProject(Envelope(),Request());
+        if(bridgeVersion!="0.68.0")
+        {
+            var edge=diagnostics["heightExits"]![0]!;
+            // Road-only stair connections are valid even when the general graph
+            // reports false; the reverse must never authorize a route candidate.
+            edge["nativeConnected"]=true;edge["candidateAttempts"]=1;
+            diagnostics["nativeConnectedExits"]=1;
+            NativeClient.ValidateLargeProject(Envelope(),Request());
+            edge["nativeConnected"]=false;edge["generalConnected"]=true;
+            diagnostics["nativeConnectedExits"]=0;
+            Assert.Throws<InvalidDataException>(()=>NativeClient.ValidateLargeProject(Envelope(),Request()));
+            edge["candidateAttempts"]=0;edge["generalConnected"]=false;
+            diagnostics["connectionGraph"]="instant_general";
+            Assert.Throws<InvalidDataException>(()=>NativeClient.ValidateLargeProject(Envelope(),Request()));
+            diagnostics["connectionGraph"]=graph;
+            edge["generalConnected"]=null;
+            Assert.Throws<InvalidDataException>(()=>NativeClient.ValidateLargeProject(Envelope(),Request()));
+            edge["generalConnected"]=false;
+        }
+        if(bridgeVersion is "0.70.0" or "0.71.0" or "0.72.0")
+        {
+            var edge=diagnostics["heightExits"]![0]!;
+            edge["landingCandidate"]=true;edge["previewLandingConnected"]=true;
+            edge["candidateAttempts"]=1;diagnostics["landingPreviewCount"]=1;
+            NativeClient.ValidateLargeProject(Envelope(),Request());
+            diagnostics["landingPreviewCount"]=0;
+            Assert.Throws<InvalidDataException>(()=>NativeClient.ValidateLargeProject(Envelope(),Request()));
+            diagnostics["landingPreviewCount"]=1;edge["previewLandingConnected"]=null;
+            Assert.Throws<InvalidDataException>(()=>NativeClient.ValidateLargeProject(Envelope(),Request()));
+            edge["previewLandingConnected"]=false;
+            Assert.Throws<InvalidDataException>(()=>NativeClient.ValidateLargeProject(Envelope(),Request()));
+            edge["previewLandingConnected"]=true;edge["landingCandidate"]=false;
+            Assert.Throws<InvalidDataException>(()=>NativeClient.ValidateLargeProject(Envelope(),Request()));
+            edge["previewLandingConnected"]=null;edge["candidateAttempts"]=0;
+            diagnostics["landingPreviewCount"]=9;
+            Assert.Throws<InvalidDataException>(()=>NativeClient.ValidateLargeProject(Envelope(),Request()));
+            diagnostics["landingPreviewCount"]=1;
+        }
+        var compact=(JsonObject)payload.DeepClone();
+        ProjectReportPresentation.Compact("plan_large_project_access",compact);
+        Assert.True(JsonNode.DeepEquals(payload["searchDiagnostics"],compact["searchDiagnostics"]));
+        payload["searchDiagnostics"]!["heightExits"]![0]!["candidateAttempts"]=1;
+        Assert.Throws<InvalidDataException>(()=>NativeClient.ValidateLargeProject(Envelope(),Request()));
+        payload["searchDiagnostics"]!["heightExits"]![0]!["candidateAttempts"]=0;
+        payload["searchDiagnostics"]!["heightExitsTruncated"]=true;
+        Assert.Throws<InvalidDataException>(()=>NativeClient.ValidateLargeProject(Envelope(),Request()));
+        payload.Remove("searchDiagnostics");
+        Assert.Throws<InvalidDataException>(()=>NativeClient.ValidateLargeProject(Envelope(),Request()));
+    }
+
 }

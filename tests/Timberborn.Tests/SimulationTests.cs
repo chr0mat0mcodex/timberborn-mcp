@@ -94,6 +94,21 @@ public sealed class SimulationTests
         Assert.False(result["error"]!["retryable"]!.GetValue<bool>());
         Assert.Equal(1, handler.Calls);
     }
+    [Fact]
+    public async Task FreshLockEvidenceSurvivesSpeedReceipt()
+    {
+        var session=Guid.NewGuid().ToString("D");
+        var observation=new NativeSimulation(0,1,0.5f,12,SpeedLocked:false,
+            SpeedLockSource:"speed_lock_changed_event",SpeedLockReason:"not_exposed_by_public_api",PauseSettled:true);
+        var envelope=new BridgeEnvelope<NativeSpeedResult>(1,session,DateTimeOffset.UtcNow,"0.72.0",new(0,1,true,observation,["synthetic"]));
+        var handler=new Handler(JsonSerializer.Serialize(envelope,NativeJson.Options));
+        using var tools=new NativeTools(new NativeClient(new(8081,new string('a',64)),handler),enableSpeedControl:true);
+        var result=await tools.Invoke("set_simulation_speed",Args(0,1,session),TestContext.Current.CancellationToken);
+        Assert.Equal("ok",result["status"]!.GetValue<string>());
+        Assert.False(result["data"]!["observation"]!["speedLocked"]!.GetValue<bool>());
+        Assert.True(result["data"]!["observation"]!["pauseSettled"]!.GetValue<bool>());
+        Assert.Equal(1,handler.Calls);
+    }
     private static JsonElement Args(int speed, int expectedSpeed, string session) => JsonSerializer.SerializeToElement(new { speed, expectedSpeed, session });
     private sealed class Handler(string? json) : HttpMessageHandler
     {

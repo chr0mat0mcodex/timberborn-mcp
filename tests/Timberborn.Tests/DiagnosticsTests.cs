@@ -116,7 +116,19 @@ public sealed class DiagnosticsTests
     [InlineData("ok","0.65.0")][InlineData("missing","0.65.0")][InlineData("flood_missing","0.65.0")]
     [InlineData("input_mismatch","0.65.0")][InlineData("contamination_range","0.65.0")][InlineData("pipe_mismatch","0.65.0")]
     [InlineData("ok","0.66.0")][InlineData("missing","0.66.0")][InlineData("flood_missing","0.66.0")]
+    [InlineData("ok","0.67.0")][InlineData("missing","0.67.0")][InlineData("flood_missing","0.67.0")]
+    [InlineData("ok","0.68.0")][InlineData("missing","0.68.0")][InlineData("flood_missing","0.68.0")]
+    [InlineData("ok","0.69.0")][InlineData("missing","0.69.0")][InlineData("flood_missing","0.69.0")]
+    [InlineData("ok","0.70.0")][InlineData("missing","0.70.0")][InlineData("flood_missing","0.70.0")]
+    [InlineData("ok","0.71.0")][InlineData("missing","0.71.0")][InlineData("flood_missing","0.71.0")]
+    [InlineData("ok","0.72.0")][InlineData("missing","0.72.0")][InlineData("flood_missing","0.72.0")]
     [InlineData("input_mismatch","0.66.0")][InlineData("contamination_range","0.66.0")][InlineData("pipe_mismatch","0.66.0")]
+    [InlineData("input_mismatch","0.67.0")][InlineData("contamination_range","0.67.0")][InlineData("pipe_mismatch","0.67.0")]
+    [InlineData("input_mismatch","0.68.0")][InlineData("contamination_range","0.68.0")][InlineData("pipe_mismatch","0.68.0")]
+    [InlineData("input_mismatch","0.69.0")][InlineData("contamination_range","0.69.0")][InlineData("pipe_mismatch","0.69.0")]
+    [InlineData("input_mismatch","0.70.0")][InlineData("contamination_range","0.70.0")][InlineData("pipe_mismatch","0.70.0")]
+    [InlineData("input_mismatch","0.71.0")][InlineData("contamination_range","0.71.0")][InlineData("pipe_mismatch","0.71.0")]
+    [InlineData("input_mismatch","0.72.0")][InlineData("contamination_range","0.72.0")][InlineData("pipe_mismatch","0.72.0")]
     public async Task WaterContractRequiresNativeEvidenceInNewRelease(string defect,string version)
     {
         var e=Envelope(Operation() with {Inventories=[],Power=new(false,null,null,null,null,null),

@@ -79,9 +79,19 @@ function Stop-LocalMcpServers([string]$WorkspaceRoot) {
     if ($remaining.Count -gt 0) { throw 'Lokaler MCP-Prozess konnte nicht vollständig beendet werden.' }
 }
 
-. "$PSScriptRoot/environment.ps1"
-Push-Location $taskRoot
+$gateLogDirectory = Join-Path (Split-Path $PSScriptRoot -Parent) '.local/gate-logs'
+[void][IO.Directory]::CreateDirectory($gateLogDirectory)
+$gateDisplay.LogPath = Join-Path $gateLogDirectory ('gate-' + (Get-Date -Format 'yyyyMMdd-HHmmss') + '-' + [guid]::NewGuid().ToString('N') + '.log')
+$gateFailed = $false
+$gateLocationPushed = $false
 try {
+    # Dot-source preserves phase variables. Every command stream goes to the local
+    # log; only the display renderer writes directly to the console.
+    . {
+    $ProgressPreference = 'SilentlyContinue'
+    . "$PSScriptRoot/environment.ps1"
+    Push-Location $taskRoot
+    $gateLocationPushed = $true
     Start-TimberbornGatePhase $gateDisplay 0
     Stop-TimberbornGame
     Stop-LocalMcpServers $taskRoot
@@ -158,12 +168,15 @@ try {
     Start-Process -FilePath $gameExe -WorkingDirectory $gameDir -ErrorAction Stop
     Write-TimberbornStatus 'OK' 'Timberborn-Start angefordert.'
     Complete-TimberbornGatePhase $gateDisplay
+    } *> ($gateDisplay.LogPath)
     Write-TimberbornGateSummary $gateDisplay
-    Write-Host '  Tests bestanden. Mod installiert und geprüft. Start angefordert.' -ForegroundColor Green
-    Write-Host '  Jetzt Spielstand laden und "live bereit" schreiben.' -ForegroundColor Cyan
 } catch {
+    $gateFailed = $true
+    $gateDisplay.Failure = $_.Exception.Message
+    try { ($_ | Out-String) | Add-Content -LiteralPath $gateDisplay.LogPath -Encoding utf8NoBOM } catch {}
     Write-TimberbornGateSummary $gateDisplay -Failed
-    Write-TimberbornStatus 'FEHLER' $_.Exception.Message Red
-    Write-Host '  OFFEN = nicht ausgeführt. Keine automatische Wiederholung.' -ForegroundColor Yellow
-    throw
-} finally { Stop-TimberbornGateProgress $gateDisplay; Pop-Location }
+} finally {
+    Stop-TimberbornGateProgress $gateDisplay
+    if ($gateLocationPushed) { Pop-Location }
+}
+if ($gateFailed) { exit 1 }

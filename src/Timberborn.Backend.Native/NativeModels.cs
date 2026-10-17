@@ -68,7 +68,8 @@ public sealed record NativeBuildingDetails(string Template, Position Position, b
     bool ConstructionComponentPresent, NativeConstruction? Construction, NativeDistrict District, NativeOperations? Operations = null);
 public sealed record NativePause(bool Paused, bool CanPause);
 public sealed record NativeWorkplace(int DesiredWorkers, int AssignedWorkers, int MaxWorkers,
-    bool Understaffed, bool Overstaffed, bool AnyWorkerHasJobRunning);
+    bool Understaffed, bool Overstaffed, bool AnyWorkerHasJobRunning,
+    int? MinimumWorkers = null, string? MinimumWorkersSource = null);
 public sealed record NativeOperations(bool PauseComponentPresent, NativePause? Pause,
     bool WorkplaceComponentPresent, NativeWorkplace? Workplace);
 public sealed record NativeBuilding(Guid Id, bool Found, NativeBuildingDetails? Details, string[] Limitations);
@@ -79,7 +80,8 @@ public sealed record StatusWatch(string ChangeToken, bool? Changed, string Reaso
 public sealed record NativeResult<T>(int SchemaVersion, string Status, T? Data, NativeMeta Meta, NativeFault? Error,
     [property: System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)] StatusWatch? Watch = null);
 public sealed record NativeSimulation(float CurrentSpeed, int DayNumber, float DayProgress, float HoursPassedToday,
-    string? ActiveRunId = null, int? PendingSpeed = null);
+    string? ActiveRunId = null, int? PendingSpeed = null, bool? SpeedLocked = null,
+    string? SpeedLockSource = null, string? SpeedLockReason = null, bool? PauseSettled = null);
 public sealed record NativeSpeedResult(int RequestedSpeed, float PreviousSpeed, bool MatchedImmediately,
     NativeSimulation Observation, string[] Limitations);
 public sealed record NativeWorkplaceAssignment(Guid Id, string Template, Position Position);
@@ -89,7 +91,7 @@ public sealed record NativeWorkforce(string Scope, int Offset, int Limit, int To
     NativeWorker[] Items, bool HasMore, string[] Limitations);
 public sealed record NativeStaffingResult(Guid Id, string Template, int PreviousDesiredWorkers,
     int RequestedDesiredWorkers, int ObservedDesiredWorkers, int AssignedWorkers, int MaxWorkers,
-    string Outcome, string[] Limitations);
+    string Outcome, string[] Limitations, int? MinimumWorkers = null, string? MinimumWorkersSource = null);
 public sealed record NativePriority(Guid Id, string Kind, string PreviousPriority, string Priority, string Outcome, string[] Limitations);
 public sealed record NativeConstructionEntry(NativeBuilding Building, string? Priority);
 public sealed record NativeConstructionList(int Offset, int Limit, int Total, NativeConstructionEntry[] Items, bool HasMore, string[] Limitations);

@@ -1,5 +1,133 @@
 # Projektstand
 
+## 0.72.0 — Gate und vollständiger Plattform-Umwegpilot bestanden
+
+Abschluss der seit 0.67 entwickelten Zugangsverbesserungen: automatische
+Umwegsuche im sicheren Stand mit 191 Zuständen; 15/15 Teile (zehn Plattformen,
+drei Wege, zwei Lager) fertig und zugänglich. Beide Lagereingänge und native
+Verbindung zum Distriktzentrum bestätigt; untere Bestandswege trotz Überbau
+weiter verbunden. Bestandsdiagnosen durchgehend lostConnections=0.
+Journal regulär freigegeben, keine Baustellen, Endtempo 0, kein aktiver Lauf.
+Zweites vorhandenes Sägewerk für die Brettlieferung aktiviert und besetzt.
+Baupause/Stützwarten, beobachtete Mindestbesetzung und Menü-Sperre/Entsperre
+bereits live bestanden. Menschliches Gate bestanden, keine Agent-Builds/Tests.
+[Umfang, historische Vorläufe und Abschlussbelege](docs/releases/0.72.0.md).
+Anleitung, Tool-Doku und zurückgestellter Hermes-Skillentwurf aktualisiert;
+Workflow geprüft. Skill bleibt zurückgestellt. Abnahme für den dokumentierten
+Umfang abgeschlossen; Code und Nachweise zur Git-Sicherung freigegeben.
+
+Grenzen: neuer unterer Zielweg einer gedrehten Bestandstreppe noch kein eigener
+Livefall; keine allgemeine Such-/Bauphasengarantie. Zielgebäude kann vor seinem
+Zugang fertig sein. Weganschluss ist kein Nachweis trockenen Betriebs.
+
+## 0.71.0 — Gate, Anschlussprüfung und Umwegplatzierung bestanden; Fertigbau offen
+
+Bridge 0.71 und neue Session bestätigt. Oberer Treppenanschluss sowie seitliche
+Negativkontrolle bestanden. Zwei Anschlusswege fertig, realer Bauzugang belegt.
+Automatische Umwegvorschau um ein mitgeplantes Lager: 819 Suchzustände,
+17 Teile, native Eingänge und Arbeitszugänge bestätigt; 3477 Bestandsprüfungen
+ohne Verlust. Alle 17 Objekte einmal platziert und bestätigt. Geprüfte reale
+Baustellenzugänge erreichbar, Bestandsdiagnose weiter ohne Verlust.
+17 Baustellen bleiben, Endpause bestätigt; Fertigbau und unterer neuer
+Treppenzielweg noch nicht abgenommen. Kein Commit/Push.
+[Belege, Grenzen und Learnings](docs/releases/0.71.0.md).
+Nächste Diagnosekorrektur: construction_paused trotz paused=false bei unfertigen
+Trägern; Inaktivität, manuelle Pause und Stützabhängigkeit trennen. Nullbesetzung
+am Holzfäller unbestätigt; minimale Besetzung und Zeitsperrstatus sichtbar machen.
+Anleitung, Tool-Doku und zurückgestellter Hermes-Skillentwurf aktualisiert.
+Cockpit-Gate erfolgreich; Darstellung nicht gesondert visuell abgenommen.
+Backend verbunden, Startsperre frei. Baustellen nicht erneut beauftragen.
+
+## 0.70.0 — Bestandstreppen-Höhenfall bestanden, erweiterter Umweg offen
+
+Gate-Nacharbeit: 1841 Unit-/13 Integrationstests bestanden (3 Livefälle
+übersprungen), Native Bridge mit CS1503 abgebrochen. Falschen Parametertyp
+bei `Rotation` korrigiert. Cockpitbalken auf ASCII umgestellt, Grün erhalten.
+Anschließendes menschliches Gate bestanden. Höhenfall bis Fertigzugang bestanden; erweiterte Umwegvorschau abgelehnt.
+
+Instant-Netz und Vorschau mit Zielweg getrennt: gedrehter oberer Austritt
+von Folktails-Bestandstreppen nur als Kandidat; native Zielweg-/Stützenvorschau
+bestätigt Distriktanschluss und Wiederherstellung. Keine ausgelesene direkte
+Treppenkante behaupten. Maximal acht Proben, bestehende Suchlimits unverändert.
+Diagnose Version 3 zeigt Instant-Kante und Vorschauergebnis separat.
+[API-Befund, Learning, Grenzen und Pilot](docs/releases/0.70.0.md).
+Regressionen und Versionsprofile ergänzt; Quell-/Diffprüfung, keine Agent-
+Builds/Tests/Installation. Gate und bekannter Höhenfertigbau bestanden; erweiterter Umweg nicht abgenommen, kein vollständiger Abschluss/Commit/Push.
+Anleitung, Toolbeschreibung und lokaler Hermes-Skillentwurf aktualisiert;
+Entwurf bleibt zurückgestellt. Workflow geprüft, unverändert.
+Live 0.70: Backend verbunden, neue Session bestätigt. Höhenbau 3/3 fertig und zugänglich, Ledger freigegeben, keine Baustellen, Endpause.
+Umweg mit neuen Plattformen nativ abgelehnt, keine Platzierung. Seitliche Quellkante der Bestandstreppe und Stützenvorschau gezielt klären.
+
+## 0.69.0 — Gate bestanden, Höhenpilot erneut fehlgeschlagen
+
+Bestandstreppen werden mit AreConnectedRoadInstant statt AreConnectedInstant
+geprüft. Diagnose Version 2 kennzeichnet den Weggraph und zeigt die allgemeine
+Abfrage getrennt; kein Ersatz nativer Freigabe durch Geometrie. Regressionen
+und Versionsprofile ergänzt. Höhenpilot: beide Graphabfragen am Treppenaustritt false; 2048 Zustände ausgeschöpft. Manuelle Zwei-Wege-Gegenprobe gültig, Bestandsverbindungen erhalten.
+MCP-Log öffnet sich nach dem Laden automatisch; bleibt manuell schließbar.
+[Änderungen, Learning und Abnahmeplan](docs/releases/0.69.0.md).
+Quell-/Diffprüfung; keine Agent-Builds, Tests oder Installation. Kein Commit/Push.
+Spielanleitung, Toolbeschreibung und lokaler Hermes-Skillentwurf gepflegt;
+Skill bleibt zurückgestellt. Entwicklungsworkflow geprüft, unverändert.
+Nach live bereit: 0.69 mit neuer Session verbunden; Gate bestanden. Keine neuen Baustellen, Endpause bestätigt.
+Weitere Höhenpiloten gestoppt; Zielwegregistrierung und native Treppen-Endpunkte gezielt klären.
+
+Nachtrag nach dem 0.68-Livepilot: MCP-Log wird beim Laden des Spielstands
+über den vorhandenen Sichtbarkeitswechsel automatisch geöffnet. Manuelles
+Schließen bleibt bis zum nächsten Laden wirksam. Quell-/Diffprüfung erfolgt;
+Gate und Livekontrolle (Laden, Schließen, Neuladen) stehen aus.
+Spielanleitung angepasst; Hermes-Skill geprüft, keine geänderte Agentenbedienung.
+
+## 0.68.0 — Gate bestanden, Höhenpilot fehlgeschlagen
+
+A*-Priorisierung mit konservativer Zielkostenschätzung und zielnahem Gleichstand;
+Geometrievarianten, native Schlussvorschau und Budgets bleiben erhalten.
+`searchDiagnostics` zeigt Bestandsquellen, geprüfte Höhenanschlüsse, native
+Bestätigung, Geometrie-/Stützenablehnung und Suchaufwand auch in kompakter Ausgabe.
+Begrenzte Stichproben und unbekannte Verbindungen werden ausdrücklich markiert.
+[Änderungen, Learning und Abnahmeplan](docs/releases/0.68.0.md).
+
+Neue Regressionen ergänzt, Quell-/Diffprüfung; keine Agent-Builds oder Testläufe.
+Menschliches Gate bestanden; Höhenpilot erneut am Suchbudget gescheitert. Kein Commit/Push.
+Spielanleitung, Tool-Doku und lokaler Hermes-Skillentwurf aktualisiert;
+Entwurf bleibt zurückgestellt. Workflow geprüft, keine fachliche Änderung nötig.
+Nach `live bereit`: Backend gestartet, Bridge 0.68.0 und neue Session bestätigt.
+Livebefund: 104 Höhenproben ohne bestätigten Übergang; manuelle Zwei-Wege-Gegenprobe gültig. Endpause und null Baustellen bestätigt.
+Cockpit ergänzt: unterer Gesamtbalken mit anteiligem Phasenfortschritt;
+rechts der Schrittzählung und je Phase sichtbare letzte erfolgreiche
+Referenzdauer (Gesamt als Summe). Ohne Referenz `--:--:--`.
+Gate erfolgreich; visuelle Cockpitdarstellung nicht separat beobachtet.
+
+## 0.67.0 — Gate bestanden, Höhen-Livepilot fehlgeschlagen
+
+Bridge 0.67.0 mit neuer Session bestätigt. Gleicher erhöhter Lagerfall endet
+mit `search_budget_exhausted` nach 2048 Zuständen, ohne Hilfsteile oder Auftrag.
+Manuelle Zwei-Wege-Gegenprobe weiterhin nativ gültig und angeschlossen,
+Bestandsverbindungen erhalten. Keine Baustellen; Endpause bestätigt.
+Keine Releaseabnahme, kein Commit/Push des Codes. Suchpriorisierung und
+native Treppenaustritte gezielt diagnostizieren; keine blinde Limiterhöhung.
+
+Auf Nutzerauftrag zusätzlich: Testgate-Cockpit mit sechs festen Balkenzeilen,
+Gesamtfortschritt und Laufzeiten; Befehlsdetails ausschließlich in lokalen
+Logs. Fehlerursache und Logpfad sichtbar, Exitcode 1 und Fail-fast erhalten.
+Gespeicherte Gatehistorie bestätigt sechs erfolgreiche Phasen und Referenzzeiten;
+visuelle Konsolendarstellung nicht separat vom Agenten beobachtet.
+
+Eigenkollisionen der Zugangssuche: bisherige Routengeometrie geht in neue
+Kanten und Stützenprüfung ein; verschiedene Belegungen am selben Zielknoten
+bleiben getrennte, begrenzte Suchzustände. Vorhandene Höhenanschlüsse werden
+über native Verbindungen ab fertigen Distriktwegen genutzt, mit regulärem
+Zielweg statt erfundener kostenloser Quelle. Schlussvorschau unverändert.
+[Änderungen, Regressionen und Livepilot](docs/releases/0.67.0.md).
+
+Quell-/Diffprüfung; keine Agent-Builds, Testläufe oder Installation.
+Regressionen im menschlichen Gate, feature-spezifischer Liveabschluss fehlt;
+Änderungen bleiben uncommitted.
+Spielanleitung, Werkzeugbeschreibung und lokaler Hermes-Skillentwurf fachlich
+aktualisiert; Entwurf bleibt zurückgestellt. Workflow geprüft, kein neuer
+Ablauf nötig. Vorbestehende Starter-/Hermes-Änderungen bleiben erhalten.
+Nach `live bereit` Backend wieder verbunden; Spiel am Ende pausiert.
+
 ## 0.66.0 — Kernpilot begrenzt bestanden am 17. Oktober 2026
 
 Mensch meldet Gate bestanden; Bridge 0.66.0 mit neuer Session live bestätigt.

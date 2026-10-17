@@ -32,39 +32,118 @@ public static class AccessRouteSearch
         public Cell Source { get; set; }
         public Edge[] Edges { get; set; } = Array.Empty<Edge>();
         public int Visited { get; set; }
+        public int GeneratedStates { get; set; }
+        public int PeakOpenStates { get; set; }
+        public int ClosestRemainingCost { get; set; } = -1;
         public bool Found => Reason == "candidate";
     }
     public static Result Find(IEnumerable<Cell> sources, ISet<Cell> targets,
         Func<Cell,IEnumerable<Edge>> expand, int partBudget, int nodeBudget=2048)
+        => Find(sources, targets, (cell, _) => expand(cell), partBudget, nodeBudget);
+
+    public static bool ConfirmedHeightExit(bool nativeRoadConnected,bool? registeredLandingConnected)
+        => nativeRoadConnected || registeredLandingConnected==true;
+
+    public static Cell StraightStairLandingCandidate(Cell anchor,int rotation)
+    {
+        var direction=rotation switch {0=>(X:0,Y:-1),1=>(X:-1,Y:0),2=>(X:0,Y:1),3=>(X:1,Y:0),_=>throw new ArgumentException("stair_rotation")};
+        return new Cell(anchor.X+direction.X,anchor.Y+direction.Y,anchor.Z+1);
+    }
+
+    // The lower exit is opposite the rise, at the anchor's height. Neither
+    // candidate proves connectivity: both still require a native road check.
+    public static Cell StraightStairLowerCandidate(Cell anchor,int rotation)
+    {
+        var upper=StraightStairLandingCandidate(anchor,rotation);
+        return new Cell(2*anchor.X-upper.X,2*anchor.Y-upper.Y,anchor.Z);
+    }
+
+    public static bool AllowsGenericStairExit(Cell lowerCandidate,Cell destination,int heightChange)
+        => heightChange==0 && lowerCandidate.Equals(destination);
+
+    // The caller confirms a native edge or a restored registered landing preview.
+    // The destination remains a normal, validated path rather than a free source.
+    public static IEnumerable<Cell> HeightExits(Cell from, Func<Cell,bool> connected)
+    {
+        foreach(var d in new[]{(X:0,Y:-1),(X:-1,Y:0),(X:0,Y:1),(X:1,Y:0)})
+            foreach(int dz in new[]{-1,1})
+            {
+                var to=new Cell(from.X+d.X,from.Y+d.Y,from.Z+dz);
+                if(connected(to)) yield return to;
+            }
+    }
+
+    private sealed class State
+    {
+        public Cell Cell, Source;
+        public int RemainingCost;
+        public LargeProjectStep[] Parts=Array.Empty<LargeProjectStep>();
+        public Edge[] Edges=Array.Empty<Edge>();
+    }
+
+    private static string GeometryKey(IEnumerable<LargeProjectStep> parts) => string.Join(";",parts
+        .Select(p=>$"{p.Template.Length}:{p.Template}:{p.X}:{p.Y}:{p.Z}:{p.Rotation}")
+        .OrderBy(p=>p,StringComparer.Ordinal));
+
+    public static Result Find(IEnumerable<Cell> sources, ISet<Cell> targets,
+        Func<Cell,IReadOnlyList<LargeProjectStep>,IEnumerable<Edge>> expand, int partBudget, int nodeBudget=2048,
+        Func<Cell,int>? remainingCost=null)
     {
         if(partBudget<0 || partBudget>32 || nodeBudget is <1 or >8192) throw new ArgumentException("route_budget");
-        var distance=new Dictionary<Cell,int>();
-        var previous=new Dictionary<Cell,(Cell From,Edge Edge)>();
-        var open=new List<Cell>(); var done=new HashSet<Cell>();
+        // Equal endpoints with different built geometry are different search states.
+        // Merging them by distance alone can discard the only non-colliding detour.
+        var seen=new HashSet<(Cell,string)>();
+        var open=new List<State>();
+        var estimates=new Dictionary<Cell,int>();
+        int Estimate(Cell cell)
+        {
+            if(!estimates.TryGetValue(cell,out int value))
+            {
+                value=remainingCost?.Invoke(cell)??0;
+                if(value<0 || value>16384) throw new ArgumentException("route_estimate");
+                estimates.Add(cell,value);
+            }
+            return value;
+        }
         foreach(var source in sources.Distinct().OrderBy(c=>c.Z).ThenBy(c=>c.X).ThenBy(c=>c.Y))
-        { distance[source]=0; open.Add(source); }
-        var result=new Result();
+        { seen.Add((source,"")); open.Add(new State{Cell=source,Source=source,RemainingCost=Estimate(source)}); }
+        var result=new Result{GeneratedStates=seen.Count,PeakOpenStates=open.Count};
         while(open.Count>0)
         {
             if(result.Visited>=nodeBudget) { result.Reason="search_budget_exhausted"; return result; }
             int best=0;
-            for(int i=1;i<open.Count;i++) if(distance[open[i]]<distance[open[best]]) best=i;
-            var cell=open[best]; open.RemoveAt(best);
-            if(!done.Add(cell)) continue;
+            for(int i=1;i<open.Count;i++)
+            {
+                int score=open[i].Parts.Length+open[i].RemainingCost;
+                int bestScore=open[best].Parts.Length+open[best].RemainingCost;
+                if(score<bestScore || score==bestScore&&open[i].RemainingCost<open[best].RemainingCost) best=i;
+            }
+            var current=open[best]; open.RemoveAt(best);
+            var cell=current.Cell;
             result.Visited++;
+            result.ClosestRemainingCost=result.ClosestRemainingCost<0?current.RemainingCost:
+                Math.Min(result.ClosestRemainingCost,current.RemainingCost);
             if(targets.Contains(cell))
             {
-                var route=new List<Edge>();
-                while(previous.TryGetValue(cell,out var p)) { route.Add(p.Edge); cell=p.From; }
-                route.Reverse(); result.Source=cell; result.Edges=route.ToArray(); result.Reason="candidate"; return result;
+                result.Source=current.Source; result.Edges=current.Edges; result.Reason="candidate"; return result;
             }
-            foreach(var edge in expand(cell))
+            foreach(var edge in expand(cell,current.Parts))
             {
-                if(edge.Parts.Length<1 || edge.Parts.Length>32 || done.Contains(edge.To)) continue;
-                int next=distance[cell]+edge.Parts.Length;
-                if(next>partBudget || distance.TryGetValue(edge.To,out int old)&&old<=next) continue;
-                if(!distance.ContainsKey(edge.To)) open.Add(edge.To);
-                distance[edge.To]=next; previous[edge.To]=(cell,edge);
+                if(edge.Parts.Length<1 || edge.Parts.Length>32) continue;
+                // A route is a simple path; loops only spend the bounded build budget.
+                if(edge.To.Equals(current.Source)||current.Edges.Any(e=>e.To.Equals(edge.To))) continue;
+                if(current.Parts.Length+edge.Parts.Length>partBudget) continue;
+                int estimate=Estimate(edge.To);
+                // Caller supplies an admissible lower bound; zero preserves generic search.
+                if(current.Parts.Length+edge.Parts.Length+estimate>partBudget) continue;
+                var parts=current.Parts.Concat(edge.Parts).ToArray();
+                if(!seen.Add((edge.To,GeometryKey(parts)))) continue;
+                result.GeneratedStates=seen.Count;
+                // Bound queued geometry variants as well as expanded states.
+                if(seen.Count>nodeBudget*16) { result.Reason="search_budget_exhausted"; return result; }
+                open.Add(new State{Cell=edge.To,Source=current.Source,Parts=parts,RemainingCost=estimate,
+                    Edges=current.Edges.Concat(new[]{edge}).ToArray()});
+                result.PeakOpenStates=Math.Max(result.PeakOpenStates,open.Count);
             }
         }
         return result;

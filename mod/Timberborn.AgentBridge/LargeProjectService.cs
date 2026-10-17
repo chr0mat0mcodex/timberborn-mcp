@@ -29,7 +29,8 @@ namespace Timberborn.AgentBridge;
 public sealed partial class LargeProjectService(BuildingCatalog catalog, PreviewFactory factory, BlockObjectValidationService validators,
     EntityRegistry entities, IBlockService blocks, SpeedManager speed, RoadProtection roads, SiteValidation validation,
     BlockObjectPlacerService placers, BuildingUnlockingService unlocks, PowerObservations power,
-    IGoodService goods, ResourceCountingService resources, SimulationControl simulation, Timberborn.TerrainSystem.ITerrainService terrain)
+    IGoodService goods, ResourceCountingService resources, SimulationControl simulation, Timberborn.TerrainSystem.ITerrainService terrain,
+    INavMeshService navMesh)
 {
     private readonly LargeProjectLedger ledger=new();
     private readonly Dictionary<string,(LargeProjectRequest Request,RoadProtection.Sample Baseline)> jobs=new();

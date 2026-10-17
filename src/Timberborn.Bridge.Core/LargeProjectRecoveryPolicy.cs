@@ -3,6 +3,13 @@ namespace Timberborn.Bridge.Core;
 // Fresh identity observations, never a retry authorization or inferred placement success.
 public static class LargeProjectRecoveryPolicy
 {
+    public static string ConstructionReason(bool? manuallyPaused,bool? isOn,bool? materialsReady,bool unfinishedSupport)
+        => manuallyPaused == true ? "construction_paused"
+        : isOn == false && unfinishedSupport ? "waiting_for_support_completion"
+        : isOn == false ? "construction_inactive_unknown"
+        : materialsReady == false ? "materials_not_ready"
+        : "awaiting_builders_or_work";
+
     // Retain a positive identity observation even after a terminal stop. This is
     // observation bookkeeping only: it never dispatches, resumes or finishes a job.
     public static string ConfirmIdentity(string recorded, string observed) => recorded == "unconfirmed" ? observed switch {

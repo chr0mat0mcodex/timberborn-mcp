@@ -58,18 +58,34 @@ Jede der sechs Phasen verwendet beim nächsten Lauf ihre letzte erfolgreiche
 Dauer als Zeitreferenz. Der Livebalken ist eine Schätzung, bis zum Erfolg auf
 95 Prozent begrenzt; bei Überschreitung bleibt die Phase sichtbar aktiv.
 Ohne Referenz wird die Laufzeit gemessen, keine Prozentprognose erfunden.
-Footer und Abschlusszeile zeigen erfolgreiche Phasen mit vollem Balken.
+Erfolgreiche Phasen zeigen einen vollen Balken.
+Der grüne Gesamtbalken oben ist zwei Zeilen hoch, nutzt die Terminalbreite
+und berücksichtigt den geschätzten Fortschritt der laufenden Phase.
+Neben der Schrittzählung und den Phasenlaufzeiten steht
+`Ref`: die letzte erfolgreiche Phasendauer, beim Gesamtwert deren Summe.
+Fehlende Referenzen erscheinen als `--:--:--`; die angezeigten Referenzen
+bleiben während des Laufs einschließlich Abschluss unverändert.
 Auch bei Abbruch werden die tatsächlichen Phasenzustände/Dauern gespeichert;
 fehlgeschlagene und offene Phasen überschreiben keine erfolgreiche Referenz.
-Bei umgeleiteter Ausgabe bleibt die Textanzeige ohne Livebalken erhalten.
+Das Vorbereitungsskript zeigt im interaktiven Terminal ein festes Cockpit:
+alle sechs Phasen, Gesamtfortschritt und Laufzeiten, Aktualisierung viermal
+pro Sekunde. Keine scrollenden Unterbefehlsausgaben. Ohne Referenz animierter
+Balken, bei Zeitüberschreitung Hinweis statt erfundener Fertigmeldung.
+Alle Befehlsstreams einschließlich Warnungen und Testdiagnosen gehen in ein
+eindeutiges lokales Log unter `.local/gate-logs/` (nicht Git).
+Bei Fehlern bleibt das Cockpit mit Ursache und Logpfad stehen; Exitcode 1,
+keine Wiederholung. Bei Erfolg erscheint die Aufforderung zum Laden des Saves.
+Bei umgeleiteter Ausgabe oder ohne ANSI-Terminal erscheint nur das statische
+Abschlusscockpit ohne Steuersequenzen. Die einzelnen Hilfsskripte behalten bei
+direktem Aufruf ihre bisherige ausführliche Ausgabe.
 Fehler beim Laden/Speichern der Anzeigehistorie ändern das Gate-Ergebnis nicht.
 
 Einmalige Codex-Einrichtung, Lifecycle-Werkzeug und Abnahme:
 [Persistenter MCP-Vorschaltprozess](docs/codex-mcp-supervisor.md).
 Das Gate prüft dessen synthetische Python-Tests ebenfalls ohne Wiederholung.
-Bei Erfolg zeigt es nur Testanzahl und Schrittdauer; Warnungen und Hinweise auf
-übersprungene Tests bleiben sichtbar. Bei Fehlern erscheint die vollständige
-Python-Testdiagnose vor dem Abbruch.
+Testanzahl, Warnungen, Hinweise auf übersprungene Tests und vollständige
+Python-Fehlerdiagnosen bleiben im Cockpit-Log erhalten. Beim direkten Aufruf
+von `verify.ps1` erscheinen sie weiterhin in der Konsole.
 Python 3.8 oder neuer muss als `python` erreichbar sein; keine Zusatzpakete.
 
 `-ModsRoot <Pfad>` setzt bei Bedarf einen abweichenden Timberborn-Mod-Ordner.

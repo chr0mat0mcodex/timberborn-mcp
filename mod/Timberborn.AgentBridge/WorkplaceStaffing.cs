@@ -26,6 +26,7 @@ public sealed class WorkplaceStaffing(EntityRegistry entities)
                 int previous = workplace.DesiredWorkers;
                 int direction = request.DesiredWorkers > previous ? 1 : -1;
                 if (direction > 0) workplace.IncreaseDesiredWorkers(); else workplace.DecreaseDesiredWorkers();
+                if (direction < 0) WorkplaceMinimum.Read(workplace).DecreaseReturned(previous,workplace.DesiredWorkers);
                 if (workplace.DesiredWorkers != previous + direction) { outcome = "unconfirmed"; break; }
             }
         }
@@ -34,6 +35,8 @@ public sealed class WorkplaceStaffing(EntityRegistry entities)
         return new { id, template = template.TemplateName, previousDesiredWorkers = before,
             requestedDesiredWorkers = request.DesiredWorkers, observedDesiredWorkers = workplace.DesiredWorkers,
             assignedWorkers = workplace.NumberOfAssignedWorkers, maxWorkers = workplace.MaxWorkers, outcome,
+            minimumWorkers = WorkplaceMinimum.Read(workplace).MinimumWorkers,
+            minimumWorkersSource = WorkplaceMinimum.Read(workplace).Source,
             limitations = new[] { "desired_staffing_not_immediate_assignment", "no_worker_teleport_or_forced_assignment",
                 "read_building_and_workforce_to_confirm", "partial_change_possible_no_retry_or_rollback" } };
     }

@@ -36,6 +36,7 @@ public sealed class ActivityLogWindow(UILayout layout, ActivityLog log) : ILoada
         root.Add(window);
         toggle=new Button(()=>SetVisible(!visible)) {text="MCP-Log"};toggle.style.minWidth=95;root.Add(toggle);
         layout.AddBottomRight(root,50);
+        SetVisible(true);
     }
     private static Label Text(string value,int size=12)
     {

@@ -58,7 +58,9 @@ public sealed class BuildingObservations(EntityRegistry entities)
                     workplace = hasWorkplace && block.IsFinished ? new
                     {
                         desiredWorkers = workplace.DesiredWorkers, assignedWorkers = workplace.NumberOfAssignedWorkers,
-                        maxWorkers = workplace.MaxWorkers, understaffed = workplace.Understaffed,
+                        maxWorkers = workplace.MaxWorkers,
+                        minimumWorkers = WorkplaceMinimum.Read(workplace).MinimumWorkers,
+                        minimumWorkersSource = WorkplaceMinimum.Read(workplace).Source, understaffed = workplace.Understaffed,
                         overstaffed = workplace.Overstaffed, anyWorkerHasJobRunning = workplace.AnyWorkerHasJobRunning()
                     } : null
                 },

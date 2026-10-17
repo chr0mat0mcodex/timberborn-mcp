@@ -1,5 +1,17 @@
 # Einstieg
 
+**0.72.0 abgeschlossen:** Gate, Laufzeitdiagnosen und vollständiger Plattform-Umwegpilot bestanden: 15/15 Teile fertig und zugänglich, Bestandswege erhalten, Journal freigegeben. [Livebelege](docs/releases/0.72.0.md).
+
+**0.71.0: Gate und Umwegplatzierung bestanden, Fertigbau offen.** Oberer Treppenanschluss und seitliche Negativkontrolle bestätigt; automatischer Plattformumweg nativ gültig, 17/17 Teile platziert, keine verlorene Bestandsverbindung. [Belege und Learnings](docs/releases/0.71.0.md).
+
+**0.70.0: Höhenkernpilot bestanden, Umweg offen:** native Vorschau registrierter Treppen-Zielwege, getrennte Anschlussbelege. Gate und bekannter Höhenbau bis Fertigzugang bestanden; erweiterter Umweg nativ abgelehnt. [Nachweisplan](docs/releases/0.70.0.md).
+
+**0.69.0: Gate bestanden, Höhenpilot fehlgeschlagen:** native Weggraph-Prüfung für Bestandstreppen und automatisch geöffnetes MCP-Log. Beide Graphabfragen bleiben negativ, manuelle Gegenprobe gültig. Logfenster sichtbar und angehängt. [Nachweisplan](docs/releases/0.69.0.md).
+
+Aktuell: **0.68.0**, Gate bestanden, Höhenpilot fehlgeschlagen.
+Nächster Schritt: native Anschlussprüfung am vorhandenen Treppenaustritt klären.
+[Nachweis und Stoppkriterium](docs/releases/0.68.0.md). Kein Agent-Build/Testlauf.
+
 ## 0.54.0 - Pflanzen- und Flaechenjournal begrenzt live abgenommen
 
 Menschliches Gate und Abschluss-Livetest am 12. Oktober 2026 bestanden.
@@ -32,6 +44,9 @@ und prüft Quelltext/Diff; der Mensch testet, baut und installiert; danach gezie
 MCP-Livetest. Keine historische Kolonie oder konkreter Spielstand erforderlich.
 
 ## Aktueller Auftrag
+
+0.67.0: Gate bestanden; Höhenpilot scheitert am Suchbudget trotz gültiger
+Gegenprobe. Suchpriorisierung und Treppenanschlüsse gezielt nacharbeiten. [Übergabe](docs/releases/0.67.0.md). Kein Agent-Build/Testlauf.
 
 0.66.0: menschliches Gate und begrenzter Uferpumpen-/Startfehlerpilot bestanden.
 [Livebelege und Grenzen](docs/releases/0.66.0.md). Folgearbeiten im Backlog.

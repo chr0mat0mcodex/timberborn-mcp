@@ -43,6 +43,20 @@ public sealed class StaffingTests
         Assert.Equal(valid ? "ok":"error",result["status"]!.GetValue<string>());Assert.Equal(1,handler.Calls);
         if(!valid)Assert.False(result["error"]!["retryable"]!.GetValue<bool>());
     }
+    [Fact]
+    public async Task ObservedMinimumSurvivesMcpReceiptWithoutTurningRefusalIntoSuccess()
+    {
+        var id=Guid.NewGuid();var session=Guid.NewGuid().ToString("D");
+        var d=new NativeStaffingResult(id,"SyntheticWorkplace",1,0,1,1,1,"unconfirmed",["synthetic"],1,"observed_decrease_boundary");
+        var handler=new Handler(JsonSerializer.Serialize(new BridgeEnvelope<NativeStaffingResult>(1,session,DateTimeOffset.UtcNow,"0.72.0",d),NativeJson.Options));
+        using var tools=new NativeTools(new NativeClient(new(8081,new string('a',64)),handler),enableStaffing:true);
+        var result=await tools.Invoke("set_workplace_staffing",JsonSerializer.SerializeToElement(new{id,session,desiredWorkers=0,expectedDesiredWorkers=1}),TestContext.Current.CancellationToken);
+        Assert.Equal("ok",result["status"]!.GetValue<string>());
+        Assert.Equal("unconfirmed",result["data"]!["outcome"]!.GetValue<string>());
+        Assert.Equal(1,result["data"]!["minimumWorkers"]!.GetValue<int>());
+        Assert.Equal("observed_decrease_boundary",result["data"]!["minimumWorkersSource"]!.GetValue<string>());
+        Assert.Equal(1,handler.Calls);
+    }
     private sealed class Handler(string? json):HttpMessageHandler
     {
         public int Calls;

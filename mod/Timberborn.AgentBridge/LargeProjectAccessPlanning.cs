@@ -68,8 +68,9 @@ public sealed partial class LargeProjectService
                 !steps.Concat(additional).Where(other=>!Same(s,other)).Any(other=>Geometry(other).Any(c.IsIntersecting)));
         }
         // Add a support column only where the public template allows stackable support.
-        bool Supports(LargeProjectStep s,List<LargeProjectStep> package)
+        bool Supports(LargeProjectStep s,List<LargeProjectStep> package,IReadOnlyList<LargeProjectStep>? prefix=null)
         {
+            prefix ??= Array.Empty<LargeProjectStep>();
             foreach(var foundation in Geometry(s).Where(c=>c.IsFoundationBlock))
             {
                 var p=foundation.Coordinates;
@@ -79,11 +80,11 @@ public sealed partial class LargeProjectService
                 while(!Supported(p))
                 {
                     var below=p+new Vector3Int(0,0,-1);
-                    if(steps.Concat(package).Any(other=>Geometry(other).Any(c=>c.Coordinates==below&&c.Stackable==BlockStackable.BlockObject))) break;
+                    if(steps.Concat(prefix).Concat(package).Any(other=>Geometry(other).Any(c=>c.Coordinates==below&&c.Stackable==BlockStackable.BlockObject))) break;
                     var support=new LargeProjectStep{Template="Platform.Folktails",X=below.x,Y=below.y,Z=below.z};
-                    if(!Inside(new(below.x,below.y,below.z))||!Clear(support,package.Concat(column))) return false;
+                    if(!Inside(new(below.x,below.y,below.z))||!Clear(support,prefix.Concat(package).Concat(column))) return false;
                     column.Add(support); p=below;
-                    if(column.Count+package.Count+steps.Count>32) return false;
+                    if(column.Count+package.Count+prefix.Count+steps.Count>32) return false;
                 }
                 column.Reverse(); package.AddRange(column);
             }
@@ -99,30 +100,117 @@ public sealed partial class LargeProjectService
             s.DependsOn=deps; int index=steps.Count; steps.Add(s); if(keep)permanent.Add(index); return index;
         }
         var sources=new Dictionary<Cell,int>();
+        var stairLandings=new Dictionary<Cell,Cell>();
+        var stairLowerExits=new Dictionary<Cell,Cell>();
+        var sourceEvidence=new List<(Cell Cell,string Template,bool Connected)>();
+        var exitEvidence=new Dictionary<(Cell From,Cell To),JObject>();
+        var routeEvidence=new List<object>();
+        object Position(Cell cell)=>new{x=cell.X,y=cell.Y,z=cell.Z};
+        int Distance(Cell a,Cell b)=>Math.Max(Math.Abs(a.X-b.X)+Math.Abs(a.Y-b.Y),Math.Abs(a.Z-b.Z));
+        int TargetDistance(Cell cell)=>request.Steps.Min(s=>Distance(cell,new(s.X,s.Y,s.Z)));
         foreach(var e in entities.Entities.Where(e=>!e.Deleted&&e.Initialized))
         {
             if(!e.TryGetComponent<BlockObject>(out var b)||b.IsPreview||!b.IsFinished||!e.TryGetComponent<PathSpec>(out var path))continue;
             var p=b.TransformCoordinates(path.MainPathCoordinates); var c=new Cell(p.x,p.y,p.z);
-            if(Inside(c)&&district.IsOnInstantDistrictRoad(NavigationCoordinateSystem.GridToWorld(p))) sources[c]=-1;
+            if(!Inside(c))continue;
+            bool connected=district.IsOnInstantDistrictRoad(NavigationCoordinateSystem.GridToWorld(p));
+            sourceEvidence.Add((c,e.TryGetComponent<TemplateSpec>(out var template)?template.TemplateName:"Path",connected));
+            if(connected) sources[c]=-1;
+            if(connected&&template is not null&&template.TemplateName=="Stairs.Folktails")
+            {
+                // Candidate only: the ordinary straight stair rises towards its
+                // rotated forward neighbour. Native registered preview is authority.
+                for(int rotation=0;rotation<4;rotation++)if(b.Orientation==Rotation(rotation))
+                {
+                    stairLandings[c]=AccessRouteSearch.StraightStairLandingCandidate(new(b.Coordinates.x,b.Coordinates.y,b.Coordinates.z),rotation);
+                    stairLowerExits[c]=AccessRouteSearch.StraightStairLowerCandidate(new(b.Coordinates.x,b.Coordinates.y,b.Coordinates.z),rotation);
+                }
+            }
+        }
+        var existingSources=sources.Keys.ToHashSet();
+        var existingExits=new Dictionary<Cell,Cell[]>();
+        var landingChecks=new Dictionary<Cell,bool>();int landingPreviewCount=0;
+        bool? LandingConnected(Cell to)
+        {
+            // Existing connected destinations already are search sources.
+            if(existingSources.Contains(to))return null;
+            if(landingChecks.TryGetValue(to,out bool cached))return cached;
+            if(landingPreviewCount>=8||searchClock.Elapsed.TotalSeconds>5)return null;
+            var road=new LargeProjectStep{Template="Path",X=to.X,Y=to.Y,Z=to.Z};
+            var package=new List<LargeProjectStep>();
+            if(!Clear(road,Array.Empty<LargeProjectStep>())||!Supports(road,package))return null;
+            package.Add(road);
+            for(int i=0;i<package.Count;i++)package[i].DependsOn=i==0?Array.Empty<int>():new[]{i-1};
+            landingPreviewCount++;
+            // Reuse the guarded joint-preview lifecycle: no placement, validation
+            // before registration, reverse cleanup and baseline restoration checks.
+            // Preview district membership is not an observed instant stair edge.
+            var probe=LargeProjectRequest.Parse("/agent-api/v1/large-project-plan",new NameValueCollection{
+                {"session",request.Session},{"districtId",request.DistrictId},{"steps",LargeProjectRequest.Encode(package.ToArray())}});
+            var report=Plan(probe);
+            bool connected=(bool?)report["pilotEligible"]==true&&(bool?)report["restored"]==true;
+            landingChecks.Add(to,connected);return connected;
         }
         var directions=new[]{(X:0,Y:-1),(X:-1,Y:0),(X:0,Y:1),(X:1,Y:0)};
-        IEnumerable<AccessRouteSearch.Edge> Expand(Cell from)
+        IEnumerable<AccessRouteSearch.Edge> Expand(Cell from,IReadOnlyList<LargeProjectStep> prefix)
         {
+            if(searchClock.Elapsed.TotalSeconds>5) yield break;
+            if(existingSources.Contains(from))
+            {
+                if(!existingExits.TryGetValue(from,out var exits))
+                {
+                    exits=AccessRouteSearch.HeightExits(from,to=> {
+                        bool inside=Inside(to);
+                        // PathSpec sources belong to the road graph. A general/terrain
+                        // edge query must not veto a native road-only stair connection.
+                        var origin=new Vector3Int(from.X,from.Y,from.Z);
+                        var destination=new Vector3Int(to.X,to.Y,to.Z);
+                        bool connected=inside&&navMesh.AreConnectedRoadInstant(origin,destination);
+                        bool? generalConnected=inside?navMesh.AreConnectedInstant(origin,destination):null;
+                        bool landingCandidate=inside&&stairLandings.TryGetValue(from,out var landing)&&landing.Equals(to);
+                        bool? previewLandingConnected=landingCandidate&&!connected?LandingConnected(to):null;
+                        exitEvidence[(from,to)]=JObject.FromObject(new{from=Position(from),to=Position(to),
+                            insideRegion=inside,nativeConnected=inside?(bool?)connected:null,generalConnected,
+                            landingCandidate,previewLandingConnected,
+                            candidateAttempts=0,geometryBlockedAttempts=0,unsupportedAttempts=0});
+                        return AccessRouteSearch.ConfirmedHeightExit(connected,previewLandingConnected);
+                    }).ToArray();
+                    existingExits.Add(from,exits);
+                }
+                foreach(var to in exits)
+                {
+                    var package=new List<LargeProjectStep>();
+                    var road=new LargeProjectStep{Template="Path",X=to.X,Y=to.Y,Z=to.Z};
+                    var evidence=exitEvidence[(from,to)];
+                    if(!Clear(road,prefix)) { evidence["geometryBlockedAttempts"]=evidence.Value<int>("geometryBlockedAttempts")+1;continue; }
+                    if(!Supports(road,package,prefix)) { evidence["unsupportedAttempts"]=evidence.Value<int>("unsupportedAttempts")+1;continue; }
+                    evidence["candidateAttempts"]=evidence.Value<int>("candidateAttempts")+1;
+                    package.Add(road);
+                    yield return new AccessRouteSearch.Edge{To=to,Parts=package.ToArray()};
+                }
+            }
             for(int rotation=0;rotation<4;rotation++) foreach(int dz in new[]{0,1,-1})
             {
                 if(searchClock.Elapsed.TotalSeconds>5)yield break;
                 var d=directions[rotation]; int stride=dz==0?1:2;
                 var to=new Cell(from.X+d.X*stride,from.Y+d.Y*stride,from.Z+dz);
                 if(!Inside(to))continue;
+                // A stair main node is not a four-way flat road. Its upper exit
+                // is handled above; only its native-confirmed lower landing may
+                // enter generic expansion. Never start a new stair at its side.
+                bool stairSource=stairLowerExits.TryGetValue(from,out var lower);
+                if(stairSource&&!AccessRouteSearch.AllowsGenericStairExit(lower,to,dz))continue;
                 var package=new List<LargeProjectStep>();
                 if(dz!=0)
                 {
                     var stair=new LargeProjectStep{Template="Stairs.Folktails",X=from.X+d.X,Y=from.Y+d.Y,Z=Math.Min(from.Z,to.Z),Rotation=dz>0?rotation:(rotation+2)%4};
-                    if(!Clear(stair,package)||!Supports(stair,package))continue;
+                    if(!Clear(stair,prefix.Concat(package))||!Supports(stair,package,prefix))continue;
                     package.Add(stair);
                 }
                 var road=new LargeProjectStep{Template="Path",X=to.X,Y=to.Y,Z=to.Z};
-                if(!Clear(road,package)||!Supports(road,package))continue;
+                if(!Clear(road,prefix.Concat(package))||!Supports(road,package,prefix))continue;
+                if(stairSource&&!navMesh.AreConnectedRoadInstant(new Vector3Int(from.X,from.Y,from.Z),new Vector3Int(to.X,to.Y,to.Z))&&
+                    LandingConnected(to)!=true)continue;
                 package.Add(road);
                 yield return new AccessRouteSearch.Edge{To=to,Parts=package.ToArray()};
             }
@@ -132,8 +220,17 @@ public sealed partial class LargeProjectService
             dependencies=Array.Empty<int>();
             if(targets.Count==0) {reason="no_access_candidate";return false;}
             if(visited>=4096) {reason="search_budget_exhausted";return false;}
-            var route=AccessRouteSearch.Find(sources.Keys,targets,Expand,32-steps.Count,Math.Min(2048,4096-visited));
+            // Every generated edge moves at most one horizontal cell per part
+            // (new stairs: two cells, at least stair+path); existing height exits
+            // move one cell and still cost a path. max(horizontal, vertical) is
+            // therefore a lower bound, not a straight-line reachability claim.
+            var route=AccessRouteSearch.Find(sources.Keys,targets,Expand,32-steps.Count,Math.Min(2048,4096-visited),
+                cell=>targets.Min(target=>Distance(cell,target)));
             visited+=route.Visited;
+            routeEvidence.Add(new{part=blockedPart,phase,sourceCount=sources.Count,targetCount=targets.Count,
+                reason=route.Reason,visitedStates=route.Visited,generatedStates=route.GeneratedStates,
+                peakOpenStates=route.PeakOpenStates,closestRemainingCost=route.ClosestRemainingCost,
+                selectedSource=route.Found?Position(route.Source):null,pathParts=route.Edges.Sum(edge=>edge.Parts.Length)});
             if(!route.Found){reason=searchClock.Elapsed.TotalSeconds>5?"search_time_budget_exhausted":route.Reason;return false;}
             var used=new List<int>(); int previous=sources[route.Source];
             if(previous>=0)used.Add(previous);
@@ -201,10 +298,19 @@ public sealed partial class LargeProjectService
             // Native rejection codes derive from ArgumentException; do not relabel them as geometry errors.
             catch(ArgumentException ex) when(ex is not BridgeRejectionException){reason="generated_plan_extent_or_dependency_limit";}
         }
+        var sourceSample=sourceEvidence.OrderBy(s=>TargetDistance(s.Cell)).ThenBy(s=>s.Cell.X).ThenBy(s=>s.Cell.Y).ThenBy(s=>s.Cell.Z).Take(32).ToArray();
+        var exitSample=exitEvidence.OrderBy(e=>TargetDistance(e.Key.To)).ThenBy(e=>e.Key.From.X).ThenBy(e=>e.Key.From.Y).ThenBy(e=>e.Key.To.Z).Take(64).Select(e=>e.Value).ToArray();
         return new {reservedAreasKey=ReservedArea.Encode(request.ReservedAreas),reservedAreasClear=!steps.Any(Reserved),candidateFound=reason=="candidate",reason,blockedPart,phase,workCellCount,steps=steps.Select(s=>new{template=s.Template,x=s.X,y=s.Y,z=s.Z,rotation=s.Rotation,dependsOn=s.DependsOn}).ToArray(),plan,
+            searchDiagnostics=new{version=3,connectionGraph="instant_road_or_registered_landing",landingPreviewCount,landingPreviewLimit=8,
+                strategy="a_star_geometry",existingSourceCount=existingSources.Count,
+                observedPathCount=sourceEvidence.Count,examinedHeightSources=existingExits.Count,
+                heightExitCount=exitEvidence.Count,nativeConnectedExits=exitEvidence.Values.Count(e=>(bool?)e["nativeConnected"]==true),
+                sources=sourceSample.Select(s=>new{position=Position(s.Cell),template=s.Template,districtConnected=s.Connected,heightExitsExamined=existingExits.ContainsKey(s.Cell)}).ToArray(),
+                sourcesTruncated=sourceEvidence.Count>sourceSample.Length,heightExits=exitSample,heightExitsTruncated=exitEvidence.Count>exitSample.Length,
+                routes=routeEvidence.ToArray(),evidence="native_edges_or_registered_landing_not_build_permission"},
             assessment=new{requestedParts=request.Steps.Length,generatedParts=steps.Count-request.Steps.Length,visitedNodes=visited,
                 region=new{minX,minY,minZ,maxX,maxY,maxZ},parts=reports.ToArray(),constructionAccess="unproven_until_live_construction",regularExecutionAllowed=false},
             cleanupCandidateIndices=Enumerable.Range(request.Steps.Length,steps.Count-request.Steps.Length).Where(i=>!permanent.Contains(i)).Reverse().ToArray(),
-            limitations=new[]{"bounded_geometric_search_not_complete_route_coverage","existing_roads_required_within_twelve_cell_margin","maximum_32_parts_and_eight_occupied_levels","folktails_stairs_and_single_platforms_only","native_road_to_work_cell_not_hypothetical_builder_proof","cleanup_candidates_require_fresh_access_check","never_delete_recovered_resource_stacks","run_returned_steps_and_nested_plan_key_without_replanning"}};
+            limitations=new[]{"bounded_geometric_search_not_complete_route_coverage","simple_routes_with_geometry_variants_counted_as_search_states","existing_height_exit_requires_native_edge_or_restored_landing_preview","existing_roads_required_within_twelve_cell_margin","maximum_32_parts_and_eight_occupied_levels","folktails_stairs_and_single_platforms_only","native_road_to_work_cell_not_hypothetical_builder_proof","cleanup_candidates_require_fresh_access_check","never_delete_recovered_resource_stacks","run_returned_steps_and_nested_plan_key_without_replanning"}};
     }
 }

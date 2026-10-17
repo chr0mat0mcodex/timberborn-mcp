@@ -1,5 +1,113 @@
 # Native MCP-Werkzeuge
 
+## 0.72 — Laufzeitbelege im begrenzten Livepilot bestätigt
+
+Bei Recovery `manuallyPaused` und `unfinishedSupportIndices` lesen.
+`construction_paused` bedeutet ausdrücklich manuelle Pause;
+`waiting_for_support_completion` nennt geometrisch direkte, noch unfertige
+Projektstützen bei inaktiver Baustelle. Ohne diesen Beleg bleibt
+`construction_inactive_unknown`. Ein solcher Status fordert keinen Neubau.
+
+`inspect_building.operations.workplace` und Personaländerungsbelege zeigen
+`minimumWorkers`/`minimumWorkersSource`: zunächst null/unknown_public_api.
+`observed_decrease_boundary` entsteht erst durch einen ohnehin angeforderten
+nativen Absenkversuch, der den Sollwert nicht ändert. Kein garantierter
+Vorlagenwert, keine automatischen Probeeingriffe; unconfirmed frisch nachlesen.
+Eine reguläre Gebäudepause ist separat von Sollbesetzung null zu behandeln.
+
+`inspect_simulation`: speedLocked/pauseSettled bleiben vor erstem beobachteten
+Sperrereignis null (speedLockSource=not_observed). Danach Quelle
+speed_lock_changed_event; settled verlangt Tempo null, keine Sperre und keinen
+pendingSpeed. Sperrgrund nicht öffentlich verfügbar, keine Dialognamen raten.
+Bei run_start_speed_locked Nutzerzustand klären; keine Entsperrung oder blinden
+Startwiederholungen. Live bestätigt: Materialmangel unten, direkte unfertige
+Stützen oben, manuelle Pause/Resume separat; Holzfäller-Grenze 1 nach
+unbestätigtem Nullauftrag in Beleg und Gebäudeabruf erhalten. Esc-Menü offen:
+speedLocked=true/pauseSettled=false; geschlossen und pausiert: false/true.
+Vor erstem Ereignis beide null. Plattform-Umweg im sicheren Stand vollständig
+abgenommen: 15/15 Teile fertig und zugänglich, beide Lagereingänge und native
+Verbindung zum Distriktzentrum bestätigt. Untere Bestandswege trotz Überbau
+weiter verbunden; lostConnections=0, Journal freigegeben, keine Baustellen.
+Während der Bauphase konnte ein Lager fertig sein, aber sein Zugang noch fehlen.
+Frische Recovery und native Zugänge lesen; historisches blocked/game_time_limit
+allein ist nach weiteren Zeitfenstern keine aktuelle Fertigbauaussage.
+Vor längeren Bauzeitfenstern Betriebszustand und Beschäftigungsfähigkeit
+mitlesen: Im verworfenen Teststand fiel die Produktion durch Überflutung aus,
+obwohl alle Wegverbindungen bestanden. Quelle, Netz und aktuelle Kraft sowie
+Lieferung separat prüfen; vorhandene Windkraft garantiert keine Dauerleistung.
+Unterer neuer Zielweg einer gedrehten Bestandstreppe bleibt separater Livefall.
+
+## 0.71 — Treppenabgänge und Umweg live geprüft; Fertigbau offen
+
+Bestandstreppen sind keine ebenen Vierwegeknoten. Oberer bestätigter Austritt
+und seitliche Negativkontrolle live bestanden. Unterer gedrehter Nachbar braucht
+native Bestätigung; dessen neuer Zielweg noch nicht separat live geprüft.
+`landingPreviewCount` zählt obere/untere Zielwegproben zusammen (maximal acht),
+`heightExits` weiterhin nur Höhenkanten.
+Automatischer Umweg um ein mitgeplantes Lager: 17 Teile, native Eingänge und
+Arbeitszugänge bestätigt, alle Teile platziert, keine Bestandsverluste.
+Reale geprüfte Baustellenzugänge erreichbar; Fertigbau bleibt offen.
+`deferred_native_validation` ist kein fertiger Träger. `construction_paused`
+gegen tatsächliches `operations.pause.paused` prüfen: isOn=false kann bei
+unfertigen Trägern ohne manuelle Pause auftreten. Fehlende Lieferung separat
+von Zugang und Personal prüfen. Sollbesetzung null kann unbestätigt bleiben;
+frisch lesen, nicht wiederholen. Bei run_start_speed_locked Sperre klären;
+Pause allein ist keine Freigabe der Zeitsteuerung. Bestehende Baustellen mit
+Projekt-ID lesen, keine wiederholten Bauaufträge.
+
+## 0.70 — Registrierter Treppen-Zielweg live bestätigt, Umweggrenze offen
+
+Diagnose Version 3: `connectionGraph=instant_road_or_registered_landing`.
+`nativeConnected` bleibt die Instant-Wegkante; `generalConnected` separat.
+`landingCandidate` kennzeichnet den geometrisch abgeleiteten oberen Austritt
+nur für gerade Folktails-Treppen. `previewLandingConnected=true` bestätigt
+native Zielweg-/Stützenvorschau und Wiederherstellung, keine direkt ausgelesene
+Treppenkante. false bedeutet abgelehnte Vorschau, null bedeutet ungeprüft
+(Vorprüfung, vorhandene Quelle oder Budget). `landingPreviewCount` zählt die
+höchstens acht Proben. Die Suche nimmt weiter einen echten Zielweg als Bauteil
+auf; volle gemeinsame Vorschau und tatsächliche Zugänge bleiben erforderlich.
+Fehler beim Aufräumen bleiben native Fehler mit Sitzungssperre; nicht erneut
+blind planen. Zuerst bekannten Höhenfall prüfen; bei Fehler Diagnose und
+manuelle Gegenprobe, anschließend stoppen. Live: fünf Suchzustände, zwei Wege, Lager fertig und zugänglich, Bestand erhalten. Erweiterter Umweg mit neuen Plattformen nativ abgelehnt; seitlichen Abgang von der Treppen-Hauptzelle nicht als verbunden annehmen. Kein allgemeiner Umwegnachweis.
+
+## 0.69 — Bestandstreppen über nativen Weggraph, Höhenpilot fehlgeschlagen
+
+`searchDiagnostics.version=2`, `connectionGraph=instant_road`:
+`nativeConnected` ist jetzt die native Wegverbindung (AreConnectedRoadInstant).
+`generalConnected` protokolliert die bisherige allgemeine Abfrage separat.
+Nur die Wegverbindung darf einen Höhenkandidaten zulassen; ein negatives
+allgemeines Ergebnis verwirft sie nicht. Außerhalb des Suchgebiets beide null.
+Stichprobengrenzen unverändert; gemeinsame Vorschau und reale Zugänge weiter
+prüfen. Bei erneutem Scheitern des bekannten Höhenfalls stoppen und beide
+Graphwerte auswerten. MCP-Aufrufe seriell. Das Logfenster öffnet nach Laden
+von selbst: sichtbar und angehängt live bestätigt. Gate bestanden; Höhenfall erneut am Suchbudget gescheitert. Beide Graphwerte am Treppenaustritt false, manuelle Gegenprobe gültig. Zielwegregistrierung und tatsächliche Treppen-Endpunkte klären. Weitere Baupiloten gestoppt.
+
+## 0.68 — Zielpriorisierung und sichtbare Anschlüsse, Höhenpilot fehlgeschlagen
+
+`plan_large_project_access` priorisiert Teilekosten plus konservative Zielkosten;
+Umwege und Geometrievarianten bleiben möglich. `searchDiagnostics` bleibt auch
+kompakt erhalten: `sources` zeigt Vorlage, Position, `districtConnected` und
+`heightExitsExamined`; `heightExits` zeigt Start/Ziel, `insideRegion`,
+`nativeConnected` und Versuche als `candidateAttempts`, `geometryBlockedAttempts`
+oder `unsupportedAttempts`. Kandidaten sind keine native Bauzulassung.
+
+Gesamtzähler gelten vollständig, Stichproben umfassen höchstens 32 Quellen
+und 64 Übergänge; `sourcesTruncated`/`heightExitsTruncated` beachten.
+Nicht geprüfte Anschlüsse bleiben unbekannt; außerhalb des Suchgebiets ist
+`nativeConnected=null`. Fehlende Stichprobeneinträge beweisen keine Sperre.
+`routes` zeigt pro Teil/Phase Suchaufwand, Restschätzung und gewählte Quelle.
+Äußerer Abbruchgrund bleibt maßgeblich. Native Gesamtvorschau, Bauarbeiterzugang,
+Fertigzugang und Bestandsanschlüsse weiterhin getrennt prüfen. Budgets unverändert.
+Gate bestanden; Höhenpilot am Suchbudget gescheitert. Diagnose: 104 Höhenproben ohne bestätigten Übergang, manuelle Zwei-Wege-Gegenprobe gültig. Weitere Piloten gestoppt; native Anschlussprüfung klären.
+
+## 0.67 — Gate bestanden, Höhenpilot nicht abgenommen
+
+`plan_large_project_access` berücksichtigt Vorgängergeometrie und nativ
+bestätigte Höhenanschlüsse vorhandener Wege/Treppen. Zielwege bleiben reguläre
+Bauteile. Suchzustände unterscheiden Belegungsvarianten; Budgets und native
+Schlussvorschau bleiben verbindlich. Keine Parameteränderung, kein neuer
+Ausführungsmodus. [Details und Livepilot](releases/0.67.0.md).
+
 ## 0.66 — Kernpilot begrenzt bestanden
 
 `precheck_building` und `plan_large_project_access`: Terraincheck anhand nativer
@@ -400,7 +508,7 @@ kommt vom persistenten Codex-Vorschaltprozess, nicht aus der Spiel-Bridge.
 Stop sperrt das Backend vor dem menschlichen Gate; Start erst nach `live bereit`.
 [Einrichtung, Fehlerverhalten und Abnahme](codex-mcp-supervisor.md).
 
-Letzter dokumentierter Abschluss: Bridge 0.54.0, begrenzt live abgenommen.
+Letzter dokumentierter Abschluss: Bridge 0.72.0, begrenzt live abgenommen.
 Paket-/Abnahmestand: [PROJECT_STATE.md](../PROJECT_STATE.md).
 Praktischer Ablauf: [Spielanleitung für Agenten](agent-playing-guide.md).
 Historische Versionsabschnitte unten sind keine allgemeine Baufreigabe;
