@@ -1,5 +1,8 @@
 # Projektstand
 
+Aktueller Stand: **0.74.0 plus Journal-Korrekturen**, abgeschlossen und gepusht.
+Ältere Versionsabschnitte sind historische Nachweise.
+
 ## Journal-Korrekturen — Gate und gezielter Livetest bestanden
 
 Menschliches Gate: 23 Supervisor-, 1931 Unit- und 13 Integrationstests bestanden;
@@ -18,7 +21,7 @@ Spielsession erhalten. Windows-Austauschfehler synthetisch im Gate geprüft,
 nicht künstlich live erzeugt. Keine Live-Unterbrechung eines laufenden
 Schreibauftrags; deren Nichtwiederholung bleibt Gate-Nachweis.
 Learnings und Grenzen in docs/releases/0.74.0.md; Anleitung, Tool-Doku und
-zurückgestellter Skillentwurf aktualisiert. Korrekturen fachlich abgeschlossen; Git-Sicherung durch den Abschlusscommit.
+zurückgestellter Skillentwurf aktualisiert. Korrekturen fachlich abgeschlossen; Git-Sicherung: Journal-Korrekturen `c09750f`, ursprünglicher 0.74-Abschluss `680fd00`.
 
 ## 0.74.0 — Gate und gezielter Livetest bestanden
 

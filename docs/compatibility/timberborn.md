@@ -1,5 +1,11 @@
 # Kompatibilität und Nachweise
 
+Aktuell: **Bridge 0.74.0**, zusätzlich MCP-/Supervisor-Journalkorrekturen in `c09750f`; keine neue Bridge-API. Gate: 23 Supervisor-, 1931 Unit-, 13 Integrationstests bestanden, drei optionale Live-Integrationstests übersprungen.
+
+Live zusätzlich bestätigt: unerreichbare Plattformbaustelle ohne Bestandsverluste, Forstbelege ohne erneute Mutation nach Backend-Neustart und Client-Neuverbindung, Supervisor-Lifecycle mit neu geladenem Skript. Unbekannte Objektidentität bleibt live offen; Windows-Dateifehler und unterbrochene Schreibaufträge nur synthetisch geprüft. [Vollständige Nachweise](../releases/0.74.0.md).
+
+## Historische Versionsnachweise
+
 0.74.0: Menschliches Gate und gezielter Livetest bestanden: Materialwarten, echter Bestandszugangsverlust und fertige Plattform bei historischem Zeitlimit korrekt unterschieden; kein allgemeiner Zugangs-/Betriebsnachweis.
 
 0.73.0: Menschliches Gate und gezielter Livetest für Parameterdiagnose und frischen Fertigbaustand bestanden; Einzelplattform nach historischem Zeitlimit, keine allgemeine Betriebs-/Zugangsgarantie.

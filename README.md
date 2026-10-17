@@ -1,5 +1,15 @@
 # Timberborn MCP
 
+**Stand 0.74.0 mit abgeschlossenen Journal-Korrekturen:** Reparaturbedarf wird aus frischen Zugangsbelegen abgeleitet. Materialwarten, Bestandsverlust, unerreichbare Baustelle und Fertigbau sind getrennt live geprüft. Forstjournale verhindern erneute Mutationen bei Wiederaufrufen, auch nach Neuverbindung.
+
+Letzte Abnahme: **23 Supervisor-, 1931 Unit- und 13 Integrationstests**, drei optionale Live-Integrationstests übersprungen. Supervisor-Stop/Start und Forstjournal-Persistenz gezielt live bestätigt. [Belege und Grenzen](docs/releases/0.74.0.md).
+
+Offen bleiben insbesondere unbekannte Objektidentität im Livebetrieb und gesonderte weitere Zugangsgeometrien. Dateifehler sowie unterbrochene Schreibaufträge sind synthetische Gate-Nachweise. [Projektstand](PROJECT_STATE.md) · [Offene Aufgaben](BACKLOG.md) · [Agenten-Anleitung](docs/agent-playing-guide.md).
+
+## Frühere Abnahmen
+
+Die folgenden Versionsabschnitte beschreiben damalige Ergebnisse; sie ersetzen nicht den aktuellen Projektstand.
+
 **0.74.0 abgeschlossen:** Materialwarten, echter Bestandszugangsverlust und Fertigbau korrekt unterschieden; Weg wiederhergestellt und Journale freigegeben. [Livebelege](docs/releases/0.74.0.md).
 
 **0.73.0 abgeschlossen:** Gate und Livetest für Parameterdiagnose sowie frischen Fertigbau trotz altem Zeitlimit bestanden. [Livebelege](docs/releases/0.73.0.md).

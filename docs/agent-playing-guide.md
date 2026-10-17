@@ -1,11 +1,25 @@
 # Spielanleitung für Agenten
 
+## Aktueller Nachweisumfang
+
+Stand: **0.74.0 mit Journal-Korrekturen**, abgeschlossen in `680fd00` und `c09750f`.
+Materialwarten, Bestandsverlust, isolierte unerreichbare Baustelle und Fertigbau
+sind getrennt live geprüft. `repairEligible` bezeichnet die technische Möglichkeit;
+`recoveryAdvice` empfiehlt den nächsten Schritt anhand des frischen Befunds.
+Unbekannte Identität ist weiterhin keine live geschlossene Nachweisgrenze.
+
+Forstbelege überstehen Backend-Neustart und Client-Neuverbindung ohne erneute
+Spielmutation. Ein wiedergegebener Beleg ist historisch; aktuellen Zustand separat
+lesen. Supervisor-Skriptänderungen erfordern eine neue Client-Verbindung.
+Windows-Dateifehler und unterbrochene Aufträge wurden synthetisch im Gate geprüft.
+Ältere Versionsabschnitte unten sind historische Teilabnahmen.
+
 ## Supervisor-Dateiaustausch (Gate und Lifecycle live bestätigt)
 
 Die Lifecycle-Statusdatei verwendet begrenzte, bytegeprüfte Austauschversuche
 bei ausgewählten Windows-Fehlern. Keine Wiederholung von Spielaufrufen oder
 Backend-Starts. Fehler beim Statusspeichern sind keine Stoppbestätigung und
-keine Freigabe fürs Bauen. Details: docs/codex-mcp-supervisor.md im Repository.
+keine Freigabe fürs Bauen. Details stehen in `docs/codex-mcp-supervisor.md` im Repository.
 
 ## Forstjournal-Korrektur nach 0.74 (gezielt live bestätigt)
 
@@ -117,7 +131,7 @@ obwohl alle Wegverbindungen bestanden. Quelle, Netz und aktuelle Kraft sowie
 Lieferung separat prüfen; vorhandene Windkraft garantiert keine Dauerleistung.
 Unterer neuer Zielweg einer gedrehten Bestandstreppe bleibt separater Livefall.
 
-## 0.71 — Treppenabgänge und Umweg live geprüft; Fertigbau offen
+## Historisch 0.71 — Treppenabgänge und Umwegplatzierung; Fertigbau damals offen
 
 Bestandstreppen sind keine ebenen Vierwegeknoten. Oberer bestätigter Austritt
 und seitliche Negativkontrolle live bestanden. Unterer gedrehter Nachbar braucht
@@ -135,7 +149,7 @@ frisch lesen, nicht wiederholen. Bei run_start_speed_locked Sperre klären;
 Pause allein ist keine Freigabe der Zeitsteuerung. Bestehende Baustellen mit
 Projekt-ID lesen, keine wiederholten Bauaufträge.
 
-## 0.70 — Registrierter Treppen-Zielweg live bestätigt, Umweggrenze offen
+## Historisch 0.70 — Registrierter Treppen-Zielweg, damalige Umweggrenze
 
 Diagnose Version 3: `connectionGraph=instant_road_or_registered_landing`.
 `nativeConnected` bleibt die Instant-Wegkante; `generalConnected` separat.
@@ -538,7 +552,7 @@ falscher Planschlüssel korrekt ohne Bauauftrag abgewiesen und gültiger Reparat
 lauf bis Weg-/Elternabschluss, Pause und Freigabe geprüft. Zwölf Ergebniszeilen
 in beiden Dateilogs identisch. Mensch bestätigt Ablehnungs- und Abschlusszeile vollständig und verständlich lesbar. [Befund und Livebelege](repair-start-0.60.md).
 
-## Abgenommener Stand: 0.59 begrenzt live abgenommen
+## Historischer Nachweis: 0.59 begrenzt live abgenommen
 
 Stand 16. Oktober 2026: 0.55–0.59 sind im dokumentierten Umfang live abgenommen.
 0.58: Gebäudepause, Ein-Stunden-Lauf und Pflanzbeleg live geprüft; Mensch bestätigt die Ergebniszeilen.
@@ -1118,7 +1132,7 @@ Das menschliche Vorbereitungsskript startet seit 0.57 nach erfolgreichen Tests,
 Installation und Paketprüfung Timberborn automatisch. Spielstand laden und
 `live bereit` bleiben menschliche Schritte; der Agent startet das Gate nicht selbst.
 
-Stand: letzter dokumentierter Abschluss Bridge 0.66.0; aktualisiert am 17. Oktober 2026.
+Stand: Bridge 0.74.0 mit abgeschlossenen Journal-Korrekturen; aktualisiert am 17. Oktober 2026.
 Diese Anleitung beschreibt die vorhandenen MCP-Fähigkeiten. Aktueller Auftrag
 und Projektregeln stehen in [AGENTS.md](../AGENTS.md) und
 [missionsplan.md](../missionsplan.md); das lokale Spiel ist das freigegebene

@@ -1,19 +1,21 @@
 # Persistenter MCP-Vorschaltprozess
 
-## Gate-Stopp-Nacharbeit in 0.66 — automatisches Gate noch ausstehend
+## Gate-Stopp-Nacharbeit seit 0.66
 
 Wiederholte CLI-Stopps behalten das vorhandene Gate-Ticket; keine erneute
 Quittungsrunde nur wegen Wiederholung. Prozessidentitäten werden weiter geprüft.
 Nur nachweislich verwaiste, unveränderte Instanzmeldungen werden gelöscht;
 alte Zeitstempel allein reichen nicht. Vor einem Timeout ausstehende Quittungen
 frisch lesen. Lebende/unlesbare Instanzen blockieren weiterhin den Build.
-CLI-Stopp nach Bereinigung und Wiederholung erfolgreich; ergänzte Regressionen
-werden erst vom menschlichen Gate ausgeführt. [Befund](releases/0.66.0.md).
+CLI-Stopp nach Bereinigung und Wiederholung erfolgreich; Regressionen sind im
+menschlichen Gate enthalten und bestanden. [Befund](releases/0.66.0.md).
 Der CLI-Helfer lädt die Änderung beim nächsten Aufruf; dafür ist kein Neustart
 der verbundenen Frontends nötig. Schon laufende Frontends behalten ihren
 geladenen Python-Code bis zum nächsten regulären Client-Neustart.
 
-Stand: menschlicher Vollgate-Lauf und acht gezielte Python-Tests bestanden.
+Aktueller Stand: menschliches Gate mit 23 Supervisor-Tests bestanden.
+Nach vollständiger Client-Neuverbindung Stop/Status/Start mit aktualisiertem
+Python-Skript live bestätigt. Die folgenden frühen Werkzeugzahlen sind historisch.
 Stop/status/start über dieselbe Codex-Verbindung live bestanden; Spielstatus vor
 und nach Backendwechsel erreichbar, gleiche Spielsitzung. Werkzeugübernahme nach
 erstmaliger Cachebefüllung und Client-Neustart bestätigt (76 Backendwerkzeuge).
@@ -48,10 +50,11 @@ verändert oder versioniert.
   `scripts/stop-codex-mcp.ps1`. Ergebnis muss `running: false`, `gate: true` sein.
 - Der Vorschaltprozess beendet nur sein eigenes Kind. Alle Vorschaltinstanzen
   dieses Projekts bestätigen die dateibasierte Sperre. Kein Bestätigungsnachweis:
-  Abbruch vor Build. Registrierte PIDs werden ausschließlich auf Existenz geprüft.
+  Abbruch vor Build. Registrierte Prozesse werden auf Existenz und Prozessidentität geprüft.
 - Das menschliche Vorbereitungsskript setzt dieselbe Sperre erneut. Als Rückfall
   beendet es direkt gestartete dotnet-Server nur mit genauem Projekt-Releasepfad.
-  Fehler lassen die Sperre bestehen; kein automatischer Neustart, keine Retries.
+  Fehler lassen die Sperre bestehen; kein automatischer Neustart oder Auftragsretry.
+  Begrenzte Dateiaustauschversuche sind unten gesondert beschrieben.
 - Nach erfolgreichem Gate, geladenem Spiel und `live bereit`: Agent ruft `action:
   start` auf. Dies hebt die Sperre auf und startet das Backend dieser Verbindung.
   Andere gestoppte Instanzen starten nicht automatisch. Danach `timberborn_status`
@@ -87,7 +90,8 @@ Stoppbestätigung. Keine echten Spielzugriffe in diesen Tests.
 
 Live-Nachweis nach einmaliger Einrichtung: start → timberborn_status → stop →
 status bleibt über dieselbe Verbindung erreichbar → start → timberborn_status.
-Kein Codex-Neustart zwischen stop und start. Anschließend die offene
+Bei unverändertem Supervisor ist kein Client-Neustart zwischen stop und start nötig.
+Nach Änderungen am Python-Skript muss die Client-Verbindung vollständig erneuert werden. Anschließend die offene
 [Regionalsuche-Abnahme](regional-survey.md). Bei Transportverlust oder fehlender
 Stoppbestätigung abbrechen und diagnostizieren; kein Commit/Push vor beiden Belegen.
 
@@ -106,7 +110,7 @@ serialisiert ein benannter Windows-Mutex je Dateipfad Leser, Austausch und
 Löschen über Prozesse hinweg. Sperrzeitlimit fünf Sekunden; kein Datei-Retry.
 Ein Schreibfehler stoppt das Backend ohne weiteren Publish-Versuch im Fehlerpfad;
 das Gate verlangt weiterhin eine tatsächlich geschriebene Stoppbestätigung.
-Keine Wiederholung von Builds oder Spielaktionen. Zwei Regressionen vorbereitet:
+Keine Wiederholung von Builds oder Spielaktionen. Zwei Regressionen im menschlichen Gate enthalten:
 Ein separater Schreiber wartet bei offenem Leser und ersetzt danach erfolgreich;
 Backend-Stopp bei ausgefallenem Statusschreiben. Alte Vorschaltprozesse laden
 Codeänderungen erst beim Wiederaufbau ihrer Verbindung. Der nachgewiesen hängende
@@ -121,7 +125,7 @@ Bereinigung des getesteten Schreibvorgangs bleiben unverändert geprüft.
 Nur Testisolation geändert, kein Lifecycle-Code und keine Retries. Ausführung
 der Korrektur erfolgte im anschließenden menschlichen Gate vor erneuter Bereitmeldung.
 
-## Offene Gate-Diagnose in 0.53
+## Historische Gate-Diagnose in 0.53
 
 Der menschliche Stop/Start-Test scheiterte am erneuten Start mit einer generischen
 Fehlermeldung. Die darin versprochene lokale Diagnose wurde bisher nicht geschrieben;
@@ -132,9 +136,9 @@ numerische Betriebssystemfehler nach stderr und im Fehlerergebnis, ohne Pfade
 oder Konfigurationsinhalte. Scheitert der Start nach Prozesserzeugung, beendet
 der Fehlerpfad das Backend ohne erneutes Statusschreiben; ein solcher zweiter
 Speicherfehler darf die ursprüngliche Ursache nicht verdecken.
-Zwei vorbereitete Regressionen erzwingen Katalog- bzw. Statusschreibfehler und
+Zwei Regressionen erzwingen Katalog- bzw. Statusschreibfehler und
 prüfen Diagnose, Prozessbereinigung und ausbleibende Schreibwiederholung.
-Statisch geprüft; menschliche Ausführung und Abnahme noch offen. Kein Nachweis,
+Menschliches Gate anschließend bestanden (siehe Nachtrag). Kein Nachweis,
 dass die unbekannte Ursache des gemeldeten Startfehlers damit behoben ist.
 
 Nachtrag: menschliches Gate anschliessend bestanden; expliziter Backendstart
