@@ -13,6 +13,9 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
 {
     private readonly ClearedGroupTools clearedGroups = new(new NativeClearedGroupPort(client), Path.Combine(AppContext.BaseDirectory,".local","cleared-groups"));
     private readonly SemaphoreSlim callGate = new(1,1);
+    private readonly object admissionLock = new();
+    private bool statusWaitInProgress;
+    private bool cancelInProgress;
     public static IReadOnlyList<Tool> Catalog(bool enableValidation = false, bool enablePlacement = false, bool enableLodgePlacement = false, bool enableSpeedControl = false, bool enableStaffing = false, bool enablePriorities = false, bool enableAreas = false, bool enableRemoval = false, bool enableBuildingPlacement = false, bool enableBuildingSettings = false, bool enableResearch = false)
     {
         var options = new JsonSerializerOptions(NativeJson.Options) { TypeInfoResolver = new DefaultJsonTypeInfoResolver() };
@@ -86,16 +89,27 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
     public async Task<JsonObject> Invoke(string name, JsonElement args, CancellationToken ct)
     {
         using var dispatch=new NativeDispatchTrace();
-        bool ownsGate=false;
+        bool ownsGate=false, ownsCancel=false;
         JsonObject Wrap<T>(BridgeEnvelope<T> envelope) => (JsonObject)JsonSerializer.SerializeToNode(
             new NativeResult<T>(1, "ok", envelope.Data, new("native", false, envelope.SessionId, envelope.ObservedAtUtc), null), NativeJson.Options)!;
         try
         {
-            // Admission belongs to the same result boundary as native dispatch.
-            // Reject contention instead of queuing an action behind an unknown result.
-            ownsGate=await callGate.WaitAsync(0,ct);
-            if(!ownsGate)throw new ArgumentException("another_call_in_progress_not_queued");
             args=ActivityTools.WithoutReasoning(args);
+            ct.ThrowIfCancellationRequested();
+            bool statusWait = StatusWaitTools.Handles(name) && StatusWaitTools.Parse(name,args).WaitSeconds > 0;
+            // A read-only status wait must not exclude an explicit run cancellation.
+            // Keep all other calls exclusive and never queue or replay a mutation.
+            lock(admissionLock) {
+                if(!cancelInProgress) {
+                    ownsGate=callGate.Wait(0);
+                    if(ownsGate)statusWaitInProgress=statusWait;
+                    else if(statusWaitInProgress && name=="cancel_simulation_run") {
+                        ownsCancel=true;
+                        cancelInProgress=true;
+                    }
+                }
+            }
+            if(!ownsGate && !ownsCancel)throw new ArgumentException("another_call_in_progress_not_queued");
             if(ClearedGroupTools.Handles(name))return await clearedGroups.Invoke(name,args,enableBuildingPlacement && enableSpeedControl && enableRemoval && enableAreas,ct);
             if(clearedGroups.Active && Catalog(true,true,true,true,true,true,true,true,true,true,true).Any(t=>t.Name==name && t.Annotations?.ReadOnlyHint!=true))
                 throw new ArgumentException("cleared_group_owns_dispatch_stop_or_wait");
@@ -222,7 +236,12 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
             return (JsonObject)JsonSerializer.SerializeToNode(new NativeResult<object>(1, "error", null,
                 new("native", false, null, null), new(code,message,code=="backend_unavailable"&&!action&&dispatch.WriteAttempts==0,execution)), NativeJson.Options)!;
         }
-        finally { if(ownsGate)callGate.Release(); }
+        finally {
+            lock(admissionLock) {
+                if(ownsGate) {statusWaitInProgress=false;callGate.Release();}
+                if(ownsCancel)cancelInProgress=false;
+            }
+        }
     }
     public async Task<JsonObject> InvokeLogged(string name,JsonElement args,CancellationToken ct)
     {

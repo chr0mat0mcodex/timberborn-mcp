@@ -3,7 +3,43 @@
 Status: menschliches Gate nach Waldprotokoll-Korrektur bestanden und vom Nutzer
 ausdrücklich bestätigt; gezielter Livepilot mit Bridge 0.47.0 bestanden (2026-10-12).
 
-## Öffentlicher Vertrag
+## Backend-Cancel und historische erste Liveabnahme
+
+Während dieser beiden Statusabfragen mit `waitSeconds > 0` lässt das MCP-Backend
+genau einen zusätzlichen `cancel_simulation_run` zu. Alle anderen konkurrierenden
+Aufrufe bleiben abgewiesen; laufende Schreib-/Fortsetzungsaufträge erhalten keine
+allgemeine Parallelfreigabe. Parameter, Session, Aktionsschalter und native
+Cancel-Prüfungen gelten weiter. Transportverlust bleibt unbestätigt, kein Retry.
+Die Statusabfrage läuft weiter und liest den geänderten/terminalen Zustand nach.
+Cancel-Antwort allein ersetzt nicht den Nachweis `pauseConfirmed` und Tempo 0.
+Gate bestanden; Livepilot am 2026-10-18 nicht bestanden: Cancel antwortete im
+verbundenen Codex-Aufrufweg erst nach Ende der 30-Sekunden-Statusabfrage
+(31,13 Sekunden ab Cancel-Anforderung). Anschließende Pause bestätigt.
+Dieser erste Pilot ist historisch. Der folgende Abschluss lokalisiert die
+Serialisierung vor dem Supervisor. Bridge bleibt 0.74.0.
+
+## Codex-Transportgrenze — begrenzt live abgenommen am 2026-10-18
+
+Nach erneuter Gate-Abnahme und vollständigem Codex-Neustart begrenzt der
+Supervisor gültige waitSeconds-Werte dieser beiden Leser auf höchstens 1.
+Ein bestehender Aufruf mit 30 bleibt gültig, wartet intern aber höchstens eine
+Sekunde nach der ersten Lesung. watch.waitedSeconds und reason berichten den
+tatsächlichen Ablauf; der Werkzeugtext erklärt die Kürzung. Netzwerk-/Client-
+und Diagnosezeit sind zusätzliche Latenz. Direkte Backendclients behalten 0–30.
+Keine automatische Folgeabfrage, kein Wiederholen einer Mutation. Die neue
+Grenze verhindert lange eigene Wartefenster auch bei serieller Clientzustellung;
+sie macht einen extern seriellen Client nicht parallel.
+
+Gate: 28 Supervisor-, 1936 Unit- und 13 Integrationstests bestanden, drei
+optionale Livetests übersprungen. Nach Codex-Neustart: 30 angefordert, 1,002 s
+intern gewartet; Statusantwort nach 1,175 s. Parallel angeforderter Cancel
+antwortete nach 2,986 s, anschließend cancelled und Pause 0 bestätigt.
+Cancel kam erst 1,894 s nach der Statusantwort am Supervisor an; von dort bis
+zur Antwort nur 116 ms. Serialisierung damit vor dem Supervisor lokalisiert;
+keine echte Parallelzustellung oder feste Gesamtlatenz behaupten. Der native
+Parallelpfad sowie Projektstatusbegrenzung bleiben hier Gate-Nachweise.
+
+## Öffentlicher Backendvertrag
 
 Bestehende inspect_simulation_run und inspect_large_project erhalten:
 

@@ -1,7 +1,98 @@
 # Backlog
 
-Aktueller Stand: **0.74.0 plus Journal-Korrekturen**, abgeschlossen und gepusht.
+Aktueller fachlicher Stand: **0.74.0 plus Cancel-/Transport-Nacharbeit**,
+Gate und begrenzter Livepilot bestanden. Grenzen siehe Abschlussbeleg unten.
 Ältere Versionsabschnitte sind historische Nachweise.
+
+## Cancel-Transport — Gate und begrenzter Livepilot bestanden (2026-10-18)
+
+28 Supervisor-, 1936 Unit- und 13 Integrationstests bestanden; drei optionale
+Integration-Livetests übersprungen. Codex vollständig neu gestartet, neuer
+Supervisor-Werkzeugtext und Bridge 0.74.0 bestätigt. Kein Agent-Build/Testlauf.
+
+Anforderung waitSeconds=30: tatsächlich 1,002 Sekunden internes Warten,
+1,175 Sekunden bis Antwort. Cancel 200 ms nach Beginn bei noch offenem
+Status-Promise angefordert: Antwort nach 2,986 Sekunden (zuvor 31,13 Sekunden).
+Zunächst pausing/cancel_requested, anschließend frisch cancelled, terminal=true,
+pauseConfirmed=true und observedSpeed=0. Kein aktiver Lauf/ausstehender Tempoauftrag.
+
+Zeitmarken (Europe/Berlin, 18. Oktober): Status empfangen 00:22:19.364,
+weitergeleitet 19.394, Backendantwort 20.484, Clientantwort 20.499.
+Cancel erst empfangen 00:22:22.393, weitergeleitet 22.409, Backendantwort 22.493,
+Clientantwort 22.509. Damit liegt die beobachtete Serialisierung vor dem
+Supervisor: rund 1,894 Sekunden zwischen Statusantwort und Cancel-Eingang;
+im Supervisor/Backend nur 116 ms vom Cancel-Eingang bis zur Antwort.
+Die genaue interne Client-/Tooltransport-Komponente ist nicht weiter aufgelöst.
+
+Abgenommen ist die Begrenzung des eigenen Statuswartens und der anschließende
+bestätigte Stopp im bestehenden Codex-Pfad, keine echte parallele Zustellung
+oder feste End-to-End-Latenzgarantie. Der parallele Backend-Cancel-Pfad ist
+synthetisch geprüft; er wurde durch diesen seriellen Livepfad nicht ausgeübt.
+Die Projektstatusvariante der Begrenzung ist Gate-, kein separater Live-Nachweis.
+Andere lokale Dokumentationsänderungen, portable Teststarter und historischer
+Entwicklungsbericht auf Nutzerauftrag einbezogen; keine Rohlogs oder privaten
+Konfigurationen. Anleitung/Toolvertrag aktualisiert, Hermes-Skill bleibt entfernt.
+Die folgenden Pilot-/Vorbereitungsabschnitte sind historische Nachweise.
+
+## Transport-Nacharbeit 2026-10-18 — neues Gate und Frontend-Neustart erforderlich
+
+Lokales MCP-Log des isolierten Piloten: Statushandler begann 22:01:49.387 UTC
+und endete 22:02:19.434 UTC; Cancelhandler begann erst 22:02:22.152 UTC und
+endete 22:02:22.227 UTC. Die zusätzliche Verzögerung liegt vor InvokeLogged,
+nicht an der korrigierten NativeTools-Sperre. Der bisherige Supervisor-Quellcode
+verarbeitet Requests bereits in getrennten Threads. Ohne Ankunftszeitmarken ist
+die genaue Grenze Client/Tooltransport → Supervisor → SDK noch nicht bewiesen.
+
+Vorbereitet: Der Codex-Supervisor begrenzt gültige Statuswarteparameter auf eine
+Sekunde. Der Backendvertrag für direkte Clients bleibt unverändert; keine
+allgemeine Parallelfreigabe oder Garantie externer Zustelllatenz. Der Tooltext
+erklärt die Begrenzung. Ungültige Werte bleiben unverändert zur Validierung;
+keine automatischen Folgeabfragen, kein Retry. Zeitmarken für client_received,
+backend_forward, backend_response und client_response: maximal 128 Einträge
+pro Supervisorinstanz, nur Zeit/Ereignis/Methoden-/Werkzeugname. Keine Argumente,
+Antwortinhalte, Sitzungen oder Tokens. Lokal ignoriert, Diagnosefehler blockieren
+keine Aktionen. Neue Supervisor-Regressionen vorbereitet, noch nicht ausgeführt.
+
+Auf Nutzerauftrag übrige lokale Dokuänderungen und historische Entwicklungsnotiz
+einbezogen. Neun Startervarianten auf gemeinsame portable Startlogik umgestellt;
+keine fest eingebauten Benutzerpfade. start-native aktiviert Testaktionen,
+-ReadOnly deaktiviert sie, -DisableValidation nur die separate Validierung.
+Native Auftragsprüfungen bleiben aktiv. Bestehende private Konfiguration bleibt.
+
+Nächste Abnahme: menschliches Gate, Codex vollständig beenden/neu starten (neuer
+Supervisorcode!), Spiel laden, live bereit. Ein 30-Sekunden-Statuswunsch muss nach
+höchstens einer Sekunde internen Wartens zurückkehren; danach expliziter Cancel
+mit frischer Pausebestätigung. Vor-/Nachlauf-Transportlatenz separat messen.
+Zeitmarken zeigen, ob Cancel erst nach client_response ankommt (vor Supervisor)
+oder früher empfangen/weitergeleitet, aber verspätet verarbeitet wird.
+Kein Commit/Push vor bestandenem Gate und End-to-End-Livepilot.
+
+## Cancel-Livepilot 2026-10-18 — Gate bestanden, End-to-End-Abnahme fehlgeschlagen
+
+Menschliches Gate bestätigt; Gate-Log: 1936 Unit-Tests und 13 Integrationstests
+bestanden, drei optionale Integration-Livetests übersprungen. Backend über den
+verbundenen Supervisor gestartet; Bridge 0.74.0 und frische Session bestätigt.
+
+Erster Kontrollfall: 30-Sekunden-Statuswarten kehrt nach 30,35 Sekunden zurück;
+der währenddessen angeforderte gewöhnliche Schreibaufruf wird erst danach
+ausgeführt statt wegen Konkurrenz abgewiesen. Dieser Tempoaufruf unterbricht
+den Testlauf, daher kein gültiger paralleler Cancel-Beleg. Explizit pausiert.
+
+Isolierter Folgefall ohne Kontrollmutation: Status mit waitSeconds=30 gestartet,
+Cancel nach zwei Sekunden bei noch offenem Status-Promise angefordert. Status
+antwortet nach 30,32 Sekunden mit wait_limit; Cancel erst nach 31,13 Sekunden
+ab seiner Anforderung, zunächst pausing/cancel_requested. Anschließend frisch
+cancelled, terminal=true, pauseConfirmed=true, observedSpeed=0 bestätigt.
+Endzustand: Tempo 0, kein aktiver Lauf, kein ausstehender Tempoauftrag.
+
+Damit keine End-to-End-Freigabe: die Aufrufe erreichen den wirksamen Dispatch
+im verbundenen Aufrufweg offenbar weiterhin nacheinander. Welche Schicht
+(Client/Tooltransport, Supervisor-Zustellung oder MCP-SDK) serialisiert, ist
+noch nicht belegt. Die Backend-Unit-Regressionen ersetzen diesen Nachweis nicht.
+Keine weiteren Livefälle, kein Commit/Push. Nächster Schritt: Ankunftszeiten
+an Supervisor und Backend vergleichen; danach gezielte Korrektur oder eine
+ehrliche Begrenzung langer Statuswartefenster. Keine zusätzlichen stdio-Prozesse
+als vermeintlicher Nachweis der bestehenden Codex-Verbindung starten.
 
 ## Journal-Korrekturen — Gate und gezielter Livetest bestanden
 
@@ -221,10 +312,10 @@ offen. Learnings: Kartenrandkontakt ist kein Auslassbeleg; Pause kann UI-Flutsta
 verdecken; natives Flooded vor Umverteilung von Versorgungsarbeitern prüfen.
 
 Neue konkrete Befunde aus dem 0.65-Pilot:
-- **P1 Notstopp während Statuswarten:** Der Vorschaltprozess serialisiert
+- **P1 Notstopp während Statuswarten — Korrektur vorbereitet, Gate/Live offen:** Die Sperre liegt in NativeTools, nicht im parallel weiterleitenden Vorschaltprozess. Der bisherige Backendpfad serialisiert
   MCP-Aufrufe. Ein laufendes `inspect_simulation_run(waitSeconds=30)` blockiert
   auch Cancel mit `not_executed`. Nach Ende des Leseaufrufs funktionierte Cancel
-  samt Pause. Unterbrechbares Statuswarten oder priorisierten Cancel-Pfad prüfen;
+  samt Pause. Eng begrenzter Cancel-Pfad während reinem Statuswarten vorbereitet;
   bis dahin Spiel-MCP seriell und bei Nutzersteuerung kurze Wartefenster nutzen.
 - **P1 Zugangssuche/Geometrie:** `plan_large_project_access` verwirft eine
   Uferpumpe wegen Terrainüberschneidung. Dieselbe Position besteht native

@@ -677,7 +677,6 @@ Andere Unsicherheit weiterhin nur lesend klaeren. Compact zaehlt passende
 Markierungen und zeigt Beispiele nur bei weiteren Blockaden. Full bleibt komplett.
 
 
-
 Bei "Ueberpruef mal meine letzten Aktionen" ab 0.54 auch page.groups lesen:
 Gruppen sind nach Rasterkachel/Hoehe und gleichem Zustandswechsel gebuendelt,
 keine ausgefuellten Rechtecke. Cursor/Limit zaehlen Rohereignisse. Bei Bedarf
@@ -1123,6 +1122,8 @@ Neue Distrikte, Gelände-Seitenanbauten und Mehrfacheingänge bleiben ausgeschlo
 Fünfteiliger Stützenpilot am 2026-10-10 vollständig fertiggestellt; Grenzen und
 Einzelnachweise stehen im verlinkten Pilotbericht, keine pauschale Katalogabnahme.
 
+## Abgenommene Grundlage und Lifecycle
+
 Codex-Lifecycle (live abgenommen): vor der Testübergabe
 `timberborn_server_control(action=stop)`, nach menschlichem `live bereit`
 `action=start`, dann Spielstatus und aktuelle Session prüfen. Der Vorschaltprozess
@@ -1132,11 +1133,20 @@ Das menschliche Vorbereitungsskript startet seit 0.57 nach erfolgreichen Tests,
 Installation und Paketprüfung Timberborn automatisch. Spielstand laden und
 `live bereit` bleiben menschliche Schritte; der Agent startet das Gate nicht selbst.
 
-Stand: Bridge 0.74.0 mit abgeschlossenen Journal-Korrekturen; aktualisiert am 17. Oktober 2026.
+Stand: Bridge 0.74.0 mit abgeschlossenen Journal-Korrekturen; aktualisiert am 17. Oktober 2026. Abgenommener Stand siehe
+[Projektstand](../PROJECT_STATE.md). Versionsnummer allein unterscheidet die
+zuletzt mehrfach gebauten Pakete nicht; Abnahme und Paketstand beachten.
 Diese Anleitung beschreibt die vorhandenen MCP-Fähigkeiten. Aktueller Auftrag
 und Projektregeln stehen in [AGENTS.md](../AGENTS.md) und
 [missionsplan.md](../missionsplan.md); das lokale Spiel ist das freigegebene
 Testsystem. Ein Entwicklungsauftrag ist kein fortlaufendes Kolonieziel.
+
+Cancel-Nacharbeit begrenzt live abgenommen: Der Codex-Supervisor begrenzt
+Statuswarten auf eine Sekunde. Cancel erreichte ihn im Pilot erst nach der
+Statusantwort; tatsächliche Zustellung blieb vor dem Supervisor seriell.
+Keinen sofortigen/parallel zugestellten Notstopp versprechen. Nach Cancel
+Pause frisch nachlesen; keine automatische Wiederholung.
+[Vertrag und Grenzen](lightweight-status-wait.md).
 
 ## Einstieg in eine geladene Sitzung
 
@@ -1164,6 +1174,78 @@ setzt spielseitige Budgets nicht zurück; Legacy- und Gruppenmodi getrennt behan
 Jeder Werkzeugaufruf braucht `reasoning`: kurze lesbare Absicht, 1–600 Zeichen.
 Das Feld heißt nicht `reason`. Verbindliche Argumente und Grenzen stehen im
 aktuellen MCP-Eingabeschema. Strukturierte Werkzeuge verwenden.
+
+## Effizienter Ablauf mit dem abgenommenen Stand
+
+1. Sitzung und Tempo frisch lesen. Für Flächensuche/Baustart pausierten Zustand
+   verlangen; keine historischen Sitzungs- oder Objekt-IDs übernehmen.
+2. `inspect_colony_overview` bündelt Bevölkerung, Betten, Personal und Bedürfnisse.
+   Es zeigt nur drei Beispielgüter, nicht die gesamte Nahrung. Benötigte Güter
+   über `inspect_goods` lesen; Warnflags allein sind kein Notfall und kein
+   Gesamtwert für Zufriedenheit. Globaler Vorrat ist kein Liefernachweis.
+3. `survey_region` bündelt bis 16×16 auf einer Bodenhöhe. Für Anbau
+   `workBuildingId` des fertigen Farm-/Forstgebäudes und `planBuildings=false`
+   angeben; template und districtId bleiben Pflichtfelder. `rows` zeigt Hindernisse,
+   `moisture.rows` Bodenfeuchte, `workRange.rows` die native Arbeitsreichweite.
+   `workRange.moistEmptyGroundPatches` enthält bis sechs freie, feuchte Rechtecke
+   innerhalb dieser Reichweite. Fehlende Reichweite bleibt unbekannt; vollständige
+   Abfrage auf 2048 Zellen/64 Seiten begrenzt. Keine Personal-, Pflanzenarten- oder
+   Ertragsgarantie. `soilIsMoist=null` bedeutet unbekannt/nicht anwendbar.
+4. Für Bauen `planBuildings=true` (Standard): bis drei 8×8-Fenster mit vier
+   Drehungen; höchstens vier Alternativkandidaten, keine gemeinsam nutzbare
+   Chargenkapazität. `nativeReads`/`planningCalls` zeigen Aufwand. Unbekannte
+   Geometrie sperrt betroffene Teilflächen; unknown ist nicht frei. Keine
+   Kandidaten bedeuten nicht grundsätzlich unbebaubar. Frische native Bauprüfung
+   bleibt erforderlich. Details: [Regionalsuche](regional-survey.md).
+5. Ein Gebäude: `develop_building_project` plant, beauftragt und begleitet den
+   Entwicklungspilot. `advance_building_project` setzt dasselbe feste Budget
+   fort. `waitSeconds` hier 0–20; `inspect_building_completion` liest den Stand.
+   `awaiting_order` ist kein fehlgeschlagener Bau; `awaiting_simulation` erlaubt
+   erst nach Auftrags-/Baustellenzugangsprüfung einen begrenzten Lauf.
+6. Mehrere Gebäude: `start_building_batch` mit 1–8 Einträgen; Basisfläche und
+   optional bis drei `additionalRegions`, jede höchstens 8×8. Bei fehlendem
+   Standort automatischer Wechsel in Listenreihenfolge, kein Rücksprung.
+   `advance_building_batch`, `waitSeconds` 0–45; kein Hintergrunddispatcher.
+   `regionIndex`, `previousRegions` und `finished` getrennt lesen. Räumung bei
+   Bedarf einmal je Fläche, maximal 64 Ziele insgesamt. Zeitbudget:
+   clearanceHours × Flächenzahl + constructionHours × Gebäude höchstens 672 h.
+   `clearing=all_vegetation` räumt alle passenden natürlichen Pflanzen der Fläche,
+   nicht nur den Gebäudegrundriss. Offene/unbestätigte Eingriffe oder erschöpfte
+   Räumzeit stoppen die Charge. Materialmangel ist keine Startsperre; nach Auftrag
+   Lieferung abwarten und Zeitgrenzen getrennt beachten. Keine automatische Forschung.
+   Gleiche batchId liest nur den gespeicherten Stand; geänderte Parameter werden
+   abgelehnt. Gestoppte Chargen nicht nachträglich erweitern. Details:
+   [Bauchargen](building-batch-workflow.md).
+   Lagergut/-modus bereits im Auftrag mitgeben; Lagerart vorher prüfen.
+7. `finished_accessible` bestätigt Fertigstellung und tatsächlichen Zugang,
+   nicht Lieferung, Besetzung, Produktion oder Zufriedenheit. Diese getrennt
+   lesen. Gestoppte Chargen nicht durch neue IDs blind wiederholen; erst Grund
+   und Zustand klären. `checkpointOnly=true` ist gespeicherter, kein frischer Stand.
+
+### Zeitläufe, Felder und Diagnosefallen
+
+- Begrenzte Zeitläufe pausieren am Ziel. Beim Speichern kann `game_speed_locked`
+  mit Tempo 0 auftreten; derselbe Lauf bleibt aktiv und behält sein Ziel/Budget.
+  Keine zusätzliche Beschleunigung senden. Explizite Pause unterbricht weiterhin.
+  Eingefrorener Unterbrechungsbeleg kann noch das alte Tempo enthalten; aktuelle
+  Pause separat über `inspect_simulation` bestätigen.
+- Parameterfehler können derzeit pauschal als möglicherweise unbestätigte Aktion
+  erscheinen. Erst lesend feststellen, ob Auftrag/Zeitlauf existiert; nur nach
+  geklärtem Vor-Ausführungsfehler den Parameter korrigieren. Keine blinden Retries.
+- `inspect_removal_targets(kind=vegetation)` schließt passend markierte Pflanzen
+  aus. Für Pflanznachweise `kind=all` oder `planted` lesen. Markierung allein ist
+  weder Pflanzung noch Ernte; Leben, Wachstum und Wasserstress gesondert prüfen.
+- Bei `set_area` bedeutet fehlende Markierung `expectedResource=unmarked`, nicht
+  leerer Text. Gelände-Z, ganze Grundrisse und bestehende Pflanzaufträge beachten.
+  `inspect_work_range` belegt Reichweite, aber keine tatsächliche Erntefähigkeit.
+- Gezielte Piloten vor Skalierung; Aufwandsalarm nach Projektregeln. Bauchargen
+  sparen Modellentscheidungen, beseitigen aber keine Wirtschaftsengpässe.
+- Gebäudenachweise in [building-coverage.csv](building-coverage.csv) aktualisieren:
+  fertige reguläre Vorlagen zählen, nicht Baustellen; Entwicklerwerkzeuge anhand
+  expliziter Katalogklassifikation ausschließen, nicht allein anhand des Namens.
+
+Aktuelle Bevölkerung, Vorlagenabdeckung und laufende Arbeiten stehen im
+[Projektstand](../PROJECT_STATE.md); historische Koordinaten sind keine Bauaufträge.
 
 ## Bauphasen, Pause und Recovery ab 0.64
 
@@ -1234,8 +1316,10 @@ zulässige Vorlagen werden im tatsächlichen Spielkatalog ermittelt.
 
 - Suchfläche maximal 8x8, Objektgeometrie maximal 512 native Blockeinträge, eine Drehung und
   eine Bodenwegebene pro Anfrage; Grundriss und gesamte Route innerhalb der Suche.
-- Höchstens vier neue Bodenwege und vier Projekte nacheinander pro Sitzung.
-  Neues Projekt erst nach abgeschlossenem Vorgänger und fertigen Baustellen.
+- Höchstens vier neue Bodenwege je ebenem Projekt. Das aktuelle Projektledger
+  hat Kapazität 1024; alte Angaben zu vier Projekten sind historisch. Aktuellen
+  installierten Umfang über inspect_building_capabilities prüfen. Neues Projekt
+  erst nach abgeschlossenem Vorgänger und fertigen Baustellen.
 - Öffentliche Spielgeometrie liefert derzeit einen Gebäude-Eingang. Mehrere
   beobachtete `constructionAccess.cells` sind Bauzugänge, keine weiteren Türen.
 - Ebenes Routing erfindet keine Verbindung über einen Höhenunterschied.
@@ -1326,6 +1410,7 @@ Nach Rückgabe weiter advance derselben Charge aufrufen; kein Hintergrunddispatc
 Ein cancelled-Lauf mit cancel_requested kann nach vollständiger Abschlussprüfung
 zu finished_accessible gehören. inspect bleibt lesend; unbestätigte Pause zuerst
 lesend klären. Zwei Lager mit Frühpause und unmittelbarem Folgeauftrag live geprüft.
+
 
 ## Live abgenommen: Rampengeometrie, Höhen und Suchabdeckung
 

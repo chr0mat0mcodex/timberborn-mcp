@@ -1,10 +1,15 @@
 # Timberborn MCP
 
-**Stand 0.74.0 mit abgeschlossenen Journal-Korrekturen:** Reparaturbedarf wird aus frischen Zugangsbelegen abgeleitet. Materialwarten, Bestandsverlust, unerreichbare Baustelle und Fertigbau sind getrennt live geprüft. Forstjournale verhindern erneute Mutationen bei Wiederaufrufen, auch nach Neuverbindung.
+**Stand 0.74.0 mit abgeschlossenen Journal- und Cancel-/Transport-Korrekturen:** Reparaturbedarf wird aus frischen Zugangsbelegen abgeleitet. Materialwarten, Bestandsverlust, unerreichbare Baustelle und Fertigbau sind getrennt live geprüft. Forstjournale verhindern erneute Mutationen bei Wiederaufrufen, auch nach Neuverbindung.
 
-Letzte Abnahme: **23 Supervisor-, 1931 Unit- und 13 Integrationstests**, drei optionale Live-Integrationstests übersprungen. Supervisor-Stop/Start und Forstjournal-Persistenz gezielt live bestätigt. [Belege und Grenzen](docs/releases/0.74.0.md).
+Letzte Abnahme: **28 Supervisor-, 1936 Unit- und 13 Integrationstests**, drei optionale Live-Integrationstests übersprungen. Supervisor-Stop/Start und Forstjournal-Persistenz gezielt live bestätigt. [Belege und Grenzen](docs/releases/0.74.0.md).
 
 Offen bleiben insbesondere unbekannte Objektidentität im Livebetrieb und gesonderte weitere Zugangsgeometrien. Dateifehler sowie unterbrochene Schreibaufträge sind synthetische Gate-Nachweise. [Projektstand](PROJECT_STATE.md) · [Offene Aufgaben](BACKLOG.md) · [Agenten-Anleitung](docs/agent-playing-guide.md).
+
+Cancel-Transport begrenzt live bestätigt: Statuswarten höchstens eine Sekunde
+im Codex-Supervisor; Cancel-Antwort im Pilot nach 2,986 Sekunden, Pause frisch
+bestätigt. Die verbleibende Serialisierung liegt vor dem Supervisor.
+[Nachweis und Grenzen](docs/lightweight-status-wait.md).
 
 ## Frühere Abnahmen
 
@@ -45,6 +50,7 @@ und Fertigstellung verfolgen; kompakte Vorwarnung vor möglichen Faulwasserdurch
 Menschliches Gate und begrenzte Liveabnahme bestanden. Teilablehnung mitten im
 Platzierungsdurchgang nur synthetisch geprüft; diese Grenze ist ausdrücklich akzeptiert.
 [Releaseumfang](docs/releases/0.63.0.md), [B15-Belege](docs/construction-structures-0.63.md).
+
 
 Zusätzlich `analysis.terraforming`: bedingte 3×3-Reservoir-Optionen, zwei Ebenen Absenkung, Nutzen und Blockaden kompakt, Zellbelege full. Gate und begrenzter Livepilot bestanden.
 
@@ -165,7 +171,6 @@ Aktueller dokumentierter Abschluss: **0.74.0**. Die folgenden
 Versionsabschnitte sind historische Teilabnahmen, keine parallel aktuellen Stände.
 Offene Fähigkeiten stehen im [Backlog](BACKLOG.md).
 
-
 **0.48.0 begrenzt live abgenommen:** [Regionale native Baupläne](docs/regional-building-plans.md).
 
 **0.47.0 begrenzt live abgenommen:** [Günstige Statusabfragen und Warten](docs/lightweight-status-wait.md).
@@ -210,6 +215,9 @@ Historischer Screenshot-Release: Bridge 0.36.0. Explizite Screenshots der
 Spielansicht inklusive Kameraposition/Höhe, Richtung und Bildweite sind begrenzt
 live geprüft; Bilddaten werden als MCP-Bildblock mit Größenlimit ausgegeben.
 [Abnahme und Grenzen](docs/screenshot-0.36.0.md).
+Maßgeblich sind [Projektstand](PROJECT_STATE.md),
+[Testdoku](docs/playtest-2026-10-04.md), [Werkzeugübersicht](docs/tools.md)
+und [Agenten-Spielanleitung](docs/agent-playing-guide.md).
 
 Codex während des menschlichen Build-Gates verbunden halten:
 [Vorschaltprozess einmalig einrichten](docs/codex-mcp-supervisor.md)

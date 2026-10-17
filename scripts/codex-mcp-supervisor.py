@@ -1,5 +1,7 @@
 """Persistent stdio frontend. Python 3.8+, standard library only; no build step."""
 import argparse
+from collections import deque
+import copy
 import ctypes
 from contextlib import contextmanager
 from ctypes import wintypes
@@ -16,6 +18,34 @@ import uuid
 
 ROOT = Path(__file__).resolve().parent.parent
 CONTROL = "timberborn_server_control"
+STATUS_READERS = {"inspect_simulation_run", "inspect_large_project"}
+STATUS_WAIT_LIMIT = 1
+
+
+def responsive_params(method, params):
+    # Client-side serialization is outside this process. Bound our own wait so
+    # the client regains its dispatch slot promptly; never retry the request.
+    if method != "tools/call" or params.get("name") not in STATUS_READERS:
+        return params
+    arguments = params.get("arguments")
+    if not isinstance(arguments, dict):
+        return params
+    wait = arguments.get("waitSeconds")
+    if type(wait) is not int or not 0 <= wait <= 30:
+        return params  # Preserve invalid input for the backend validator.
+    return dict(params, arguments=dict(arguments, waitSeconds=min(wait, STATUS_WAIT_LIMIT)))
+
+
+def responsive_tools(tools):
+    result = copy.deepcopy(tools)
+    for tool in result:
+        if tool.get("name") in STATUS_READERS:
+            tool["description"] = ("Codex-Vorschaltprozess: waitSeconds wird auf höchstens eine Sekunde begrenzt, "
+                "damit seriell zustellende Clients Cancel zeitnah senden können. Größere gültige Werte "
+                "werden gekürzt; watch.waitedSeconds/reason nennen das tatsächliche Warten. "
+                "Keine automatische Folgelesung und keine Garantie über Client-/Transportlatenz. "
+                + tool.get("description", ""))
+    return result
 TOOL = {"name": CONTROL, "description": "Control the project MCP backend while retaining the Codex connection. stop before the human build gate; start only after the developer reports live bereit. Interrupted calls are never replayed. status does not start anything.",
         "inputSchema": {"type": "object", "properties": {"action": {"type": "string", "enum": ["status", "stop", "start"]}}, "required": ["action"], "additionalProperties": False}}
 
@@ -232,6 +262,9 @@ class Supervisor:
         self.lifecycle = threading.RLock()
         self.lock = threading.RLock()
         self.output_lock = threading.Lock()
+        self.trace_lock = threading.Lock()
+        self.trace_events = deque(maxlen=128)
+        self.trace_path = runtime / (self.registry.stem + "-timing.log")
         self.emit = emit or self.write_stdout
         self.process = None
         self.reader_thread = None
@@ -254,11 +287,28 @@ class Supervisor:
         self.watcher = threading.Thread(target=self.watch, daemon=True)
         self.watcher.start()
 
+    def trace(self, event, message):
+        # Bounded local timing only: no arguments, IDs, results, paths or tokens.
+        method = message.get("method", "response")
+        params = message.get("params")
+        tool = params.get("name") if isinstance(params, dict) else None
+        def label(value):
+            return value if isinstance(value, str) and 0 < len(value) <= 80 and all(
+                c in "abcdefghijklmnopqrstuvwxyz_./" for c in value) else None
+        try:
+            with self.trace_lock:
+                self.trace_events.append({"at": time.time(), "event": event,
+                                          "method": label(method), "tool": label(tool)})
+                atomic_json(self.trace_path, list(self.trace_events))
+        except (OSError, ValueError, TypeError):
+            print("Supervisor timing unavailable; request handling continues", file=sys.stderr)
+
     def write_stdout(self, message):
         sys.stdout.write(json.dumps(message, separators=(",", ":")) + "\n")
         sys.stdout.flush()
 
     def send(self, message):
+        self.trace("client_response", message)
         with self.output_lock:
             self.emit(message)
 
@@ -288,6 +338,7 @@ class Supervisor:
         try:
             for line in process.stdout:
                 message = json.loads(line)
+                self.trace("backend_response", message)
                 with self.lock:
                     if process is not self.process:
                         return
@@ -332,7 +383,9 @@ class Supervisor:
             if client_id is not None:
                 self.client_ids[client_id] = ident
             try:
-                self.child_send(process, {"jsonrpc": "2.0", "id": ident, "method": method, "params": params or {}})
+                outgoing = {"jsonrpc": "2.0", "id": ident, "method": method, "params": params or {}}
+                self.trace("backend_forward", outgoing)
+                self.child_send(process, outgoing)
             except OSError:
                 self.pending.pop(ident, None)
                 if client_id is not None:
@@ -452,7 +505,7 @@ class Supervisor:
             elif method == "ping":
                 result = {}
             elif method == "tools/list":
-                result = {"tools": [TOOL] + self.tools}
+                result = {"tools": [TOOL] + responsive_tools(self.tools)}
             elif method == "tools/call" and params.get("name") == CONTROL:
                 action = params.get("arguments", {}).get("action")
                 if action == "stop":
@@ -463,7 +516,7 @@ class Supervisor:
                     raise ValueError("action must be stop, start or status")
                 result = {"content": [{"type": "text", "text": json.dumps({"running": self.process is not None and self.process.poll() is None, "gate": self.gate.exists()})}]}
             else:
-                response = self.rpc(method, params, client_id=ident)
+                response = self.rpc(method, responsive_params(method, params), client_id=ident)
                 response.update(jsonrpc="2.0", id=ident)
                 self.send(response)
                 return
@@ -522,6 +575,7 @@ def main():
     try:
         for line in sys.stdin:
             request = json.loads(line)
+            supervisor.trace("client_received", request)
             # Independent lifecycle calls must be able to interrupt a pending game call.
             if "id" in request:
                 threading.Thread(target=supervisor.handle, args=(request,), daemon=True).start()

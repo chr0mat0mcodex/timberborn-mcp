@@ -1,0 +1,355 @@
+Historischer Entwicklungsbericht; kein aktueller Spielauftrag.
+Die Befunde sind gegen PROJECT_STATE.md und spätere Releases abzugleichen.
+
+Überlebenslauf 2026-10-16
+
+Auftrag: Kolonie erhalten; durchgehend reguläres Maximaltempo 7, keine Pause.
+Kein Entwicklungsbuild, keine Installation, keine Änderungen vorhandener fremder Arbeiten.
+
+Beobachteter Einstieg: Tag 1, 9 Erwachsene und 4 Kinder, 90 Beeren,
+0 Wasser, 0 Holz, keine Betten. Tempo von 1 auf 7 gesetzt und getrennt bestätigt.
+Einziges Arbeitsgebäude: Distriktzentrum; zunächst 2 von maximal 4 Bauarbeitern.
+
+Befunde und Verbesserungen:
+1. Kritisch: Durchgehendes Spielen ist mit den vorhandenen Projektbauabläufen
+   nicht möglich. Projekt-Ausführung und regionale Planung setzen Pause voraus;
+   Simulationsläufe pausieren selbst. Benötigt wird ein ausdrücklich laufender
+   Modus mit frischer atomarer Prüfung pro Auftrag, ohne Tempowechsel.
+2. Einzelbau: Holzfällerflagge direkt neben dem Zentrum nativ geometrisch gültig;
+   keine verlorenen beobachteten Verbindungen, Vorschau wiederhergestellt.
+   Trotzdem regularExecutionAllowed=false, weil Bau-/Zugangsabdeckung unknown.
+   Kein Bauauftrag erteilt. Benötigt wird ein belastbarer regulärer Baustart
+   auch für eine frische Kolonie ohne vorherige Wege und Baustellen.
+3. Planersuche: Eine 8x8-Suche neben dem Zentrum prüfte 64 Kandidaten,
+   fand keinen und lieferte nur die Diagnose des Ursprungs. Keine Wiederholung.
+   Verbesserungsbedarf: aggregierte Ablehnungsgründe und Starterkolonie-Fall.
+4. Gebäudesuche ohne includePaths blendet das Distriktzentrum aus, weil es
+   isPath=true ist. Über Personalzuordnung gefunden, mit includePaths bestätigt.
+   Verbesserungsbedarf: gesonderte Distriktliste oder eindeutiger Filterhinweis.
+5. Gleichzeitige MCP-Leseaufrufe werden nicht eingereiht: einer abgewiesen.
+   Spielaufrufe anschließend seriell. Verbesserungsbedarf: wartende serielle
+   Verarbeitung oder ein gebündelter konsistenter Überlebensstatus.
+6. Nach etwa anderthalb realen Minuten auf Tempo 7 bereits 7 Dehydrierte.
+   Notfallhilfe für Holzfäller/Fällfläche und angeschlossene Wasserpumpe angefordert.
+   Eigene Priorität: Wasser vor Wohnraum; vorhandene Arbeitslose zum Bauen nutzen.
+7. Gewünschter Überlebensstatus: lebenswichtige Bedürfnisse getrennt von Komfort,
+   gesamtes essbares Essen, Wasserproduktion/-verbrauch, Restreichweite als
+   kenntlich gemachte Schätzung sowie Wetter-/Dürreprognose mit Datenherkunft.
+
+Status: laufender Versuch; kein Überlebenserfolg behauptet. Keine Rohlogs,
+Personennamen, Spiel- oder Sitzungskennungen in diesem Protokoll.
+
+Fortsetzung:
+- Nutzer erlaubt kurze Pausen für Pilotplaner und Großbauprojekte; sonst Tempo 7.
+- Holzfäller und Erstweg fertig und frisch zugänglich, Projekt freigegeben;
+  16 reife Kiefern markiert, ein Arbeiter beschäftigt, Holzbestand bis 6 gestiegen.
+- Eigener Fehler: Zentrumsanker zunächst als Anschluss behandelt. Vollständige
+  Gebäudesuche liefert wirklichen Eingang; künftig Geometrie vor Standortwahl.
+- Pumpenbefund: Uferstandort wird durch precheck wegen terrain_intersection und
+  automatischen Zugangsplaner als target_intersects_existing_or_planned_object
+  verworfen. Derselbe Standort ist in nativer Einzel- UND Gesamtvorschau gültig.
+  Expliziter Vier-Teile-Plan belegt Eingangsanschluss und road_reachable.
+  Verbesserung: Terrainprüfung muss tatsächliche Zellbelegung berücksichtigen;
+  widersprüchliche Suchfilter dürfen keine nativ gültige Pumpengeometrie verstecken.
+- Manuelles Wiederanlaufen zwischen Vorschau und Start führte zu sicherer
+  Startablehnung. Neu gelesen, explizit pausiert und neu geplant, kein blindes Retry.
+- Tempoänderung einmal unconfirmed, frische Lesung bestätigte Tempo 0.
+  Ein Wegauftrag zunächst unconfirmed, spätere Projektbeobachtung belegte
+  vollständigen Bau. Unbestätigte Antworten sind keine sicheren Fehlschläge.
+- Wasserpumpe und drei Anschlusswege fertig/zugänglich, Charge freigegeben.
+  Pumpe tatsächlich mit einem Arbeiter besetzt, Priorität VeryHigh.
+  Kritischer Durst sank zunächst von 13 auf 11; noch keine stabile Versorgung.
+- Nahrungsvorrat vollständig aufgebraucht. Beerenbüsche westlich gefunden.
+  Sammler und zweiter Holzfäller beauftragt. Zweistundenbudget endete nachts
+  vor Bauabschluss; beide real vorhanden und teils gebaut. Weiterlaufen bei 7.
+  Eigene Verbesserung: Tag/Nacht und aktuelle Arbeitszeit bei Bauzeitbudget
+  berücksichtigen; ein Zeitlimit braucht nicht automatisch eine Zugangreparatur.
+  MCP-Verbesserung: Diagnose nextStep unterscheidet fehlende Bauzeit/Schlaf von
+  tatsächlich fehlendem Zugang; aktuell wird review_access_repair_plan empfohlen.
+- Tag 6: weiterhin 13 lebende Biber. Zweite Pumpe und zweiter Sammler fertig,
+  zugänglich und besetzt. Beide Pumpen im Betriebsbild ready, keine beobachtete
+  Blockade; Wasser bleibt sehr knapp. Farmhaus für 25 Holz in Auftrag.
+- Mehrere Starts während externer Tempoänderungen korrekt not_executed abgewiesen.
+  Ein alter Plan nach zeitlichem Fortschritt korrekt plan_changed abgewiesen.
+  Notwendig: kurze transaktionale Plan-und-Start-Funktion mit optionaler vorher
+  autorisierter Pause und Wiederherstellung des gewünschten Laufbetriebs.
+- Diagnose für Sammler meldet nur not_manufactory. Hilfreich wäre ein eigener
+  Erntebericht: erreichbare reife Beeren, aktueller Arbeitsweg, Ernte/Transport,
+  Regeneration und tatsächlich angelieferte Mengen.
+- Eigener Planungsfehler: erste Fällcharge umfasste nur 16 Kiefern mit zusammen
+  32 Holz. Zwei Pumpen verbrauchten 24; acht blieben fürs 25-Holz-Farmhaus.
+  Weitere nahe Fällflächen markiert. Künftig Gesamtbedarf und markierten
+  verwertbaren Ertrag vor Folgeauftrag bilanzieren; nächste Bäume nach Wegstrecke
+  priorisieren statt erste nach Koordinatensortierung zurückgegebene Kandidaten.
+- 48 Karottenzellen auf frisch beobachtetem feuchtem Boden markiert. Einzelne
+  set_area-Aufträge funktionieren bei laufender Simulation, anders als Sammelvorschau.
+- Tag 7 abends: beide Pumpen tatsächlich leer, vollständig besetzt, technisch
+  bereit, aber außerhalb Arbeitszeit. Kein Vorrat für die Nacht.
+  Verbesserung: Arbeitszeit lesen/ändern, Bedarf und tatsächlichen Tagesertrag
+  gegenüberstellen; global totalCapacity enthält mehr als reale Pumpenpuffer.
+- Mensch hat auf Anfrage die Arbeitszeit auf 18 Stunden erhöht. Später an Tag 9:
+  elf lebend, null kritisch Durstige, aber alle elf kritisch hungrig.
+- Farmhaus fertig, zugänglich, drei Farmer, Karotten und Ernten zuerst gesetzt.
+  Reale Pflanzenabfrage: 48 Karotten vorhanden, Stichprobe etwa 18–26 % Wachstum.
+  inspect_areas gab dennoch überall vegetation=null zurück. Fehlendes Feld ist
+  kein Abwesenheitsbeweis; Pflanzenzustand muss separat gelesen werden.
+- Sammler näher an westlicher Beerenquelle samt 16 kostenlosen Wegen außerhalb
+  des Karottenfeldes geplant. Hauptproblem der bisherigen Sammler: lange Wege
+  und begrenzte Reichweite. Produktionsdiagnose erfasst Erntearbeit noch nicht.
+- Tag 10: sechs Erwachsene übrig; weiterer Verlust während Hungerkrise.
+  Neuer Sammler bei den Beeren mit 16 Wegen fertig und besetzt. Beide Holzfäller
+  deaktiviert, Bauarbeiter auf einen reduziert. Nahrung und Pumpen VeryHigh.
+- Tag 11: Flusszellen an beiden Pumpen vollständig trocken, waterDepth=0.
+  Pumpenbericht: ready=false, aber kein spezifischer Wasserblocker und zunächst
+  nur manufactory_not_ready. Keine Wetter-/Dürrevorhersage in verfügbaren Tools.
+  Kritische MCP-Erweiterung: Wetterphase, Restdauer, Zufluss, Ansaugstelle,
+  tatsächliche Pumpreichweite und wasserbedingten Stillstand strukturiert melden.
+- Eigene strategische Fehler: Grundversorgung zu spät gestartet, Reserven nicht
+  vor erster Trockenphase aufgebaut; Nahrung und Holz zu lange über kleine,
+  ungünstig gelegene Ernteaufträge gedeckt. Farm zu spät für erste Hungerkrise.
+  Priorität künftig: kostenloser naher Sammler und Holzfäller sofort gemeinsam,
+  Pumpen früh parallel, Felder früh, Arbeitszeit und Wasserreserve vor Komfort.
+- Tag 11: drei Erwachsene übrig. Trockene Pumpen und beide entfernten Sammler
+  deaktiviert, beerenaher Sammler bleibt aktiv. Ziel: eine Person sammelt,
+  eine baut Unterkunft, eine kann erste Karotten ernten. Pumpen bei Rückkehr
+  des Wassers sofort reaktivieren. Unterkunft ist beauftragt, nicht fertig.
+- Zeitbudgetende/Frühabschluss pausieren zwingend und erfordern Nachführung.
+  Für Spielen sollte finishPolicy=resume_previous_speed verfügbar sein;
+  Testlaufmodus mit Abschluss-Pause getrennt davon beibehalten.
+- Tag 12/13: Unterkunft fertig, zwei Erwachsene mit Betten, keine Kinder.
+  Fluss weiter trocken. Karotten kurz vor Reife, noch ohne Trockenstress.
+  Bauzentrum deaktiviert, Farm auf einen Farmer und höchste Priorität reduziert;
+  anderer Arbeitsplatz ist beerenaher Sammler. Keine weiteren Bauprojekte.
+- Protokoll nennt Verluste ausdrücklich; kein stabiler Überlebensnachweis.
+- Ende Tag 13: Wasser an der Pumpe wieder vorhanden (etwa 0,16 Tiefe).
+  Erste Pumpe inzwischen extern wieder aktiv und besetzt, Nahsammler pausiert.
+  Aktuell ein Pumpenarbeiter und ein Farmer. Keine Zuschreibung externer Änderungen
+  ohne Herkunftsbeleg. Zwei Erwachsene, einer bereits nicht mehr kritisch hungrig.
+  Karottenernte real angelaufen, Wasserproduktion wartet noch auf Arbeitsbeginn.
+
+Erster Wendepunkt, Tag 14:
+Zwei Erwachsene leben, beide haben Unterkunft. Hunger und Durst bei beiden
+nicht mehr kritisch und nicht im Warnbereich. Pumpe und Farm mit je einer
+Person tatsächlich besetzt und arbeitend. Erste Wasserreserve von 1 beobachtet.
+Elf der ursprünglich 13 Biber verloren. Noch kein langfristiger Stabilitätsbeleg.
+Alle fertigen Bauprojekte werden freigegeben; kein neuer begrenzter Simulationslauf.
+
+Priorisierte Verbesserungsvorschläge:
+P1 Spielbarkeit: laufender Bau-/Planungsmodus mit atomarer Frischeprüfung,
+   explizitem Abschlussverhalten und ohne obligatorische Simulationspause.
+P1 Überlebensdaten: Wetter/Dürredauer, Wasserquelle/Ansaugblockade, Bedarf und
+   tatsächlicher Ertrag, aggregiertes essbares Essen, demografischer Trend.
+P1 Startkolonie: Distrikt-Eingang und erster Weg als eigener belastbarer Ablauf;
+   nativen Pumpenbau nicht durch falsche Terrainfilter aussortieren.
+P2 Ernte: nahe reife Bestände nach Reiseaufwand statt Koordinaten sortieren;
+   Arbeitsreichweite, Ertrag, Regeneration und Transport zusammen diagnostizieren.
+P2 Bedienung: Arbeitszeiten steuern, Personal gruppenweise umverteilen,
+   aktuelle Markierung und reale Pflanzen konsistent gemeinsam ausgeben.
+P2 Verlässlichkeit: erwartbar verzögerten Tempowechsel nicht als allgemeines
+   unconfirmed darstellen; reine Leseanfragen seriell wartend verarbeiten.
+
+Eigene nächste Spielstrategie:
+Kostenlose Rohstoff- und Nahrungsarbeitsplätze sofort gemeinsam starten.
+Den echten Distrikteingang zuerst lesen. Farm und Feld vor Erschöpfung der
+Startnahrung bauen; markierten Holzertrag gegen gesamten Bedarf rechnen.
+Wasserreserve vor Dürre dimensionieren, dann Wohnraum; Bauarbeiter reduzieren,
+wenn lebenswichtige Produktion personell ausfällt. Weniger breite Katalogabfragen,
+keine übergroßen Toolbeschreibungen laden, Zwischenantworten gezielt kürzen.
+
+Zwischenstand Tag 15, 17:20 Spielzeit:
+Zwei Erwachsene und ein Kind; drei belegte Betten, niemand obdachlos.
+45 Karotten und 12 Wasser verfügbar. Kein Hunger-/Durstwarnwert oder kritischer
+Bedürfniswert bei den drei lebenden Bibern. Tempo 7 bestätigt.
+Erste Trockenphase mit menschlicher Hilfe überstanden; kein autonomer Alleinerfolg.
+Mensch bestätigte Arbeitszeitänderung; weitere externe Einstellungen beobachtet,
+aber ohne gesicherte Herkunft nicht zugeschrieben. Elf Startbiber verloren.
+Nächster Bedarf: Wasserreserve vor nächster Trockenphase und behutsamer Wiederaufbau.
+
+Fortsetzung Tag 16/17:
+Voriger Zielturn war Fortschritt: erste Trockenphase überstanden, Geburt,
+Nahrungsreserve und konkrete MCP-Befunde. Ziel bleibt langfristig offen.
+Aktueller Stand neu gelesen: zwei Erwachsene, ein Kind, keine akuten Bedürfnisse.
+15 Holz vorhanden, Pumpe zunächst extern pausiert und Holzfäller aktiv.
+Für Wasserreserve umverteilt: ein Pumpenarbeiter und ein Bauarbeiter,
+Farmer kurz pausiert bei 47 Karotten. Wassertank (30 Kapazität) fertig und
+zugänglich, auf Water/obtain konfiguriert. Voller Pumpenausgang beobachtet.
+Beschaffung ist noch kein Lieferbeleg; tatsächliche Füllung anschließend prüfen.
+- Tag 17: reale Lieferung von 20 Wasser in den 30er-Tank belegt; Pumpe arbeitet.
+  Native Wasserhistorie: letzte zwei Einträge jeweils 7 Verbrauch, davor 24
+  bei Dursterholung. Keine pauschale Momentanrate aus Vorratsdifferenzen ableiten.
+  Ein Arbeitskräftewechsel genügt: zweiter Erwachsener zeitweise Holz statt
+  Bau/Ernte, erster pumpt. Nahrungsvorrat zuletzt 47 Karotten.
+- Tag 18: Wassertank 30/30 gefüllt, Pumpenpuffer zusätzlich 15; insgesamt
+  45 verfügbares Wasser. Drei Biber ohne Hunger-/Durstwarnungen.
+  22 Holz gewonnen. Zweite Unterkunft und kleines Karottenlager für zusammen
+  15 Holz samt einem neuen Weg beauftragt. Kein neuer Nahrungsertrag behauptet.
+- Verbesserung für Arbeitsplanung: Bei nur zwei Erwachsenen müssen Ernte,
+  Pumpen, Holz, Bau und Transport anhand tatsächlicher Reserven zeitweise
+  wechseln. Eine transparente, begrenzte Personal- und Vorratssteuerung wäre
+  hilfreicher als zahlreiche einzelne Pause-/Prioritätsaufrufe.
+- Tag 19: zweite Unterkunft und Karottenlager fertig; 30 Karotten real im
+  Lager plus 2 im Farmbestand. Farmer wieder aktiviert, Bauzentrum pausiert.
+  Projektabschluss-Ledger noch nicht freigegeben: close bei extern wieder
+  laufendem Tempo abgewiesen. Bauabschluss und Projektfreigabe getrennt;
+  Freigabe bei nächster sachlich nötiger Baupause nachholen.
+  Höchsttempo 7 lesend bestätigt. Farmpriorität inzwischen extern planting;
+  vorhandenen Zustand gelesen und angesichts ausreichender Reserve belassen.
+Zwischenstand Tag 20, etwa 20:30 Spielzeit:
+Drei Erwachsene, keine Kinder, sechs Betten. 49 Karotten und 41 Wasser,
+11 Holz. Keine Hunger-/Durstwarnungen. Tempo 7 bestätigt.
+Dritter Erwachsener hat normal priorisierten Holzarbeitsplatz übernommen;
+Pumpe und Farm blieben besetzt. Nächster Schritt: weitere 15-Holz-Wasserreserve
+für wachsende Bevölkerung und nächste Trockenphase; offenes, bereits fertig
+gebautes Wohn-/Lagerprojekt bei nächster Baupause freigeben.
+
+Fortsetzung Tag 21:
+Voriger Zielturn war Fortschritt: Tank gefüllt, zweite Unterkunft und
+Karottenlager gebaut, dritter Erwachsener mit gesicherter Grundversorgung.
+Neue externe Baustelle exakt am geplanten zweiten Tankplatz: Zierstrauch,
+12 Holz. Eigene Tankvorschau deshalb state_conflict/unconfirmed, kein
+Tankauftrag behauptet. Konstruktion separat gelesen, Simulation wieder 7.
+Eigener Ansatz: externe Baustelle erhalten, fertigstellen lassen, Tank später
+anders platzieren und Materialbedarf neu lesen. Globale Baustellensperre ist
+für laufendes gemeinsames Spielen ein erheblicher Engpass; unabhängige Projekte
+sollten anhand tatsächlicher Zugangs-/Materialkonflikte beurteilt werden.
+Fortsetzung Tag 24-25:
+Vier Biber (drei Erwachsene, ein Kind), sechs Betten, 73 Karotten.
+Pumpeneinlauf trocken beobachtet, 28 Wasser zu Beginn der Kontrolle.
+Zweiter Tank nach fertigem Zierstrauch am alternativen freien Wegplatz gebaut:
+Fertigstellung und Zugang nachgewiesen, Projekt freigegeben, Water/obtain
+bestätigt. Weitere 30 Kapazität, noch kein zusätzlicher Vorrat nachgewiesen.
+Kurze genehmigte Planungspause, Bau auf Tempo 7, nach Abschluss wieder 7.
+Bauarbeiter anschließend zurück zur Holzarbeit; Farm/Pumpe bleiben aktiv.
+Eigener Fehler: zweiten Tank nicht vor der erneuten Trockenphase gefüllt.
+Kapazität allein schützt nicht. Wettervorwarnung und Füllziel pro Bevölkerung
+müssen vor weiterem Wachstum die Baupriorität bestimmen.
+MCP: Pumpenbetrieb meldet nur manufactory_not_ready statt trockenem Einlauf;
+separate Kartenabfrage war nötig. Wetterphase und Restdauer fehlen weiterhin.
+Tag 26-27: Nutzer meldet 2,5 Tage Restduerre. Auf ausdruecklichen Hinweis
+Spielbild via MCP angesehen: Wetteranzeige spaeter 1,8 Tage, offenes Wasserloch
+sichtbar. Gezielte Kartenabfrage bestaetigt neun offene Wasserzellen bei
+x127..129/y137..139 mit etwa 1,6 Tiefe. Vorherige Stichprobe unter oestlichem
+Gelaende war keine ausreichende Suche nach erreichbarem Restwasser.
+Notpumpen-Zugangsplan dort scheitert bereits an target_geometry; kein Auftrag.
+Treppen aktuell gesperrt, 70 Forschung benoetigt, null vorhanden.
+Dritter Tank fertig, Zugang nachgewiesen und Ledger freigegeben, Water/obtain
+bestaetigt; insgesamt 90 Tankkapazitaet. Noch kein Fuellnachweis.
+Verbesserung: Kartenuebersicht frueh nutzen, danach strukturierte Zielpruefung.
+MCP sollte offene Wasserkoerper samt Uferhoehe, Tiefe und Zugangsoptionen
+gezielt auffinden, statt viele isolierte Zellen abfragen zu muessen.
+Tag 28-29: Ein Erwachsener laut sichtbarer Ereignisliste an Altersschwaeche
+verstorben, nicht als Dursttod zaehlen. Zwei Erwachsene und ein Kind verbleiben.
+Bei 79 Karotten Farm voruebergehend pausiert; beide Pumpen mit je einem
+Arbeiter nachgewiesen. Tag 29 morgens noch kein Zufluss, alle drei durstig.
+MCP-Verbesserung: strukturierte Lebensereignisse/Todesursachen und Altersstruktur
+fehlen fuer rechtzeitige Personal- und Nachwuchsplanung. Bild war hier die
+einzige direkt verfuegbare Evidenz zur Ursache; keine Namen protokolliert.
+Tag 30: Rueckfluss mit zunaechst etwa 0,12 Tiefe und 0,53 Kontamination.
+Keine dauerhafte Pumpenblockade behaupten: kurz danach beide Pumpen bereit,
+ein Wasser direkt im Pumpenbestand nachgewiesen. Spaeter sechs Wasser und
+bei allen drei Erwachsenen keine Hunger-/Durstwarnung mehr; kein aktiver
+Kontaminationsbedarf. Kontamination am Einlauf auf etwa 0,24 gesunken.
+Zweite Trockenphase ohne zusaetzlich beobachteten Dursttod ueberstanden;
+ein Altersverlust und Erwachsenwerden getrennt belegt. Farm wieder aktiv,
+beide Pumpen besetzt. Weiteres Ziel: 90 Tankplaetze tatsaechlich fuellen,
+nicht Tankkapazitaet als Vorrat zaehlen. Simulation weiter auf Tempo 7.
+Tag 31-33: Vorrat auf 110 Wasser gestiegen, davon 84 in Tanks; vier Biber,
+keine Hunger-/Durstwarnung. Nahrung vor Ausbauversuch 77 Karotten.
+Erfinder (12 Holz) mit kurzem Weg vorgesehen. Freier Platz geometrisch
+vorgeprueft. Erste Vorschau enthielt falsche Wegvorlage Path.Folktails;
+Katalog korrigiert auf Path. Auch korrigierte Vorschau und separater
+Zugangsplaner scheitern unspezifisch mit state_conflict/unconfirmed.
+Keine Baustellen entstanden; vorhandenes Projekt completed/released,
+faulted=false/busy=false. Kein Erfinderbau behauptet, keine weiteren blinden
+Versuche. Simulation nach jeder Diagnose wieder 7, Farm reaktiviert.
+Nutzer um Setzen eines angeschlossenen Erfinders gebeten.
+MCP P1: Vorpruefungsablehnungen muessen konkrete Guard-/Baseline-Ursachen
+liefern und dürfen nicht pauschal als unbestaetigter Schreibauftrag erscheinen.
+Eigene Verbesserung: bei Personaleinsatz auch konkurrierende Holzarbeit
+pausieren; freier Farmer wird sonst nicht zwingend zum Bauarbeiter.
+Tag 33: Befuellung erfolgreich: 90 Wasser in Tanks plus 30 in Pumpen,
+120 gesamt. Zweite Pumpe danach pausiert, Arbeiter zur Holzarbeit;
+Hauptpumpe und Farm weiterhin mit je einem Arbeiter bestaetigt.
+Tag 34, Diagnosepraezisierung: Einzelvalidierung liefert placement valid,
+aber roadProtection.reason=navigation_object_limit. Quellcode Capture begrenzt
+alle initialisierten BlockObjects vor Auswahl der Navigationsproben auf 4096.
+Damit ist eine globale Objektgrenze als konkrete aktuelle Nachweisluecke
+belegt; kein Standortfehler. Projektplaner verbergen diesen Grund hinter
+state_conflict/unconfirmed. Nicht durch ungeprueften Bau umgehen.
+Verbesserung fuer MCP: relevante Navigationsobjekte gezielt erfassen, Vollstaendigkeit
+separat ausweisen, Guard-Grund im Projektbericht unverkuerzt weiterreichen.
+Keine Codeaenderung im Spiellauf.
+Nutzer setzte Erfinder am bestehenden Weg; gebauter Auftrag separat gelesen,
+Bauarbeiterzugang nativ erreichbar. Holzarbeiter zum Bauzentrum versetzt.
+Tag 35: Menschlich gesetzter Erfinder fertig und besetzt. Nachweis echter
+Forschung: Punkte von null auf acht gestiegen. Farm und Hauptpumpe laufen,
+109 Wasser, vier Biber ohne Hunger-/Durstwarnung. Kein autonomer Bau des
+Erfinders behauptet; Nutzerhilfe war fuer Platzierung erforderlich.
+Tag 38-39: Sechs Bewohner, volle Wohnkapazitaet. Neueste Wasserbuchungen
+acht bis zehn pro Tag vor vollem Nachwuchseffekt; Reserve zu Beginn 89.
+Treppen regulär fuer 70 Forschung freigeschaltet, Punkteabzug 73 auf 3
+und unlocked=true nachgelesen. Freischaltung bedeutet noch keinen Bau:
+Bretterproduktion und nachgewiesener Hoehenzugang fehlen weiterhin.
+Holzstapel fuer zwei Holz geometrisch gueltig, aber weiterhin
+navigation_object_limit. Nutzer um Setzen gebeten, keine Wiederholung
+blockierter Projektauftraege. Holzlager wird fuer Produktionsketten benoetigt.
+Tag 40-41: Vom Nutzer gesetzter kleiner Holzstapel fertiggestellt, Log/obtain
+bestaetigt, Kapazitaet 20. Baupersonal danach zur Holzarbeit zurueckgefuehrt.
+Treppen brauchen ein Holz und vier Bretter; Saegewerk kostet 15 Holz,
+Kraftversorgung zusaetzlich erforderlich. Freischaltung ohne Produktionskette
+haette allein keinen Wasserzugang geschaffen. Eigene Verbesserung: Material-
+und Kraftkette vor Forschungsprioritaet gemeinsam planen.
+Tag 41: Foerster fuer 30 Forschung regulär freigeschaltet, Abzug und
+unlocked nachgelesen. Kraftversorgung fuer Saegewerk konkret: Laufrad
+20 Holz plus Saegewerk 15 Holz, zusaetzliche Belegschaft erforderlich.
+Neue strategische Warnung im Bild: Unstable Core, etwa elf Tage.
+Aktive Statusabfrage bestaetigt Explodes soon; Alert-Targets liefert
+UnstableCore bei (103,116,12). Explosionsradius und Folgen unbekannt.
+Korrektur zur Kartenfaehigkeit: aktive Warnungen erlauben bereits eine
+kartenweite gezielte Spezialobjektlokalisierung. Das ersetzt keinen
+vollstaendigen Spezialobjektindex oder eine Topologieuebersicht.
+
+Tag 66-69, nach 0.61-Liveabnahme: Nutzer beauftragt Saegewerk und Laufrad,
+Tempo 7, kurze Planpause. Suedlicher Bauplatz kollidiert mit Pflanzen;
+Vorpruefung benennt nur object_intersection, nicht die konkreten Objekte.
+Westlicher Platz geometrisch frei. Laufrad hat einen gerichteten Kraftport;
+erster benachbarter Entwurf haette keine Verbindung hergestellt. Nordvariante
+mit automatischer Zugangsergaenzung: zwei Gebaeude plus zehn Bodenwege,
+35 Holz. Erster Start trotz bestaetigter Pause: project_start_plan_changed,
+not_executed, keine Baustellen. Frische explizite Gesamtvorschau danach gueltig,
+neuer Auftrag erfolgreich; Saegewerk und zehn Wege fertig, Laufrad im Bau.
+MCP-Luecken: stabiler Planschluessel zwischen Zugangsergaenzung und Start;
+konkrete Kollisionsobjekte in Bauvorpruefung; Generator-Verbraucher-Anordnung
+mit Kraftportziel als Planungsbedingung; Warnung Unstable Core zeigt {0} days
+statt Countdown und keine Wirkungszone/Versorgungsfolgen. Keine Rohlogs abgelegt.
+Tag 69: Beide Produktionsgebaeude und zehn Wege vollstaendig fertig und
+frisch zugaenglich, Projekt abgeschlossen und freigegeben. Forscher und
+Bauarbeiter fuer die zwei Produktionsarbeitsplaetze freigegeben. Beide mit
+je einem Biber besetzt. Native Kraftverbindung Laufrad -> Saegewerk bestaetigt;
+Netz liefert 53 bei 50 Bedarf. Erste zwei Bretter im Saegewerkbestand gelesen.
+rotationMatches=false in der geometrischen Vorschau war kein Ausschluss einer
+realen Kraftverbindung; Semantik fuer Agenten erklaeren statt als Fehler werten.
+Baucharge pausiert am Abschluss zwingend; sofort wieder auf 7 gesetzt.
+Verbesserungswunsch: explizite Abschlussgeschwindigkeit bzw. Continue-on-complete
+fuer fortlaufendes Spielen, ohne das eigene Simulations-Ledger zu unterbrechen.
+Tag 69/70: Neun Bretter im Saegewerk; beide Produktionsarbeitsplaetze besetzt.
+67 Karotten verfuegbar. Kurzzeitige Hungerwarnung verschwand nach Arbeitsschluss,
+keine unbegruendete Personalumschichtung. Explosionswarnung verschwunden,
+bekannter Kern nicht mehr auffindbar; weiterhin fuenf Erwachsene. Dies belegt
+nicht exakt Explosionszeit, Wirkungsradius oder indirekte Wasseraenderungen.
+MCP-Luecke ergaenzt: Ereignisprotokoll fuer Katastrophen mit Zeitpunkt,
+Objekt-/Gelaendeaenderungen und abgeleiteten Versorgungsausfaellen.
+Tag 71: Foerster gebaut (10 Holz/7 Bretter), fertig und zugaenglich;
+28 freie erreichbare Zellen fuer Kiefern nativ vorgeprueft und markiert.
+Feuchte bewusst nicht vorausgesetzt: Auftrag fuer Nachwuchs, kein Ertragsbeleg.
+Holzdiagnose im ganzen Arbeitsbereich: 108 reife lebende Kiefern, beobachteter
+Ertrag 216 Holz; kein sofortiger Holznotstand. Beide Pumpstellen trocken,
+Betriebsdiagnose nennt trotzdem kein water_source_empty. Tiefes Wasserloch
+hat noch 1,59 Tiefe, aber Verunreinigung etwa 0,07-0,08. Aufnahme von
+Pumpenansaugzelle, Wasserstand, Verunreinigung und Ursache fehlender Foerderung
+in Betriebsdiagnose dringend sinnvoll. Keine Reinwasserbehauptung daraus.
+Tag 73/74: Reservoirpumpe samt einer Treppe und neun Wegen selbst geplant und beauftragt. Automatische Zugangssuche meldet target_intersects_existing_or_planned_object, obwohl keine Objekte im Baufeld vorliegen und native Gesamtvorschau Pumpengeometrie akzeptiert. Vermutung: unterirdische Any-Zellen falsch als Kollision gewertet. Manuelle gemeinsame Planung ist pilotEligible, alle Teile nativ gueltig, keine verlorenen Anschluesse. Start nach Personalaktivierung meldet korrekt not_executed/project_start_plan_changed; frische Planung danach erfolgreich. Bau laeuft auf Tempo 7. Nur acht Wasser, jetzt fuenf Erwachsene und ein Kind.
+Tag 74: Reservoiranschluss fertig: elf Teile real vorhanden und erreichbar. Neue Pumpe besetzt, laufender Job, Wasser im reinen Ausgabepuffer von 5 auf 10 gestiegen; Gesamtwasser zuletzt10, Karotten71, Holz40. Alle sechs Biber ohne Hunger-/Durstnot. Alte trockene Pumpe pausiert. Tempo7 bestaetigt. Projektledger noch nicht freigegeben: Simulation war bei frischer Abschlussdiagnose bereits wieder7, close daher korrekt rejected. Bei naechster benoetigter Planungspause freigeben, kein erneuter Bauauftrag.
+Tag 76: Traegerposten fertig und erreichbar, Projekt freigegeben. Danach verseuchtes Hochwasser ueber gesamtem Koloniekern: elf ueberflutete Gebaeude einschliesslich Farm, Pumpen, Lager und Wohnen. Vier Erwachsene und ein Kind, alle arbeitslos durch Ueberflutung; ein Alterstod bestaetigt. Wasser21 und Karotten68 sind Bestandszahlen, keine Garantie fuer Zugriff auf ueberflutete Lager. Spielansicht auf Nutzerwunsch bestaetigt grossflaechige rote Ueberflutung; Warnung Unstable Core zeigt neun Tage, waehrend MCP weiterhin Platzhalter liefert. Tempo7. Strategischer Fehler: Versorgung im gefaehrdeten Becken konzentriert; frueher Hochwasserabfluss, Flutgrenzen und Ausweichstandort auf hoeherem Terrain planen.
+Tag77: Zentrum testweise aktiviert: ebenfalls Flooded, null Arbeiter; aktuell kein Wiederaufbau von dort. Keine neuen Bauauftraege. Wasser am identischen Distriktzugang sinkt von0,103 auf0,066, bleibt stark kontaminiert. Traegerposten von Standard5 auf1 Sollarbeiter begrenzt, Holzfaeller reaktiviert, Zentrum ohne Baustellen wieder pausiert; Wasser und Farm aktiv. Paused-Status verdeckt im Statuslisting offenbar Flooded: fehlender Fluttext bei pausiertem Gebaeude ist kein Trockenheitsbeleg.
+Tag78,88: Vier Erwachsene, kein Kind; Ursache dieser weiteren Bevoelkerungsaenderung noch nicht belegt. Nur3 Wasser, alle vier arbeitslos, keine nutzbaren Betten. Fester Wasserstandmesspunkt sinkt weiter auf0,0557, Kontamination0,988. Alte Pumpe weiterhin Flooded. Menschliche Hilfe fuer Beckenabfluss/Flutquelle angefragt: vorhandenes MCP bietet keine direkte Terrainbearbeitung/Evakuierung, Bauen durch ueberflutetes Zentrum nicht moeglich. Tempo7 unveraendert.

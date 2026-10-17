@@ -1,10 +1,15 @@
 # Einstieg
 
-**Stand 0.74.0 mit abgeschlossenen Journal-Korrekturen:** Reparaturbedarf wird aus frischen Zugangsbelegen abgeleitet. Materialwarten, Bestandsverlust, unerreichbare Baustelle und Fertigbau sind getrennt live geprüft. Forstjournale verhindern erneute Mutationen bei Wiederaufrufen, auch nach Neuverbindung.
+**Stand 0.74.0 mit abgeschlossenen Journal- und Cancel-/Transport-Korrekturen:** Reparaturbedarf wird aus frischen Zugangsbelegen abgeleitet. Materialwarten, Bestandsverlust, unerreichbare Baustelle und Fertigbau sind getrennt live geprüft. Forstjournale verhindern erneute Mutationen bei Wiederaufrufen, auch nach Neuverbindung.
 
-Letzte Abnahme: **23 Supervisor-, 1931 Unit- und 13 Integrationstests**, drei optionale Live-Integrationstests übersprungen. Supervisor-Stop/Start und Forstjournal-Persistenz gezielt live bestätigt. [Belege und Grenzen](docs/releases/0.74.0.md).
+Letzte Abnahme: **28 Supervisor-, 1936 Unit- und 13 Integrationstests**, drei optionale Live-Integrationstests übersprungen. Supervisor-Stop/Start und Forstjournal-Persistenz gezielt live bestätigt. [Belege und Grenzen](docs/releases/0.74.0.md).
 
 Offen bleiben insbesondere unbekannte Objektidentität im Livebetrieb und gesonderte weitere Zugangsgeometrien. Dateifehler sowie unterbrochene Schreibaufträge sind synthetische Gate-Nachweise. [Projektstand](PROJECT_STATE.md) · [Offene Aufgaben](BACKLOG.md) · [Agenten-Anleitung](docs/agent-playing-guide.md).
+
+Cancel-Transport begrenzt live abgenommen: 30 Sekunden angefordert, intern
+1,002 Sekunden gewartet; Cancel-Antwort nach 2,986 Sekunden, Pause bestätigt.
+Zeitmarken lokalisieren die serielle Zustellung vor dem Supervisor.
+[Aktueller Vertrag](docs/lightweight-status-wait.md). Kein Parallelitätsversprechen.
 
 ## Frühere Abnahmen
 

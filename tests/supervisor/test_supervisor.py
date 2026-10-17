@@ -152,6 +152,26 @@ class StopRequestTests(unittest.TestCase):
             module.request_stop(self.runtime, timeout=0)
 
 
+class ResponsiveTransportTests(unittest.TestCase):
+    def test_only_valid_waiting_status_arguments_are_capped_without_mutation(self):
+        for name in ("inspect_simulation_run", "inspect_large_project"):
+            for wait in (0, 1, 2, 30, 31, -1, 0.5, True, "30", None):
+                original = {"name": name, "arguments": {"waitSeconds": wait, "session": "synthetic"}}
+                result = module.responsive_params("tools/call", original)
+                expected = min(wait, 1) if type(wait) is int and 0 <= wait <= 30 else wait
+                self.assertEqual(expected, result["arguments"]["waitSeconds"])
+                self.assertEqual(wait, original["arguments"]["waitSeconds"])
+                self.assertEqual("synthetic", result["arguments"]["session"])
+        for name in ("cancel_simulation_run", "run_simulation_for", "advance_building_batch"):
+            params = {"name": name, "arguments": {"waitSeconds": 30}}
+            self.assertIs(params, module.responsive_params("tools/call", params))
+
+    def test_catalog_explains_limit_without_mutating_backend_cache(self):
+        original = [{"name": "inspect_simulation_run", "description": "original", "inputSchema": {}}]
+        self.assertIn("eine Sekunde", module.responsive_tools(original)[0]["description"])
+        self.assertEqual("original", original[0]["description"])
+
+
 class LifecycleTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
@@ -178,6 +198,44 @@ class LifecycleTests(unittest.TestCase):
 
     def control(self, action):
         return self.call("tools/call", {"name": module.CONTROL, "arguments": {"action": action}})
+
+    def test_frontend_forwards_second_rpc_while_first_response_is_pending(self):
+        self.initialize()
+        result = queue.Queue()
+        thread = threading.Thread(target=lambda: result.put(self.server.rpc("tools/call", {"name": "pending"})))
+        thread.start()
+        try:
+            deadline = time.monotonic() + 3
+            while not self.server.pending and time.monotonic() < deadline:
+                time.sleep(0.01)
+            self.assertTrue(self.server.pending)
+            response = self.call("tools/call", {"name": "synthetic_read"})
+            self.assertIn("result", response)
+            self.assertTrue(thread.is_alive())
+        finally:
+            self.server.stop()
+            thread.join(timeout=3)
+        self.assertFalse(thread.is_alive())
+        self.assertIn("error", result.get(timeout=1))
+
+    def test_dispatch_caps_wait_and_forwards_cancel_once(self):
+        with patch.object(self.server, "rpc", return_value={"result": {}}) as rpc:
+            self.call("tools/call", {"name": "inspect_simulation_run", "arguments": {"waitSeconds": 30}})
+            self.assertEqual(1, rpc.call_args.args[1]["arguments"]["waitSeconds"])
+            self.call("tools/call", {"name": "cancel_simulation_run", "arguments": {"runId": "synthetic"}})
+            self.assertEqual("cancel_simulation_run", rpc.call_args.args[1]["name"])
+            self.assertEqual(2, rpc.call_count)
+
+    def test_timing_is_bounded_and_excludes_arguments_and_ids(self):
+        self.server.trace_events.extend({"event": "synthetic"} for _ in range(128))
+        for _ in range(3):
+            self.server.trace("client_received", {"id": "secret", "method": "tools/call",
+                "params": {"name": "inspect_simulation_run", "arguments": {"token": "secret"}}})
+        events = module.read_json(self.server.trace_path)
+        self.assertEqual(128, len(events))
+        self.assertNotIn("secret", json.dumps(events))
+        with patch.object(module, "atomic_json", side_effect=OSError("synthetic")):
+            self.server.trace("client_received", {})
 
     def test_stop_restart_preserves_frontend_and_replays_handshake(self):
         self.initialize()

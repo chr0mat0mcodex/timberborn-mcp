@@ -293,7 +293,6 @@ Andere Unsicherheit weiterhin nur lesend klaeren. Compact zaehlt passende
 Markierungen und zeigt Beispiele nur bei weiteren Blockaden. Full bleibt komplett.
 
 
-
 ## 0.53.0 - Sammelpflanzung begrenzt live abgenommen
 
 Menschliches Gate bestanden; nativer Pilot am 12. Oktober 2026 bestaetigt.
@@ -597,23 +596,57 @@ Gebäudebauschalter, zwei Leser unabhängig davon. Kein automatischer Wiederholu
 oder Hintergrundbau **im manuellen Altmodus dieser Tabelle**.
 [Parameter, Grenzen und Statusbedeutung](large-projects-0.37.0.md).
 
+## Cancel-Nacharbeit — Gate und begrenzter Livepilot bestanden
+
+`cancel_simulation_run` darf während `inspect_simulation_run` oder
+`inspect_large_project` mit `waitSeconds > 0` parallel passieren. Andere
+konkurrierende Aufrufe bleiben gesperrt. Der Codex-Supervisor begrenzt
+gültige Statuswartezeiten zusätzlich auf eine Sekunde. Externe Zustelllatenz
+bleibt separat: im Livepilot 2,986 s bis Cancel-Antwort, dann Pause bestätigt.
+Die beobachtete Serialisierung liegt vor dem Supervisor.
+[Vertrag und Nachweisgrenzen](lightweight-status-wait.md).
+
+## Abgenommene Grundlage
+
 Live abgenommen: `timberborn_server_control` (`action: stop|start|status`)
 kommt vom persistenten Codex-Vorschaltprozess, nicht aus der Spiel-Bridge.
 Stop sperrt das Backend vor dem menschlichen Gate; Start erst nach `live bereit`.
 [Einrichtung, Fehlerverhalten und Abnahme](codex-mcp-supervisor.md).
 
-Letzter dokumentierter Abschluss: Bridge 0.72.0, begrenzt live abgenommen.
-Paket-/Abnahmestand: [PROJECT_STATE.md](../PROJECT_STATE.md).
+Letzter dokumentierter Abschluss: Bridge 0.72.0, begrenzt live abgenommen. Paket-/Abnahmestand: [PROJECT_STATE.md](../PROJECT_STATE.md).
 Praktischer Ablauf: [Spielanleitung für Agenten](agent-playing-guide.md).
-Historische Versionsabschnitte unten sind keine allgemeine Baufreigabe;
-aktueller Auftrag folgt ../missionsplan.md.
-Etappe A ergänzt `assessment` in bestehenden Einzel-/Projekt-Validierungen;
-freie/gesperrte Vorschau und Vorschauzugang live geprüft, keine neue Baufreigabe.
-[Bericht und Grenzen](build-assessment.md).
-[Grund und Ergebnisvertrag](road-protection.md). Der verfügbare Werkzeugumfang
-ergibt sich aus `tools/list` und den aktiven technischen Aktionsschaltern.
-Neu: Ingame-Zeitläufe, automatisch und im begrenzten MCP-Live-Pilot geprüft. Die 30 bisherigen Leser
-sind unter 0.21.1 live belegt. Nachweise und Grenzen stehen in den Fachdokumenten.
+Der tatsächliche Werkzeugumfang und die Pflichtargumente ergeben sich aus
+`tools/list` und den aktiven technischen Aktionsschaltern; keine feste Werkzeugzahl.
+Historische Versionsabschnitte unten beschreiben frühere Nachweise und Grenzen.
+
+## Gebündelte Abläufe
+
+| Werkzeug | Zweck und Grenze |
+| --- | --- |
+| `inspect_colony_overview` | Bevölkerung, Betten, Personal, Bedürfnisse und ausgewählte Güter bündeln; keine vollständige Nahrungsbilanz. |
+| `inspect_map_region` | Gelände einschließlich `soilIsMoist`; null bleibt unbekannt bzw. auf dieser Höhe nicht anwendbar. |
+| `survey_region` | Pausierte Region bis 16×16: Hindernisse, Feuchte und freie Rechtecke. Optional `workBuildingId` für native Arbeitsreichweite; `planBuildings=false` spart Bauplanung bei Anbausuchen. `template` und `districtId` bleiben Pflicht. Keine Pflanz-/Ertragsgarantie. |
+| `develop_building_project` | Einzelnen ausgewählten Bauplan prüfen, beauftragen und durch ein begrenztes Bauzeitfenster begleiten. |
+| `advance_building_project` | Bereits gestartetes Projekt beobachten/fortführen, dasselbe Zeitbudget niemals automatisch verlängern. |
+| `inspect_building_completion` | Tatsächliche Fertigstellung und Zugang lesen; Betrieb getrennt prüfen. |
+| `start_building_batch` | 1–8 Gebäude, Basisfläche plus höchstens drei `additionalRegions`, jede bis 8×8. Automatischer Flächenwechsel nur vorwärts; kein Rücksprung. |
+| `advance_building_batch` | Gemeinsame Standortwahl/Räumung und Strukturbeleg fortsetzen; `waitSeconds` 0–45, höchstens 64 Zustandsübergänge pro Aufruf. |
+| `inspect_building_batch` | Gespeicherter Status (`checkpointOnly`), keine frische Spielbeobachtung. |
+| `stop_building_batch` | Weitere Chargenaufträge dauerhaft stoppen; ein bereits laufendes Zeitfenster endet erst an seinem Budget. Für sofortigen Laufabbruch `cancel_simulation_run` verwenden. |
+
+Chargen räumen bei Bedarf einmal pro Teilfläche passende natürliche Vegetation;
+`maxClearTargets` gilt über alle Flächen zusammen (höchstens 64). Gesamtzeit:
+`clearanceHours × Flächenzahl + constructionHours × Gebäudezahl ≤ 672 Stunden`.
+Unbestätigte Eingriffe oder erschöpfte Räumbudgets stoppen die Charge.
+Fehlendes Material ist keine Startsperre; Deckung und Erzeuger prüfen, Agent
+entscheidet und verfolgt Lieferungen während des Baus. `regionIndex` und `previousRegions` zeigen Flächenfortschritt.
+Gleiche `batchId` mit gleichen Parametern liefert Status, keine erneute Ausführung;
+geänderte Parameter werden abgewiesen. Ohne `advance` kein Hintergrunddispatcher,
+nur ein bereits gestarteter begrenzter Spielzeitlauf kann weiterlaufen.
+`finished_accessible` bestätigt Fertigstellung, Zugang und Pause, keinen Betrieb.
+
+[Regionalsuche](regional-survey.md) · [Bauchargen](building-batch-workflow.md) ·
+[Bauprüfbericht](build-assessment.md) · [Wegschutz](road-protection.md)
 
 ## Leser
 
@@ -665,7 +698,7 @@ sind unter 0.21.1 live belegt. Nachweise und Grenzen stehen in den Fachdokumente
   vor Filtern. Kein eingefrorener Status-Snapshot und keine vollständige
   Aktionshistorie. [Vertrag und Gate](agent-log-pagination-0.55.md).
 
-## Freizugebende Werkzeuge
+## Aktionswerkzeuge (technische Aktionsschalter)
 
 - `set_workplace_staffing`
 - `run_simulation_for`, `run_simulation_until`, `cancel_simulation_run`
@@ -700,7 +733,7 @@ sind unter 0.21.1 live belegt. Nachweise und Grenzen stehen in den Fachdokumente
   validate_building prüft einzelne Objekte; place_building bleibt ohne safe-Wegschutz
   gesperrt. inspect_build_catalog/precheck_build_site sowie validate_build_site/
   place_path/place_lodge sind erhaltene, begrenzte frühe Pilotwerkzeuge.
-- Validierung mit Vorschau zählt nicht als rein lesend und benötigt eine eigene Freigabe.
+- Validierung mit Vorschau zählt nicht als rein lesend und benötigt den technischen Bau-Aktionsschalter. Im beauftragten Testumfang ist keine zusätzliche Rückfrage nötig.
 - Aktionsfreigaben werden in Mod und MCP-Prozess geprüft; [vollständige Tabelle](native-bridge-install.md).
 - reasoning ist Pflicht für alle MCP-Werkzeugaufrufe, einschließlich Leseabfragen,
   Fake und Legacy: kurze für den Spieler lesbare Absicht, keine internen
@@ -739,15 +772,16 @@ anschließbarer öffentlicher Eingang entscheiden, keine Gebäudenamensliste.
 Ältere Bridges behalten ihren versionierten festen Pilotumfang.
 Benötigt Suchparameter, optionIndex, planKey, session, actionId und
 `mode=development_pilot`. Bau-Opt-in und Pause sind Pflicht. Bis 0.31.3 ein Auftrag
-je Sitzung; ab 0.31.4 höchstens vier Aufträge nacheinander, neue ID nur nach
+je Sitzung; ab 0.31.4 zunächst vier Aufträge, ab 0.35.2 Ledger-Kapazität 1024 für ebene und vertikale Projekte. Weiterhin sequenziell: neue ID nur nach
 completed und tatsächlicher Fertigstellung bisheriger Baustellen. Unabhängige
 offene Baustellen verhindern den Start. stopped/unconfirmed sperren weitere Projekte. Alte ID+Parameter lesen
-nur das gespeicherte Ergebnis, geänderte Parameter werden abgewiesen. Bis 0.62 bedeutet completed keine Fertigstellung; ab 0.63 bezeichnet ordered den Auftrag und completed den Fertigbau.
+nur das gespeicherte Ergebnis, geänderte Parameter werden abgewiesen. Bis 0.62 war completed kein Fertigbau; ab 0.63 ist ordered der Auftragsbeleg
+und completed die beobachtete Fertigstellung.
 `inspect_building_project` liest session/actionId ohne Schreibfreigabe.
 
 running/completed/stopped/unconfirmed und Schritt-IDs erlauben gezielten Abgleich.
-completed bestätigt regulären Auftrag, realen Eingang und Bauarbeiterzugang; keine
-Fertigstellung. Bekannte Wegverluste bleiben verboten; nur der unbelegte Bauphasen-
+Ab 0.63 bestätigt ordered den Auftrag und completed die Fertigstellung;
+Betrieb/Produktion sind weiterhin separat nachzuweisen. Bekannte Wegverluste bleiben verboten; nur der unbelegte Bauphasen-
 Vorabnachweis darf im freigegebenen Pilot offenbleiben. Teilergebnisse bleiben stehen.
 [Aktueller Umfang und Live-Abnahme](generic-building-project.md).
 
@@ -799,6 +833,7 @@ zugehörigen Lauf früh pausieren, Abschlusszugang/Konfiguration prüfen. Zeitbu
 bleibt Obergrenze; sofort mögliche Chargenübergänge auch bei waitSeconds=0.
 Kein Hintergrunddispatcher, reine inspect-Aufrufe ändern nichts.
 Entwickler-Gate und Zwei-Lager-Livepilot bestanden: [Nachweis](building-batch-workflow.md).
+
 
 ## Live abgenommen: Rampengeometrie, Höhen und Suchabdeckung
 

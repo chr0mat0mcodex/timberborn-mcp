@@ -61,7 +61,11 @@ pwsh -NoProfile -File ./scripts/start-native.ps1 `
 
 Für einen MCP-Client denselben Befehl mit **absolutem Skript- und Konfigurationspfad**
 als stdio-Server eintragen. stdout ist ausschließlich MCP, Diagnose geht nach stderr.
-Der Starter setzt explizit `TIMBERBORN_BACKEND=native` und schaltet alle Aktionen aus.
+Der Starter setzt explizit `TIMBERBORN_BACKEND=native` und aktiviert im Testmodus
+alle vorhandenen Aktionsgruppen; `-ReadOnly` deaktiviert sie.
+`-DisableValidation` deaktiviert nur das separate Validierungswerkzeug, nicht
+die nativen Prüfungen bei Bauaufträgen. Reguläre Spielvalidierung, Kollisionserkennung
+und Aktions-IDs bleiben dabei unverändert aktiv.
 
 Für eigene Client-Einträge mit Aktionen stattdessen direkt die gebaute
 `src/Timberborn.McpServer/bin/Release/net10.0/Timberborn.McpServer.dll` über `dotnet` starten
@@ -80,7 +84,7 @@ Keine Tokens als Argument oder in öffentliche Client-Beispiele schreiben.
 ## Aktionsfreigaben
 
 Für jede Gruppe müssen Mod-Konfiguration (`true`) **und** MCP-Prozess (`1`) zustimmen.
-Neue Paketkonfigurationen und der Lesestarter deaktivieren alle Gruppen.
+Neue Paketkonfigurationen und der Starter aktivieren im Testmodus alle Gruppen.
 
 | Mod-Konfiguration | MCP-Prozessvariable | Werkzeuge |
 | --- | --- | --- |
@@ -119,3 +123,12 @@ pwsh -NoProfile -File ./scripts/verify.ps1 `
 Prüft normale Tests plus den nativen Lesetest. Keine automatischen Schreibtests.
 Nach Updates Version, neue Session und relevante Funktionen gezielt abnehmen; bei
 unklarem Aktionsergebnis nur nachlesen. [Entwicklungsablauf](../DEVELOPMENT_WORKFLOW.md).
+
+## Portable Teststarter
+
+`run-server.ps1` verwendet standardmäßig die private Mod-Konfiguration unter
+dem Dokumente-Verzeichnis des aktuellen Benutzers; `-ConfigPath` überschreibt
+den Pfad. Die vorhandenen `.cmd`-/`.bat`-/Bash- und PowerShell-Varianten sind
+schmale Weiterleitungen. Keine Benutzerpfade oder Tokens im Repository.
+`start-writes.ps1` verlangt einen expliziten Konfigurationspfad.
+Diese direkten Starter ersetzen nicht die bestehende Codex-Supervisor-Verbindung.

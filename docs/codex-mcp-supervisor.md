@@ -1,5 +1,20 @@
 # Persistenter MCP-Vorschaltprozess
 
+## Statuswarten und Laufabbruch
+
+Der Supervisor leitet Requests bereits parallel weiter. Die Backend-Sperre wurde
+korrigiert; im Livepilot kam Cancel dennoch erst nach Ende des Statushandlers an.
+Der Folgepilot lokalisiert die Serialisierung vor dem Supervisor: Cancel kam
+erst 1,894 s nach der Statusantwort an und wurde intern in 116 ms beantwortet.
+Nacharbeit mit 28 Supervisor-Tests und begrenztem Livepilot abgenommen:
+Statuswarten im Codex-Supervisor auf eine Sekunde begrenzt, ergänzt um lokale,
+auf 128 Einträge begrenzte Zeitmarken unter `.local/codex-mcp-supervisor/`.
+Dateinamen enden auf `-timing.log`; keine Argumente, IDs oder Antwortinhalte.
+Das erfordert nach dem menschlichen Gate einen vollständigen Codex-Neustart,
+damit der persistente Supervisor seinen neuen Code lädt. Kein separater stdio-
+Prozess als Ersatz. [Vertrag und offener Livepilot](lightweight-status-wait.md).
+Lifecycle-Stop ist weiterhin kein Ingame-Pausennachweis.
+
 ## Gate-Stopp-Nacharbeit seit 0.66
 
 Wiederholte CLI-Stopps behalten das vorhandene Gate-Ticket; keine erneute
@@ -71,7 +86,8 @@ nötig. Dasselbe kann bei neu hinzugefügten Werkzeugen erforderlich sein.
 Ein beim Stoppen oder Absturz offener Aufruf erhält „action outcome unknown“.
 Seine Wirkung muss im Spiel nachgeprüft werden; keine Wiederholung durch den Proxy.
 MCP-IDs werden übersetzt, Abbruchbenachrichtigungen zugeordnet, Bildinhalte und
-Schemas unverändert durchgereicht. Client-Callbacks werden nicht angeboten.
+Schemas durchgereicht; die beiden Statuswerkzeugtexte erläutern die
+Ein-Sekunden-Grenze. Gültige waitSeconds-Werte werden beim Weiterleiten gekürzt. Client-Callbacks werden nicht angeboten.
 Der Proxy bietet nur tools und ping; keine Ressourcen-/Prompt-Fähigkeiten.
 
 ## Grenzen und Abnahme

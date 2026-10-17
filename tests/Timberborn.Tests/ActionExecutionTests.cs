@@ -78,6 +78,10 @@ public sealed class ActionExecutionTests
             var contending=await tools.Invoke("set_simulation_speed",Speed(),TestContext.Current.CancellationToken);
             Assert.Equal("not_executed",contending["error"]!["execution"]!.GetValue<string>());
             Assert.False(contending["error"]!["retryable"]!.GetValue<bool>());
+            var stop=await tools.Invoke("cancel_simulation_run",JsonSerializer.SerializeToElement(new {
+                session=Session,runId="22222222-2222-4222-8222-222222222222"
+            }),TestContext.Current.CancellationToken);
+            Assert.Equal("not_executed",stop["error"]!["execution"]!.GetValue<string>());
             Assert.Equal(1,h.Calls);
         } finally {h.Release.TrySetResult(true);await pending;}
         Assert.Equal("unconfirmed",(await pending)["error"]!["execution"]!.GetValue<string>());
