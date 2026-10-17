@@ -5,6 +5,35 @@ description: Timberborn über die vorhandene Hermes-MCP-Verbindung steuern; Test
 
 # Timberborn in Hermes
 
+## 0.73 — frischer Fertigbaustand und Parameterdiagnose (gezielt live bestätigt)
+
+Bauchargenfehler enthalten zusätzlich `failure.exceptionKind` und `failure.hResult`
+(bei älteren Belegen null). Dies sind Fehlerkategorie und numerischer Exception-Code,
+keine Freigabe zum Wiederholen; `stage`, `execution` und `recoveryAction` weiter beachten.
+Journal-Dateiaustausch darf intern höchstens vier Versuche bei ausgewählten Windows-
+Dateisperr-/Austauschfehlern machen (insgesamt 175 ms Wartezeit), ausschließlich nach
+Bytevergleich unveränderter Dateien. Das wiederholt keine Spielaufträge; unbekannte
+oder veränderte Dateien brechen ab. Bereits vollständig publizierte Bytes gelten als Erfolg.
+
+Livebeleg: Einzelplattform nach historischem Ein-Stunden-Zeitlimit später 1/1 fertig,
+compact/full und watch-Diagnose konsistent; null Bestandsverluste, regulär freigegeben.
+Kein allgemeiner Betriebsnachweis. repairEligible allein bedeutet nicht, dass bei
+Materialwarten eine Zugangsreparatur nötig ist; konkreten reason lesen.
+
+Lesende invalid_argument-Fehler verwenden execution=not_applicable. Hinweise nennen
+bei generischen Fehlern fehlende Pflichtfelder, falsche Typen oder gültige
+Ganzzahlbereiche (limit: 1..32; Karten-depth: 1..4). Spezielle Hinweise haben Vorrang.
+Nur Parameter korrigieren; unconfirmed-Schreibaufträge weiterhin niemals wiederholen.
+
+Frische Projektdiagnosen liefern currentConstruction in compact und full:
+state=finished_accessible nur bei sämtlichen beobachteten fertigen, zugänglichen
+Teilen; existingAccess separat prüfen. lost_or_unknown ist kein Bestandsschutzbeleg.
+Historisches state=blocked und game_time_limit im Journal bleiben bestehen.
+inspect_large_project ohne diagnose=true liefert weiterhin nur Journalwissen.
+review_close_finished_project empfiehlt die Prüfung der Freigabe; bei
+inspect_release_conditions die aktuellen Freigabebedingungen lesen. Kein Neubau
+wegen eines alten Zeitlimits. Fertigbau ist kein Betriebs-/Versorgungsnachweis.
+
 ## 0.72 — Laufzeitbelege im begrenzten Livepilot bestätigt
 
 Bei Recovery `manuallyPaused` und `unfinishedSupportIndices` lesen.

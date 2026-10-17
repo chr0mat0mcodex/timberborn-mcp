@@ -25,11 +25,11 @@ public sealed partial class NativeClient
     public static void ValidateProjectExecution(BridgeEnvelope<NativeProjectExecution> e,BuildingProjectExecutionRequest r)
     {
         var d=e.Data;
-        if(d is not null && e.BridgeVersion is ("0.63.0" or "0.64.0" or "0.65.0" or "0.66.0" or "0.67.0" or "0.68.0" or "0.69.0" or "0.70.0" or "0.71.0" or "0.72.0") && d.State=="ordered" &&
+        if(d is not null && e.BridgeVersion is ("0.63.0" or "0.64.0" or "0.65.0" or "0.66.0" or "0.67.0" or "0.68.0" or "0.69.0" or "0.70.0" or "0.71.0" or "0.72.0" or "0.73.0") && d.State=="ordered" &&
             (d.Steps is null || d.Steps.Any(s=>s.State is not ("confirmed" or "finished" or "rejected"))))
             throw new InvalidDataException("Invalid structure order evidence");
         if (d?.InitialConfiguration is { } config) {
-            if (e.BridgeVersion is not ("0.35.3" or "0.35.4" or "0.35.5" or "0.36.0" or "0.37.0" or "0.38.0" or "0.39.0" or "0.40.0" or "0.41.0" or "0.42.0" or "0.43.0" or "0.44.0" or "0.45.0" or "0.46.0" or "0.47.0" or "0.48.0" or "0.49.0" or "0.50.0" or "0.51.0" or "0.52.0" or "0.53.0" or "0.54.0" or "0.55.0" or "0.56.0" or "0.57.0" or "0.58.0" or "0.59.0" or "0.60.0" or "0.61.0" or "0.62.0" or "0.63.0" or "0.64.0" or "0.65.0" or "0.66.0" or "0.67.0" or "0.68.0" or "0.69.0" or "0.70.0" or "0.71.0" or "0.72.0") || config.Good is null && config.Mode is null ||
+            if (e.BridgeVersion is not ("0.35.3" or "0.35.4" or "0.35.5" or "0.36.0" or "0.37.0" or "0.38.0" or "0.39.0" or "0.40.0" or "0.41.0" or "0.42.0" or "0.43.0" or "0.44.0" or "0.45.0" or "0.46.0" or "0.47.0" or "0.48.0" or "0.49.0" or "0.50.0" or "0.51.0" or "0.52.0" or "0.53.0" or "0.54.0" or "0.55.0" or "0.56.0" or "0.57.0" or "0.58.0" or "0.59.0" or "0.60.0" or "0.61.0" or "0.62.0" or "0.63.0" or "0.64.0" or "0.65.0" or "0.66.0" or "0.67.0" or "0.68.0" or "0.69.0" or "0.70.0" or "0.71.0" or "0.72.0" or "0.73.0") || config.Good is null && config.Mode is null ||
                 config.Good is not null && !BuildingPolicy.ValidTemplate(config.Good) ||
                 config.Mode is not null && !BuildingSettingsRequest.IsStorageMode(config.Mode) ||
                 config.State is not ("waiting_order" or "applying" or "confirmed" or "conflict" or "unconfirmed" or "stopped") ||
@@ -41,7 +41,7 @@ public sealed partial class NativeClient
                 r.Validation is not null && (config.Good != r.InitialStorageGood || config.Mode != r.InitialStorageMode))
                 throw new InvalidDataException("Invalid initial configuration receipt");
         } else if (r.HasInitialConfiguration) throw new InvalidDataException("Missing initial configuration receipt");
-        if(e.BridgeVersion is not ("0.26.0" or "0.27.0" or "0.28.0" or "0.28.1" or "0.29.0" or "0.29.1" or "0.29.2" or "0.29.3" or "0.30.0" or "0.31.0" or "0.31.1" or "0.31.2" or "0.31.3" or "0.31.4" or "0.32.0" or "0.32.1" or "0.33.0" or "0.33.1" or "0.34.0" or "0.35.0" or "0.35.1" or "0.35.2" or "0.35.3" or "0.35.4" or "0.35.5" or "0.36.0" or "0.37.0" or "0.38.0" or "0.39.0" or "0.40.0" or "0.41.0" or "0.42.0" or "0.43.0" or "0.44.0" or "0.45.0" or "0.46.0" or "0.47.0" or "0.48.0" or "0.49.0" or "0.50.0" or "0.51.0" or "0.52.0" or "0.53.0" or "0.54.0" or "0.55.0" or "0.56.0" or "0.57.0" or "0.58.0" or "0.59.0" or "0.60.0" or "0.61.0" or "0.62.0" or "0.63.0" or "0.64.0" or "0.65.0" or "0.66.0" or "0.67.0" or "0.68.0" or "0.69.0" or "0.70.0" or "0.71.0" or "0.72.0")||e.SessionId!=r.Session||d is null||d.ActionId!=r.ActionId.ToString("D")||
+        if(e.BridgeVersion is not ("0.26.0" or "0.27.0" or "0.28.0" or "0.28.1" or "0.29.0" or "0.29.1" or "0.29.2" or "0.29.3" or "0.30.0" or "0.31.0" or "0.31.1" or "0.31.2" or "0.31.3" or "0.31.4" or "0.32.0" or "0.32.1" or "0.33.0" or "0.33.1" or "0.34.0" or "0.35.0" or "0.35.1" or "0.35.2" or "0.35.3" or "0.35.4" or "0.35.5" or "0.36.0" or "0.37.0" or "0.38.0" or "0.39.0" or "0.40.0" or "0.41.0" or "0.42.0" or "0.43.0" or "0.44.0" or "0.45.0" or "0.46.0" or "0.47.0" or "0.48.0" or "0.49.0" or "0.50.0" or "0.51.0" or "0.52.0" or "0.53.0" or "0.54.0" or "0.55.0" or "0.56.0" or "0.57.0" or "0.58.0" or "0.59.0" or "0.60.0" or "0.61.0" or "0.62.0" or "0.63.0" or "0.64.0" or "0.65.0" or "0.66.0" or "0.67.0" or "0.68.0" or "0.69.0" or "0.70.0" or "0.71.0" or "0.72.0" or "0.73.0")||e.SessionId!=r.Session||d is null||d.ActionId!=r.ActionId.ToString("D")||
             !ValidPlanKey(d.PlanKey)||r.Validation is not null&&d.PlanKey!=r.Validation.PlanKey||d.ConstructionPreflightProven||
             d.State is not ("running" or "ordered" or "completed" or "stopped" or "unconfirmed")||d.Reason is null||d.Reason.Length>100||
             d.Steps is not {Length:>=1 and <=5}||d.Steps.Any(s=>s is null||!Guid.TryParse(s.EntityId,out var id)||id==Guid.Empty||
@@ -51,8 +51,8 @@ public sealed partial class NativeClient
             !FlatTemplateForVersion(e.BridgeVersion,d.Steps[^1].Template)||
             r.Validation is not null&&d.Steps[^1].Template!=r.Validation.Plan.Template||
             d.Steps.Take(d.Steps.Length-1).Any(s=>s.Template!="Path"||s.Rotation!=0)||
-            d.State=="completed"&&d.Steps.Any(s=>s.State!=(e.BridgeVersion is ("0.63.0" or "0.64.0" or "0.65.0" or "0.66.0" or "0.67.0" or "0.68.0" or "0.69.0" or "0.70.0" or "0.71.0" or "0.72.0")?"finished":"confirmed"))||
-            e.BridgeVersion is not ("0.63.0" or "0.64.0" or "0.65.0" or "0.66.0" or "0.67.0" or "0.68.0" or "0.69.0" or "0.70.0" or "0.71.0" or "0.72.0")&&d.Steps.SkipWhile(s=>s.State=="confirmed").Skip(1).Any(s=>s.State!="pending")||
+            d.State=="completed"&&d.Steps.Any(s=>s.State!=(e.BridgeVersion is ("0.63.0" or "0.64.0" or "0.65.0" or "0.66.0" or "0.67.0" or "0.68.0" or "0.69.0" or "0.70.0" or "0.71.0" or "0.72.0" or "0.73.0")?"finished":"confirmed"))||
+            e.BridgeVersion is not ("0.63.0" or "0.64.0" or "0.65.0" or "0.66.0" or "0.67.0" or "0.68.0" or "0.69.0" or "0.70.0" or "0.71.0" or "0.72.0" or "0.73.0")&&d.Steps.SkipWhile(s=>s.State=="confirmed").Skip(1).Any(s=>s.State!="pending")||
             d.Limitations is null||d.Limitations.Length>16||d.Limitations.Any(s=>string.IsNullOrEmpty(s)||s.Length>160))
             throw new InvalidDataException("Invalid project execution receipt");
         if (r.Validation is { } validation)
@@ -63,7 +63,7 @@ public sealed partial class NativeClient
                 throw new InvalidDataException("Project receipt outside selected region");
         }
     }
-    private static bool FlatTemplateForVersion(string version,string template) => version is ("0.35.0" or "0.35.1" or "0.35.2" or "0.35.3" or "0.35.4" or "0.35.5" or "0.36.0" or "0.37.0" or "0.38.0" or "0.39.0" or "0.40.0" or "0.41.0" or "0.42.0" or "0.43.0" or "0.44.0" or "0.45.0" or "0.46.0" or "0.47.0" or "0.48.0" or "0.49.0" or "0.50.0" or "0.51.0" or "0.52.0" or "0.53.0" or "0.54.0" or "0.55.0" or "0.56.0" or "0.57.0" or "0.58.0" or "0.59.0" or "0.60.0" or "0.61.0" or "0.62.0" or "0.63.0" or "0.64.0" or "0.65.0" or "0.66.0" or "0.67.0" or "0.68.0" or "0.69.0" or "0.70.0" or "0.71.0" or "0.72.0")
+    private static bool FlatTemplateForVersion(string version,string template) => version is ("0.35.0" or "0.35.1" or "0.35.2" or "0.35.3" or "0.35.4" or "0.35.5" or "0.36.0" or "0.37.0" or "0.38.0" or "0.39.0" or "0.40.0" or "0.41.0" or "0.42.0" or "0.43.0" or "0.44.0" or "0.45.0" or "0.46.0" or "0.47.0" or "0.48.0" or "0.49.0" or "0.50.0" or "0.51.0" or "0.52.0" or "0.53.0" or "0.54.0" or "0.55.0" or "0.56.0" or "0.57.0" or "0.58.0" or "0.59.0" or "0.60.0" or "0.61.0" or "0.62.0" or "0.63.0" or "0.64.0" or "0.65.0" or "0.66.0" or "0.67.0" or "0.68.0" or "0.69.0" or "0.70.0" or "0.71.0" or "0.72.0" or "0.73.0")
         ? BuildingProjectPilotPolicy.SupportsTemplate(template)
         : template == "SmallWarehouse.Folktails" ||
           template == "MediumWarehouse.Folktails" && version is ("0.33.0" or "0.33.1" or "0.34.0") ||

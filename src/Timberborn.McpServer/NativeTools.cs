@@ -204,7 +204,7 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
                 ex is BridgeRejectionException && LargeProjectPlanningPolicy.IsPreDispatchCode(code);
             bool simulationStartRejected = SimulationStartOutcome.Handles(name) && dispatch.WriteAttempts == 1 &&
                 ex is BridgeRejectionException && SimulationStartPolicy.IsPreDispatchCode(code);
-            string execution=plantingRejected||projectStartRejected||projectPlanningRejected||simulationStartRejected?"not_executed":dispatch.WriteAttempts>0?"unconfirmed":action||code=="invalid_argument"?"not_executed":"not_applicable";
+            string execution=plantingRejected||projectStartRejected||projectPlanningRejected||simulationStartRejected?"not_executed":dispatch.WriteAttempts>0?"unconfirmed":action?"not_executed":"not_applicable";
             string message=execution switch {
                 "not_executed"=>"Nicht ausgeführt: kein schreibender Spielauftrag an den Transport übergeben. Ursache korrigieren; kein automatisches Retry.",
                 "unconfirmed"=>"Schreibender Spielauftrag an den Transport übergeben; Ausgang unbestätigt. Nur lesend klären, niemals automatisch wiederholen.",
@@ -217,6 +217,8 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
             if(code=="project_preview_failed")message="Native Bauvorschau fehlgeschlagen; Wiederherstellung unbekannt, Planer gesperrt. Spiel neu laden und Zustand mit neuer Session prüfen; kein automatisches Retry.";
             if(code=="project_not_found")message="Unter dieser Kennung existiert kein natives Großprojekt in der aktuellen Spielsitzung. Chargenstatus und Planungsfehler prüfen; keine automatische Wiederholung.";
             if(ArgumentDiagnostics.Hint(ex) is { } hint)message+=" "+hint;
+            else if (ex is ArgumentException && Catalog(true,true,true,true,true,true,true,true,true,true,true).FirstOrDefault(t=>t.Name==name) is { } tool &&
+                ArgumentDiagnostics.SchemaHint(args, tool.InputSchema) is { } parameterHint) message+=" "+parameterHint;
             return (JsonObject)JsonSerializer.SerializeToNode(new NativeResult<object>(1, "error", null,
                 new("native", false, null, null), new(code,message,code=="backend_unavailable"&&!action&&dispatch.WriteAttempts==0,execution)), NativeJson.Options)!;
         }

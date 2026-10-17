@@ -10,7 +10,7 @@ namespace Timberborn.Tests;
 public sealed class BuildingCapabilityTests
 {
     [Theory]
-    [InlineData("0.64.0")][InlineData("0.65.0")][InlineData("0.66.0")][InlineData("0.67.0")][InlineData("0.68.0")][InlineData("0.69.0")][InlineData("0.70.0")][InlineData("0.71.0")][InlineData("0.72.0")]
+    [InlineData("0.64.0")][InlineData("0.65.0")][InlineData("0.66.0")][InlineData("0.67.0")][InlineData("0.68.0")][InlineData("0.69.0")][InlineData("0.70.0")][InlineData("0.71.0")][InlineData("0.72.0")][InlineData("0.73.0")]
     public void RecoveryReleaseKeepsKnownCapabilitiesWithoutInventingLiveEvidence(string version)
     {
         var previous = BuildingCapabilityTools.Describe("0.63.0", "Folktails", true);

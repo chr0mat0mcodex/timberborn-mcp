@@ -8,7 +8,7 @@ public sealed partial class NativeClient
     private static void ValidateAccessPlan(BridgeEnvelope<JsonElement> envelope,LargeProjectRequest request)
     {
         var d=envelope.Data; bool found=d.GetProperty("candidateFound").GetBoolean();
-        if(request.ReservedAreas.Length>0 && (envelope.BridgeVersion is not ("0.51.0" or "0.52.0" or "0.53.0" or "0.54.0" or "0.55.0" or "0.56.0" or "0.57.0" or "0.58.0" or "0.59.0" or "0.60.0" or "0.61.0" or "0.62.0" or "0.63.0" or "0.64.0" or "0.65.0" or "0.66.0" or "0.67.0" or "0.68.0" or "0.69.0" or "0.70.0" or "0.71.0" or "0.72.0") ||
+        if(request.ReservedAreas.Length>0 && (envelope.BridgeVersion is not ("0.51.0" or "0.52.0" or "0.53.0" or "0.54.0" or "0.55.0" or "0.56.0" or "0.57.0" or "0.58.0" or "0.59.0" or "0.60.0" or "0.61.0" or "0.62.0" or "0.63.0" or "0.64.0" or "0.65.0" or "0.66.0" or "0.67.0" or "0.68.0" or "0.69.0" or "0.70.0" or "0.71.0" or "0.72.0" or "0.73.0") ||
             d.GetProperty("reservedAreasKey").GetString()!=ReservedArea.Encode(request.ReservedAreas) ||
             found && !d.GetProperty("reservedAreasClear").GetBoolean()))throw new InvalidDataException("reserved_area_evidence_missing");
         string? reason=d.GetProperty("reason").GetString();
@@ -23,7 +23,7 @@ public sealed partial class NativeClient
             if(b is null||a.Template!=b.Template||a.X!=b.X||a.Y!=b.Y||a.Z!=b.Z||a.Rotation!=b.Rotation||b.DependsOn is null||a.DependsOn.Except(b.DependsOn).Any())throw new InvalidDataException();
         }
         var assessment=d.GetProperty("assessment");
-        if(envelope.BridgeVersion is "0.68.0" or "0.69.0" or "0.70.0" or "0.71.0" or "0.72.0") ValidateAccessSearchDiagnostics(d.GetProperty("searchDiagnostics"),assessment,envelope.BridgeVersion);
+        if(envelope.BridgeVersion is "0.68.0" or "0.69.0" or "0.70.0" or "0.71.0" or "0.72.0" or "0.73.0") ValidateAccessSearchDiagnostics(d.GetProperty("searchDiagnostics"),assessment,envelope.BridgeVersion);
         if(assessment.GetProperty("requestedParts").GetInt32()!=request.Steps.Length ||
             assessment.GetProperty("generatedParts").GetInt32()!=steps.Length-request.Steps.Length ||
             assessment.GetProperty("visitedNodes").GetInt32() is <0 or >4096 ||
@@ -51,7 +51,7 @@ public sealed partial class NativeClient
 
     private static void ValidateAccessSearchDiagnostics(JsonElement d,JsonElement assessment,string bridgeVersion)
     {
-        bool landingPreview=bridgeVersion is "0.70.0" or "0.71.0" or "0.72.0",roadGraph=bridgeVersion!="0.68.0";
+        bool landingPreview=bridgeVersion is "0.70.0" or "0.71.0" or "0.72.0" or "0.73.0",roadGraph=bridgeVersion!="0.68.0";
         int Count(JsonElement value,string name,int maximum=65536)
         {
             int count=value.GetProperty(name).GetInt32();

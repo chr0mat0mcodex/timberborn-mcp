@@ -7,6 +7,21 @@ public static class ProjectReportPresentation
 {
     public static bool Supports(string name) => LargeProjectTools.Handles(name) && name != "inspect_power_network";
 
+    public static void ObserveCurrent(JsonObject data)
+    {
+        if (data["parts"] is not JsonArray parts || !data.ContainsKey("closeEligible")) return;
+        int finished = parts.OfType<JsonObject>().Count(p => p["observed"]?.GetValue<string>() == "finished");
+        bool complete = parts.Count > 0 && finished == parts.Count;
+        data["currentConstruction"] = new JsonObject {
+            ["evidence"] = "fresh_recovery_observation", ["planned"] = parts.Count,
+            ["finishedAccessible"] = finished,
+            ["state"] = complete ? "finished_accessible" : "not_fully_finished_accessible",
+            ["existingAccess"] = data["lostConnections"]?.GetValue<int>() == 0 ? "no_observed_losses" : "lost_or_unknown",
+            ["historicalState"] = data["state"]?.DeepClone(),
+            ["scope"] = "construction_and_access_not_supply_staffing_or_operation"
+        };
+    }
+
     public static void Compact(string name, JsonObject data)
     {
         if (name == "plan_large_project_access") {
@@ -97,6 +112,7 @@ public static class ProjectReportPresentation
     private static void Diagnose(JsonObject data)
     {
         if (data["parts"] is not JsonArray parts) return;
+        ObserveCurrent(data);
         var attentionIndices = new JsonArray(); var observedFinished = 0; var pending = 0; var attempted = 0; var placed = 0;
         foreach (var part in parts.OfType<JsonObject>()) {
             string? observed = part["observed"]?.GetValue<string>();
@@ -132,6 +148,9 @@ public static class ProjectReportPresentation
         if (data["released"]?.GetValue<bool>() == true) return "none_project_released";
         if (data["simulation"] is JsonObject sim && sim["pauseConfirmed"]?.GetValue<bool>() != true &&
             data["state"]?.GetValue<string>() != "running") return "inspect_pause_confirmation";
+        if (data["currentConstruction"]?["state"]?.GetValue<string>() == "finished_accessible" &&
+            data["currentConstruction"]?["existingAccess"]?.GetValue<string>() == "no_observed_losses")
+            return data["closeEligible"]?.GetValue<bool>() == true ? "review_close_finished_project" : "inspect_release_conditions";
         if (data["closeEligible"]?.GetValue<bool>() == true) return "review_close_abandons_unissued_parts";
         if (data["repairEligible"]?.GetValue<bool>() == true) return "review_access_repair_plan";
         return data["state"]?.GetValue<string>() switch {

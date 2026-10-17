@@ -150,6 +150,11 @@ public sealed class StructureBatchTests
                 JsonSerializer.SerializeToElement(new BatchStartRequest(job.Spec,0),NativeJson.Options),true,true,true,store,port,TestContext.Current.CancellationToken);
             Assert.Equal("stopped",result["data"]!["state"]!.GetValue<string>());
             Assert.Equal("batch_interrupted",result["error"]!["code"]!.GetValue<string>());
+            Assert.Equal("argument",result["data"]!["failure"]!["exceptionKind"]!.GetValue<string>());
+            Assert.Equal(port.PlanningFailure!.HResult,result["data"]!["failure"]!["hResult"]!.GetValue<int>());
+            var persisted=store.Load(job.Spec.Session,job.Spec.BatchId)!;
+            Assert.Equal("argument",persisted.Failure!.ExceptionKind);
+            Assert.Equal(port.PlanningFailure.HResult,persisted.Failure.HResult);
             Assert.DoesNotContain("synthetic private diagnostic",result.ToJsonString());
             await BuildBatchTools.Execute(BuildBatchTools.Advance,
                 JsonSerializer.SerializeToElement(new BatchHandle(job.Spec.Session,job.Spec.BatchId),NativeJson.Options),true,true,true,store,port,TestContext.Current.CancellationToken);

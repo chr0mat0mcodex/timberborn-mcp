@@ -137,6 +137,9 @@ public sealed class BuildBatchTests
             p.ReadCheckpoint = () => store.Load(s.Session, s.BatchId)!.State;
             var input = JsonSerializer.SerializeToElement(new BatchStartRequest(s, 0), NativeJson.Options);
             var result = await BuildBatchTools.Execute(BuildBatchTools.Start, input, true, true, true, store, p, TestContext.Current.CancellationToken);
+            // Show the safe captured failure before a secondary state mismatch obscures it.
+            Assert.True(result["status"]!.GetValue<string>() == "ok",
+                "Unexpected batch failure: " + result["data"]!["failure"]?.ToJsonString());
             Assert.Equal(unconfirmed ? "building" : "completed", result["data"]!["state"]!.GetValue<string>());
             Assert.Equal(unconfirmed ? 1 : 2, p.Builds); Assert.Equal(unconfirmed ? 0 : 2, p.Runs);
         } finally { if (Directory.Exists(dir)) Directory.Delete(dir, true); }

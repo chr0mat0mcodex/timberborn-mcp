@@ -1,5 +1,19 @@
 # Projektstand
 
+## 0.73.0 — Gate und gezielter Livetest bestanden
+
+Menschliches Gate: 21 Supervisor-, 1908 Unit- und 13 Integrationstests bestanden;
+drei optionale Integration-Livetests übersprungen. Bridge 0.73.0 live bestätigt.
+limit=100 und depth=5 melden den konkreten Bereich mit not_applicable;
+korrigierte Abfragen funktionieren. Einzelplattform nach einer Spielstunde
+blocked/game_time_limit und frisch 0/1 fertig; nach separaten zwölf Stunden
+frisch 1/1 fertig und zugänglich bei unveränderter Historie. Compact/full,
+explizite watch-Diagnose und rein historische Journalansicht bestätigt.
+Keine beobachteten Bestandsverluste; Journal regulär freigegeben, Tempo 0,
+kein aktiver Lauf. [Livebelege und Grenzen](docs/releases/0.73.0.md).
+Anleitung, Tool-Doku und zurückgestellter Hermes-Skillentwurf aktualisiert;
+Workflow unverändert. Keine Agent-Builds/Tests. Version 0.73.0 fachlich abgeschlossen; Git-Sicherung durch den Abschlusscommit.
+
 ## 0.72.0 — Gate und vollständiger Plattform-Umwegpilot bestanden
 
 Abschluss der seit 0.67 entwickelten Zugangsverbesserungen: automatische

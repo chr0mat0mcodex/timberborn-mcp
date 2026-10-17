@@ -148,10 +148,14 @@ public sealed class PlantingBatchTests
         var r=Request();var h=new Handler(r);using var tools=new NativeTools(new NativeClient(new(8081,new string('a',64)),h),enableAreas:true);
         var bad=JsonSerializer.SerializeToElement(new PlantingPreview(r.Session,"friendly-name",r.Rectangles),NativeJson.Options);
         var response=await tools.Invoke(PlantingBatchTools.Preview,bad,TestContext.Current.CancellationToken);
-        Assert.Equal("not_executed",response["error"]!["execution"]!.GetValue<string>());Assert.Contains("UUID",response["error"]!["message"]!.GetValue<string>());
+        // Preview is read-only: execution classification does not describe a write.
+        Assert.Equal("not_applicable",response["error"]!["execution"]!.GetValue<string>());Assert.Contains("UUID",response["error"]!["message"]!.GetValue<string>());
+        Assert.DoesNotContain("schreibender",response["error"]!["message"]!.GetValue<string>());
         var missing=JsonSerializer.SerializeToNode(new PlantingPreview(r.Session,r.JobId,r.Rectangles),NativeJson.Options)!.AsObject();missing["rectangles"]![0]!.AsObject().Remove("x");
         response=await tools.Invoke(PlantingBatchTools.Preview,JsonSerializer.SerializeToElement(missing),TestContext.Current.CancellationToken);
-        Assert.Contains("x, y, z",response["error"]!["message"]!.GetValue<string>());Assert.Equal(0,h.Reads);
+        Assert.Contains("x, y, z",response["error"]!["message"]!.GetValue<string>());
+        Assert.Equal("not_applicable",response["error"]!["execution"]!.GetValue<string>());
+        Assert.DoesNotContain("schreibender",response["error"]!["message"]!.GetValue<string>());Assert.Equal(0,h.Reads);
     }
     [Fact] public void CompactSkipsMatchingOnlyCellsButKeepsAdditionalBlockers() {
         var r=Request();var d=new PlantingBatchController().Handle(r,new Fake());

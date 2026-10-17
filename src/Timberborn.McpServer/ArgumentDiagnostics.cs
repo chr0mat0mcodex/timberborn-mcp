@@ -3,6 +3,40 @@ namespace Timberborn.McpServer;
 // Fixed messages only. Never expose arbitrary exception text, paths or request values.
 public static class ArgumentDiagnostics
 {
+    // Advisory diagnosis of backend arguments after rejection; not a replacement validator.
+    // reasoning is validated by the activity boundary and stripped before backend dispatch.
+    public static string? SchemaHint(System.Text.Json.JsonElement args, System.Text.Json.JsonElement schema)
+    {
+        if (args.ValueKind != System.Text.Json.JsonValueKind.Object) return "Argumente muessen ein Objekt sein.";
+        if (!schema.TryGetProperty("properties", out var properties)) return null;
+        if (schema.TryGetProperty("required", out var required))
+            foreach (var field in required.EnumerateArray())
+                if (field.GetString() is { } key && key != "reasoning" && !args.TryGetProperty(key, out _))
+                    return $"Pflichtparameter {key} fehlt.";
+        foreach (var field in properties.EnumerateObject()) {
+            if (field.Name == "reasoning" || !args.TryGetProperty(field.Name, out var value)) continue;
+            var rule = field.Value;
+            if (!rule.TryGetProperty("type", out var type) || type.ValueKind != System.Text.Json.JsonValueKind.String) continue;
+            var kind = type.GetString();
+            bool valid = kind switch {
+                "integer" => value.ValueKind == System.Text.Json.JsonValueKind.Number && value.TryGetInt64(out _),
+                "string" => value.ValueKind == System.Text.Json.JsonValueKind.String,
+                "boolean" => value.ValueKind is System.Text.Json.JsonValueKind.True or System.Text.Json.JsonValueKind.False,
+                "array" => value.ValueKind == System.Text.Json.JsonValueKind.Array,
+                "object" => value.ValueKind == System.Text.Json.JsonValueKind.Object,
+                _ => true
+            };
+            if (!valid) return $"Parameter {field.Name}: Typ {kind} erforderlich.";
+            if (kind == "integer" && value.TryGetInt64(out var number) &&
+                rule.TryGetProperty("minimum", out var min) && rule.TryGetProperty("maximum", out var max) &&
+                (number < min.GetInt64() || number > max.GetInt64()))
+                return $"Parameter {field.Name}: gueltiger Bereich {min.GetInt64()}..{max.GetInt64()} (Ganzzahl).";
+        }
+        if (schema.TryGetProperty("additionalProperties", out var additional) && additional.ValueKind == System.Text.Json.JsonValueKind.False &&
+            args.EnumerateObject().Any(p => !properties.TryGetProperty(p.Name, out _)))
+            return "Unbekannter Parameter; nur Felder des Werkzeugschemas verwenden.";
+        return null;
+    }
     public static T Parse<T>(System.Text.Json.JsonElement args) {
         try {return BuildBatchState.Parse<T>(args);}
         catch(System.Text.Json.JsonException){throw new ArgumentException("invalid_argument_structure");}

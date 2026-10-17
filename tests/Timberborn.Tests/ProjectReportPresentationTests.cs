@@ -91,7 +91,7 @@ public sealed class ProjectReportPresentationTests
         var compact=ResponsePresentation.Present("diagnose_large_project",r,false);
         Assert.Equal(2,compact["data"]!["summary"]!["finishedAccessible"]!.GetValue<int>());
         Assert.Empty(compact["data"]!["parts"]!.AsArray());
-        Assert.True(compact.ToJsonString().Length<r.ToJsonString().Length);
+        Assert.True(compact.ToJsonString().Length<ResponsePresentation.Present("diagnose_large_project",r,true).ToJsonString().Length);
         Assert.Equal(2,ResponsePresentation.Present("diagnose_large_project",r,true)["data"]!["parts"]!.AsArray().Count);
     }
 

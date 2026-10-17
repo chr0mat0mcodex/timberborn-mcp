@@ -20,7 +20,8 @@ public sealed record BatchSelection(int Rotation, int OptionIndex, string PlanKe
 public sealed record BatchSearch(int Rotation, int Checked, int Rejected, string StopReason);
 public sealed record BatchFinished(int Index, string ActionId, string Template, Position Origin, string Proof, int RegionIndex = 0);
 public sealed record BatchRegionExit(int RegionIndex, string Reason, bool ClearanceUsed, int Targets);
-public sealed record BatchFailure(string Code, string Stage, string Execution, string RecoveryAction);
+public sealed record BatchFailure(string Code, string Stage, string Execution, string RecoveryAction,
+    string? ExceptionKind = null, int? HResult = null);
 
 public sealed class BuildBatchJob
 {
@@ -105,7 +106,7 @@ public static class BuildBatchState
 }
 
 // Private runtime journal, never source-controlled. Lock serializes all batches across MCP processes.
-public sealed class BuildBatchStore(string directory)
+public sealed class BuildBatchStore(string directory, Action<string, string>? replaceFile = null)
 {
     private string PathFor(string session, string id) {
         BuildBatchState.Id(session); BuildBatchState.Id(id);
@@ -164,6 +165,29 @@ public sealed class BuildBatchStore(string directory)
     }
     public bool HasActive(string session) => Directory.EnumerateFiles(directory, session + "-*.json")
         .Any(path => Load(session, Path.GetFileNameWithoutExtension(path)[(session.Length + 1)..]) is { Terminal: false });
+    private void ReplaceCheckpoint(string temp, string path)
+    {
+        byte[] previous = File.ReadAllBytes(path), next = File.ReadAllBytes(temp);
+        for (int attempt = 0; ; attempt++) {
+            try {
+                if (replaceFile is null) File.Replace(temp, path, null);
+                else replaceFile(temp, path);
+                return;
+            } catch (IOException ex) when (ex.HResult is unchecked((int)0x80070020) or
+                unchecked((int)0x80070021) or unchecked((int)0x80070497)) {
+                // Windows sharing/lock violation or unable-to-remove-replaced (1175).
+                // Read errors, missing files and changed bytes fail closed. Do not
+                // guess whether an exchange happened from the exception alone.
+                if (attempt < 3) Thread.Sleep(25 << attempt); // At most 175 ms total.
+                if (!File.Exists(path)) throw;
+                byte[] current = File.ReadAllBytes(path);
+                if (current.AsSpan().SequenceEqual(next)) return;
+                if (attempt >= 3 || !current.AsSpan().SequenceEqual(previous) ||
+                    !File.Exists(temp) || !File.ReadAllBytes(temp).AsSpan().SequenceEqual(next)) throw;
+            }
+        }
+    }
+
     public void Save(BuildBatchJob job) {
         job.UpdatedAtUtc = DateTimeOffset.UtcNow;
         var path = PathFor(job.Spec.Session, job.Spec.BatchId);
@@ -172,10 +196,9 @@ public sealed class BuildBatchStore(string directory)
             using (var stream = new FileStream(temp, FileMode.CreateNew, FileAccess.Write, FileShare.None)) {
                 JsonSerializer.Serialize(stream, job, NativeJson.Options); stream.Flush(true);
             }
-            // Existing checkpoints use the replacement primitive, not Windows'
-            // overwrite-move path. The dispatcher lease serializes writers.
-            // Never delete the committed checkpoint first or retry a failed exchange.
-            if (File.Exists(path)) File.Replace(temp, path, null);
+            // The dispatcher lease serializes writers. Retry only a proven unchanged
+            // file exchange, never a game operation or a partially published checkpoint.
+            if (File.Exists(path)) ReplaceCheckpoint(temp, path);
             else File.Move(temp, path);
         } finally { if (File.Exists(temp)) File.Delete(temp); }
     }

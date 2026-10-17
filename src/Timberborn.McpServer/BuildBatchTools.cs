@@ -101,7 +101,18 @@ public static class BuildBatchTools
                 string execution=rejectedBeforeOrder ? "not_executed" : planning ? "no_build_order" : "ledger_required";
                 string recovery=code is "project_plan_faulted" or "project_preview_failed" ? "reload_game_and_reinspect" :
                     planning || rejectedBeforeOrder ? "diagnose_before_new_plan" : "inspect_existing_action_no_replay";
-                job.Failure=new(code,stage,execution,recovery);
+                // Preserve safe diagnostic categories; never persist exception messages or paths.
+                string exceptionKind=ex switch {
+                    BridgeRejectionException => "bridge_rejection",
+                    InvalidDataException => "invalid_data",
+                    IOException => "io",
+                    HttpRequestException => "http",
+                    ArgumentException => "argument",
+                    JsonException => "json",
+                    OperationCanceledException => "cancelled",
+                    _ => "unknown"
+                };
+                job.Failure=new(code,stage,execution,recovery,exceptionKind,ex.HResult);
                 // A failed read/preview cannot be repaired by replaying the planning loop.
                 // Pending writes keep their checkpoint for read-only ledger reconciliation.
                 if(planning || rejectedBeforeOrder || code=="project_preview_failed") { job.State="stopped"; job.Reason=code; }

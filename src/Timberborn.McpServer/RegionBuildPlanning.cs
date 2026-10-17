@@ -63,7 +63,7 @@ public static class RegionBuildPlanning
         var (request,max)=Parse(args);
         var initial=await client.Simulation(ct);
         if(initial.SessionId!=request.Session)throw new BridgeRejectionException("stale_session");
-        if(initial.BridgeVersion is not ("0.48.0" or "0.49.0" or "0.50.0" or "0.51.0" or "0.52.0" or "0.53.0" or "0.54.0" or "0.55.0" or "0.56.0" or "0.57.0" or "0.58.0" or "0.59.0" or "0.60.0" or "0.61.0" or "0.62.0" or "0.63.0" or "0.64.0" or "0.65.0" or "0.66.0" or "0.67.0" or "0.68.0" or "0.69.0" or "0.70.0" or "0.71.0" or "0.72.0"))throw new InvalidDataException("regional_planning_requires_048");
+        if(initial.BridgeVersion is not ("0.48.0" or "0.49.0" or "0.50.0" or "0.51.0" or "0.52.0" or "0.53.0" or "0.54.0" or "0.55.0" or "0.56.0" or "0.57.0" or "0.58.0" or "0.59.0" or "0.60.0" or "0.61.0" or "0.62.0" or "0.63.0" or "0.64.0" or "0.65.0" or "0.66.0" or "0.67.0" or "0.68.0" or "0.69.0" or "0.70.0" or "0.71.0" or "0.72.0" or "0.73.0"))throw new InvalidDataException("regional_planning_requires_048");
         if(initial.Data.CurrentSpeed!=0)throw new BridgeRejectionException("state_conflict");
         var survey=await RegionSurvey.Observe(request,new NativeRegionSurveyPort(client),ct);
         var candidates=survey.BuildingCandidates.Concat(survey.AdditionalLevels.SelectMany(l=>l.BuildingCandidates));
@@ -98,7 +98,7 @@ public static class RegionBuildPlanning
                 var step=new LargeProjectStep {Template=request.Template,X=c.Origin.X,Y=c.Origin.Y,Z=c.Origin.Z,Rotation=c.Rotation};
                 var e=await check(step,ct); // Transport/session failures abort; never turn them into a rejected site.
                 if(e.SessionId!=request.Session)throw new BridgeRejectionException("stale_session");
-                if(e.BridgeVersion is not ("0.48.0" or "0.49.0" or "0.50.0" or "0.51.0" or "0.52.0" or "0.53.0" or "0.54.0" or "0.55.0" or "0.56.0" or "0.57.0" or "0.58.0" or "0.59.0" or "0.60.0" or "0.61.0" or "0.62.0" or "0.63.0" or "0.64.0" or "0.65.0" or "0.66.0" or "0.67.0" or "0.68.0" or "0.69.0" or "0.70.0" or "0.71.0" or "0.72.0"))throw new InvalidDataException("regional_planning_requires_048");
+                if(e.BridgeVersion is not ("0.48.0" or "0.49.0" or "0.50.0" or "0.51.0" or "0.52.0" or "0.53.0" or "0.54.0" or "0.55.0" or "0.56.0" or "0.57.0" or "0.58.0" or "0.59.0" or "0.60.0" or "0.61.0" or "0.62.0" or "0.63.0" or "0.64.0" or "0.65.0" or "0.66.0" or "0.67.0" or "0.68.0" or "0.69.0" or "0.70.0" or "0.71.0" or "0.72.0" or "0.73.0"))throw new InvalidDataException("regional_planning_requires_048");
                 var data=JsonNode.Parse(e.Data.GetRawText())!.AsObject();
                 bool ok=data["candidateFound"]!.GetValue<bool>();
                 item["state"]=ok?"native_preview_passed":"rejected";

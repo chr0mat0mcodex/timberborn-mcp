@@ -25,7 +25,7 @@ public sealed partial class NativeClient
     {
         try
         {
-            if(e.BridgeVersion is not ("0.37.0" or "0.38.0" or "0.39.0" or "0.40.0" or "0.41.0" or "0.42.0" or "0.43.0" or "0.44.0" or "0.45.0" or "0.46.0" or "0.47.0" or "0.48.0" or "0.49.0" or "0.50.0" or "0.51.0" or "0.52.0" or "0.53.0" or "0.54.0" or "0.55.0" or "0.56.0" or "0.57.0" or "0.58.0" or "0.59.0" or "0.60.0" or "0.61.0" or "0.62.0" or "0.63.0" or "0.64.0" or "0.65.0" or "0.66.0" or "0.67.0" or "0.68.0" or "0.69.0" or "0.70.0" or "0.71.0" or "0.72.0")||e.SessionId!=r.Session||e.Data.ValueKind!=JsonValueKind.Object)throw new InvalidDataException();
+            if(e.BridgeVersion is not ("0.37.0" or "0.38.0" or "0.39.0" or "0.40.0" or "0.41.0" or "0.42.0" or "0.43.0" or "0.44.0" or "0.45.0" or "0.46.0" or "0.47.0" or "0.48.0" or "0.49.0" or "0.50.0" or "0.51.0" or "0.52.0" or "0.53.0" or "0.54.0" or "0.55.0" or "0.56.0" or "0.57.0" or "0.58.0" or "0.59.0" or "0.60.0" or "0.61.0" or "0.62.0" or "0.63.0" or "0.64.0" or "0.65.0" or "0.66.0" or "0.67.0" or "0.68.0" or "0.69.0" or "0.70.0" or "0.71.0" or "0.72.0" or "0.73.0")||e.SessionId!=r.Session||e.Data.ValueKind!=JsonValueKind.Object)throw new InvalidDataException();
             var d=e.Data;
             var limits=d.GetProperty("limitations");
             if(limits.ValueKind!=JsonValueKind.Array||limits.GetArrayLength()>16||limits.EnumerateArray().Any(v=>v.ValueKind!=JsonValueKind.String||v.GetString() is not {Length:>0 and <=160}))throw new InvalidDataException();
@@ -95,8 +95,8 @@ public sealed partial class NativeClient
                 var state=d.GetProperty("state").GetString();var ids=d.GetProperty("entityIds").EnumerateArray().Select(v=>v.GetString()).ToArray();var states=d.GetProperty("partStates").EnumerateArray().Select(v=>v.GetString()).ToArray();
                 if(state is not ("ready" or "waiting" or "completed" or "stopped" or "unconfirmed")||ids.Length!=order.Length||states.Length!=order.Length||ids.Distinct().Count()!=ids.Length||ids.Any(s=>!Guid.TryParseExact(s,"D",out var id)||id==Guid.Empty)||states.Any(s=>s is not ("pending" or "unconfirmed" or "construction" or "awaiting_access" or "finished" or "rejected")))throw new InvalidDataException();
                 int current=d.GetProperty("current").GetInt32();
-                if(current<0||current>order.Length||e.BridgeVersion is not ("0.63.0" or "0.64.0" or "0.65.0" or "0.66.0" or "0.67.0" or "0.68.0" or "0.69.0" or "0.70.0" or "0.71.0" or "0.72.0")&&(order.Take(current).Any(i=>states[i]!="finished")||order.Skip(current+1).Any(i=>states[i]!="pending"))||state=="completed"&&(current!=order.Length||states.Any(s=>s!="finished")))throw new InvalidDataException();
-                if(current==order.Length&&state!="completed"||state=="ready"&&(current!=0||states.Any(s=>s!="pending"))||state=="waiting"&&e.BridgeVersion is not ("0.63.0" or "0.64.0" or "0.65.0" or "0.66.0" or "0.67.0" or "0.68.0" or "0.69.0" or "0.70.0" or "0.71.0" or "0.72.0")&&states[order[current]] is not ("unconfirmed" or "construction"))throw new InvalidDataException();
+                if(current<0||current>order.Length||e.BridgeVersion is not ("0.63.0" or "0.64.0" or "0.65.0" or "0.66.0" or "0.67.0" or "0.68.0" or "0.69.0" or "0.70.0" or "0.71.0" or "0.72.0" or "0.73.0")&&(order.Take(current).Any(i=>states[i]!="finished")||order.Skip(current+1).Any(i=>states[i]!="pending"))||state=="completed"&&(current!=order.Length||states.Any(s=>s!="finished")))throw new InvalidDataException();
+                if(current==order.Length&&state!="completed"||state=="ready"&&(current!=0||states.Any(s=>s!="pending"))||state=="waiting"&&e.BridgeVersion is not ("0.63.0" or "0.64.0" or "0.65.0" or "0.66.0" or "0.67.0" or "0.68.0" or "0.69.0" or "0.70.0" or "0.71.0" or "0.72.0" or "0.73.0")&&states[order[current]] is not ("unconfirmed" or "construction"))throw new InvalidDataException();
                 if(r.Operation=="start"&&!order.SequenceEqual(LargeProjectRequest.Order(r.Steps)))throw new InvalidDataException();
             }
         }
@@ -144,7 +144,7 @@ public sealed partial class NativeClient
         for(int i=0;i<parts.Length;i++)
         {
             var p=parts[i];var id=p.GetProperty("id").GetString();
-            if(version=="0.72.0") RuntimeObservationContract.Construction(p,parts.Length);
+            if(version is ("0.72.0" or "0.73.0")) RuntimeObservationContract.Construction(p,parts.Length);
             if(p.GetProperty("index").GetInt32()!=i||!Guid.TryParseExact(id,"D",out var parsed)||parsed==Guid.Empty||!ids.Add(id!)||!BuildingPolicy.ValidTemplate(p.GetProperty("template").GetString()))throw new InvalidDataException();
             CheckVector(p.GetProperty("position"));
             string recorded=p.GetProperty("recorded").GetString()??"", observed=p.GetProperty("observed").GetString()??"";

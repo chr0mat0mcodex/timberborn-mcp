@@ -28,7 +28,7 @@ public static class ResponsePresentation
             properties["waitSeconds"]=new JsonObject { ["type"]="integer", ["minimum"]=0, ["maximum"]=30, ["default"]=0 };
             properties["after"]=new JsonObject { ["type"]="string", ["pattern"]="^[0-9a-f]{64}$", ["description"]="Letztes watch.changeToken desselben Laufs und derselben Sitzung; abweichender Zustand kehrt sofort zurück." };
             properties["diagnose"]=new JsonObject { ["type"]="boolean", ["default"]=false, ["description"]="Einmalige frische Diagnose nach dem Statuswarten. false spart Inventar-/Wegdiagnose; detail=full allein aktiviert sie nicht." };
-            tool.Description = "0.47: leichte Statuslesung, standardmäßig diagnose=false. waitSeconds 0–30 wartet mit höchstens einer Folgelesung pro Sekunde bis Änderung, Blockade, Ende oder Wartefrist. Kein Auftrag/Tempoeingriff. watch enthält Änderungskennung, Wartegrund und Abfragezahlen; meta.observedAtUtc ist die letzte tatsächliche Beobachtung. diagnose=true ergänzt einmal am Ende frische Diagnose; beim Bauprojekt separat unter watch.diagnosis. detail steuert nur Ausgabeumfang. " + tool.Description;
+            tool.Description = "0.47: leichte Statuslesung, standardmäßig diagnose=false. waitSeconds 0–30 wartet mit höchstens einer Folgelesung pro Sekunde bis Änderung, Blockade, Ende oder Wartefrist. Kein Auftrag/Tempoeingriff. watch enthält Änderungskennung, Wartegrund und Abfragezahlen; meta.observedAtUtc ist die letzte tatsächliche Beobachtung. diagnose=true ergänzt einmal am Ende frische Diagnose; beim Bauprojekt separat unter watch.diagnosis, ab 0.73 mit currentConstruction unabhängig vom historischen Laufabbruch. detail steuert nur Ausgabeumfang. " + tool.Description;
         }
         input["properties"]!.AsObject()["detail"] = new JsonObject {
             ["type"] = "string", ["enum"] = new JsonArray("compact", "full"), ["default"] = "compact",
@@ -91,6 +91,12 @@ public static class ResponsePresentation
     public static JsonObject Present(string name, JsonObject result, bool full)
     {
         var copy = (JsonObject)result.DeepClone();
+        if (copy["status"]?.GetValue<string>() == "ok") {
+            if (name is ("diagnose_large_project" or "close_large_project") && copy["data"] is JsonObject recovery)
+                ProjectReportPresentation.ObserveCurrent(recovery);
+            if (name == "inspect_large_project" && copy["watch"]?["diagnosis"]?["data"] is JsonObject fresh)
+                ProjectReportPresentation.ObserveCurrent(fresh);
+        }
         if (full || !Supports(name) || copy["status"]?.GetValue<string>() != "ok" ||
             copy["data"] is not JsonObject data) return copy;
         switch (name) {

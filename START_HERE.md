@@ -1,5 +1,7 @@
 # Einstieg
 
+**0.73.0 abgeschlossen:** Gate und Livetest für Parameterdiagnose sowie frischen Fertigbau trotz altem Zeitlimit bestanden. [Livebelege](docs/releases/0.73.0.md).
+
 **0.72.0 abgeschlossen:** Gate, Laufzeitdiagnosen und vollständiger Plattform-Umwegpilot bestanden: 15/15 Teile fertig und zugänglich, Bestandswege erhalten, Journal freigegeben. [Livebelege](docs/releases/0.72.0.md).
 
 **0.71.0: Gate und Umwegplatzierung bestanden, Fertigbau offen.** Oberer Treppenanschluss und seitliche Negativkontrolle bestätigt; automatischer Plattformumweg nativ gültig, 17/17 Teile platziert, keine verlorene Bestandsverbindung. [Belege und Learnings](docs/releases/0.71.0.md).

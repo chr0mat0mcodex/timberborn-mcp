@@ -1,5 +1,19 @@
 # Backlog
 
+## 0.73.0 — Gate und gezielter Livetest bestanden
+
+Menschliches Gate: 21 Supervisor-, 1908 Unit- und 13 Integrationstests bestanden;
+drei optionale Integration-Livetests übersprungen. Bridge 0.73.0 live bestätigt.
+limit=100 und depth=5 melden den konkreten Bereich mit not_applicable;
+korrigierte Abfragen funktionieren. Einzelplattform nach einer Spielstunde
+blocked/game_time_limit und frisch 0/1 fertig; nach separaten zwölf Stunden
+frisch 1/1 fertig und zugänglich bei unveränderter Historie. Compact/full,
+explizite watch-Diagnose und rein historische Journalansicht bestätigt.
+Keine beobachteten Bestandsverluste; Journal regulär freigegeben, Tempo 0,
+kein aktiver Lauf. [Livebelege und Grenzen](docs/releases/0.73.0.md).
+Anleitung, Tool-Doku und zurückgestellter Hermes-Skillentwurf aktualisiert;
+Workflow unverändert. Keine Agent-Builds/Tests. Version 0.73.0 fachlich abgeschlossen; Git-Sicherung durch den Abschlusscommit.
+
 ## 0.72.0 — Gate und vollständiger Plattform-Umwegpilot bestanden
 
 Abschluss der seit 0.67 entwickelten Zugangsverbesserungen: automatische
@@ -20,16 +34,31 @@ Grenzen: neuer unterer Zielweg einer gedrehten Bestandstreppe noch kein eigener
 Livefall; keine allgemeine Such-/Bauphasengarantie. Zielgebäude kann vor seinem
 Zugang fertig sein. Weganschluss ist kein Nachweis trockenen Betriebs.
 
-## Nächste Verbesserungen
+## Nächster Fix — repairEligible und Reparaturempfehlung trennen
 
-- Lesende invalid_argument-Fehler mit konkretem Parameter und Bereich ausgeben;
-  inspect_goods(limit=100) und inspect_map_region(depth=5) liefern bisher den
-  irreführenden Standardtext über einen schreibenden Auftrag.
+Priorität: nächste Diagnosekorrektur nach 0.73. Im Livepilot war bei
+materials_not_ready und lostConnections=0 bereits repairEligible=true samt
+review_access_repair_plan sichtbar. Das beschreibt eine mögliche Operation,
+nicht einen nachgewiesenen Reparaturbedarf.
+
+- Technische Reparaturmöglichkeit beibehalten, tatsächlichen Reparaturbedarf
+  anhand frischer Zugangsbelege separat ausweisen; unknown nicht als fehlenden
+  Zugang behandeln.
+- Bei reinem Material-/Stützwarten oder Personalproblem den passenden nächsten
+  Schritt nennen. Kein automatischer Zugangsbau allein wegen repairEligible.
+- Abnahme: Materialwarten ohne Zugangsverlust, belegter fehlender Zugang,
+  unbekannter Zugang sowie vollständiger Fertigbau. Historischen Laufabbruch,
+  aktuellen Bauzustand und Journalfreigabe weiterhin getrennt halten.
+- Learning aus 0.73: Fähigkeitsflag ist keine Handlungsempfehlung. Belege und
+  konkrete Gründe müssen den nächsten Schritt bestimmen.
+
+## Weitere Verbesserungen
+
 - Betriebs-/Überflutungszustand des Bauzentrums und der Lieferkette vor längeren
   Bauzeitfenstern bündeln; connected allein reicht nicht.
-- Historischen Zeitlimitstatus und aktuell fertigen Projektzustand deutlicher
-  trennen. Frische Recovery kann alles fertig belegen, obwohl state noch blocked ist.
 - Unteren neuen Zielweg an gedrehter Bestandstreppe separat live prüfen.
+- Parameterdiagnose und Trennung Zeitlimit/Fertigbau sind mit 0.73 erledigt;
+  keine erneute Umsetzung dieser Punkte.
 
 ## 0.71.0 — Gate, Anschlussprüfung und Umwegplatzierung bestanden; Fertigbau offen
 
