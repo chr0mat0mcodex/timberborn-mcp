@@ -1,5 +1,23 @@
 # Projektstand
 
+## Nachtrag 2026-10-18 — wartende Lodge fertiggestellt
+
+Bei Spielzeit 20:28: Lodge unpausiert, 12/12 Holz an der Baustelle,
+buildersReachable=true, einzige Baustelle, Priorität Normal. DistrictCenter
+und BuildersHut jeweils 4/4 besetzt, trocken und unpausiert, aber
+workingHours=false und anyJobRunning=false: Feierabend als aktuelle Blockade.
+Keine dauerhafte Zugangs-/Materialblockade beobachtet.
+
+Gezielte neue Diagnoseentscheidung: einmal bis Folgetag 10 Uhr, Tempo 7,
+maximal 60 Echtzeitsekunden. Um etwa 08:23 bereits fertig; Bauzentrum wieder
+workingHours=true/anyJobRunning=true. Ende nach 13,53125 Spielstunden und
+39,90 Echtzeitsekunden mit bestätigter Pause. Frische Projektdiagnose: beide
+Teile finished_accessible, keine verlorenen Bestandszugänge. Projekt freigegeben.
+Der historische game_time_limit-Beleg blieb korrekt getrennt vom Fertigbau.
+Die Verteilung von Transport-/Anmarschzeit vor dem vorherigen Feierabend ist
+nicht beobachtet; Besetzung allein belegt weder Arbeitszeit noch Bauarbeit.
+Keine Codeänderung erforderlich.
+
 ## Abschluss 2026-10-18 — automatische Betriebsdiagnose begrenzt live abgenommen
 
 Gate: 1964 Unit- und 13 Integrationstests bestanden, drei optionale Live-Tests
