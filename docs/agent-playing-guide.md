@@ -1,5 +1,12 @@
 # Spielanleitung für Agenten
 
+Bezirksweite Bauarbeitszeit **begrenzt live abgenommen**: Zentrum und
+Bauhütten gemeinsam prüfen. Aktiver Job oder besetzte unpausierte Bauhütte in
+Arbeitszeit verhindert gemeinsamen Feierabend; unbekannte Belege bleiben null.
+Einzelner Feierabend am Zentrum ist keine Baupause im ganzen Bezirk.
+[Vertrag, Grenzen und Pilot](operating-readiness.md).
+
+
 
 Arbeitszeitdiagnose erweitert, **Gate und Livepilot bestanden**: Feierabend am beobachteten
 Arbeitsplatz wird konkret benannt. Frische Baudiagnose nutzt den Schichtstatus

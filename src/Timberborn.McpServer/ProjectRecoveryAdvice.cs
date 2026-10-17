@@ -23,7 +23,7 @@ public static class ProjectRecoveryAdvice
                     "materials_not_ready" => "check_material_supply",
                     "waiting_for_support_completion" => "wait_for_support_completion",
                     "construction_paused" => "review_construction_pause",
-                    "construction_center_outside_working_hours" => "wait_for_construction_working_hours",
+                    "builders_outside_working_hours" or "construction_center_outside_working_hours" => "wait_for_construction_working_hours",
                     "awaiting_builders_or_work" => "check_workers_and_work_progress",
                     _ => "inspect_construction_inactivity"
                 },
@@ -33,6 +33,8 @@ public static class ProjectRecoveryAdvice
             part["nextStep"]=next;
             if(reason=="construction_center_outside_working_hours")
                 part["nextStepExplanation"]="Feierabend am zuständigen Bezirkszentrum: Arbeitszeit ist beendet. Gezielt bis zur nächsten Arbeitsphase beobachten und Baufortschritt erneut prüfen; andere Bauhütten und weitere Ursachen sind damit nicht ausgeschlossen. Kein automatisches Verlängern des Laufbudgets.";
+            if(reason=="builders_outside_working_hours")
+                part["nextStepExplanation"]="Feierabend an allen vollständig beobachteten, besetzten und unpausierten Bauarbeitsplätzen im zuständigen Bezirk. Kein laufender Auftrag beobachtet. Gezielt nächste Arbeitsphase prüfen; keine automatische Budgetverlängerung und keine Zusage für diese Baustelle.";
             nextSteps.Add(next);
             if(next=="inspect_missing_access")missing.Add(part["index"]?.DeepClone());
             if(next=="inspect_unknown_access_or_identity")unknown.Add(part["index"]?.DeepClone());

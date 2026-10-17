@@ -1,5 +1,85 @@
 # Gemeinsame Betriebsdiagnose (begrenzt live abgenommen)
 
+## Bezirksweite Bauarbeitszeit — begrenzt live abgenommen
+
+Frische Baudiagnosen berücksichtigen das zuständige DistrictCenter und fertige
+BuildersHuts mit nativer Zuordnung zum selben Bezirk (Folktails/IronTeeth).
+Keine Näheheuristik. Widersprüchliche oder fehlende Bezirkszuordnung bleibt
+unbekannt; bekannte fremde Bezirke beeinflussen den Befund nicht.
+
+builderWorkforce enthält districtId, source="district_builder_workplaces",
+complete, workingHours und bis zu 64 workplaces. Je Arbeitsplatz: id, template,
+districtId, assignedWorkers, paused, workingHours und anyJobRunning. Die
+Einzelbelege bleiben auch in Compact sichtbar. Das bisherige
+constructionCenterWorkingHours bleibt ausschließlich der Einzelwert des Zentrums.
+
+Aggregat workingHours ist ein dreistufiger Verfügbarkeitsbefund:
+- true: mindestens ein zugehöriger Arbeitsplatz meldet einen laufenden Job
+  oder ist besetzt, unpausiert und in Arbeitszeit. Auch bei unvollständiger
+  Abdeckung reicht dieser Positivbeleg gegen eine gemeinsame Baupause.
+- false: vollständige eindeutige Auswahl einschließlich Bezirkszentrum;
+  mindestens ein besetzter unpausierter Arbeitsplatz, alle solchen Arbeitsplätze
+  außerhalb Arbeitszeit, kein laufender Auftrag und keine fehlenden Pflichtwerte.
+- null: keine besetzten unpausierten Bauarbeitsplätze, fehlende Belege,
+  ungeklärte Mitgliedschaft oder gekürzte Auswahl ohne Positivbeleg. Das ist kein
+  Feierabendnachweis. Pausierte/unbesetzte Arbeitsplätze beweisen keine aktive Schicht.
+
+Nur false kann bei sonst aktiver, erreichbarer, unpausierter und materialbereiter
+Baustelle builders_outside_working_hours auslösen. Andere Blockaden behalten
+Vorrang. Eine arbeitende Bauhütte verhindert diesen Grund auch bei Feierabend im
+Zentrum. Ein laufender Job beweist keine Arbeit an genau dieser Baustelle.
+Alte Berichte ohne builderWorkforce behalten den eng begrenzten Zentrum-Beleg;
+niemals als aktuelle bezirksweite Beobachtung ausgeben.
+
+Die Betriebsdiagnose beschreibt weiterhin den Schichtstatus jedes ausgewählten
+Arbeitsplatzes. Ein dortiger Feierabendhinweis am Zentrum ist keine Baupause des
+ganzen Bezirks. Für diese Entscheidung diagnose_large_project oder
+inspect_large_project(diagnose=true) und builderWorkforce verwenden.
+Keine Änderungen an Schichten/Personal oder Startfreigaben; kein automatisches
+Verlängern von Laufbudgets. Bei true und ausbleibendem Fortschritt Aufträge,
+Zugang und Anmarsch weiter prüfen, nicht automatisch neu bauen.
+
+Im menschlichen Gate bestanden: Zentrum aus/Bauhütte an, laufender Job trotz Schichtende,
+alle aus, fremder Bezirk, Pause/keine Besetzung, fehlende Daten, Suchlimit,
+widersprüchlicher Gesamtbeleg und Compact-Erhalt. Native Registrierung im
+aktuellen Folktails-Spiel bestätigt DistrictCenter und BuildersHut als Vorlagen.
+Einzelbelege live gegen frische Arbeitsplatzabfragen geprüft; genaue
+Abnahme und Grenze des gemischten Schichtfalls stehen im folgenden Abschnitt.
+
+
+## Liveabnahme bezirksweite Bauarbeitszeit 2026-10-18
+
+Menschliches Gate bestanden: 28 Supervisor-, 1984 Unit- und 13 Integrationstests;
+drei optionale Integration-Livetests übersprungen. Bridge 0.74.0.
+Im pausierten Folktails-Spiel um 14:28 stimmen Bezirkszuordnung, Besetzung,
+Pause, Arbeitszeit und laufende Jobs von Zentrum und Bauhütte mit den
+Einzelabfragen überein: jeweils vier Beschäftigte, Arbeitszeit und Jobs aktiv.
+Kontrolle: Zentrum vorübergehend pausiert (0 Beschäftigte, kein Job), Bauhütte
+weiter unpausiert mit vier Beschäftigten und laufendem Job. builderWorkforce
+bleibt complete=true/workingHours=true, keine gemeinsame Feierabenddiagnose.
+Zentrum anschließend nachweislich wieder eingeschaltet.
+
+Abendgegenprobe nach sechs Spielstunden (17,73 Sekunden), um 20:28 pausiert:
+beide Arbeitsplätze besetzt und unpausiert, workingHours=false und kein Job.
+Einzelabfragen und vollständiger Bezirksbefund stimmen überein. Lodge mit
+12/12 Holz, aktiv und erreichbar, Baufortschritt null: korrekt
+builders_outside_working_hours und wait_for_construction_working_hours.
+Compact und Full erhalten dieselben Einzelbelege. Betriebsdiagnose bestätigt
+den Einzelwert des Zentrums und erklärt ausdrücklich, dass dieser allein
+keine bezirksweite Baupause beweist.
+
+Separat begrenzte Morgengegenprobe bis 06:00 (9,53125 Spielstunden, 28,08
+Sekunden): beide Arbeitsplätze wieder aktiv, beide Testteile fertig und
+erreichbar. Zielpause bestätigt, gestopptes Projekt danach freigegeben.
+Der erste Freigabeversuch am Abend blieb wegen der unfertigen Lodge gesperrt.
+
+Grenze: Unterschiedliche Schichtzeiten (Zentrum Feierabend, Bauhütte in Schicht)
+wurden synthetisch im Gate geprüft, nicht live hergestellt. Der Livekontrollfall
+verwendet eine Gebäudepause; diese ist kein Feierabend. Laufende Jobs belegen
+keine Arbeit an genau dieser Baustelle. Keine automatische Budgetverlängerung.
+Anleitung, Werkzeugdoku, Fachvertrag und Einstiegsdokumente aktualisiert;
+kein vorhandener projektbezogener Spielskill zu ändern, Hermes bleibt entfernt.
+
 ## Liveabnahme Arbeitszeitdiagnose 2026-10-18
 
 Menschliches Gate: 28 Supervisor-, 1975 Unit- und 13 Integrationstests bestanden;
@@ -33,7 +113,7 @@ während laufender Simulation zu verschiedenen Zeiten; die pausierten
 Abend-/Morgengegenproben bestätigen jeweils konsistente aktuelle Werte.
 
 
-## Arbeitszeiten in Betriebs- und Baudiagnose — begrenzt live abgenommen
+## Vorheriger Stand: Arbeitszeit nur des Bezirkszentrums — begrenzt live abgenommen
 
 Die Betriebsdiagnose benennt outside_working_hours ausdrücklich als Feierabend,
 working_hours_unknown als fehlende Beobachtung. Besetzung ist kein Arbeitsbeleg.

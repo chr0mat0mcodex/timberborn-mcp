@@ -39,8 +39,19 @@ public static class RuntimeObservationContract
                 throw new InvalidDataException("invalid_construction_working_hours_evidence");
             workingHours=hours.ValueKind==JsonValueKind.Null?null:hours.GetBoolean();
         }
+        bool districtWorkforce=part.TryGetProperty("builderWorkforce",out var workforce);
+        if(districtWorkforce) {
+            var evidence=JsonSerializer.Deserialize<BuilderWorkforceEvidence>(workforce.GetRawText(),NativeJson.Options)
+                ?? throw new InvalidDataException("missing_builder_workforce_evidence");
+            var expected=BuilderWorkforcePolicy.Evaluate(evidence);
+            if(evidence.WorkingHours!=expected || evidence.DistrictId!=part.GetProperty("constructionCenterId").GetString())
+                throw new InvalidDataException("inconsistent_builder_workforce_evidence");
+            var center=evidence.Workplaces.SingleOrDefault(w=>w.Id==evidence.DistrictId);
+            if(center?.WorkingHours!=workingHours) throw new InvalidDataException("inconsistent_center_working_hours");
+            workingHours=expected;
+        }
         var reason=LargeProjectRecoveryPolicy.ConstructionReason(pause.ValueKind==JsonValueKind.Null?null:pause.GetBoolean(),
-            Flag("isOn"),Flag("hasMaterialsToResumeBuilding"),supports.Length>0,workingHours);
+            Flag("isOn"),Flag("hasMaterialsToResumeBuilding"),supports.Length>0,workingHours,districtWorkforce);
         if (part.GetProperty("reason").GetString()!=reason) throw new InvalidDataException("inconsistent_construction_reason");
     }
 }

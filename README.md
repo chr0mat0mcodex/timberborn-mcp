@@ -1,5 +1,12 @@
 # Timberborn MCP
 
+Bezirksweite Bauarbeitszeit **begrenzt live abgenommen**: Zentrum und
+Bauhütten gemeinsam prüfen. Aktiver Job oder besetzte unpausierte Bauhütte in
+Arbeitszeit verhindert gemeinsamen Feierabend; unbekannte Belege bleiben null.
+Einzelner Feierabend am Zentrum ist keine Baupause im ganzen Bezirk.
+[Vertrag, Grenzen und Pilot](docs/operating-readiness.md).
+
+
 Arbeitszeit-Nachtrag im Gate und begrenzten Livepilot bestätigt: konkrete Feierabendursache in Betriebs- und frischer Baudiagnose. [Vertrag](docs/operating-readiness.md).
 
 Automatische Bauzentrum-/Produzentenauswahl und Vorprüfung vor Strukturstarts bzw. längeren Simulationen sind nach Gate sowie Simulations- und Baupilot begrenzt live abgenommen. Befunde bleiben beratend, Materialmangel sperrt den Start nicht. [Vertrag und Livebelege](docs/automatic-operating-readiness.md).

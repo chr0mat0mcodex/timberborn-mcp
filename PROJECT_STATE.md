@@ -1,5 +1,45 @@
 # Projektstand
 
+Bezirksweite Bauarbeitszeit **begrenzt live abgenommen**: Zentrum und
+Bauhütten gemeinsam prüfen. Aktiver Job oder besetzte unpausierte Bauhütte in
+Arbeitszeit verhindert gemeinsamen Feierabend; unbekannte Belege bleiben null.
+Einzelner Feierabend am Zentrum ist keine Baupause im ganzen Bezirk.
+[Vertrag, Grenzen und Pilot](docs/operating-readiness.md).
+
+
+## Liveabnahme bezirksweite Bauarbeitszeit 2026-10-18
+
+Menschliches Gate bestanden: 28 Supervisor-, 1984 Unit- und 13 Integrationstests;
+drei optionale Integration-Livetests übersprungen. Bridge 0.74.0.
+Im pausierten Folktails-Spiel um 14:28 stimmen Bezirkszuordnung, Besetzung,
+Pause, Arbeitszeit und laufende Jobs von Zentrum und Bauhütte mit den
+Einzelabfragen überein: jeweils vier Beschäftigte, Arbeitszeit und Jobs aktiv.
+Kontrolle: Zentrum vorübergehend pausiert (0 Beschäftigte, kein Job), Bauhütte
+weiter unpausiert mit vier Beschäftigten und laufendem Job. builderWorkforce
+bleibt complete=true/workingHours=true, keine gemeinsame Feierabenddiagnose.
+Zentrum anschließend nachweislich wieder eingeschaltet.
+
+Abendgegenprobe nach sechs Spielstunden (17,73 Sekunden), um 20:28 pausiert:
+beide Arbeitsplätze besetzt und unpausiert, workingHours=false und kein Job.
+Einzelabfragen und vollständiger Bezirksbefund stimmen überein. Lodge mit
+12/12 Holz, aktiv und erreichbar, Baufortschritt null: korrekt
+builders_outside_working_hours und wait_for_construction_working_hours.
+Compact und Full erhalten dieselben Einzelbelege. Betriebsdiagnose bestätigt
+den Einzelwert des Zentrums und erklärt ausdrücklich, dass dieser allein
+keine bezirksweite Baupause beweist.
+
+Separat begrenzte Morgengegenprobe bis 06:00 (9,53125 Spielstunden, 28,08
+Sekunden): beide Arbeitsplätze wieder aktiv, beide Testteile fertig und
+erreichbar. Zielpause bestätigt, gestopptes Projekt danach freigegeben.
+Der erste Freigabeversuch am Abend blieb wegen der unfertigen Lodge gesperrt.
+
+Grenze: Unterschiedliche Schichtzeiten (Zentrum Feierabend, Bauhütte in Schicht)
+wurden synthetisch im Gate geprüft, nicht live hergestellt. Der Livekontrollfall
+verwendet eine Gebäudepause; diese ist kein Feierabend. Laufende Jobs belegen
+keine Arbeit an genau dieser Baustelle. Keine automatische Budgetverlängerung.
+Anleitung, Werkzeugdoku, Fachvertrag und Einstiegsdokumente aktualisiert;
+kein vorhandener projektbezogener Spielskill zu ändern, Hermes bleibt entfernt.
+
 ## Liveabnahme Arbeitszeitdiagnose 2026-10-18
 
 Menschliches Gate: 28 Supervisor-, 1975 Unit- und 13 Integrationstests bestanden;
@@ -33,7 +73,7 @@ während laufender Simulation zu verschiedenen Zeiten; die pausierten
 Abend-/Morgengegenproben bestätigen jeweils konsistente aktuelle Werte.
 
 
-## Arbeitszeiten in Betriebs- und Baudiagnose — begrenzt live abgenommen
+## Vorheriger Stand: Arbeitszeit nur des Bezirkszentrums — begrenzt live abgenommen
 
 Die Betriebsdiagnose benennt outside_working_hours ausdrücklich als Feierabend,
 working_hours_unknown als fehlende Beobachtung. Besetzung ist kein Arbeitsbeleg.

@@ -1,5 +1,12 @@
 # Einstieg
 
+Bezirksweite Bauarbeitszeit **begrenzt live abgenommen**: Zentrum und
+Bauhütten gemeinsam prüfen. Aktiver Job oder besetzte unpausierte Bauhütte in
+Arbeitszeit verhindert gemeinsamen Feierabend; unbekannte Belege bleiben null.
+Einzelner Feierabend am Zentrum ist keine Baupause im ganzen Bezirk.
+[Vertrag, Grenzen und Pilot](docs/operating-readiness.md).
+
+
 Arbeitszeit-Nachtrag im Gate und begrenzten Livepilot bestätigt: konkrete Feierabendursache in Betriebs- und frischer Baudiagnose. [Vertrag](docs/operating-readiness.md).
 
 Aktuelle Arbeit: automatische Betriebsdiagnose und Einbindung vor längeren Läufen **Gate, Auto-Reader, Simulations- und Strukturpilot bestanden**. [Vertrag](docs/automatic-operating-readiness.md) · [Spielablauf](docs/agent-playing-guide.md#automatische-vorprüfung-vor-längeren-läufen). Manuelle Betriebsdiagnose ist bereits begrenzt live abgenommen.
