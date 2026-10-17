@@ -22,6 +22,19 @@ summary und frische Diagnose nutzen. Der lokale Skill bleibt zurückgestellt.
 
 ## Gesamtstruktur 0.63 — mit dokumentierter Grenze abgeschlossen
 
+Korrektur 0.64 (begrenzt live abgenommen): `awaiting_access` ist
+ein vorhandenes fertiges Teil ohne aktuellen Zugang, keine verlorene Identität.
+Unterbau/Fertigzugang im selben begrenzten Projekt weiter beobachten; kein Replay.
+Diagnose bewahrt positive Identitätsbelege nach Stop; belegter späterer Rückbau
+kann Close ermöglichen. Nie bestätigte fehlende Objekte bleiben gesperrt.
+`inspect_simulation` ergänzt `activeRunId` und `pendingSpeed`: bei verlorener
+Antwort dieselbe Kennung und den aktuellen Tempozustand lesen. Historische
+Pausebestätigung ist kein frischer Beleg; ausstehendes Tempo und verzögerte
+Update-Wirkung beachten. Höhenbau 3/3, Stopp/Rückbau/Close mit Folgeauftrag ohne
+Reload und frische Pause live bestätigt. Antwortverlust und Update-Rennen bleiben
+synthetische Fälle. Fachvertrag/Belege: `docs/releases/0.64.0.md` im Projekt.
+Dieser lokale Skillentwurf bleibt zurückgestellt, keine Installation/Freigabe.
+
 Ebener Gesamtauftrag, Reparatur, Schema-2-Charge und manueller Höhen-Gesamtstart
 mit Weg auf unfertiger Plattform live belegt. Separater Vertikalpilot bestätigt
 fünf gemeinsame Aufträge; ebener Dreiteilepilot vollständig fertig. Objektverlust

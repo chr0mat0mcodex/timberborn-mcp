@@ -1,6 +1,6 @@
 namespace Timberborn.Bridge.Core;
 
-// The first dispatch submits every part; subsequent ticks only observe. Inspect never mutates.
+// The first dispatch submits every part; subsequent ticks only observe. No observation dispatches.
 public sealed class LargeProjectLedger
 {
     public sealed class Receipt
@@ -91,6 +91,8 @@ public sealed class LargeProjectLedger
                 var observed=observe(i);
                 r.PartReasons[i]=observed;
                 if(observed is "construction" or "construction_unreachable") r.PartStates[i]="construction";
+                else if(observed=="finished_access_missing") r.PartStates[i]="awaiting_access";
+                else if(observed=="construction_access_unknown") {r.PartStates[i]="construction";r.State="stopped";r.Reason="construction_access_unknown";}
                 else if(observed=="finished") r.PartStates[i]="finished";
                 else if(observed=="mismatch") { r.State="stopped";r.Reason="object_or_access_mismatch"; }
                 else if(observed is "missing" or "pending") {

@@ -9,6 +9,17 @@ namespace Timberborn.Tests;
 
 public sealed class BuildingCapabilityTests
 {
+    [Fact]
+    public void RecoveryReleaseKeepsKnownCapabilitiesWithoutInventingLiveEvidence()
+    {
+        var previous = BuildingCapabilityTools.Describe("0.63.0", "Folktails", true);
+        var current = BuildingCapabilityTools.Describe("0.64.0", "Folktails", true);
+        Assert.Equal("known", current.ProfileState);
+        Assert.Equal(previous.Modes.Select(m => m.Tool), current.Modes.Select(m => m.Tool));
+        Assert.False(current.RegularExecutionAllowed);
+        Assert.False(current.ConstructionPreflightProven);
+        Assert.Equal("unknown", BuildingCapabilityTools.Describe("99.0.0", "Folktails", true).ProfileState);
+    }
     private const string Session = "11111111-1111-1111-1111-111111111111";
 
     [Theory]

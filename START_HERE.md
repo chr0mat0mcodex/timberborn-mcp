@@ -33,15 +33,18 @@ MCP-Livetest. Keine historische Kolonie oder konkreter Spielstand erforderlich.
 
 ## Aktueller Auftrag
 
+0.64.0: menschliches Gate und begrenzter Bauphasen-/Pause-/Recovery-Pilot bestanden.
+[Livebelege und Grenzen](docs/releases/0.64.0.md). Keine eigenen Builds/Tests.
+
 0.63.0 und anschließende Bauplaner-Korrektur sind begrenzt live abgenommen.
 Überlebenslauf nach vom Nutzer gemeldetem Kolonieverlust beendet; Rettungsziel
 nicht erreicht. Aktuelle Nachweise stehen im [Projektstand](PROJECT_STATE.md),
-offene Bauphasen-, Pause- und Recoveryfehler im [Backlog](BACKLOG.md).
+verbleibende Fehler und Nachweisgrenzen im [Backlog](BACKLOG.md).
 Keine automatische Wiederaufnahme historischer Kolonieziele.
 
 ## Technischer Stand
 
-Bridge 0.63.0; MCP-Nachträge derselben Version werden durch Commit und
+Bridge 0.64.0; MCP-Nachträge derselben Version werden durch Commit und
 feature-spezifische Abnahme unterschieden. Die älteren Abschnitte oben sind
 historische Nachweise, keine aktuelle Aufgabenliste.
 

@@ -9,6 +9,23 @@ namespace Timberborn.Tests;
 public sealed class SimulationTests
 {
     [Theory]
+    [InlineData(0, true)][InlineData(7, true)][InlineData(2, false)]
+    public async Task QueuedSpeedReceiptRetainsOwnerAndValidatesPendingCommand(int pending, bool valid)
+    {
+        const string session = "11111111-1111-1111-1111-111111111111";
+        const string run = "22222222-2222-2222-2222-222222222222";
+        var payload = new BridgeEnvelope<NativeSpeedResult>(1, session, DateTimeOffset.UnixEpoch,
+            "0.64.0", new(0, 1, false, new(1, 1, .5f, 12, run, pending), ["synthetic"]));
+        using var client = new NativeClient(new(8081, new string('a', 64)), new Handler(JsonSerializer.Serialize(payload, NativeJson.Options)));
+        var request = BridgeRequest.Parse("/agent-api/v1/simulation-speed", new() {
+            ["session"] = session, ["speed"] = "0", ["expectedSpeed"] = "1" });
+        if (valid) {
+            var result = await client.SetSpeed(request, TestContext.Current.CancellationToken);
+            Assert.Equal(run, result.Data.Observation.ActiveRunId);
+            Assert.Equal(pending, result.Data.Observation.PendingSpeed);
+        } else await Assert.ThrowsAsync<InvalidDataException>(() => client.SetSpeed(request, TestContext.Current.CancellationToken));
+    }
+    [Theory]
     [InlineData(0, true)]
     [InlineData(1, true)]
     [InlineData(2, false)]

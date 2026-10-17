@@ -18,7 +18,7 @@ public sealed class LargeProjectBatch
         public string[] PartReasons { get; set; } = Array.Empty<string>();
         public string?[] PartExceptionTypes { get; set; } = Array.Empty<string?>();
         public int[] DeferredParts { get; set; } = Array.Empty<int>();
-        public int Ordered => PartStates.Count(s => s is "unconfirmed" or "construction" or "finished");
+        public int Ordered => PartStates.Count(s => s is "unconfirmed" or "construction" or "awaiting_access" or "finished");
         public int Finished => PartStates.Count(s => s == "finished");
         public bool RegularExecutionAllowed { get; set; }
         public SimulationRunStatus Simulation { get; set; } = new();
@@ -86,11 +86,20 @@ public sealed class LargeProjectBatch
                             }
                         }
                     }
-                    else foreach (int i in result.Order.Where(i => result.PartStates[i] is "unconfirmed" or "construction" or "finished"))
+                    else foreach (int i in result.Order.Where(i => result.PartStates[i] is "unconfirmed" or "construction" or "awaiting_access" or "finished"))
                     {
                         currentPart = i;
                         string observed = observe(i);
-                        if (observed == "construction_unreachable") {
+                        if (observed == "finished_access_missing") {
+                            result.PartStates[i] = "awaiting_access";
+                            result.PartReasons[i] = "finished_access_missing";
+                        }
+                        else if (observed == "construction_access_unknown") {
+                            result.PartStates[i] = "construction";
+                            result.PartReasons[i] = "construction_access_unknown";
+                            Finish("blocked", "construction_access_unknown", i);
+                        }
+                        else if (observed == "construction_unreachable") {
                             result.PartStates[i] = "construction";
                             result.PartReasons[i] = "builders_unreachable";
                         }

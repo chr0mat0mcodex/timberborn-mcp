@@ -1,5 +1,20 @@
 # Simulation lesen und steuern — 0.11.0
 
+## 0.64-Korrektur begrenzt live abgenommen
+
+Tempoabsichten werden bis zur nächsten Bridge-Aktualisierung zusammengeführt.
+Nach Übergabe an SpeedManager wird im selben Update keine Laufpause bestätigt;
+die nächste Beobachtung folgt nach dessen verzögerter Tempoübernahme. Ein sofort
+abgebrochener Start darf keine spätere Beschleunigung hinterlassen. Game-Locks
+werden nicht überschrieben. `activeRunId` und `pendingSpeed` in der aktuellen
+Simulationsübersicht dienen der lesenden Klärung verlorener Antworten.
+Historische terminale Berichte bleiben eingefroren und ersetzen keine frische
+Tempoabfrage. Eine unbekannte Laufkennung allein beweist keine Wirkungslosigkeit.
+Start/sofortiger Cancel und explizite MCP-Tempo-Unterbrechung live bestanden;
+frische spätere Abfragen blieben pausiert, ohne aktive Laufkennung/Tempoabsicht.
+Rennen innerhalb desselben Updates und Antwortverlust nur synthetisch geprüft.
+[Regressionen und Livepilot](releases/0.64.0.md). Die Nachweise unten sind historisch.
+
 ## Live bestanden — temporäre Spielsperren in Zeitläufen (2026-10-04)
 
 Menschliches Test-/Installationsgate abgeschlossen; alle fünf installierten

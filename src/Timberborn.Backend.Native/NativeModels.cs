@@ -78,7 +78,8 @@ public sealed record StatusWatch(string ChangeToken, bool? Changed, string Reaso
     int StatusReads, int DiagnosticRequests, string DiagnosisState, JsonElement? Diagnosis = null);
 public sealed record NativeResult<T>(int SchemaVersion, string Status, T? Data, NativeMeta Meta, NativeFault? Error,
     [property: System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)] StatusWatch? Watch = null);
-public sealed record NativeSimulation(float CurrentSpeed, int DayNumber, float DayProgress, float HoursPassedToday);
+public sealed record NativeSimulation(float CurrentSpeed, int DayNumber, float DayProgress, float HoursPassedToday,
+    string? ActiveRunId = null, int? PendingSpeed = null);
 public sealed record NativeSpeedResult(int RequestedSpeed, float PreviousSpeed, bool MatchedImmediately,
     NativeSimulation Observation, string[] Limitations);
 public sealed record NativeWorkplaceAssignment(Guid Id, string Template, Position Position);

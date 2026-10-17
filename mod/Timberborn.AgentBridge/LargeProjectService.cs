@@ -114,10 +114,10 @@ public sealed partial class LargeProjectService(BuildingCatalog catalog, Preview
         var e=entities.Entities.SingleOrDefault(e=>!e.Deleted&&e.EntityId.ToString("D")==id);
         if(e is null)return "missing";if(!e.Initialized)return "pending";
         if(!e.TryGetComponent<BlockObject>(out var b)||b.IsPreview||b.Coordinates!=new Vector3Int(s.X,s.Y,s.Z)||b.Orientation!=Rotation(s.Rotation)||!e.TryGetComponent<TemplateSpec>(out var t)||t.TemplateName!=s.Template)return "mismatch";
-        if(b.IsUnfinished)return e.TryGetComponent<ReachableConstructionSite>(out var site)?site.IsReachableByBuilders()?"construction":"construction_unreachable":"pending";
+        if(b.IsUnfinished)return e.TryGetComponent<ReachableConstructionSite>(out var site)?site.IsReachableByBuilders()?"construction":"construction_unreachable":"construction_access_unknown";
         if(!b.IsFinished)return "mismatch";
-        if(b.HasEntrance && !district.IsOnInstantDistrictRoad(NavigationCoordinateSystem.GridToWorld(b.PositionedEntrance.Coordinates)))return "mismatch";
-        if(e.TryGetComponent<PathSpec>(out var path)&&!district.IsOnInstantDistrictRoad(NavigationCoordinateSystem.GridToWorld(b.TransformCoordinates(path.MainPathCoordinates))))return "mismatch";
+        if(b.HasEntrance && !district.IsOnInstantDistrictRoad(NavigationCoordinateSystem.GridToWorld(b.PositionedEntrance.Coordinates)))return "finished_access_missing";
+        if(e.TryGetComponent<PathSpec>(out var path)&&!district.IsOnInstantDistrictRoad(NavigationCoordinateSystem.GridToWorld(b.TransformCoordinates(path.MainPathCoordinates))))return "finished_access_missing";
         // Entrance-less supports/shafts have no door to invent; their construction access was observed separately.
         return "finished";
     }
@@ -153,7 +153,7 @@ public sealed partial class LargeProjectService(BuildingCatalog catalog, Preview
     }
     private JObject Plan(LargeProjectRequest r, string[]? ownedSites = null)
     {
-        LargeProjectPlanningPolicy.RequireAvailable(faulted, speed.CurrentSpeed==0, false, true);
+        LargeProjectPlanningPolicy.RequireAvailable(faulted, simulation.PauseSettled, false, true);
         LargeProjectPlanningPolicy.RequireIsolation(ConstructionIsolation.Blocker(entities, ownedSites));
         var district=District(r.DistrictId, planning: true);var order=LargeProjectRequest.Order(r.Steps);
         var templates=r.Steps.Select(Resolve).ToArray();

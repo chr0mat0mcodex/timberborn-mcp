@@ -52,6 +52,10 @@ public sealed partial class LargeProjectService
         if (!jobs.TryGetValue(id, out var job)) throw new BridgeRejectionException("project_not_found");
         var recorded = Recorded(id); var ids = Ids(id);
         var observations = Enumerable.Range(0, ids.Length).Select(i => IdentityObservation(id, i)).ToArray();
+        // Preserve matching identity evidence independently of access and terminal
+        // job state. Later absence can then mean removal, never permission to replay.
+        for (int i = 0; i < recorded.Length; i++)
+            recorded[i] = LargeProjectRecoveryPolicy.ConfirmIdentity(recorded[i], observations[i]);
         var lost = RoadProtectionPolicy.LostConnections(job.Baseline.Before, roads.Read(job.Baseline, false));
         var affected = lost.Take(32).Select(i => {
             var probe = job.Baseline.Probes[i % job.Baseline.Probes.Length];
@@ -62,7 +66,7 @@ public sealed partial class LargeProjectService
         var others = entities.Entities.Where(e => !e.Deleted && e.TryGetComponent<BlockObject>(out var b) && !b.IsPreview &&
             (!e.Initialized || !b.IsFinished) && !owned.Contains(e.EntityId.ToString("D"))).Take(33).Select(e => e.EntityId.ToString("D")).ToArray();
         bool busy = activeBatch is not null || repairParents.Any(p => p.Value == id && !TerminalProject(p.Key));
-        bool ready = TerminalProject(id) && !busy && !faulted && speed.CurrentSpeed == 0;
+        bool ready = TerminalProject(id) && !busy && !faulted && simulation.PauseSettled;
         bool resolved = observations.Select((o,i) => LargeProjectRecoveryPolicy.Resolved(recorded[i], o)).All(v => v);
         bool repairable = observations.Select((o,i) => LargeProjectRecoveryPolicy.Repairable(recorded[i], o)).All(v => v);
         var reader = new BuildingObservations(entities);

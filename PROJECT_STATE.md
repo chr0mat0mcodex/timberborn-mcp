@@ -1,5 +1,21 @@
 # Projektstand
 
+## 0.64.0 — begrenzt live abgenommen am 17. Oktober 2026
+
+Bauphasen getrennt von Identitätsverlust (`awaiting_access`), positive
+Diagnosebelege für spätere Recovery erhalten, Tempoübergabe an Update-Grenze
+mit nachgelagerter Pausenbestätigung. Simulationsübersicht ergänzt aktive
+Laufkennung und ausstehendes Tempo. Menschliches Gate laut Nutzer bestanden.
+Live: Höhenübergang von `awaiting_access` bis 3/3 fertig, Stopp/Rückbau/Close und
+Folgeauftrag ohne Reload, Start/Cancel sowie explizite Tempo-Unterbrechung bestanden.
+Frische Endpause 0, keine aktive Laufkennung/Tempoabsicht. Bestandsanschlüsse erhalten.
+[Konkrete Belege und synthetisch verbliebene Grenzfälle](docs/releases/0.64.0.md).
+Anleitung, Tool-Doku, Simulationserklärung und lokaler Hermes-Skillentwurf
+aktualisiert; Skill weiterhin zurückgestellt. Vorbestehende Änderungen erhalten.
+Backend nach `live bereit` regulär gestartet; Bridge 0.64.0 bestätigt.
+Keine Builds/Tests/Installation durch den Agenten. Historischer `run_not_found`-
+Ursprung bleibt ungeklärt; kein neuer Hydraulik- oder Überlebensnachweis.
+
 ## Abschluss des Überlebenslaufs — 17. Oktober 2026
 
 Nutzer meldet vollständigen Kolonieverlust und beendet den Lauf. Rettungsziel

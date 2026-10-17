@@ -1,5 +1,17 @@
 # Native MCP-Werkzeuge
 
+## 0.64 — Gate und begrenzte Liveabnahme bestanden
+
+Großprojektteile können `awaiting_access` melden: Identität bestätigt, fertiges
+Teil noch ohne Zugang. Compact zählt sie in `confirmedPlaced` und separat in
+`awaitingAccess`, nicht in `finishedAccessRecorded`. Diagnose behält positive
+Identitätsbelege für Close nach später nachgewiesener Entfernung. Keine erneute
+Platzierung, keine Freigabe aus bloßer Abwesenheit eines unbestätigten Auftrags.
+`inspect_simulation` ergänzt optionale `activeRunId`/`pendingSpeed`; null bedeutet
+kein aktiver Lauf/kein ausstehender Tempoauftrag. Alte Bridgeversionen liefern
+diese Felder nicht. Neue Tempoübergabe und fachliche Grenzen:
+[0.64-Vertrag, Livebelege und Nachweisgrenzen](releases/0.64.0.md).
+
 ## 0.63 / B15 — Gesamtauftrag, mit dokumentierter Grenze abgeschlossen
 
 Alle Teile eines Plans werden in einem Game-Thread-Durchgang platziert; erst

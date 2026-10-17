@@ -53,6 +53,8 @@ public sealed class SimulationRunController
     }
     public bool StockConditionActive => active?.StopAtAvailableLogs is not null;
     public bool HasActiveRun => active is not null;
+    public string? ActiveRunId => active?.RunId;
+    public bool IsPausing => active?.State == "pausing";
     public SimulationRunStatus? ActiveBuildingRun => active?.HasBuildingTargets==true?active:null;
     public SimulationRunStatus? ActiveProductionRun => active?.HasProductionTargets == true ? active : null;
     public bool BuildingObservationNeedsReconcile(double hours,double now) =>
@@ -176,6 +178,9 @@ public sealed class SimulationRunController
 
     // An explicit speed call supersedes the run even when its speed value is unchanged.
     public void Interrupt() { if (active is not null) Finish("interrupted", "explicit_speed_change"); }
+    public void SpeedCommandFailed() {
+        Finish("failed", "speed_command_failed");
+    }
     public void Unload(Action<int> changeSpeed)
     {
         if (active is null) return;

@@ -10,6 +10,49 @@ namespace Timberborn.Tests;
 
 public sealed class SimulationRunTests
 {
+    [Theory]
+    [InlineData(false)][InlineData(true)]
+    public void DeferredSpeedStartAndImmediateCancelCannotConfirmStaleZero(bool startAlreadyDispatched)
+    {
+        var c = new SimulationRunController(); var queue = new DeferredSpeedCommand();
+        var commands = new List<int>(); float speed = 0; int? lateSpeed = null;
+        // Synthetic SpeedManager: ignore a command equal to CurrentSpeed and apply
+        // accepted changes only after the bridge update (the native race).
+        void Change(int value) { commands.Add(value); if (value != speed) lateSpeed = value; }
+        var r = c.Start(Parse(Query()), 24, speed, 0, queue.Request);
+        if (startAlreadyDispatched) Assert.True(queue.Apply(Change));
+        c.Cancel(r.RunId, 24, speed, .1, queue.Request);
+        Assert.False(r.Terminal);
+        if (lateSpeed is { } start) { speed = start; lateSpeed = null; }
+        // SimulationControl applies a command instead of ticking in this update.
+        Assert.True(queue.Apply(Change)); Assert.False(r.Terminal);
+        Assert.Equal(0, queue.PendingSpeed);
+        if (lateSpeed is { } stop) { speed = stop; lateSpeed = null; }
+        queue.ObserveNextUpdate();
+        c.Tick(24, speed, 1, queue.Request);
+        Assert.Equal("cancelled", r.State); Assert.True(r.PauseConfirmed);
+        Assert.Equal(0, speed); Assert.False(queue.HasPending);
+        Assert.Null(queue.PendingSpeed);
+        Assert.Equal(startAlreadyDispatched ? new[] { 3, 0 } : new[] { 0 }, commands);
+        Assert.Same(r, c.Inspect(r.RunId));
+    }
+
+    [Fact]
+    public void LostStartResponseAndSpeedFailureRetainRunIdentityWithoutReplay()
+    {
+        var c = new SimulationRunController(); var queue = new DeferredSpeedCommand();
+        var request = Parse(Query());
+        c.Start(request, 24, 0, 0, queue.Request); // caller discards the receipt
+        Assert.Equal(request.RunId, c.Inspect(request.RunId).RunId);
+        Assert.Throws<BridgeRejectionException>(() => c.Start(request, 24, 0, .1, queue.Request));
+        int attempts = 0;
+        Assert.Throws<InvalidOperationException>(() => queue.Apply(_ => { attempts++; throw new InvalidOperationException(); }));
+        c.SpeedCommandFailed();
+        Assert.False(queue.Apply(_ => attempts++));
+        Assert.Equal(1, attempts);
+        Assert.Equal("speed_command_failed", c.Inspect(request.RunId).Reason);
+    }
+
     [Fact]
     public void Wood_threshold_stops_early_but_requires_observed_pause() {
         var q = Query(); q["stopAtAvailableLogs"] = "10";

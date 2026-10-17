@@ -95,6 +95,7 @@ public sealed partial class LargeProjectService
                 "unconfirmed" => "inspect_identity_do_not_repeat",
                 "pending" => "await_required_dependency_within_same_job",
                 "construction" => "check_materials_workers_and_access",
+                "awaiting_access" => "await_structure_access_or_repair_after_stop",
                 _ => "none"
             }
         }));

@@ -27,12 +27,43 @@ public sealed class LargeProjectRecoveryTests
     [InlineData("construction","construction_unreachable",false,true)]
     [InlineData("construction","construction_access_unknown",false,false)]
     [InlineData("construction","identity_mismatch",false,false)]
-    [InlineData("finished","finished_access_missing",false,false)]
+    [InlineData("finished","finished_access_missing",false,true)]
+    [InlineData("awaiting_access","missing",true,true)]
+    [InlineData("awaiting_access","identity_mismatch",false,false)]
     [InlineData("finished","finished",true,true)]
     public void FreshEvidenceDistinguishesAbsentOrdersFromRemovedObjects(string recorded,string observed,bool close,bool repair)
     {
         Assert.Equal(close,LargeProjectRecoveryPolicy.Resolved(recorded,observed));
         Assert.Equal(repair,LargeProjectRecoveryPolicy.Repairable(recorded,observed));
+    }
+
+    [Theory]
+    [InlineData("finished_access_missing", "awaiting_access")]
+    [InlineData("construction_access_unknown", "construction")]
+    [InlineData("construction_unreachable", "construction")]
+    [InlineData("finished", "finished")]
+    public void DiagnosticIdentitySurvivesStopAndLaterRemoval(string observed, string expected)
+    {
+        var ledger = new LargeProjectLedger();
+        var receipt = ledger.Start(Parent, new string('a', 64), "synthetic", [0], [Entity]);
+        int orders = 0;
+        ledger.Advance(Parent, 0, () => true, _ => "missing", _ => true, _ => orders++);
+        ledger.Stop(Parent);
+        Assert.Throws<BridgeRejectionException>(() => ledger.Release(Parent, ["missing"]));
+        receipt.PartStates[0] = LargeProjectRecoveryPolicy.ConfirmIdentity(receipt.PartStates[0], observed);
+        Assert.Equal(expected, receipt.PartStates[0]);
+        ledger.Release(Parent, ["missing"]);
+        Assert.False(ledger.BlocksNewProject); Assert.Equal(1, orders);
+    }
+
+    [Theory]
+    [InlineData("missing")][InlineData("initializing")][InlineData("identity_mismatch")]
+    public void UncertainObservationNeverAuthorizesRelease(string observed)
+    {
+        var state = LargeProjectRecoveryPolicy.ConfirmIdentity("unconfirmed", observed);
+        Assert.Equal("unconfirmed", state);
+        Assert.False(LargeProjectRecoveryPolicy.Resolved(state, "missing"));
+        Assert.Equal("pending", LargeProjectRecoveryPolicy.ConfirmIdentity("pending", "finished"));
     }
 
     [Fact]

@@ -1,25 +1,22 @@
 # Backlog
 
-## Offene Fehler nach beendetem Überlebenslauf (0.63.0)
+## Fehler aus dem Überlebenslauf — Stand nach 0.64.0
+
+Die drei P0-Korrekturen sind in [0.64.0](docs/releases/0.64.0.md) begrenzt live
+abgenommen: Höhenbau bis Fertigzugang, stabile Pause und Journalfreigabe nach
+Rückbau mit Folgeauftrag ohne Reload. Menschliches Gate laut Nutzer bestanden.
+Der konkrete Ursprung des damaligen run_not_found bleibt offen; Antwortverlust
+und Rennen innerhalb desselben Updates sind synthetische Gatefälle.
 
 Kolonieverlust vom Nutzer gemeldet; Schutzmauer nicht fertiggestellt.
 Keine hydraulische Schutz- oder autonome Überlebensabnahme. Priorisierte Folgearbeit:
 
-- **P0 Bauphasen und Identität:** vorhandene Wege hinter unfertigen Plattformen
-  werden als unconfirmed/object_or_access_mismatch gewertet und stoppen den Lauf.
-  Identität unabhängig von aktuellem Zugang bestätigen; erwartete Abhängigkeiten
-  als Bauphase führen. Abnahme: dreiteiliger offener Steg mit Wegen und ferner
-  Landung bis fertig/zugänglich, ohne Replay und ohne sofortigen Fehlstopp.
-- **P0 Pause und Laufregistrierung:** Bauwächter meldete cancelled/pauseConfirmed,
-  frische Simulation dennoch Tempo 7. Später unconfirmed beim Zeitstart, danach
-  run_not_found bei gleichzeitigem Fortschritt; anschließender Pausenauftrag
-  meldete unconfirmed, frische Simulation bestätigte Tempo 0. Ursache offen,
-  kein Beweis eines einzelnen gemeinsamen Defekts. Abnahme: Start/Abbruchrennen
-  und Antwortverlust, auffindbare Laufkennung, frischer Pausenbeleg, kein Replay.
-- **P0 Ledger-Freigabe:** bestätigte, später entfernte Wege blieben unconfirmed
-  und sperrten neue Projekte bis Reload. Positive Identitätsbelege übernehmen;
-  kontrollierten Abschluss nach nachgewiesener Entfernung anbieten. Abnahme:
-  Platzieren, Identität lesen, entfernen, freigeben, Folgeprojekt ohne Reload.
+- **Offener Diagnoseumfang:** bei erneutem unconfirmed/run_not_found Transport,
+  Session und Laufregistrierung getrennt belegen. Kein Wiederholen aus bloßer
+  Abwesenheit einer Kennung. Neue Felder activeRunId/pendingSpeed dafür nutzen.
+- **Weitere Livegrenzen:** Game-Lock-Abbruch, Antwortverlust, erst nach terminalem
+  Stop bestätigte Identität und separat ausgelöster lostConnections-Guard in
+  dieser Version nicht live provoziert; vorhandene synthetische Regressionen.
 - **P1 Wasserbau und Versorgung:** sichere Abflussroute, Rückstau und Umgehung
   getrennt von gültiger Geometrie bewerten. Pumpendiagnose um native Flooded-
   und Ansaugblockaden ergänzen; Reserve-/Gefahrenstopps für Zeitläufe. Kein
@@ -30,7 +27,9 @@ Keine hydraulische Schutz- oder autonome Überlebensabnahme. Priorisierte Folgea
   erreichbaren Bauweg räumen sich nicht durch zusätzliche Simulationszeit.
 
 Details und weitere Abnahmekriterien: [Pilotjournal](docs/survival-run-2026-10-17.txt).
-Diese Punkte sind dokumentiert, nicht implementiert oder abgenommen.
+Die verbleibenden Wasserbau-/Zugangsplanerarbeiten sind nicht implementiert oder
+abgenommen. Learnings aus 0.64: gemeinsames Testfenster ohne parallele Nutzerbauten,
+Materialbedarf aus Katalog, Quittung und frische Diagnose getrennt lesen.
 
 ## Bauplaner und Fehlerweitergabe — begrenzt live abgeschlossen
 

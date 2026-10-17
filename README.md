@@ -1,5 +1,9 @@
 # Timberborn MCP
 
+**0.64.0 begrenzt live abgenommen:** Höhenbau bis Fertigzugang,
+stabile Pause und Recovery nach Rückbau mit Folgeauftrag ohne Reload.
+[Nachweise und Grenzen](docs/releases/0.64.0.md).
+
 **0.63.0 abgeschlossen:** gesamte Struktur zuerst platzieren, danach Probleme
 und Fertigstellung verfolgen; kompakte Vorwarnung vor möglichen Faulwasserdurchbrüchen.
 Menschliches Gate und begrenzte Liveabnahme bestanden. Teilablehnung mitten im
@@ -121,7 +125,7 @@ Beobachtung und kontrollierte Eingriffe über reguläre Spielservices.
 
 ## Status
 
-Aktueller dokumentierter Abschluss: **0.63.0**. Die folgenden
+Aktueller dokumentierter Abschluss: **0.64.0**. Die folgenden
 Versionsabschnitte sind historische Teilabnahmen, keine parallel aktuellen Stände.
 Offene Fähigkeiten stehen im [Backlog](BACKLOG.md).
 

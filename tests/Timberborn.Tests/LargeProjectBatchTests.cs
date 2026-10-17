@@ -68,6 +68,33 @@ public sealed class LargeProjectBatchTests
         p.Tick(3,2);Assert.Equal(32,p.Orders.Count);
     }
     [Fact]
+    public void FinishedLandingWaitsForSupportAccessWithoutLosingIdentityOrReplaying()
+    {
+        var p = new Pilot(dependency: true); p.Tick(.25);
+        p.Observations[1] = "finished_access_missing"; p.Tick(1);
+        Assert.Equal("running", p.Receipt.State);
+        Assert.Equal("awaiting_access", p.Receipt.PartStates[1]);
+        Assert.Equal(3, p.Receipt.Ordered); Assert.Equal(0, p.Receipt.Finished);
+        Validate(Data(p), p.Request);
+        p.Tick(8); Assert.Equal("running", p.Receipt.State); // beyond identity grace
+        Array.Fill(p.Observations, "finished"); p.Tick(9); p.Tick(9.25);
+        Assert.Equal("completed", p.Receipt.State); Assert.Equal(3, p.Orders.Count);
+    }
+
+    [Fact]
+    public void MissingAccessRemainsIncompleteAtBudgetAndUnknownConstructionStops()
+    {
+        var p = new Pilot(); p.Tick(.25);
+        p.Observations[1] = "finished_access_missing"; p.Tick(1);
+        p.Tick(31); p.Tick(31.25);
+        Assert.Equal("blocked", p.Receipt.State); Assert.NotEqual(3, p.Receipt.Finished);
+        p = new Pilot(); p.Tick(.25); p.Observations[0] = "construction_access_unknown";
+        p.Tick(1); p.Tick(1.25);
+        Assert.Equal("blocked", p.Receipt.State);
+        Assert.Equal("construction_access_unknown", p.Receipt.Reason);
+        Assert.Equal("construction", p.Receipt.PartStates[0]);
+    }
+    [Fact]
     public void RepairCompletionWaitsForOriginalSitesWithoutRepeatingHelpers()
     {
         var p=new Pilot(1, repair:true) {RepairedSitesFinished=false};

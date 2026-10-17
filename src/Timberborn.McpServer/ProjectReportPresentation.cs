@@ -51,10 +51,11 @@ public static class ProjectReportPresentation
     private static void Ledger(JsonObject data)
     {
         if (data["partStates"] is not JsonArray states || data["entityIds"] is not JsonArray ids) return;
-        var pending = 0; var construction = 0; var finished = 0; var unconfirmed = 0; var rejected = 0;
+        var pending = 0; var construction = 0; var finished = 0; var unconfirmed = 0; var rejected = 0; var awaitingAccess = 0;
         foreach (var state in states) switch (state?.GetValue<string>()) {
             case "pending": pending++; break;
             case "construction": construction++; break;
+            case "awaiting_access": awaitingAccess++; break;
             case "finished": finished++; break;
             case "unconfirmed": unconfirmed++; break;
             case "rejected": rejected++; break;
@@ -66,7 +67,8 @@ public static class ProjectReportPresentation
         }
         data["summary"] = new JsonObject {
             ["evidence"] = "recorded_project_state_not_fresh_access", ["planned"] = states.Count,
-            ["attempted"] = states.Count - pending, ["rejected"] = rejected, ["confirmedPlaced"] = construction + finished,
+            ["attempted"] = states.Count - pending, ["rejected"] = rejected, ["confirmedPlaced"] = construction + finished + awaitingAccess,
+            ["awaitingAccess"] = awaitingAccess,
             ["finishedAccessRecorded"] = finished, ["construction"] = construction,
             ["unconfirmed"] = unconfirmed, ["pending"] = pending,
             // Empty means no indexed blocker supplied, not that the project is unblocked.

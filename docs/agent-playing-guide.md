@@ -856,7 +856,7 @@ Das menschliche Vorbereitungsskript startet seit 0.57 nach erfolgreichen Tests,
 Installation und Paketprüfung Timberborn automatisch. Spielstand laden und
 `live bereit` bleiben menschliche Schritte; der Agent startet das Gate nicht selbst.
 
-Stand: letzter dokumentierter Abschluss Bridge 0.63.0; aktualisiert am 17. Oktober 2026.
+Stand: letzter dokumentierter Abschluss Bridge 0.64.0; aktualisiert am 17. Oktober 2026.
 Diese Anleitung beschreibt die vorhandenen MCP-Fähigkeiten. Aktueller Auftrag
 und Projektregeln stehen in [AGENTS.md](../AGENTS.md) und
 [missionsplan.md](../missionsplan.md); das lokale Spiel ist das freigegebene
@@ -878,6 +878,27 @@ Testsystem. Ein Entwicklungsauftrag ist kein fortlaufendes Kolonieziel.
 Jeder Werkzeugaufruf braucht `reasoning`: kurze lesbare Absicht, 1–600 Zeichen.
 Das Feld heißt nicht `reason`. Verbindliche Argumente und Grenzen stehen im
 aktuellen MCP-Eingabeschema. Strukturierte Werkzeuge verwenden.
+
+## Bauphasen, Pause und Recovery ab 0.64
+
+0.64.0 ist begrenzt live abgenommen; [Belege und Grenzen](releases/0.64.0.md).
+`awaiting_access` bezeichnet ein identitätsbestätigtes fertiges Teil ohne aktuellen
+Anschluss, etwa die Landung hinter unfertigen Plattformen. Kein fehlendes Objekt,
+kein fertiger Gesamtzugang: gleiche Projektkennung bis Fertigbau oder Budgetende
+beobachten. Unbekannter Bauzugang und Identitätsfehler bleiben Stopgründe.
+Diagnose behält positive Identitätsbelege auch nach Stop. Nach nachgewiesenem
+Rückbau kann `close_large_project` freigeben; fehlende nie bestätigte Objekte
+bleiben unaufgelöst. Diagnose/Close platzieren nichts erneut.
+
+Ab 0.64 ergänzt `inspect_simulation` `activeRunId` und `pendingSpeed`. Nach
+unbestätigtem Start zunächst dieselbe Laufkennung und diese aktuelle Übersicht
+lesen. Ein fehlender Lauf beweist nicht allein, dass keine Wirkung eingetreten ist.
+Tempoänderungen wirken verzögert; ein unmittelbar passender Wert oder historisches
+`pauseConfirmed` ersetzt keine frische Beobachtung nach der Übergabe. Bei
+`pendingSpeed != null` steht noch eine Tempoabsicht aus. Frühere 0.63-Läufe zeigten
+falsche terminale Pausenbelege. Start/Cancel, explizite MCP-Tempo-Unterbrechung,
+Höhenbau bis 3/3 fertig und Recovery mit Folgeauftrag ohne Reload sind jetzt live
+belegt. Antwortverlust und Rennen innerhalb desselben Updates bleiben synthetisch.
 
 ## Generisches Gebäude mit Anschlussweg bauen
 

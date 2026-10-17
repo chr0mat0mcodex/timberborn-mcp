@@ -28,11 +28,13 @@ public sealed class SimulationControl
     [OnEvent]
     public void OnSpeedLockChanged(SpeedLockChangedEvent change) => speedLocked = change.IsLocked;
     private readonly SimulationRunController runs = new();
+    private readonly DeferredSpeedCommand speedCommand = new();
     private string? batchOwner;
     public bool SpeedLocked => speedLocked;
+    public bool PauseSettled => speed.CurrentSpeed == 0 && !speedLocked && speedCommand.PendingSpeed is null;
     public void RequireBatchAvailable()
     {
-        if (batchOwner is not null || runs.HasActiveRun || speedLocked || speed.CurrentSpeed != 0)
+        if (batchOwner is not null || runs.HasActiveRun || !PauseSettled)
             throw new BridgeRejectionException("state_conflict");
     }
     public void RequireConfigurationAvailable(BuildingConfigurationRequest r) {
@@ -45,13 +47,13 @@ public sealed class SimulationControl
         var request = SimulationRunRequest.Parse("/agent-api/v1/simulation-run-for", new System.Collections.Specialized.NameValueCollection {
             {"session", r.Session}, {"runId", r.ActionId}, {"duration", r.MaxGameHours.ToString(System.Globalization.CultureInfo.InvariantCulture)}, {"unit", "hours"},
             {"speed", r.Speed.ToString(System.Globalization.CultureInfo.InvariantCulture)}, {"expectedSpeed", "0"}, {"maxRealSeconds", r.MaxRealSeconds.ToString(System.Globalization.CultureInfo.InvariantCulture)} });
-        var result = runs.Start(request, Hours, speed.CurrentSpeed, wall.Elapsed.TotalSeconds, s => speed.ChangeSpeed(s), deferSpeedStart: true);
+        var result = runs.Start(request, Hours, speed.CurrentSpeed, wall.Elapsed.TotalSeconds, speedCommand.Request, deferSpeedStart: true);
         batchOwner = r.ActionId;
         return result;
     }
     public SimulationRunStatus InspectBatch(string id) => runs.Inspect(id);
-    public void BeginBatch(string id) => runs.BeginDeferred(id, wall.Elapsed.TotalSeconds, s => speed.ChangeSpeed(s));
-    public void CancelBatch(string id) => runs.Cancel(id, Hours, speed.CurrentSpeed, wall.Elapsed.TotalSeconds, s => speed.ChangeSpeed(s), speedLocked);
+    public void BeginBatch(string id) => runs.BeginDeferred(id, wall.Elapsed.TotalSeconds, speedCommand.Request);
+    public void CancelBatch(string id) => runs.Cancel(id, Hours, speed.CurrentSpeed, wall.Elapsed.TotalSeconds, speedCommand.Request, speedLocked);
     public void ReleaseBatch(string id) { if (batchOwner == id && runs.Inspect(id).Terminal) batchOwner = null; }
     private readonly System.Diagnostics.Stopwatch wall = System.Diagnostics.Stopwatch.StartNew();
     private double Hours => time.DayNumber * 24d + time.HoursPassedToday;
@@ -69,7 +71,19 @@ public sealed class SimulationControl
         return sample;
     }
     public void Update() {
-        runs.Tick(Hours, speed.CurrentSpeed, wall.Elapsed.TotalSeconds, s => speed.ChangeSpeed(s), speedLocked,
+        speedCommand.ObserveNextUpdate();
+        // Cancellation under a game lock defers its pause command. Discard a
+        // queued acceleration before the lock lifts; never dispatch it afterwards.
+        if (runs.IsPausing && speedCommand.PendingSpeed is > 0) speedCommand.Clear();
+        // Do not let the old CurrentSpeed acknowledge a newly queued pause/start.
+        // The following bridge update occurs after SpeedManager's LateUpdate.
+        if (speedCommand.HasPending && !speedLocked) {
+            try { speedCommand.Apply(s => speed.ChangeSpeed(s)); }
+            catch { runs.SpeedCommandFailed(); }
+            CleanupBuildingProof();
+            return;
+        }
+        runs.Tick(Hours, speed.CurrentSpeed, wall.Elapsed.TotalSeconds, speedCommand.Request, speedLocked,
             runs.StockConditionActive ? AvailableLogs() : null,
             runs.ActiveProductionRun is { } active ? Sample(active.GoodTargets.Select(t=>t.Good),active.StopAtScience is not null) : null,
             runs.ActiveBuildingRun is not null ? buildingProof?.Sample(runs.BuildingObservationNeedsReconcile(Hours,wall.Elapsed.TotalSeconds)) : null);
@@ -78,21 +92,21 @@ public sealed class SimulationControl
     private void CleanupBuildingProof() {
         if(runs.ActiveBuildingRun is not {} active||active.State=="pausing") {buildingProof?.Dispose();buildingProof=null;}
     }
-    public void Unload() { buildingProof?.Dispose();buildingProof=null;events.Unregister(this); runs.Unload(s => speed.ChangeSpeed(s)); }
+    public void Unload() { buildingProof?.Dispose();buildingProof=null;events.Unregister(this); speedCommand.Clear(); runs.Unload(s => speed.ChangeSpeed(s)); }
     public object Run(SimulationRunRequest r)
     {
-        if (r.Starts && (speedLocked || batchOwner is not null)) throw new BridgeRejectionException("state_conflict");
+        if (r.Starts && (speedLocked || batchOwner is not null || speedCommand.PendingSpeed is not null)) throw new BridgeRejectionException("state_conflict");
         SimulationRunStatus result;
         if(r.Starts) {
             BuildingProductionObserver? candidate=null;
             try {
                 if(r.BuildingIds.Length>0)candidate=new BuildingProductionObserver(entities,journal,time,r.BuildingIds,r.MeasureProduction);
-                result=runs.Start(r,Hours,speed.CurrentSpeed,wall.Elapsed.TotalSeconds,s=>speed.ChangeSpeed(s),
+                result=runs.Start(r,Hours,speed.CurrentSpeed,wall.Elapsed.TotalSeconds,speedCommand.Request,
                     r.StopAtAvailableLogs is null?null:AvailableLogs(),production:Sample(r.GoodTargets.Select(t=>t.Good),r.StopAtScience is not null),
                     buildingProduction:candidate?.Sample());
                 buildingProof=candidate;
             } catch {candidate?.Dispose();throw;}
-        } else result=r.Route=="simulation-run-cancel"?runs.Cancel(r.RunId,Hours,speed.CurrentSpeed,wall.Elapsed.TotalSeconds,s=>speed.ChangeSpeed(s),speedLocked):runs.Inspect(r.RunId);
+        } else result=r.Route=="simulation-run-cancel"?runs.Cancel(r.RunId,Hours,speed.CurrentSpeed,wall.Elapsed.TotalSeconds,speedCommand.Request,speedLocked):runs.Inspect(r.RunId);
         CleanupBuildingProof();
         var payload = Newtonsoft.Json.Linq.JObject.FromObject(result, Newtonsoft.Json.JsonSerializer.Create(new Newtonsoft.Json.JsonSerializerSettings {
             ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() }));
@@ -115,7 +129,8 @@ public sealed class SimulationControl
         return payload;
     }
     public object Observe() => new { currentSpeed = speed.CurrentSpeed, dayNumber = time.DayNumber,
-        dayProgress = time.DayProgress, hoursPassedToday = time.HoursPassedToday };
+        dayProgress = time.DayProgress, hoursPassedToday = time.HoursPassedToday,
+        activeRunId = runs.ActiveRunId, pendingSpeed = speedCommand.PendingSpeed };
 
     public object Set(BridgeRequest request)
     {
@@ -123,7 +138,7 @@ public sealed class SimulationControl
         float previous = speed.CurrentSpeed;
         if (speedLocked || previous != request.ExpectedSpeed) throw new ArgumentException("speed_changed");
         runs.Interrupt();CleanupBuildingProof();
-        speed.ChangeSpeed(request.Speed);
+        speedCommand.Request(request.Speed);
         return new { requestedSpeed = request.Speed, previousSpeed = previous,
             matchedImmediately = speed.CurrentSpeed == request.Speed, observation = Observe(),
             limitations = new[] { "read_simulation_to_confirm", "no_automatic_retry", "game_locks_not_overridden",

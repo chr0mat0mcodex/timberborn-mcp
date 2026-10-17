@@ -2,7 +2,11 @@
 
 ## Einordnung zum aktuellen Stand
 
-Aktueller Bridge-Stand: 0.63.0. Menschliches Gate und begrenzte Liveabnahme
+0.64.0: menschliches Gate und begrenzter Livepilot am 17. Oktober 2026 bestanden.
+Höhenbau bis Fertigzugang, Pause und Recovery mit Folgeauftrag ohne Reload.
+[Konkrete Belege und Grenzen](../releases/0.64.0.md).
+
+Vorheriger Bridge-Stand: 0.63.0. Menschliches Gate und begrenzte Liveabnahme
 am 17. Oktober 2026 bestanden; [Nachweisgrenzen](../releases/0.63.0.md). Feature-spezifische Nachweise
 stehen im [Projektstand](../../PROJECT_STATE.md) und den verlinkten Fachverträgen.
 Die historischen Nachweise unten sind keine pauschale Abnahme neuer Fraktionen,
