@@ -13,7 +13,7 @@ public sealed record ForestryProtectionReport(string ActionId, string Fingerprin
 
 public static class ForestryProtection
 {
-    public static async Task<JsonObject> Execute(JsonElement args, IForestryPort port, string directory, CancellationToken ct)
+    public static async Task<JsonObject> Execute(JsonElement args, IForestryPort port, string directory, CancellationToken ct, Action<string, string>? replaceFile = null)
     {
         var r = BuildBatchState.Parse<ForestryProtectionRequest>(args);
         var region = new ForestryRequest(r.Session, r.WorkBuildingId, FullRange: true);
@@ -48,7 +48,7 @@ public static class ForestryProtection
                 }
                 // Match BuildBatchStore: lease serializes writers; preserve the
                 // committed receipt until replacement succeeds. No action retry.
-                if (File.Exists(path)) File.Replace(temp, path, null);
+                if (File.Exists(path)) CheckpointPublication.Replace(temp, path, replaceFile);
                 else File.Move(temp, path);
             } finally { if (File.Exists(temp)) File.Delete(temp); }
         }

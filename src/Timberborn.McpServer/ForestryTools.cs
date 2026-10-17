@@ -44,7 +44,7 @@ public static class ForestryTools
     public static Task<JsonObject> Invoke(NativeClient client, string name, JsonElement args, bool enabled, CancellationToken ct) =>
         Execute(name, args, enabled, new NativeForestryPort(client), Path.Combine(AppContext.BaseDirectory, ".local", "forestry"), ct);
 
-    public static async Task<JsonObject> Execute(string name, JsonElement args, bool enabled, IForestryPort port, string directory, CancellationToken ct)
+    public static async Task<JsonObject> Execute(string name, JsonElement args, bool enabled, IForestryPort port, string directory, CancellationToken ct, Action<string, string>? replaceFile = null)
     {
         if (!Handles(name) || Writes(name) && !enabled) throw new ArgumentException();
         if (name == Inspect) {
@@ -52,7 +52,7 @@ public static class ForestryTools
             var report = await ForestrySurvey.Observe(r, port, ct);
             return Wrap(report, r.Session, report.ObservedAtUtc);
         }
-        if (name == Protect) return await ForestryProtection.Execute(args, port, directory, ct);
+        if (name == Protect) return await ForestryProtection.Execute(args, port, directory, ct, replaceFile);
         var request = BuildBatchState.Parse<ForestryMarkRequest>(args);
         if (request.Region is null || request.TreeIds is not { Length: >= 1 and <= 16 }) throw new ArgumentException();
         ForestrySurvey.Validate(request.Region); BuildBatchState.Id(request.ActionId);
@@ -81,7 +81,7 @@ public static class ForestryTools
                 }
                 // Match BuildBatchStore: lease serializes writers; preserve the
                 // committed receipt until replacement succeeds. No action retry.
-                if (File.Exists(path)) File.Replace(temp, path, null);
+                if (File.Exists(path)) CheckpointPublication.Replace(temp, path, replaceFile);
                 else File.Move(temp, path);
             } finally { if (File.Exists(temp)) File.Delete(temp); }
         }

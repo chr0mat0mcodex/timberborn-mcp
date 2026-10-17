@@ -1,5 +1,25 @@
 # Projektstand
 
+## Journal-Korrekturen — Gate und gezielter Livetest bestanden
+
+Menschliches Gate: 23 Supervisor-, 1931 Unit- und 13 Integrationstests bestanden;
+drei optionale Integration-Livetests übersprungen. Bridge weiterhin 0.74.0.
+Einzelkiefer markiert und geschützt, jeweils completed und genau ein bestätigtes
+Ziel. Alte Markierungs-ID nach Schutz erneut gelesen: Kiefer blieb unmarkiert.
+Mit neuer Action wieder markiert; alte Schutz-ID nach Backend-Neustart und
+vollständiger Client-Neuverbindung erneut gelesen: Markierung blieb bestehen.
+Damit keine erneute Spielmutation in beiden Gegenrichtungen beobachtet.
+Abschluss durch neue Schutz-Action, readbackConfirmed=true. Endtempo 0, kein
+aktiver Lauf oder Tempoauftrag; Spielzeit unverändert.
+Supervisor zunächst noch alter persistenter Prozess. Nach menschlicher
+Neuverbindung lagen die Elternprozess-Startzeiten nach der Skriptänderung.
+Stop/Status bestätigten running=false/gate=true; Start running=true/gate=false,
+Spielsession erhalten. Windows-Austauschfehler synthetisch im Gate geprüft,
+nicht künstlich live erzeugt. Keine Live-Unterbrechung eines laufenden
+Schreibauftrags; deren Nichtwiederholung bleibt Gate-Nachweis.
+Learnings und Grenzen in docs/releases/0.74.0.md; Anleitung, Tool-Doku und
+zurückgestellter Skillentwurf aktualisiert. Korrekturen fachlich abgeschlossen; Git-Sicherung durch den Abschlusscommit.
+
 ## 0.74.0 — Gate und gezielter Livetest bestanden
 
 Menschliches Gate: 21 Supervisor-, 1929 Unit- und 13 Integrationstests bestanden, drei optionale
@@ -14,6 +34,15 @@ Bestandsverluste, Tempo 0, kein aktiver Lauf oder ausstehender Tempoauftrag.
 [Livebelege und Grenzen](docs/releases/0.74.0.md). Anleitung, Tool-Doku und
 zurückgestellter Hermes-Skillentwurf mit Livebelegen aktualisiert; kein Skill
 installiert. Keine Agent-Builds/Tests. Version 0.74.0 fachlich abgeschlossen; Git-Sicherung durch den Abschlusscommit.
+
+Ergänzender Livetest: isolierte Plattformbaustelle nativ buildersReachable=false,
+construction_unreachable, keine unfertigen Stützen und lostConnections=0.
+Compact/full und Watch: observed_access_problem, accessProblemPartIndices=[0],
+repairEligible=true, review_access_repair_plan. Testbau regulär entfernt und
+Journal freigegeben; keine Baustellen, Endtempo 0. Unbekannte Identität bleibt
+live offen: reguläre Werkzeuge ändern keine Objektidentität; automatische
+Bestätigung verhindert einen deterministischen unbestätigten Abrissfall.
+Bekannter Abriss wurde korrekt als previously_observed_object_removed erkannt.
 
 ## 0.73.0 — Gate und gezielter Livetest bestanden
 

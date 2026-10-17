@@ -1,5 +1,25 @@
 # Backlog
 
+## Journal-Korrekturen — Gate und gezielter Livetest bestanden
+
+Menschliches Gate: 23 Supervisor-, 1931 Unit- und 13 Integrationstests bestanden;
+drei optionale Integration-Livetests übersprungen. Bridge weiterhin 0.74.0.
+Einzelkiefer markiert und geschützt, jeweils completed und genau ein bestätigtes
+Ziel. Alte Markierungs-ID nach Schutz erneut gelesen: Kiefer blieb unmarkiert.
+Mit neuer Action wieder markiert; alte Schutz-ID nach Backend-Neustart und
+vollständiger Client-Neuverbindung erneut gelesen: Markierung blieb bestehen.
+Damit keine erneute Spielmutation in beiden Gegenrichtungen beobachtet.
+Abschluss durch neue Schutz-Action, readbackConfirmed=true. Endtempo 0, kein
+aktiver Lauf oder Tempoauftrag; Spielzeit unverändert.
+Supervisor zunächst noch alter persistenter Prozess. Nach menschlicher
+Neuverbindung lagen die Elternprozess-Startzeiten nach der Skriptänderung.
+Stop/Status bestätigten running=false/gate=true; Start running=true/gate=false,
+Spielsession erhalten. Windows-Austauschfehler synthetisch im Gate geprüft,
+nicht künstlich live erzeugt. Keine Live-Unterbrechung eines laufenden
+Schreibauftrags; deren Nichtwiederholung bleibt Gate-Nachweis.
+Learnings und Grenzen in docs/releases/0.74.0.md; Anleitung, Tool-Doku und
+zurückgestellter Skillentwurf aktualisiert. Korrekturen fachlich abgeschlossen; Git-Sicherung durch den Abschlusscommit.
+
 ## 0.74.0 — Gate und gezielter Livetest bestanden
 
 Menschliches Gate: 21 Supervisor-, 1929 Unit- und 13 Integrationstests bestanden, drei optionale
@@ -14,6 +34,15 @@ Bestandsverluste, Tempo 0, kein aktiver Lauf oder ausstehender Tempoauftrag.
 [Livebelege und Grenzen](docs/releases/0.74.0.md). Anleitung, Tool-Doku und
 zurückgestellter Hermes-Skillentwurf mit Livebelegen aktualisiert; kein Skill
 installiert. Keine Agent-Builds/Tests. Version 0.74.0 fachlich abgeschlossen; Git-Sicherung durch den Abschlusscommit.
+
+Ergänzender Livetest: isolierte Plattformbaustelle nativ buildersReachable=false,
+construction_unreachable, keine unfertigen Stützen und lostConnections=0.
+Compact/full und Watch: observed_access_problem, accessProblemPartIndices=[0],
+repairEligible=true, review_access_repair_plan. Testbau regulär entfernt und
+Journal freigegeben; keine Baustellen, Endtempo 0. Unbekannte Identität bleibt
+live offen: reguläre Werkzeuge ändern keine Objektidentität; automatische
+Bestätigung verhindert einen deterministischen unbestätigten Abrissfall.
+Bekannter Abriss wurde korrekt als previously_observed_object_removed erkannt.
 
 ## 0.73.0 — Gate und gezielter Livetest bestanden
 
@@ -62,11 +91,25 @@ nicht einen nachgewiesenen Reparaturbedarf.
 - Bei reinem Material-/Stützwarten oder Personalproblem den passenden nächsten
   Schritt nennen. Kein automatischer Zugangsbau allein wegen repairEligible.
 - Live bestanden: Materialwarten, belegter Bestandsverlust, Wiederherstellung
-  und vollständiger Fertigbau. Unbekannter Zugang und unerreichbare Baustelle
-  bleiben separate Live-Nachweisgrenzen; Gate-Regression vorhanden. Historischen
+  und vollständiger Fertigbau sowie isolierte unerreichbare Baustelle. Unbekannter
+  Zugang/Identität bleiben Live-Nachweisgrenzen; Gate-Regression vorhanden. Historischen
   Laufabbruch, aktuellen Bauzustand und Journalfreigabe weiter getrennt halten.
 - Learning aus 0.73: Fähigkeitsflag ist keine Handlungsempfehlung. Belege und
   konkrete Gründe müssen den nächsten Schritt bestimmen.
+
+## Offener Recovery-Nachweis nach 0.74
+
+Unbekannte Identität benötigt einen deterministischen, ausdrücklich als injiziert
+gekennzeichneten Entwicklungsfall oder einen echten passenden Laufzeitfehler.
+Keine wiederholten Zeitrennen zwischen Platzierung und Abriss: Legacy-Projekte
+beobachten automatisch auch bei Pause. Kein Save-/Ledger-Patching als Livebeleg.
+Bei möglichem Testmechanismus native Sperren sowie repairEligible=false und
+closeEligible=false mitprüfen; Präsentationsfixtures allein belegen diese nicht.
+Begrenzte Fehler-Injektion ist ein Vorschlag, noch nicht implementiert/freigegeben.
+
+Zusatzbefund: inspect_map_region außerhalb der Karte lieferte nur generisches
+invalid_argument. Konkrete Kartengrenzen fehlen in dieser Fehlerausgabe; separat
+präzisieren, nicht mit unbekannter Objektidentität verwechseln.
 
 ## Weitere Verbesserungen
 

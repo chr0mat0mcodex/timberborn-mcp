@@ -1,5 +1,25 @@
 # Spielanleitung für Agenten
 
+## Supervisor-Dateiaustausch (Gate und Lifecycle live bestätigt)
+
+Die Lifecycle-Statusdatei verwendet begrenzte, bytegeprüfte Austauschversuche
+bei ausgewählten Windows-Fehlern. Keine Wiederholung von Spielaufrufen oder
+Backend-Starts. Fehler beim Statusspeichern sind keine Stoppbestätigung und
+keine Freigabe fürs Bauen. Details: docs/codex-mcp-supervisor.md im Repository.
+
+## Forstjournal-Korrektur nach 0.74 (gezielt live bestätigt)
+
+Forstmarkierung und Forstschutz verwenden denselben bytegeprüften
+Dateiaustausch wie Baujournale: höchstens vier Versuche bei ausgewählten Windows-
+Dateisperr-/Austauschfehlern, insgesamt höchstens 175 ms Wartezeit. Bereits identisch
+publizierte Bytes gelten als gespeichert; fremde Änderungen oder unklare Lesezustände
+brechen ab. Keine Spielaktion wird dadurch wiederholt. Ein Journalfehler ist keine
+Freigabe für erneutes Markieren. Gate bestanden. Einzelbaum-Markieren/Schützen sowie gespeicherte Belege nach
+Backend-Neustart und Client-Neuverbindung live bestätigt: keine erneute Mutation.
+Supervisor-Skriptänderungen benötigen eine vollständige Client-Neuverbindung;
+Backend-Stop/Start allein lädt den persistenten Python-Prozess nicht neu.
+Dateifehler-Injektion und unterbrochene Aufträge bleiben synthetische Gate-Belege.
+
 ## 0.74 — Reparaturbedarf statt bloßer Reparaturmöglichkeit (gezielt live bestätigt)
 
 Zahlenformatkorrektur nach erstem Diagnosefehler erneut durch Gate und live
@@ -7,9 +27,12 @@ bestätigt. Materialwarten empfiehlt Versorgung prüfen; zwei gezielt erzeugte
 Bestandsverluste empfehlen Reparaturplanung. Nach Wegwiederherstellung und
 Plattform-Fertigbau empfiehlt die Diagnose Abschluss trotz altem Zeitlimit.
 Compact/full und Watch konsistent, beide Journale freigegeben, Endpause bestätigt.
-Belegter Negativfall: Bestandsweg/Gebäudeeingang; kein separater Livebeleg für
-unzugängliche Baustelle oder unbekannte Identität. Werkzeugfehler ist kein
-Zugangsbefund und keine Freigabe zum erneuten Bauauftrag.
+Belegte Negativfälle: Bestandsweg/Gebäudeeingang und isolierte Baustelle mit
+buildersReachable=false, construction_unreachable, ohne unfertige Stützen oder
+Bestandsverluste. Compact/full und Watch empfehlen dafür Zugangsreparatur.
+Unbekannte Identität bleibt live offen; bekannter Abriss ist keine unbekannte
+Identität. Auch pausierte Legacy-Projekte bestätigen Objekte automatisch.
+Werkzeugfehler ist kein Zugangsbefund und keine Freigabe zum erneuten Bauauftrag.
 
 repairEligible bleibt die native technische Möglichkeit, keine Empfehlung.
 Frische Diagnose liefert recoveryAdvice in compact/full und unter watch.diagnosis:

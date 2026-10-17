@@ -16,6 +16,70 @@ module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(module)
 
 
+class AtomicPublicationTests(unittest.TestCase):
+    def test_known_windows_errors_retry_only_unchanged_publication(self):
+        scenarios = ["transient", "published", "exhausted", "target_changed", "temp_changed", "other_error"]
+        for existing in (False, True):
+            for code in (5, 32, 33, 1175):
+                for scenario in scenarios:
+                    with self.subTest(existing=existing, code=code, scenario=scenario), tempfile.TemporaryDirectory() as directory:
+                        path = Path(directory) / "synthetic.json"
+                        previous = b'{"before": true}' if existing else None
+                        if existing:
+                            path.write_bytes(previous)
+                        attempts = []
+                        def replace(source, target):
+                            attempts.append(1)
+                            source, target = Path(source), Path(target)
+                            if scenario == "published" or scenario == "transient" and len(attempts) == 3:
+                                target.write_bytes(source.read_bytes())
+                                source.unlink()
+                                if scenario == "transient":
+                                    return
+                            if scenario == "target_changed":
+                                target.write_bytes(b"synthetic concurrent writer")
+                            if scenario == "temp_changed":
+                                source.write_bytes(b"synthetic temporary change")
+                            error = OSError("synthetic publication failure")
+                            error.winerror = 87 if scenario == "other_error" else code
+                            raise error
+                        with patch.object(module.os, "replace", side_effect=replace), patch.object(module.time, "sleep") as sleep:
+                            if scenario in ("transient", "published"):
+                                module.atomic_json(path, {"after": True})
+                                self.assertEqual({"after": True}, module.read_json(path))
+                            else:
+                                with self.assertRaises(OSError):
+                                    module.atomic_json(path, {"after": True})
+                                expected = b"synthetic concurrent writer" if scenario == "target_changed" else previous
+                                self.assertEqual(expected, path.read_bytes() if path.exists() else None)
+                            expected_attempts = 3 if scenario == "transient" else 4 if scenario == "exhausted" else 1
+                            self.assertEqual(expected_attempts, len(attempts))
+                            self.assertLessEqual(sum(call.args[0] for call in sleep.call_args_list), 0.1750001)
+                        self.assertEqual([], list(Path(directory).glob("*.tmp")))
+
+    def test_unreadable_target_does_not_retry_exchange(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "synthetic.json"
+            path.write_bytes(b"before")
+            original = Path.read_bytes
+            exchanged = []
+            def replace(source, target):
+                exchanged.append(1)
+                error = OSError("synthetic publication failure")
+                error.winerror = 5
+                raise error
+            def read(target):
+                if target == path and exchanged:
+                    raise PermissionError("synthetic unreadable target")
+                return original(target)
+            with patch.object(module.os, "replace", side_effect=replace), patch.object(module.time, "sleep"), patch.object(Path, "read_bytes", read):
+                with self.assertRaises(PermissionError):
+                    module.atomic_json(path, {"after": True})
+            self.assertEqual(1, len(exchanged))
+            self.assertEqual(b"before", path.read_bytes())
+            self.assertEqual([], list(Path(directory).glob("*.tmp")))
+
+
 class StopRequestTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()

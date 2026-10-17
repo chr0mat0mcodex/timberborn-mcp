@@ -131,7 +131,25 @@ def atomic_json(path, value):
         temp = path.with_name(path.name + "." + uuid.uuid4().hex + ".tmp")
         try:
             temp.write_text(json.dumps(value), encoding="utf-8")
-            os.replace(str(temp), str(path))
+            # The lifecycle mutex serializes our readers/writers, but Windows
+            # can still deny replacement transiently. Never retry lifecycle actions.
+            previous = path.read_bytes() if path.exists() else None
+            expected = temp.read_bytes()
+            for attempt in range(4):
+                try:
+                    os.replace(str(temp), str(path))
+                    break
+                except OSError as error:
+                    if getattr(error, "winerror", None) not in (5, 32, 33, 1175):
+                        raise
+                    if attempt < 3:
+                        time.sleep(0.025 * (2 ** attempt))  # 175 ms total maximum.
+                    current = path.read_bytes() if path.exists() else None
+                    if current == expected:
+                        break  # Published despite an error; do not publish twice.
+                    if (attempt == 3 or current != previous or not temp.exists()
+                            or temp.read_bytes() != expected):
+                        raise
         finally:
             if temp.exists():
                 temp.unlink()

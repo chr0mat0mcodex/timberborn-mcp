@@ -140,3 +140,17 @@ dass die unbekannte Ursache des gemeldeten Startfehlers damit behoben ist.
 Nachtrag: menschliches Gate anschliessend bestanden; expliziter Backendstart
 und Bridgekontakt 0.53.0 live bestaetigt. Die urspruengliche sporadische Ursache
 bleibt unbekannt; kein neuer Nachweis eines provozierten Speicherfehlers live.
+
+## Dateiaustausch-Korrektur nach 0.74 (Gate/Lifecycle bestätigt)
+
+Windows kann den atomaren Austausch der Lifecycle-Statusdatei trotz eigenem
+Mutex vorübergehend verweigern. Bei WinError 5, 32, 33 oder 1175 sind
+höchstens vier Austauschversuche mit insgesamt 175 ms Wartezeit vorgesehen.
+Vor erneutem Austausch werden Ziel- und Tempbytes verglichen; schon vollständig
+publizierte Bytes gelten als Erfolg. Veränderte oder nicht lesbare Dateien und
+andere Fehler brechen ab. Das wiederholt keine Backend-Starts, Stop-Aktionen
+oder MCP-Aufträge und bestätigt keinen Stopp ohne gültigen gespeicherten Beleg.
+23 Supervisor-Tests im menschlichen Gate bestanden. Nach vollständiger Client-
+Neuverbindung Prozessstart nach Skriptänderung bestätigt; Stop/Status/Start live
+erfolgreich. Backend-Neustart allein aktualisiert den persistenten Supervisor
+nicht. Live keine Dateisperre injiziert und keinen Schreibauftrag unterbrochen.

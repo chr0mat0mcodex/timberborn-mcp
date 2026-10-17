@@ -192,6 +192,41 @@ public sealed class ForestryRangeTests
         } finally { if (Directory.Exists(dir)) Directory.Delete(dir, true); }
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task Changed_target_receipt_survives_transient_exchange_without_game_retry(bool publishedBeforeError)
+    {
+        var port = new Port { ChangeTarget = true };
+        string dir = Path.Combine(Path.GetTempPath(), "forestry-exchange-" + Guid.NewGuid().ToString("N"));
+        try {
+            int attempts = 0;
+            void Replace(string temp, string target) {
+                attempts++;
+                if (publishedBeforeError || attempts == 3) {
+                    File.WriteAllBytes(target, File.ReadAllBytes(temp));
+                    File.Delete(temp);
+                    if (!publishedBeforeError) return;
+                }
+                throw new IOException("synthetic exchange failure", unchecked((int)0x80070497));
+            }
+            var args = JsonSerializer.SerializeToElement(
+                new ForestryProtectionRequest(Session, Session, "SyntheticPine", Action), NativeJson.Options);
+            var result = await ForestryTools.Execute(ForestryTools.Protect, args, true, port, dir,
+                TestContext.Current.CancellationToken, Replace);
+            Assert.Equal("stopped", result["data"]!["state"]!.GetValue<string>());
+            Assert.Equal("forestry_tree_changed", result["data"]!["reason"]!.GetValue<string>());
+            Assert.Equal(publishedBeforeError ? 1 : 3, attempts);
+            Assert.Equal(0, port.Writes);
+            var replay = await ForestryTools.Execute(ForestryTools.Protect, args, true, port, dir,
+                TestContext.Current.CancellationToken, Replace);
+            Assert.Equal("forestry_tree_changed", replay["data"]!["reason"]!.GetValue<string>());
+            Assert.Equal(publishedBeforeError ? 1 : 3, attempts);
+            Assert.Equal(0, port.Writes);
+            Assert.Empty(Directory.EnumerateFiles(dir, "*.tmp"));
+        } finally { if (Directory.Exists(dir)) Directory.Delete(dir, true); }
+    }
+
     [Fact]
     public async Task Partial_receipt_keeps_confirmed_prefix_and_noop_needs_no_write()
     {
