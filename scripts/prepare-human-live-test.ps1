@@ -14,7 +14,7 @@ $gateDisplay = New-TimberbornGateDisplay @(
     'Mod sichern und installieren',
     'Installierte Dateien prüfen',
     'Timberborn starten'
-)
+) -TimingPath (Join-Path (Split-Path $PSScriptRoot -Parent) '.local/gate-timings.json')
 
 function Get-NormalizedPath([string]$Path, [string]$Label) {
     if (-not (Test-Path -LiteralPath $Path -PathType Container)) { throw "$Label existiert nicht: $Path" }
@@ -166,4 +166,4 @@ try {
     Write-TimberbornStatus 'FEHLER' $_.Exception.Message Red
     Write-Host '  OFFEN = nicht ausgeführt. Keine automatische Wiederholung.' -ForegroundColor Yellow
     throw
-} finally { Pop-Location }
+} finally { Stop-TimberbornGateProgress $gateDisplay; Pop-Location }

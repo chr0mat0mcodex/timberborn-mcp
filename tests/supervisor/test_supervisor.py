@@ -16,6 +16,78 @@ module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(module)
 
 
+class StopRequestTests(unittest.TestCase):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temp.cleanup)
+        self.runtime = Path(self.temp.name)
+        self.path = self.runtime / "instance-synthetic.json"
+
+    def test_repeated_stop_preserves_existing_acknowledgement(self):
+        module.request_stop(self.runtime)
+        gate = module.read_json(self.runtime / "gate.json")
+        module.atomic_json(self.path, {"pid": 123, "heartbeat": 1, "running": False, "ticket": gate["ticket"]})
+        with patch.object(module, "alive", return_value=True):
+            module.request_stop(self.runtime, timeout=0)
+        self.assertEqual(gate, module.read_json(self.runtime / "gate.json"))
+        self.assertTrue(self.path.exists())
+
+    def test_late_acknowledgement_is_reread_before_deadline_failure(self):
+        ticket = module.stop_ticket(self.runtime)
+        before = {"pid": 123, "heartbeat": 1, "running": True, "ticket": None}
+        after = dict(before, heartbeat=2, running=False, ticket=ticket)
+        module.atomic_json(self.path, before)
+        # Test stale observation -> fresh acknowledgement, not concurrent file
+        # replacement inside an identity probe. File locking has its own test.
+        registry_reads = Mock(side_effect=[before, after])
+        read_json = module.read_json
+        def observe(path):
+            return registry_reads() if path == self.path else read_json(path)
+        with patch.object(module, "read_json", side_effect=observe), \
+                patch.object(module, "alive", return_value=True) as alive, \
+                patch.object(module.time, "sleep") as sleep:
+            module.request_stop(self.runtime, timeout=0)
+        self.assertEqual(2, registry_reads.call_count)
+        self.assertEqual(2, alive.call_count)
+        sleep.assert_not_called()
+
+    def test_only_confirmed_dead_registry_is_removed(self):
+        module.atomic_json(self.path, {"pid": 123, "heartbeat": 1, "running": True, "ticket": None})
+        with patch.object(module, "alive", return_value=False):
+            module.request_stop(self.runtime, timeout=0)
+        self.assertFalse(self.path.exists())
+
+    def test_changed_registry_is_not_deleted(self):
+        original = {"pid": 123, "heartbeat": 1, "running": True, "ticket": None}
+        replacement = dict(original, heartbeat=2)
+        module.atomic_json(self.path, original)
+        def changed(pid, heartbeat):
+            module.atomic_json(self.path, replacement)
+            return False
+        with patch.object(module, "alive", side_effect=changed):
+            self.assertTrue(module.stop_pending(self.path, "ticket"))
+        self.assertEqual(replacement, module.read_json(self.path))
+
+    def test_old_live_registry_and_unknown_running_state_still_block(self):
+        for running in (True, None):
+            gate = module.stop_ticket(self.runtime)
+            module.atomic_json(self.path, {"pid": 123, "heartbeat": 0, "running": running, "ticket": gate})
+            with patch.object(module, "alive", return_value=True):
+                with self.assertRaisesRegex(RuntimeError, "not acknowledged by 1"):
+                    module.request_stop(self.runtime, timeout=0)
+            self.assertTrue(self.path.exists())
+
+    def test_unknown_identity_and_corrupt_registry_do_not_release_gate(self):
+        module.atomic_json(self.path, {"pid": 123, "heartbeat": 1})
+        with patch.object(module, "alive", side_effect=RuntimeError("identity unavailable")):
+            with self.assertRaisesRegex(RuntimeError, "identity unavailable"):
+                module.request_stop(self.runtime, timeout=0)
+        self.assertTrue(self.path.exists())
+        self.path.write_text("{", encoding="utf-8")
+        with self.assertRaisesRegex(RuntimeError, "not acknowledged"):
+            module.request_stop(self.runtime, timeout=0)
+
+
 class LifecycleTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()

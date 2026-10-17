@@ -112,7 +112,7 @@ public sealed class SpatialObservations(EntityRegistry entities, TemplateNameMap
             bool intersects = inside && blocks.GetObjectsAt(p).Any(other => !other.IsPreview && !other.HasComponent<RecoveredGoodStack>() && other.IsIntersecting(block));
             if (!inside) reasons.Add("outside_map");
             if (intersects) reasons.Add("object_intersection");
-            if (underground && !block.Underground && !block.OptionallyUnderground) reasons.Add("terrain_intersection");
+            if (TerrainOccupancyPolicy.Intersects(block.IsOccupied,underground,block.Underground,block.OptionallyUnderground)) reasons.Add("terrain_intersection");
             if (inside && block.IsFoundationBlock) {
                 bool stackable = p.z > 0 && blocks.GetObjectsAt(p + new Vector3Int(0,0,-1)).Any(other =>
                     !other.IsPreview && other.IsFinished && other.PositionedBlocks.GetAllBlocks().Any(b =>

@@ -216,7 +216,7 @@ public sealed class SimulationRunTests
         var c = new SimulationRunController(); var commands = new List<int>(); var r = Parse(Query());
         c.Start(r, 24, 0, 0, commands.Add);
         Assert.Equal("run_id_used", Assert.Throws<BridgeRejectionException>(() => c.Start(r, 24, 0, 1, commands.Add)).Code);
-        Assert.Equal("state_conflict", Assert.Throws<BridgeRejectionException>(() => c.Start(Parse(Query()), 24, 0, 1, commands.Add)).Code);
+        Assert.Equal("run_start_active", Assert.Throws<BridgeRejectionException>(() => c.Start(Parse(Query()), 24, 0, 1, commands.Add)).Code);
         c.Interrupt();
         Assert.Throws<BridgeRejectionException>(() => c.Start(r, 24, 0, 2, commands.Add)); Assert.Single(commands);
     }

@@ -158,7 +158,7 @@ public static class StrategicMapTools
             StrategicScanStore.Validate(request);
             var current=await client.Simulation(ct);
             if(current.SessionId!=request.Session)throw new BridgeRejectionException("stale_session");
-            if(current.BridgeVersion is not ("0.62.0" or "0.63.0" or "0.64.0" or "0.65.0"))throw new InvalidDataException("strategic_map_requires_062");
+            if(current.BridgeVersion is not ("0.62.0" or "0.63.0" or "0.64.0" or "0.65.0" or "0.66.0"))throw new InvalidDataException("strategic_map_requires_062");
             var report=await Stores.GetValue(client,_=>new()).Observe(request,client.StrategicMap,ct);
             report=report with {NativeReadsThisCall=report.NativeReadsThisCall+1};
             return JsonSerializer.SerializeToNode(new NativeResult<StrategicScanReport>(1,"ok",report,

@@ -1,5 +1,8 @@
 # Timberborn MCP
 
+**0.66.0 Kernpilot begrenzt bestanden:** Uferpumpen-Terraincheck und konkrete
+Simulationsstart-Ablehnungen. [Umfang und Pilot](docs/releases/0.66.0.md).
+
 **0.65.0 Kernpilot begrenzt bestanden:** Rückstau-/Faulwasserwarnungen und native
 Überflutungs-/Ansaugdiagnose für Pumpen, auch bei Gebäudepause.
 [Livebelege und verbleibende Grenzen](docs/releases/0.65.0.md).
@@ -129,7 +132,7 @@ Beobachtung und kontrollierte Eingriffe über reguläre Spielservices.
 
 ## Status
 
-Aktueller dokumentierter Abschluss: **0.65.0**. Die folgenden
+Aktueller dokumentierter Abschluss: **0.66.0**. Die folgenden
 Versionsabschnitte sind historische Teilabnahmen, keine parallel aktuellen Stände.
 Offene Fähigkeiten stehen im [Backlog](BACKLOG.md).
 

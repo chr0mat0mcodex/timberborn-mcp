@@ -1,5 +1,18 @@
 # Persistenter MCP-Vorschaltprozess
 
+## Gate-Stopp-Nacharbeit in 0.66 — automatisches Gate noch ausstehend
+
+Wiederholte CLI-Stopps behalten das vorhandene Gate-Ticket; keine erneute
+Quittungsrunde nur wegen Wiederholung. Prozessidentitäten werden weiter geprüft.
+Nur nachweislich verwaiste, unveränderte Instanzmeldungen werden gelöscht;
+alte Zeitstempel allein reichen nicht. Vor einem Timeout ausstehende Quittungen
+frisch lesen. Lebende/unlesbare Instanzen blockieren weiterhin den Build.
+CLI-Stopp nach Bereinigung und Wiederholung erfolgreich; ergänzte Regressionen
+werden erst vom menschlichen Gate ausgeführt. [Befund](releases/0.66.0.md).
+Der CLI-Helfer lädt die Änderung beim nächsten Aufruf; dafür ist kein Neustart
+der verbundenen Frontends nötig. Schon laufende Frontends behalten ihren
+geladenen Python-Code bis zum nächsten regulären Client-Neustart.
+
 Stand: menschlicher Vollgate-Lauf und acht gezielte Python-Tests bestanden.
 Stop/status/start über dieselbe Codex-Verbindung live bestanden; Spielstatus vor
 und nach Backendwechsel erreichbar, gleiche Spielsitzung. Werkzeugübernahme nach

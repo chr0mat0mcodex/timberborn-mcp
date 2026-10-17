@@ -1,5 +1,30 @@
 # Projektstand
 
+## 0.66.0 — Kernpilot begrenzt bestanden am 17. Oktober 2026
+
+Mensch meldet Gate bestanden; Bridge 0.66.0 mit neuer Session live bestätigt.
+Uferpumpen-Vorprüfung und automatische Zugangssuche stimmen am ursprünglichen
+Standort überein. Regulärer Bauauftrag im Entwicklungspiloten, tatsächlicher
+Bauarbeiterzugang und Fertigzugang nachgewiesen; keine verlorenen Bestandsanschlüsse.
+Echte Terrain- und Objektkollisionen bleiben blockiert. Tempoabweichung und
+konkurrierender Start liefern konkrete Codes mit `not_executed`; gültiger
+Zwölfstundenlauf erreicht das Ziel und pausiert. Details und Nachweisgrenzen:
+[Releasebericht](docs/releases/0.66.0.md).
+
+Gate-Nacharbeiten (Supervisor-Quittung, deterministischer Regressionstest,
+xUnit-Assertions) sind durch die aktuelle menschliche Erfolgsmeldung überholt.
+Gate-CLI speichert erfolgreiche Phasendauern lokal als Balkenreferenz;
+die visuelle Konsolendarstellung wurde vom Agenten nicht separat beobachtet.
+Keine Agent-Builds/Tests/Installation. Anleitung, Tool-Doku und lokaler
+Hermes-Skillentwurf mit tatsächlichen Belegen aktualisiert; Skill bleibt
+zurückgestellt. Vorbestehende Starter-/Hermes-Experimente bleiben separat.
+
+Offen: neuer Umweg-/Höhenvergleich nicht in diesem Pilot wiederholt;
+Pending-/Lock-/Kapazitätsfälle nur Gate-Regressionen. Früher Navigations-
+Baselinekonflikt nach Simulationsfortschritt und Entfernen einer fremden,
+unbegonnenen Testtreppe verschwunden; Ursache nicht isoliert nachgewiesen.
+Spiel am Ende pausiert, Bestandspumpe wieder eingeschaltet.
+
 ## Agentenregel: Materialdeckung statt Vorratswartepflicht
 
 Auf Nutzerauftrag gilt: Kosten des gesamten Bauplans, Deckung je Gut und insgesamt

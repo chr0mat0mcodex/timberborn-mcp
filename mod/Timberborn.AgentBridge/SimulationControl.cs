@@ -95,7 +95,7 @@ public sealed class SimulationControl
     public void Unload() { buildingProof?.Dispose();buildingProof=null;events.Unregister(this); speedCommand.Clear(); runs.Unload(s => speed.ChangeSpeed(s)); }
     public object Run(SimulationRunRequest r)
     {
-        if (r.Starts && (speedLocked || batchOwner is not null || speedCommand.PendingSpeed is not null)) throw new BridgeRejectionException("state_conflict");
+        if (r.Starts) SimulationStartPolicy.RequireAvailable(speedLocked,batchOwner is not null,speedCommand.PendingSpeed is not null);
         SimulationRunStatus result;
         if(r.Starts) {
             BuildingProductionObserver? candidate=null;

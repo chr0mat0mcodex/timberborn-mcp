@@ -1,5 +1,15 @@
 # Backlog
 
+## 0.66.0 — Kernpilot bestanden; verbleibende Nachweise
+
+Uferpumpen-Terraincheck berücksichtigt `Block.IsOccupied`; Laufstart-Ablehnungen
+haben konkrete Codes und gezielt `not_executed`. Uferpumpe bis Fertigzugang,
+Tempoabweichung, konkurrierender Start und gültiger Folgelauf live bestanden.
+Neuer Umweg-/Höhenvergleich bleibt offen. Navigations-Baselinekonflikt bei
+Wiederauftreten isoliert diagnostizieren. [Belege](docs/releases/0.66.0.md).
+Die nachfolgenden 0.65-Befunde bleiben Herkunft und Live-Abnahmekriterien;
+Cancel-Priorisierung ist nicht Teil dieser Version.
+
 ## 0.65.0 — begrenzt live abgenommen; Folgearbeiten
 
 Rückstauszenario unter Sperrkrone, Abflussunsicherheit und kontaminiertes Zielwasser

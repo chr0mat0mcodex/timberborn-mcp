@@ -113,13 +113,15 @@ public sealed class DiagnosticsTests
         Assert.Equal("backend_incompatible",(await Call("inspect_building_operation",e,new{id=Id,session=Session}))["error"]!["code"]!.GetValue<string>());
     }
     [Theory]
-    [InlineData("ok")][InlineData("missing")][InlineData("flood_missing")]
-    [InlineData("input_mismatch")][InlineData("contamination_range")][InlineData("pipe_mismatch")]
-    public async Task WaterContractRequiresNativeEvidenceInNewRelease(string defect)
+    [InlineData("ok","0.65.0")][InlineData("missing","0.65.0")][InlineData("flood_missing","0.65.0")]
+    [InlineData("input_mismatch","0.65.0")][InlineData("contamination_range","0.65.0")][InlineData("pipe_mismatch","0.65.0")]
+    [InlineData("ok","0.66.0")][InlineData("missing","0.66.0")][InlineData("flood_missing","0.66.0")]
+    [InlineData("input_mismatch","0.66.0")][InlineData("contamination_range","0.66.0")][InlineData("pipe_mismatch","0.66.0")]
+    public async Task WaterContractRequiresNativeEvidenceInNewRelease(string defect,string version)
     {
         var e=Envelope(Operation() with {Inventories=[],Power=new(false,null,null,null,null,null),
             Water=new(true,true,true,true,0.5f,true,false)});
-        e["bridgeVersion"]="0.65.0";
+        e["bridgeVersion"]=version;
         var data=e["data"]!;
         switch(defect) {
             case "missing":data.AsObject().Remove("water");break;

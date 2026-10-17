@@ -1,5 +1,18 @@
 # Spielanleitung für Agenten
 
+## 0.66 — Uferzugang und Startfehler, Kernpilot begrenzt bestanden
+
+Zugangssuche und Vorprüfung ignorieren leere native Blockzellen beim
+Terrainkonflikt. Keine generelle Freigabe von Uferpumpen: native Gesamtvorschau,
+Unterbau, Bau-/Fertigzugang und Bestandsanschlüsse weiter prüfen.
+`run_start_speed_changed`, `run_start_speed_pending`, `run_start_speed_locked`,
+`run_start_batch_busy`, `run_start_active`, `run_start_capacity` und
+`run_start_stock_unavailable` sind konkrete Startablehnungen. Bei direktem
+Simulationsstart bedeutet `not_executed`: kein neuer Lauf registriert.
+Aktuelles Tempo, `pendingSpeed` und `activeRunId` lesen, dann neu entscheiden;
+kein automatisches Retry. Andere Konflikte/Transportverlust bleiben unbestätigt,
+`run_not_found` allein beweist keine Nichtausführung. [Pilot](releases/0.66.0.md).
+
 ## Materialdeckung und Bauentscheidung
 
 Fehlender Vorrat verhindert keinen Bauauftrag. Vor der Entscheidung einmal
@@ -913,7 +926,7 @@ Das menschliche Vorbereitungsskript startet seit 0.57 nach erfolgreichen Tests,
 Installation und Paketprüfung Timberborn automatisch. Spielstand laden und
 `live bereit` bleiben menschliche Schritte; der Agent startet das Gate nicht selbst.
 
-Stand: letzter dokumentierter Abschluss Bridge 0.65.0; aktualisiert am 17. Oktober 2026.
+Stand: letzter dokumentierter Abschluss Bridge 0.66.0; aktualisiert am 17. Oktober 2026.
 Diese Anleitung beschreibt die vorhandenen MCP-Fähigkeiten. Aktueller Auftrag
 und Projektregeln stehen in [AGENTS.md](../AGENTS.md) und
 [missionsplan.md](../missionsplan.md); das lokale Spiel ist das freigegebene

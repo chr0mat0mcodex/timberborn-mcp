@@ -5,6 +5,18 @@ description: Timberborn über die vorhandene Hermes-MCP-Verbindung steuern; Test
 
 # Timberborn in Hermes
 
+## 0.66 — Uferzugang und Startfehler, Kernpilot begrenzt bestanden
+
+Terraincheck nutzt native Zellbelegung; leere Vorlagenzellen sind kein
+Terrainhindernis. Echte Kollisionen und die gemeinsame Bauvorschau weiter prüfen.
+Bei `run_simulation_for`/`run_simulation_until` sind explizite `run_start_*`-Codes
+für Tempoabweichung, Pending, Spielsperre, Bauchargenbesitz, aktiven Lauf,
+Journalgrenze und unbekannten Zielbestand vor dem Start abgewiesen:
+`not_executed`, kein neuer Lauf. Frisch Tempo/`pendingSpeed`/`activeRunId` lesen,
+dann neu entscheiden; kein automatisches Retry. Generische Konflikte und
+Transportverluste bleiben `unconfirmed`; `run_not_found` ist keine Entwarnung.
+Code und Pilotumfang: `docs/releases/0.66.0.md`. Uferpumpe bis Fertigzugang und zwei Startablehnungen live belegt; übrige Codes nur im Gate geprüft.
+
 ## Bauentscheidung trotz fehlender Materialien
 
 Nicht auf volle Materialvorräte warten. Kosten des gesamten Plans einschließlich

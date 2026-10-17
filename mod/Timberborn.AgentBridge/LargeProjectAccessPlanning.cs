@@ -63,7 +63,7 @@ public sealed partial class LargeProjectService
         {
             var shape=Geometry(s);
             return !Reserved(s) && shape.Length is >0 and <=BuildingPolicy.MaxGeometryCells && shape.All(c=>Inside(new(c.Coordinates.x,c.Coordinates.y,c.Coordinates.z))&&
-                (!terrain.Underground(c.Coordinates)||c.Underground||c.OptionallyUnderground)&&
+                !TerrainOccupancyPolicy.Intersects(c.IsOccupied,terrain.Underground(c.Coordinates),c.Underground,c.OptionallyUnderground)&&
                 !blocks.GetObjectsAt(c.Coordinates).Any(b=>!b.IsPreview&&!b.HasComponent<RecoveredGoodStack>()&&b.IsIntersecting(c))&&
                 !steps.Concat(additional).Where(other=>!Same(s,other)).Any(other=>Geometry(other).Any(c.IsIntersecting)));
         }

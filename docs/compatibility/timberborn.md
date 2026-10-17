@@ -2,6 +2,10 @@
 
 ## Einordnung zum aktuellen Stand
 
+0.66.0: menschliches Gate und begrenzter Kernpilot bestanden; Uferpumpe bis
+Fertigzugang sowie Tempoabweichung/konkurrierender Start mit gültigem Folgelauf:
+[Uferpumpen und Startablehnungen](../releases/0.66.0.md).
+
 0.65.0: Nach menschlicher Bereitmeldung begrenzter Kernpilot bestanden:
 Wasserwarnungen, native Überflutung auch bei Pause und produktive Pumpenkontrolle.
 Blockiertes Ansaugrohr und höherer Umweg bleiben synthetische Kontrollfälle.

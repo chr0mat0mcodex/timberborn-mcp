@@ -66,8 +66,10 @@ public sealed class SimulationRunController
         if (!r.Starts) throw new ArgumentException();
         ValidateClock(hours, speed, now);
         if (history.ContainsKey(r.RunId)) throw new BridgeRejectionException("run_id_used");
-        if (active is not null || history.Count >= Capacity || speed != r.ExpectedSpeed) throw new BridgeRejectionException("state_conflict");
-        if (r.StopAtAvailableLogs is not null && (availableLogs is null || availableLogs < 0)) throw new BridgeRejectionException("state_conflict");
+        if (active is not null) throw new BridgeRejectionException("run_start_active");
+        if (history.Count >= Capacity) throw new BridgeRejectionException("run_start_capacity");
+        if (speed != r.ExpectedSpeed) throw new BridgeRejectionException("run_start_speed_changed");
+        if (r.StopAtAvailableLogs is not null && (availableLogs is null || availableLogs < 0)) throw new BridgeRejectionException("run_start_stock_unavailable");
         double target = r.Route == "simulation-run-for" ? hours + r.DurationHours : r.TargetHours;
         if (target < hours || target - hours > 672) throw new BridgeRejectionException("invalid_time_target");
         var pending = new SimulationRunStatus { RunId = r.RunId, StartGameHours = hours, TargetGameHours = target,

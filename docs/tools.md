@@ -1,5 +1,13 @@
 # Native MCP-Werkzeuge
 
+## 0.66 — Kernpilot begrenzt bestanden
+
+`precheck_building` und `plan_large_project_access`: Terraincheck anhand nativer
+Zellbelegung; leere Vorlagenzellen sperren keine Uferposition. Native Vorschau
+bleibt erforderlich. Direkte Simulationsstarts unterscheiden explizite
+`run_start_*`-Ablehnungen als `not_executed`; generische Konflikte und
+Transportverlust bleiben `unconfirmed`. [Codes und Pilot](releases/0.66.0.md).
+
 ## 0.65 — Kernpilot begrenzt bestanden
 
 Zielscan: `backwater` bleibt auch kompakt erhalten; `closureRecommended=false`,

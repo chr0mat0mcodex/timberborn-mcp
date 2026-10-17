@@ -151,26 +151,57 @@ def lifecycle_step(stage):
         raise RuntimeError(detail) from error
 
 
+def stop_ticket(runtime):
+    gate = runtime / "gate.json"
+    with lifecycle_file_lock(gate):
+        try:
+            state = read_json(gate)
+        except FileNotFoundError:
+            state = {"ticket": uuid.uuid4().hex}
+            atomic_json(gate, state)
+        ticket = state.get("ticket")
+        if not isinstance(ticket, str) or not ticket:
+            raise RuntimeError("Invalid stop gate; refusing build")
+        return ticket  # Repeated/concurrent stops share the still-active gate.
+
+
+def stop_pending(path, ticket):
+    try:
+        state = read_json(path)
+        if not alive(state["pid"], state.get("heartbeat")):
+            # Remove only a positively dead/reused process identity and only if
+            # its registry did not change while process identity was checked.
+            with lifecycle_file_lock(path):
+                if read_json(path) == state:
+                    path.unlink()
+                    return False
+            return True
+        return state.get("ticket") != ticket or state.get("running") is not False
+    except FileNotFoundError:
+        return False  # Normal close removes its registry after backend cleanup.
+    except (OSError, ValueError, KeyError, TypeError, AttributeError):
+        return True  # Unreadable or malformed is not stopped.
+
+
 def request_stop(runtime, timeout=10):
     runtime.mkdir(parents=True, exist_ok=True)
-    ticket = uuid.uuid4().hex
-    atomic_json(runtime / "gate.json", {"ticket": ticket})
+    ticket = stop_ticket(runtime)
     # Registries are heartbeats, never authority to kill a PID.
     deadline = time.monotonic() + timeout
     while True:
         pending = []
         for path in runtime.glob("instance-*.json"):
-            try:
-                state = read_json(path)
-                if alive(state["pid"], state.get("heartbeat")) and (
-                        state.get("ticket") != ticket or state.get("running")):
-                    pending.append(path.name)
-            except (OSError, ValueError, KeyError):
-                pending.append(path.name)
+            if stop_pending(path, ticket):
+                pending.append(path)
+        # A large stale registry inventory may consume the whole deadline.
+        # Re-read earlier observations before treating them as a timeout.
+        pending = [path for path in pending if stop_pending(path, ticket)]
         if not pending:
+            if read_json(runtime / "gate.json").get("ticket") != ticket:
+                raise RuntimeError("Stop gate changed during acknowledgement; refusing build")
             return
         if time.monotonic() >= deadline:
-            raise RuntimeError("Supervisor stop was not acknowledged; build must not start")
+            raise RuntimeError("Supervisor stop was not acknowledged by {} instance(s); build must not start".format(len(pending)))
         time.sleep(0.1)
 
 
@@ -452,7 +483,14 @@ def main():
     args = parser.parse_args()
     runtime = ROOT / ".local" / "codex-mcp-supervisor"
     if args.control:
-        request_stop(runtime)
+        try:
+            request_stop(runtime)
+        except RuntimeError as error:
+            print("[FEHLER] " + str(error), file=sys.stderr)
+            sys.exit(1)
+        except (OSError, ValueError, TypeError, AttributeError):
+            print("[FEHLER] MCP-Stopp nicht bestaetigt; lebende/unlesbare Instanz oder geaenderte Gatesperre. Kein Build gestartet.", file=sys.stderr)
+            sys.exit(1)
         print("[OK] Backend-Starts gesperrt; vorhandene Vorschaltprozesse haben den Stopp bestätigt.")
         return
     if not args.config or not Path(args.config).is_file():

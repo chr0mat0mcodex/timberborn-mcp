@@ -53,6 +53,17 @@ nicht nur Werkzeugaufruf oder erfolgreiche Paketierung.
 
 ## Skriptoptionen
 
+Das Gate speichert Phasendauern lokal in `.local/gate-timings.json` (nicht Git).
+Jede der sechs Phasen verwendet beim nächsten Lauf ihre letzte erfolgreiche
+Dauer als Zeitreferenz. Der Livebalken ist eine Schätzung, bis zum Erfolg auf
+95 Prozent begrenzt; bei Überschreitung bleibt die Phase sichtbar aktiv.
+Ohne Referenz wird die Laufzeit gemessen, keine Prozentprognose erfunden.
+Footer und Abschlusszeile zeigen erfolgreiche Phasen mit vollem Balken.
+Auch bei Abbruch werden die tatsächlichen Phasenzustände/Dauern gespeichert;
+fehlgeschlagene und offene Phasen überschreiben keine erfolgreiche Referenz.
+Bei umgeleiteter Ausgabe bleibt die Textanzeige ohne Livebalken erhalten.
+Fehler beim Laden/Speichern der Anzeigehistorie ändern das Gate-Ergebnis nicht.
+
 Einmalige Codex-Einrichtung, Lifecycle-Werkzeug und Abnahme:
 [Persistenter MCP-Vorschaltprozess](docs/codex-mcp-supervisor.md).
 Das Gate prüft dessen synthetische Python-Tests ebenfalls ohne Wiederholung.

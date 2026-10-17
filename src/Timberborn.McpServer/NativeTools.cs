@@ -202,7 +202,9 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
                 dispatch.WriteAttempts == 1 && ex is BridgeRejectionException && LargeProjectStartPolicy.IsPreDispatchCode(code);
             bool projectPlanningRejected = ProjectPlanningOutcome.Handles(name) && dispatch.WriteAttempts == 1 &&
                 ex is BridgeRejectionException && LargeProjectPlanningPolicy.IsPreDispatchCode(code);
-            string execution=plantingRejected||projectStartRejected||projectPlanningRejected?"not_executed":dispatch.WriteAttempts>0?"unconfirmed":action||code=="invalid_argument"?"not_executed":"not_applicable";
+            bool simulationStartRejected = SimulationStartOutcome.Handles(name) && dispatch.WriteAttempts == 1 &&
+                ex is BridgeRejectionException && SimulationStartPolicy.IsPreDispatchCode(code);
+            string execution=plantingRejected||projectStartRejected||projectPlanningRejected||simulationStartRejected?"not_executed":dispatch.WriteAttempts>0?"unconfirmed":action||code=="invalid_argument"?"not_executed":"not_applicable";
             string message=execution switch {
                 "not_executed"=>"Nicht ausgeführt: kein schreibender Spielauftrag an den Transport übergeben. Ursache korrigieren; kein automatisches Retry.",
                 "unconfirmed"=>"Schreibender Spielauftrag an den Transport übergeben; Ausgang unbestätigt. Nur lesend klären, niemals automatisch wiederholen.",
@@ -211,6 +213,7 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
             if(plantingRejected)message="Nicht ausgeführt: native Vorprüfung hat die veraltete Pflanzvorschau vor jeder Änderung abgewiesen. Frische Vorschau lesen und neu beurteilen; kein automatisches Retry.";
             if(projectStartRejected)message=ProjectStartOutcome.Describe(code)+" Kein automatisches Retry.";
             if(projectPlanningRejected)message=ProjectPlanningOutcome.Describe(code)+" Kein automatisches Retry.";
+            if(simulationStartRejected)message=SimulationStartOutcome.Describe(code);
             if(code=="project_preview_failed")message="Native Bauvorschau fehlgeschlagen; Wiederherstellung unbekannt, Planer gesperrt. Spiel neu laden und Zustand mit neuer Session prüfen; kein automatisches Retry.";
             if(code=="project_not_found")message="Unter dieser Kennung existiert kein natives Großprojekt in der aktuellen Spielsitzung. Chargenstatus und Planungsfehler prüfen; keine automatische Wiederholung.";
             if(ArgumentDiagnostics.Hint(ex) is { } hint)message+=" "+hint;
