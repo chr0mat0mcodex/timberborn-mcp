@@ -1,5 +1,7 @@
 # Timberborn MCP
 
+Arbeitszeit-Nachtrag im Gate und begrenzten Livepilot bestätigt: konkrete Feierabendursache in Betriebs- und frischer Baudiagnose. [Vertrag](docs/operating-readiness.md).
+
 Automatische Bauzentrum-/Produzentenauswahl und Vorprüfung vor Strukturstarts bzw. längeren Simulationen sind nach Gate sowie Simulations- und Baupilot begrenzt live abgenommen. Befunde bleiben beratend, Materialmangel sperrt den Start nicht. [Vertrag und Livebelege](docs/automatic-operating-readiness.md).
 
 Gemeinsame Betriebsdiagnose vor längeren Bau-/Simulationsläufen: `inspect_operating_readiness` bündelt ausgewähltes Bauzentrum, Überflutung, Personal und Materialproduzenten mit priorisierten nächsten Schritten. Gate und gezielter Livevergleich bestanden; kein Produktionsnachweis. [Aufruf und Grenzen](docs/operating-readiness.md).

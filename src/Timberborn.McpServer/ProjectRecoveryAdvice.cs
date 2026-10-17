@@ -23,6 +23,7 @@ public static class ProjectRecoveryAdvice
                     "materials_not_ready" => "check_material_supply",
                     "waiting_for_support_completion" => "wait_for_support_completion",
                     "construction_paused" => "review_construction_pause",
+                    "construction_center_outside_working_hours" => "wait_for_construction_working_hours",
                     "awaiting_builders_or_work" => "check_workers_and_work_progress",
                     _ => "inspect_construction_inactivity"
                 },
@@ -30,6 +31,8 @@ public static class ProjectRecoveryAdvice
                 _ => "inspect_unknown_access_or_identity"
             };
             part["nextStep"]=next;
+            if(reason=="construction_center_outside_working_hours")
+                part["nextStepExplanation"]="Feierabend am zuständigen Bezirkszentrum: Arbeitszeit ist beendet. Gezielt bis zur nächsten Arbeitsphase beobachten und Baufortschritt erneut prüfen; andere Bauhütten und weitere Ursachen sind damit nicht ausgeschlossen. Kein automatisches Verlängern des Laufbudgets.";
             nextSteps.Add(next);
             if(next=="inspect_missing_access")missing.Add(part["index"]?.DeepClone());
             if(next=="inspect_unknown_access_or_identity")unknown.Add(part["index"]?.DeepClone());
@@ -41,7 +44,7 @@ public static class ProjectRecoveryAdvice
             ? data["repairEligible"]?.GetValue<bool>()==true ? "review_access_repair_plan" : "inspect_access_repair_conditions"
             : uncertain ? "inspect_unknown_access_or_identity"
             : new[] { "review_construction_pause", "wait_for_support_completion", "check_material_supply",
-                "check_workers_and_work_progress", "inspect_construction_inactivity", "review_unissued_or_removed_parts" }
+                "wait_for_construction_working_hours", "check_workers_and_work_progress", "inspect_construction_inactivity", "review_unissued_or_removed_parts" }
                 .FirstOrDefault(nextSteps.Contains) ?? "inspect_release_conditions";
         if (data["released"]?.GetValue<bool>()==true) nextStep="none_project_released";
         else if (data["currentSpeed"] is { } speed && JsonSerializer.SerializeToElement(speed).GetDouble() > 0) nextStep="inspect_pause_confirmation";

@@ -19,6 +19,40 @@ public sealed class RuntimeObservationTests
     public void NativeInactivityIsNotManualPause(bool? paused,bool? active,bool? materials,bool support,string expected)
         => Assert.Equal(expected,LargeProjectRecoveryPolicy.ConstructionReason(paused,active,materials,support));
 
+    [Theory]
+    [InlineData(false,true,true,false,"construction_center_outside_working_hours")]
+    [InlineData(false,true,true,true,"awaiting_builders_or_work")]
+    [InlineData(false,true,true,null,"awaiting_builders_or_work")]
+    [InlineData(true,true,true,false,"construction_paused")]
+    [InlineData(null,true,true,false,"awaiting_builders_or_work")]
+    [InlineData(false,true,false,false,"materials_not_ready")]
+    [InlineData(false,false,true,false,"construction_inactive_unknown")]
+    public void WorkingHoursDoNotOverrideOtherCauses(bool? paused,bool? active,bool? materials,bool? hours,string reason)
+        => Assert.Equal(reason,LargeProjectRecoveryPolicy.ConstructionReason(paused,active,materials,false,hours));
+
+    [Fact]
+    public void WorkingHoursEvidenceSurvivesCompactAndContradictionsAreRejected()
+    {
+        var part=JsonSerializer.SerializeToNode(new {index=0,observed="construction",recorded="construction",
+            manuallyPaused=false,unfinishedSupportIndices=Array.Empty<int>(),reason="construction_center_outside_working_hours",
+            constructionCenterId="11111111-1111-4111-8111-111111111111",constructionCenterWorkingHours=false,
+            workingHoursSource="district_center_workplace_component",construction=new{isOn=true,hasMaterialsToResumeBuilding=true}})!.AsObject();
+        RuntimeObservationContract.Construction(JsonSerializer.SerializeToElement(part),1);
+        var data=new JsonObject{["parts"]=new JsonArray(part),["state"]="blocked",["currentSpeed"]=0,
+            ["released"]=false,["closeEligible"]=false,["repairEligible"]=true,["lostConnections"]=0};
+        ProjectReportPresentation.ObserveCurrent(data);
+        ProjectReportPresentation.Compact("diagnose_large_project",data);
+        Assert.Equal("wait_for_construction_working_hours",data["recoveryAdvice"]!["nextStep"]!.GetValue<string>());
+        var shown=data["parts"]![0]!;
+        Assert.False(shown["constructionCenterWorkingHours"]!.GetValue<bool>());
+        Assert.Contains("Feierabend",shown["nextStepExplanation"]!.GetValue<string>());
+        shown["constructionCenterWorkingHours"]=true;
+        Assert.Throws<InvalidDataException>(()=>RuntimeObservationContract.Construction(JsonSerializer.SerializeToElement(shown),1));
+        shown["constructionCenterWorkingHours"]=false;
+        shown["workingHoursSource"]="guessed_from_clock";
+        Assert.Throws<InvalidDataException>(()=>RuntimeObservationContract.Construction(JsonSerializer.SerializeToElement(shown),1));
+    }
+
     [Fact]
     public void MinimumIsUnknownUntilReturnedDecreaseRefusesAndCanBeInvalidated()
     {

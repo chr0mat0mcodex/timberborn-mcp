@@ -12,9 +12,9 @@ public sealed class OperatingReadinessTests
     private const string Producer = "33333333-3333-4333-8333-333333333333";
     private static BridgeEnvelope<T> E<T>(T value) => new(1, Session, DateTimeOffset.UnixEpoch, "synthetic", value);
     private static OperatingRequest Request => new(Session, Center, [Producer], [new("Plank", 20)]);
-    private static NativeOperation Operation(string id, bool flooded = false, int assigned = 1) => new(
+    private static NativeOperation Operation(string id, bool flooded = false, int assigned = 1, bool? hours = true) => new(
         id, id == Center ? "DistrictCenter.Folktails" : "LumberMill.Folktails", true, false,
-        new(assigned, 2, 2, assigned < 2, false, true),
+        new(assigned, 2, 2, assigned < 2, false, hours),
         id == Center ? null : new(true, "PlankRecipe", true, true, true, false, true, 0), [], [], [],
         new(false, null, null, null, null, null), null, null, new(true, flooded, false, null, null, false, null));
     private static BridgeEnvelope<NativeSnapshot> Snapshot => E(new NativeSnapshot("colony", [], new(1, 0, 0, 1),
@@ -38,6 +38,26 @@ public sealed class OperatingReadinessTests
                 new(Producer, missing ? "not_found" : "observed", missing ? null : Operation(Producer))], 1, []))),
             readGoods ?? ((offset, ct) => Task.FromResult(Goods(offset, many))), readAccess ?? Access,
             token ?? TestContext.Current.CancellationToken);
+
+    [Theory]
+    [InlineData(false,"outside_working_hours")]
+    [InlineData(null,"working_hours_unknown")]
+    [InlineData(true,null)]
+    public async Task OperatingDiagnosisNamesObservedHoursWithoutGuessing(bool? hours,string? expected)
+    {
+        var e=await OperatingReadinessTools.Observe(Request,ct=>Task.FromResult(Snapshot),ct=>Task.FromResult(Graph),
+            ct=>Task.FromResult(E(new OperationBatch([
+                new(Center,"observed",Operation(Center,hours:hours)),
+                new(Producer,"observed",Operation(Producer,hours:hours))],1,[]))),
+            (offset,ct)=>Task.FromResult(Goods(offset)),Access,TestContext.Current.CancellationToken);
+        foreach(var id in new[]{Center,Producer}) {
+            if(expected is null) Assert.DoesNotContain(e.Data.NextSteps,s=>s.Target==id && s.Code is "outside_working_hours" or "working_hours_unknown");
+            else {
+                var step=Assert.Single(e.Data.NextSteps,s=>s.Target==id && s.Code==expected);
+                Assert.Contains(hours==false?"Feierabend":"nicht beobachtet",step.Action);
+            }
+        }
+    }
 
     [Fact]
     public async Task FloodComesBeforeStaffingAndShortageIsInformation()

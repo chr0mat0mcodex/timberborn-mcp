@@ -1,5 +1,72 @@
 # Projektstand
 
+## Liveabnahme Arbeitszeitdiagnose 2026-10-18
+
+Menschliches Gate: 28 Supervisor-, 1975 Unit- und 13 Integrationstests bestanden;
+drei optionale Integration-Livetests übersprungen. Builds ohne Warnungen/Fehler.
+Vormittags Betriebsdiagnose gegen Einzelabfragen von Bezirkszentrum und zwei
+Sägewerken: workingHours=true, keine Feierabend-Hinweise, Werte identisch.
+
+Ein Lodge-Auftrag mit Zugangsweg, native Vorschau pilotEligible und wiederhergestellt,
+sechs Stunden festes Bauzeitfenster ab 14:28. Frische Anfangsdiagnose:
+materials_not_ready und constructionCenterWorkingHours=true. Nach Lieferung
+12/12 Holz, aktive unpausierte erreichbare Baustelle, Baufortschritt noch null.
+Bei Feierabend construction_center_outside_working_hours mit Quell-ID und
+district_center_workplace_component; Compact und Full erhalten den Beleg und
+wait_for_construction_working_hours samt verständlicher Erklärung.
+Betriebsdiagnose für Zentrum und beide Sägewerke: outside_working_hours mit
+Feierabend-Text; alle drei Einzelabfragen stimmen überein. Pause um 20:28
+nach exakt sechs Stunden bestätigt. Historischer game_time_limit bleibt getrennt.
+
+Expliziter Kontrolllauf bis Folgetag 06:00 (9,53125 Spielstunden, 28,19 Sekunden):
+Pause bestätigt, Zentrum/Produzenten wieder workingHours=true, keine
+Feierabend-Hinweise. Baudiagnose Full zeigt ebenfalls true und inzwischen
+beide Teile finished_accessible, keine beobachteten Bestandszugangsverluste.
+Testprojekt freigegeben. Keine Schicht-/Personaländerung, keine Startsperre
+oder automatische Budgetverlängerung. Keine aktiven Aufträge nach Abschluss.
+
+Grenzen: Andere Bauhütten-Schichten nicht aus Bezirkszentrum ableiten;
+unbekannte Arbeitszeiten und widersprüchliche Belege synthetisch im Gate geprüft.
+Der genaue Zeitpunkt der Fertigstellung zwischen Abend und 06:00 wurde nicht
+beobachtet. Der anfängliche true-Beleg und die spätere false-Einzelabfrage lagen
+während laufender Simulation zu verschiedenen Zeiten; die pausierten
+Abend-/Morgengegenproben bestätigen jeweils konsistente aktuelle Werte.
+
+
+## Arbeitszeiten in Betriebs- und Baudiagnose — begrenzt live abgenommen
+
+Die Betriebsdiagnose benennt outside_working_hours ausdrücklich als Feierabend,
+working_hours_unknown als fehlende Beobachtung. Besetzung ist kein Arbeitsbeleg.
+Die frische Baudiagnose (diagnose_large_project bzw. inspect_large_project mit
+diagnose=true) liest die native WorkplaceWorkingHours-Komponente des zum Auftrag
+gehörenden Bezirkszentrums einmal pro Bericht. constructionCenterId,
+constructionCenterWorkingHours und workingHoursSource bleiben in Compact/Full.
+Bei erreichbarer, unpausierter, aktiver und materialbereiter Baustelle mit
+beobachtetem false lautet reason construction_center_outside_working_hours;
+nextStep ist wait_for_construction_working_hours mit konkreter Erklärung.
+Pause, inaktive Baustelle/Stützen, Materialmangel und fehlender Zugang behalten
+Vorrang. Fehlende Komponente bleibt null, ältere Belege ohne Feld bleiben gültig.
+
+Quelle ist ausschließlich das Bezirkszentrum: keine Behauptung gleicher
+Arbeitszeiten anderer Bauhütten, keiner exklusiven Ursache oder garantierten
+Fertigstellung am Morgen. Unbekannte Arbeitszeit niemals aus Uhrzeit erraten.
+Keine Schichtänderung, Personaländerung, Startsperre oder automatische
+Budgetverlängerung. Historische Ledgergründe bleiben historisch; für die
+Arbeitszeitursache frische Diagnose anfordern.
+
+Anwendung: Vor längerem Lauf Arbeitsplatz-Schichtstatus berücksichtigen. Bei
+Feierabend und sonst geklärten Voraussetzungen bewusst ein begrenztes Fenster
+bis zur nächsten Arbeitsphase wählen und Baufortschritt/Pause nachlesen.
+Bei fehlendem Fortschritt während Arbeitszeit Personal, Anmarsch, weitere
+Bauarbeitsplätze und Zugänge gesondert prüfen, nicht erneut Bauaufträge senden.
+
+Im Gate geprüft: Ursache mit Prioritäten, null/true/false, widersprüchlicher
+Beleg/Quelle, Compact-Erhalt sowie Betriebsdiagnose für Zentrum und Produzent.
+Kein Agent-Build/Testlauf. Livepilot bestanden: frische erreichbare materialbereite
+Baustelle am Feierabend und Morgen gegen Einzelabfragen abgeglichen;
+keine zusätzliche Dauer-/Startsperre. Belege und Grenzen siehe Liveabnahme.
+
+
 ## Nachtrag 2026-10-18 — wartende Lodge fertiggestellt
 
 Bei Spielzeit 20:28: Lodge unpausiert, 12/12 Holz an der Baustelle,

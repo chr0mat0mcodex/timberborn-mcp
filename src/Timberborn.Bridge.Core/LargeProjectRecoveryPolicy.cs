@@ -3,11 +3,13 @@ namespace Timberborn.Bridge.Core;
 // Fresh identity observations, never a retry authorization or inferred placement success.
 public static class LargeProjectRecoveryPolicy
 {
-    public static string ConstructionReason(bool? manuallyPaused,bool? isOn,bool? materialsReady,bool unfinishedSupport)
+    public static string ConstructionReason(bool? manuallyPaused,bool? isOn,bool? materialsReady,bool unfinishedSupport,bool? constructionCenterWorkingHours = null)
         => manuallyPaused == true ? "construction_paused"
         : isOn == false && unfinishedSupport ? "waiting_for_support_completion"
         : isOn == false ? "construction_inactive_unknown"
         : materialsReady == false ? "materials_not_ready"
+        : manuallyPaused == false && isOn == true && materialsReady == true && constructionCenterWorkingHours == false
+            ? "construction_center_outside_working_hours"
         : "awaiting_builders_or_work";
 
     // Retain a positive identity observation even after a terminal stop. This is

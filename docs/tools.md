@@ -1,5 +1,13 @@
 # Native MCP-Werkzeuge
 
+
+Arbeitszeitdiagnose erweitert, **Gate und Livepilot bestanden**: Feierabend am beobachteten
+Arbeitsplatz wird konkret benannt. Frische Baudiagnose nutzt den Schichtstatus
+des zuständigen Bezirkszentrums; unbekannte Werte und andere Blockaden bleiben
+getrennt. Kein automatisches Verlängern von Laufbudgets.
+[Vertrag und Pilot](operating-readiness.md).
+
+
 ## Automatische Betriebsdiagnose — begrenzt live abgenommen
 
 | Aufruf/Feld | Bedeutung |

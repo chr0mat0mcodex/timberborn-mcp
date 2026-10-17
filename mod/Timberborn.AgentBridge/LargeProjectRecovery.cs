@@ -4,6 +4,7 @@ using Timberborn.Bridge.Core;
 using Timberborn.BuildingsReachability;
 using Timberborn.TemplateSystem;
 using UnityEngine;
+using Timberborn.WorkSystem;
 
 namespace Timberborn.AgentBridge;
 
@@ -69,6 +70,12 @@ public sealed partial class LargeProjectService
         bool ready = TerminalProject(id) && !busy && !faulted && simulation.PauseSettled;
         bool resolved = observations.Select((o,i) => LargeProjectRecoveryPolicy.Resolved(recorded[i], o)).All(v => v);
         bool repairable = observations.Select((o,i) => LargeProjectRecoveryPolicy.Repairable(recorded[i], o)).All(v => v);
+        // Observe the declared district center only; do not infer other builders' schedules.
+        var center = entities.Entities.SingleOrDefault(e => e.Initialized && !e.Deleted &&
+            e.EntityId.ToString("D") == job.Request.DistrictId);
+        bool? centerWorkingHours = center is not null && center.TryGetComponent<BlockObject>(out var centerBlock) &&
+            centerBlock.IsFinished && !centerBlock.IsPreview && center.TryGetComponent<Workplace>(out _) &&
+            center.TryGetComponent<WorkplaceWorkingHours>(out var hours) ? (bool?)hours.AreWorkingHours : null;
         var reader = new BuildingObservations(entities);
         var geometry = job.Request.Steps.Select(s=>Resolve(s).GetSpec<BlockObjectSpec>().GetBlocks(Placement(s)).ToArray()).ToArray();
         var parts = observations.Select((observed,i) => {
@@ -86,14 +93,16 @@ public sealed partial class LargeProjectService
             string reason = observed switch {
                 "construction_unreachable" => "builders_unreachable",
                 "construction" => LargeProjectRecoveryPolicy.ConstructionReason(manuallyPaused,
-                    (bool?)construction?["isOn"],(bool?)construction?["hasMaterialsToResumeBuilding"],unfinishedSupports.Length>0),
+                    (bool?)construction?["isOn"],(bool?)construction?["hasMaterialsToResumeBuilding"],unfinishedSupports.Length>0,centerWorkingHours),
                 "missing" when recorded[i] is "pending" or "rejected" => "not_ordered",
                 "missing" when recorded[i] == "unconfirmed" => "placement_effect_unconfirmed",
                 "missing" => "previously_observed_object_removed",
                 _ => observed
             };
             return new { index = i, id = ids[i], template = step.Template, position = new { x=step.X,y=step.Y,z=step.Z },
-                recorded = recorded[i], observed, reason, manuallyPaused, unfinishedSupportIndices = unfinishedSupports, construction, availableGoods = available };
+                recorded = recorded[i], observed, reason, manuallyPaused,
+                constructionCenterId = job.Request.DistrictId, constructionCenterWorkingHours = centerWorkingHours,
+                workingHoursSource = "district_center_workplace_component", unfinishedSupportIndices = unfinishedSupports, construction, availableGoods = available };
         }).ToArray();
         return JObject.FromObject(new { actionId=id, state=State(id), released=releasedProjects.Contains(id), currentSpeed=speed.CurrentSpeed,
             closeEligible=ready && resolved, repairEligible=ready && !releasedProjects.Contains(id) && State(id)!="completed" && repairable && others.Length==0,
