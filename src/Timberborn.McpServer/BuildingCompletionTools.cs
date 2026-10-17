@@ -224,7 +224,7 @@ public static class BuildingCompletionTools
         if (retained == false) return Result("configuration_changed", "diagnose");
         if (run is null && Finished() && speed == 0) return Result("finished_accessible", "done");
         if (run is null && r.Advance) {
-            if (a?.BuildersReachable != true && steps[^1].Finished != true || version is not ("0.63.0" or "0.64.0") && (steps[^1].Finished == true || steps.Take(steps.Count - 1).Any(s => s.Finished != true)))
+            if (a?.BuildersReachable != true && steps[^1].Finished != true || version is not ("0.63.0" or "0.64.0" or "0.65.0") && (steps[^1].Finished == true || steps.Take(steps.Count - 1).Any(s => s.Finished != true)))
                 return Result("access_unproven", "diagnose");
             if (speed != 0) return Result("not_paused", "diagnose");
             var start = new NameValueCollection(runQuery) { ["duration"] = r.DurationHours.ToString(CultureInfo.InvariantCulture),

@@ -9,7 +9,7 @@ public sealed record ExplosionWarning(Guid CoreId, Position Core, string State, 
 public sealed record ExplosionChain(Position StoredLiquid, float Contamination, float ObservedLevel,
     string ConnectionChange, int? BeforePass, int AfterPass, Position TargetEntry, Position[] Route,
     bool RouteTruncated, ProtectionCandidate Protection, string ProtectionAssessment,
-    string[] Measures);
+    string[] Measures, BackwaterAssessment? Backwater = null);
 
 // A counterfactual terrain analysis, never an explosion or a fluid simulation.
 public static class ExplosionPlanning
@@ -52,11 +52,11 @@ public static class ExplosionPlanning
                     previous is null?"post_breach_route_before_connection_unresolved":previous.MinimumTerrainPassLevel>route.MinimumTerrainPassLevel?
                         "terrain_pass_lowered":"existing_connection_may_worsen",previous?.MinimumTerrainPassLevel,
                     route.MinimumTerrainPassLevel,h.TargetEntry,route.Path,route.PathTruncated,h.Candidate,assessment,
-                    [assessment=="terrain_route_cut_at_observed_level"?"plan_closure_at_protection_cross_section_before_detonation":
-                        "find_barrier_outside_blast_and_recheck_all_bypasses",
+                    ["do_not_close_cross_section_without_verified_outlet_and_backwater_review",
+                    "find_barrier_outside_blast_and_recheck_all_bypasses",
                     "protect_target_entry_and_isolate_drinking_water_intake",
                     "verify_build_access_materials_and_completion_before_trigger",
-                    "diversion_only_after_verified_safe_outlet_and_backwater_check"]);
+                    "diversion_only_after_verified_safe_outlet_and_backwater_check"],h.Backwater);
             }).OrderByDescending(c=>c.Contamination>0.00001f).ThenByDescending(c=>c.ObservedLevel-c.AfterPass).Take(3).ToArray();
             warnings.Add(new(core.Id,position,chains.Any(c=>c.Contamination>0.00001f)?"badwater_breach_to_target_potential":
                 chains.Length>0?"water_breach_to_target_potential":"no_chain_proven_not_safe",e.Radius,e.Blocked,e.Timing,removed.Count,chains,

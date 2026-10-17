@@ -89,6 +89,14 @@ Schutz anderer Projekte/Systemdateien und nachvollziehbare Git-Checkpoints bleib
 - Auftrag, Fertigstellung, Zugang, Lieferung, Besetzung und Betrieb getrennt
   belegen. Kraftgeometrie, tatsächliche Netzverbindung und Produktion sind
   ebenfalls unterschiedliche Nachweise.
+- Baumaterial ist eine Entscheidungsinformation, keine Startsperre: Vor dem
+  Auftrag Baukosten einschließlich Zugangshilfen, Materialdeckung in Prozent
+  und vorhandene Erzeuger prüfen. Nicht auf vollständige Vorräte warten und
+  keine Mindestdeckung verlangen. Der Agent entscheidet über den Bau; nach
+  dieser Entscheidung sofort regulär beauftragen und Lieferungen während der
+  Bauphase abwarten. Fehlende, blockierte oder unbekannte Produktion benennen,
+  nicht automatisch als Bauverbot behandeln. Geometrie-/Zugangsprüfungen bleiben
+  erforderlich. Berechnung und Ablauf: [Materialprüfung](docs/agent-playing-guide.md#materialdeckung-und-bauentscheidung).
 - Aktuelle Werkzeuggrenzen, Ausführungsmodi und Abnahmeumfänge aus Schema,
   Fähigkeitsbericht und Fachvertrag lesen. Historische Einzelschrittregeln nicht
   auf autonome Chargen übertragen; keine pauschale Freigabe aus Versionsnummern.
@@ -98,7 +106,7 @@ Schutz anderer Projekte/Systemdateien und nachvollziehbare Git-Checkpoints bleib
 - Ziel ist eine funktionierende MCP-Steuerung für Timberborn: Zustandsdaten, Entscheidungsgrundlagen und programmierte Eingriffe implementieren und praktisch prüfen. Analyse nur so weit betreiben, wie sie die nächste sinnvolle Umsetzung oder Fehlerklärung unterstützt.
 - Tatsächliches Spielen ist derzeit nachrangig. Prototypen und Live-Tests dienen gezielt dem Nachweis einer konkreten Fähigkeit oder der Klärung einer Lücke; keinen autonomen Kolonieaufbau als Standard-Fortsetzung betreiben.
 - Ergebnisse knapp festhalten: Funktion, geprüfter Nachweis, relevante Grenze und nächster Schritt. Vorprüfung, Spielvalidierung, Auftrag und Wirkung nicht verwechseln; keine Dokumentation ohne praktischen Nutzen erzeugen.
-- Zustände strukturiert aus dem Spiel abfragen und Interaktionen kontrolliert programmieren. Keine Screenshot-Auswertung oder simulierten Maus-/Tastatureingriffe als Spielsteuerung.
+- Zustände strukturiert aus dem Spiel abfragen und Interaktionen kontrolliert programmieren. Bei einem ausdrücklichen Blickauftrag im Spielkontext (auch allein „schauen“, „SCHAUEN!!!!“, „guck mal“ oder „da wo ich hinschaue“) sofort die aktuelle Ansicht über `capture_screenshot` abrufen und tatsächlich ansehen; keine vorherige Markierung oder zusätzliche Bestätigung verlangen. Bild und Kamerametadaten zur Orientierung nutzen, Baukoordinaten und Eingriffe anschließend strukturiert prüfen. Nur bei verbleibender Mehrdeutigkeit gezielt nachfragen. Keine simulierten Maus-/Tastatureingriffe als Spielsteuerung. Ablauf: [Spielbild](docs/agent-playing-guide.md#optionales-spielbild-ab-0360).
 - Im freigegebenen Umfang selbstständig weiterarbeiten, bis tatsächliche Nutzerhilfe nötig ist. Abhängigkeiten möglichst vermeiden; sinnvolle Abhängigkeiten mit Nutzen/Aufwand/Risiko gegenüber Eigenbau abwägen und vor Aufnahme fragen.
 
 ## Eingriffsgrenzen

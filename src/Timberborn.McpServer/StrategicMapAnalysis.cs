@@ -12,10 +12,14 @@ public sealed record ProtectionCandidate(Position At, Position[] NearbyTerrainBa
 public sealed record ProtectionCell(Position At, int HeightToCrest);
 public sealed record StrategicHazards(string State, int AssessedWetNodes, int PotentialInflowNodes,
     int ContaminatedPotentialInflowNodes, int FloodedTargetNodes, int RepresentedPotentialInflowNodes,
-    string NextAction, StrategicHazard[] Priorities, string[]? CommonMeasures = null, string[]? CommonUnresolved = null);
+    string NextAction, StrategicHazard[] Priorities, string[]? CommonMeasures = null, string[]? CommonUnresolved = null,
+    int ContaminatedTargetNodes = 0);
+public sealed record BackwaterAssessment(string State, bool ClosureRecommended, float? ReviewLevel,
+    bool? TargetReachableBelowCrest, int? ReachableBoundaryNodes, string OutletEvidence, string[] RequiredChecks);
 public sealed record StrategicHazard(Position Origin, string Priority, string Evidence, float ObservedLevel,
     float HeadAboveTargetAndPass, int MinimumTerrainPassLevel, float Contamination, bool Covered, Position TargetEntry,
-    ProtectionCandidate Candidate, string ClosureAssessment, string[] Measures, string[] Unresolved);
+    ProtectionCandidate Candidate, string ClosureAssessment, string[] Measures, string[] Unresolved,
+    BackwaterAssessment? Backwater = null);
 public sealed record StrategicAnalysis(string State, int VoidNodes, int ConnectedVoidNodes, int CoveredColumns,
     int CaveColumns, int TargetVoidNodes, int CandidateCount, TerrainRoute[] Corridors, Position[] HigherGround,
     string[] Limitations, StrategicHazards? Hazards = null, ReservoirOptions? Terraforming = null,
@@ -118,16 +122,19 @@ public static class StrategicMapAnalysis
         int contaminated = candidates.Count(i => Threat(i) && nodes[i].Span.Contamination>0.00001f);
         int flooded = Enumerable.Range(0,nodes.Count).Count(i => InTarget(nodes[i]) && nodes[i].Span.Bottom<=target.Z &&
             target.Z<nodes[i].Span.Top && nodes[i].Span.WaterDepth>0.01f && nodes[i].Span.Bottom+nodes[i].Span.WaterDepth>target.Z+0.01f);
+        int contaminatedTarget = nodes.Count(n => InTarget(n) && n.Span.WaterDepth>0.01f &&
+            n.Span.Bottom+n.Span.WaterDepth>target.Z+0.01f && n.Span.Contamination>0.00001f);
         var priorities = selected.Select((id,index)=>(id,index)).Where(p=>Threat(p.id)).Select(p=>Hazard(p.id,routes[p.index])).ToArray();
-        var hazards = new StrategicHazards(flooded>0?"target_water_observed":threatened>0?"potential_inflow_requires_action":"no_current_head_exceedance_not_safe",
+        var hazards = new StrategicHazards(contaminatedTarget>0?"target_badwater_observed":flooded>0?"target_water_observed":threatened>0?"potential_inflow_requires_action":"no_current_head_exceedance_not_safe",
             wet,threatened,contaminated,flooded,priorities.Length,
-            flooded>0?"inspect_affected_supply_and_access_then_plan_protection":threatened>0?"inspect_priority_closures_and_plan_protection_before_expansion":"monitor_stored_water_sources_weather_and_terrain_changes",priorities);
+            flooded>0?"inspect_affected_supply_and_access_then_plan_protection":threatened>0?"review_outlet_backwater_and_supply_before_any_closure":"monitor_stored_water_sources_weather_and_terrain_changes",priorities,
+            ContaminatedTargetNodes:contaminatedTarget);
         var higher = Enumerable.Range(0,nodes.Count).Where(i => distance[i] != int.MaxValue && nodes[i].Span.Top == size.Z &&
                 nodes[i].Span.Bottom > Math.Max(target.Z, scenarioLevel ?? target.Z) && nodes[i].Span.WaterDepth <= 0.01f)
             .OrderBy(i => Math.Abs(nodes[i].X-target.X)+Math.Abs(nodes[i].Y-target.Y))
             .GroupBy(i => (nodes[i].X/8,nodes[i].Y/8)).Select(g => Point(g.First())).Take(8).ToArray();
         var explosions = includeDerived ? ExplosionPlanning.Analyze(size,columns,target,objects ?? [],objectsComplete,ct) : null;
-        if (explosions is { Cores: > 0 }) hazards = hazards with { NextAction="inspect_explosion_chains_and_protect_target_before_detonation" };
+        if (flooded==0 && explosions is { Cores: > 0 }) hazards = hazards with { NextAction="inspect_explosion_chains_and_protect_target_before_detonation" };
         return new("terrain_analysis_complete",nodes.Count,distance.Count(d => d!=int.MaxValue),columns.Count,caves,roots,candidates.Length,routes,higher,Limits,hazards,
             includeDerived ? ReservoirPlanning.Analyze(size,columns,target,objects ?? [],objectsComplete,ct) : null, explosions);
 
@@ -145,16 +152,39 @@ public static class StrategicMapAnalysis
                 "observed_stored_liquid_above_target_and_terrain_pass_not_arrival_forecast",level,Head(start),route.MinimumTerrainPassLevel,route.Contamination,
                 nodes[start].Span.Top<size.Z,route.Path[^1],candidate,closure,
                 ["resurvey_origin_cross_section_and_target_entry",
-                 closure=="terrain_route_cut_at_observed_level"?"plan_barrier_at_candidate_cross_section_with_native_build_validation":"find_alternative_barrier_or_bypass_closure_before_building",
+                 "do_not_close_cross_section_without_verified_outlet_and_backwater_review",
                  "retain_safe_outlet_and_check_backwater_before_closure",
                  "protect_water_food_and_access_at_target_entry",
                  "reobserve_target_and_upstream_after_each_construction_phase"],
                 ["existing_waterworks_unknown", "construction_access_cost_unlock_and_duration_unverified",
                  "other_origins_and_higher_future_levels_not_cut_proven", "no_explosion_countdown_or_arrival_time",
-                 "no_excavation_or_diversion_recommended_without_verified_outlet"]);
+                 "no_excavation_or_diversion_recommended_without_verified_outlet"],Backwater(start,candidate,closure));
+        }
+
+        BackwaterAssessment Backwater(int start, ProtectionCandidate candidate, string closure)
+        {
+            string[] checks=["verify_remaining_outlet_and_capacity_with_continuing_inflow",
+                "inspect_upstream_banks_supply_buildings_and_parallel_spill_routes",
+                "reobserve_each_build_phase_and_keep_emergency_supply"];
+            if(closure is not ("terrain_route_cut_at_observed_level" or "alternate_terrain_route_remains"))
+                return new("candidate_invalid_or_incomplete_backwater_unassessed",false,null,null,null,"unverified",checks);
+            // Stress scenario just below the proposed crest, NOT an equilibrium level,
+            // arrival time or predicted volume. Boundary reachability is not an outlet proof.
+            float reviewLevel=candidate.AssumedBarrierCrest-0.01f;
+            var reach=ReachAfterClosure(start,candidate,reviewLevel);
+            return new(closure=="alternate_terrain_route_remains"?"target_route_already_open":
+                reach.Target?"target_route_reopens_below_barrier_crest":"outlet_capacity_and_upstream_flooding_unverified",
+                false,reviewLevel,reach.Target,reach.Boundary,"terrain_boundary_only_not_verified_outlet",checks);
         }
 
         string CheckClosure(int start, ProtectionCandidate candidate, float level)
+        {
+            var reach=ReachAfterClosure(start,candidate,level);
+            return !reach.OriginOpen?"candidate_intersects_observed_reservoir_relocate_barrier":
+                reach.Target?"alternate_terrain_route_remains":"terrain_route_cut_at_observed_level";
+        }
+
+        (bool OriginOpen, bool Target, int Boundary) ReachAfterClosure(int start, ProtectionCandidate candidate, float level)
         {
             var blocked=candidate.CrossSection.ToDictionary(c=>(c.At.X,c.At.Y),c=>c.At.Z);
             bool Open(int i) => nodes[i].Span.Bottom<level &&
@@ -162,18 +192,20 @@ public static class StrategicMapAnalysis
                   nodes[i].Span.Bottom>=floor && nodes[i].Span.Bottom<candidate.AssumedBarrierCrest);
             // Model a hypothetical solid barrier only. This is not a construction or hydraulic proof.
             var seen=new HashSet<int>(); var pending=new Queue<int>();
-            if(!Open(start)) return "candidate_intersects_observed_reservoir_relocate_barrier";
+            if(!Open(start)) return (false,false,0);
+            bool targetReached=false; int boundary=0;
             seen.Add(start);pending.Enqueue(start);
             while(pending.TryDequeue(out int i))
             {
                 ct.ThrowIfCancellationRequested(); var n=nodes[i];
-                if(InTarget(n) && n.Span.Bottom<=target.Z && target.Z<n.Span.Top) return "alternate_terrain_route_remains";
+                if(InTarget(n)) targetReached=true;
+                if(n.X==0||n.Y==0||n.X==size.X-1||n.Y==size.Y-1) boundary++;
                 foreach(var d in Directions)
                     if(byColumn.TryGetValue((n.X+d.X,n.Y+d.Y),out var others)) foreach(int next in others)
                         if(Open(next) && Math.Max(n.Span.Bottom,nodes[next].Span.Bottom)<Math.Min(n.Span.Top,nodes[next].Span.Top) && seen.Add(next))
                             pending.Enqueue(next);
             }
-            return "terrain_route_cut_at_observed_level";
+            return (true,targetReached,boundary);
         }
 
         Position Point(int i) => new(nodes[i].X,nodes[i].Y,nodes[i].Span.Bottom);

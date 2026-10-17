@@ -58,7 +58,7 @@ public sealed class BuildingQueryTests
     [InlineData(false)][InlineData(true)]
     public async Task BulkIsOneRequestAndCompactOmitsDetailedInventory(bool full)
     {
-        var data=new OperationBatch([new(Id,"observed",Operation()),new(Missing,"not_found",null)],1,[]);
+        var data=new OperationBatch([new(Id,"observed",Operation() with {Water=new(true,true,true,true,0,true,false)}),new(Missing,"not_found",null)],1,[]);
         using var handler=new Reply(data);using var client=new NativeClient(new(8081,new string('a',64)),handler);
         var result=await BuildingQueryTools.Invoke(client,"inspect_building_operations",JsonSerializer.SerializeToElement(new{ids=new[]{Id,Missing},session=Session,detail=full?"full":"compact"}),TestContext.Current.CancellationToken);
         Assert.Equal(1,handler.Calls);Assert.Contains("building-operations?",handler.Url);
@@ -67,6 +67,8 @@ public sealed class BuildingQueryTests
         Assert.False(items[0]!["summary"]!["assessment"]!["productionProven"]!.GetValue<bool>());
         Assert.Equal(full,items[0]!["details"] is not null);
         Assert.Null(items[0]!["summary"]!["inventories"]);
+        Assert.True(items[0]!["summary"]!["water"]!["flooded"]!.GetValue<bool>());
+        Assert.Contains(items[0]!["summary"]!["assessment"]!["blockers"]!.AsArray(),n=>n!.GetValue<string>()=="building_flooded");
     }
     [Theory]
     [InlineData("comma")][InlineData("duplicate")][InlineData("detail")]

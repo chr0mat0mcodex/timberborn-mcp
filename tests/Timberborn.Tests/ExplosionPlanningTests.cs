@@ -74,6 +74,8 @@ public sealed class ExplosionPlanningTests
         var chain=compact["analysis"]!["explosions"]!["priorities"]![0]!["chains"]![0]!;
         Assert.NotNull(chain["storedLiquid"]); Assert.NotNull(chain["targetEntry"]);
         Assert.NotNull(chain["protection"]!["at"]); Assert.NotNull(chain["measures"]);
+        Assert.NotNull(chain["backwater"]);
+        Assert.False(chain["backwater"]!["closureRecommended"]!.GetValue<bool>());
         Assert.Null(chain["route"]);
         Assert.NotNull(full["analysis"]!["explosions"]!["priorities"]![0]!["chains"]![0]!["route"]);
     }

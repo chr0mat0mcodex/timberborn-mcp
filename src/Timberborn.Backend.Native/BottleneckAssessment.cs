@@ -7,7 +7,7 @@ public static class BottleneckAssessment
 {
     public static BottleneckFinding[] Read(NativeOperation d)
     {
-        var findings=new List<BottleneckFinding>();
+        var findings=new List<BottleneckFinding>(WaterOperationAssessment.Read(d));
         void Add(string area,string code,string severity,string step,string? good=null)=>findings.Add(new(area,code,severity,good,step));
         var e=d.Bottleneck;
         if(e is null||e.State!="observed") {

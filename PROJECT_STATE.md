@@ -1,5 +1,43 @@
 # Projektstand
 
+## Agentenregel: Materialdeckung statt Vorratswartepflicht
+
+Auf Nutzerauftrag gilt: Kosten des gesamten Bauplans, Deckung je Gut und insgesamt
+sowie vorhandene Erzeuger prüfen; keine Mindestdeckung als Startsperre. Der Agent
+entscheidet, beauftragt und verfolgt Lieferungen während der Bauphase.
+AGENTS, Spielanleitung, lokaler Skillentwurf und Chargenanleitung aktualisiert;
+veraltete Material-Stopptexte ersetzt. Bestehender Struktur-Baupfad unterstützt
+Aufträge ohne vollständigen Vorrat bereits. Reine Anleitungskorrektur, keine
+neue API, kein Versionssprung und kein neuer Build-/Livetest behauptet.
+
+## 0.65.0 — begrenzt live abgenommen am 17. Oktober 2026
+
+Wasserbauwarnungen verlangen Abfluss-/Rückstauprüfung auch bei geometrischem
+Schnitt; Gegenprobe unter Sperrkrone, kontaminiertes Zielwasser und Versorgungsvorrang.
+Pumpendiagnose liest native Überflutung, Ansaugwasser/-kontamination und Rohrblockade
+auch bei Pause. [Umfang, Regressionen und Pilot](docs/releases/0.65.0.md).
+Nach menschlicher Meldung `live bereit` Bridge 0.65.0 verbunden. Trockene
+Ansaugung vor Personal/Pause diagnostiziert; vollständiger Kartenscan bestätigt
+Rückstaupflicht und identische Compact-/Full-Befunde. Kontrollpumpe eigenständig
+gebaut, zugänglich und mit einem nativen Produktionszyklus nachgewiesen.
+Nasse Ansaugung mit geringer Kontamination und positives kontaminiertes Testziel
+ebenfalls beobachtet. Überflutungs-Positivfall inzwischen bestätigt, auch bei
+Gebäudepause und ausschließlich sichtbarem Pausenstatus. Höhere Ersatzpumpe
+nicht überflutet; native Produktionszyklen nach Aktivierung nachgewiesen.
+Gate-CLI: sechs Phasen mit Abschlusszähler, Phasen-/Gesamtlaufzeiten und
+Ergebnisliste; harter Spielstopp ohne Speichern vor den Tests. Laufzeitprüfung
+der Anzeige wurde nicht separat beobachtet.
+Spielanleitung, Tool-Doku, strategischer Fachvertrag und lokaler Hermes-Skillentwurf
+aktualisiert; Skill bleibt zurückgestellt. Fremde Starteränderungen erhalten.
+Backend nach Freigabe gestartet. Wetterpilot für Nutzerauftrag unterbrochen:
+dreiteilige Deichsperre an oberer Klippenrinne samt Höhenzugang beauftragt.
+Frische Diagnose bestätigt alle 30 Teile fertig und zugänglich, keine verlorenen
+Bestandsanschlüsse. Drei Deichblöcke schließen die Rinne; sicherer Abfluss und
+Schutzwirkung bei künftigem Hochwasser bleiben ungeprüft. Ersatzpumpe lieferte
+22 native Zyklen in zwölf Spielstunden. Endpause bestätigt, Wasserbestand 87,
+acht Erwachsene und keine Kinder. Releaseabschluss mit Quell-/Diffprüfung;
+Livegrenzen und Folgefehler im Releasebericht und Backlog dokumentiert.
+
 ## 0.64.0 — begrenzt live abgenommen am 17. Oktober 2026
 
 Bauphasen getrennt von Identitätsverlust (`awaiting_access`), positive

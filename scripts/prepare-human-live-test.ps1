@@ -7,10 +7,14 @@ param(
 
 $ErrorActionPreference = 'Stop'
 . "$PSScriptRoot/cli-output.ps1"
-$preparationWatch = [Diagnostics.Stopwatch]::StartNew()
-$preparationPhase = 'Vorbereitung'
-Write-Host "`nTIMBERBORN  |  Live-Test vorbereiten" -ForegroundColor Cyan
-Write-Host 'Tests > Paket > Installation > Prüfung > Spielstart  |  Abbruch beim ersten Fehler' -ForegroundColor DarkGray
+$gateDisplay = New-TimberbornGateDisplay @(
+    'Spiel und MCP stoppen / Umgebung prüfen',
+    'Tests und Release-Build',
+    'Native Bridge und Paket',
+    'Mod sichern und installieren',
+    'Installierte Dateien prüfen',
+    'Timberborn starten'
+)
 
 function Get-NormalizedPath([string]$Path, [string]$Label) {
     if (-not (Test-Path -LiteralPath $Path -PathType Container)) { throw "$Label existiert nicht: $Path" }
@@ -27,6 +31,27 @@ function Assert-SameFile([string]$Expected, [string]$Actual) {
     if ((Get-FileHash -LiteralPath $Expected -Algorithm SHA256).Hash -ne (Get-FileHash -LiteralPath $Actual -Algorithm SHA256).Hash) {
         throw "Paketprüfung fehlgeschlagen: $(Split-Path -Leaf $Expected)"
     }
+}
+
+function Stop-TimberbornGame {
+    $processes = @(Get-Process -ErrorAction Stop | Where-Object ProcessName -EQ 'Timberborn')
+    if ($processes.Count -eq 0) {
+        Write-TimberbornStatus 'OK' 'Timberborn ist bereits beendet.'
+        return
+    }
+    Write-TimberbornStatus 'INFO' "Timberborn.exe hart beenden, ohne Speichern ($($processes.Count) Prozess(e))."
+    foreach ($process in $processes) {
+        try {
+            if (-not $process.HasExited) { Stop-Process -InputObject $process -Force -ErrorAction Stop }
+        } catch {
+            if (-not $process.HasExited) { throw }
+        }
+        if (-not $process.WaitForExit(5000)) { throw 'Timberborn wurde nicht innerhalb von 5 Sekunden beendet. Kein Build gestartet.' }
+    }
+    if (@(Get-Process -ErrorAction Stop | Where-Object ProcessName -EQ 'Timberborn').Count -gt 0) {
+        throw 'Timberborn läuft weiterhin oder wurde erneut gestartet. Kein Build gestartet.'
+    }
+    Write-TimberbornStatus 'OK' 'Timberborn ohne Speichern beendet.'
 }
 
 function Stop-LocalMcpServers([string]$WorkspaceRoot) {
@@ -57,9 +82,8 @@ function Stop-LocalMcpServers([string]$WorkspaceRoot) {
 . "$PSScriptRoot/environment.ps1"
 Push-Location $taskRoot
 try {
-    if (@(Get-Process -Name 'Timberborn*' -ErrorAction SilentlyContinue).Count -gt 0) {
-        throw 'Timberborn läuft noch. Spiel vollständig beenden und dieses Skript erneut starten.'
-    }
+    Start-TimberbornGatePhase $gateDisplay 0
+    Stop-TimberbornGame
     Stop-LocalMcpServers $taskRoot
     $managedDir = Get-NormalizedPath $TimberbornManagedDir 'Timberborn Managed-Verzeichnis'
     $gameDir = Split-Path (Split-Path $managedDir -Parent) -Parent
@@ -68,12 +92,12 @@ try {
     $modsDir = Get-NormalizedPath $ModsRoot 'Mods-Verzeichnis'
     $targetDir = Join-Path $modsDir 'TimberbornAgentBridge'
     Assert-ChildPath $targetDir $modsDir 'Zielordner'
+    Complete-TimberbornGatePhase $gateDisplay
 
-    $preparationPhase = '1/4 Tests und Build'
-    Write-Host "`n$preparationPhase" -ForegroundColor Cyan
+    Start-TimberbornGatePhase $gateDisplay 1
     & "$PSScriptRoot/verify.ps1"
-    $preparationPhase = '2/4 Native Bridge paketieren'
-    Write-Host "`n$preparationPhase" -ForegroundColor Cyan
+    Complete-TimberbornGatePhase $gateDisplay
+    Start-TimberbornGatePhase $gateDisplay 2
     & "$PSScriptRoot/build-native-bridge.ps1" -TimberbornManagedDir $managedDir -Port $Port
 
     $packageRoot = Get-ChildItem -LiteralPath (Join-Path $taskRoot '.local/packages') -Directory -Filter 'agent-bridge-*' | Sort-Object LastWriteTimeUtc -Descending | Select-Object -First 1
@@ -83,6 +107,8 @@ try {
     foreach ($file in $packageFiles) {
         if (-not (Test-Path -LiteralPath (Join-Path $sourceDir $file) -PathType Leaf)) { throw "Paketdatei fehlt: $file" }
     }
+    Complete-TimberbornGatePhase $gateDisplay
+    Start-TimberbornGatePhase $gateDisplay 3
 
     $previousConfig = $null
     if (Test-Path -LiteralPath $targetDir -PathType Container) {
@@ -100,8 +126,6 @@ try {
     $previousInstall = Join-Path $backupRoot 'TimberbornAgentBridge'
     $installationStarted = $false
     try {
-        $preparationPhase = '3/4 Mod sichern und installieren'
-        Write-Host "`n$preparationPhase" -ForegroundColor Cyan
         New-Item -ItemType Directory -Path $stagingDir | Out-Null
         Copy-Item -LiteralPath $sourceDir -Destination $stagingDir -Recurse
         $stagedModDir = Join-Path $stagingDir 'TimberbornAgentBridge'
@@ -110,27 +134,36 @@ try {
         if (Test-Path -LiteralPath $targetDir -PathType Container) { Move-Item -LiteralPath $targetDir -Destination $previousInstall }
         $installationStarted = $true
         Move-Item -LiteralPath $stagedModDir -Destination $targetDir
-        $preparationPhase = '4/4 Installierte Dateien prüfen'
-        Write-Host "`n$preparationPhase" -ForegroundColor Cyan
-        foreach ($file in $packageFiles) { Assert-SameFile (Join-Path $sourceDir $file) (Join-Path $targetDir $file) }
+        Complete-TimberbornGatePhase $gateDisplay
+        Start-TimberbornGatePhase $gateDisplay 4
+        $verifiedFiles = 0
+        foreach ($file in $packageFiles) {
+            Assert-SameFile (Join-Path $sourceDir $file) (Join-Path $targetDir $file)
+            $verifiedFiles++
+            Write-TimberbornStatus 'SHA256' ("{0}/{1}  {2}" -f $verifiedFiles, $packageFiles.Count, $file) Green
+        }
     } catch {
         if ($installationStarted -and (Test-Path -LiteralPath $previousInstall -PathType Container)) {
             if (Test-Path -LiteralPath $targetDir -PathType Container) { Remove-Item -LiteralPath $targetDir -Recurse -Force }
             Move-Item -LiteralPath $previousInstall -Destination $targetDir
+            Write-TimberbornStatus 'ROLLBACK' 'Vorherige Mod-Installation wiederhergestellt.' Yellow
         }
         throw
     } finally {
         if (Test-Path -LiteralPath $stagingDir -PathType Container) { Remove-Item -LiteralPath $stagingDir -Recurse -Force }
     }
-    Write-Host ''
-    Write-TimberbornStatus 'BEREIT' ("Tests bestanden, Mod installiert, {0} Dateien geprüft. Gesamt: {1:n1} s" -f $packageFiles.Count, $preparationWatch.Elapsed.TotalSeconds) Green
+    Complete-TimberbornGatePhase $gateDisplay
     if (Test-Path -LiteralPath $previousInstall) { Write-Host "  Sicherung: $previousInstall" -ForegroundColor DarkGray }
-    $preparationPhase = 'Spielstart (Tests und Installation bereits erfolgreich)'
+    Start-TimberbornGatePhase $gateDisplay 5
     Start-Process -FilePath $gameExe -WorkingDirectory $gameDir -ErrorAction Stop
     Write-TimberbornStatus 'OK' 'Timberborn-Start angefordert.'
+    Complete-TimberbornGatePhase $gateDisplay
+    Write-TimberbornGateSummary $gateDisplay
+    Write-Host '  Tests bestanden. Mod installiert und geprüft. Start angefordert.' -ForegroundColor Green
     Write-Host '  Jetzt Spielstand laden und "live bereit" schreiben.' -ForegroundColor Cyan
 } catch {
-    Write-Host ''
-    Write-TimberbornStatus 'ABGEBROCHEN' ("{0} nach {1:n1} s. Kein automatischer Neustart." -f $preparationPhase, $preparationWatch.Elapsed.TotalSeconds) Red
+    Write-TimberbornGateSummary $gateDisplay -Failed
+    Write-TimberbornStatus 'FEHLER' $_.Exception.Message Red
+    Write-Host '  OFFEN = nicht ausgeführt. Keine automatische Wiederholung.' -ForegroundColor Yellow
     throw
 } finally { Pop-Location }

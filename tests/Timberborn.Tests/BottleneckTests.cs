@@ -29,7 +29,8 @@ public sealed class BottleneckTests
     private static NativeOperation Operation(GoodFlowEvidence? flow=null)=>new(Id,"SyntheticFactory.IronTeeth",true,false,
         new(1,2,2,true,false,true),new(true,"SyntheticRecipe",false,false,true,false,true,0),[],[],[],
         new(true,true,true,true,50,100,true),Bottleneck:new(){State="observed",DistrictConnected=true,EntranceBlocked=false,
-            Complete=true,CandidateBuildings=1,InspectedBuildings=1,Goods=[flow??Flow()]});
+            Complete=true,CandidateBuildings=1,InspectedBuildings=1,Goods=[flow??Flow()]},
+            Water:new(false,null,false,null,null,false,null));
     private static BuildingQueryRequest Request(int count)=>BuildingQueryRequest.Parse("/agent-api/v1/building-operations",new(){
         ["session"]=Session,["ids"]=string.Join(",",Enumerable.Range(1,count).Select(n=>$"{n:D8}-0000-0000-0000-000000000001")),["diagnose"]="true"});
 

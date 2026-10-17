@@ -5,6 +5,50 @@ description: Timberborn über die vorhandene Hermes-MCP-Verbindung steuern; Test
 
 # Timberborn in Hermes
 
+## Bauentscheidung trotz fehlender Materialien
+
+Nicht auf volle Materialvorräte warten. Kosten des gesamten Plans einschließlich
+Zugangshilfen je Gut summieren, verfügbare Bestände lesen und vorhandene Erzeuger
+samt aktuellem Zustand prüfen. Je Gut Deckung = 100 × min(Bestand, Bedarf) / Bedarf;
+gesamt = 100 × Summe der je Gut gedeckten Mengen / Summe des Bedarfs. Kostenfrei
+bedeutet 100 Prozent; unbekannte Bestände nicht als null oder vollständig werten.
+Rezeptdefinitionen sind keine vorhandenen Erzeuger; vorhanden/betriebsbereit/
+produktiv unterscheiden, auch Holzgewinnung prüfen. Fehlende oder blockierte
+Produktion melden, keine Mindestquote oder automatische Material-Bausperre.
+Der Agent entscheidet und beauftragt nach positiver Entscheidung sofort regulär.
+Lieferungen kommen während des Baus; begrenzte Zeitfenster und frische Diagnose
+verwenden, nach Zeitlimit keine erneute Platzierung. Geometrie und Zugang bleiben
+Pflichtprüfungen. Vollständiger Ablauf: `docs/agent-playing-guide.md`, Abschnitt
+„Materialdeckung und Bauentscheidung“. Keine neue API oder Installation nötig.
+
+## Blickauftrag: sofort Spielbild ansehen
+
+Im Spielkontext bedeuten auch allein „schauen“, „SCHAUEN!!!!“, „schau mal“,
+„guck mal“, „Screenshot jetzt“, „ich schau genau drauf“ und „da wo ich hinschaue“:
+aktuelle Session ermitteln, `capture_screenshot` einmal aufrufen und den
+Bildblock tatsächlich ansehen. Großschreibung und offensichtliche Tippfehler
+ändern den Auftrag nicht. Keine Markierung oder zusätzliche Bestätigung vor
+dem Bildabruf verlangen. Bild und Kamerametadaten zur Orientierung nutzen;
+Baupositionen und Eingriffe weiterhin strukturiert prüfen. Erst bei verbleibender
+Mehrdeutigkeit nachfragen. „Schau in den Code“ löst keinen Screenshot aus.
+Kamera unverändert lassen, keine Bilddatei/-historie speichern. Bei
+`screenshot_unavailable` Ursache klären statt automatisch erneut aufzunehmen.
+Details: `docs/agent-playing-guide.md`, Abschnitt „Optionales Spielbild“.
+
+## 0.65 — Wasserwarnungen und Versorgung, begrenzt live abgenommen
+
+`water.flooded` meldet native Überflutung unabhängig von Pause und sichtbarem
+Statustext. `intakeUnderwater`, `intakeContamination` und `intakeBlocked` prüfen;
+null bleibt unbekannt/nicht anwendbar. Überflutung vor zusätzlichem Personal
+beheben; bei Ausfall trockene Ersatzversorgung und zugängliche Vorräte prüfen.
+Kontaminierter Ansaugpunkt ist kein Trinkbarkeits- oder Produktionsnachweis.
+Zielscan: `target_badwater_observed` hat Versorgungsvorrang. `backwater` bleibt
+auch kompakt sichtbar; `closureRecommended=false`. Wieder erreichbarer Weg unter
+Sperrkrone ist Rückstaurisiko, Kartenrandkontakt kein sicherer Auslass. Auch ohne
+Umweg sind Kapazität und Oberliegerüberflutung nicht bewiesen. Keine feste Sperre
+als sichere Notlösung aus gültiger Geometrie ableiten. Details: `docs/releases/0.65.0.md`.
+Dieser lokale Skillentwurf bleibt zurückgestellt und wird nicht installiert.
+
 ## Bauplaner-Korrektur — begrenzt live geprüft
 
 `project_preview_failed` bedeutet Vorschaufehler und unbekannte
@@ -111,8 +155,9 @@ repräsentative Gefahren erscheinen unter `priorities`; weitere bleiben im Zähl
 Pro Gefahr: Ursprung, Pegel, Höhenüberschuss, Kontamination, Zielzutritt sowie
 Schutzquerschnitt und angenommene Krone. `closureAssessment` prüft Dachfreiheit,
 Kartenhöhe, vollständige Ufer und geometrische Umwege bei hypothetischer Sperre.
-Nur `terrain_route_cut_at_observed_level` erlaubt den nächsten Schritt **native
-Bauplanung**, keine direkte Ausführung. Dieser Nachweis betrifft einen Ursprung
+`terrain_route_cut_at_observed_level` ist nur ein geometrischer Schnitt, keine
+Empfehlung zur Sperre. Ab 0.65 zuerst `backwater` und einen
+unabhängig geprüften Abfluss bewerten. Dieser Nachweis betrifft einen Ursprung
 bei beobachtetem Pegel; weitere Zuflüsse, Bauwerke, Rückstau, Bauphasen, Material,
 Forschung, Arbeitszugang und Dauer bleiben zu prüfen. Bei Dachkonflikt, offenem
 Umweg oder unvollständigem Querschnitt einen anderen Sperrpunkt untersuchen.
@@ -148,7 +193,7 @@ Kern ist keine dauerhafte Entwarnung. Unvollständige Daten/Budgets ergeben
 
 Vor Auslösung Schutzquerschnitt und Krone außerhalb des möglichen Sprengbereichs
 prüfen; `protection_inside_possible_blast_relocate` verwirft den Standort.
-Nur bei `terrain_route_cut_at_observed_level` zur nativen Bauplanung übergehen.
+Auch bei `terrain_route_cut_at_observed_level` zuerst Abfluss und Rückstau prüfen; keine Sperrempfehlung allein aus diesem Wert.
 Material, Bauzugang, Fertigstellung vor Auslösung, alternative Rinnen und Rückstau
 prüfen. Zielzutritt/Wasserentnahme absichern; Umleitung erst mit belegtem sicheren
 Auslass. Compact nennt Kern, Wasserherkunft, Zielzutritt, Schutzposition/-höhe und
@@ -289,8 +334,9 @@ aktuell geladenen Werkzeugschema erkennen, nicht allein an der Bridge-Version.
   je Fläche, maximal 64 Ziele insgesamt; gesamte Spielzeitbudgets höchstens 672 h.
   `advance_building_batch` hat waitSeconds 0–45. Ohne Aufrufe läuft nur ein bereits
   gestartetes begrenztes Zeitfenster weiter, kein Hintergrunddispatcher.
-- `regionIndex`/`previousRegions` zeigen Teilflächenwechsel. Materialmangel,
-  unbestätigte Eingriffe oder ausgeschöpfte Räumzeit stoppen die ganze Charge.
+- `regionIndex`/`previousRegions` zeigen Teilflächenwechsel. Unbestätigte
+  Eingriffe oder ausgeschöpfte Räumzeit stoppen die ganze Charge. Materialmangel
+  ist keine Startsperre; Lieferungen nach Auftrag innerhalb der Zeitfenster verfolgen.
   Gleiche batchId ist Status-Replay; geänderte Parameter sind nicht zulässig.
 - `finished_accessible` ist Bau-/Zugangsnachweis, kein Betriebsnachweis.
   `checkpointOnly` bedeutet gespeicherte Beobachtung. Mehrere alternative

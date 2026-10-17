@@ -223,8 +223,9 @@ repräsentative Gefahren erscheinen unter `priorities`; weitere bleiben im Zähl
 Pro Gefahr: Ursprung, Pegel, Höhenüberschuss, Kontamination, Zielzutritt sowie
 Schutzquerschnitt und angenommene Krone. `closureAssessment` prüft Dachfreiheit,
 Kartenhöhe, vollständige Ufer und geometrische Umwege bei hypothetischer Sperre.
-Nur `terrain_route_cut_at_observed_level` erlaubt den nächsten Schritt **native
-Bauplanung**, keine direkte Ausführung. Dieser Nachweis betrifft einen Ursprung
+`terrain_route_cut_at_observed_level` ist nur ein geometrischer Schnitt, keine
+Empfehlung zur Sperre. Ab 0.65 zuerst `backwater` und einen
+unabhängig geprüften Abfluss bewerten. Dieser Nachweis betrifft einen Ursprung
 bei beobachtetem Pegel; weitere Zuflüsse, Bauwerke, Rückstau, Bauphasen, Material,
 Forschung, Arbeitszugang und Dauer bleiben zu prüfen. Bei Dachkonflikt, offenem
 Umweg oder unvollständigem Querschnitt einen anderen Sperrpunkt untersuchen.

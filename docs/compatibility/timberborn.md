@@ -2,6 +2,11 @@
 
 ## Einordnung zum aktuellen Stand
 
+0.65.0: Nach menschlicher Bereitmeldung begrenzter Kernpilot bestanden:
+Wasserwarnungen, native Überflutung auch bei Pause und produktive Pumpenkontrolle.
+Blockiertes Ansaugrohr und höherer Umweg bleiben synthetische Kontrollfälle.
+[API, Regressionen und Livebelege](../releases/0.65.0.md).
+
 0.64.0: menschliches Gate und begrenzter Livepilot am 17. Oktober 2026 bestanden.
 Höhenbau bis Fertigzugang, Pause und Recovery mit Folgeauftrag ohne Reload.
 [Konkrete Belege und Grenzen](../releases/0.64.0.md).

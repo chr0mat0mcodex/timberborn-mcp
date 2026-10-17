@@ -30,9 +30,10 @@ nicht nur Werkzeugaufruf oder erfolgreiche Paketierung.
    `timberborn_server_control(action=stop)` oder `scripts/stop-codex-mcp.ps1`
    ausführen: Backendende und Gatesperre bestätigen. Der Vorschaltprozess bleibt
    verbunden. Kein Spiel-MCP-Aufruf mehr bis `live bereit`. Noch nicht committen.
-3. **Mensch: Test und Deploy.** Bei beendetem Spiel
+3. **Mensch: Test und Deploy.**
    `scripts/prepare-human-live-test.ps1 -TimberbornManagedDir <Managed-Verzeichnis>`
-   ausführen. Das Skript führt die automatischen Tests aus, baut und paketiert die
+   ausführen. Das Skript beendet zuerst `Timberborn.exe` hart ohne Speichern.
+   Danach führt es die automatischen Tests aus, baut und paketiert die
    Bridge, sichert die bisherige Installation, erhält `bridge.local.json`,
    installiert die neue Mod und verifiziert die Paketdateien.
 4. **Mensch: Spiel bereitstellen.** Timberborn starten, einen beliebigen
@@ -68,7 +69,8 @@ und niemals ausgegeben oder versioniert.
 ## Grenzen
 
 - Das Skript wird vom Menschen lokal gestartet, weil es die Mod-Installation
-  verändert. Es bricht ab, wenn ein Timberborn-Prozess läuft.
+  verändert. Es beendet laufende `Timberborn.exe`-Prozesse ohne Speichern und
+  bricht vor den Tests ab, wenn deren Ende nicht bestätigt werden kann.
 - Build, automatische Tests, Paketierung und Installation erfolgen ausschließlich
   im vom menschlichen Entwickler gestarteten Gate. Ein Release-Build als Grundlage
   für Prüfung und Livetest; keine Debug-/Parallelfassung als Ausweichweg.

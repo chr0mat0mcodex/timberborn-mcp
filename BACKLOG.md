@@ -1,5 +1,43 @@
 # Backlog
 
+## 0.65.0 — begrenzt live abgenommen; Folgearbeiten
+
+Rückstauszenario unter Sperrkrone, Abflussunsicherheit und kontaminiertes Zielwasser
+sowie native Flooded-/Ansaugdiagnose implementiert; Bridge nach `live bereit`
+verbunden. Rückstaupflicht und trockene Ansaugung live bestätigt; selbst gebaute
+Kontrollpumpe hat einen nativen Produktionszyklus geliefert. Überflutungsfall
+auch bei Gebäudepause positiv bestätigt; höhere Ersatzpumpe produziert.
+[Nachweisplan und Grenzen](docs/releases/0.65.0.md). Kein vollständiges Hydraulikmodell.
+Reserve-/Gefahrenstopps, Abflusskapazität und automatische sichere Umleitung bleiben
+offen. Learnings: Kartenrandkontakt ist kein Auslassbeleg; Pause kann UI-Flutstatus
+verdecken; natives Flooded vor Umverteilung von Versorgungsarbeitern prüfen.
+
+Neue konkrete Befunde aus dem 0.65-Pilot:
+- **P1 Notstopp während Statuswarten:** Der Vorschaltprozess serialisiert
+  MCP-Aufrufe. Ein laufendes `inspect_simulation_run(waitSeconds=30)` blockiert
+  auch Cancel mit `not_executed`. Nach Ende des Leseaufrufs funktionierte Cancel
+  samt Pause. Unterbrechbares Statuswarten oder priorisierten Cancel-Pfad prüfen;
+  bis dahin Spiel-MCP seriell und bei Nutzersteuerung kurze Wartefenster nutzen.
+- **P1 Zugangssuche/Geometrie:** `plan_large_project_access` verwirft eine
+  Uferpumpe wegen Terrainüberschneidung. Dieselbe Position besteht native
+  Einzel- und Gesamtvorschau und ist anschließend regulär fertiggebaut und
+  produktiv. `SpatialObservations` hat denselben pauschalen Terraincheck.
+  Native Belegungsregeln leerer/optionaler Pumpenzellen prüfen; keine pauschale
+  Lockerung für echte Hindernisse. Eine Ebene höher erzeugt die Suche unnötige
+  Plattformen. Kontrollfall für nächsten Fix: gültige Uferpumpe plus echte
+  Terrainkollision, Objektkollision und nachgewiesener Bau-/Betriebszugang.
+- **P1 Lauf-Fehlerweitergabe:** Starts meldeten generisch
+  `state_conflict`/`unconfirmed`, danach `run_not_found`. Ein späterer Fall zeigte
+  frisch Tempo 7 statt erwartetem Tempo 0. Batchbesitz ist als Ursache des
+  früheren Falls nicht bewiesen; terminale Chargen geben ihren Besitzer frei.
+  Frühe Ablehnung von unbestätigtem Transport trennen und konkreten Tempo-,
+  Sperr- oder Besitzerkonflikt nennen. Nach frischer Diagnose eine neue Aktion
+  planen, unbestätigte Starts nicht blind wiederholen.
+- **Baukosten und Abschluss:** Höhenzugang benötigte zwölf Plattformen und
+  drei Treppen. Materialbedarf samt Produktionszeit vor dem Auftrag anzeigen.
+  Nach abgelaufenem Bauzeitfenster frische `diagnose_large_project` verwenden;
+  eingefrorene Chargenzähler zeigen spätere Fertigstellung nicht.
+
 ## Fehler aus dem Überlebenslauf — Stand nach 0.64.0
 
 Die drei P0-Korrekturen sind in [0.64.0](docs/releases/0.64.0.md) begrenzt live

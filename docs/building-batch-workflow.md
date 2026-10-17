@@ -77,8 +77,11 @@ Nach ausdrücklichem Go implementiert: Basisfläche plus optional additionalRegi
 mit bis zu drei weiteren Rechtecken (x/y/z/width/height, jeweils maximal 8×8).
 Feste Listenreihenfolge, kein Rücksprung und keine freie Kartensuche. Pro Fläche
 bisherige Planung und optionale Räumung; nur nach fehlendem Kandidaten bzw. fehlender
-räumbarer Vegetation weiter. Offene/unbestätigte Eingriffe, Materialmangel,
+räumbarer Vegetation weiter. Offene/unbestätigte Eingriffe,
 Zugangsfehler oder ausgeschöpftes Räumbudget stoppen die gesamte Charge.
+Aktuelle Materialregel: Fehlende Vorräte verhindern den Auftrag nicht; Deckung
+und Erzeuger prüfen, Agent entscheidet, Lieferungen während des Baus abwarten.
+[Berechnung und Ablauf](agent-playing-guide.md#materialdeckung-und-bauentscheidung).
 
 Ein gemeinsames maxClearTargets (maximal 64), keine Multiplikation je Fläche.
 Worst-Case-Zeitbudget: clearanceHours × Flächenzahl + constructionHours × Gebäude

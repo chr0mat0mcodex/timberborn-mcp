@@ -33,6 +33,10 @@ MCP-Livetest. Keine historische Kolonie oder konkreter Spielstand erforderlich.
 
 ## Aktueller Auftrag
 
+0.65.0: Nach menschlicher Bereitmeldung Kernpilot begrenzt bestanden: Wasser-/
+Rückstauwarnungen, Überflutung bei Pause und produktive Pumpenkontrolle.
+[Livebelege und Grenzen](docs/releases/0.65.0.md).
+
 0.64.0: menschliches Gate und begrenzter Bauphasen-/Pause-/Recovery-Pilot bestanden.
 [Livebelege und Grenzen](docs/releases/0.64.0.md). Keine eigenen Builds/Tests.
 

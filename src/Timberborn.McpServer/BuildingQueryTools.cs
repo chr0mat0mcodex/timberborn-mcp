@@ -10,7 +10,7 @@ using Timberborn.Bridge.Core;
 namespace Timberborn.McpServer;
 
 public sealed record OperationSummary(string Template,bool Finished,bool? Paused,OperationWorkplace? Workplace,
-    OperationManufacturing? Manufacturing,OperationPower? Power,OperationAssessment? Assessment, BottleneckEvidence? Bottleneck=null);
+    OperationManufacturing? Manufacturing,OperationPower? Power,OperationAssessment? Assessment, BottleneckEvidence? Bottleneck=null, OperationWater? Water=null);
 public sealed record OperationViewItem(string Id,string State,OperationSummary? Summary,NativeOperation? Details);
 public sealed record OperationView(OperationViewItem[] Items,int NativeReads,string[] Limitations);
 
@@ -34,7 +34,7 @@ public static class BuildingQueryTools
                 foreach(var key in new[]{"finished","includePaths","productionOnly"})p[key]=new JsonObject{["type"]="boolean"};
             }
             yield return new Tool{Name=batch?"inspect_building_operations":"find_buildings",
-                Description=batch?"Ab 0.39: liest 1–32 eindeutige Gebäude-IDs in einem nativen Request und Spielthread-Durchlauf. Je ID observed oder not_found; fehlend ist keine leere Betriebsbeobachtung. Kompakte Summary enthält Rezept, Personal, Zutatenbereitschaft, Produktplatz, Kraft und Diagnose. detail=full ergänzt Inventare/Statustexte. Keine Rezeptlisten und kein Produktionsbeweis aus Bereitschaft. Aktuelle session nötig.":
+                Description=batch?"Ab 0.39: liest 1–32 eindeutige Gebäude-IDs in einem nativen Request und Spielthread-Durchlauf. Je ID observed oder not_found; fehlend ist keine leere Betriebsbeobachtung. Ab 0.65 enthält water native Überflutung und Ansaugbelege auch kompakt; Überflutung vor Personalmaßnahmen prüfen. Kompakte Summary enthält Rezept, Personal, Zutatenbereitschaft, Produktplatz, Kraft und Diagnose. detail=full ergänzt Inventare/Statustexte. Keine Rezeptlisten und kein Produktionsbeweis aus Bereitschaft. Aktuelle session nötig.":
                     "Ab 0.39: native Gebäudesuche, Filter vor Pagination. Optional exakte template, finished, productionOnly (Manufactory-Komponente), includePaths (standardmäßig false, PathSpec einschließlich Treppen). Optionaler Bereich benötigt x/y/z/width/height/depth gemeinsam und filtert den Objektanker, nicht den Grundriss. GUID-sortiert, maximal 32 Treffer; total/hasMore beziehen sich auf gefilterte Treffer. Standard kompakt; detail=full für geometry mit Eingang/Orientierung/bis 512 Zellen. Kein Zugangs- oder Betriebsnachweis.",
                 InputSchema=JsonSerializer.SerializeToElement(new JsonObject{["type"]="object",["properties"]=p,
                     ["required"]=batch?new JsonArray("ids","session"):new JsonArray("offset","limit"),["additionalProperties"]=false}),
@@ -65,7 +65,7 @@ public static class BuildingQueryTools
         if(!batch)return Wrap(await client.SearchBuildings(r,ct));
         var result=await client.BuildingOperations(r,ct);
         var view=new OperationView(result.Data.Items.Select(i=>new OperationViewItem(i.Id,i.State,
-            i.Operation is {} o?new(o.Template,o.Finished,o.Paused,o.Workplace,o.Manufacturing,o.Power,o.Assessment,o.Bottleneck):null,
+            i.Operation is {} o?new(o.Template,o.Finished,o.Paused,o.Workplace,o.Manufacturing,o.Power,o.Assessment,o.Bottleneck,o.Water):null,
             r.Full?i.Operation:null)).ToArray(),result.Data.NativeReads,result.Data.Limitations);
         return Wrap(new BridgeEnvelope<OperationView>(result.SchemaVersion,result.SessionId,result.ObservedAtUtc,result.BridgeVersion,view));
     }

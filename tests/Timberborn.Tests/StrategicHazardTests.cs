@@ -10,7 +10,7 @@ public sealed class StrategicHazardTests
         Enumerable.Range(0,height).SelectMany(y=>Enumerable.Range(0,width).Select(x=>new StrategicColumn(x,y,spans(x,y)))).ToArray();
 
     [Fact]
-    public void StoredBadwaterWithoutSourceProducesConcreteClosurePlan()
+    public void StoredBadwaterWithoutSourceNeverAuthorizesClosureFromTerrainCut()
     {
         var grid=Grid(7,5,(x,y)=>[new(y==2?x==3?2:1:6,8,x==0&&y==2?3:0,x==0&&y==2?1:0)]);
         var report=StrategicMapAnalysis.Analyze(new(7,5,8),grid,new(6,2,1,1,1),null,TestContext.Current.CancellationToken);
@@ -22,7 +22,11 @@ public sealed class StrategicHazardTests
         Assert.Equal(5,hazard.Candidate.AssumedBarrierCrest);
         Assert.Equal(2f,hazard.HeadAboveTargetAndPass);
         Assert.Equal("terrain_route_cut_at_observed_level",hazard.ClosureAssessment);
-        Assert.Contains("plan_barrier_at_candidate_cross_section_with_native_build_validation",hazard.Measures);
+        Assert.DoesNotContain("plan_barrier_at_candidate_cross_section_with_native_build_validation",hazard.Measures);
+        Assert.Contains("do_not_close_cross_section_without_verified_outlet_and_backwater_review",hazard.Measures);
+        Assert.False(hazard.Backwater!.ClosureRecommended);
+        Assert.True(hazard.Backwater.ReachableBoundaryNodes>0);
+        Assert.Equal("terrain_boundary_only_not_verified_outlet",hazard.Backwater.OutletEvidence);
     }
 
     [Fact]
@@ -44,6 +48,8 @@ public sealed class StrategicHazardTests
         var report=StrategicMapAnalysis.Analyze(new(7,5,8),grid,new(6,2,1,1,1),null,TestContext.Current.CancellationToken);
         var hazard=Assert.Single(Assert.IsType<StrategicHazards>(report.Hazards).Priorities);
         Assert.Equal("blocked_by_cave_roof",hazard.ClosureAssessment);
+        Assert.Equal("candidate_invalid_or_incomplete_backwater_unassessed",hazard.Backwater!.State);
+        Assert.Null(hazard.Backwater.TargetReachableBelowCrest);
         Assert.DoesNotContain("plan_barrier_at_candidate_cross_section_with_native_build_validation",hazard.Measures);
     }
 
@@ -54,6 +60,8 @@ public sealed class StrategicHazardTests
         var report=StrategicMapAnalysis.Analyze(new(7,7,10),grid,new(6,2,1,1,1),null,TestContext.Current.CancellationToken);
         var hazard=Assert.Single(Assert.IsType<StrategicHazards>(report.Hazards).Priorities);
         Assert.Equal("alternate_terrain_route_remains",hazard.ClosureAssessment);
+        Assert.Equal("target_route_already_open",hazard.Backwater!.State);
+        Assert.False(hazard.Backwater.ClosureRecommended);
     }
 
     [Fact]
@@ -64,8 +72,34 @@ public sealed class StrategicHazardTests
         Assert.Equal(0,Assert.IsType<StrategicHazards>(report.Hazards).PotentialInflowNodes);
         grid[2]=new(2,0,[new(0,8,4,1)]);
         report=StrategicMapAnalysis.Analyze(new(3,1,8),grid,new(2,0,3,1,1),null,TestContext.Current.CancellationToken);
-        Assert.Equal("target_water_observed",Assert.IsType<StrategicHazards>(report.Hazards).State);
+        Assert.Equal("target_badwater_observed",Assert.IsType<StrategicHazards>(report.Hazards).State);
         Assert.Equal(1,report.Hazards!.FloodedTargetNodes);
+        Assert.Equal(1,report.Hazards.ContaminatedTargetNodes);
+    }
+
+    [Fact]
+    public void RisingBackwaterCanReachTargetAroundAnInitiallyEffectiveBarrier()
+    {
+        var grid=Grid(7,7,(x,y)=>[new(y==2?x==3?2:1:
+            y==4?3:y==3&&(x==0||x==6)?1:7,10,x==0&&y==2?2:0,x==0&&y==2?1:0)]);
+        var report=StrategicMapAnalysis.Analyze(new(7,7,10),grid,new(6,2,1,1,1),null,TestContext.Current.CancellationToken);
+        var hazard=Assert.Single(report.Hazards!.Priorities);
+        Assert.Equal("terrain_route_cut_at_observed_level",hazard.ClosureAssessment);
+        Assert.Equal("target_route_reopens_below_barrier_crest",hazard.Backwater!.State);
+        Assert.True(hazard.Backwater.TargetReachableBelowCrest);
+        Assert.False(hazard.Backwater.ClosureRecommended);
+        Assert.True(hazard.Backwater.ReviewLevel< hazard.Candidate.AssumedBarrierCrest);
+    }
+
+    [Fact]
+    public void FloodedSupplyTakesPriorityOverAnUnassessedCore()
+    {
+        var grid=Grid(3,1,(x,_)=>[new(0,8,x==2?2:0,0)]);
+        var report=StrategicMapAnalysis.Analyze(new(3,1,8),grid,new(2,0,1,1,1),null,
+            TestContext.Current.CancellationToken,[new(Guid.Parse("11111111-1111-4111-8111-111111111111"),"UnstableCore",0,0,0,"special_or_unknown",true)],true);
+        Assert.Equal("target_water_observed",report.Hazards!.State);
+        Assert.Equal("inspect_affected_supply_and_access_then_plan_protection",report.Hazards.NextAction);
+        Assert.Equal(0,report.Hazards.ContaminatedTargetNodes);
     }
 
     [Fact]

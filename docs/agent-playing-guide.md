@@ -1,5 +1,48 @@
 # Spielanleitung für Agenten
 
+## Materialdeckung und Bauentscheidung
+
+Fehlender Vorrat verhindert keinen Bauauftrag. Vor der Entscheidung einmal
+Materialdeckung und vorhandene Produktion prüfen, dann entscheidet der Agent.
+Keine Mindestquote, kein Warten auf 100 Prozent und keine zusätzliche
+Nutzerbestätigung allein wegen fehlender Baumaterialien. Nach positiver
+Entscheidung die geplante Struktur regulär beauftragen; Lieferung und Fertigbau
+folgen während der Bauphase. Geometrie und Bau-/Bestandszugang weiter prüfen.
+
+- Gesamtkosten aller geplanten Teile einschließlich Wege, Treppen und Plattformen
+  aus aktuellem Baukatalog (`costs`) oder Produktionsgraph ermitteln und je Gut
+  summieren. `inspect_goods` liefert den aktuellen verfügbaren Bestand; alle
+  für diese Güter erforderlichen Seiten lesen. Fehlende Werte bleiben unbekannt.
+- Pro Gut: `Deckung = 100 × min(verfügbarer Bestand, Bedarf) / Bedarf`.
+  Gesamtdeckung: `100 × Summe(min(Bestand je Gut, Bedarf je Gut)) / Summe(Bedarf)`.
+  So kann überschüssiges Holz fehlende Bretter nicht ausgleichen. Nur Güter mit
+  positivem Bedarf zählen; kostenfreier Plan: 100 Prozent, keine Materialien nötig.
+  Ist ein benötigter Bestand unbekannt, keine vollständige Gesamtquote behaupten.
+  Dies ist mengenbezogene Vorratsdeckung, kein Baufortschritt oder Zeitversprechen.
+- Erzeuger über `inspect_production_graph` zuordnen, tatsächlich vorhandene
+  Gebäude mit `find_buildings` prüfen und deren aktuellen Zustand über
+  `inspect_building_operations` lesen. Rezeptdefinition allein ist keine
+  vorhandene Produktion. Für Holz/Sammelgüter auch Erntegebäude und erreichbare
+  markierte Quellen berücksichtigen. Vorhanden, betriebsbereit und tatsächlich
+  produzierend getrennt benennen; für die Bauentscheidung ist kein zusätzlicher
+  Produktionsmesslauf vorgeschrieben. Fehlende/pausierte/blockierte Erzeuger
+  oder unbekannte Daten sind Hinweise für die Entscheidung, keine Startsperre.
+
+Kurzer Entscheidungsbericht, etwa: „Holz 20/40 = 50 %, Bretter 0/10 = 0 %;
+gesamt 40 %. Holzfäller vorhanden, Sägewerk vorhanden und besetzt. Bau beauftragen,
+Material nachliefern lassen.“ Beispielwerte sind keine Livebeobachtung.
+Globale Vorräte sind nicht für das Projekt reserviert und garantieren keine
+Lieferbarkeit. Bei mehreren gleichzeitigen Vorhaben konkurrierenden Bedarf nennen.
+
+Nach Auftrag begrenzte Bauzeitfenster nutzen und tatsächliche Baustellen,
+Materialzufuhr und Versorgung beobachten. Materialmangel rechtfertigt weder
+Abriss noch erneutes Platzieren. Nach Zeitlimit frisch diagnostizieren und bei
+weiterhin sinnvoller Entscheidung zusätzliche Simulationszeit geben, ohne die
+Aufträge zu wiederholen. Eine unveränderte fehlende Produktion nicht durch
+blindes Warten lösen; der Agent entscheidet über Produktionsaufbau oder Umplanung.
+Spätere Vorräte nicht als Restbedarf aus Gesamtkosten zurückrechnen: bereits
+verbaute Materialien und Lieferungen unterwegs sind darin nicht vollständig erfasst.
+
 ## Bauplaner-Korrektur auf 0.63 — begrenzt live geprüft
 
 `project_preview_failed` meldet einen nativen
@@ -73,17 +116,25 @@ Restwasser bleibt auch bei stillstehenden Quellen eine priorisierte Gefahr.
 Die Zähler sind Hohlräume, keine unabhängigen Flutereignisse. Bis zu acht
 repräsentative Gefahren erscheinen unter `priorities`; weitere bleiben im Zähler.
 `target_water_observed` bedeutet bereits beobachtetes Wasser über der Zielhöhe.
+Ab 0.65 unterscheidet `target_badwater_observed` kontaminiertes
+Zielwasser; `contaminatedTargetNodes` zählt die betroffenen Hohlräume. Aktuelle
+Zielüberflutung zuerst auf ausgefallene Versorgung prüfen, dann weitere Kernrisiken.
 `no_current_head_exceedance_not_safe` ist keine Entwarnung für künftige Ereignisse.
 
 Pro Gefahr: Ursprung, Pegel, Höhenüberschuss, Kontamination, Zielzutritt sowie
 Schutzquerschnitt und angenommene Krone. `closureAssessment` prüft Dachfreiheit,
 Kartenhöhe, vollständige Ufer und geometrische Umwege bei hypothetischer Sperre.
-Nur `terrain_route_cut_at_observed_level` erlaubt den nächsten Schritt **native
-Bauplanung**, keine direkte Ausführung. Dieser Nachweis betrifft einen Ursprung
+`terrain_route_cut_at_observed_level` ist nur ein geometrischer Schnitt, keine
+Empfehlung zur Sperre. Ab 0.65 zuerst `backwater` und einen
+unabhängig geprüften Abfluss bewerten. Dieser Nachweis betrifft einen Ursprung
 bei beobachtetem Pegel; weitere Zuflüsse, Bauwerke, Rückstau, Bauphasen, Material,
 Forschung, Arbeitszugang und Dauer bleiben zu prüfen. Bei Dachkonflikt, offenem
 Umweg oder unvollständigem Querschnitt einen anderen Sperrpunkt untersuchen.
 Keinen Abfluss aufgraben, bevor dessen Auslass und Rückwirkungen belegt sind.
+Ab 0.65 bleibt `backwater.closureRecommended=false`. Eine Gegenprobe unter der
+Sperrkrone kann `target_route_reopens_below_barrier_crest` melden. Auch ohne diesen
+Umweg bleiben Abflusskapazität und Rückstau unbewiesen; Randkontakt ist kein
+sicherer Auslass. `reviewLevel` ist ein Szenario, keine Pegelprognose.
 Ein niedriger Szenariopegel verkleinert den Schutzvorschlag für beobachtetes Wasser nicht.
 `overviewOnly=true` liefert weiterhin keine zielbezogene Gefahrenbewertung.
 Explosionszeit, tatsächliche Ereigniswirkung, zukünftige Pegel und Ankunftszeiten bleiben unbekannt.
@@ -115,7 +166,7 @@ Kern ist keine dauerhafte Entwarnung. Unvollständige Daten/Budgets ergeben
 
 Vor Auslösung Schutzquerschnitt und Krone außerhalb des möglichen Sprengbereichs
 prüfen; `protection_inside_possible_blast_relocate` verwirft den Standort.
-Nur bei `terrain_route_cut_at_observed_level` zur nativen Bauplanung übergehen.
+Auch bei `terrain_route_cut_at_observed_level` zuerst Abfluss und Rückstau prüfen; keine Sperrempfehlung allein aus diesem Wert.
 Material, Bauzugang, Fertigstellung vor Auslösung, alternative Rinnen und Rückstau
 prüfen. Zielzutritt/Wasserentnahme absichern; Umleitung erst mit belegtem sicheren
 Auslass. Compact nennt Kern, Wasserherkunft, Zielzutritt, Schutzposition/-höhe und
@@ -226,6 +277,12 @@ Bevölkerung nicht ohne Beleg Hunger oder Durst zuschreiben.
 **Nicht auf scheinbar beruhigende Diagnosen verlassen.** `ready=true` beweist
 weder Wasserförderung noch tatsächlichen Betrieb. Sichtbares `Paused` kann
 `Flooded` verdecken; fehlender Fluttext ist kein Trockenheitsnachweis.
+Ab 0.65 `water.flooded` in der Betriebsdiagnose lesen:
+native Überflutung auch bei Pause. `intakeUnderwater`, `intakeContamination` und
+`intakeBlocked` getrennt prüfen; null bleibt unbekannt/nicht anwendbar. Erst
+Wasserblockaden klären, dann Personal-/Transportmaßnahmen. Kontamination am
+Ansaugpunkt beweist weder Trinkbarkeit noch Förderleistung. Gegenprobe mit
+trockener Kontrollpumpe und realen Zyklen; [Gateumfang](releases/0.65.0.md).
 Bedürfniswarnungen allein sind keine akute Notlage, und gespeicherte Bedürfniswerte
 können trotz bereits ausgefallener Versorgung noch gut aussehen. Bei Warntexten
 mit Platzhaltern keine Frist erfinden. Fehlende Gefahreninformation früh klären.
@@ -856,7 +913,7 @@ Das menschliche Vorbereitungsskript startet seit 0.57 nach erfolgreichen Tests,
 Installation und Paketprüfung Timberborn automatisch. Spielstand laden und
 `live bereit` bleiben menschliche Schritte; der Agent startet das Gate nicht selbst.
 
-Stand: letzter dokumentierter Abschluss Bridge 0.64.0; aktualisiert am 17. Oktober 2026.
+Stand: letzter dokumentierter Abschluss Bridge 0.65.0; aktualisiert am 17. Oktober 2026.
 Diese Anleitung beschreibt die vorhandenen MCP-Fähigkeiten. Aktueller Auftrag
 und Projektregeln stehen in [AGENTS.md](../AGENTS.md) und
 [missionsplan.md](../missionsplan.md); das lokale Spiel ist das freigegebene
@@ -1005,9 +1062,16 @@ keine Wiederholung mit neuer ID ohne Diagnose und geänderte Voraussetzungen.
 
 ## Optionales Spielbild ab 0.36.0
 
-Wenn der Spieler im Chat „schau mal“, „zeig ich dir“ oder sinngemäß darum bittet,
-die aktuelle Ansicht anzusehen: aktuelle Sitzung ermitteln und einmal
-capture_screenshot aufrufen. Der Spieler stellt zuvor Kamera und UI im Spiel
+Ein Blickauftrag im Spielkontext ist ein ausdrücklicher Screenshot-Abruf:
+auch allein „schauen“, „SCHAUEN!!!!“, „schau mal“, „guck mal“, „sieh hin“,
+„Screenshot jetzt“, „ich schau genau drauf“ oder „da wo ich hinschaue“.
+Großschreibung, Ausrufezeichen und offensichtliche Tippfehler ändern den Auftrag
+nicht. Aktuelle Sitzung ermitteln, einmal `capture_screenshot` aufrufen und den
+zurückgegebenen Bildblock tatsächlich ansehen, nicht nur Metadaten lesen.
+Keine vorherige Objektmarkierung, Koordinaten oder zusätzliche Bestätigung
+verlangen. Erst wenn Bild und strukturierter Abgleich das Ziel nicht klären,
+gezielt nachfragen. „Schau in den Code“ ist dagegen kein Spielbildauftrag.
+Der Spieler stellt zuvor Kamera und UI im Spiel
 selbst ein; diese Ansicht unverändert erfassen. Das zurückgegebene Bild ansehen
 und auf den gezeigten Sachverhalt antworten. Die Aufnahme entsteht beim Aufruf,
 nicht rückwirkend beim Absenden der Nachricht. Kein Ingame-Knopf erforderlich.

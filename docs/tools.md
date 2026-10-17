@@ -1,5 +1,15 @@
 # Native MCP-Werkzeuge
 
+## 0.65 — Kernpilot begrenzt bestanden
+
+Zielscan: `backwater` bleibt auch kompakt erhalten; `closureRecommended=false`,
+Kartenrandkontakt kein sicherer Abfluss. `target_badwater_observed` kennzeichnet
+kontaminiertes Wasser über Zielhöhe. Sperrschnitt ist keine Bauempfehlung.
+Betriebsdiagnose ergänzt `water` mit nativer Überflutung auch bei Pause,
+Ansaugwasser/-kontamination und Rohrblockade. Kompakte Mehrfachdiagnose führt
+dieselben Befunde; alte Bridges bleiben unbekannt statt angeblich trocken.
+[Vertrag und Livebelege](releases/0.65.0.md).
+
 ## 0.64 — Gate und begrenzte Liveabnahme bestanden
 
 Großprojektteile können `awaiting_access` melden: Identität bestätigt, fertiges
@@ -559,7 +569,9 @@ Bauchargen antworten standardmäßig kompakt; `details=true` zeigt den Verlauf.
 
 ## capture_screenshot ab 0.36.0 — begrenzt live abgenommen
 
-„Schau mal“ im Chat ist ein ausdrücklicher Abruf: aktuelle Sitzung ermitteln,
+Auch allein „schauen“/„SCHAUEN!!!!“, „guck mal“ oder „da wo ich hinschaue“ im
+Spielkontext ist ein ausdrücklicher Abruf, ohne vorherige Objektmarkierung:
+aktuelle Sitzung ermitteln,
 einmal capture_screenshot aufrufen und das Bild ansehen. Erfasst wird die vom
 Spieler eingestellte Kamera samt UI zum Aufnahmezeitpunkt, ohne Kameraänderung.
 

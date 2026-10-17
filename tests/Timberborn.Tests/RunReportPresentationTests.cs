@@ -58,6 +58,19 @@ public sealed class RunReportPresentationTests
         Assert.Single(compact["buildingProduction"]![0]!["seenBlockers"]!.AsArray());
     }
     [Fact]
+    public void CurrentFloodedStateSurvivesCompactEvenAfterHistoricalProduction()
+    {
+        var full=Report();
+        var operation=full["data"]!["currentBuildingOperations"]!["items"]![0]!["operation"]!;
+        operation["water"]=new JsonObject { ["floodComponentPresent"]=true,["flooded"]=true };
+        operation["assessment"]!["blockers"]=new JsonArray("building_flooded");
+        operation["assessment"]!["findings"]=new JsonArray(new JsonObject { ["code"]="building_flooded" });
+        var compact=ResponsePresentation.Present("inspect_simulation_run",full,false)["data"]!;
+        Assert.True(compact["currentBuildingOperations"]!["items"]![0]!["operation"]!["water"]!["flooded"]!.GetValue<bool>());
+        Assert.Equal(1,compact["buildingProduction"]![0]!["completedCycles"]!.GetValue<int>());
+        Assert.False(compact["currentBuildingOperations"]!["items"]![0]!["operation"]!["assessment"]!["productionProven"]!.GetValue<bool>());
+    }
+    [Fact]
     public void ScienceAndStockTargetsAndNullRatesRemainVisible()
     {
         var r=Report();var data=r["data"]!;var m=data["buildingProduction"]![0]!["measurement"]!;

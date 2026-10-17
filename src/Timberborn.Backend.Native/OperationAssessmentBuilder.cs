@@ -8,6 +8,11 @@ public static class OperationAssessmentBuilder
     {
         var blockers=new List<string>(); var warnings=new List<string>(); var unknown=new List<string>();
         if(!d.Finished) return new(["construction_unfinished"],[],["operation_not_observed"],false);
+        foreach(var finding in WaterOperationAssessment.Read(d)) {
+            if(finding.Severity=="blocker") blockers.Add(finding.Code);
+            else if(finding.Severity=="warning") warnings.Add(finding.Code);
+            else unknown.Add(finding.Code);
+        }
         if(d.Paused==true) blockers.Add("building_paused");
         if(d.Workplace is {} w) {
             if(w.Assigned==0) blockers.Add("no_assigned_workers");

@@ -10,6 +10,8 @@ using Timberborn.TemplateSystem;
 using Timberborn.Workshops;
 using Timberborn.MechanicalSystem;
 using Timberborn.WorkSystem;
+using Timberborn.WaterObjects;
+using Timberborn.WaterBuildings;
 namespace Timberborn.AgentBridge;
 
 public sealed class DiagnosticsObservations(EntityRegistry entities, Timberborn.ResourceCountingSystem.ResourceCountingService resources)
@@ -87,8 +89,19 @@ public sealed class DiagnosticsObservations(EntityRegistry entities, Timberborn.
         }
         var statuses=e.TryGetComponent<StatusSubject>(out var subject)?subject.ActiveStatuses.Where(s=>s.IsActive&&s.IsVisible()).Select(s=>Text(s.StatusDescription)).Distinct().OrderBy(s=>s,StringComparer.Ordinal).ToArray():Array.Empty<string>();
         if(statuses.Length>32)throw new InvalidOperationException("status_limit");
+        object? water=null;
+        if(block.IsFinished) {
+            bool flood=e.TryGetComponent<FloodableObject>(out var floodable);
+            bool input=e.TryGetComponent<WaterInput>(out var intake);
+            bool pipe=e.TryGetComponent<WaterInputPipeCoordinates>(out var coordinates);
+            // Public native state, independent of pause and localized/hidden statuses.
+            water=new { floodComponentPresent=flood, flooded=flood?(bool?)floodable.IsFlooded:null,
+                inputComponentPresent=input, intakeUnderwater=input?(bool?)intake.IsUnderwater:null,
+                intakeContamination=input?(float?)intake.ContaminationPercentage:null,
+                pipeComponentPresent=pipe, intakeBlocked=pipe?(bool?)coordinates.IsBlocked:null };
+        }
         return new {id=e.EntityId.ToString("D"),template=e.GetComponent<TemplateSpec>().TemplateName,finished=block.IsFinished,
-            paused=e.TryGetComponent<PausableBuilding>(out var pause)?(bool?)pause.Paused:null,workplace,manufacturing,statuses,power,
+            paused=e.TryGetComponent<PausableBuilding>(out var pause)?(bool?)pause.Paused:null,workplace,manufacturing,statuses,power,water,
             inventories=block.IsFinished?InventoryObservations.Read(e):null,
             bottleneck=diagnosis?.Read(e).ToWire(),
             limitations=new[]{"null_means_component_or_observation_unavailable","unfinished_buildings_have_no_operating_diagnosis","manufacturing_only_for_native_manufactory_component","ready_not_guaranteed_actual_production","no_job_running_may_mean_off_hours_or_travel","understaffed_not_necessarily_fully_blocked","statuses_are_untrusted_localized_text","not_complete_power_water_resource_or_delivery_diagnosis","inventories_are_enabled_components_on_this_finished_entity_only","global_buffered_output_not_identical_to_pump_stock","capacity_may_be_ignored_by_game_component","unreserved_capacity_is_per_good_not_additive","reservation_is_not_a_delivery_guarantee","no_inventory_owner_attribution_outside_this_entity"}};

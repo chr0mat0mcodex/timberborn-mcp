@@ -112,6 +112,30 @@ public sealed class DiagnosticsTests
         }
         Assert.Equal("backend_incompatible",(await Call("inspect_building_operation",e,new{id=Id,session=Session}))["error"]!["code"]!.GetValue<string>());
     }
+    [Theory]
+    [InlineData("ok")][InlineData("missing")][InlineData("flood_missing")]
+    [InlineData("input_mismatch")][InlineData("contamination_range")][InlineData("pipe_mismatch")]
+    public async Task WaterContractRequiresNativeEvidenceInNewRelease(string defect)
+    {
+        var e=Envelope(Operation() with {Inventories=[],Power=new(false,null,null,null,null,null),
+            Water=new(true,true,true,true,0.5f,true,false)});
+        e["bridgeVersion"]="0.65.0";
+        var data=e["data"]!;
+        switch(defect) {
+            case "missing":data.AsObject().Remove("water");break;
+            case "flood_missing":data["water"]!["flooded"]=null;break;
+            case "input_mismatch":data["water"]!["inputComponentPresent"]=false;break;
+            case "contamination_range":data["water"]!["intakeContamination"]=2;break;
+            case "pipe_mismatch":data["water"]!["intakeBlocked"]=null;break;
+        }
+        var result=await Call("inspect_building_operation",e,new{id=Id,session=Session});
+        if(defect=="ok") {
+            Assert.Equal("ok",result["status"]!.GetValue<string>());
+            Assert.True(result["data"]!["water"]!["flooded"]!.GetValue<bool>());
+            Assert.Contains(result["data"]!["assessment"]!["blockers"]!.AsArray(),n=>n!.GetValue<string>()=="building_flooded");
+        } else Assert.Equal("backend_incompatible",result["error"]!["code"]!.GetValue<string>());
+    }
+
     private sealed class Reply(string body):HttpMessageHandler
     {
         public int Calls{get;private set;}

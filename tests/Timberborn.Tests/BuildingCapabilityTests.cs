@@ -9,11 +9,12 @@ namespace Timberborn.Tests;
 
 public sealed class BuildingCapabilityTests
 {
-    [Fact]
-    public void RecoveryReleaseKeepsKnownCapabilitiesWithoutInventingLiveEvidence()
+    [Theory]
+    [InlineData("0.64.0")][InlineData("0.65.0")]
+    public void RecoveryReleaseKeepsKnownCapabilitiesWithoutInventingLiveEvidence(string version)
     {
         var previous = BuildingCapabilityTools.Describe("0.63.0", "Folktails", true);
-        var current = BuildingCapabilityTools.Describe("0.64.0", "Folktails", true);
+        var current = BuildingCapabilityTools.Describe(version, "Folktails", true);
         Assert.Equal("known", current.ProfileState);
         Assert.Equal(previous.Modes.Select(m => m.Tool), current.Modes.Select(m => m.Tool));
         Assert.False(current.RegularExecutionAllowed);

@@ -28,7 +28,10 @@ public sealed class StrategicScanPresentationTests
         var priorities=data["analysis"]!["hazards"]!["priorities"]!.AsArray();
         var second=priorities[0]!.DeepClone().AsObject();
         second["closureAssessment"]="terrain_route_cut_at_observed_level";
-        second["measures"]![1]="plan_barrier_at_candidate_cross_section_with_native_build_validation";
+        second["measures"]![1]="do_not_close_cross_section_without_verified_outlet_and_backwater_review";
+        second["backwater"]=new JsonObject { ["state"]="target_route_reopens_below_barrier_crest",
+            ["closureRecommended"]=false,["reviewLevel"]=4.99,["targetReachableBelowCrest"]=true,
+            ["reachableBoundaryNodes"]=1,["outletEvidence"]="terrain_boundary_only_not_verified_outlet" };
         priorities.Add(second);
         for(int i=0;i<64;i++) data["tiles"]!.AsArray().Add(new JsonObject{["tile"]=i,["wetColumns"]=20,["caveColumns"]=10});
         return result;
@@ -53,7 +56,9 @@ public sealed class StrategicScanPresentationTests
         Assert.Null(first["candidate"]!["crossSection"]);
         Assert.Contains(hazards["commonMeasures"]!.AsArray(),n=>n!.GetValue<string>()=="resurvey_origin_cross_section_and_target_entry");
         Assert.Contains(first["measures"]!.AsArray(),n=>n!.GetValue<string>()=="find_alternative_barrier_or_bypass_closure_before_building");
-        Assert.Contains(hazards["priorities"]![1]!["measures"]!.AsArray(),n=>n!.GetValue<string>()=="plan_barrier_at_candidate_cross_section_with_native_build_validation");
+        Assert.Contains(hazards["priorities"]![1]!["measures"]!.AsArray(),n=>n!.GetValue<string>()=="do_not_close_cross_section_without_verified_outlet_and_backwater_review");
+        Assert.Equal(raw["data"]!["analysis"]!["hazards"]!["priorities"]![1]!["backwater"]!.ToJsonString(),
+            hazards["priorities"]![1]!["backwater"]!.ToJsonString());
         Assert.Equal(2,hazards["commonUnresolved"]!.AsArray().Count);
         Assert.True(compact.ToJsonString().Length < original.Length * 0.6);
         Assert.Equal(original,raw.ToJsonString());

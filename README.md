@@ -1,5 +1,9 @@
 # Timberborn MCP
 
+**0.65.0 Kernpilot begrenzt bestanden:** Rückstau-/Faulwasserwarnungen und native
+Überflutungs-/Ansaugdiagnose für Pumpen, auch bei Gebäudepause.
+[Livebelege und verbleibende Grenzen](docs/releases/0.65.0.md).
+
 **0.64.0 begrenzt live abgenommen:** Höhenbau bis Fertigzugang,
 stabile Pause und Recovery nach Rückbau mit Folgeauftrag ohne Reload.
 [Nachweise und Grenzen](docs/releases/0.64.0.md).
@@ -125,7 +129,7 @@ Beobachtung und kontrollierte Eingriffe über reguläre Spielservices.
 
 ## Status
 
-Aktueller dokumentierter Abschluss: **0.64.0**. Die folgenden
+Aktueller dokumentierter Abschluss: **0.65.0**. Die folgenden
 Versionsabschnitte sind historische Teilabnahmen, keine parallel aktuellen Stände.
 Offene Fähigkeiten stehen im [Backlog](BACKLOG.md).
 
@@ -266,7 +270,7 @@ Fremdmods und keine Screenshot- oder Eingabesteuerung.
 ## Einstieg
 
 ```powershell
-# Durch den menschlichen Entwickler bei beendetem Spiel ausführen:
+# Durch den menschlichen Entwickler ausführen; beendet Timberborn hart ohne Speichern:
 pwsh -NoProfile -File ./scripts/prepare-human-live-test.ps1 -TimberbornManagedDir '<Spielverzeichnis>/Timberborn_Data/Managed'
 ```
 
