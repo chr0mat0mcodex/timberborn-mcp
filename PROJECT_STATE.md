@@ -1,5 +1,20 @@
 # Projektstand
 
+## 0.74.0 — Gate und gezielter Livetest bestanden
+
+Menschliches Gate: 21 Supervisor-, 1929 Unit- und 13 Integrationstests bestanden, drei optionale
+Integration-Livetests übersprungen. Bridge 0.74.0 in neuer Session bestätigt.
+Materialwarten trotz repairEligible=true empfiehlt check_material_supply.
+Gezielt entfernter Bestandsweg erzeugt zwei belegte Anschlussverluste und
+review_access_repair_plan; Einzelbefund Materialwarten bleibt erhalten.
+Weg regulär wiederhergestellt, Plattform 1/1 fertig und zugänglich; Empfehlung
+review_close_finished_project trotz historischem game_time_limit. Compact/full
+und explizite Watch-Diagnose bestätigt. Beide Journale freigegeben, null
+Bestandsverluste, Tempo 0, kein aktiver Lauf oder ausstehender Tempoauftrag.
+[Livebelege und Grenzen](docs/releases/0.74.0.md). Anleitung, Tool-Doku und
+zurückgestellter Hermes-Skillentwurf mit Livebelegen aktualisiert; kein Skill
+installiert. Keine Agent-Builds/Tests. Version 0.74.0 fachlich abgeschlossen; Git-Sicherung durch den Abschlusscommit.
+
 ## 0.73.0 — Gate und gezielter Livetest bestanden
 
 Menschliches Gate: 21 Supervisor-, 1908 Unit- und 13 Integrationstests bestanden;

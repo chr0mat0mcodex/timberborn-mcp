@@ -106,7 +106,7 @@ public sealed class BridgeMod(Timberborn.CameraSystem.CameraService cameraServic
             screenshots=host.AddComponent<ScreenshotCapture>();
         }
         var data=await screenshots.Capture(request.Screenshot,cameraService);
-        return JsonConvert.SerializeObject(new { schemaVersion=1,sessionId,observedAtUtc=DateTimeOffset.UtcNow,bridgeVersion="0.73.0",data });
+        return JsonConvert.SerializeObject(new { schemaVersion=1,sessionId,observedAtUtc=DateTimeOffset.UtcNow,bridgeVersion="0.74.0",data });
     }
     private string Observe(BridgeRequest request)
     {
@@ -154,7 +154,7 @@ public sealed class BridgeMod(Timberborn.CameraSystem.CameraService cameraServic
             _ => throw new ArgumentException("invalid_request")
         };
         return JsonConvert.SerializeObject(new { schemaVersion = 1, sessionId, observedAtUtc = DateTimeOffset.UtcNow,
-            bridgeVersion = "0.73.0", data });
+            bridgeVersion = "0.74.0", data });
     }
     private object Snapshot()
     {

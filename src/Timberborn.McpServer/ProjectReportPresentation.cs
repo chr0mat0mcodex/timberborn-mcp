@@ -10,6 +10,7 @@ public static class ProjectReportPresentation
     public static void ObserveCurrent(JsonObject data)
     {
         if (data["parts"] is not JsonArray parts || !data.ContainsKey("closeEligible")) return;
+        ProjectRecoveryAdvice.Apply(data, parts);
         int finished = parts.OfType<JsonObject>().Count(p => p["observed"]?.GetValue<string>() == "finished");
         bool complete = parts.Count > 0 && finished == parts.Count;
         data["currentConstruction"] = new JsonObject {
@@ -148,11 +149,11 @@ public static class ProjectReportPresentation
         if (data["released"]?.GetValue<bool>() == true) return "none_project_released";
         if (data["simulation"] is JsonObject sim && sim["pauseConfirmed"]?.GetValue<bool>() != true &&
             data["state"]?.GetValue<string>() != "running") return "inspect_pause_confirmation";
+        if (data["recoveryAdvice"]?["nextStep"]?.GetValue<string>() is { } advice) return advice;
         if (data["currentConstruction"]?["state"]?.GetValue<string>() == "finished_accessible" &&
             data["currentConstruction"]?["existingAccess"]?.GetValue<string>() == "no_observed_losses")
             return data["closeEligible"]?.GetValue<bool>() == true ? "review_close_finished_project" : "inspect_release_conditions";
         if (data["closeEligible"]?.GetValue<bool>() == true) return "review_close_abandons_unissued_parts";
-        if (data["repairEligible"]?.GetValue<bool>() == true) return "review_access_repair_plan";
         return data["state"]?.GetValue<string>() switch {
             "running" or "pausing" => "inspect_existing_project",
             "ready" => "review_manual_advance",

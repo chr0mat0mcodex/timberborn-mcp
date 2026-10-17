@@ -46,7 +46,7 @@ public static class RegionGroupPlanning
         var (request,templates,budget,searchBudget,reserved)=Parse(args);
         var start=await client.Simulation(ct);
         if(start.SessionId!=request.Session)throw new BridgeRejectionException("stale_session");
-        if(start.BridgeVersion is not ("0.51.0" or "0.52.0" or "0.53.0" or "0.54.0" or "0.55.0" or "0.56.0" or "0.57.0" or "0.58.0" or "0.59.0" or "0.60.0" or "0.61.0" or "0.62.0" or "0.63.0" or "0.64.0" or "0.65.0" or "0.66.0" or "0.67.0" or "0.68.0" or "0.69.0" or "0.70.0" or "0.71.0" or "0.72.0" or "0.73.0"))throw new InvalidDataException("group_search_requires_051");
+        if(start.BridgeVersion is not ("0.51.0" or "0.52.0" or "0.53.0" or "0.54.0" or "0.55.0" or "0.56.0" or "0.57.0" or "0.58.0" or "0.59.0" or "0.60.0" or "0.61.0" or "0.62.0" or "0.63.0" or "0.64.0" or "0.65.0" or "0.66.0" or "0.67.0" or "0.68.0" or "0.69.0" or "0.70.0" or "0.71.0" or "0.72.0" or "0.73.0" or "0.74.0"))throw new InvalidDataException("group_search_requires_051");
         if(start.Data.CurrentSpeed!=0)throw new BridgeRejectionException("state_conflict");
         var surveys=new Dictionary<string,RegionSurveyReport>(StringComparer.Ordinal);
         var choices=new Dictionary<string,SurveyCandidate[]>(StringComparer.Ordinal);

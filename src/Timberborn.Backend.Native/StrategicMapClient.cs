@@ -26,7 +26,7 @@ public sealed partial class NativeClient
             throw new ArgumentException("invalid_strategic_map_request");
         var result = await Get<StrategicTile>($"strategic-map?session={id:D}&tile={tile}", ct,
             maxResponseBytes: StrategicMapRequest.MaxResponseBytes);
-        if (result.BridgeVersion is not ("0.62.0" or "0.63.0" or "0.64.0" or "0.65.0" or "0.66.0" or "0.67.0" or "0.68.0" or "0.69.0" or "0.70.0" or "0.71.0" or "0.72.0" or "0.73.0")) throw new InvalidDataException("strategic_map_requires_062");
+        if (result.BridgeVersion is not ("0.62.0" or "0.63.0" or "0.64.0" or "0.65.0" or "0.66.0" or "0.67.0" or "0.68.0" or "0.69.0" or "0.70.0" or "0.71.0" or "0.72.0" or "0.73.0" or "0.74.0")) throw new InvalidDataException("strategic_map_requires_062");
         if (result.SessionId != session) throw new BridgeRejectionException("stale_session");
         ValidateStrategicTile(result.Data, tile);
         return result;

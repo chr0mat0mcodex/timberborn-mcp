@@ -1,5 +1,7 @@
 # Kompatibilität und Nachweise
 
+0.74.0: Menschliches Gate und gezielter Livetest bestanden: Materialwarten, echter Bestandszugangsverlust und fertige Plattform bei historischem Zeitlimit korrekt unterschieden; kein allgemeiner Zugangs-/Betriebsnachweis.
+
 0.73.0: Menschliches Gate und gezielter Livetest für Parameterdiagnose und frischen Fertigbaustand bestanden; Einzelplattform nach historischem Zeitlimit, keine allgemeine Betriebs-/Zugangsgarantie.
 
 **0.72.0 abgeschlossen:** Gate, Laufzeitdiagnosen und vollständiger Plattform-Umwegpilot bestanden: 15/15 Teile fertig und zugänglich, Bestandswege erhalten, Journal freigegeben. [Livebelege](../releases/0.72.0.md).

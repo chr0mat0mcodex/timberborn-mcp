@@ -1,5 +1,33 @@
 # Spielanleitung für Agenten
 
+## 0.74 — Reparaturbedarf statt bloßer Reparaturmöglichkeit (gezielt live bestätigt)
+
+Zahlenformatkorrektur nach erstem Diagnosefehler erneut durch Gate und live
+bestätigt. Materialwarten empfiehlt Versorgung prüfen; zwei gezielt erzeugte
+Bestandsverluste empfehlen Reparaturplanung. Nach Wegwiederherstellung und
+Plattform-Fertigbau empfiehlt die Diagnose Abschluss trotz altem Zeitlimit.
+Compact/full und Watch konsistent, beide Journale freigegeben, Endpause bestätigt.
+Belegter Negativfall: Bestandsweg/Gebäudeeingang; kein separater Livebeleg für
+unzugängliche Baustelle oder unbekannte Identität. Werkzeugfehler ist kein
+Zugangsbefund und keine Freigabe zum erneuten Bauauftrag.
+
+repairEligible bleibt die native technische Möglichkeit, keine Empfehlung.
+Frische Diagnose liefert recoveryAdvice in compact/full und unter watch.diagnosis:
+accessRepairState ist observed_access_problem, unknown,
+deferred_until_support_finished oder no_observed_access_problem. Fehlende
+Identitäts-/Zugangsbelege bleiben unknown; unfertige Stützen erfordern zuerst
+Fertigbau und erneute Beobachtung. no_observed_access_problem ist keine allgemeine
+Zugangsgarantie. Bestandsverluste haben Vorrang vor Materialwarten.
+
+nextStep empfiehlt bei reinem Materialwarten check_material_supply, bei Stützwarten
+wait_for_support_completion, bei Baupause review_construction_pause und sonst
+check_workers_and_work_progress bzw. inspect_construction_inactivity. Fehlender
+Zugang empfiehlt nur bei repairEligible review_access_repair_plan, andernfalls
+inspect_access_repair_conditions. parts[].nextStep erhält den einzelnen Befund,
+accessProblemPartIndices/unknownPartIndices identifizieren betroffene Teile.
+Freigegebene Projekte empfehlen keinen Neubau, laufendes Tempo erst Pausenklärung.
+Keine zusätzlichen Spielabfragen, Aufträge oder Änderung der nativen Freigabe.
+
 ## 0.73 — frischer Fertigbaustand und Parameterdiagnose (gezielt live bestätigt)
 
 Bauchargenfehler enthalten zusätzlich `failure.exceptionKind` und `failure.hResult`

@@ -71,6 +71,6 @@ public sealed class CurrentConstructionTests
         """)!.AsObject();
         ProjectReportPresentation.Compact("diagnose_large_project",d);
         Assert.Equal("lost_or_unknown",d["currentConstruction"]!["existingAccess"]!.GetValue<string>());
-        Assert.Equal("resolve_reported_blockers",d["summary"]!["nextStep"]!.GetValue<string>());
+        Assert.Equal("inspect_access_repair_conditions",d["summary"]!["nextStep"]!.GetValue<string>());
     }
 }

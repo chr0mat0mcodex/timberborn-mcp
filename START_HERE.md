@@ -1,5 +1,7 @@
 # Einstieg
 
+**0.74.0 abgeschlossen:** Materialwarten, echter Bestandszugangsverlust und Fertigbau korrekt unterschieden; Weg wiederhergestellt und Journale freigegeben. [Livebelege](docs/releases/0.74.0.md).
+
 **0.73.0 abgeschlossen:** Gate und Livetest für Parameterdiagnose sowie frischen Fertigbau trotz altem Zeitlimit bestanden. [Livebelege](docs/releases/0.73.0.md).
 
 **0.72.0 abgeschlossen:** Gate, Laufzeitdiagnosen und vollständiger Plattform-Umwegpilot bestanden: 15/15 Teile fertig und zugänglich, Bestandswege erhalten, Journal freigegeben. [Livebelege](docs/releases/0.72.0.md).
