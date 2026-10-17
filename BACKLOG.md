@@ -209,6 +209,8 @@ präzisieren, nicht mit unbekannter Objektidentität verwechseln.
 
 - Betriebs-/Überflutungszustand des Bauzentrums und der Lieferkette vor längeren
   Bauzeitfenstern bündeln; connected allein reicht nicht.
+  Erledigt im begrenzten Umfang: `inspect_operating_readiness` für ausgewählte
+  Gebäude; Gate und Einzelabgleich live bestanden. Keine Kolonievollabdeckung. [Vertrag](docs/operating-readiness.md).
 - Unteren neuen Zielweg an gedrehter Bestandstreppe separat live prüfen.
 - Parameterdiagnose und Trennung Zeitlimit/Fertigbau sind mit 0.73 erledigt;
   keine erneute Umsetzung dieser Punkte.

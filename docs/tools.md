@@ -1,5 +1,7 @@
 # Native MCP-Werkzeuge
 
+Gemeinsame Betriebsdiagnose vor längeren Bau-/Simulationsläufen: `inspect_operating_readiness` bündelt ausgewähltes Bauzentrum, Überflutung, Personal und Materialproduzenten mit priorisierten nächsten Schritten. Gate und gezielter Livevergleich bestanden; kein Produktionsnachweis. [Aufruf und Grenzen](operating-readiness.md).
+
 ## Aktueller Nachweisumfang
 
 Stand: **0.74.0 mit Journal-Korrekturen**, abgeschlossen in `680fd00` und `c09750f`.

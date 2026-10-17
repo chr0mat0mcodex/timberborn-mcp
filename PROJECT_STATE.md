@@ -1,8 +1,73 @@
 # Projektstand
 
+## Abschluss 2026-10-18 — Gate und gezielter Livevergleich bestanden
+
+Menschliches Gate: 28 Supervisor-, 1952 Unit- und 13 Integrationstests bestanden;
+drei optionale Integration-Livetests übersprungen. Bridge weiterhin 0.74.0.
+Nachabnahme um 00:53 Uhr Europe/Berlin: kein `access_unknown` bei allen vier
+Gebäuden mit `unconnectedBlockerCount=0`. Vier einzelne Betriebsabfragen und
+vier Zugangsabfragen bestätigen sämtliche verglichenen Felder des Sammelberichts.
+Globale Personalreserve und Materialbestände separat identisch bestätigt:
+fünf Arbeitslose, 33 Bretter, 40 Zahnräder, 260 Holz; Bauzentrum trocken, 4/4.
+Testbedarf je 100 Bretter/Zahnräder ergibt 33/40 Prozent, ohne Startsperre.
+Holz ohne ausgewählten Ernter bleibt ausdrücklich außerhalb der Auswahl unbekannt.
+40 Güter vollständig; neun native Beobachtungen über rund 0,54 Sekunden.
+Abschluss weiter Tempo 0, kein aktiver Lauf/ausstehender Tempoauftrag.
+
+Abgenommen sind Auswahlaggregation, Quellenübereinstimmung und korrigierte
+Warnungsableitung. Keine Spielmutation und kein Produktions-/Durchsatznachweis.
+Überflutungspriorität, fehlende Komponenten, Sessionwechsel und Scanlimit sind
+synthetische Gate-Nachweise, keine zusätzlich erzeugten Livefälle.
+Frühere offene Gate-/Livevermerke unten dokumentieren die Entwicklungshistorie.
+
+
 Aktueller fachlicher Abschluss: **0.74.0 plus Cancel-/Transport-Nacharbeit**.
 Gate und begrenzter Livepilot bestanden; Git-Checkpoint schließt die Nacharbeit ab.
 Ältere Versionsabschnitte sind historische Nachweise.
+
+
+
+## Livevergleich 2026-10-18 — Korrektur vorbereitet, erneutes Gate offen
+
+Gate zuvor bestätigt: 28 Supervisor-, 1948 Unit- und 13 Integrationstests,
+drei optionale Tests übersprungen. Nach Client-Neustart Reader verfügbar.
+Rein lesender Pilot bei Tempo 0: Bauzentrum und drei Produzenten. Sämtliche
+Betriebsfelder (Überflutung, Pause, Personal, Rezept, Kraft, Assessment) und
+Zugangsbelege stimmten mit vier einzelnen Betriebs-/Zugangspaaren überein;
+globale Personalreserve und drei Bestände ebenfalls einzeln bestätigt.
+40 Güter vollständig in zwei Seiten; neun Beobachtungen in rund 0,50 Sekunden.
+
+Bauzentrum trocken, 4/4 besetzt; fünf globale Arbeitslose. Ein Sägewerk pausiert
+und unbesetzt; das zweite sowie die Zahnradfabrik mit fehlender Kraft und ohne
+Produktplatz. 33 Bretter, 40 Zahnräder, 260 Holz. Testbedarf je 100 Bretter und
+Zahnräder (kein Bauauftrag) korrekt als 33/40 Prozent und informative Fehlmenge
+67/60 ausgewiesen. Holz ohne ausgewählten Ernter bleibt Versorgung außerhalb
+der Auswahl unbekannt, Nullbedarf hat keine Deckungsquote. Kein Produktionsbeweis.
+
+Fehler im abgeleiteten nächsten Schritt: `access_unknown` trotz ausdrücklich
+fehlender optionaler Anschlussblocker (`unconnectedBlockerCount=0`). Die Quelle
+unterscheidet nun diesen belegten Sonderfall von unbekannter Anzahl bzw. fehlenden
+Eingangsbelegen. Vier Regressionen vorbereitet, noch nicht ausgeführt.
+Keine Simulation oder Spielmutation; frische Abschlussabfrage weiter Tempo 0,
+kein aktiver Lauf/ausstehender Tempoauftrag. Keine Überflutung im Pilot:
+Überflutungs-Priorität bleibt synthetisch geprüft. Featureabschluss und Commit
+stehen bis erneutem Gate und gezieltem Livevergleich der Warnung aus.
+
+## Gemeinsame Betriebsdiagnose — vorbereitet, Gate/Live offen (2026-10-18)
+
+Erster menschlicher Gate-Lauf: Build ohne Warnungen/Fehler, 28 Supervisor-
+und 1948 Unit-Tests bestanden. Integration abgebrochen: neue Reader-Bezeichnung
+fehlte in der expliziten Katalog-Erwartung. Erwartung in NativeBridgeTests und
+optionalem LiveNativeTests ergänzt; keine Änderung am Laufzeitverhalten.
+Erneutes Gate und Feature-Livepilot ausstehend. Backend bleibt gatesperrt.
+
+Neuer MCP-Reader `inspect_operating_readiness`: Bauzentrum und bis sieben
+ausgewählte Produzenten, Überflutung, Personal, Zugang, begrenzte Güterseiten
+und Rezept-/Erntezuordnung. Priorisierte nächste Schritte, keine Material-
+Startsperre. Auswahlabdeckung und globale/lokale Grenzen bleiben ausdrücklich.
+Keine Bridgeänderung. Tests vorbereitet; kein Agent-Build/Testlauf.
+README, Werkzeugvertrag und Agentenanleitung ergänzt; ältere Releasebelege
+bleiben historisch. [Vertrag und Livepilot](docs/operating-readiness.md).
 
 ## Cancel-Transport — Gate und begrenzter Livepilot bestanden (2026-10-18)
 
