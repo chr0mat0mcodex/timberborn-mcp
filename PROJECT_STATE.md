@@ -19,7 +19,18 @@ Keine Agent-Builds/Tests/Installation. Anleitung, Tool-Doku und lokaler
 Hermes-Skillentwurf mit tatsächlichen Belegen aktualisiert; Skill bleibt
 zurückgestellt. Vorbestehende Starter-/Hermes-Experimente bleiben separat.
 
-Offen: neuer Umweg-/Höhenvergleich nicht in diesem Pilot wiederholt;
+Folgepilot Umweg/Höhe: am 17. Oktober 2026 an einem erhöhten Lagerziel
+gescheitert. Automatische Suche erzeugt zehn Hilfsteile mit Treppe/Plattform
+auf derselben Zelle; native Gesamtvorschau lehnt korrekt ab. Manuelle
+Gegenprobe mit zwei Wegen ab bestehender Treppe ist für dasselbe Ziel gültig,
+Eingang und Arbeitszelle verbunden, keine verlorenen Bestandsanschlüsse.
+Kein Bauauftrag, keine neue Baustelle, unveränderte Endpause. Suchpfad muss
+die Geometrie seiner Vorgängerkanten berücksichtigen; vorhandene Treppenanschlüsse
+gezielt prüfen. [Befund und Regressionsziel](docs/releases/0.66.0.md#folgepilot-umweg-und-höhenunterschied).
+Der ursprüngliche Uferpumpen-Kernpilot bleibt bestanden; automatische
+Umweg-/Höhenzugangssuche ist durch diesen Folgepilot nicht abgenommen.
+
+Weitere Grenzen:
 Pending-/Lock-/Kapazitätsfälle nur Gate-Regressionen. Früher Navigations-
 Baselinekonflikt nach Simulationsfortschritt und Entfernen einer fremden,
 unbegonnenen Testtreppe verschwunden; Ursache nicht isoliert nachgewiesen.

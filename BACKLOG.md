@@ -5,7 +5,20 @@
 Uferpumpen-Terraincheck berücksichtigt `Block.IsOccupied`; Laufstart-Ablehnungen
 haben konkrete Codes und gezielt `not_executed`. Uferpumpe bis Fertigzugang,
 Tempoabweichung, konkurrierender Start und gültiger Folgelauf live bestanden.
-Neuer Umweg-/Höhenvergleich bleibt offen. Navigations-Baselinekonflikt bei
+**P1 Höhen-/Umwegsuche:** Folgepilot findet einen selbstkollidierenden Plan
+(Treppe und spätere Plattform auf derselben Zelle), obwohl eine native gültige
+Gegenprobe mit zwei Wegen über die bestehende Treppe vorliegt. Suchzustand
+berücksichtigt bisher nur Zielzelle/Kosten, nicht Geometrie des bisherigen
+Routenpfads. Kantenpakete gegen Vorgängerkanten prüfen und zulässige Alternativen
+bei unterschiedlicher Belegung erhalten. Vorhandene Treppenanschlüsse separat
+prüfen: Quellen stammen bisher ausschließlich aus `MainPathCoordinates`.
+Keine erfundene Verbindung; gültige Anschlüsse nativ bestätigen.
+Regression: erhöhtes Ziel hinter Hindernis, Eigenkollision verworfen,
+gültiger Umweg gefunden, Bestandsanschlüsse vor/während/nach Bau erhalten.
+Native Schlussvorschau hat den Fehler korrekt abgefangen; nicht lockern.
+Details und Nachweisgrenzen im Releasebericht.
+
+Navigations-Baselinekonflikt bei
 Wiederauftreten isoliert diagnostizieren. [Belege](docs/releases/0.66.0.md).
 Die nachfolgenden 0.65-Befunde bleiben Herkunft und Live-Abnahmekriterien;
 Cancel-Priorisierung ist nicht Teil dieser Version.
