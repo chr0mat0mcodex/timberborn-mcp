@@ -570,11 +570,12 @@ sind nicht pauschal der aktuelle Funktionsumfang.
 
 ## Zurückgestellte Experimente
 
-Hermes-/andere Agenten-Anbindungen sowie die damit verbundenen lokalen Startskript-
-und Budgetexperimente sind auf Nutzerentscheidung vom 2026-10-12 **ferne Zukunft**.
-Erst bei gezielten Tests anderer Agenten mit dem MCP wieder aufnehmen. Kein Auftrag
-für den nächsten Release, keine Abnahme und keine Aufnahme experimenteller Dateien
-in den Dokumentationsabschluss. Lokale Änderungen bleiben erhalten.
+Der Hermes-Integrationstest wurde am 2026-10-17 auf Nutzerwunsch beendet.
+Proxy, Integrationsanleitung und Skillvorlage wurden aus dem Projekt entfernt;
+keine weitere Umsetzung, Installation oder Versionspflege für Hermes vorgesehen.
+Historische Release-Erwähnungen bleiben als Nachweise früherer Arbeiten erhalten.
+Andere lokale Startskript-/Budgetexperimente sind kein Auftrag für den nächsten
+Release und bleiben außerhalb dieses Rückbaus.
 
 ## Zurückgestellte Nachweise
 
@@ -604,8 +605,9 @@ in den Dokumentationsabschluss. Lokale Änderungen bleiben erhalten.
 ## Dokumentationsklärung
 
 [Prüfbericht 2026-10-12](docs/documentation-audit-2026-10-12.md): korrigierte
-Altstände und die anschließend getroffenen Nutzerentscheidungen. Lokale Hermes-/Budgetänderungen
-nicht aus dem Versionsnamen automatisch als abgenommen behandeln.
+Altstände und die anschließend getroffenen Nutzerentscheidungen. Die damalige
+Hermes-Rückstellung ist durch die Entfernung am 2026-10-17 überholt. Lokale
+Budgetänderungen nicht aus dem Versionsnamen automatisch als abgenommen behandeln.
 
 ## Folgebeobachtungen aus 0.51
 

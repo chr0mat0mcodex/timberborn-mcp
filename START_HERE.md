@@ -87,8 +87,9 @@ historische Nachweise, keine aktuelle Aufgabenliste.
 Aktuellen Laufzeitstand nach Wiederanschluss aus `timberborn_status` und Session
 lesen. Die Versionsnummer allein beweist nicht den Abnahmestatus lokaler Änderungen.
 Arbeitsbranch: `codex/road-protection-pilot`; Git-Status vor Änderungen prüfen.
-Lokale Hermes-/Startskript-/Budgetänderungen sind separat vom Releaseabschluss
-zurückgestellt (Tests anderer Agenten in ferner Zukunft); [Entscheidung](docs/documentation-audit-2026-10-12.md).
+Der Hermes-Integrationstest wurde auf Nutzerwunsch beendet; Proxy,
+Integrationsanleitung und Skillvorlage sind entfernt. Historische Erwähnungen
+dokumentieren frühere Arbeiten und begründen keine weitere Pflege.
 
 Phase A–E ist historisch im begrenzten Umfang abgeschlossen; die verbliebenen
 Nachweislücken und Folgefähigkeiten stehen im [aktuellen Backlog](BACKLOG.md).

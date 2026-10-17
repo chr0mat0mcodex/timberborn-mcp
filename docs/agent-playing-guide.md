@@ -1140,6 +1140,16 @@ Testsystem. Ein Entwicklungsauftrag ist kein fortlaufendes Kolonieziel.
 
 ## Einstieg in eine geladene Sitzung
 
+Die vorhandene MCP-Verbindung des jeweiligen Clients verwenden. Der Client
+verwaltet seinen stdio-Prozess; der Agent startet für Spielaufgaben keine
+zusätzlichen Start-/Buildskripte und wechselt keinen Server für Schreibzugriff.
+Die tatsächlich verfügbaren Aktionsgruppen aus dem geladenen Schema prüfen.
+Der Codex-Verbindungsablauf steht unter [MCP-Lifecycle](codex-mcp-supervisor.md).
+
+Technische Aktionsschalter und Budgets aus dem installierten Fähigkeitsbericht
+und aktuellen Schema lesen. Experimentelle Budgetänderungen sind keine zusätzliche
+Live-Abnahme und keine allgemeine Freigabe hoher Grenzwerte. Ein Serverneustart
+setzt spielseitige Budgets nicht zurück; Legacy- und Gruppenmodi getrennt behandeln.
 1. `timberborn_status` für Bridge-Version und frische Sitzungskennung lesen;
    anschließend `inspect_simulation` für Geschwindigkeit und Spielzeit.
 2. `inspect_building_capabilities(session, reasoning)` für Projektmodi,

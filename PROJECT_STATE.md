@@ -1,7 +1,16 @@
 # Projektstand
 
-Aktueller Stand: **0.74.0 plus Journal-Korrekturen**, abgeschlossen und gepusht.
+Letzter Releaseabschluss: **0.74.0 plus Journal-Korrekturen**, abgeschlossen und gepusht.
 Ältere Versionsabschnitte sind historische Nachweise.
+
+## Hermes-Testanbindung entfernt — 2026-10-17
+
+Auf Nutzerwunsch den nicht mehr benötigten Hermes-Test beendet: separaten
+Kompatibilitätsproxy, Integrationsanleitung und lokale Skillvorlage entfernt.
+Aktive Einstiegsverweise bereinigt; historische Release-Erwähnungen beschreiben
+damalige Pflege und sind kein aktueller Integrations- oder Pflegeauftrag.
+MCP-/Mod-Code und regulärer Codex-Verbindungsweg unverändert. Datei- und
+Referenzprüfung durchgeführt; kein Build, Testlauf oder Deploy für diesen Rückbau.
 
 ## Journal-Korrekturen — Gate und gezielter Livetest bestanden
 
@@ -562,7 +571,7 @@ Projekt/Weg lesend nachweisbar, kein Retry. Reparaturerfolg bleibt offen.
 Zeitlimit-/Stopgrund im Kurztext noch allgemein; Ursache nur im Fachbericht.
 [Zusatzprotokoll und Diagnosegrenzen](docs/agent-log-live-tests-0.59.md).
 
-Versionspflege: `docs/agent-playing-guide.md` und `docs/hermes-skill/SKILL.md`
+Versionspflege: `docs/agent-playing-guide.md` und die damalige Hermes-Skillvorlage (inzwischen entfernt)
 auf Umfang und begrenzte Live-Abnahme ergänzt und bisherige Ausschlüsse präzisiert.
 Die Hermes-Spielskillvorlage bleibt uninstalliert und als Integration unabgenommen.
 Allgemeine Entwicklungsskills benötigen keine neuen spielbezogenen Regeln.
@@ -577,8 +586,8 @@ Ein-Stunden-Lauf und Pflanzbeleg (1 gesetzt, 2 vorhanden, 1 ausgeschlossen) live
 geprüft. Elf Ergebnisbelege in beiden Dateilogs identisch, keine Schreibverluste.
 Mensch bestätigt alle Ergebniszeilen als vollständig und gut lesbar. [Umfang und Livepilot](docs/agent-log-outcomes-0.58.md).
 
-Versionspflege vor dem Gate: `docs/agent-playing-guide.md` und die lokale Vorlage
-`docs/hermes-skill/SKILL.md` für 0.55–0.58 aktualisiert. Paging/Filter, Korrelation,
+Versionspflege vor dem Gate: `docs/agent-playing-guide.md` und
+die damalige Hermes-Skillvorlage (inzwischen entfernt) für 0.55–0.58 aktualisiert. Paging/Filter, Korrelation,
 Dateilogs, Autostart und Ergebnisbelege ergänzt; veraltete aktuelle Versionsangaben
 und pauschale Budgetaussagen ersetzt. 0.58 ist im beschriebenen Umfang abgenommen. Nur eine
 projektbezogene Spielskillvorlage vorhanden; allgemeine Entwicklungs-Skills

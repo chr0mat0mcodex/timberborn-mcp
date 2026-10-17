@@ -86,5 +86,5 @@ weiterläuft. Kein Nachweis für Produktion, Belieferung, Kraftnetze oder allgem
 Bauphasensicherheit. Bekannter Darstellungsumfang: der angeforderte Stopgrund
 erscheint nach Stillstand noch allgemein als Verweis auf den Fachbericht.
 
-Versionspflege: Spielanleitung und `docs/hermes-skill/SKILL.md` aktualisiert;
+Versionspflege: Spielanleitung und die damalige Hermes-Skillvorlage (inzwischen entfernt) aktualisiert;
 Hermes bleibt eine lokale, nicht installierte und nicht abgenommene Vorlage.
