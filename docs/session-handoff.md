@@ -3,12 +3,13 @@
 ## Aktueller Einstieg
 
 Aktueller Featurestand, letzte Gatezahlen und Nachweise: [Projektstand](../PROJECT_STATE.md).
-Bridge 0.74.0; jüngster fachlicher Abschluss ist die automatische Bretterketten-
-Vorprüfung. A01/A02/A06 und A03/A04/A05-Piloten abgeschlossen; weitere
-Refactorings zurückgestellt. A07-Pilot abgenommen: MCP-Kennung im Status und
-Gatebericht. Gate und lesender Liveabgleich bestanden; kein Gate offen.
-[Belege und Bewertung](mcp-runtime-identity-pilot.md). Weitere Erweiterungen
-vorerst zurückgestellt; Gesamt-A07 bleibt offen.
+Bridge 0.74.0; **A08-Pilot abgenommen, Gate und begrenzter Livepilot bestanden**.
+13 neue synthetische Fälle bestanden. Positive native Vorschau, fünf echte
+Verluste bei Wohnhausvorschau und anschließende freie Kontrollvorschau bestanden;
+Wiederherstellung bestätigt. Kein Gate offen. Weitere Adapter zurückgestellt.
+[Nachweismatrix, Grenzen und Bewertung](mod-adapter-evidence-pilot.md).
+A01/A02/A06 und A03/A04/A05/A07-Piloten abgenommen; weitere Erweiterungen
+zurückgestellt. Keine weiteren Adapter in diesem Auftrag.
 [Offene Arbeit](../BACKLOG.md) · [Lifecycle und Gate](../DEVELOPMENT_WORKFLOW.md).
 Git-Status und Laufzeitstand separat prüfen. Die folgenden Übergaben sind
 historisch und enthalten keine heute offenen Gate-Aufträge.

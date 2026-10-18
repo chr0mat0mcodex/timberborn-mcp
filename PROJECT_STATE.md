@@ -2,6 +2,27 @@
 
 ## Aktueller Stand — 2026-10-18
 
+**A08-Pilot abgenommen — menschliches Gate und gezielter Livepilot bestanden.**
+Abschlussentscheidung von `RoadProtection.Finish` nach Bridge.Core gezogen;
+native Reads/Cleanup und Freigabegrenzen unverändert. 13 neue synthetische Fälle
+bestanden. Gate: 13 Paket-, 28 Supervisor-, 2221 Unit- und 14 Integrationstests;
+drei optionale Livefälle übersprungen. Release-Builds ohne Warnungen/Fehler,
+fünf installierte Dateien per SHA-256 bestätigt. MCP-Kennung live gleich Gate.
+Positive Bankvorschau bestanden: 740 Verbindungspaare, kein Verlust, restauriert.
+Einzellige Bank als Negativkontrolle ungeeignet; nach gezielter Diagnose größere
+Wohnhausvorschau am selben Wegknoten mit fünf echten Verlusten (zwei Wegpunkte,
+drei Gebäudezugänge), korrekt blocked und restauriert. Ursprüngliche freie
+Vorschau danach wieder gültig und verlustfrei; tatsächlicher Zugang unverändert.
+Keine persistente Änderung beobachtet, keine Session-Sperre, kein Bauauftrag.
+Nutzen/Aufwand positiv: isolierte Policytests und explizite Adapter-Nachweisgrenze;
+kleiner Codeumfang, zusätzlicher Aufwand für geeignete native Negativkontrolle.
+[Nachweismatrix, Grenzen und Bewertung](docs/mod-adapter-evidence-pilot.md).
+Bridge/API 0.74.0. Kein Gate offen. Anleitung mit tatsächlichem Nachweisstand
+aktualisiert; keine projektbezogenen Spielskills vorhanden. Gesamt-A08 offen;
+weitere Adapter, Sessionwechsel und Fertigzugang bleiben zurückgestellt.
+
+### Vorheriger Abschluss A07
+
 Bridge/Manifest **0.74.0**; letzter neuer Funktionsumfang in `f52750f`:
 automatische Bretterketten-Vorprüfung, begrenzt live abgenommen.
 **A07-Pilot abgenommen — menschliches Gate und lesender Liveabgleich bestanden.**
@@ -19,7 +40,7 @@ Native Bridge 0.74.0, aktuelle Session, Spiel pausiert; keine Spielmutation.
 Bewertung positiv: MCP-only-Stand dem Gate zuordenbar bei überschaubarem Zusatz-
 aufwand. Clientcache, Supervisor und vollständige Installation nicht attestiert.
 Gesamt-A07 offen; weitere Erweiterungen auf Nutzerwunsch vorerst zurückgestellt.
-Kein Gate offen. Spielanleitung mit Abgleich und tatsächlichen Nachweisgrenzen
+Zum A07-Abschluss kein Gate offen. Spielanleitung mit Abgleich und tatsächlichen Nachweisgrenzen
 aktualisiert; keine projektbezogenen Spielskills vorhanden.
 Weitere A03/A04/A05-Migrationen bleiben zurückgestellt.
 

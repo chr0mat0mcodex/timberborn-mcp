@@ -109,16 +109,18 @@ public sealed class RoadProtection(EntityRegistry entities, ConstructionAccessPr
             constructionProbeCount = sample.Probes.Count(p => p.Kind == "construction_access") };
         if (!sample.Complete || withPreview is null) { report.reasons = new[] { sample.Reason.Length > 0 ? sample.Reason : "preview_navigation_unavailable" }; return report; }
         report.checkedConnections = sample.Before.Length;
-        report.restored = sample.Before.SequenceEqual(Read(sample, false)) && sample.PreviewBefore.SequenceEqual(Read(sample, true)) &&
-            report.constructionAccessPreview.restored != false;
+        bool navigationRestored = sample.Before.SequenceEqual(Read(sample, false)) &&
+            sample.PreviewBefore.SequenceEqual(Read(sample, true));
         int[] lost = RoadProtectionPolicy.LostConnections(sample.Before, withPreview);
         report.lostConnections = lost.Length;
         // Finished preview, construction occupancy, unconnected roads and arbitrary nav adders
         // are not interchangeable. Keep the gate closed until these domains are live-proven.
         report.constructionCovered = false;
-        report.status = RoadProtectionPolicy.Decision(true, report.restored, report.constructionCovered, lost.Length);
-        report.reasons = !report.restored ? new[] { "navigation_not_restored" } : lost.Length > 0
-            ? new[] { "existing_district_access_lost" } : new[] { "construction_and_road_node_coverage_unproven" };
+        var outcome = RoadProtectionPolicy.EvaluatePreview(navigationRestored,
+            report.constructionAccessPreview.restored, lost.Length);
+        report.restored = outcome.Restored;
+        report.status = outcome.Status;
+        report.reasons = new[] { outcome.Reason };
         report.affected = lost.Take(32).Select(index => {
             var p = sample.Probes[index % sample.Probes.Length];
             var d = sample.Districts[index / sample.Probes.Length];

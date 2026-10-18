@@ -15,11 +15,12 @@ Laufzeitstand und Session werden beim regulären Wiederanschluss frisch gelesen.
 
 ## Aktueller Auftrag
 
-**A07-Pilot abgenommen:** MCP-Modul-/Katalogkennung im Status und Gatebericht;
-Gate und lesender Liveabgleich bestanden. Kein Gate offen.
-[Belege und Bewertung](docs/mcp-runtime-identity-pilot.md). Weitere Erweiterungen
-vorerst zurückgestellt; Gesamt-A07 bleibt offen.
-A03/A04/A05-Piloten abgenommen; weitere Refactorings zurückgestellt.
+**A08-Pilot abgenommen: Gate und begrenzter Livepilot bestanden.** Reine
+Abschlussentscheidung des Wegschutz-Adapters ausgelagert; direkte Mod-Aufrufe als
+eigene Nachweisgrenze. Positive Vorschau, echter Verlustfall und Wiederherstellung
+bestanden. [Belege/Bewertung](docs/mod-adapter-evidence-pilot.md).
+Weitere Adapter zurückgestellt; Gesamt-A08 offen. Kein Gate offen.
+A03/A04/A05/A07-Piloten abgenommen; weitere Erweiterungen zurückgestellt.
 A01/A02/A06 abgeschlossen; offene Aufgaben im [Backlog](BACKLOG.md).
 
 ## Maßgebliche Arbeitsweise

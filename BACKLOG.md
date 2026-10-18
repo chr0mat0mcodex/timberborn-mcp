@@ -2,13 +2,13 @@
 
 ## Aktuelle Arbeit
 
-**A07-Pilot abgenommen — Gate und Liveabgleich bestanden:** MCP-Modul-/Backend-
-Katalogkennung im Status und Offline-Kennungsbericht im menschlichen Gate.
-[Belege und Nutzen-/Aufwandsbewertung](docs/mcp-runtime-identity-pilot.md).
-Weitere Erweiterungen vorerst zurückgestellt; Gesamt-A07 bleibt offen.
-A03/A04/A05-Piloten abgenommen; weitere Refactorings zurückgestellt.
-A01/A02/A06 abgeschlossen; A08–A12 noch nicht begonnen.
-Belege und Grenzen im [Projektstand](PROJECT_STATE.md).
+**A08-Pilot abgenommen — Gate und begrenzter Livepilot bestanden:** Abschluss-
+bewertung des Wegschutz-Adapters in Bridge.Core; Policytests und direkte native
+Belege getrennt. Positive Vorschau, fünf echte Verluste mit Wohnhausvorschau und
+anschließende Wiederherstellung bestanden. [Belege/Bewertung](docs/mod-adapter-evidence-pilot.md).
+Weitere Adapter zurückgestellt; Gesamt-A08 bleibt offen. A03/A04/A05/A07-Piloten
+abgenommen; weitere Erweiterungen zurückgestellt. A01/A02/A06 abgeschlossen.
+A09–A12 noch nicht begonnen. [Projektstand](PROJECT_STATE.md).
 
 ## Projektprüfung 2026-10-18 — abarbeitbare Befunde
 
@@ -16,7 +16,7 @@ Prüfbasis und vollständiger Audit: [Archivstand](BACKLOG_HISTORY.md#archivstan
 Ergebnis: gezieltes Refactoring von Versionsprofilen, Werkzeugdispatch und
 Prüfketten sinnvoll; kein belegter Bedarf für einen Komplettumbau.
 Der ursprüngliche Audit war statisch. A06 ist inzwischen **abgeschlossen**;
-A03 ist **teilweise abgeschlossen**, A04 **teilweise abgeschlossen**; A05 ist **teilweise abgeschlossen**, A07 ist **teilweise abgeschlossen**, A08–A12 sind **offen**.
+A03 ist **teilweise abgeschlossen**, A04 **teilweise abgeschlossen**; A05 ist **teilweise abgeschlossen**, A07 ist **teilweise abgeschlossen**, A08 ist **teilweise abgeschlossen**, A09–A12 sind **offen**.
 P2 = vor der nächsten betroffenen Erweiterung, P3 = nach Bedarf;
 S/M/L sind relative Aufwandsschätzungen. Codeänderungen benötigen weiterhin
 das [menschliche Gate und den gezielten Livetest](DEVELOPMENT_WORKFLOW.md).
@@ -113,6 +113,15 @@ das [menschliche Gate und den gezielten Livetest](DEVELOPMENT_WORKFLOW.md).
 
 ### A08 — P2 / M: direkte Mod-Adapter als eigene Nachweisgrenze behandeln
 
+- [x] **Pilot abgenommen (2026-10-18):** ausschließlich `RoadProtection.Finish`:
+  reine Abschlussentscheidung in `RoadProtectionPolicy.EvaluatePreview`, 13 neue
+  synthetische Fälle bestanden. Native Reads/Cleanup bleiben im Adapter.
+  Gate und Livepilot bestanden: freie Vorschau, fünf verlorene Verbindungen
+  bei Wohnhausvorschau, anschließend freie Kontrolle wieder verlustfrei.
+  Bank-Negativkontrolle war ungeeignet; gezielt diagnostiziert, kein Codefehler
+  belegt. [Nachweise und Bewertung](docs/mod-adapter-evidence-pilot.md).
+  Nutzen/Aufwand positiv. Weitere Adapter sowie Sessionwechsel/Fertigzugang
+  bleiben Restarbeit und auf Nutzerwunsch vorerst zurückgestellt.
 - [ ] **Befund, bestätigt:** [TimberbornMcp.slnx](TimberbornMcp.slnx) und die
   Testprojekte referenzieren die spielabhängige AgentBridge nicht; sie wird im
   Gate separat gegen Spiel-DLLs gebaut. Die hohe Unit-Testzahl prüft damit nicht

@@ -36,6 +36,21 @@ Automatische Bauzentrum-/Produzentenauswahl und Vorprüfung vor Strukturstarts b
 
 Gemeinsame Betriebsdiagnose vor längeren Bau-/Simulationsläufen: `inspect_operating_readiness` bündelt ausgewähltes Bauzentrum, Überflutung, Personal und Materialproduzenten mit priorisierten nächsten Schritten. Gate und gezielter Livevergleich bestanden; kein Produktionsnachweis. [Aufruf und Grenzen](operating-readiness.md).
 
+## A08: direkte Mod-Adapter (Gate und begrenzter Livepilot bestanden)
+
+Core-Tests prüfen die Entscheidung aus synthetischen Beobachtungen. Sie beweisen
+keine echten Spielservice-Aufrufe oder Bereinigung temporärer Vorschauen.
+Beim Wegschutz sind `restored`, verlorene Verbindungen und Bauphasenabdeckung
+getrennte Aussagen. Auch bei `restored=true` bleibt ohne Verlust der Status
+`unknown`, solange `constructionCovered=false` gilt. Ein unbekannter
+Baustellen-Wiederherstellungswert ist kein positiver Baustellennachweis.
+Positive Bankvorschau, fünf native Verluste bei größerer Wohnhausvorschau und
+anschließende freie Kontrollvorschau bestanden; Wiederherstellung bestätigt.
+Die einzellige Bank war am Kontrollpunkt als Verlustprobe ungeeignet.
+Geometrische Überlappung ersetzt keinen Verlustnachweis; Vorlagentyp und
+Grundrissgröße wurden nicht unabhängig voneinander untersucht.
+[Adapterpilot, Nachweise und Grenzen](mod-adapter-evidence-pilot.md).
+
 ## Aktueller Nachweisumfang
 
 Stand: **0.74.0 mit Journal-Korrekturen**, abgeschlossen in `680fd00` und `c09750f`.
