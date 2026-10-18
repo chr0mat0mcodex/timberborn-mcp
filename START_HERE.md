@@ -15,10 +15,10 @@ Laufzeitstand und Session werden beim regulären Wiederanschluss frisch gelesen.
 
 ## Aktueller Auftrag
 
-**A12/N04 begrenzt live abgeschlossen; N01/N02/N03 ebenfalls abgenommen.**
-[Planschlüsselvergleich, Negativkontrolle und Grenzen](docs/access-plan-key-pilot.md).
-Historischer Fehler nicht reproduziert, keine Codeänderung nötig. Testprojekt
-freigegeben, Spiel pausiert; weitere Fehlerfälle/A12-Pakete offen.
+**A12/N05 begrenzt abgenommen; kein Gate offen.**
+[Anzeigeabweichung, Korrektur und Nachweise](docs/project-progress-display-pilot.md).
+Acht neue Testfälle und Livevergleich bestanden; Journal frei, Spiel pausiert.
+N01/N02/N03/N04 abgenommen; weitere Fehlerfälle/A12-Pakete offen.
 Weitere Journale und frühere Piloterweiterungen bleiben zurückgestellt.
 A01/A02/A06 abgeschlossen; offene Aufgaben im [Backlog](BACKLOG.md).
 

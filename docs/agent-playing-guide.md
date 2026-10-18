@@ -1,5 +1,12 @@
 # Spielanleitung für Agenten
 
+N05-Anzeigekorrektur begrenzt abgenommen: Großprojekt-Ergebniszeilen zählen
+korrekt und trennen gespeicherten Projektstand von frischer „Bauprüfung“.
+Maßgeblich bleiben `partStates`/`summary.finishedAccessRecorded` (gespeichert)
+und `currentConstruction.finishedAccessible`/Diagnose (frisch). Unterschiedliche
+Beobachtungszeitpunkte können unterschiedliche korrekte Zahlen liefern.
+[Reproduktion, Gate und sichtbarer Livevergleich](project-progress-display-pilot.md).
+
 ## A12/N03: Identitätsinjektion (begrenzter Pilot abgenommen)
 
 Nur für den ausdrücklich beauftragten Entwicklungspilot:

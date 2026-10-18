@@ -72,6 +72,53 @@ public sealed class BuildingActivityOutcomeTests
         Assert.InRange(group.Length,1,400);
     }
     [Theory]
+    [InlineData("run_large_project","running",14)]
+    [InlineData("inspect_large_project","running",14)]
+    [InlineData("inspect_large_project","blocked",14)]
+    [InlineData("inspect_large_project","completed",15)]
+    [InlineData("stop_large_project","stopped",14)]
+    [InlineData("run_large_project_repair","running",14)]
+    public void BatchPartsDoNotTurnRecordedProgressIntoFreshDiagnosis(string tool,string state,int finished)
+    {
+        // Native BatchReceipt includes both partStates and descriptive parts (state, not observed).
+        var states=new JsonArray();var ids=new JsonArray();var parts=new JsonArray();
+        for(int i=0;i<15;i++) {
+            string partState=i<finished?"finished":"construction";
+            states.Add(partState);ids.Add("synthetic-"+i);
+            parts.Add(new JsonObject { ["index"]=i,["state"]=partState });
+        }
+        var data=new JsonObject { ["executionMode"]="batch",["state"]=state,
+            ["partStates"]=states,["entityIds"]=ids,["parts"]=parts };
+        string original=data.ToJsonString();
+        string full=ActivityOutcome.Describe(tool,new JsonObject { ["status"]="ok",["data"]=data });
+        Assert.StartsWith("Gespeicherter Projektstand",full);
+        Assert.Contains($"{finished} von 15 Bauteilen",full);
+        Assert.DoesNotContain("Bauprüfung:",full);
+        Assert.Equal(original,data.ToJsonString());
+        ProjectReportPresentation.Compact(tool,data);
+        Assert.Equal(full,Describe(tool,data.ToJsonString()));
+        Assert.InRange(full.Length,1,400);
+    }
+    [Theory]
+    [InlineData("diagnose_large_project")]
+    [InlineData("close_large_project")]
+    public void FreshDiagnosisCountsObservedCompletionDespiteOlderLedger(string tool)
+    {
+        var data=JsonNode.Parse("""
+            {"state":"blocked","reason":"game_time_limit","closeEligible":true,
+             "lostConnections":0,"parts":[
+               {"index":0,"recorded":"construction","observed":"finished","reason":"finished"},
+               {"index":1,"recorded":"finished","observed":"finished","reason":"finished"}]}
+            """)!.AsObject();
+        string original=data.ToJsonString();
+        string full=ActivityOutcome.Describe(tool,new JsonObject { ["status"]="ok",["data"]=data });
+        Assert.StartsWith("Bauprüfung:",full);
+        Assert.Contains("2 von 2 Bauteilen",full);
+        Assert.Equal(original,data.ToJsonString());
+        ProjectReportPresentation.Compact(tool,data);
+        Assert.Equal(full,Describe(tool,data.ToJsonString()));
+    }
+    [Theory]
     [InlineData("plan_large_project")]
     [InlineData("plan_large_project_access")]
     [InlineData("plan_large_project_repair")]

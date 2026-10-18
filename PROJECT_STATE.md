@@ -2,6 +2,23 @@
 
 ## Aktueller Stand — 2026-10-18
 
+**A12/N05 begrenzt abgenommen — Ingame-Fortschrittszählung korrigiert.**
+2292 Unit-, 19 Integrations-, 13 Paket- und 35 Supervisor-Prüfungen bestanden;
+drei optionale Livefälle übersprungen, beide Builds ohne Warnungen/Fehler,
+fünf installierte Dateien per SHA-256 bestätigt. MCP-Kennungen wie Gate.
+Live: laufend 0/2 unbestätigt und anschließend 1/2 fertig korrekt gespeichert;
+terminal full/compact samt Logzeile 2/2, separate Diagnose als Bauprüfung 2/2.
+Laufende und terminale Anzeige im Spielbild bestätigt. Beide Teile fertig und
+zugänglich, keine Bestandsverluste, Journal freigegeben, Spiel pausiert.
+Nutzen hoch bei kleinem Aufwand: falsche Nullzählung und falsche Belegart mit
+einer engen Darstellungskorrektur beseitigt; acht Regressionstestfälle grün.
+[Ursache, Nachweise und Grenzen](docs/project-progress-display-pilot.md).
+API weiterhin 0.74.0; keine zusätzlichen Spielabfragen oder Auftragsfamilien.
+Anleitung/Werkzeugübersicht aktualisiert; keine projektbezogenen Spielskills
+vorhanden. Stopgrundtexte und andere B10-Restumfänge offen. Kein Gate offen.
+
+### Vorheriger Abschluss A12/N04
+
 **A12/N04 begrenzt live abgeschlossen — historischer Fehler nicht reproduziert.**
 Automatische Zugangsergänzung und explizite Gesamtvorschau ergeben identische
 Planschlüssel. Bewusst geänderte Wegrotation mit altem Schlüssel korrekt als

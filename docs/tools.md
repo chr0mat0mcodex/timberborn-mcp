@@ -1,5 +1,12 @@
 # Native MCP-Werkzeuge
 
+N05-Anzeigekorrektur begrenzt abgenommen: Großprojekt-Ergebniszeilen zählen
+korrekt und trennen gespeicherten Projektstand von frischer „Bauprüfung“.
+Maßgeblich bleiben `partStates`/`summary.finishedAccessRecorded` (gespeichert)
+und `currentConstruction.finishedAccessible`/Diagnose (frisch). Unterschiedliche
+Beobachtungszeitpunkte können unterschiedliche korrekte Zahlen liefern.
+[Reproduktion, Gate und sichtbarer Livevergleich](project-progress-display-pilot.md).
+
 N03-Entwicklungspilot **begrenzt abgenommen**:
 `set_large_project_identity_pilot(session, actionId, partIndex, pilotAction, mode)`.
 `pilotAction=enable|disable`, `mode=development_pilot`; vorhandene

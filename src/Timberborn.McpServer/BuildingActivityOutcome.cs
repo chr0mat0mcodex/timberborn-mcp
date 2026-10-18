@@ -20,12 +20,12 @@ public static class BuildingActivityOutcome
             if(name==ClearedGroupTools.Plan)return "Nur Räumvorschau. Keine Räum- oder Bauaufträge erteilt; Bauplanung folgt erst nach der Räumung.";
             string stop=IsTrue(d,"stopRequested") && !IsTrue(d,"terminal")?" Stopp angefragt; Abschluss noch offen.":"";
             return "Gespeicherter Räum-/Baustand: "+State(d)+stop+" "+
-                (d["construction"] is JsonObject construction?Large(construction,true):"Noch kein Baunachweis verfügbar.");
+                (d["construction"] is JsonObject construction?Large(construction,checkpoint:true):"Noch kein Baunachweis verfügbar.");
         }
         if(ProjectReportPresentation.Supports(name)) {
             if(name is "plan_large_project" or "plan_large_project_access" or "plan_large_project_repair")
                 return "Nur Bauvorschau. Keine Bauaufträge erteilt; Freigabe und Zugangsprüfungen im Fachbericht beachten.";
-            return Large(d);
+            return Large(d,name);
         }
         if(name=="develop_building_project")return d["completion"] is JsonObject completion?Completion(completion):Start(d["start"] as JsonObject);
         if(name is "advance_building_project" or "inspect_building_completion")return Completion(d);
@@ -74,12 +74,15 @@ public static class BuildingActivityOutcome
             ?"Weitere Aufträge gestoppt; ein bestehender Simulationslauf behält sein Budget."
             :State(d));
     }
-    private static string Large(JsonObject d,bool checkpoint=false)
+    private static string Large(JsonObject d,string tool="inspect_large_project",bool checkpoint=false)
     {
         // Reuse the existing projection on a clone: compact and full reports share evidence semantics.
         var report=d.DeepClone().AsObject();
         if(report["summary"] is not JsonObject)
-            ProjectReportPresentation.Compact(report["parts"] is JsonArray?"diagnose_large_project":"inspect_large_project",report);
+            // Batch receipts also contain parts; only recovery tools provide fresh observations.
+            // Nested clearance checkpoints keep their existing presentation outside this pilot.
+            ProjectReportPresentation.Compact(checkpoint && report["parts"] is JsonArray
+                ? "diagnose_large_project" : tool,report);
         var s=report["summary"];var total=Count(s,"planned");
         bool fresh=Text(s,"evidence")=="fresh_recovery_observation";
         var finished=Count(s,fresh?"finishedAccessible":"finishedAccessRecorded");

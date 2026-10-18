@@ -2,14 +2,13 @@
 
 ## Aktueller Einstieg
 
-**A12/N04 begrenzt live abgeschlossen; kein Gate offen.**
-Automatische und explizite Gesamtvorschau mit identischen Schritten liefern
-identische Schlüssel; Originalschlüssel beim Start angenommen. Geänderte
-Wegrotation mit altem Schlüssel vor Auftrag korrekt abgelehnt. Historischer
-Fehler nicht reproduziert, keine rückwirkende Ursachenbehauptung.
-2/2 Teile fertig/zugänglich, Journal freigegeben, Spiel pausiert, Backend läuft.
-Keine Codeänderung; N03-Gatestand unverändert. Weitere Pakete nicht erweitern.
-[Vergleich, Nachweise und Bewertung](access-plan-key-pilot.md).
+**A12/N05 begrenzt abgenommen; kein Gate offen.**
+Gate: 2292 Unit-, 19 Integrations-, 13 Paket- und 35 Supervisor-Prüfungen grün;
+drei optionale Livefälle übersprungen. MCP-Kennungen entsprechen dem Gate.
+Live laufend 0/2 und 1/2 korrekt, terminal full/compact 2/2; frische Diagnose
+korrekt als Bauprüfung bezeichnet. Laufende/terminale Spielanzeige gesehen.
+Journal freigegeben, Spiel pausiert, Backend läuft. Weitere Auftragsfamilien
+und Stopgrundtexte nicht erweitert. [Nachweise](project-progress-display-pilot.md).
 Aktueller Stand und Gatezahlen: [Projektstand](../PROJECT_STATE.md).
 [Offene Arbeit](../BACKLOG.md) · [Lifecycle und Gate](../DEVELOPMENT_WORKFLOW.md).
 Git-Status und Laufzeitstand separat prüfen. Folgende Übergaben sind historisch.
