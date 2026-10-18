@@ -2,13 +2,14 @@
 
 ## Aktueller Einstieg
 
-**A12/N05 begrenzt abgenommen; kein Gate offen.**
-Gate: 2292 Unit-, 19 Integrations-, 13 Paket- und 35 Supervisor-Prüfungen grün;
+**A12/N06 begrenzt abgenommen; kein Gate offen.**
+Gate: 2304 Unit-, 19 Integrations-, 13 Paket- und 35 Supervisor-Prüfungen grün;
 drei optionale Livefälle übersprungen. MCP-Kennungen entsprechen dem Gate.
-Live laufend 0/2 und 1/2 korrekt, terminal full/compact 2/2; frische Diagnose
-korrekt als Bauprüfung bezeichnet. Laufende/terminale Spielanzeige gesehen.
-Journal freigegeben, Spiel pausiert, Backend läuft. Weitere Auftragsfamilien
-und Stopgrundtexte nicht erweitert. [Nachweise](project-progress-display-pilot.md).
+Lesender Pilot bestätigt Gebäude/Pflanzen-ID und Template je Kollisionszelle,
+Terrain separat, freie Objektliste und unbeobachteten Kartenaußenbereich.
+Keine Baufreigabe; Identitätslücke und Kürzung nur synthetisch geprüft.
+Spiel pausiert, Backend läuft. Weitere Diagnosefamilien unverändert.
+[Vertrag und Nachweise](precheck-collision-pilot.md).
 Aktueller Stand und Gatezahlen: [Projektstand](../PROJECT_STATE.md).
 [Offene Arbeit](../BACKLOG.md) · [Lifecycle und Gate](../DEVELOPMENT_WORKFLOW.md).
 Git-Status und Laufzeitstand separat prüfen. Folgende Übergaben sind historisch.

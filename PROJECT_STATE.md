@@ -2,6 +2,22 @@
 
 ## Aktueller Stand — 2026-10-18
 
+**A12/N06 begrenzt abgenommen — Zellursachen der Baukollision.**
+2304 Unit-, 19 Integrations-, 13 Paket- und 35 Supervisor-Prüfungen bestanden;
+drei optionale Livefälle übersprungen, beide Builds ohne Warnungen/Fehler,
+fünf Paketdateien per SHA-256 bestätigt. MCP-Kennungen wie Gate.
+Live: Gebäude- und Pflanzen-IDs/Template-Typen an nativen Zellen unabhängig
+bestätigt; Terrain ohne Objekt-ID, freie Bodenfläche mit leerer Objektliste,
+Kartenaußenbereich ausdrücklich unbeobachtet. gameValidated bleibt false.
+Vollständig lesender Pilot, Spiel pausiert. Fehlende Identitäten/Kürzung nur
+synthetisch geprüft. [Vertrag und Nachweise](docs/precheck-collision-pilot.md).
+Hoher Nutzen bei kleinem bis mittlerem Aufwand über Mod/Transport/Schema;
+keine neue Abhängigkeit, kein größerer Refactoringbedarf. API weiterhin 0.74.0.
+Anleitung/Werkzeugübersicht aktualisiert; keine projektbezogenen Spielskills.
+Weitere Diagnosefamilien unverändert. Kein Gate offen.
+
+### Vorheriger Abschluss A12/N05
+
 **A12/N05 begrenzt abgenommen — Ingame-Fortschrittszählung korrigiert.**
 2292 Unit-, 19 Integrations-, 13 Paket- und 35 Supervisor-Prüfungen bestanden;
 drei optionale Livefälle übersprungen, beide Builds ohne Warnungen/Fehler,

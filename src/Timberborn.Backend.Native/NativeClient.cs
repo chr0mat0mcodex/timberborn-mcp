@@ -114,6 +114,7 @@ public sealed partial class NativeClient : IDisposable
             (d.Assessment == "blocked") != (d.Reasons.Length > 0) || d.Cells is null || d.Cells.Length is < 1 or > BuildingPolicy.MaxGeometryCells ||
             d.Cells.Any(c => c is null || c.Position is null || c.SupportRule is null) || !ValidCosts(d.Costs) || d.Limitations is null)
             throw new InvalidDataException("Invalid site precheck");
+        foreach (var cell in d.Cells) SiteCollisionContract.Validate(cell);
         return result;
     }
     private static bool ValidCosts(NativeCost[]? costs) => costs is not null && costs.Length <= 32 &&

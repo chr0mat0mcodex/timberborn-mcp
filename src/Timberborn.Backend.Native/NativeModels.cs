@@ -50,7 +50,10 @@ public sealed record NativeCost(string Id, int Required, int AvailableGlobally);
 public sealed record CatalogEntry(string Template, bool Available, bool FactionCompatible, bool? Unlocked, Position? Size,
     Position? Entrance, NativeCost[] Costs);
 public sealed record NativeCatalog(string Faction, CatalogEntry[] Items, string[] Limitations);
-public sealed record SiteCell(Position Position, bool InsideMap, bool Underground, bool OnGround, bool IntersectsObject, string SupportRule);
+public sealed record SiteCollisionObject(Guid? Id, string? Template);
+public sealed record SiteCollision(bool? IntersectsTerrain, string ObjectState, SiteCollisionObject[]? Objects, bool Truncated);
+public sealed record SiteCell(Position Position, bool InsideMap, bool Underground, bool OnGround, bool IntersectsObject, string SupportRule,
+    SiteCollision? Collision = null);
 public sealed record NativeSite(string Template, Position Origin, int Rotation, string Assessment, bool GameValidated,
     string[] Reasons, SiteCell[] Cells, Position? Entrance, bool? PathAtEntrance, NativeCost[] Costs, string[] Limitations, string[]? EntranceOccupants = null);
 public sealed record NativeValidation(string Template, Position Origin, int Rotation, bool GameValidated, bool? Valid,

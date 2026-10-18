@@ -109,10 +109,17 @@ public sealed class SpatialObservations(EntityRegistry entities, TemplateNameMap
             bool inside = terrain.Contains(p) && blocks.Contains(p);
             bool underground = inside && terrain.Underground(p);
             bool onGround = inside && terrain.OnGround(p);
-            bool intersects = inside && blocks.GetObjectsAt(p).Any(other => !other.IsPreview && !other.HasComponent<RecoveredGoodStack>() && other.IsIntersecting(block));
+            var collisions = inside ? blocks.GetObjectsAt(p)
+                .Where(other => !other.IsPreview && !other.HasComponent<RecoveredGoodStack>() && other.IsIntersecting(block))
+                .Distinct().Select(other => new {
+                    id = other.TryGetComponent<EntityComponent>(out var entity) && entity.EntityId != Guid.Empty ? (Guid?)entity.EntityId : null,
+                    template = other.TryGetComponent<TemplateSpec>(out var otherTemplate) ? otherTemplate.TemplateName : null
+                }).OrderBy(other => other.id).ThenBy(other => other.template, StringComparer.Ordinal).Take(33).ToArray() : null;
+            bool intersects = collisions is { Length: > 0 };
+            bool terrainIntersection = TerrainOccupancyPolicy.Intersects(block.IsOccupied,underground,block.Underground,block.OptionallyUnderground);
             if (!inside) reasons.Add("outside_map");
             if (intersects) reasons.Add("object_intersection");
-            if (TerrainOccupancyPolicy.Intersects(block.IsOccupied,underground,block.Underground,block.OptionallyUnderground)) reasons.Add("terrain_intersection");
+            if (terrainIntersection) reasons.Add("terrain_intersection");
             if (inside && block.IsFoundationBlock) {
                 bool stackable = p.z > 0 && blocks.GetObjectsAt(p + new Vector3Int(0,0,-1)).Any(other =>
                     !other.IsPreview && other.IsFinished && other.PositionedBlocks.GetAllBlocks().Any(b =>
@@ -122,6 +129,11 @@ public sealed class SpatialObservations(EntityRegistry entities, TemplateNameMap
                 if (block.MatterBelow.ToString() == "Stackable" && !stackable) reasons.Add("required_stackable_missing");
             }
             return new { position = Vec(p), insideMap = inside, underground, onGround, intersectsObject = intersects,
+                collision = request.GenericBuilding ? new {
+                    intersectsTerrain = inside ? (bool?)terrainIntersection : null,
+                    objectState = inside ? "observed" : "outside_map",
+                    objects = collisions?.Take(32).ToArray(), truncated = collisions is { Length: > 32 }
+                } : null,
                 occupation = block.Occupation.ToString(), occupationMask = (int)block.Occupation,
                 fullOccupation = block.Occupation == Block.FullFrom(p).Occupation && block.IsIntersecting(Block.FullFrom(p)),
                 supportRule = block.MatterBelow.ToString() };

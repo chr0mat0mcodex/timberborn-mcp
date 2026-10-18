@@ -1,5 +1,13 @@
 # Spielanleitung für Agenten
 
+N06 begrenzt abgenommen: `precheck_building.cells[].collision` nennt
+native Objektkollisionen mit `id`/`template` (maximal 32/Zelle, `truncated`) und
+`intersectsTerrain` separat. Fehlendes collision oder fehlende Identitäten sind
+unbekannt; `objectState=outside_map` ist ungeprüft, keine freie Zelle. Nur ein
+beobachtetes leeres Objektarray belegt keine Objektkollision. Kein Abrissauftrag
+und keine Baufreigabe. Gebäude/Pflanzen, Terrain, frei und außerhalb live geprüft;
+Identitätslücke und Kürzung nur synthetisch. [Nachweise](precheck-collision-pilot.md).
+
 N05-Anzeigekorrektur begrenzt abgenommen: Großprojekt-Ergebniszeilen zählen
 korrekt und trennen gespeicherten Projektstand von frischer „Bauprüfung“.
 Maßgeblich bleiben `partStates`/`summary.finishedAccessRecorded` (gespeichert)

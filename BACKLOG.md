@@ -2,11 +2,11 @@
 
 ## Aktuelle Arbeit
 
-**A12/N05 begrenzt abgenommen; N01/N02/N03/N04 ebenfalls abgeschlossen.**
-Gate und Livevergleich bestanden: laufende/terminale Zählung korrekt,
-gespeicherter Projektstand von frischer Bauprüfung getrennt, im Spiel sichtbar.
-[Ursache, Nachweise und Bewertung](docs/project-progress-display-pilot.md).
-Journal freigegeben, Spiel pausiert; weitere Pakete bleiben zurückgestellt.
+**A12/N06 begrenzt abgenommen; N01–N05 ebenfalls abgeschlossen.**
+Gate und lesender Livepilot bestanden: Gebäude/Pflanzenursachen, Terrain,
+freie und unbeobachtete Zelle korrekt getrennt. Spiel pausiert.
+[Vertrag, Nachweise und Bewertung](docs/precheck-collision-pilot.md).
+Weitere Diagnosefamilien und Pakete bleiben zurückgestellt.
 A03/A04/A05/A07/A08/A09/A10-Piloten abgenommen; weitere Erweiterungen zurückgestellt.
 A01/A02/A06/A11 abgeschlossen. Weitere A12-Pakete zurückgestellt. [Projektstand](PROJECT_STATE.md).
 
@@ -16,7 +16,7 @@ Prüfbasis und vollständiger Audit: [Archivstand](BACKLOG_HISTORY.md#archivstan
 Ergebnis: gezieltes Refactoring von Versionsprofilen, Werkzeugdispatch und
 Prüfketten sinnvoll; kein belegter Bedarf für einen Komplettumbau.
 Der ursprüngliche Audit war statisch. A06 ist inzwischen **abgeschlossen**;
-A03 ist **teilweise abgeschlossen**, A04 **teilweise abgeschlossen**; A05 ist **teilweise abgeschlossen**, A07 ist **teilweise abgeschlossen**, A08 ist **teilweise abgeschlossen**, A09 ist **teilweise abgeschlossen**, A10 ist **teilweise abgeschlossen**, A11 ist **abgeschlossen**, A12 ist **teilweise abgeschlossen (N01/N02/N03/N04/N05)**.
+A03 ist **teilweise abgeschlossen**, A04 **teilweise abgeschlossen**; A05 ist **teilweise abgeschlossen**, A07 ist **teilweise abgeschlossen**, A08 ist **teilweise abgeschlossen**, A09 ist **teilweise abgeschlossen**, A10 ist **teilweise abgeschlossen**, A11 ist **abgeschlossen**, A12 ist **teilweise abgeschlossen (N01/N02/N03/N04/N05/N06)**.
 P2 = vor der nächsten betroffenen Erweiterung, P3 = nach Bedarf;
 S/M/L sind relative Aufwandsschätzungen. Codeänderungen benötigen weiterhin
 das [menschliche Gate und den gezielten Livetest](DEVELOPMENT_WORKFLOW.md).
@@ -234,6 +234,11 @@ das [menschliche Gate und den gezielten Livetest](DEVELOPMENT_WORKFLOW.md).
   Ergebniszeilen mit strukturiertem Stand und Spielbild abgeglichen. Frische
   Diagnose bleibt getrennt. [Nachweise](docs/project-progress-display-pilot.md).
 
+- [x] **N06-Pilot abgenommen:** Objekt-ID/Template je kollidierender Zelle;
+  zwölf Testfälle und Gate grün. Gebäude/Pflanzen, Terrain, freie Fläche und
+  Kartenaußenbereich live getrennt belegt. Unbekannte Identität/Kürzung nur
+  synthetisch geprüft. [Nachweise](docs/precheck-collision-pilot.md).
+
 - [ ] **Bestehende Restarbeit, keine neu nachgewiesenen Regressionen:** B06
   (Reload), B03 (allgemeine Kraft-/Höhenrouten), B07 (Produktionsausbauplanung),
   F01/F02 (vollständiger Bauphasenschutz/Umweg vor Bestandsänderung) und F04/F05
@@ -265,7 +270,7 @@ Abschlussbeleg verworfen wurden. Herkunft: [archivierter Verlauf](BACKLOG_HISTOR
 | N03 — begrenzt abgeschlossen, A12 | [Einzelinjektionspilot abgenommen](docs/unknown-object-identity-pilot.md); weitere Fehlerfälle zurückgestellt. | Injektion klar markiert, repairEligible=false und closeEligible=false, Close/Repair tatsächlich abgelehnt; Objekt und Journal unverändert, nach Deaktivierung echte Freigaben wiederhergestellt. |
 | N04 — begrenzt abgeschlossen, A12 | [Livevergleich bestanden](docs/access-plan-key-pilot.md); historischer Fehler nicht reproduziert, keine behauptete Ursachenklärung. | Gleicher Plan/Schlüssel angenommen; geänderte Rotation mit altem Schlüssel vor Auftrag abgelehnt. 2/2 Teile fertig/zugänglich, Journal freigegeben. |
 | N05 — begrenzt abgeschlossen, A12/B10 | [Anzeigekorrektur abgenommen](docs/project-progress-display-pilot.md); weitere Auftragsfamilien unverändert. | Laufende 0/2 bzw. 1/2 und terminale 2/2 korrekt, Spielbild bestätigt; gespeicherte und frische Belege getrennt. |
-| N06 — offen | Kollisionsdiagnose von precheck_building um verursachende Objekt-ID/-typ ergänzen. | Terrain-, Objekt- und unbekannte Belegung getrennt und gegen native Zellen belegt. |
+| N06 — begrenzt abgeschlossen, A12 | [Zellweise Kollisionsbelege abgenommen](docs/precheck-collision-pilot.md); weitere Diagnosefamilien unverändert. | Gebäude-/Pflanzen-ID und Typ unabhängig bestätigt; Terrain, frei und unbeobachtet getrennt. Identitätslücke/Kürzung synthetisch. |
 | N07 — nur bei Wiederauftreten | `unconfirmed`/`run_not_found` bzw. Navigations-Baselinekonflikt anhand Session, Transport und Registrierung isolieren. | Ursache belegt oder Fall ausdrücklich unreproduziert; Antwortverlust nicht als Nichtausführung behandeln. |
 | N08 — Vorschlag | Optionale ausdrücklich gewünschte Abschlussgeschwindigkeit statt Pflichtpause entwerfen. | Besitzer-/Abbruch-/Fehlerfälle geklärt; bestehende Pause bleibt Standard bis zur gesonderten Freigabe und Abnahme. |
 | N09 — Vorschlag, B12 | Nutzen paralleler Leser gegenüber sofortiger Ablehnung messen. | Begrenzter Pilot zeigt Nutzen ohne Mutationsqueue, Replay oder blockierten Cancel; sonst zurückstellen. |
