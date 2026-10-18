@@ -155,6 +155,10 @@ public sealed class LargeProjectRecoveryTests
         Assert.Throws<InvalidDataException>(()=>NativeClient.ValidateLargeProject(Envelope(report),Read("close")));
         report["closeEligible"]=false;report["foreignSites"]=new JsonArray(Child);
         Assert.Throws<InvalidDataException>(()=>NativeClient.ValidateLargeProject(Envelope(report),Read("diagnose")));
+        report["repairScopeVersion"]=2;
+        NativeClient.ValidateLargeProject(Envelope(report),Read("diagnose"));
+        report["foreignSitesTruncated"]=true;
+        Assert.Throws<InvalidDataException>(()=>NativeClient.ValidateLargeProject(Envelope(report),Read("diagnose")));
     }
 
     [Theory]

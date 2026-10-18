@@ -4,6 +4,8 @@ Eigene Timberborn-Mod und MCP-Server für strukturierte Zustandsabfragen,
 kontrollierte Bau-/Betriebsaktionen und begrenzte Simulation.
 
 **Aktueller Stand:** Bridge 0.74.0 mit nachfolgenden MCP-Erweiterungen.
+
+**Begrenzter Abschluss akzeptiert:** [Parallele Bauprojekte und Projektprioritäten](docs/parallel-construction-gate.md), beide Prüflager fertig, Guardgrund und Mehrprojekt-Reparatur bestätigt; gültiger Sperr-/Umwegvergleich ausdrücklich im Backlog offen.
 Letzter fachlicher Abschluss ist die automatische Bretterketten-Vorprüfung,
 begrenzt live abgenommen; keine automatische Ausbauplanung oder Materialsperre.
 [Vertrag](docs/plank-chain.md#automatische-einbindung-vor-starts).

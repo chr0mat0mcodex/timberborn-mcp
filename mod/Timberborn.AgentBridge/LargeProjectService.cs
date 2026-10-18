@@ -60,6 +60,7 @@ public sealed partial class LargeProjectService(BuildingCatalog catalog, Preview
     }
     private object HandleCore(LargeProjectRequest r)
     {
+        if(r.Operation is "priority" or "set-priority") return ProjectPriority(r);
         if(r.Operation=="identity-pilot") return SetIdentityPilot(r);
         if(r.Operation=="plan-access") return PlanAccess(r);
         if(r.Operation is "diagnose" or "close") return Recover(r.ActionId, r.Operation == "close");
@@ -72,8 +73,8 @@ public sealed partial class LargeProjectService(BuildingCatalog catalog, Preview
             if(r.Operation=="stop") { batches[r.ActionId].Stop(); UpdateBatch(r.ActionId); return BatchReceipt(r.ActionId); }
             throw new BridgeRejectionException("state_conflict");
         }
-        if(activeBatch is not null && r.Operation is ("plan" or "start" or "advance"))
-            throw new BridgeRejectionException(r.Operation=="advance" ? "state_conflict" : "project_plan_busy");
+        if(activeBatch is not null && r.Operation is ("plan" or "start"))
+            throw new BridgeRejectionException("project_plan_busy");
         if(r.Operation=="plan") return Plan(r);
         if(r.Operation=="inspect") return Receipt(r.ActionId);
         if(r.Operation=="stop") {ledger.Stop(r.ActionId);return Receipt(r.ActionId);}
@@ -81,19 +82,21 @@ public sealed partial class LargeProjectService(BuildingCatalog catalog, Preview
         {
             if(ledger.Existing(r.ActionId,Fingerprint(r)) is not null) return Receipt(r.ActionId);
             if(ledger.Remaining==0)throw new BridgeRejectionException("large_project_journal_limit");
-            if(jobs.Count>=128 || BatchesBlockNewProject)throw new BridgeRejectionException("state_conflict");
+            if(jobs.Count>=128)throw new BridgeRejectionException("state_conflict");
             var plan=Plan(r);
             if((string?)plan["planKey"]!=r.PlanKey || (bool?)plan["pilotEligible"]!=true) throw new BridgeRejectionException("state_conflict");
             var baseline=roads.Capture();LargeProjectPlanningPolicy.RequireBaseline(baseline.Complete, baseline.Reason);
+            var protection=CaptureProtectedSites(r.Steps.SelectMany(s=>Resolve(s).GetSpec<BlockObjectSpec>().GetBlocks(Placement(s))),baseline);
             var ids=Enumerable.Range(0,r.Steps.Length).Select(i=>EntityId(r.ActionId,i)).ToArray();
             if(entities.Entities.Any(e=>ids.Contains(e.EntityId.ToString("D"))))throw new BridgeRejectionException("state_conflict");
-            ledger.Start(r.ActionId,r.PlanKey,Fingerprint(r),LargeProjectRequest.Order(r.Steps),ids);
+            ledger.Start(r.ActionId,r.PlanKey,Fingerprint(r),LargeProjectRequest.Order(r.Steps),ids,allowConcurrent:true);
             jobs.Add(r.ActionId,(r,baseline));
+            protectedSites.Add(r.ActionId,protection);
             // Fall through: submit the whole structure before returning the start receipt.
         }
         var job=jobs.TryGetValue(r.ActionId,out var stored)?stored:throw new BridgeRejectionException("state_conflict");
         var receipt=ledger.Inspect(r.ActionId);var district=District(job.Request.DistrictId);
-        bool Guard()=>!faulted && ConstructionIsolation.Allows(entities,receipt.EntityIds.Where((_,i)=>receipt.PartStates[i]!="pending"), allowOwnedInitialization:true) &&
+        bool Guard()=>!faulted && ParallelGuard(r.ActionId) &&
             RoadProtectionPolicy.LostConnections(job.Baseline.Before,roads.Read(job.Baseline,false)).Length==0;
         ledger.Advance(r.ActionId,clock.Elapsed.TotalSeconds,()=>GuardWithEvidence(r.ActionId,Guard),i=>Observe(job.Request.Steps[i],receipt.EntityIds[i],district),i=>Preflight(job.Request.Steps[i],r.Session,district,i,r.ActionId),i=>{
             var step=job.Request.Steps[i];var template=Resolve(step);var spec=template.GetSpec<BlockObjectSpec>();
@@ -162,7 +165,9 @@ public sealed partial class LargeProjectService(BuildingCatalog catalog, Preview
     private JObject Plan(LargeProjectRequest r, string[]? ownedSites = null)
     {
         LargeProjectPlanningPolicy.RequireAvailable(faulted, simulation.PauseSettled, false, true);
-        LargeProjectPlanningPolicy.RequireIsolation(ConstructionIsolation.Blocker(entities, ownedSites));
+        bool repair = r.Operation is "plan-repair" or "run-repair";
+        RequireKnownProjects(repair: repair);
+        RequireParallelInventory();
         var district=District(r.DistrictId, planning: true);var order=LargeProjectRequest.Order(r.Steps);
         var templates=r.Steps.Select(Resolve).ToArray();
         var cells=r.Steps.Select((s,i)=>templates[i].GetSpec<BlockObjectSpec>().GetBlocks(Placement(s)).Take(BuildingPolicy.MaxGeometryCells + 1).ToArray()).ToArray();
@@ -172,6 +177,7 @@ public sealed partial class LargeProjectService(BuildingCatalog catalog, Preview
             cells.SelectMany(c=>c).Max(c=>c.Coordinates.x)-cells.SelectMany(c=>c).Min(c=>c.Coordinates.x)>=32||
             cells.SelectMany(c=>c).Max(c=>c.Coordinates.y)-cells.SelectMany(c=>c).Min(c=>c.Coordinates.y)>=32)throw new ArgumentException("project_occupied_extent_limit");
         var baseline=roads.Capture();LargeProjectPlanningPolicy.RequireBaseline(baseline.Complete, baseline.Reason);
+        var protection=CaptureProtectedSites(cells.SelectMany(c=>c),baseline,ownedSites,repair);
         var before=entities.Entities.Where(e=>!e.Deleted).Select(e=>e.EntityId).ToHashSet();
         var beforeStock=Stocks();
         var existingNodes=entities.Entities.Where(e=>!e.Deleted&&e.Initialized&&e.TryGetComponent<BlockObject>(out var b)&&!b.IsPreview)
@@ -182,7 +188,7 @@ public sealed partial class LargeProjectService(BuildingCatalog catalog, Preview
         var active=new List<Preview>();var results=new object[r.Steps.Length];var activeNodes=new List<(int Index,Transput[] Ports)>();var links=new List<object>();
         var deferred=new bool[r.Steps.Length];
         var workReports=new WorkAccessReport[r.Steps.Length];
-        bool eligible=true;bool restored=false;bool[]? withPreview=null;
+        bool eligible=true;bool restored=false;bool[]? withPreview=null;bool foreignAccessPreserved=true;
         try
         {
             foreach(int i in order)
@@ -218,6 +224,10 @@ public sealed partial class LargeProjectService(BuildingCatalog catalog, Preview
                 if(preview.BlockObject.TryGetComponent<PathSpec>(out var path)) connected=district.IsOnPreviewDistrictRoad(NavigationCoordinateSystem.GridToWorld(preview.BlockObject.TransformCoordinates(path.MainPathCoordinates)));
                 var observed=roads.Read(baseline,true);int lost=RoadProtectionPolicy.LostConnections(baseline.Before,observed).Length;
                 eligible &= register && connected!=false && lost==0;
+                if(protection.Length>0) {
+                    foreignAccessPreserved &= roads.PreservesEveryConstructionAccess(baseline,true,repair);
+                    eligible &= foreignAccessPreserved;
+                }
                 // Only the current topological prefix is available at this construction stage.
                 // Required road helpers must precede the target through explicit dependencies.
                 workReports[i]=WorkAccess(r.Steps[i],district,
@@ -273,16 +283,19 @@ public sealed partial class LargeProjectService(BuildingCatalog catalog, Preview
         }
         if(faulted) throw new BridgeRejectionException("project_preview_failed");
         var safety=roads.Finish(baseline,withPreview,cells.SelectMany(c=>c).ToArray());
+        if(!safety.restored) { faulted=true;throw new BridgeRejectionException("project_preview_failed"); }
         eligible &= restored&&!faulted&&safety.restored&&safety.lostConnections==0&&!safety.constructionAccessPreview.HasKnownFailure()&&
             (safety.status=="safe"||safety.status=="unknown"&&safety.reasons.SequenceEqual(new[]{"construction_and_road_node_coverage_unproven"}));
         var result=JObject.FromObject(new{accessPolicyVersion=1,order,parts=results,powerLinks=links.ToArray(),pilotEligible=eligible,regularExecutionAllowed=false,
             restored=restored&&!faulted,sessionLocked=faulted,roadProtection=safety,
+            parallelConstruction=new { policyVersion=1, protectedSites=protection.Length, spatialSeparation=repair?"access_helpers_preserve_existing_connections":"one_cell_xy_margin_including_accesses", accessPreserved=foreignAccessPreserved },
             limitations=new[]{"explicit_3d_blueprint_not_automatic_terrain_route_search","maximum_32_parts_32x32_eight_occupied_levels","dependencies_order_submission_not_completion","joint_preview_not_builder_preflight","deferred_native_validation_is_unknown_until_real_supports_finish","entranceless_parts_have_no_invented_door","planned_power_ports_not_live_network_or_supply","new_districts_and_unsupported_catalog_layouts_excluded","no_reservation_or_execution_permission","no_material_delivery_or_production_guarantee"}});
         result["manualJournal"] = ManualJournal();
         // Runtime diagnostic counters and cached preview identities are not plan identity.
         // Start always repeats native validation; this key binds the blueprint and sampled baseline.
         result["planKey"]=Hash(Fingerprint(r)+"|"+r.ParentActionId+"|"+string.Join(",",before.OrderBy(id=>id))+"|"+string.Join(",",beforeStock)+"|"+
-            string.Join(",",baseline.Before.Select(b=>b?"1":"0"))+"|"+eligible);
+            string.Join(",",baseline.Before.Select(b=>b?"1":"0"))+"|"+eligible+"|"+
+            string.Join(";",protection.OrderBy(p=>p.Entity.EntityId).Select(p=>p.Entity.EntityId+":"+p.Template+":"+p.Position+":"+p.Orientation+":"+string.Join(",",p.Shape))));
         return result;
     }
 }

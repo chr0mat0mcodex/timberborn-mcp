@@ -36,11 +36,11 @@ public sealed class LargeProjectLedger
         if (entry.Fingerprint != fingerprint) throw new BridgeRejectionException("state_conflict");
         return entry.Result;
     }
-    public Receipt Start(string id, string key, string fingerprint, int[] order, string[] entityIds)
+    public Receipt Start(string id, string key, string fingerprint, int[] order, string[] entityIds, bool allowConcurrent = false)
     {
         var old = Existing(id, fingerprint); if (old is not null) return old;
         if (entries.Count >= Capacity) throw new BridgeRejectionException("large_project_journal_limit");
-        if (entries.Values.Any(e =>
+        if (!allowConcurrent && entries.Values.Any(e =>
             !e.Result.Released && e.Result.State != "completed" &&
             !(e.Result.State == "stopped" && e.Result.Reason == "stop_requested_objects_retained" && !e.PlacementAttempted)))
             throw new BridgeRejectionException("state_conflict");

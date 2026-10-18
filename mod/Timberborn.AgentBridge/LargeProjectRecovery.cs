@@ -44,6 +44,7 @@ public sealed partial class LargeProjectService
     private bool GuardWithEvidence(string id, Func<bool> guard)
     {
         if (guard()) return true;
+        simulation.CancelForConstructionGuard();
         var report = Diagnose(id);
         guardFailures[id] = new { reason="guard_changed", faulted, lostConnections=(int)report["lostConnections"]!,
             affected=report["affected"]!.DeepClone(), affectedTruncated=(bool)report["affectedTruncated"]!,
@@ -109,8 +110,8 @@ public sealed partial class LargeProjectService
                 builderWorkforce, constructionCenterId = job.Request.DistrictId, constructionCenterWorkingHours = centerWorkingHours,
                 workingHoursSource = "district_center_workplace_component", unfinishedSupportIndices = unfinishedSupports, construction, availableGoods = available };
         }).ToArray();
-        var report = JObject.FromObject(new { actionId=id, state=State(id), released=releasedProjects.Contains(id), currentSpeed=speed.CurrentSpeed,
-            closeEligible=ready && resolved, repairEligible=ready && !releasedProjects.Contains(id) && State(id)!="completed" && repairable && others.Length==0,
+        var report = JObject.FromObject(new { actionId=id, state=State(id), released=releasedProjects.Contains(id), currentSpeed=speed.CurrentSpeed, repairScopeVersion=2,
+            closeEligible=ready && resolved, repairEligible=ready && !releasedProjects.Contains(id) && State(id)!="completed" && repairable && others.Length<=32 && RepairContextKnown(),
             lastGuardFailure=guardFailures.TryGetValue(id, out var guardFailure) ? guardFailure : null,
             lastValidationFailure=validationFailures.TryGetValue(id, out var failure) ? failure : null,
             faulted, busy, lostConnections=lost.Length, affected, affectedTruncated=lost.Length>32,
@@ -164,26 +165,35 @@ public sealed partial class LargeProjectService
         return report;
     }
 
-    private string[] RepairOwned(string id) => repairParents.TryGetValue(id, out var parent) ?
-        Ids(parent).Where((_,i)=>Recorded(parent)[i]!="pending").ToArray() : Array.Empty<string>();
-    private bool RepairIdentitiesValid(string id) => !repairParents.TryGetValue(id, out var parent) ||
-        Enumerable.Range(0,Ids(parent).Length).All(i=>LargeProjectRecoveryPolicy.Repairable(Recorded(parent)[i],IdentityObservation(parent,i)));
-    private bool RepairFinished(string id) => !repairParents.TryGetValue(id, out var parent) ||
-        Enumerable.Range(0,Ids(parent).Length).All(i=>LargeProjectRecoveryPolicy.Resolved(Recorded(parent)[i],IdentityObservation(parent,i)));
+    private bool RepairContextKnown(string except = "") => jobs.Keys.Where(id=>id!=except && !releasedProjects.Contains(id)).All(id=>
+        TerminalProject(id) && Enumerable.Range(0,Ids(id).Length).All(i=>
+            ParallelConstructionPolicy.KnownRepairPart(Recorded(id)[i],IdentityObservation(id,i))));
+    private bool RepairIdentitiesValid(string id) => !repairParents.ContainsKey(id) || RepairContextKnown(id);
+    private bool RepairFinished(string id)
+    {
+        if (!repairParents.ContainsKey(id)) return true;
+        // Completion is restored access, not completion of unrelated industrial construction.
+        return RepairContextKnown(id) && jobs.Keys.Where(other=>other!=id && !releasedProjects.Contains(other)).All(other=>
+            Enumerable.Range(0,Ids(other).Length).All(i=>
+                ParallelConstructionPolicy.RepairAccessRestored(Recorded(other)[i],IdentityObservation(other,i)))) && protectedSites[id].All(site=>
+            site.Entity.TryGetComponent<BlockObject>(out var b) &&
+            (b.IsFinished || site.Entity.TryGetComponent<ReachableConstructionSite>(out var reachable) && reachable.IsReachableByBuilders()));
+    }
 
     private JObject PlanRepair(LargeProjectRequest r)
     {
-        if (!jobs.ContainsKey(r.ParentActionId)) throw new BridgeRejectionException("repair_parent_ineligible");
-        var report = Diagnose(r.ParentActionId);
-        if ((bool?)report["repairEligible"] != true) throw new BridgeRejectionException("repair_parent_ineligible");
-        if (jobs[r.ParentActionId].Request.DistrictId != r.DistrictId) throw new BridgeRejectionException("repair_district_mismatch");
+        if (r.ParentActionId.Length>0)
+        {
+            if (!jobs.ContainsKey(r.ParentActionId)) throw new BridgeRejectionException("repair_parent_ineligible");
+            var report = Diagnose(r.ParentActionId);
+            if ((bool?)report["repairEligible"] != true) throw new BridgeRejectionException("repair_parent_ineligible");
+            if (jobs[r.ParentActionId].Request.DistrictId != r.DistrictId) throw new BridgeRejectionException("repair_district_mismatch");
+        }
         if (r.Steps.Any(s=>!LargeProjectRecoveryPolicy.AccessHelper(s.Template))) throw new BridgeRejectionException("repair_helpers_only");
-        // Only the chosen parent may be unresolved. No unrelated ledger or nested repair bypass.
         if (repairParents.ContainsKey(r.ParentActionId)) throw new BridgeRejectionException("repair_nested");
-        if (jobs.Keys.Any(id=>id!=r.ParentActionId && !releasedProjects.Contains(id) &&
-            State(id)!="completed" && !(State(id)=="stopped" && Recorded(id).All(s=>s=="pending")))) throw new BridgeRejectionException("repair_other_project_unresolved");
-        var owned = Ids(r.ParentActionId).Where((_,i)=>Recorded(r.ParentActionId)[i]!="pending").ToArray();
-        var plan = Plan(r, owned);
+        if (!RepairContextKnown()) throw new BridgeRejectionException("repair_other_project_unresolved");
+        if (jobs.Values.Any(j=>j.Request.DistrictId!=r.DistrictId)) throw new BridgeRejectionException("repair_district_mismatch");
+        var plan = Plan(r);
         plan["parentActionId"] = r.ParentActionId;
         return plan;
     }

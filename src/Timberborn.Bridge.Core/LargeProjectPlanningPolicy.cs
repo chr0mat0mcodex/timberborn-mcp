@@ -7,6 +7,7 @@ public static class LargeProjectPlanningPolicy
     public static bool IsPreDispatchCode(string? code) => code is
         "project_plan_requires_pause" or "project_plan_faulted" or "project_plan_busy" or
         "project_plan_foreign_construction" or "project_plan_district_unavailable" or
+        "project_plan_foreign_site_nearby" or "project_plan_foreign_access_unknown" or "project_plan_unresolved_identity" or "project_plan_existing_access_lost" or
         "project_plan_construction_inventory_incomplete" or "project_plan_construction_initialization_pending" or
         "project_plan_construction_state_unknown" or
         "project_plan_navigation_access_limit" or "project_plan_navigation_comparison_limit" or "project_plan_navigation_no_probes" or

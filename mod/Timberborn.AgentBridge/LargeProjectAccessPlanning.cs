@@ -21,7 +21,8 @@ public sealed partial class LargeProjectService
     {
         LargeProjectPlanningPolicy.RequireAvailable(faulted, speed.CurrentSpeed==0,
             activeBatch is not null, true);
-        LargeProjectPlanningPolicy.RequireIsolation(ConstructionIsolation.Blocker(entities));
+        RequireKnownProjects();
+        RequireParallelInventory();
         var district=District(request.DistrictId, planning: true);
         var steps=request.Steps.Select(s=>new LargeProjectStep {Template=s.Template,X=s.X,Y=s.Y,Z=s.Z,Rotation=s.Rotation,DependsOn=s.DependsOn.ToArray()}).ToList();
         var originals=steps.Select(s=>Resolve(s).GetSpec<BlockObjectSpec>().GetBlocks(Placement(s)).Take(BuildingPolicy.MaxGeometryCells + 1).ToArray()).ToArray();

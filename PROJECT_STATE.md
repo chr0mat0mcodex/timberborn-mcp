@@ -2,6 +2,68 @@
 
 ## Aktueller Stand — 2026-10-18
 
+**Begrenzter Abschluss ausdrücklich akzeptiert (2026-10-18).**
+Der Nutzer akzeptiert die dokumentierte Teilabnahme als Abschluss des geprüften
+Umfangs und beauftragt Commit/Push. Der gültige Sperr-/Umwegvergleich bleibt
+ausdrücklich im Backlog offen; keine weitere Suche und keine allgemeine Schutzfreigabe.
+
+**Teilabnahme und letzte Livekontrolle:**
+Fertigübergang einer geschützten Altbaustelle inzwischen bestanden: Stapellager
+unter aktivem Wächter fertig und zugänglich, Wächter ohne Guardfehler/Zugangsverlust.
+Nur gültiger Sperr-/Umwegvergleich weiter offen. Zwölf Steuerungsaktionen im
+abschließenden Pilot; Industriepausen zurückgenommen, Wächterprojekt gestoppt,
+Wächterlager bleibt pausiert/unfertig. Tag 52, Stunde 21,375, Tempo 0, kein Lauf.
+Nutzerentscheidung: keine weitere Suche; begrenzten geprüften Stand sichern.
+
+**Mehrprojekt-Reparatur, Fertigbau und neuer Guardgrund live bestätigt.**
+Nach Allowlist-Korrektur menschliches Gate erfolgreich: 2389 Unit- und 19
+Integrationstests bestanden, drei optionale Integrationsfälle übersprungen.
+Geladene Build-/Katalogkennung bestätigt, Backend verbunden. Reparatur ohne
+Elternjournal stellte über eine Treppe alle sechs Altbaustellenzugänge wieder her;
+frischer Fertigzugang und Journalfreigabe trotz unfertiger Industrie bestätigt.
+Reparatur-Fremdgebäude, veraltete Prioritätsrevision und Planvorschaufehler korrekt
+behandelt. Ursprüngliches Reparaturzeitbudget lief zuvor ab; kein automatischer
+Fertigbau innerhalb dieses Budgets belegt.
+
+Vorheriger Tempokonflikt vom Nutzer als Benutzereingriff geklärt; kein offener
+MCP-Tempodefekt. Freigegebene Fortsetzung: Bauzentrum auf vier Sollarbeiter erhöht,
+vier zugewiesene bestätigt; ein 16-Stunden-Lauf bei Tempo 7 beendet beide Prüflager
+und drei Räumaufträge. Fertige Lagereingänge frei/zugänglich. Weitere Guardkontrolle
+stoppt bei Wegabriss automatisch mit `construction_guard_changed` und Pause.
+Kostenfreien Ersatzweg per Mehrprojekt-Reparatur wiederhergestellt: automatisch
+abgeschlossen und freigegeben trotz fünf unfertiger Altbaustellen. Alle fünf
+Builderzugänge sowie beide Lagereingänge abschließend bestätigt. Tag 51, Stunde
+15,375, Tempo 0, kein aktiver Lauf. Sieben Steuerungsaktionen plus drei Vorschauen.
+Zusätzliche Plattformbaustelle bleibt unfertig/erreichbar, Guardjournal gestoppt.
+Gültiger Sperr-/Umwegvergleich weiter offen: Plattform gültig ohne Verlust,
+quere Treppe ungültig trotz Verlust; deshalb keine vollständige Schutzabnahme.
+Keine weitere Suchserie; nächsten gültigen Testaufbau zuerst konkret entwerfen.
+[Aktuelle Nachweise und Stoppbefund](docs/parallel-construction-gate.md).
+Anleitung, Werkzeugübersicht, Reparaturvertrag, README und Backlog abgeglichen;
+keine projektbezogenen Spielskills vorhanden, keine Agentenregeln geändert.
+Nach dem erfolgreichen menschlichen Gate nur Dokumentation geändert;
+keine Agent-Builds/Tests/Installation. Sicherungsauftrag für den begrenzten Abschluss siehe oben.
+
+**Parallele Großprojekte und Projektpriorität: Gate erfolgreich, Liveabnahme teilweise.**
+Expliziter Nutzerauftrag nach reproduzierter Baustellenisolation beim Schutzbau.
+Begrenzte räumliche Ausnahme mit nativer Bestands-/Arbeitszugangsprüfung statt
+pauschaler Fremdbaustellensperre; mehrere manuelle Projekte mit gemeinsamem Zeitlauf,
+Prioritäten je Projekt mit Revisionsprüfung und Rücklesebelegen. Unbekannte Zugänge,
+unbestätigte Aufträge und nahe/gestapelte unabhängige Vorhaben bleiben gesperrt.
+[Vertrag, Grenzen und sechs Livefälle](docs/parallel-construction-gate.md).
+Menschliches Gate erfolgreich; geladene Kennungen bestätigt, Backend verbunden.
+Zwei gleichzeitige Lageraufträge neben vier Industriebaustellen bestätigt;
+Low/VeryHigh und veraltete Revision geprüft. Gültige Nahkontrolle korrekt gesperrt.
+Echte Treppenunterbrechung stoppt beide Projekte und MCP-Zeitlauf automatisch.
+Der damals unterbrochene Zugang ist inzwischen repariert; beide Prüflager fertig.
+Gültiger Sperr-/Umwegvergleich bleibt offen; Fertigübergang inzwischen oben belegt.
+Korrigierte Konflikt-/Vorschaufehler und Mehrprojekt-Reparatur teilweise live belegt.
+Begrenzter Abschluss akzeptiert, keine allgemeine Schutzabnahme. API 0.74.0;
+B06 bleibt zurückgestellt.
+Anleitung, Werkzeugübersicht und Isolationsdokument fachlich aktualisiert;
+keine projektbezogenen SKILL.md vorhanden, keine Agentenregeln geändert.
+
+
 **B06 auf Nutzerwunsch vorerst zurückgestellt (2026-10-18).**
 Entwurf und B06.1-Nachweise bleiben erhalten. B06.2/B06.3 nicht beginnen;
 Wiederaufnahme nur auf neuen ausdrücklichen Auftrag. Kein Folgepaket gestartet.

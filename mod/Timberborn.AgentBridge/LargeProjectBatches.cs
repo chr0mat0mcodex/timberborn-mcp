@@ -14,7 +14,6 @@ public sealed partial class LargeProjectService
     private readonly Dictionary<string, LargeProjectBatch> batches = new();
     private string? activeBatch;
     private double nextBatchObservation;
-    private bool BatchesBlockNewProject => batches.Values.Any(b => !releasedProjects.Contains(b.Inspect().ActionId) && b.Inspect().State != "completed" && !(b.Inspect().State == "stopped" && b.Inspect().Ordered == 0));
     private static string BatchFingerprint(LargeProjectRequest r) => Fingerprint(r) + "|" + r.Operation + "|" + r.ParentActionId + "|" + r.PlanKey + "|" + r.Speed + "|" + r.MaxGameHours + "|" + r.MaxRealSeconds;
     private object StartBatch(LargeProjectRequest r)
     {
@@ -26,8 +25,6 @@ public sealed partial class LargeProjectService
         if (jobs.ContainsKey(r.ActionId)) throw new BridgeRejectionException("project_start_identity_conflict");
         if (activeBatch is not null) throw new BridgeRejectionException("project_start_busy");
         if (jobs.Count >= 128) throw new BridgeRejectionException("project_start_capacity");
-        if (r.Operation != "run-repair" && (ledger.BlocksNewProject || BatchesBlockNewProject))
-            throw new BridgeRejectionException("project_start_unresolved");
         try { simulation.RequireBatchAvailable(); }
         catch (BridgeRejectionException ex) when (ex.Code == "state_conflict") {
             throw new BridgeRejectionException("project_start_simulation_unavailable");
@@ -40,6 +37,8 @@ public sealed partial class LargeProjectService
         LargeProjectStartPolicy.RequirePlan((string?)plan["planKey"], r.PlanKey, (bool?)plan["pilotEligible"] == true);
         var baseline = roads.Capture();
         LargeProjectPlanningPolicy.RequireBaseline(baseline.Complete, baseline.Reason);
+        var protection=CaptureProtectedSites(r.Steps.SelectMany(s=>Resolve(s).GetSpec<BlockObjectSpec>().GetBlocks(Placement(s))),baseline,
+            repair: r.Operation=="run-repair");
         var ids = Enumerable.Range(0, r.Steps.Length).Select(i => EntityId(r.ActionId, i)).ToArray();
         if (entities.Entities.Any(e => ids.Contains(e.EntityId.ToString("D")))) throw new BridgeRejectionException("project_start_entity_conflict");
         var batch = new LargeProjectBatch(r, BatchFingerprint(r), ids);
@@ -48,6 +47,7 @@ public sealed partial class LargeProjectService
         batch.Inspect().Simulation = run;
         if (r.Operation == "run-repair") repairParents.Add(r.ActionId, r.ParentActionId);
         batches.Add(r.ActionId, batch); jobs.Add(r.ActionId, (r, baseline)); activeBatch = r.ActionId;
+        protectedSites.Add(r.ActionId,protection);
         nextBatchObservation = 0;
         UpdateBatch(r.ActionId); // Issue the complete ready set while paused, then start simulation.
         return BatchReceipt(r.ActionId);
@@ -70,7 +70,7 @@ public sealed partial class LargeProjectService
         // All delegates run synchronously on Unity's main thread, between simulation ticks.
         // Native previews are removed before any placement, even while the simulation is running.
         batch.Tick(clock.Elapsed.TotalSeconds, simulation.InspectBatch(id), simulation.SpeedLocked,
-            () => GuardWithEvidence(id, () => !faulted && ConstructionIsolation.Allows(entities, receipt.EntityIds.Where((_, i) => receipt.PartStates[i] != "pending").Concat(RepairOwned(id)), allowOwnedInitialization: true) &&
+            () => GuardWithEvidence(id, () => !faulted && ParallelGuard(id) &&
                 RoadProtectionPolicy.LostConnections(job.Baseline.Before, roads.Read(job.Baseline, false)).Length == 0 && RepairIdentitiesValid(id)),
             i => Observe(job.Request.Steps[i], receipt.EntityIds[i], District(job.Request.DistrictId)),
             i => {

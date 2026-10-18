@@ -1,5 +1,26 @@
 # Backlog
 
+**Begrenzter Abschluss vom Nutzer akzeptiert; keine weitere Suche.**
+Fertigübergang einer geschützten Altbaustelle unter aktivem Guard bestanden.
+Gültiger Sperr-/Umwegvergleich bleibt ausdrücklich offen. Commit/Push des geprüften
+Teilumfangs am 2026-10-18 ausdrücklich beauftragt; keine allgemeine Schutzabnahme.
+
+**Restabnahme fortgeschritten:** Tempokonflikt vom Nutzer als Benutzereingriff
+geklärt. Beide Prüflager fertig/zugänglich, drei Räumaufträge erledigt, neuer
+Guardgrund und automatischer Mehrprojekt-Reparaturabschluss live bestätigt.
+Bei erneuter Beauftragung: gültigen entfernten Sperr-/Umweg-Testaufbau entwerfen;
+ungültige Treppenüberlagerung ist kein Schutzbeleg. [Belege](docs/parallel-construction-gate.md).
+
+**Begrenzter Abschluss (2026-10-18):** [Parallele Bauprojekte und Projektprioritäten](docs/parallel-construction-gate.md)
+implementiert, menschliches Gate erfolgreich, Liveabnahme teilweise: Parallelauftrag,
+Projektprioritäten, Nahschutz, Fertigbau und automatischer Guard-Zeitstopp belegt.
+Fertigübergang geschützter Altteile unter Guard belegt, gültiger Sperr-/Umwegvergleich
+offen. Mehrprojekt-Wiederanschluss abgeschlossen; beide Prüflager fertig/erreichbar.
+Zusätzliche Testplattform bleibt unfertig/erreichbar. Räumjob-/Lieferdiagnose
+als Verbesserung festhalten. Kein allgemeiner Wasserbau- oder Reload-Abschluss;
+B06 bleibt zurückgestellt.
+
+
 ## Aktuelle Arbeit
 
 **B06 auf Nutzerwunsch vorerst zurückgestellt (2026-10-18).**

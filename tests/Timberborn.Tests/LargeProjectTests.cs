@@ -170,14 +170,15 @@ public sealed class LargeProjectTests
     public void NewToolsUseIndependentBuildingGateAndCorrectMethods(bool enabled)
     {
         var tools=LargeProjectTools.Catalog(enabled).ToArray();
-        Assert.Equal(enabled?11:3,tools.Length);
-        foreach(var name in new[]{"plan-access","plan","start","advance","stop"}) {
+        Assert.Equal(enabled?13:4,tools.Length);
+        foreach(var name in new[]{"plan-access","plan","start","advance","stop","set-priority"}) {
             string path="/agent-api/v1/large-project-"+name;
             Assert.Equal(enabled,BridgeHttpServer.MethodAllowed("POST",path,false,false,enableBuildingPlacement:enabled));
             Assert.False(BridgeHttpServer.MethodAllowed("GET",path,false,true,true,true,enableBuildingPlacement:enabled));
             Assert.False(BridgeHttpServer.MethodAllowed("POST",path,true,false,enableBuildingPlacement:enabled));
         }
         Assert.True(BridgeHttpServer.MethodAllowed("GET","/agent-api/v1/large-project-inspect",false,false));
+        Assert.True(BridgeHttpServer.MethodAllowed("GET","/agent-api/v1/large-project-priority",false,false));
         Assert.True(BridgeHttpServer.MethodAllowed("GET","/agent-api/v1/power-network",false,false));
         Assert.All(tools,t=>Assert.Equal(!LargeProjectTools.Writes(t.Name),t.Annotations!.ReadOnlyHint));
     }

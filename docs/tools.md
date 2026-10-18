@@ -1,5 +1,16 @@
 # Native MCP-Werkzeuge
 
+Gate erfolgreich, begrenzter Abschluss ausdrücklich akzeptiert:
+[parallele Großprojekte](parallel-construction-gate.md).
+Mehrprojekt-Reparatur, Prioritäts-Revisionsfehler, zwei fertige Prüflager und
+Guardgrund `construction_guard_changed` belegt; gültiger Sperr-/Umwegvergleich offen.
+Geschütztes Alt-Stapellager unter aktivem Guard fertig/zugänglich, kein Guardfehler.
+`inspect_large_project_priority` liest Bauprioritäten und `revision`;
+`set_large_project_priority` schreibt mit `expectedRevision` und dem Bauschalter.
+Großprojektplanung/-start erlaubt begrenzt getrennte Baustellen unter vollständiger
+Bestands-/Arbeitszugangsprüfung. Ein gemeinsamer Zeitlauf, kein zweiter Tempobesitzer.
+
+
 N10-Pilot abgeschlossen: Negativkontrolle null Zyklen; nach kleinem Lager-/Kraftaufbau
 drei native Produktionszyklen in fünf Spielstunden. Ausgang 13→1 Bretter, neues
 Lager 0→14, altes Lager 20→20. Ausgabeentlastung und Lagerzufluss beobachtet;
@@ -691,10 +702,14 @@ reproduziert. [Belege und Diagnosegrenze](access-plan-key-pilot.md).
 | --- | --- | --- |
 | `diagnose_large_project` | Lesen/GET | Frische Teilzustände, Baustellenmaterial, Zugänge und Fehlerbelege |
 | `close_large_project` | Schreiben/POST, Baugate | Geklärtes terminales Ledger freigeben; Restteile aufgeben |
-| `plan_large_project_repair` | Vorschau/POST, Baugate | Zusätzliche Wege/Treppen/Plattformen für `parentActionId` prüfen |
+| `plan_large_project_repair` | Vorschau/POST, Baugate | Zugangshilfen für mehrere Baustellen; `parentActionId` optional, nach Reload weglassen |
 | `run_large_project_repair` | Schreiben/POST, Bau- und Tempogate | Eigene Reparaturcharge mit festem Budget; Originalaufträge nicht wiederholen |
 
-Sessionbindung, frischer Zustandsabgleich, fremde Baustellen ausgeschlossen.
+Vorbereitetes Mehrprojekt-Gate: Sessionbindung, frischer Zustandsabgleich aller
+Baustellen (maximal 32, ein Distrikt). Bekannte Unerreichbarkeit ist reparierbar;
+unbekannte Identitäten/Zugänge und laufende Altprojekte blockieren. Nur Zugangshilfen,
+erhaltene Verbindungen in jeder Phase schützen. Reparaturabschluss belegt fertige
+Hilfen und wieder erreichbaren Bestand, keinen Fertigbau der Industrieprojekte.
 `closeOutcome` entscheidet über den Abschluss, nicht allein Transportstatus `ok`.
 [Vertrag und Testfälle](project-recovery.md).
 

@@ -1,5 +1,44 @@
 # Spielanleitung für Agenten
 
+## Begrenzter Abschluss: parallele Großprojekte und Baupriorität
+
+Parallelauftrag/Prioritäten, Mehrprojekt-Reparatur ohne Elternjournal und
+Revisions-/Vorschaufehler nach Gate teilweise live bestätigt.
+Beide Prüflager fertig und zugänglich; Guardgrund `construction_guard_changed`
+und automatischer Reparaturabschluss trotz unfertiger Altbaustellen bestätigt.
+Fertigübergang einer geschützten Altbaustelle unter aktivem Guard ebenfalls belegt.
+Die Teilabnahme ist vom Nutzer als begrenzter Abschluss akzeptiert. Der gültige
+Sperr-/Umwegvergleich bleibt ausdrücklich im Backlog; keine weitere Suche ohne
+neuen Auftrag. `regularExecutionAllowed=false` und Entwicklungspilot-Grenzen
+bleiben bestehen: [Vertrag und Pilot](parallel-construction-gate.md).
+Mehrere `start_large_project` bei bestätigter Pause nacheinander beauftragen,
+Aufträge bestätigen, projektweise priorisieren und mit einem gemeinsamen
+`run_simulation_for` bauen lassen. `run_large_project` behält einen exklusiven
+Zeitlauf; vor weiteren Starts diesen beenden und die Pause bestätigen.
+
+Räumliche Trennung allein genügt nicht: ein Feld XY-Abstand einschließlich
+Arbeitszugängen, vollständige Identität, native Bestandswege und einzelne
+Baustellenzugänge müssen in jeder Vorschauphase erhalten bleiben. Maximal 32
+reguläre bestehende Baustellen in einer fertig verfügbaren Distriktzentrale;
+unbekannte/erweiterte Zugänge bleiben gesperrt. `project_plan_foreign_site_nearby`,
+`project_plan_foreign_access_unknown` und `project_plan_unresolved_identity`
+benennen verschiedene Blockaden. Keine Entfernung oder Fertigstellung erzwingen,
+um eine unbekannte Schutzprüfung zu umgehen.
+
+`inspect_large_project_priority` liefert `revision`; diese als `expectedRevision`
+an `set_large_project_priority` zusammen mit `priority` senden. Die Einstellung
+betrifft offene Baustellen, nicht Arbeitsplätze. Bei `partial_unconfirmed` nur
+frisch lesen, keine blinde Wiederholung. Priorität garantiert keine Lieferreihenfolge.
+Bei Zugangsverlust Projekt und MCP-Zeitlauf frisch lesen; `construction_guard_changed`
+bezeichnet den Guard-Abbruch. Für Reparaturen reine Wege/Treppen/Plattformen mit
+`plan_large_project_repair` prüfen und einmal mit neuer ID ausführen. Nach Reload
+`parentActionId` weglassen; vorhandene Baustellen werden frisch erfasst, alte
+Aufträge nicht rekonstruiert. Reparaturabschluss verlangt fertige Zugangshilfen
+und wieder erreichbaren Bestand, keinen Industriefertigbau. Details und Grenzen:
+[Reparaturablauf](project-recovery.md). Alte Einzel-/Vertikalpiloten behalten ihre
+Isolation. Badwater-Abfluss und Rückstau weiterhin getrennt prüfen.
+
+
 N10-Pilot abgeschlossen: Negativkontrolle null Zyklen; nach kleinem Lager-/Kraftaufbau
 drei native Produktionszyklen in fünf Spielstunden. Ausgang 13→1 Bretter, neues
 Lager 0→14, altes Lager 20→20. Ausgabeentlastung und Lagerzufluss beobachtet;
@@ -1246,12 +1285,16 @@ derselben Sitzung geprüft. Belegte Wegzelle und fremde Baustelle abgewiesen:
   `rejected` anhand der Diagnose klären. Restteile werden aufgegeben, nicht gebaut.
   Unbekannte Wirkungen nie durch eine neue ID umgehen.
 - Fehlender Bauzugang: Projekt stoppen, terminalen Zustand und Pause nachlesen,
-  dann `plan_large_project_repair` mit `parentActionId` und zusätzlichen Wegen,
-  Treppen/Plattformen. Bekannte Originalbaustellen sind erlaubter Bestand;
-  keine fremden Baustellen oder verschachtelten Reparaturen einschließen.
+  dann `plan_large_project_repair` mit zusätzlichen Wegen, Treppen/Plattformen.
+  Vorbereitetes Mehrprojekt-Gate: `parentActionId` optional; nach Reload weglassen.
+  Alle aktuellen Baustellen (maximal 32, ein Distrikt) frisch prüfen. Bekannte
+  Unerreichbarkeit ist reparierbar; unbekannte Identitäten/Zugänge blockieren.
+  Laufende Altprojekte zuerst stoppen. Kein Wiederaufbau alter Journale.
 - `run_large_project_repair` mit neuer ID, frischem Plan und festem Budget einmal
-  starten. Die Charge wartet auch auf beauftragte Originalteile; keine Wiederholung
-  ursprünglicher Platzierungen. Danach Originalprojekt schließen, Rest frisch planen.
+  starten. Abschluss verlangt fertige Hilfen und wieder erreichbare erfasste
+  Baustellen bzw. fertige Gebäudezugänge, keinen Fertigbau aller Altteile.
+  Bestehende und wiedergewonnene Zugänge bleiben geschützt. Alte Projekte bleiben
+  terminal; Originalaufträge nie wiederholen. Freigabe separat prüfen.
 - Temporäre Bauten einschließlich Straßen anschließend gezielt entfernen und
   rücklesen. Dauerhafte Gebäudezugänge zuvor prüfen. Rückgewinnungsstapel nicht
   mit `remove_debris` löschen: Rohstoffe erhalten und regulär einsammeln lassen;

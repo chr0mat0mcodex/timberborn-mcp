@@ -16,9 +16,10 @@ public sealed partial class NativeClient
             if(r.Operation is "run" or "run-repair")query+="&speed="+r.Speed+"&maxGameHours="+r.MaxGameHours+"&maxRealSeconds="+r.MaxRealSeconds;
         }
         else query+="&actionId="+r.ActionId;
+        if(r.Operation=="set-priority")query+="&priority="+r.Priority+"&expectedRevision="+r.ExpectedRevision;
         if(r.Operation=="identity-pilot")query+="&pilotAction="+r.PilotAction+"&partIndex="+r.PartIndex+"&mode=development_pilot";
         if(r.ReservedAreas.Length>0)query+="&reservedAreas="+Uri.EscapeDataString(ReservedArea.Encode(r.ReservedAreas));
-        if(r.Operation is "plan-repair" or "run-repair")query+="&parentActionId="+r.ParentActionId;
+        if(r.Operation is ("plan-repair" or "run-repair") && r.ParentActionId.Length>0)query+="&parentActionId="+r.ParentActionId;
         if (r.Operation is ("start" or "run" or "run-repair") && BeforeOperatingRun is { } preflight)
             await preflight(null, r, ct);
         ct.ThrowIfCancellationRequested();
@@ -34,6 +35,7 @@ public sealed partial class NativeClient
             ManualProjectJournalContract.Validate(d);
             var limits=d.GetProperty("limitations");
             if(limits.ValueKind!=JsonValueKind.Array||limits.GetArrayLength()>16||limits.EnumerateArray().Any(v=>v.ValueKind!=JsonValueKind.String||v.GetString() is not {Length:>0 and <=160}))throw new InvalidDataException();
+            if(r.Operation is "priority" or "set-priority") { ProjectPriorityContract.Validate(d,r); return; }
             if(r.Operation=="identity-pilot")
             {
                 if(d.GetProperty("actionId").GetString()!=r.ActionId || d.GetProperty("pilotAction").GetString()!=r.PilotAction ||
@@ -79,6 +81,11 @@ public sealed partial class NativeClient
             if(order.Length is <1 or >32||!order.Order().SequenceEqual(Enumerable.Range(0,order.Length)))throw new InvalidDataException();
             if(r.Operation is "plan" or "plan-repair")
             {
+                if(d.TryGetProperty("parallelConstruction",out var parallel)) {
+                    if(parallel.GetProperty("policyVersion").GetInt32()!=1 || parallel.GetProperty("protectedSites").GetInt32() is <0 or >32 ||
+                        parallel.GetProperty("spatialSeparation").GetString()!=(r.Operation=="plan-repair"?"access_helpers_preserve_existing_connections":"one_cell_xy_margin_including_accesses") ||
+                        !parallel.GetProperty("accessPreserved").GetBoolean() && d.GetProperty("pilotEligible").GetBoolean())throw new InvalidDataException();
+                }
                 if(!ValidPlanKey(d.GetProperty("planKey").GetString()??"")||!order.SequenceEqual(LargeProjectRequest.Order(r.Steps)))throw new InvalidDataException();
                 var parts=d.GetProperty("parts").EnumerateArray().ToArray();
                 if(parts.Length!=r.Steps.Length||d.GetProperty("powerLinks").GetArrayLength()>512)throw new InvalidDataException();
@@ -185,7 +192,10 @@ public sealed partial class NativeClient
         if(lost<0||affected.Length!=Math.Min(lost,32)||d.GetProperty("affectedTruncated").GetBoolean()!=(lost>32))throw new InvalidDataException();
         foreach(var a in affected) {CheckVector(a.GetProperty("position"));if(!a.GetProperty("baselineConnected").GetBoolean()||a.GetProperty("currentConnected").GetBoolean())throw new InvalidDataException();}
         var foreign=d.GetProperty("foreignSites").EnumerateArray().ToArray();
-        if(foreign.Length>32||foreign.Any(v=>!Guid.TryParseExact(v.GetString(),"D",out _))||repair&&foreign.Length!=0)throw new InvalidDataException();
+        bool multiRepair=d.TryGetProperty("repairScopeVersion",out var repairScope);
+        if(multiRepair && repairScope.GetInt32()!=2)throw new InvalidDataException();
+        if(foreign.Length>32||foreign.Any(v=>!Guid.TryParseExact(v.GetString(),"D",out _))||repair&&foreign.Length!=0&&!multiRepair ||
+            repair && d.GetProperty("foreignSitesTruncated").GetBoolean())throw new InvalidDataException();
         _=d.GetProperty("foreignSitesTruncated").GetBoolean();
     }
     private static void CheckPorts(JsonElement ports)

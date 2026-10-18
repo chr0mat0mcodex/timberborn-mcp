@@ -99,6 +99,7 @@ public sealed class RoadProtection(EntityRegistry entities, ConstructionAccessPr
     public bool[] Read(Sample sample, bool preview) => sample.Districts.SelectMany(d => sample.Probes.Select(p =>
         preview ? d.IsOnPreviewDistrictRoad(p.Access) : d.IsOnInstantDistrictRoad(p.Access))).ToArray();
     public void ObserveConstructionPreview(Sample sample, IEnumerable<Block> candidate) => construction.ObservePreview(sample.Construction, candidate);
+    public bool PreservesEveryConstructionAccess(Sample sample, bool preview, bool repair = false) => construction.PreservesEveryAccess(sample.Construction, preview, repair);
 
     public Report Finish(Sample sample, bool[]? withPreview, IEnumerable<Block> candidate)
     {

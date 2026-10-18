@@ -61,6 +61,11 @@ public sealed class SimulationControl
     public SimulationRunStatus InspectBatch(string id) => runs.Inspect(id);
     public void BeginBatch(string id) => runs.BeginDeferred(id, wall.Elapsed.TotalSeconds, speedCommand.Request);
     public void CancelBatch(string id) => runs.Cancel(id, Hours, speed.CurrentSpeed, wall.Elapsed.TotalSeconds, speedCommand.Request, speedLocked);
+    public void CancelForConstructionGuard()
+    {
+        // Cancel only our controller's active run; never override a user's manual speed.
+        if(runs.ActiveRunId is { } id) runs.Cancel(id, Hours, speed.CurrentSpeed, wall.Elapsed.TotalSeconds, speedCommand.Request, speedLocked, constructionGuard:true);
+    }
     public void ReleaseBatch(string id) { if (batchOwner == id && runs.Inspect(id).Terminal) batchOwner = null; }
     private readonly System.Diagnostics.Stopwatch wall = System.Diagnostics.Stopwatch.StartNew();
     public double ObservedGameHours => Hours;

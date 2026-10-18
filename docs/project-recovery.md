@@ -1,7 +1,12 @@
 # Projektabschluss, Blockadediagnose und Bauzugangsreparatur
 
-Stand 2026-10-11: menschliches Gate und begrenzter feature-spezifischer
-Livetest bestanden. Gemeinsamer 0.37.0-Build.
+Stand 2026-10-18: Gate erfolgreich; Mehrprojekt-Reparatur ohne Elternjournal mit
+sechs Altbaustellen und Freigabe trotz unfertiger Industrie live bestätigt.
+Der Nutzer akzeptiert den geprüften Umfang als begrenzten Abschluss; gültiger
+Sperr-/Umwegvergleich bleibt im Backlog. Automatischer Reparaturabschluss auch mit
+Elternjournal und fünf unfertigen Altbaustellen live bestätigt. Historischer
+0.37-Livebeleg weiter unten gilt nur für den damaligen Einzelprojektumfang.
+[Abschluss und Nachweisgrenzen](parallel-construction-gate.md).
 
 ## Werkzeugablauf
 
@@ -19,16 +24,18 @@ Livetest bestanden. Gemeinsamer 0.37.0-Build.
    aufgegeben; vorhandene Objekte bleiben erhalten. Abschluss ist keine
    Fertigmeldung des ursprünglichen Gesamtplans.
 3. Für fehlenden Bauzugang: laufendes Projekt zunächst stoppen und terminalen
-   Zustand sowie Pause nachweisen. `plan_large_project_repair` mit `parentActionId`,
+   Zustand sowie Pause nachweisen. `plan_large_project_repair` mit optionalem `parentActionId`,
    Distrikt und zusätzlichen Wegen/Treppen/Plattformen verwenden. Bestehende
    Stützen nicht erneut beauftragen. Ein Reparaturplan enthält nur Bauhilfen,
    höchstens 32 Teile, 32×32 Grundfläche und acht belegte Höhen. Schrittindizes
-   und Abhängigkeiten beziehen sich auf diesen neuen Plan.
+   und Abhängigkeiten beziehen sich auf diesen neuen Plan. Nach Reload Eltern-ID
+   weglassen: aktueller Bestand wird geprüft, alte Journale werden nicht rekonstruiert.
 4. `run_large_project_repair` mit gleicher Planung und `parentActionId`, frischem
    `planKey`, neuer `actionId` und festem Simulationsbudget starten. Die Mod baut
-   die Hilfen autonom und wartet anschließend auf die bereits beauftragten
-   Originalteile. Bestätigt entfernte Originalteile gelten als geklärt, nicht
-   als fertig gebaut. Neue/unbestätigte Fehlwirkungen stoppen die Reparatur.
+   die Hilfen autonom. Abschluss verlangt deren Fertigzugang und erreichbare
+   erfasste Baustellen bzw. fertige Gebäudezugänge, keinen Fertigbau der Originalteile.
+   Bestätigt entfernte Originalteile gelten als geklärt, nicht als fertig gebaut.
+   Neue/unbestätigte Fehlwirkungen stoppen die Reparatur.
 5. Nach Reparatur Originalprojekt erneut diagnostizieren und ausdrücklich
    schließen. Nicht erteilte Restteile frisch planen. Bauhilfen erst nach Prüfung
    der verbleibenden Zugänge gezielt abbauen; Straßen mitprüfen. Rückgewinnungs-
@@ -43,8 +50,9 @@ wiederholt. Abgeschlossene Projekte zählen weiterhin zum Sitzungslimit 128.
 - Frische Bestandsverluste: Anzahl, bis zu 32 betroffene Objekte/Zellen und
   vorherige/aktuelle Verbindung; abgeschnittene Listen sind gekennzeichnet.
 - Fremde Baustellen und aktive Ausführung getrennt ausweisen. Reparaturen dürfen
-  ausschließlich die bestätigten Baustellen ihres gewählten Ursprungsprojekts
-  als eigenen Bestand behandeln. Keine globale Abschaltung der Baustellenprüfung.
+  vollständig erfasste Baustellen mehrerer Projekte berücksichtigen (maximal 32,
+  ein Distrikt), einschließlich bekannter Unerreichbarkeit. Unbekannte Identitäten
+  oder Zugangsdaten sperren. Keine globale Abschaltung der Baustellenprüfung.
 - Baupause, fehlende Baumaterialbereitschaft, aktuelle Baustellenbestände,
   gesamte Vorlagenkosten sowie globale freie/gesamte Güterbestände getrennt.
   Kein berechneter Restbedarf, keine erfundene Liefer- oder Personalursache.
@@ -55,7 +63,7 @@ wiederholt. Abgeschlossene Projekte zählen weiterhin zum Sitzungslimit 128.
   Zeitpunkt vorhandenen Verbindungen. Frühere Verluste bleiben in der Diagnose
   des Ursprungsprojekts sichtbar; deren allgemeine Wiederherstellung wird nicht
   behauptet. Reguläre Bauprüfung und sofortige Einzelvorprüfung bleiben aktiv.
-- Keine verschachtelten Reparaturen, keine fremden offenen Projekte umgehen.
+- Kein Reparaturprojekt als Elternauftrag; laufende Altprojekte zuerst stoppen.
   Fehlgeschlagene Reparatur erst klären/abschließen, bevor eine neue folgt.
 - Keine automatische Routensuche, kein Umbau bestehender Teile, kein Abriss im
   Reparaturaufruf. Vorschau bleibt Entwicklungspilot, kein universeller

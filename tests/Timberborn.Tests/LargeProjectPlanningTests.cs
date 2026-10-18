@@ -12,6 +12,8 @@ public sealed class LargeProjectPlanningTests
     public static TheoryData<string> Codes => new() {
         "project_plan_requires_pause", "project_plan_faulted", "project_plan_busy",
         "project_plan_foreign_construction", "project_plan_district_unavailable",
+        "project_plan_foreign_site_nearby", "project_plan_foreign_access_unknown", "project_plan_unresolved_identity",
+        "project_plan_existing_access_lost",
         "project_plan_construction_inventory_incomplete", "project_plan_construction_initialization_pending",
         "project_plan_construction_state_unknown",
         "project_plan_navigation_access_limit", "project_plan_navigation_comparison_limit", "project_plan_navigation_no_probes",

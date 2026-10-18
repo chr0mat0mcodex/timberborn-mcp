@@ -243,6 +243,20 @@ public sealed class SimulationRunTests
         Assert.Equal(pauseApplies ? "cancel_requested" : "pause_unconfirmed", r.Reason);
     }
 
+    [Fact]
+    public void ConstructionGuardCancellationHasDistinctReasonAndConfirmedPause()
+    {
+        var c = new SimulationRunController(); var commands = new List<int>();
+        var r = c.Start(Parse(Query()), 24, 0, 0, commands.Add);
+        c.Tick(24.1, 3, 1, commands.Add);
+        c.Cancel(r.RunId,24.1,3,2,commands.Add,constructionGuard:true);
+        c.Tick(24.2,0,3,commands.Add);
+        Assert.Equal("cancelled",r.State);
+        Assert.Equal("construction_guard_changed",r.Reason);
+        Assert.True(r.PauseConfirmed);
+        Assert.Equal(2,commands.Count);
+    }
+
     [Theory]
     [InlineData("deadline")] [InlineData("stalled")] [InlineData("reversed")] [InlineData("blocked")]
     public void FailureRequestsPauseAndDoesNotClaimCompletion(string scenario)

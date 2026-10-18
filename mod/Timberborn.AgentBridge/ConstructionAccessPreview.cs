@@ -57,6 +57,7 @@ public sealed class ConstructionAccessPreview(INavigationRangeService ranges, IN
         public bool[] Before = Array.Empty<bool>();
         public bool[] PreviewBefore = Array.Empty<bool>();
         public bool[]? During;
+        public bool[] AccessBefore = Array.Empty<bool>(), AccessPreviewBefore = Array.Empty<bool>();
         public string Reason = "no_existing_construction_sites";
         public string DetailReason = "no_existing_construction_sites";
         public Vector3Int ConnectionOrigin;
@@ -109,7 +110,8 @@ public sealed class ConstructionAccessPreview(INavigationRangeService ranges, IN
                 s.OriginOnDistrictRoad = district.IsOnInstantDistrictRoad(NavigationCoordinateSystem.GridToWorld(s.ConnectionOrigin)); }
         }
         try { s.Before = Read(s, false, Array.Empty<Block>(), out s.DetailBefore);
-            s.PreviewBefore = Read(s, true, Array.Empty<Block>(), out s.DetailPreviewBefore); s.Reason = "captured"; }
+            s.PreviewBefore = Read(s, true, Array.Empty<Block>(), out s.DetailPreviewBefore);
+            s.AccessBefore = ReadAccesses(s, false); s.AccessPreviewBefore = ReadAccesses(s, true); s.Reason = "captured"; }
         catch { s.Reason = "construction_range_unavailable"; }
         return s;
     }
@@ -153,6 +155,21 @@ public sealed class ConstructionAccessPreview(INavigationRangeService ranges, IN
         }
         return s.Accesses.Select(cells => cells.Any(set.Contains)).ToArray();
     }
+    private bool[] ReadAccesses(Sample s, bool preview)
+    {
+        var origin = NavigationCoordinateSystem.GridToWorld(s.District!.CenterCoordinates);
+        var nodes = (preview ? ranges.GetRoadSpillPreviewNodesInRange(origin) : ranges.GetRoadSpillNodesInRange(origin)).Take(32769).ToArray();
+        if (nodes.Length > 32768) throw new InvalidOperationException("construction_range_limit");
+        var set = new HashSet<Vector3Int>(nodes);
+        return s.Accesses.SelectMany(c => c).Select(set.Contains).ToArray();
+    }
+    public bool PreservesEveryAccess(Sample s, bool preview, bool repair = false)
+    {
+        if (s.Reason != "captured" || !repair && !s.Observed.All(v => v) ||
+            !s.Before.SequenceEqual(s.Observed) || !s.Before.SequenceEqual(s.PreviewBefore)) return false;
+        try { return ParallelConstructionPolicy.Preserved(s.AccessBefore, s.AccessPreviewBefore, ReadAccesses(s, preview), repair); }
+        catch { return false; }
+    }
     public void ObservePreview(Sample s, IEnumerable<Block> candidate)
     {
         if (s.Reason != "captured") return;
@@ -175,6 +192,8 @@ public sealed class ConstructionAccessPreview(INavigationRangeService ranges, IN
         catch { report.reason = "construction_range_unavailable"; return report; }
         report.baselineMatches = s.Before.SequenceEqual(s.PreviewBefore) && s.Before.SequenceEqual(s.Observed);
         report.restored = s.Before.SequenceEqual(after) && s.PreviewBefore.SequenceEqual(previewAfter) && s.Observed.SequenceEqual(observedAfter);
+        try { report.restored &= s.AccessBefore.SequenceEqual(ReadAccesses(s,false)) && s.AccessPreviewBefore.SequenceEqual(ReadAccesses(s,true)); }
+        catch { report.restored = false; }
         var detailDuring = s.DetailDuring;
         report.details.reason = s.DetailReason;
         if (s.DetailReason == "captured" && detailDuring is not null)

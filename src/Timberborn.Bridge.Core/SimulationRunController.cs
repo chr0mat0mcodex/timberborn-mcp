@@ -214,17 +214,18 @@ public sealed class SimulationRunController
         else if (now - lastProgress >= 120) BeginPause("failed", "simulation_stalled", now, changeSpeed);
     }
 
-    public SimulationRunStatus Cancel(string id, double hours, float speed, double now, Action<int> changeSpeed, bool speedLocked = false)
+    public SimulationRunStatus Cancel(string id, double hours, float speed, double now, Action<int> changeSpeed, bool speedLocked = false, bool constructionGuard = false)
     {
+        string reason = constructionGuard ? "construction_guard_changed" : "cancel_requested";
         var r = Inspect(id);
         if (!r.Terminal) {
             if (r.CompletionSpeed == 1) {
-                r.CompletionFallbackReason = "cancel_requested";
+                r.CompletionFallbackReason = reason;
                 // Cancel can replace a successful completion pause without resetting its deadline.
-                if (r.State == "pausing") { finishState = "cancelled"; finishReason = r.Reason = "cancel_requested"; }
+                if (r.State == "pausing") { finishState = "cancelled"; finishReason = r.Reason = reason; }
             }
             Observe(r, hours, speed, now);
-            BeginPause("cancelled", "cancel_requested", now, changeSpeed, speedLocked);
+            BeginPause("cancelled", reason, now, changeSpeed, speedLocked);
         }
         return r;
     }

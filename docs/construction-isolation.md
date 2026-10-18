@@ -1,4 +1,12 @@
-# B-Minimalabschluss: konservative Baustellensperre
+# Baustellenisolation: begrenzte Parallelbauprüfung und historische Abnahme
+
+Aktueller geprüfter Umfang als begrenzter Abschluss akzeptiert: Für explizite Großprojekte ersetzt
+[die begrenzte Parallelbauprüfung](parallel-construction-gate.md) den pauschalen
+Ausschluss räumlich getrennter Baustellen. Nähe, unbekannte Zugänge, widersprüchliche
+Objekte und unbestätigte Aufträge bleiben gesperrt. Alte Einzel-/Vertikalpiloten
+behalten ihre Isolation. Die folgenden Abschnitte dokumentieren den historischen
+0.32.1-Umfang und sind kein aktueller Vertrag für die neue Großprojekterweiterung.
+
 
 0.32.1 nach menschlichem Skript-Gate am 2026-10-03 live bestanden.
 Vom Nutzer freigegebener Ansatz: unbewiesenen hypothetischen Builder-Schutz nicht
