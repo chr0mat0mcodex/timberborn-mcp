@@ -1,5 +1,43 @@
 # Projektstand
 
+Bretterketten-Vorprüfung **begrenzt live abgenommen**: `inspect_plank_chain`
+bündelt Holzversorgung, Sägewerksbetrieb, Kraft und Lager-/Transportbelege im
+gewählten Bezirk. Nur Diagnose und konkrete nächste Schritte; kein automatischer
+Ausbau oder Material-Startverbot. [Ablauf und Grenzen](docs/plank-chain.md).
+
+MCP-Erweiterung mit bestehenden nativen Lesern; keine neue Mod-API.
+Menschliches Korrekturgate 2026-10-18 bestanden: 2013 Unit- und 13
+Integrationstests, drei optionale Livefälle übersprungen, Release-Build ohne Fehler.
+Die zuvor fehlenden Katalogerwartungen sind korrigiert; strikte Vergleiche bleiben.
+Nach Codex-Neustart ist inspect_plank_chain auch im Client verfügbar.
+
+Liveabgleich: vier Holzfäller und zwei Sägewerke im gewählten Bezirk vollständig
+ausgewählt. Betrieb aller sechs Produzenten stimmt mit Einzelabfragen überein;
+Inventare, Kraft und Lager-/Wegbelege beider Sägewerke separat bestätigt.
+Rezept: ein Holz zu einem Brett in 1,25 Stunden; verfügbare globale Vorräte
+260 Holz und 33 Bretter. Ein Sägewerk pausiert, ohne Personal: inaktiver Verbraucher
+ist kein Anschlussfehler. Das andere ist besetzt und in Arbeitszeit, hat aber
+13 Bretter im vollen Inventar und Kraftversorgung 0 bei Bedarf 50.
+Fünf erreichbare Holzquellen dort; beim pausierten Werk bleibt Erreichbarkeit
+unbekannt. Kein geeignetes Bretterziel in der vollständigen nativen Suche gefunden.
+Nächste Schritte: Pause/Personal prüfen, Kraftversorgung herstellen und vorhandene
+Lager auf Bretterauswahl, Annahme und freien Platz prüfen; Ausbau nur separat entscheiden.
+
+Separater Messlauf beider Werke: exakt eine Spielstunde, 2,97 Echtzeitsekunden,
+unverändertes Höchstbudget 30 Sekunden, overshootHours=0. Je null Zyklen,
+eine Stunde multiple_blockers; frische Diagnose bestätigt dieselben Ursachen.
+Lauf trotz Betriebsblockaden gestartet, automatisch beendet und Pause bestätigt;
+frische Tempoabfrage zeigt 0, keinen aktiven Lauf und keinen ausstehenden Auftrag.
+Keine Einstellungen geändert, kein Ausbau und keine automatische Budgetverlängerung.
+
+Grenzen: kein erfolgreicher Produktionszyklus und kein Materialmangel live geprüft.
+Holzknappheit ohne pauschale Startsperre ist durch synthetische Gate-Tests abgedeckt.
+Vorprüfung bleibt lesend und productionProven=false; globale Bestände und
+erreichbare Quellen sind keine Liefer- oder Dauerproduktionsgarantie.
+
+Anleitung und Werkzeugdoku
+aktualisiert; keine projektbezogenen Spielskills vorhanden, Hermes bleibt entfernt.
+
 
 ## Fortschrittspilot 2026-10-18 — begrenzt live bestanden
 
@@ -232,7 +270,7 @@ kleiner Strukturpilot mit vollständigen Bau-/Hilfskosten. Deshalb noch kein
 abschließender Feature-Commit/Push. Kein weiterer Build erforderlich, solange
 kein Code geändert wird. Nach Client-Neustart aktuelle Sitzung neu lesen.
 
-## Automatische Betriebsdiagnose — vorbereitet, Gate/Live offen (2026-10-18)
+## Automatische Betriebsdiagnose — begrenzt live abgenommen (2026-10-18)
 
 Erster Gate-Lauf für die automatische Variante: 28 Supervisor-Tests bestanden;
 Build durch xUnit2031 im neuen Test abgebrochen. Assert.Single verwendet nun
@@ -317,7 +355,7 @@ kein aktiver Lauf/ausstehender Tempoauftrag. Keine Überflutung im Pilot:
 Überflutungs-Priorität bleibt synthetisch geprüft. Featureabschluss und Commit
 stehen bis erneutem Gate und gezieltem Livevergleich der Warnung aus.
 
-## Gemeinsame Betriebsdiagnose — vorbereitet, Gate/Live offen (2026-10-18)
+## Gemeinsame Betriebsdiagnose — begrenzt live abgenommen (2026-10-18)
 
 Erster menschlicher Gate-Lauf: Build ohne Warnungen/Fehler, 28 Supervisor-
 und 1948 Unit-Tests bestanden. Integration abgebrochen: neue Reader-Bezeichnung

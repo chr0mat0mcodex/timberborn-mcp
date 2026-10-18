@@ -2,12 +2,14 @@
 
 ## Aktuelle Arbeit
 
-Fortschrittsdiagnose im begrenzten Umfang abgeschlossen; kein Gate ausstehend.
+Bretterketten-Vorprüfung und Fortschrittsdiagnose sind begrenzt live abgeschlossen.
+[Nachweise und Grenzen](docs/plank-chain.md). Kein weiteres Feature begonnen.
 
 ## Aktuell offene Folgearbeiten
 
 - Produktionsketten vor Bau gemeinsam planen: Zutaten, Lager/Transport, Personal
-  und Kraft (B07); derzeit noch kein vollständiger Ausbauplan.
+  und Kraft (B07): erste lesende Bretterketten-Vorprüfung live abgenommen; weiterhin
+  kein vollständiger oder automatischer Ausbauplan.
 - Recovery: unbekannte Objektidentität deterministisch live nachweisen. Keine
   ungezielten Zeitrennen oder Save-Manipulation; Testmechanismus noch zu entscheiden.
 - Parameterfehler bei Kartenabfragen um konkrete Kartengrenzen ergänzen.
@@ -17,6 +19,11 @@ Fortschrittsdiagnose im begrenzten Umfang abgeschlossen; kein Gate ausstehend.
   (B03) bleiben eigenständige größere Arbeitspakete.
 
 ## Zuletzt abgeschlossen
+
+- Bretterketten-Vorprüfung: sechs Produzenten gegen Einzelabfragen abgeglichen;
+  Pause/Personal, Kraftmangel und volle Ausgabe korrekt benannt. Begrenzte Messung
+  endet nach einer Spielstunde mit Pause, ohne Ausbau oder Budgetverlängerung.
+  Holzknappheit synthetisch geprüft; erfolgreiche Produktion hier nicht nachgewiesen.
 
 - Fortschrittsdiagnose: Ausgangswerte, Materialwarten und Fertigstellung gegen
   Einzelabfragen live bestätigt. Zwei feste Zeitfenster stoppen ohne Verlängerung;

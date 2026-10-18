@@ -1,5 +1,10 @@
 # Einstieg
 
+Bretterketten-Vorprüfung **begrenzt live abgenommen**: `inspect_plank_chain`
+bündelt Holzversorgung, Sägewerksbetrieb, Kraft und Lager-/Transportbelege im
+gewählten Bezirk. Nur Diagnose und konkrete nächste Schritte; kein automatischer
+Ausbau oder Material-Startverbot. [Ablauf und Grenzen](docs/plank-chain.md).
+
 Fortschrittsdiagnose **begrenzt live abgenommen**: frische Baudiagnose vor
 und nach einem begrenzten Zeitfenster vergleichen. Lieferung, Baufortschritt
 und unveränderten Fortschritt anhand belegter Messwerte trennen. Keine automatische
