@@ -116,6 +116,7 @@ public static class StatusWaitTools
         var d = result["data"] as JsonObject ?? throw new InvalidDataException("Missing status receipt");
         var core = new JsonObject { ["tool"] = name, ["session"] = result["meta"]?["sessionId"]?.DeepClone() };
         foreach (string key in new[] { "runId","actionId","state","reason","observedSpeed","pauseConfirmed","terminal",
+            "completionSpeed","effectiveCompletionSpeed","completionSpeedConfirmed","completionPauseObserved","completionFallbackReason",
             "targetReached","stockTargetReached","productionTargetsReached","buildingProductionReached","observedAvailableLogs",
             "observedScience","goodTargets","partStates","blockedPart","deferredParts","released" })
             if (d.ContainsKey(key)) core[key] = d[key]?.DeepClone();

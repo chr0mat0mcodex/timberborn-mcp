@@ -69,6 +69,11 @@ public static class ActivityOutcome
         string hours="Dauer unbekannt";
         if(d["elapsedGameHours"] is JsonValue v&&v.TryGetValue<double>(out var h)&&!double.IsNaN(h)&&!double.IsInfinity(h)&&h>=0)
             hours=h.ToString("0.###",CultureInfo.GetCultureInfo("de-DE"))+" Spielstunden";
+        if (Text(d,"state")=="completed" && Flag(d,"completionSpeedConfirmed")==true &&
+            Count(d,"effectiveCompletionSpeed")==1 && Flag(d,"completionPauseObserved")==true)
+            return $"Zeitfenster beendet: {hours}. Tempo 1 bestätigt; weitere Simulation ohne Laufbudget und Überwachung.";
+        if (Text(d,"state")=="completing")
+            return $"Zeitziel erreicht: {hours}; Übergabe an Tempo 1 noch unbestätigt, Laufbesitzer bleibt gebunden.";
         string pause=Flag(d,"pauseConfirmed")==true?"Pause bestätigt.":"Pause nicht bestätigt.";
         if(Flag(d,"terminal")!=true)return Text(d,"state")=="running"?$"Simulation läuft: {hours}; Abschluss offen.":$"Simulationsauftrag läuft noch an oder wird gestoppt: {hours}; Abschluss offen.";
         string state=Text(d,"state") switch {"completed"=>"Simulation beendet", "cancelled"=>"Simulation abgebrochen", "interrupted"=>"Simulation unterbrochen", "failed"=>"Simulation mit Fehler beendet", _=>"Simulationslauf beendet"};

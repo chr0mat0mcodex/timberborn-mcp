@@ -1143,6 +1143,24 @@ DomedGarden samt automatischem Zugang live fertig; Hex-Platzierung, eingangslose
 Großgebäude und Sonderstandorte ausdrücklich zurückgestellt. Keine pauschale
 Abnahme aus dem Katalog ableiten. [Nachweis und Grenzen](large-building-geometry.md).
 
+## A12/N08: Abschlussgeschwindigkeit — begrenzt live abgenommen
+
+Nur reine `run_simulation_for`-Zeitläufe erhalten optional `completionSpeed=0|1`.
+Fehlend oder 0: wie bisher pausiert abschließen. 1: zuerst Pause bestätigen,
+dann einmal Tempo 1 anfordern und beobachten; `completing` ist noch nicht terminal
+und hält den Laufbesitzer. Danach läuft das Spiel ohne Laufbudget und Überwachung
+weiter. Nicht mit buildingIds, measureProduction oder Bestands-/Forschungszielen
+kombinieren; until und interne Bau-/Reparaturläufe bleiben unverändert.
+
+Erfolg nur mit completionSpeedConfirmed, effectiveCompletionSpeed=1,
+completionPauseObserved und beobachtetem Tempo 1. pauseConfirmed ist dabei false.
+Fehler, Cancel und Spielsperre verwerfen den Wunsch; keine automatische Wiederholung.
+Bericht nach terminalem Abschluss eingefroren: aktuelles Tempo separat lesen.
+Cancel einer terminalen ID pausiert nicht; dafür frischen regulären Tempobefehl nutzen.
+Standardpause, Tempo-1-Abschluss und Cancel-Pause live bestanden. Abschlussrennen,
+Lock/Unload/Budget und Antwortverlust nur synthetisch geprüft.
+[Vertrag und Livebelege](completion-speed-pilot-design.md).
+
 ## Produktionsziele — gezielt live abgenommen
 
 Für Materialwartezeit `run_simulation_for` mit `goodTargets` (bis acht eindeutige

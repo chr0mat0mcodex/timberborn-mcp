@@ -27,7 +27,13 @@ public sealed class SimulationControl
         events.Register(this);
     }
     [OnEvent]
-    public void OnSpeedLockChanged(SpeedLockChangedEvent change) { speedLocked = change.IsLocked; speedLockObserved = true; }
+    public void OnSpeedLockChanged(SpeedLockChangedEvent change) {
+        speedLocked = change.IsLocked; speedLockObserved = true;
+        if (speedLocked) {
+            runs.CompletionLocked(wall.Elapsed.TotalSeconds, speedCommand.Request);
+            if (runs.IsPausing && speedCommand.PendingSpeed is > 0) speedCommand.Clear();
+        }
+    }
     private readonly SimulationRunController runs = new();
     private readonly DeferredSpeedCommand speedCommand = new();
     private string? batchOwner;
@@ -80,8 +86,12 @@ public sealed class SimulationControl
         // Do not let the old CurrentSpeed acknowledge a newly queued pause/start.
         // The following bridge update occurs after SpeedManager's LateUpdate.
         if (speedCommand.HasPending && !speedLocked) {
+            if (runs.IsCompleting && !runs.PrepareCompletionDispatch(Hours, speed.CurrentSpeed, wall.Elapsed.TotalSeconds, speedCommand.Request)) {
+                if (!runs.HasActiveRun) speedCommand.Clear();
+                return;
+            }
             try { speedCommand.Apply(s => speed.ChangeSpeed(s)); }
-            catch { runs.SpeedCommandFailed(); }
+            catch { runs.SpeedCommandFailed(wall.Elapsed.TotalSeconds, speedCommand.Request); }
             CleanupBuildingProof();
             return;
         }

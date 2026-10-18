@@ -12,6 +12,7 @@ public sealed class SimulationRunRequest
     public double TargetHours { get; private set; }
     public int Speed { get; private set; }
     public int ExpectedSpeed { get; private set; }
+    public int CompletionSpeed { get; private set; }
     public int MaxRealSeconds { get; private set; }
     public int? StopAtAvailableLogs { get; private set; }
     public ProductionTarget[] GoodTargets { get; private set; } = Array.Empty<ProductionTarget>();
@@ -37,6 +38,7 @@ public sealed class SimulationRunRequest
         if (r.Route == "simulation-run-for" && q["stopAtScience"] is not null) keys.Add("stopAtScience");
         if (r.Route == "simulation-run-for" && q["buildingIds"] is not null) keys.Add("buildingIds");
         if (r.Route == "simulation-run-for" && q["measureProduction"] is not null) keys.Add("measureProduction");
+        if (r.Route == "simulation-run-for" && q["completionSpeed"] is not null) keys.Add("completionSpeed");
         if (r.Route == "simulation-run-until") keys.AddRange(new[] { "dayNumber", "hour" });
         if (q.Count != keys.Count || q.AllKeys.Any(k => k is null || !keys.Contains(k))) throw new ArgumentException();
         string Read(string key) { var v = q.GetValues(key); if (v is null || v.Length != 1) throw new ArgumentException(); return v[0]; }
@@ -54,6 +56,11 @@ public sealed class SimulationRunRequest
             r.MaxRealSeconds = Integer("maxRealSeconds", 30, 86400);
         }
         if (r.Route == "simulation-run-for") {
+            if (q["completionSpeed"] is not null) {
+                r.CompletionSpeed = Integer("completionSpeed", 0, 1);
+                if (new[] { "stopAtAvailableLogs", "goodTargets", "stopAtScience", "buildingIds", "measureProduction" }.Any(k => q[k] is not null))
+                    throw new ArgumentException("completion_speed_requires_pure_time_run");
+            }
             double factor = Read("unit") switch { "hours" => 1, "days" => 24, "weeks" => 168, _ => throw new ArgumentException() };
             r.DurationHours = Number("duration", 0.000001, 672) * factor;
             if (r.DurationHours > 672) throw new ArgumentException();

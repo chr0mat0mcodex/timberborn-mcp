@@ -2,15 +2,23 @@
 
 ## Aktueller Stand — 2026-10-18
 
-**A12/N08 geklärt — begrenzter Entwurf, Umsetzung offen.**
-Optionale Abschlussgeschwindigkeit betrifft Pausebeleg, Besitzerfreigabe und
-verzögerte Tempobefehle. Empfehlung: nur reine run_simulation_for-Zeitläufe,
-completionSpeed 0/1; Standardpause erhalten, Fehler/Cancel ohne Weiterlaufen.
-[Entwurf, Konfliktfälle und Abnahmeplan](docs/completion-speed-pilot-design.md).
-Nutzen plausibel, Aufwand mittel über Controller/Vertrag/Queue/MCP. Keine
-Codeänderung oder Liveabnahme; gesonderte Umsetzungsfreigabe erforderlich.
-Anleitung/Werkzeugübersicht unverändert: noch keine neue Fähigkeit. Keine
-projektbezogenen Spielskills vorhanden. Kein Gate offen.
+**A12/N08 begrenzt abgenommen — optionale Abschlussgeschwindigkeit.**
+2353 Unit-, 19 Integrations-, 13 Paket- und 35 Supervisor-Prüfungen bestanden;
+drei optionale Livefälle übersprungen, beide Builds ohne Warnungen/Fehler,
+fünf installierte Paketdateien per SHA-256 bestätigt. Geladene MCP-Kennungen wie Gate.
+Live: Standardlauf nach 0,25 Spielstunden pausiert; gleicher Zeitlauf mit
+completionSpeed=1 nach bestätigter Zwischenpause bei Tempo 1 abgeschlossen und
+Besitzer freigegeben. Frische Abfrage belegt weitere Simulation; anschließend
+explizit pausiert. Cancel eines dritten Laufs mit Option 1 endete bestätigt
+pausiert mit cancel_requested als verworfenem Abschlusswunsch.
+[Vertrag, Nachweise und Bewertung](docs/completion-speed-pilot-design.md).
+Nutzen bestätigt: begrenztes Beobachtungsfenster ohne dauerhafte Pflichtpause.
+Aufwand mittel über Controller/Queue/Vertrag/Schema, keine neue Abhängigkeit.
+49 zusätzliche Unitfälle; Randfälle um Lock/Unload/Budget/Antwortverlust und
+Besitzerbindung während completing ausschließlich synthetisch geprüft.
+Anleitung, Werkzeugübersicht und Simulationsdokument gepflegt; keine
+projektbezogenen Spielskills vorhanden. API bleibt 0.74.0. Bau-/Produktionsläufe
+und until unverändert. Spiel pausiert, kein aktiver Lauf/Tempoauftrag. Kein Gate offen.
 
 ### Vorheriger Abschluss A12/N07
 

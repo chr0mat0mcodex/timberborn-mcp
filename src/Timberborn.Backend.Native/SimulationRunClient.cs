@@ -8,7 +8,8 @@ public sealed record NativeSimulationRun(string RunId, string State, string Reas
     int? StopAtAvailableLogs = null, int? ObservedAvailableLogs = null, bool StockTargetReached = false,
     ProductionTargetState[]? GoodTargets = null, int? StopAtScience = null, int? ObservedScience = null,
     bool ProductionTargetsReached = false, ProductionDiagnostic[]? ProductionDiagnostics = null, double? DiagnosticsObservedGameHours = null,
-    string[]? BuildingIds = null, BuildingProductionState[]? BuildingProduction = null, bool BuildingProductionReached=false, long BuildingJournalCursor=0, OperationBatch? CurrentBuildingOperations=null, double? BottleneckObservedGameHours=null, string? BottleneckState=null, bool MeasureProduction=false);
+    string[]? BuildingIds = null, BuildingProductionState[]? BuildingProduction = null, bool BuildingProductionReached=false, long BuildingJournalCursor=0, OperationBatch? CurrentBuildingOperations=null, double? BottleneckObservedGameHours=null, string? BottleneckState=null, bool MeasureProduction=false, int CompletionSpeed=0, int? EffectiveCompletionSpeed=null,
+    bool CompletionSpeedConfirmed=false, bool CompletionPauseObserved=false, string? CompletionFallbackReason=null);
 
 public sealed partial class NativeClient
 {
@@ -17,7 +18,7 @@ public sealed partial class NativeClient
     {
         // Reparse at the transport boundary; never accept an arbitrary route/query.
         var checkedRequest = SimulationRunRequest.Parse("/agent-api/v1/" + r.Route, query);
-        if (checkedRequest.RunId != r.RunId || checkedRequest.Session != r.Session || checkedRequest.Diagnose != r.Diagnose) throw new ArgumentException();
+        if (checkedRequest.RunId != r.RunId || checkedRequest.Session != r.Session || checkedRequest.Diagnose != r.Diagnose || checkedRequest.CompletionSpeed != r.CompletionSpeed) throw new ArgumentException();
         if (checkedRequest.Starts && (checkedRequest.Route == "simulation-run-until" || checkedRequest.DurationHours >= 6) && BeforeOperatingRun is { } preflight)
             await preflight(checkedRequest, null, ct);
         ct.ThrowIfCancellationRequested();
@@ -28,6 +29,7 @@ public sealed partial class NativeClient
             d.BottleneckState is not null || d.BottleneckObservedGameHours is not null ||
             d.ProductionDiagnostics is not null || d.DiagnosticsObservedGameHours is not null))
             throw new InvalidDataException("Lightweight status requires supported lightweight status without diagnostics");
+        CompletionSpeedContract.Validate(d, checkedRequest);
         ProductionRunContract.Validate(d,r);
         BuildingProductionRunContract.Validate(d,r,e.BridgeVersion);
         if (r.Starts && r.StopAtAvailableLogs != d.StopAtAvailableLogs ||
@@ -38,14 +40,14 @@ public sealed partial class NativeClient
             throw new InvalidDataException("Invalid stock condition receipt");
         bool terminal = d.State is "completed" or "cancelled" or "interrupted" or "failed";
         if (e.BridgeVersion is not ("0.22.0" or "0.23.0" or "0.23.1" or "0.23.2" or "0.24.0" or "0.24.1" or "0.25.0" or "0.26.0" or "0.27.0" or "0.28.0" or "0.28.1" or "0.29.0" or "0.29.1" or "0.29.2" or "0.29.3" or "0.30.0" or "0.31.0" or "0.31.1" or "0.31.2" or "0.31.3" or "0.31.4" or "0.32.0" or "0.32.1" or "0.33.0" or "0.33.1" or "0.34.0" or "0.35.0" or "0.35.1" or "0.35.2" or "0.35.3" or "0.35.4" or "0.35.5" or "0.36.0" or "0.37.0" or "0.38.0" or "0.39.0" or "0.40.0" or "0.41.0" or "0.42.0" or "0.43.0" or "0.44.0" or "0.45.0" or "0.46.0" or "0.47.0" or "0.48.0" or "0.49.0" or "0.50.0" or "0.51.0" or "0.52.0" or "0.53.0" or "0.54.0" or "0.55.0" or "0.56.0" or "0.57.0" or "0.58.0" or "0.59.0" or "0.60.0" or "0.61.0" or "0.62.0" or "0.63.0" or "0.64.0" or "0.65.0" or "0.66.0" or "0.67.0" or "0.68.0" or "0.69.0" or "0.70.0" or "0.71.0" or "0.72.0" or "0.73.0" or "0.74.0") || e.SessionId != r.Session || d.RunId != r.RunId ||
-            d.State is not ("starting" or "running" or "pausing" or "completed" or "cancelled" or "interrupted" or "failed") ||
-            d.Reason is not ("production_measurement_complete" or "building_production_proven" or "building_production_time_limit" or "building_configuration_changed" or "building_unavailable" or "building_proof_observation_unavailable" or "building_proof_journal_gap" or "awaiting_speed" or "advancing" or "game_speed_locked" or "target_reached" or "stock_target_reached" or "stock_observation_unavailable" or "production_targets_reached" or "production_time_limit" or "production_observation_unavailable" or "speed_changed" or "pause_unconfirmed" or "speed_unconfirmed" or "clock_reversed" or "real_time_limit" or "simulation_stalled" or "cancel_requested" or "explicit_speed_change" or "session_ended_pause_unconfirmed" or "speed_command_failed") ||
+            d.State is not ("starting" or "running" or "pausing" or "completing" or "completed" or "cancelled" or "interrupted" or "failed") ||
+            d.Reason is not ("awaiting_completion_speed" or "completion_speed_unconfirmed" or "completion_observation_unavailable" or "production_measurement_complete" or "building_production_proven" or "building_production_time_limit" or "building_configuration_changed" or "building_unavailable" or "building_proof_observation_unavailable" or "building_proof_journal_gap" or "awaiting_speed" or "advancing" or "game_speed_locked" or "target_reached" or "stock_target_reached" or "stock_observation_unavailable" or "production_targets_reached" or "production_time_limit" or "production_observation_unavailable" or "speed_changed" or "pause_unconfirmed" or "speed_unconfirmed" or "clock_reversed" or "real_time_limit" or "simulation_stalled" or "cancel_requested" or "explicit_speed_change" or "session_ended_pause_unconfirmed" or "speed_command_failed") ||
             new[] { d.StartGameHours, d.TargetGameHours, d.ObservedGameHours, d.ElapsedGameHours, d.OvershootHours, d.ElapsedRealSeconds }.Any(n => !double.IsFinite(n) || n < 0) ||
             !float.IsFinite(d.ObservedSpeed) || d.ObservedSpeed < 0 || d.RequestedSpeed is not (1 or 3 or 7) ||
             d.MaxRealSeconds is < 30 or > 86400 || d.TargetGameHours < d.StartGameHours || d.TargetGameHours - d.StartGameHours > 672 ||
             d.Terminal != terminal || d.PauseConfirmed != (d.ObservedSpeed == 0) || d.TargetReached != (d.ObservedGameHours >= d.TargetGameHours) ||
             d.ElapsedGameHours != Math.Max(0, d.ObservedGameHours - d.StartGameHours) || d.OvershootHours != Math.Max(0, d.ObservedGameHours - d.TargetGameHours) ||
-            d.State == "completed" && (!(d.TargetReached || d.StockTargetReached || d.ProductionTargetsReached || d.BuildingProductionReached) || !d.PauseConfirmed) || d.State == "cancelled" && !d.PauseConfirmed ||
+            d.State == "completed" && (!(d.TargetReached || d.StockTargetReached || d.ProductionTargetsReached || d.BuildingProductionReached) || !(d.PauseConfirmed || CompletionSpeedContract.ConfirmedContinuation(d))) || d.State == "cancelled" && !d.PauseConfirmed ||
             r.Starts && (d.RequestedSpeed != r.Speed || d.MaxRealSeconds != r.MaxRealSeconds ||
                 Math.Abs(d.TargetGameHours - (r.Route == "simulation-run-for" ? d.StartGameHours + r.DurationHours : r.TargetHours)) > 0.0000001))
             throw new InvalidDataException("Invalid simulation run receipt");

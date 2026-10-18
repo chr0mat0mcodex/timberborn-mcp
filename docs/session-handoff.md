@@ -2,11 +2,14 @@
 
 ## Aktueller Einstieg
 
-**A12/N08 geklärt; Umsetzung offen, kein Gate offen.**
-[Entwurf](completion-speed-pilot-design.md): optionale completionSpeed 0/1 nur
-für reine run_simulation_for-Zeitläufe. Standard-/Fehlerpause und Besitzerregeln
-explizit; Bau-/Produktionsläufe ausgeschlossen. Aufwand mittel. Keine Codeänderung.
-Nächster Schritt: gesonderte Umsetzungsfreigabe für diesen konkreten Pilot.
+**A12/N08 begrenzt abgenommen; kein Gate offen.**
+[Pilotvertrag und Livebelege](completion-speed-pilot-design.md): completionSpeed 0/1
+nur für reine run_simulation_for-Zeitläufe. Standardpause, bestätigte Tempo-1-Übergabe
+mit freiem Besitzer und Cancel-Pause live bestanden. Spiel zuletzt pausiert,
+kein aktiver Lauf/Tempoauftrag. 2353 Unit- und 19 Integrationstests bestanden;
+Paket-/Supervisorprüfungen ebenfalls erfolgreich. Randfälle um completing,
+Lock/Unload/Budget/Transport nur synthetisch geprüft. Aufwand mittel, Nutzen bestätigt.
+Bau-/Produktionsfamilien und until nicht erweitert; keine automatische Fortsetzung.
 Aktueller Stand und Gatezahlen: [Projektstand](../PROJECT_STATE.md).
 [Offene Arbeit](../BACKLOG.md) · [Lifecycle und Gate](../DEVELOPMENT_WORKFLOW.md).
 Git-Status und Laufzeitstand separat prüfen. Folgende Übergaben sind historisch.
