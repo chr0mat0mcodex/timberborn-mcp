@@ -15,11 +15,10 @@ Laufzeitstand und Session werden beim regulären Wiederanschluss frisch gelesen.
 
 ## Aktueller Auftrag
 
-**A12/N10 teilgeprüft; Fortsetzung am vereinbarten Stoppkriterium beendet.**
-[Negativkontrolle und Wiedervorlage](docs/plank-production-transport-pilot.md):
-null Zyklen bei pausiertem Sägewerk bestätigt. Ausgabe/Lager voll, aktuelle Kraft fehlt;
-positiver Produktions-/Liefernachweis offen. Erst nach erneutem Go einen kleinen
-Testaufbau herstellen. Kein Code geändert, kein Gate offen. N08/N09 unverändert.
+**A12/N10-Pilot abgeschlossen; einzelne Quelle-Ziel-Lieferzuordnung bleibt offen.**
+[Nachweise](docs/plank-production-transport-pilot.md): kleiner Kraft-/Lageraufbau fertig,
+drei native Bretterzyklen, Ausgabeentlastung und Lagerzufluss beobachtet.
+Negativkontrolle null Zyklen. Spiel pausiert, kein Code geändert, kein Gate offen.
 [Weitere Reihenfolge](BACKLOG.md#empfohlene-nächste-schritte--planung-2026-10-18).
 
 ## Maßgebliche Arbeitsweise

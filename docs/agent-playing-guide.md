@@ -1,9 +1,11 @@
 # Spielanleitung für Agenten
 
-N10-Teilnachweis: blockierter, ausdrücklich pausierter Produzent über 1,5
-Spielstunden korrekt mit null Zyklen gemessen. Positivproduktion und Abtransport
-wegen voller Ausgabe/Lager und fehlender aktueller Kraft nicht abgenommen.
-[Begrenzter Pilot und Wiedervorlage](plank-production-transport-pilot.md).
+N10-Pilot abgeschlossen: Negativkontrolle null Zyklen; nach kleinem Lager-/Kraftaufbau
+drei native Produktionszyklen in fünf Spielstunden. Ausgang 13→1 Bretter, neues
+Lager 0→14, altes Lager 20→20. Ausgabeentlastung und Lagerzufluss beobachtet;
+keine einzelne Quelle-Ziel-Lieferung instrumentiert. Kraftrad bei pausiertem
+Windrad mit 58 Leistung gegenüber 50 Bedarf beobachtet, keine Dauerleistungsgarantie.
+[Nachweis und verbleibende Liefergrenze](plank-production-transport-pilot.md).
 
 N07 begrenzt untersucht: frühe Tempoablehnung, gültige Laufregistrierung und
 Vorschauvergleich vor/nach Simulation bestätigt; historische Fehler nicht

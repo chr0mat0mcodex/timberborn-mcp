@@ -2,13 +2,14 @@
 
 ## Aktuelle Arbeit
 
-**A12/N10 teilgeprüft — Negativkontrolle bestanden, Positivfall blockiert.**
-Sägewerksausgabe 13/13 Bretter, vorhandenes Bretterlager 20/20, Windradnetz ohne
-aktuelle Kraftleistung. 1,5 Spielstunden pausierter Produktionsmessung: null Zyklen,
-kein falscher Produktionsnachweis, Endpause bestätigt. Kein zweites Zeitfenster.
-[Belege, Stoppgrund und begrenzte Wiedervorlage](docs/plank-production-transport-pilot.md).
-Für den Positivfall zuerst kleinen Testaufbau separat freigeben; Produktion und
-zuordenbare Lieferung bleiben offen. N01–N09 unverändert abgeschlossen/untersucht.
+**A12/N10-Pilot abgeschlossen — Produktion belegt, einzelne Lieferzuordnung offen.**
+Kleiner Kraft-/Lageraufbau fertig; drei native Zyklen in fünf Spielstunden.
+Ausgang 13→1, neues Lager 0→14, altes Lager 20→20 Bretter. Ausgabeentlastung und
+Lagerzufluss beobachtet; keine instrumentierte Einzelübergabe Quelle→Ziel.
+Negativkontrolle bestanden, Spiel pausiert, keine Codeänderung.
+[Belege, Nutzen und konkrete Restgrenze](docs/plank-production-transport-pilot.md).
+N01–N10 im jeweils dokumentierten Umfang abgeschlossen/untersucht.
+
 A03/A04/A05/A07/A08/A09/A10-Piloten abgenommen; weitere Erweiterungen zurückgestellt.
 A01/A02/A06/A11 abgeschlossen. Weitere A12-Pakete zurückgestellt. [Projektstand](PROJECT_STATE.md).
 
@@ -21,15 +22,15 @@ Implementierungsfreigabe. Kein Sammelauftrag für die gesamten B-/F-Familien.
 
 | Reihenfolge | Paket | Nutzen / Aufwand | Kleinster sinnvoller Umfang | Abschluss / Stopp |
 | --- | --- | --- | --- | --- |
-| 1 | **A12/N10 — positiver Bretterproduktions-/Abtransportnachweis** | Hoch / S–M; schließt die konkrete Nachweislücke der vorhandenen Bretterdiagnose vor Ausbauplanung. | Ein bestehendes Sägewerk, ein erreichbares Ziellager, bestehende Werkzeuge. Vorprüfung mit echtem Produktionszyklus und Ausgangs-/Zielinventar vergleichen. Eine passende Negativkontrolle, etwa pausierter Produzent. | Nativen Produktionszyklus belegen; Abtransport/Lieferung nur bei tatsächlich zuordenbarer Beobachtung bestätigen. Globale Bestandszunahme oder Lagerreichweite reichen nicht. Höchstens zwei vorab begrenzte Beobachtungsfenster; fehlt Lieferzuordnung oder benötigt der Fall größeren Kolonieumbau, Lücke konkret dokumentieren und separat entscheiden. |
-| 2 | **B06 — Reload-Abgleich zunächst entwerfen** | Hoch / S für Entwurf, Umsetzung erst danach schätzen; verhindert, dass verlorene Sitzungseinträge mit unerledigten Spielobjekten verwechselt werden. | Eine Projektfamilie und ein kleines Projekt; minimale Absichtsdaten, Save-/Session-Zuordnung, vorhandene/fehlende/unbekannte Identität und rein lesenden Wiederabgleich definieren. Keine automatische Wiederaufnahme. | Reviewbarer Vertrag samt Persistenzort, Lebenszyklus, Datenminimierung und Testmatrix; neue Session und identischer Wiederaufruf dürfen kein Replay auslösen. Ohne verlässliche Spielstand-/Objektzuordnung kein Implementierungsstart. Entwurf gesondert freigeben lassen. |
-| 3 | **F02 mit engem F01-Anteil — fertiger Ersatzumweg vor Bestandsänderung** | Hoch / M; schließt eine funktionale Lücke beim kontrollierten Umbau. | Ein kurzer ebener Umweg für genau eine Bestandsverbindung. Ersatz bauen, reale Nutzbarkeit bestätigen, erst danach den abhängigen Eingriff prüfen und ausführen. | Positiv: Verbindung vor und nach Eingriff belegt. Negativ: unfertiger/unterbrochener Ersatz erlaubt keinen abhängigen Eingriff. Bauarbeiter-, Bestands- und Fertigzugang getrennt; bei unknown stoppen. Keine allgemeinen Höhen-/Kraftrouten oder globale Reservierungsarchitektur. |
+| 1 | **B06 — Reload-Abgleich zunächst entwerfen** | Hoch / S für Entwurf, Umsetzung erst danach schätzen; verhindert, dass verlorene Sitzungseinträge mit unerledigten Spielobjekten verwechselt werden. | Eine Projektfamilie und ein kleines Projekt; minimale Absichtsdaten, Save-/Session-Zuordnung, vorhandene/fehlende/unbekannte Identität und rein lesenden Wiederabgleich definieren. Keine automatische Wiederaufnahme. | Reviewbarer Vertrag samt Persistenzort, Lebenszyklus, Datenminimierung und Testmatrix; neue Session und identischer Wiederaufruf dürfen kein Replay auslösen. Ohne verlässliche Spielstand-/Objektzuordnung kein Implementierungsstart. Entwurf gesondert freigeben lassen. |
+| 2 | **F02 mit engem F01-Anteil — fertiger Ersatzumweg vor Bestandsänderung** | Hoch / M; schließt eine funktionale Lücke beim kontrollierten Umbau. | Ein kurzer ebener Umweg für genau eine Bestandsverbindung. Ersatz bauen, reale Nutzbarkeit bestätigen, erst danach den abhängigen Eingriff prüfen und ausführen. | Positiv: Verbindung vor und nach Eingriff belegt. Negativ: unfertiger/unterbrochener Ersatz erlaubt keinen abhängigen Eingriff. Bauarbeiter-, Bestands- und Fertigzugang getrennt; bei unknown stoppen. Keine allgemeinen Höhen-/Kraftrouten oder globale Reservierungsarchitektur. |
 
-**Aktualisierter nächster Auftrag:** N10-Positivfall mit kleinem Testaufbau erneut freigeben; erster Nachweispilot am Stoppkriterium beendet.
-Zuerst vorhandene Produktion-/Inventarverträge und die tatsächliche Testsituation
-prüfen; nicht vorab neue Liefertelemetrie oder Ausbauautomatik erfinden. Falls der
-bestehende Vertrag keinen zuordenbaren Abtransport belegt, ist genau diese Lücke
-das Ergebnis und der Ausgangspunkt für einen gesonderten kleinen Entwurf.
+**Nächster Vorschlag:** B06-Reload-Abgleich zunächst entwerfen, gesondert beauftragen.
+N10 benötigt keine weitere unveränderte Messserie. Falls eine exakte Lieferaussage
+benötigt wird: schmalen Telemetrieentwurf für eine Warenübergabe mit Quelle, Ziel,
+Gut, Menge und Session erstellen; zunächst öffentliche Spielereignisse prüfen.
+Abnahme müsste tatsächliche Übergabe von Reservierung, Abholung und Inventardelta
+trennen. Aufwand und Schnittstellen erst im Entwurf klären, keine Umsetzung freigegeben.
 
 B06 und F02 sind eigenständige Pakete, keine technische Voraussetzung füreinander.
 Die Reihenfolge ist eine Nutzenpriorisierung; ein konkreter Nutzerengpass kann sie
@@ -318,7 +319,7 @@ Abschlussbeleg verworfen wurden. Herkunft: [archivierter Verlauf](BACKLOG_HISTOR
 | N07 — Pilot abgeschlossen; bei Wiederauftreten | [Begrenzter Diagnosepilot](docs/run-navigation-diagnostic-pilot.md): historische unconfirmed-/Baselinefehler nicht reproduziert. | Konkrete Tempoablehnung vor Laufanlage, gültige Registrierung/Rückabfrage/Pause und Vorschauvergleich bestanden; Vorfallablauf dokumentiert, Ursache weiterhin offen. |
 | N08 — begrenzt abgenommen | [Pilotvertrag und Livebelege](docs/completion-speed-pilot-design.md): Standardpause, Tempo-1-Übergabe und Cancel-Pause bestanden. Nutzen bestätigt, Aufwand mittel. | Nur reine for-Zeitläufe. Abschlussrennen/Lock/Unload/Budget synthetisch geprüft; Bau-/Produktionsfamilien und until nicht erweitert. |
 | N09 — Messpilot abgeschlossen, Erweiterung zurückgestellt | [Drei Lesepaare](docs/parallel-read-pilot.md): bestehender Anschluss im Mittel 24,9 % schneller bei gleichzeitiger Anforderung; alle zwölf Antworten erfolgreich. | Keine Busy-Ablehnung, daher Zusatznutzen gelockerter Fachsperre nicht belegt. Erst bei konkretem Engpass wieder aufnehmen; dann Cancel unter Last separat beweisen. |
-| N10 — teilgeprüft, Fortsetzung gestoppt | [Negativkontrolle bestanden](docs/plank-production-transport-pilot.md): null Zyklen bei pausiertem, zugleich mehrfach blockiertem Sägewerk. Ausgabe/Lager voll, Kraft fehlt. | Positivfall und Lieferung offen. Erst nach erneutem Go minimalen Testaufbau herstellen; keine weiteren unveränderten Zeitläufe. |
+| N10 — Pilot abgeschlossen, Liefergrenze offen | [Negativ-/Positivfall](docs/plank-production-transport-pilot.md): null bzw. drei native Zyklen; kleiner Kraft-/Lageraufbau fertig, Ausgabeentlastung und Lagerzufluss beobachtet. | Einzelne Quelle-Ziel-Lieferung nicht instrumentiert. Nur bei konkretem Bedarf schmalen Übergabetelemetrieentwurf beauftragen; keine weitere Messserie oder Erweiterung freigegeben. |
 
 ## Offene Entwicklung
 

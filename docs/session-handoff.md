@@ -2,13 +2,15 @@
 
 ## Aktueller Einstieg
 
-**A12/N10 am Stoppkriterium beendet, nur Negativkontrolle bestanden.**
-[Belege und Wiedervorlage](plank-production-transport-pilot.md). Ein Messfenster,
-1,5 Spielstunden, null Zyklen und bestätigte Pause. Ausgabe und Bretterlager voll;
-Windradnetz verbunden, aber ohne aktuelle Leistung. Temporäre Gebäudepause aufgehoben.
-Spiel pausiert, kein aktiver Lauf. Kein Code geändert, kein neues Gate erforderlich.
-Positivproduktion und Lieferung offen; kein weiteres Zeitfenster ohne erneutes Go
-für einen minimalen Testaufbau mit freiem Lager und verlässlicher Kraftversorgung.
+**A12/N10 im begrenzten Pilotumfang abgeschlossen.**
+[Belege und Liefergrenze](plank-production-transport-pilot.md): ein Kraftrad,
+ein Bretterlager und zwei Wege fertig und zugänglich. Drei native Zyklen in fünf
+Spielstunden; Kraftrad ohne Windunterstützung zuletzt 58/50 Leistung/Bedarf.
+Ausgang 13→1, neues Lager 0→14, altes Lager 20→20 Bretter. Ausgabeentlastung und
+Lagerzufluss beobachtet; einzelne Quelle-Ziel-Lieferungen bleiben uninstrumentiert.
+Windrad wieder aktiviert, Spiel pausiert, kein aktiver Lauf, Bauledger freigegeben.
+Kein Code geändert, kein Gate offen. Keine automatische Telemetrieerweiterung;
+B06-Entwurf ist der nächste eigenständige Vorschlag.
 
 **A12/N09 Messpilot abgeschlossen; keine Laufzeitänderung, kein Gate offen.**
 [Messung, Bewertung und Wiedervorlage](parallel-read-pilot.md): zwölf erfolgreiche

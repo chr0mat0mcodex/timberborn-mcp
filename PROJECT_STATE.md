@@ -2,18 +2,20 @@
 
 ## Aktueller Stand — 2026-10-18
 
-**A12/N10 teilgeprüft — Negativkontrolle bestanden, Positivfall offen.**
-Vorprüfung bestätigt volle Sägewerksausgabe (13 Bretter), volles Bretterlager
-(20/20) und aktuell unversorgtes, geometrisch verbundenes Windradnetz.
-Explizit pausierter Produzent über 1,5 Spielstunden gemessen: null native Zyklen,
-keine erfundene Produktion, Endpause bestätigt; Bestände unverändert.
-Kein zweites Beobachtungsfenster gestartet. Temporäre Gebäudepause wieder aufgehoben,
+**A12/N10 im begrenzten Pilotumfang abgeschlossen; einzelne Lieferzuordnung offen.**
+Nach erneuter Freigabe ein Stapellager, ein Kraftrad und zwei Wege regulär gebaut;
+alle vier Teile fertig und zugänglich, keine beobachteten Bestandsverluste.
+Kosten 22 Holz; fünf Bäume regulär geräumt. Projekt abgeschlossen und freigegeben.
+Bei pausiertem Windrad drei native Bretterzyklen in fünf Spielstunden gemessen;
+Kraftrad zuletzt 58 Leistung bei 50 Bedarf. Anlaufzeit mit Kraftblockaden bleibt sichtbar.
+Sägewerksausgang 13→1 Bretter, neues Lager 0→14, bestehendes Lager unverändert 20.
+Native Wegverbindung Sägewerk→Lager bestätigt. Ausgabeentlastung und Lagerzufluss
+beobachtet, aber keine einzelne Quelle-Ziel-Lieferung oder Bruttoliefermenge bewiesen.
+Vorherige Negativkontrolle mit null Zyklen bleibt gültig. Windrad wieder aktiviert,
 Spiel pausiert, kein aktiver Lauf/Tempoauftrag. Keine Codeänderung und kein Gate offen.
-[Nachweisgrenzen und nächster begrenzter Aufbau](docs/plank-production-transport-pilot.md).
-Fortsetzung erst nach erneutem Go für freies Bretterlager und verlässliche Kraft;
-positiver Produktions-/Liefernachweis ausdrücklich nicht abgenommen.
-Anleitung/Werkzeugübersicht um Teilnachweis ergänzt; keine projektbezogenen Spielskills.
-B06-Entwurf und F02 bleiben spätere eigenständige Vorschläge.
+[Aufbau, Messung, Nutzen und Grenzen](docs/plank-production-transport-pilot.md).
+Anleitung, Werkzeugübersicht und Brettervertrag aktualisiert; keine projektbezogenen
+Spielskills vorhanden. Keine weiteren Erweiterungen. B06 bleibt nächster Vorschlag.
 
 ### Vorheriger Abschluss A12/N09
 
