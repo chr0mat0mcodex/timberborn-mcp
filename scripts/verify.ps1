@@ -6,6 +6,9 @@ if ($NativeConfig) { $NativeConfig = (Resolve-Path -LiteralPath $NativeConfig).P
 . "$PSScriptRoot/cli-output.ps1"
 Push-Location $taskRoot
 try {
+    Invoke-TimberbornStep 'Paketergebnis und eindeutige Auswahl prüfen' {
+        & "$taskRoot/tests/scripts/package-result.tests.ps1"
+    }
     Invoke-TimberbornStep 'MCP-Vorschaltprozess prüfen' {
         # unittest writes its normal summary to stderr. Capture both streams so
         # successful runs stay compact; failures retain the complete diagnosis.

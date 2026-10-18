@@ -39,6 +39,14 @@ Spiel-/Unity-DLLs und fremde Mod-DLLs gehören nicht in das Paket.
 
 ## Installation und Updates
 
+Das Entwickler-Gate übernimmt genau das Ergebnis seines eigenen Paketbuilds
+(Build-ID und konkreter Pfad), nicht das zuletzt geänderte Paketverzeichnis.
+Manifestversion, Mod-ID, vollständiges Quellmanifest und die fünf Datei-Hashes
+werden vor Installation geprüft. Staging und installierte Dateien müssen denselben
+Hashes entsprechen. Fehlendes/inkonsistentes Ergebnis beendet das Gate ohne
+Auswahl eines Ersatzpakets. Der lokale Gate-Log nennt Build-ID, Version und Pfad;
+die private Konfiguration wird nicht als Paketergebnis ausgegeben.
+
 1. Timberborn für den Dateiaustausch beenden; Speichern ist im Testsystem nicht erforderlich.
 2. Vorhandenen eigenen Modordner vollständig sichern.
 3. Den Paketordner `TimberbornAgentBridge` unter dem lokalen Timberborn-Modverzeichnis

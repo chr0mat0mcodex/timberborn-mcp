@@ -4,7 +4,8 @@
 
 Aktueller Featurestand, letzte Gatezahlen und Nachweise: [Projektstand](../PROJECT_STATE.md).
 Bridge 0.74.0; jüngster fachlicher Abschluss ist die automatische Bretterketten-
-Vorprüfung. Dokumentationspaket A01/A02 abgeschlossen; kein offenes Test-Gate.
+Vorprüfung. A01/A02 und A06 (eindeutige Paketübergabe) abgeschlossen; menschliches
+Gate und Status-Liveabgleich bestanden. Kein offenes Gate. Belege im Projektstand.
 [Offene Arbeit](../BACKLOG.md) · [Lifecycle und Gate](../DEVELOPMENT_WORKFLOW.md).
 Git-Status und Laufzeitstand separat prüfen. Die folgenden Übergaben sind
 historisch und enthalten keine heute offenen Gate-Aufträge.

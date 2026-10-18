@@ -7,6 +7,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 . "$PSScriptRoot/cli-output.ps1"
+. "$PSScriptRoot/package-result.ps1"
 $gateDisplay = New-TimberbornGateDisplay @(
     'Spiel und MCP stoppen / Umgebung prüfen',
     'Tests und Release-Build',
@@ -24,12 +25,6 @@ function Get-NormalizedPath([string]$Path, [string]$Label) {
 function Assert-ChildPath([string]$Child, [string]$Parent, [string]$Label) {
     if (-not $Child.StartsWith($Parent + [System.IO.Path]::DirectorySeparatorChar, [System.StringComparison]::OrdinalIgnoreCase)) {
         throw "$Label liegt nicht innerhalb von $Parent."
-    }
-}
-
-function Assert-SameFile([string]$Expected, [string]$Actual) {
-    if ((Get-FileHash -LiteralPath $Expected -Algorithm SHA256).Hash -ne (Get-FileHash -LiteralPath $Actual -Algorithm SHA256).Hash) {
-        throw "Paketprüfung fehlgeschlagen: $(Split-Path -Leaf $Expected)"
     }
 }
 
@@ -108,15 +103,12 @@ try {
     & "$PSScriptRoot/verify.ps1"
     Complete-TimberbornGatePhase $gateDisplay
     Start-TimberbornGatePhase $gateDisplay 2
-    & "$PSScriptRoot/build-native-bridge.ps1" -TimberbornManagedDir $managedDir -Port $Port
-
-    $packageRoot = Get-ChildItem -LiteralPath (Join-Path $taskRoot '.local/packages') -Directory -Filter 'agent-bridge-*' | Sort-Object LastWriteTimeUtc -Descending | Select-Object -First 1
-    if ($null -eq $packageRoot) { throw 'Kein gerade erzeugtes Bridge-Paket gefunden.' }
-    $sourceDir = Join-Path $packageRoot.FullName 'TimberbornAgentBridge'
-    $packageFiles = @('Timberborn.AgentBridge.dll', 'Timberborn.Bridge.Core.dll', 'manifest.json', 'LICENSE', 'INSTALL.md')
-    foreach ($file in $packageFiles) {
-        if (-not (Test-Path -LiteralPath (Join-Path $sourceDir $file) -PathType Leaf)) { throw "Paketdatei fehlt: $file" }
-    }
+    $packageBuildId = [guid]::NewGuid()
+    $builtPackage = $null
+    & "$PSScriptRoot/build-native-bridge.ps1" -TimberbornManagedDir $managedDir -Port $Port -BuildId $packageBuildId -PackageResult ([ref]$builtPackage)
+    $sourceDir = Resolve-TimberbornPackageResult -Result $builtPackage -BuildId $packageBuildId -PackagesDirectory (Join-Path $taskRoot '.local/packages') -ExpectedManifestPath (Join-Path $taskRoot 'mod/Timberborn.AgentBridge/manifest.json')
+    $packageFiles = @(Get-TimberbornPackageFiles)
+    Write-TimberbornStatus 'PAKET' ("Build {0}, Version {1}: {2}" -f $builtPackage.BuildId, $builtPackage.Version, $builtPackage.PackageRoot) Green
     Complete-TimberbornGatePhase $gateDisplay
     Start-TimberbornGatePhase $gateDisplay 3
 
@@ -140,15 +132,17 @@ try {
         Copy-Item -LiteralPath $sourceDir -Destination $stagingDir -Recurse
         $stagedModDir = Join-Path $stagingDir 'TimberbornAgentBridge'
         if ($null -ne $previousConfig) { Set-Content -LiteralPath (Join-Path $stagedModDir 'bridge.local.json') -Value $previousConfig -Encoding utf8NoBOM }
+        # Reject a changed/incomplete copy before moving the previous installation.
+        Assert-TimberbornPackageFiles -SourceDir $stagedModDir -Hashes $builtPackage.Hashes
         New-Item -ItemType Directory -Path $backupRoot | Out-Null
         if (Test-Path -LiteralPath $targetDir -PathType Container) { Move-Item -LiteralPath $targetDir -Destination $previousInstall }
         $installationStarted = $true
         Move-Item -LiteralPath $stagedModDir -Destination $targetDir
         Complete-TimberbornGatePhase $gateDisplay
         Start-TimberbornGatePhase $gateDisplay 4
+        Assert-TimberbornPackageFiles -SourceDir $targetDir -Hashes $builtPackage.Hashes
         $verifiedFiles = 0
         foreach ($file in $packageFiles) {
-            Assert-SameFile (Join-Path $sourceDir $file) (Join-Path $targetDir $file)
             $verifiedFiles++
             Write-TimberbornStatus 'SHA256' ("{0}/{1}  {2}" -f $verifiedFiles, $packageFiles.Count, $file) Green
         }

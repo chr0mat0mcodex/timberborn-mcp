@@ -4,13 +4,33 @@
 
 Bridge/Manifest **0.74.0**; jüngste MCP-Implementierung `f52750f`:
 automatische Bretterketten-Vorprüfung, begrenzt live abgenommen.
-Aktuelle Gatezahlen und Nachweise folgen unten. Kein neues Codefeature begonnen,
-kein offenes Test-Gate. Dokumentationspaket A01/A02 abgeschlossen:
+**A06 abgeschlossen — Gate und Status-Liveabgleich am 2026-10-18 bestanden.**
+Paketbuild liefert Build-ID, konkreten Pfad und fünf SHA-256-Werte separat von
+Diagnoseausgaben. Gate prüft Manifest/Zuordnung vor Installation und die
+Staging-/Installationsdateien gegen dieselben Prüfsummen; keine Zeitstempelsuche.
+Menschliches Gate: 13 Paket-, 28 Supervisor-, 2025 Unit- und 13 Integrationstests
+bestanden; drei optionale Integration-Livefälle übersprungen, Release-Builds
+ohne Fehler. Paketmeldung und Gate-Auswahl nennen denselben konkreten Pfad;
+alle fünf installierten Paketdateien sind per SHA-256 bestätigt.
+Die synthetischen Paketfälle belegen unter anderem ein fremdes neueres Paket,
+fehlende/fremde Ergebnisse, Manifestabweichungen und beschädigte Stagingdateien.
+
+Nach menschlichem `live bereit` Backend über den verbundenen Supervisor gestartet:
+`running=true`, `gate=false`. Lesendes timberborn_status bestätigt `reachable`,
+Bridge 0.74.0, aktuelle native Session und keine Simulation der Daten.
+Keine Spielmutation und kein erneuter Agent-Build/Test/Deploy erforderlich.
+Grenze: Fehlerfälle synthetisch geprüft; realer Paket-/Installationspfad und
+Wiederanschluss bestätigt, keine zusätzliche Spiel-Funktionsabnahme behauptet.
+Kein offenes Gate; A03 und weitere Folgepakete noch nicht begonnen.
+
+Dokumentationspaket A01/A02 abgeschlossen:
 aktuelle Einstiege vereinheitlicht, offene Aufgaben im [Backlog](BACKLOG.md),
 vorherigen Backlog vollständig ins [Archiv](BACKLOG_HISTORY.md) übernommen.
 Nur Inhalts-/Diff-/Linkprüfung; keine neue Build-/Liveabnahme.
-Agenten-Spielanleitung und Spielskills benötigen hierfür keine fachliche Änderung:
-Werkzeuge, Parameter, Grenzen und Laufzeitverhalten bleiben unverändert.
+Für A06 wurden Installationsanleitung und Entwicklungsablauf aktualisiert.
+Agenten-Spielanleitung geprüft: keine fachliche Änderung, da Spielwerkzeuge,
+Parameter und Spielverhalten unverändert bleiben. Keine projektbezogenen
+Spielskills vorhanden; globale Skills unverändert.
 
 ## Letzter fachlicher Abschluss — automatische Bretterketten-Vorprüfung
 

@@ -2,14 +2,13 @@
 
 ## Aktuelle Arbeit
 
-**A01/A02 am 2026-10-18 abgeschlossen:** Projektköpfe bereinigt und aktive
-Aufgaben von der Chronik getrennt. Reine Dokumentationspflege; kein neues
-Codefeature begonnen und kein Test-Gate offen. Letzter fachlicher Abschluss:
-automatische Bretterketten-Vorprüfung, siehe [Projektstand](PROJECT_STATE.md).
+**A06 am 2026-10-18 abgeschlossen:** eindeutige Paketübergabe mit Build-ID,
+Manifest- und Datei-Prüfung. Menschliches Gate und lesender Status-Liveabgleich
+bestanden; kein offenes Gate. A01/A02 bleiben abgeschlossen.
+Belege und Grenzen im [Projektstand](PROJECT_STATE.md).
 
-Als nächstes empfohlen: A06 (eindeutige Paketauswahl), danach A03 als kleiner
-Refactoringpilot, anschließend A04/A05. Das ist eine Empfehlung, kein bereits
-gestarteter Implementierungsauftrag. A07/A08/A10 bei passenden Featurearbeiten,
+Nach A06 empfohlen: A03 als kleiner Refactoringpilot, anschließend A04/A05.
+Diese Folgepakete sind noch nicht gestartet. A07/A08/A10 bei passenden Featurearbeiten,
 A09/A11 nach Bedarf; A12 nach gewünschter Fähigkeit einzeln auswählen.
 
 ## Projektprüfung 2026-10-18 — abarbeitbare Befunde
@@ -17,8 +16,8 @@ A09/A11 nach Bedarf; A12 nach gewünschter Fähigkeit einzeln auswählen.
 Prüfbasis und vollständiger Audit: [Archivstand](BACKLOG_HISTORY.md#archivstand-2026-10-18-vor-a01-und-a02).
 Ergebnis: gezieltes Refactoring von Versionsprofilen, Werkzeugdispatch und
 Prüfketten sinnvoll; kein belegter Bedarf für einen Komplettumbau.
-Statische Prüfung, keine neue Build-/Liveabnahme. Alle folgenden A03–A12 sind
-**offen**. P2 = vor der nächsten betroffenen Erweiterung, P3 = nach Bedarf;
+Der ursprüngliche Audit war statisch. A06 ist inzwischen **abgeschlossen**;
+die übrigen A03–A12 sind **offen**. P2 = vor der nächsten betroffenen Erweiterung, P3 = nach Bedarf;
 S/M/L sind relative Aufwandsschätzungen. Codeänderungen benötigen weiterhin
 das [menschliche Gate und den gezielten Livetest](DEVELOPMENT_WORKFLOW.md).
 
@@ -69,23 +68,6 @@ das [menschliche Gate und den gezielten Livetest](DEVELOPMENT_WORKFLOW.md).
 - **Abnahme:** vorhandene Positiv-/Negativverträge bleiben gleich; Diff trennt
   mechanische Umformatierung und fachliche Änderung. Charakterisierung dort
   ergänzen, wo eine verschobene Bedingung sonst ungeschützt wäre.
-
-### A06 — P2 / S: exakt das gerade gebaute Paket installieren
-
-- [ ] **Befund, bestätigt; Fehlzuordnung nicht praktisch reproduziert:**
-  [prepare-human-live-test.ps1](scripts/prepare-human-live-test.ps1) sucht nach
-  dem Build unter `.local/packages` alle `agent-bridge-*` und nimmt den neuesten
-  `LastWriteTimeUtc`. [build-native-bridge.ps1](scripts/build-native-bridge.ps1)
-  kennt den exakten eindeutigen Ausgabepfad, gibt ihn aber nicht strukturiert zurück.
-  Ein anderes Paket mit neuerem Zeitstempel kann so ausgewählt werden. Die spätere
-  Hashprüfung vergleicht nur gegen dieses bereits ausgewählte Paket.
-- **Arbeit:** konkreten Paketpfad als Rückgabewert/Artefaktmanifest übergeben;
-  Manifestversion, erwartete Dateien und Buildzuordnung vor Installation prüfen.
-  Keine Auswahl durch globale Verzeichnissortierung.
-- **Abnahme:** isolierter Skriptfall mit einem fremden, neuer datierten Paket
-  wählt trotzdem ausschließlich die aktuelle Ausgabe; Fehler vor Austausch bei
-  fehlendem/inkonsistentem Ergebnis. Anschließend menschliches Installationsgate
-  und Status-/Versionsabgleich. Sicherung und Konfigurationserhalt beibehalten.
 
 ### A07 — P2 / M: ausgelieferten MCP-Stand eindeutig erkennbar machen
 
@@ -281,6 +263,18 @@ gegen aktuellen Code prüfen, nicht ungeprüft wiedereinspielen.
   A03–A12, B-/F-Restumfänge, konkrete Altbefunde und Zurückstellungen hier geführt.
   Aufgaben haben Status, nächsten Schritt und Abschlusskriterium; historische
   Gate-Aufträge stehen im Archiv. Keine Code-, Regel- oder Abnahmeänderung.
+
+### A06 — P2 / S: exakt das gerade gebaute Paket installieren
+
+- [x] Am 2026-10-18: direkter Ergebnisparameter mit Build-ID, Paketpfad und
+  SHA-256-Werten ersetzt die Auswahl nach Änderungsdatum. Manifestabgleich und
+  Stagingprüfung vor Austausch; installierte Dateien gegen dieselben Hashes.
+- **Nachweis:** alle 13 synthetischen Paketfälle im menschlichen Gate bestanden,
+  einschließlich neuerem Fremdpaket, fehlendem Ergebnis und beschädigten Dateien.
+  Gate verwendet den vom Build gemeldeten Pfad und bestätigt fünf Datei-Hashes.
+  Anschließend Supervisor-Wiederanschluss und native Bridge 0.74.0 samt aktueller
+  Session lesend bestätigt. Keine Spielmutation; Fehlerfälle bleiben synthetische
+  Nachweise. [Ablauf](DEVELOPMENT_WORKFLOW.md#skriptoptionen).
 
 Ältere Abschlüsse und Entwicklungskataloge: [Backlog-Archiv](BACKLOG_HISTORY.md).
 Fachliche Abnahmen und Grenzen: [Projektstand](PROJECT_STATE.md).

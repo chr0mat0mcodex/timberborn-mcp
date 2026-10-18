@@ -53,6 +53,17 @@ nicht nur Werkzeugaufruf oder erfolgreiche Paketierung.
 
 ## Skriptoptionen
 
+Die Paketphase übergibt ihr Ergebnis direkt über `-PackageResult ([ref]...)`:
+exakter Paketpfad, frische Build-ID, Manifestversion/Mod-ID und SHA-256-Werte der
+fünf Paketdateien. Das Gate wählt niemals nach Verzeichniszeitstempel. Fehlende
+oder fremde Ergebnisse, abweichende Manifeste und unvollständige/veränderte Dateien
+brechen vor dem Austausch ab. Die kopierten Stagingdateien werden vor dem
+Verschieben der alten Installation geprüft, die installierten Dateien danach
+gegen dieselben Build-Prüfsummen. Private Konfiguration bleibt davon getrennt.
+Build-ID, Version und ausgewählter Pfad stehen im lokalen Gate-Log.
+`verify.ps1` enthält dafür synthetische PowerShell-Dateifälle ohne Zusatzpakete;
+sie laufen ausschließlich beim menschlich gestarteten Gate.
+
 Das Gate speichert Phasendauern lokal in `.local/gate-timings.json` (nicht Git).
 Jede der sechs Phasen verwendet beim nächsten Lauf ihre letzte erfolgreiche
 Dauer als Zeitreferenz. Der Livebalken ist eine Schätzung, bis zum Erfolg auf
