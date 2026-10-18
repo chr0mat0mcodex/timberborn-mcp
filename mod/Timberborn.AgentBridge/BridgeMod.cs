@@ -202,6 +202,8 @@ public sealed class BridgeMod(Timberborn.CameraSystem.CameraService cameraServic
     }
     private object Map(BridgeRequest r)
     {
+        var size = terrain.Size;
+        MapRegionBoundsException.Validate(r, size.x, size.y, size.z);
         var start = new Vector3Int(r.X, r.Y, r.Z);
         var end = new Vector3Int(r.X + r.Width - 1, r.Y + r.Height - 1, r.Z + r.Depth - 1);
         if (!terrain.Contains(start) || !terrain.Contains(end)) throw new ArgumentException("invalid_region");

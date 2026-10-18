@@ -2,11 +2,11 @@
 
 ## Aktuelle Arbeit
 
-**A11-Pilot abgenommen — A11 abgeschlossen:** verpflichtende
-Backendwahl beim DLL-Direktstart; keine stille Legacy-Auswahl.
-[Entscheidung und Nachweise](docs/backend-selection-pilot.md).
+**A12/N01-Pilot abgenommen — N01 abgeschlossen:** konkrete
+Kartengrenzen bei `inspect_map_region`, begrenzt auf diesen Lesepfad.
+[Umfang und Nachweise](docs/map-region-bounds-pilot.md).
 A03/A04/A05/A07/A08/A09/A10-Piloten abgenommen; weitere Erweiterungen zurückgestellt.
-A01/A02/A06 abgeschlossen. A12 noch nicht begonnen. [Projektstand](PROJECT_STATE.md).
+A01/A02/A06/A11 abgeschlossen. Weitere A12-Pakete noch nicht begonnen. [Projektstand](PROJECT_STATE.md).
 
 ## Projektprüfung 2026-10-18 — abarbeitbare Befunde
 
@@ -14,7 +14,7 @@ Prüfbasis und vollständiger Audit: [Archivstand](BACKLOG_HISTORY.md#archivstan
 Ergebnis: gezieltes Refactoring von Versionsprofilen, Werkzeugdispatch und
 Prüfketten sinnvoll; kein belegter Bedarf für einen Komplettumbau.
 Der ursprüngliche Audit war statisch. A06 ist inzwischen **abgeschlossen**;
-A03 ist **teilweise abgeschlossen**, A04 **teilweise abgeschlossen**; A05 ist **teilweise abgeschlossen**, A07 ist **teilweise abgeschlossen**, A08 ist **teilweise abgeschlossen**, A09 ist **teilweise abgeschlossen**, A10 ist **teilweise abgeschlossen**, A11 ist **abgeschlossen**, A12 ist **offen**.
+A03 ist **teilweise abgeschlossen**, A04 **teilweise abgeschlossen**; A05 ist **teilweise abgeschlossen**, A07 ist **teilweise abgeschlossen**, A08 ist **teilweise abgeschlossen**, A09 ist **teilweise abgeschlossen**, A10 ist **teilweise abgeschlossen**, A11 ist **abgeschlossen**, A12 ist **teilweise abgeschlossen (N01)**.
 P2 = vor der nächsten betroffenen Erweiterung, P3 = nach Bedarf;
 S/M/L sind relative Aufwandsschätzungen. Codeänderungen benötigen weiterhin
 das [menschliche Gate und den gezielten Livetest](DEVELOPMENT_WORKFLOW.md).
@@ -201,12 +201,18 @@ das [menschliche Gate und den gezielten Livetest](DEVELOPMENT_WORKFLOW.md).
 
 ### A12 — P2 / M–L: bekannte Funktions- und Livegrenzen gezielt schließen
 
+- [x] **N01-Pilot abgenommen:** native Kartengrenzen für `inspect_map_region`
+  mit Achse und gültigem Zellbereich; 17 Testfälle sowie Gate bestanden.
+  Randzelle und vier gezielte Überschreitungen live bestätigt.
+  [Vertrag, Nachweise und Bewertung](docs/map-region-bounds-pilot.md).
+  Alle anderen A12-Pakete bleiben offen und sind vorerst zurückgestellt.
+
 - [ ] **Bestehende Restarbeit, keine neu nachgewiesenen Regressionen:** B06
   (Reload), B03 (allgemeine Kraft-/Höhenrouten), B07 (Produktionsausbauplanung),
   F01/F02 (vollständiger Bauphasenschutz/Umweg vor Bestandsänderung) und F04/F05
   (Geometrien/Fraktionen) bleiben offen. Die aktuelle Bretterdiagnose ersetzt
   keinen erfolgreichen Produktions- oder Liefernachweis.
-- **Nächste kleine Pakete:** (a) konkrete Kartengrenzen in Parameterfehlern;
+- **Kleine Pakete:** (a) konkrete Kartengrenzen bei inspect_map_region abgeschlossen;
   (b) unterer Zielweg an gedrehter Bestandstreppe; (c) deterministischer Nachweis
   unbekannter Objektidentität; (d) ein positiver Bretterproduktions-/Abtransportfall.
   Jeweils vorhandenen Fachvertrag und aktuelle Implementierung zuerst abgleichen.
@@ -226,7 +232,7 @@ Abschlussbeleg verworfen wurden. Herkunft: [archivierter Verlauf](BACKLOG_HISTOR
 
 | ID / Status | Nächster Schritt | Abschlusskriterium |
 | --- | --- | --- |
-| N01 — offen, A12 | Kartenfehler um reale Kartengrenzen ergänzen. | Abfrage außerhalb der Karte nennt Achse/Grenze; gültige Randzelle funktioniert. |
+| N01 — abgeschlossen, A12 | Kein weiterer Auftrag; auf inspect_map_region begrenzt. | Gate und Live bestanden: gültige Randzelle, x/y/z-Überschreitungen und zu breite Randabfrage korrekt. |
 | N02 — offen, A12/F04 | Unteren Zielweg an gedrehter Bestandstreppe gezielt prüfen. | Native Geometrie sowie Bau- und Fertigzugang positiv, seitliche Fehlverbindung negativ belegt. |
 | N03 — offen, A12 | Deterministischen Fall unbekannter Objektidentität entwerfen; Fehler-Injektion ist noch nicht freigegeben. | Native Sperren, repairEligible=false und closeEligible=false belegt; keine Zeitrennen oder Save-/Ledger-Manipulation als Nachweis. |
 | N04 — zu reproduzieren | `project_start_plan_changed` nach Zugangsergänzung mit frischer expliziter Gesamtvorschau vergleichen. | Identische Eingaben nachvollziehbar angenommen oder konkrete Änderung benannt; kein Blindretry. |

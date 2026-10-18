@@ -3,10 +3,10 @@
 ## Aktueller Einstieg
 
 Aktueller Featurestand, letzte Gatezahlen und Nachweise: [Projektstand](../PROJECT_STATE.md).
-Bridge 0.74.0; **A11-Pilot abgenommen, A11 abgeschlossen**.
-DLL-Direktstart verlangt Backendwahl; fünf Prozessregressionen bestanden.
-Gate, verbundener nativer Status und lesende Simulation bestätigt.
-[Entscheidung und Grenzen](backend-selection-pilot.md). Supervisor unverändert;
+Bridge 0.74.0; **A12/N01-Pilot abgenommen, kein Gate offen**.
+Kartenlesung meldet native Achse/Grenze; 17 neue Testfälle und Gate bestanden.
+Gültige Randzelle und vier gezielte Überschreitungen live bestätigt.
+[Vertrag und Nachweise](map-region-bounds-pilot.md). Supervisor unverändert;
 kein zusätzlicher Codex-Neustart nötig. Weitere Piloterweiterungen zurückgestellt.
 [Offene Arbeit](../BACKLOG.md) · [Lifecycle und Gate](../DEVELOPMENT_WORKFLOW.md).
 Git-Status und Laufzeitstand separat prüfen. Die folgenden Übergaben sind

@@ -2,6 +2,24 @@
 
 ## Aktueller Stand — 2026-10-18
 
+**A12/N01-Pilot abgenommen — N01 abgeschlossen, Gesamt-A12 teilweise offen.**
+`inspect_map_region` meldet bei nativer Kartenüberschreitung die erste betroffene
+Achse und den tatsächlichen gültigen Zellbereich. Kontrollierter Fehlertransport,
+keine Zusatzabfrage oder Mutation; andere Karten-/Bauwerkzeuge unverändert.
+Gate: 13 Paket-, 35 Supervisor-, 2256 Unit- und 19 Integrationstests bestanden;
+drei optionale Livefälle übersprungen. Alle 17 neuen Fälle grün; Release-Builds
+ohne Warnungen/Fehler, fünf installierte Dateien per SHA-256 bestätigt.
+Livekarte 50×50×23: Eckzelle vor/nach vier Ablehnungen lesbar; x/y melden 0..49,
+z meldet 0..22; auch überschreitende Breite korrekt erkannt. MCP-Kennungen wie Gate.
+Nutzen/Aufwand positiv: konkrete Parameterkorrektur ohne zusätzliche Abfrage,
+kleiner Fachumfang mit kontrolliertem Fehlertransport. Kein Gate offen.
+[Umfang, Kompatibilitätsgrenze und Nachweise](docs/map-region-bounds-pilot.md).
+Bridge/API weiterhin 0.74.0; gemeinsam ausgeliefertes Mod-/MCP-Paket erforderlich.
+Spielanleitung bei Parameterdiagnose aktualisiert; keine projektbezogenen
+Spielskills vorhanden. Weitere A12-Pakete bleiben zurückgestellt.
+
+### Vorheriger Abschluss A11
+
 **A11-Pilot abgenommen — A11 abgeschlossen.**
 Roher DLL-Direktstart verlangt explizite Backendwahl; fehlend/leer führt vor
 Hoststart zu Exitcode 2 und verständlicher stderr-Meldung, stdout bleibt leer.

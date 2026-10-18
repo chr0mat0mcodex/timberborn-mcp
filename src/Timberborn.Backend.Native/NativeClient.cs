@@ -253,6 +253,15 @@ public sealed partial class NativeClient : IDisposable
         {
             using var error = JsonDocument.Parse(buffer.ToArray());
             var root = error.RootElement;
+            if (response.StatusCode == HttpStatusCode.BadRequest && route.StartsWith("map?", StringComparison.Ordinal) &&
+                root.ValueKind == JsonValueKind.Object && root.EnumerateObject().Count() == 3 &&
+                root.TryGetProperty("error", out var mapError) && mapError.ValueKind == JsonValueKind.String &&
+                mapError.GetString() == "map_region_out_of_bounds" &&
+                root.TryGetProperty("axis", out var axis) && axis.ValueKind == JsonValueKind.String &&
+                axis.GetString() is "x" or "y" or "z" &&
+                root.TryGetProperty("size", out var size) && size.ValueKind == JsonValueKind.Number &&
+                size.TryGetInt32(out var mapSize) && mapSize > 0)
+                throw new MapRegionBoundsException(axis.GetString()!, mapSize);
             if (root.ValueKind != JsonValueKind.Object || root.EnumerateObject().Count() != 1 ||
                 !root.TryGetProperty("error", out var value) || value.ValueKind != JsonValueKind.String)
                 throw new InvalidDataException("Invalid rejection response");

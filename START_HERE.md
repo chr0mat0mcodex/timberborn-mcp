@@ -15,9 +15,9 @@ Laufzeitstand und Session werden beim regulären Wiederanschluss frisch gelesen.
 
 ## Aktueller Auftrag
 
-**A11-Pilot abgenommen; A11 abgeschlossen.**
-DLL-Direktstart verlangt explizite Backendwahl; Supervisor unverändert native.
-[Umfang und Nachweise](docs/backend-selection-pilot.md).
+**A12/N01-Pilot abgenommen; N01 abgeschlossen.**
+Konkrete Kartengrenzen bei `inspect_map_region`; andere A12-Pakete offen.
+[Umfang und Nachweise](docs/map-region-bounds-pilot.md).
 Weitere Journale und frühere Piloterweiterungen bleiben zurückgestellt.
 A01/A02/A06 abgeschlossen; offene Aufgaben im [Backlog](BACKLOG.md).
 

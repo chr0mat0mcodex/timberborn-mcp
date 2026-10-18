@@ -165,6 +165,12 @@ Materialwarten eine Zugangsreparatur nötig ist; konkreten reason lesen.
 Lesende invalid_argument-Fehler verwenden execution=not_applicable. Hinweise nennen
 bei generischen Fehlern fehlende Pflichtfelder, falsche Typen oder gültige
 Ganzzahlbereiche (limit: 1..32; Karten-depth: 1..4). Spezielle Hinweise haben Vorrang.
+Seit dem abgenommenen A12/N01-Piloten nennt `inspect_map_region` bei nativer
+Kartenüberschreitung die erste betroffene Achse und die gültigen Zellen `0..size-1`.
+Ursprung und gesamte Ausdehnung müssen darin liegen; Schemaobergrenzen sind keine
+tatsächlichen Kartengrenzen. Andere Karten-/Bauwerkzeuge sind nicht umgestellt.
+Randzelle sowie x/y/z- und Ausdehnungsüberschreitungen live bestätigt.
+[Umfang und Nachweise](map-region-bounds-pilot.md).
 Nur Parameter korrigieren; unconfirmed-Schreibaufträge weiterhin niemals wiederholen.
 
 Frische Projektdiagnosen liefern currentConstruction in compact und full:

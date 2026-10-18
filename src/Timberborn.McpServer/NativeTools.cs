@@ -313,7 +313,9 @@ public sealed class NativeTools(NativeClient client, NativeToolOptions permissio
             if(simulationStartRejected)message=SimulationStartOutcome.Describe(code);
             if(code=="project_preview_failed")message="Native Bauvorschau fehlgeschlagen; Wiederherstellung unbekannt, Planer gesperrt. Spiel neu laden und Zustand mit neuer Session prüfen; kein automatisches Retry.";
             if(code=="project_not_found")message="Unter dieser Kennung existiert kein natives Großprojekt in der aktuellen Spielsitzung. Chargenstatus und Planungsfehler prüfen; keine automatische Wiederholung.";
-            if(ArgumentDiagnostics.Hint(ex) is { } hint)message+=" "+hint;
+            if(ex is MapRegionBoundsException bounds)
+                message += $" Kartenbereich auf Achse {bounds.Axis} ueberschritten: gueltige Zellen 0..{bounds.Size - 1}; Ursprung und gesamte Ausdehnung muessen innerhalb liegen.";
+            else if(ArgumentDiagnostics.Hint(ex) is { } hint)message+=" "+hint;
             else if (ex is ArgumentException && AllTools.TryGetValue(name, out var tool) &&
                 ArgumentDiagnostics.SchemaHint(args, tool.InputSchema) is { } parameterHint) message+=" "+parameterHint;
             return (JsonObject)JsonSerializer.SerializeToNode(new NativeResult<object>(1, "error", null,
