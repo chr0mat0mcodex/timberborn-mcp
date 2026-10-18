@@ -2,10 +2,13 @@
 
 ## Aktueller Einstieg
 
-Planung aktualisiert: [N10 → B06-Entwurf → F02-Pilot](../BACKLOG.md#empfohlene-nächste-schritte--planung-2026-10-18).
-Nächster Vorschlag ist ein einzelner positiver Bretterproduktions-/Abtransportfall;
-keine Umsetzung gestartet. Weitere Migrationen und Backend-Parallelität bleiben
-zurückgestellt. Der nächste Auftrag bestimmt den freigegebenen Umfang.
+**A12/N10 am Stoppkriterium beendet, nur Negativkontrolle bestanden.**
+[Belege und Wiedervorlage](plank-production-transport-pilot.md). Ein Messfenster,
+1,5 Spielstunden, null Zyklen und bestätigte Pause. Ausgabe und Bretterlager voll;
+Windradnetz verbunden, aber ohne aktuelle Leistung. Temporäre Gebäudepause aufgehoben.
+Spiel pausiert, kein aktiver Lauf. Kein Code geändert, kein neues Gate erforderlich.
+Positivproduktion und Lieferung offen; kein weiteres Zeitfenster ohne erneutes Go
+für einen minimalen Testaufbau mit freiem Lager und verlässlicher Kraftversorgung.
 
 **A12/N09 Messpilot abgeschlossen; keine Laufzeitänderung, kein Gate offen.**
 [Messung, Bewertung und Wiedervorlage](parallel-read-pilot.md): zwölf erfolgreiche

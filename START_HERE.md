@@ -15,13 +15,12 @@ Laufzeitstand und Session werden beim regulären Wiederanschluss frisch gelesen.
 
 ## Aktueller Auftrag
 
-**Backlog priorisiert; nächster vorgeschlagener Pilot A12/N10, noch nicht gestartet.**
-[Reihenfolge und Abschlusskriterien](BACKLOG.md#empfohlene-nächste-schritte--planung-2026-10-18).
-A12/N09 Messpilot abgeschlossen; kein Gate offen.
-[Messung und Bewertung](docs/parallel-read-pilot.md): begrenzte gleichzeitige
-Lesepaare sind im bestehenden Anschluss nützlich. Kein belegter Zusatznutzen
-einer gelockerten Backend-Sperre; Erweiterung zurückgestellt. N08 bereits abgenommen.
-Weitere Piloterweiterungen bleiben zurückgestellt; offene Aufgaben im [Backlog](BACKLOG.md).
+**A12/N10 teilgeprüft; Fortsetzung am vereinbarten Stoppkriterium beendet.**
+[Negativkontrolle und Wiedervorlage](docs/plank-production-transport-pilot.md):
+null Zyklen bei pausiertem Sägewerk bestätigt. Ausgabe/Lager voll, aktuelle Kraft fehlt;
+positiver Produktions-/Liefernachweis offen. Erst nach erneutem Go einen kleinen
+Testaufbau herstellen. Kein Code geändert, kein Gate offen. N08/N09 unverändert.
+[Weitere Reihenfolge](BACKLOG.md#empfohlene-nächste-schritte--planung-2026-10-18).
 
 ## Maßgebliche Arbeitsweise
 

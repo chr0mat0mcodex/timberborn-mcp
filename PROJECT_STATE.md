@@ -2,12 +2,20 @@
 
 ## Aktueller Stand — 2026-10-18
 
-**Nächste Schritte priorisiert, noch nicht gestartet.**
-[Backlog-Plan](BACKLOG.md#empfohlene-nächste-schritte--planung-2026-10-18):
-zuerst A12/N10 als begrenzter positiver Bretterproduktions-/Abtransportnachweis,
-danach B06-Reload-Vertrag entwerfen und F02-Ersatzumweg separat pilotieren.
-Keine allgemeine Refactoringfortsetzung oder neue Backend-Parallelität.
-Nur Planungs-/Statuspflege; Code, Spielzustand und Abnahmestand unverändert.
+**A12/N10 teilgeprüft — Negativkontrolle bestanden, Positivfall offen.**
+Vorprüfung bestätigt volle Sägewerksausgabe (13 Bretter), volles Bretterlager
+(20/20) und aktuell unversorgtes, geometrisch verbundenes Windradnetz.
+Explizit pausierter Produzent über 1,5 Spielstunden gemessen: null native Zyklen,
+keine erfundene Produktion, Endpause bestätigt; Bestände unverändert.
+Kein zweites Beobachtungsfenster gestartet. Temporäre Gebäudepause wieder aufgehoben,
+Spiel pausiert, kein aktiver Lauf/Tempoauftrag. Keine Codeänderung und kein Gate offen.
+[Nachweisgrenzen und nächster begrenzter Aufbau](docs/plank-production-transport-pilot.md).
+Fortsetzung erst nach erneutem Go für freies Bretterlager und verlässliche Kraft;
+positiver Produktions-/Liefernachweis ausdrücklich nicht abgenommen.
+Anleitung/Werkzeugübersicht um Teilnachweis ergänzt; keine projektbezogenen Spielskills.
+B06-Entwurf und F02 bleiben spätere eigenständige Vorschläge.
+
+### Vorheriger Abschluss A12/N09
 
 **A12/N09 Messpilot abgeschlossen — Backend-Erweiterung zurückgestellt.**
 Drei serielle und drei gleichzeitig angeforderte Paare aus Kolonieübersicht und

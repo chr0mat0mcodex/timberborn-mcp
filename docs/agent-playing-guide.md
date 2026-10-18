@@ -1,5 +1,10 @@
 # Spielanleitung für Agenten
 
+N10-Teilnachweis: blockierter, ausdrücklich pausierter Produzent über 1,5
+Spielstunden korrekt mit null Zyklen gemessen. Positivproduktion und Abtransport
+wegen voller Ausgabe/Lager und fehlender aktueller Kraft nicht abgenommen.
+[Begrenzter Pilot und Wiedervorlage](plank-production-transport-pilot.md).
+
 N07 begrenzt untersucht: frühe Tempoablehnung, gültige Laufregistrierung und
 Vorschauvergleich vor/nach Simulation bestätigt; historische Fehler nicht
 reproduziert. `run_not_found` nach `unconfirmed` beweist keine Nichtausführung:

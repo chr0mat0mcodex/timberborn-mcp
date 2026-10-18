@@ -1,5 +1,10 @@
 # Bretterketten-Vorprüfung — begrenzt live abgenommen
 
+N10-Teilnachweis: blockierter, ausdrücklich pausierter Produzent über 1,5
+Spielstunden korrekt mit null Zyklen gemessen. Positivproduktion und Abtransport
+wegen voller Ausgabe/Lager und fehlender aktueller Kraft nicht abgenommen.
+[Begrenzter Pilot und Wiedervorlage](plank-production-transport-pilot.md).
+
 `inspect_plank_chain(session, districtId)` ist ein rein lesendes Werkzeug für
 Holz → Sägewerk → Bretterlager. districtId vorher aus nativer Bezirkszuordnung
 lesen; keine Zuständigkeit aus räumlicher Nähe ableiten.
