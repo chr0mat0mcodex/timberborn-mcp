@@ -1,6 +1,14 @@
 # Kompatibilität und Nachweise
 
-Aktuell: **Bridge 0.74.0**, zusätzlich MCP-/Supervisor-Journalkorrekturen in `c09750f`; keine neue Bridge-API. Gate: 23 Supervisor-, 1931 Unit-, 13 Integrationstests bestanden, drei optionale Live-Integrationstests übersprungen.
+Aktuelle Bridge-/Manifestversion: **0.74.0**. Jüngere MCP-Erweiterungen verwenden
+weiterhin diese Bridge-API. Maßgeblicher Featurestand, letzte Gatezahlen und
+Abnahmegrenzen: [Projektstand](../../PROJECT_STATE.md).
+Die folgenden historischen Einzelpiloten sind keine pauschale Freigabe weiterer
+Fraktionen, Karten oder Spielversionen. Offene Nachweise stehen im [Backlog](../../BACKLOG.md).
+
+## Historischer Journalabschluss 0.74.0
+
+Historischer Journalabschluss: **Bridge 0.74.0**, zusätzlich MCP-/Supervisor-Journalkorrekturen in `c09750f`; keine neue Bridge-API. Gate: 23 Supervisor-, 1931 Unit-, 13 Integrationstests bestanden, drei optionale Live-Integrationstests übersprungen.
 
 Live zusätzlich bestätigt: unerreichbare Plattformbaustelle ohne Bestandsverluste, Forstbelege ohne erneute Mutation nach Backend-Neustart und Client-Neuverbindung, Supervisor-Lifecycle mit neu geladenem Skript. Unbekannte Objektidentität bleibt live offen; Windows-Dateifehler und unterbrochene Schreibaufträge nur synthetisch geprüft. [Vollständige Nachweise](../releases/0.74.0.md).
 
@@ -21,7 +29,7 @@ Live zusätzlich bestätigt: unerreichbare Plattformbaustelle ohne Bestandsverlu
 0.68.0: Gate bestanden, Höhenpilot fehlgeschlagen, Diagnose live sichtbar:
 [Suchpriorisierung und Anschlussdiagnose](../releases/0.68.0.md).
 
-## Einordnung zum aktuellen Stand
+## Historische Einordnung 0.63 bis 0.67
 
 0.67.0: Gate bestanden, Höhenpilot an Suchbudget gescheitert; keine Liveabnahme:
 [Eigenkollisionen und vorhandene Treppen](../releases/0.67.0.md).

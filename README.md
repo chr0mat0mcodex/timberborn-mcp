@@ -1,45 +1,16 @@
 # Timberborn MCP
 
-Automatische Bretterketten-Vorprüfung **begrenzt live abgenommen**:
-Vor Bauaufträgen mit Bretterkosten und langen Simulationsläufen mit Bretterbezug
-ergänzt `operatingPreflight[].plankChain` Engpässe und konkrete nächste Schritte.
-Gemeinsames Diagnosebudget unverändert fünf Sekunden; keine Materialsperre,
-kein Ausbau und keine Verlängerung des Laufbudgets.
-[Vertrag und Livebelege](docs/plank-chain.md#automatische-einbindung-vor-starts).
+Eigene Timberborn-Mod und MCP-Server für strukturierte Zustandsabfragen,
+kontrollierte Bau-/Betriebsaktionen und begrenzte Simulation.
 
-Bretterketten-Vorprüfung **begrenzt live abgenommen**: `inspect_plank_chain`
-bündelt Holzversorgung, Sägewerksbetrieb, Kraft und Lager-/Transportbelege im
-gewählten Bezirk. Nur Diagnose und konkrete nächste Schritte; kein automatischer
-Ausbau oder Material-Startverbot. [Ablauf und Grenzen](docs/plank-chain.md).
+**Aktueller Stand:** Bridge 0.74.0 mit nachfolgenden MCP-Erweiterungen.
+Letzter fachlicher Abschluss ist die automatische Bretterketten-Vorprüfung,
+begrenzt live abgenommen; keine automatische Ausbauplanung oder Materialsperre.
+[Vertrag](docs/plank-chain.md#automatische-einbindung-vor-starts).
 
-Fortschrittsdiagnose **begrenzt live abgenommen**: frische Baudiagnose vor
-und nach einem begrenzten Zeitfenster vergleichen. Lieferung, Baufortschritt
-und unveränderten Fortschritt anhand belegter Messwerte trennen. Keine automatische
-Budgetverlängerung oder Material-Startsperre. [Ablauf und Grenzen](docs/construction-progress.md).
-
-Bezirksweite Bauarbeitszeit **begrenzt live abgenommen**: Zentrum und
-Bauhütten gemeinsam prüfen. Aktiver Job oder besetzte unpausierte Bauhütte in
-Arbeitszeit verhindert gemeinsamen Feierabend; unbekannte Belege bleiben null.
-Einzelner Feierabend am Zentrum ist keine Baupause im ganzen Bezirk.
-[Vertrag, Grenzen und Pilot](docs/operating-readiness.md).
-
-
-Arbeitszeit-Nachtrag im Gate und begrenzten Livepilot bestätigt: konkrete Feierabendursache in Betriebs- und frischer Baudiagnose. [Vertrag](docs/operating-readiness.md).
-
-Automatische Bauzentrum-/Produzentenauswahl und Vorprüfung vor Strukturstarts bzw. längeren Simulationen sind nach Gate sowie Simulations- und Baupilot begrenzt live abgenommen. Befunde bleiben beratend, Materialmangel sperrt den Start nicht. [Vertrag und Livebelege](docs/automatic-operating-readiness.md).
-
-Gemeinsame Betriebsdiagnose vor längeren Bau-/Simulationsläufen: `inspect_operating_readiness` bündelt ausgewähltes Bauzentrum, Überflutung, Personal und Materialproduzenten mit priorisierten nächsten Schritten. Gate und gezielter Livevergleich bestanden; kein Produktionsnachweis. [Aufruf und Grenzen](docs/operating-readiness.md).
-
-**Stand 0.74.0 mit abgeschlossenen Journal- und Cancel-/Transport-Korrekturen:** Reparaturbedarf wird aus frischen Zugangsbelegen abgeleitet. Materialwarten, Bestandsverlust, unerreichbare Baustelle und Fertigbau sind getrennt live geprüft. Forstjournale verhindern erneute Mutationen bei Wiederaufrufen, auch nach Neuverbindung.
-
-Letzte Abnahme: **28 Supervisor-, 1936 Unit- und 13 Integrationstests**, drei optionale Live-Integrationstests übersprungen. Supervisor-Stop/Start und Forstjournal-Persistenz gezielt live bestätigt. [Belege und Grenzen](docs/releases/0.74.0.md).
-
-Offen bleiben insbesondere unbekannte Objektidentität im Livebetrieb und gesonderte weitere Zugangsgeometrien. Dateifehler sowie unterbrochene Schreibaufträge sind synthetische Gate-Nachweise. [Projektstand](PROJECT_STATE.md) · [Offene Aufgaben](BACKLOG.md) · [Agenten-Anleitung](docs/agent-playing-guide.md).
-
-Cancel-Transport begrenzt live bestätigt: Statuswarten höchstens eine Sekunde
-im Codex-Supervisor; Cancel-Antwort im Pilot nach 2,986 Sekunden, Pause frisch
-bestätigt. Die verbleibende Serialisierung liegt vor dem Supervisor.
-[Nachweis und Grenzen](docs/lightweight-status-wait.md).
+Aktuelle Gatezahlen, Featurestand und Nachweisgrenzen stehen ausschließlich im
+[Projektstand](PROJECT_STATE.md). Einstieg über [START_HERE.md](START_HERE.md);
+offene Aufgaben und abgeschlossene Dokumentationspflege A01/A02 im [Backlog](BACKLOG.md).
 
 ## Frühere Abnahmen
 
@@ -197,7 +168,7 @@ Beobachtung und kontrollierte Eingriffe über reguläre Spielservices.
 
 ## Status
 
-Aktueller dokumentierter Abschluss: **0.74.0**. Die folgenden
+Aktueller dokumentierter Stand: [PROJECT_STATE.md](PROJECT_STATE.md). Die folgenden
 Versionsabschnitte sind historische Teilabnahmen, keine parallel aktuellen Stände.
 Offene Fähigkeiten stehen im [Backlog](BACKLOG.md).
 

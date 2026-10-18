@@ -1,5 +1,19 @@
 # Projektstand
 
+## Aktueller Stand — 2026-10-18
+
+Bridge/Manifest **0.74.0**; jüngste MCP-Implementierung `f52750f`:
+automatische Bretterketten-Vorprüfung, begrenzt live abgenommen.
+Aktuelle Gatezahlen und Nachweise folgen unten. Kein neues Codefeature begonnen,
+kein offenes Test-Gate. Dokumentationspaket A01/A02 abgeschlossen:
+aktuelle Einstiege vereinheitlicht, offene Aufgaben im [Backlog](BACKLOG.md),
+vorherigen Backlog vollständig ins [Archiv](BACKLOG_HISTORY.md) übernommen.
+Nur Inhalts-/Diff-/Linkprüfung; keine neue Build-/Liveabnahme.
+Agenten-Spielanleitung und Spielskills benötigen hierfür keine fachliche Änderung:
+Werkzeuge, Parameter, Grenzen und Laufzeitverhalten bleiben unverändert.
+
+## Letzter fachlicher Abschluss — automatische Bretterketten-Vorprüfung
+
 Automatische Bretterketten-Vorprüfung **begrenzt live abgenommen**:
 Vor Bauaufträgen mit Bretterkosten und langen Simulationsläufen mit Bretterbezug
 ergänzt `operatingPreflight[].plankChain` Engpässe und konkrete nächste Schritte.
@@ -21,6 +35,15 @@ in dieser Integration nur synthetisch geprüft. [Details](docs/plank-chain.md#li
 
 Anleitung, Werkzeugvertrag und Fachverträge aktualisiert; keine projektbezogenen
 Spielskills vorhanden.
+
+## Historische Abnahmen und Zwischenstände
+
+Die folgenden Belege sind chronologisch gewachsene Historie. „Aktuell“, „offen“,
+„nächster Schritt“ und damalige Gate-Aufträge gelten ausschließlich für den
+jeweiligen Eintrag; sie ersetzen weder den aktuellen Kopf noch die offene
+Aufgabenliste im Backlog. Ältere Testzahlen sind keine aktuellen Gesamtzahlen.
+
+### Bretterketten-Reader — Abschluss vor automatischer Einbindung
 
 Bretterketten-Vorprüfung **begrenzt live abgenommen**: `inspect_plank_chain`
 bündelt Holzversorgung, Sägewerksbetrieb, Kraft und Lager-/Transportbelege im

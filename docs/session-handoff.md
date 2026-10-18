@@ -2,10 +2,12 @@
 
 ## Aktueller Einstieg
 
-Letzter dokumentierter Abschluss: 0.50.0 (`fdbc42a`); [Projektstand](../PROJECT_STATE.md),
-[offene Arbeit](../BACKLOG.md), [Lifecycle und Gate](../DEVELOPMENT_WORKFLOW.md).
-Lokale Änderungen separat prüfen. Die folgenden Abschnitte sind historische
-Übergaben und enthalten keine heute offenen Gate-Aufträge.
+Aktueller Featurestand, letzte Gatezahlen und Nachweise: [Projektstand](../PROJECT_STATE.md).
+Bridge 0.74.0; jüngster fachlicher Abschluss ist die automatische Bretterketten-
+Vorprüfung. Dokumentationspaket A01/A02 abgeschlossen; kein offenes Test-Gate.
+[Offene Arbeit](../BACKLOG.md) · [Lifecycle und Gate](../DEVELOPMENT_WORKFLOW.md).
+Git-Status und Laufzeitstand separat prüfen. Die folgenden Übergaben sind
+historisch und enthalten keine heute offenen Gate-Aufträge.
 
 ## Historischer Stand bis Phase E
 

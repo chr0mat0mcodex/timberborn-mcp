@@ -1,7 +1,8 @@
 # Mission: Timberborn über MCP steuerbar machen
 
 Einordnung 2026-10-12: historischer Etappenplan A–E, im begrenzten Umfang
-abgeschlossen. Aktueller Releaseabschluss: 0.53.0; [Projektstand](PROJECT_STATE.md).
+abgeschlossen. Damaliger Releaseabschluss am 2026-10-12: 0.53.0.
+Heutiger Stand: [PROJECT_STATE.md](PROJECT_STATE.md).
 Die folgenden Zwischenstände sind keine aktuelle Aufgabenreihenfolge. Neue
 Fähigkeiten und verbliebene Nachweislücken stehen im [Backlog](BACKLOG.md).
 
