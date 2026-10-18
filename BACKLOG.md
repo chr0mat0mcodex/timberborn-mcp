@@ -2,11 +2,11 @@
 
 ## Aktuelle Arbeit
 
-**A12/N06 begrenzt abgenommen; N01–N05 ebenfalls abgeschlossen.**
-Gate und lesender Livepilot bestanden: Gebäude/Pflanzenursachen, Terrain,
-freie und unbeobachtete Zelle korrekt getrennt. Spiel pausiert.
-[Vertrag, Nachweise und Bewertung](docs/precheck-collision-pilot.md).
-Weitere Diagnosefamilien und Pakete bleiben zurückgestellt.
+**A12/N07 begrenzt untersucht; historische Fehler nicht reproduziert.**
+Frühe Tempoablehnung und gültiger Einzellauf korrekt getrennt; native Vorschau
+vor/nach einer Spielstunde ohne Baselinekonflikt. Keine Codeänderung nötig.
+[Nachweise und Diagnose bei Wiederauftreten](docs/run-navigation-diagnostic-pilot.md).
+N01–N06 abgenommen; weitere Pakete zurückgestellt. Spiel pausiert.
 A03/A04/A05/A07/A08/A09/A10-Piloten abgenommen; weitere Erweiterungen zurückgestellt.
 A01/A02/A06/A11 abgeschlossen. Weitere A12-Pakete zurückgestellt. [Projektstand](PROJECT_STATE.md).
 
@@ -239,6 +239,11 @@ das [menschliche Gate und den gezielten Livetest](DEVELOPMENT_WORKFLOW.md).
   Kartenaußenbereich live getrennt belegt. Unbekannte Identität/Kürzung nur
   synthetisch geprüft. [Nachweise](docs/precheck-collision-pilot.md).
 
+- [x] **N07 begrenzt untersucht:** aktuelle Startablehnung/Registrierung und
+  Vorschau vor/nach einem kurzen Lauf nachvollziehbar; historische Fehler
+  nicht reproduziert. Keine Codeänderung. Bei Wiederauftreten anhand des
+  [Diagnoseablaufs](docs/run-navigation-diagnostic-pilot.md) weiterarbeiten.
+
 - [ ] **Bestehende Restarbeit, keine neu nachgewiesenen Regressionen:** B06
   (Reload), B03 (allgemeine Kraft-/Höhenrouten), B07 (Produktionsausbauplanung),
   F01/F02 (vollständiger Bauphasenschutz/Umweg vor Bestandsänderung) und F04/F05
@@ -271,7 +276,7 @@ Abschlussbeleg verworfen wurden. Herkunft: [archivierter Verlauf](BACKLOG_HISTOR
 | N04 — begrenzt abgeschlossen, A12 | [Livevergleich bestanden](docs/access-plan-key-pilot.md); historischer Fehler nicht reproduziert, keine behauptete Ursachenklärung. | Gleicher Plan/Schlüssel angenommen; geänderte Rotation mit altem Schlüssel vor Auftrag abgelehnt. 2/2 Teile fertig/zugänglich, Journal freigegeben. |
 | N05 — begrenzt abgeschlossen, A12/B10 | [Anzeigekorrektur abgenommen](docs/project-progress-display-pilot.md); weitere Auftragsfamilien unverändert. | Laufende 0/2 bzw. 1/2 und terminale 2/2 korrekt, Spielbild bestätigt; gespeicherte und frische Belege getrennt. |
 | N06 — begrenzt abgeschlossen, A12 | [Zellweise Kollisionsbelege abgenommen](docs/precheck-collision-pilot.md); weitere Diagnosefamilien unverändert. | Gebäude-/Pflanzen-ID und Typ unabhängig bestätigt; Terrain, frei und unbeobachtet getrennt. Identitätslücke/Kürzung synthetisch. |
-| N07 — nur bei Wiederauftreten | `unconfirmed`/`run_not_found` bzw. Navigations-Baselinekonflikt anhand Session, Transport und Registrierung isolieren. | Ursache belegt oder Fall ausdrücklich unreproduziert; Antwortverlust nicht als Nichtausführung behandeln. |
+| N07 — Pilot abgeschlossen; bei Wiederauftreten | [Begrenzter Diagnosepilot](docs/run-navigation-diagnostic-pilot.md): historische unconfirmed-/Baselinefehler nicht reproduziert. | Konkrete Tempoablehnung vor Laufanlage, gültige Registrierung/Rückabfrage/Pause und Vorschauvergleich bestanden; Vorfallablauf dokumentiert, Ursache weiterhin offen. |
 | N08 — Vorschlag | Optionale ausdrücklich gewünschte Abschlussgeschwindigkeit statt Pflichtpause entwerfen. | Besitzer-/Abbruch-/Fehlerfälle geklärt; bestehende Pause bleibt Standard bis zur gesonderten Freigabe und Abnahme. |
 | N09 — Vorschlag, B12 | Nutzen paralleler Leser gegenüber sofortiger Ablehnung messen. | Begrenzter Pilot zeigt Nutzen ohne Mutationsqueue, Replay oder blockierten Cancel; sonst zurückstellen. |
 

@@ -1,5 +1,11 @@
 # Spielanleitung für Agenten
 
+N07 begrenzt untersucht: frühe Tempoablehnung, gültige Laufregistrierung und
+Vorschauvergleich vor/nach Simulation bestätigt; historische Fehler nicht
+reproduziert. `run_not_found` nach `unconfirmed` beweist keine Nichtausführung:
+Session, bestehende Lauf-ID, activeRunId/pendingSpeed und Startbelege prüfen,
+kein Blindretry. [Nachweise und Vorfallablauf](run-navigation-diagnostic-pilot.md).
+
 N06 begrenzt abgenommen: `precheck_building.cells[].collision` nennt
 native Objektkollisionen mit `id`/`template` (maximal 32/Zelle, `truncated`) und
 `intersectsTerrain` separat. Fehlendes collision oder fehlende Identitäten sind

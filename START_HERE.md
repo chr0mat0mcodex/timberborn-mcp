@@ -15,10 +15,10 @@ Laufzeitstand und Session werden beim regulären Wiederanschluss frisch gelesen.
 
 ## Aktueller Auftrag
 
-**A12/N06 begrenzt abgenommen; kein Gate offen.**
-[Objektursachen der Baukollision und Livebelege](docs/precheck-collision-pilot.md).
-Zwölf neue Testfälle und rein lesender Livepilot bestanden; Spiel pausiert.
-N01–N05 abgenommen; weitere Fehlerfälle/A12-Pakete offen.
+**A12/N07 begrenzt untersucht; historische Fehler nicht reproduziert.**
+[Livekontrollen und Diagnoseablauf](docs/run-navigation-diagnostic-pilot.md).
+Keine Codeänderung, kein Gate offen; Spiel pausiert, kein aktiver Lauf.
+N01–N06 abgenommen; N07 nur bei neuem Vorfall wieder aufnehmen.
 Weitere Journale und frühere Piloterweiterungen bleiben zurückgestellt.
 A01/A02/A06 abgeschlossen; offene Aufgaben im [Backlog](BACKLOG.md).
 

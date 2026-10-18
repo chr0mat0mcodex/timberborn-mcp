@@ -2,6 +2,20 @@
 
 ## Aktueller Stand — 2026-10-18
 
+**A12/N07 begrenzt untersucht — historische Fehler nicht reproduziert.**
+Absichtlicher Tempokonflikt vor Laufanlage konkret abgelehnt, danach erwartetes
+run_not_found. Neuer gültiger Einzellauf in derselben Session registriert,
+lesend bestätigt und nach exakt einer Spielstunde pausiert. Identische native
+Vorschau davor/danach gültig und restauriert, kein Baselinekonflikt.
+Keine Codeänderung; unveränderter N06-Gatestand, kein neues Gate erforderlich.
+Nutzen: Fehlerklassen und Diagnoseweg praktisch getrennt; kleiner Aufwand.
+Keine rückwirkende Ursachenbehauptung, keine Transportstörung injiziert.
+[Belege und Ablauf bei Wiederauftreten](docs/run-navigation-diagnostic-pilot.md).
+Anleitung/Werkzeugübersicht gepflegt; keine projektbezogenen Spielskills.
+Spiel pausiert, keine aktiven Läufe. Weitere A12-Pakete unverändert.
+
+### Vorheriger Abschluss A12/N06
+
 **A12/N06 begrenzt abgenommen — Zellursachen der Baukollision.**
 2304 Unit-, 19 Integrations-, 13 Paket- und 35 Supervisor-Prüfungen bestanden;
 drei optionale Livefälle übersprungen, beide Builds ohne Warnungen/Fehler,
