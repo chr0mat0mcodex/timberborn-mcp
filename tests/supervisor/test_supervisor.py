@@ -1,4 +1,5 @@
 import importlib.util
+import io
 import json
 from pathlib import Path
 import queue
@@ -14,6 +15,72 @@ ROOT = Path(__file__).resolve().parents[2]
 spec = importlib.util.spec_from_file_location("supervisor", ROOT / "scripts/codex-mcp-supervisor.py")
 module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(module)
+
+
+class ClientFrameTests(unittest.TestCase):
+    GOOD = b'{"jsonrpc":"2.0","id":7,"method":"ping"}\n'
+
+    def read(self, payload):
+        replies = []
+        requests = list(module.client_requests(io.BytesIO(payload), replies.append))
+        return requests, replies
+
+    def test_invalid_json_and_utf8_do_not_end_connection(self):
+        for bad in (b'{broken}\n', b'\xff\n', b'\n', b'NaN\n', b'[' * 2000 + b'\n'):
+            with self.subTest(frame=bad[:10]):
+                requests, replies = self.read(bad + self.GOOD)
+                self.assertEqual([json.loads(self.GOOD)], requests)
+                self.assertEqual(-32700, replies[0]['error']['code'])
+                self.assertEqual(1, len(replies))
+                self.assertIsNone(replies[0]['id'])
+
+    def test_invalid_envelopes_never_reach_dispatch(self):
+        for bad in ([], None, 1, {}, {'jsonrpc': '2.0', 'method': 'ping', 'id': []},
+                    {'jsonrpc': '2.0', 'method': 'ping', 'params': []},
+                    {'jsonrpc': '2.0', 'method': 42},
+                    {'jsonrpc': '2.0', 'method': 'ping', 'id': True},
+                    {'jsonrpc': '2.0', 'method': 'notifications/cancelled',
+                     'params': {'requestId': []}}):
+            with self.subTest(frame=bad):
+                requests, replies = self.read(json.dumps(bad).encode() + b'\n' + self.GOOD)
+                self.assertEqual([json.loads(self.GOOD)], requests)
+                self.assertEqual(-32600, replies[0]['error']['code'])
+
+    def test_oversized_frame_tail_is_not_a_second_request(self):
+        payload = b'x' * (module.MAX_CLIENT_FRAME_BYTES + 70000) + self.GOOD + self.GOOD
+        requests, replies = self.read(payload)
+        self.assertEqual([json.loads(self.GOOD)], requests)
+        self.assertEqual(1, len(replies))
+        self.assertEqual(-32600, replies[0]['error']['code'])
+
+    def test_limit_includes_line_ending_and_counts_utf8_bytes(self):
+        prefix = '{"jsonrpc":"2.0","method":"notice","params":{"text":"'.encode()
+        suffix = b'"}}\n'
+        room = module.MAX_CLIENT_FRAME_BYTES - len(prefix) - len(suffix)
+        body = 'ä'.encode() * (room // 2) + b'x' * (room % 2)
+        exact = prefix + body + suffix
+        self.assertEqual(module.MAX_CLIENT_FRAME_BYTES, len(exact))
+        self.assertEqual(1, len(self.read(exact)[0]))
+        requests, replies = self.read(prefix + body + b'x' + suffix + self.GOOD)
+        self.assertEqual([json.loads(self.GOOD)], requests)
+        self.assertEqual(1, len(replies))
+
+    def test_eof_and_final_unterminated_frame(self):
+        self.assertEqual(([], []), self.read(b''))
+        self.assertEqual([json.loads(self.GOOD)], self.read(self.GOOD.rstrip())[0])
+        requests, replies = self.read(b'x' * (module.MAX_CLIENT_FRAME_BYTES + 1))
+        self.assertEqual([], requests)
+        self.assertEqual(1, len(replies))
+
+    def test_recovery_preserves_control_and_cancel_without_replay(self):
+        control = {'jsonrpc': '2.0', 'id': 8, 'method': 'tools/call',
+                   'params': {'name': module.CONTROL, 'arguments': {'action': 'stop'}}}
+        cancel = {'jsonrpc': '2.0', 'method': 'notifications/cancelled',
+                  'params': {'requestId': 7}}
+        requests, replies = self.read(b'{bad}\n' + json.dumps(control).encode() + b'\n'
+                                     + json.dumps(cancel).encode() + b'\n' + self.GOOD)
+        self.assertEqual([control, cancel, json.loads(self.GOOD)], requests)
+        self.assertEqual(1, len(replies))
 
 
 class AtomicPublicationTests(unittest.TestCase):
@@ -198,6 +265,25 @@ class LifecycleTests(unittest.TestCase):
 
     def control(self, action):
         return self.call("tools/call", {"name": module.CONTROL, "arguments": {"action": action}})
+
+    def test_bad_frames_preserve_backend_and_stop_remains_available(self):
+        self.initialize()
+        child = self.server.process
+        errors = []
+        payload = (b'{bad}\n' + b'x' * (module.MAX_CLIENT_FRAME_BYTES + 1) + b'\n'
+                   + ClientFrameTests.GOOD * 3)
+        dispatched = []
+        for request in module.client_requests(io.BytesIO(payload), errors.append):
+            dispatched.append(request)
+            self.server.handle(request)
+        self.assertEqual(3, len(dispatched))
+        self.assertEqual([-32700, -32600], [e['error']['code'] for e in errors])
+        self.assertIs(child, self.server.process)
+        self.assertIsNone(child.poll())
+        result = self.control("stop")
+        self.assertIn('result', result)
+        self.assertIsNotNone(child.poll())
+        self.assertTrue(self.server.gate.exists())
 
     def test_frontend_forwards_second_rpc_while_first_response_is_pending(self):
         self.initialize()

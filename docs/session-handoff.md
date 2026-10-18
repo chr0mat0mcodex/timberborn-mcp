@@ -3,13 +3,12 @@
 ## Aktueller Einstieg
 
 Aktueller Featurestand, letzte Gatezahlen und Nachweise: [Projektstand](../PROJECT_STATE.md).
-Bridge 0.74.0; **A08-Pilot abgenommen, Gate und begrenzter Livepilot bestanden**.
-13 neue synthetische Fälle bestanden. Positive native Vorschau, fünf echte
-Verluste bei Wohnhausvorschau und anschließende freie Kontrollvorschau bestanden;
-Wiederherstellung bestätigt. Kein Gate offen. Weitere Adapter zurückgestellt.
-[Nachweismatrix, Grenzen und Bewertung](mod-adapter-evidence-pilot.md).
-A01/A02/A06 und A03/A04/A05/A07-Piloten abgenommen; weitere Erweiterungen
-zurückgestellt. Keine weiteren Adapter in diesem Auftrag.
+Bridge 0.74.0; **A09-Eingangspilot abgenommen, kein Gate offen**.
+35 Supervisor-Tests einschließlich sieben neuer Eingangstests bestanden.
+Nach vollständigem Codex-Neustart verbundener Stop/Status/Start-Livefall mit
+unveränderter Spielsitzung bestanden. [Belege/Bewertung](supervisor-input-pilot.md).
+Inflight-/Threadlimits und Eingangstimeouts bleiben zurückgestellt.
+A03/A04/A05/A07/A08-Piloten abgenommen; weitere Migrationen zurückgestellt.
 [Offene Arbeit](../BACKLOG.md) · [Lifecycle und Gate](../DEVELOPMENT_WORKFLOW.md).
 Git-Status und Laufzeitstand separat prüfen. Die folgenden Übergaben sind
 historisch und enthalten keine heute offenen Gate-Aufträge.

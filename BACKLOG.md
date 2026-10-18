@@ -2,13 +2,13 @@
 
 ## Aktuelle Arbeit
 
-**A08-Pilot abgenommen — Gate und begrenzter Livepilot bestanden:** Abschluss-
-bewertung des Wegschutz-Adapters in Bridge.Core; Policytests und direkte native
-Belege getrennt. Positive Vorschau, fünf echte Verluste mit Wohnhausvorschau und
-anschließende Wiederherstellung bestanden. [Belege/Bewertung](docs/mod-adapter-evidence-pilot.md).
-Weitere Adapter zurückgestellt; Gesamt-A08 bleibt offen. A03/A04/A05/A07-Piloten
-abgenommen; weitere Erweiterungen zurückgestellt. A01/A02/A06 abgeschlossen.
-A09–A12 noch nicht begonnen. [Projektstand](PROJECT_STATE.md).
+**A09-Eingangspilot abgenommen — Gate und Lifecycle-Livefall bestanden:**
+1-MiB-Zeilenlimit, kontrollierte Parse-/Formfehler und vollständiges Verwerfen
+übergroßer Frames. [Nachweise und Bewertung](docs/supervisor-input-pilot.md).
+Inflight-Limits/Timeouts bleiben offen; weitere Erweiterungen zurückgestellt.
+A03/A04/A05/A07/A08-Piloten abgenommen; weitere Migrationen zurückgestellt.
+A01/A02/A06 abgeschlossen. A10–A12 noch nicht begonnen.
+[Projektstand](PROJECT_STATE.md).
 
 ## Projektprüfung 2026-10-18 — abarbeitbare Befunde
 
@@ -16,7 +16,7 @@ Prüfbasis und vollständiger Audit: [Archivstand](BACKLOG_HISTORY.md#archivstan
 Ergebnis: gezieltes Refactoring von Versionsprofilen, Werkzeugdispatch und
 Prüfketten sinnvoll; kein belegter Bedarf für einen Komplettumbau.
 Der ursprüngliche Audit war statisch. A06 ist inzwischen **abgeschlossen**;
-A03 ist **teilweise abgeschlossen**, A04 **teilweise abgeschlossen**; A05 ist **teilweise abgeschlossen**, A07 ist **teilweise abgeschlossen**, A08 ist **teilweise abgeschlossen**, A09–A12 sind **offen**.
+A03 ist **teilweise abgeschlossen**, A04 **teilweise abgeschlossen**; A05 ist **teilweise abgeschlossen**, A07 ist **teilweise abgeschlossen**, A08 ist **teilweise abgeschlossen**, A09 ist **teilweise abgeschlossen**, A10–A12 sind **offen**.
 P2 = vor der nächsten betroffenen Erweiterung, P3 = nach Bedarf;
 S/M/L sind relative Aufwandsschätzungen. Codeänderungen benötigen weiterhin
 das [menschliche Gate und den gezielten Livetest](DEVELOPMENT_WORKFLOW.md).
@@ -137,7 +137,15 @@ das [menschliche Gate und den gezielten Livetest](DEVELOPMENT_WORKFLOW.md).
 
 ### A09 — P3 / M: Supervisor-Eingang begrenzen und Fehler isolieren
 
-- [ ] **Befund, bestätigt; Lastwirkung ungeprüft:**
+- [x] **Eingangspilot abgenommen (2026-10-18):** 1 MiB je Clientzeile, lokale
+  Parse-/Formfehler, vollständiges Verwerfen übergroßer Frames. Sieben neue Tests
+  bestanden; Gate und Stop/Status/Start nach vollständigem Codex-Neustart bestanden.
+  Gleiche Spielsitzung nach Wiederstart; Nutzen/Aufwand positiv.
+  [Umfang und Grenzen](docs/supervisor-input-pilot.md).
+  Inflight-/Threadgrenzen, reservierte Lifecycle-/Cancel-Kapazität und Timeouts
+  sind ausdrücklich nicht Teil dieses Piloten.
+
+- [ ] **Ursprünglicher Befund; Lastwirkung ungeprüft:**
   [codex-mcp-supervisor.py](scripts/codex-mcp-supervisor.py), `main()`, liest
   beliebig lange Zeilen, ruft `json.loads` ohne lokale Fehlerbehandlung auf und
   startet für jede Nachricht mit `id` einen neuen Thread. Fehlerhaftes JSON

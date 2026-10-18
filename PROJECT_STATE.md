@@ -2,6 +2,24 @@
 
 ## Aktueller Stand — 2026-10-18
 
+**A09-Eingangspilot abgenommen — Gate und Lifecycle-Livefall bestanden.**
+Supervisor begrenzt Clientzeilen auf 1 MiB und isoliert Parse-/Formfehler vor
+Dispatch; übergroße Frames werden vollständig verworfen, ohne Replay/Neustart.
+Gate: 13 Paket-, 35 Supervisor-, 2221 Unit- und 14 Integrationstests bestanden;
+drei optionale Livefälle übersprungen. Sieben neue Supervisor-Testmethoden grün,
+Release-Builds ohne Warnungen/Fehler, fünf installierte Dateien per SHA-256 bestätigt.
+Nach vom Nutzer bestätigtem Codex-Neustart: Backendstart und nativer Status,
+Stop mit running=false/gate=true, Status ohne Neustart, expliziter Wiederstart
+und nativer Status mit gleicher Session und MCP-Kennung bestanden. Kein Spielauftrag.
+Nutzen/Aufwand positiv: Fehlerisolierung und begrenzte rohe Eingabe bei kleinem
+Codeumfang. Inflight-/Threadgrenzen und Eingangstimeouts bleiben offen.
+[Nachweise, Bewertung und Grenzen](docs/supervisor-input-pilot.md).
+Bridge/API unverändert 0.74.0. Kein Gate offen. Supervisor-Doku und Spielanleitung
+mit tatsächlicher Abnahme aktualisiert; keine projektbezogenen Spielskills vorhanden.
+Gesamt-A09 teilweise offen; weitere Erweiterungen auf Nutzerwunsch zurückgestellt.
+
+### Vorheriger Abschluss A08
+
 **A08-Pilot abgenommen — menschliches Gate und gezielter Livepilot bestanden.**
 Abschlussentscheidung von `RoadProtection.Finish` nach Bridge.Core gezogen;
 native Reads/Cleanup und Freigabegrenzen unverändert. 13 neue synthetische Fälle
@@ -17,7 +35,7 @@ Keine persistente Änderung beobachtet, keine Session-Sperre, kein Bauauftrag.
 Nutzen/Aufwand positiv: isolierte Policytests und explizite Adapter-Nachweisgrenze;
 kleiner Codeumfang, zusätzlicher Aufwand für geeignete native Negativkontrolle.
 [Nachweismatrix, Grenzen und Bewertung](docs/mod-adapter-evidence-pilot.md).
-Bridge/API 0.74.0. Kein Gate offen. Anleitung mit tatsächlichem Nachweisstand
+Bridge/API 0.74.0. Zum A08-Abschluss kein Gate offen. Anleitung mit tatsächlichem Nachweisstand
 aktualisiert; keine projektbezogenen Spielskills vorhanden. Gesamt-A08 offen;
 weitere Adapter, Sessionwechsel und Fertigzugang bleiben zurückgestellt.
 

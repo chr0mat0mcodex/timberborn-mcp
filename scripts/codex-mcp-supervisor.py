@@ -20,6 +20,46 @@ ROOT = Path(__file__).resolve().parent.parent
 CONTROL = "timberborn_server_control"
 STATUS_READERS = {"inspect_simulation_run", "inspect_large_project"}
 STATUS_WAIT_LIMIT = 1
+MAX_CLIENT_FRAME_BYTES = 1024 * 1024
+
+
+def client_requests(stream, send):
+    """Read bounded UTF-8 JSON lines; never dispatch a rejected frame or its tail."""
+    def reject(code, message):
+        send({"jsonrpc": "2.0", "id": None, "error": {"code": code, "message": message}})
+
+    def invalid_constant(value):
+        raise ValueError("Non-JSON numeric constant")
+
+    while True:
+        line = stream.readline(MAX_CLIENT_FRAME_BYTES + 1)
+        if not line:
+            return
+        if len(line) > MAX_CLIENT_FRAME_BYTES:
+            # Drain only this frame, using bounded chunks. No buffering or replay.
+            while line and not line.endswith(b"\n"):
+                line = stream.readline(65536)
+            reject(-32600, "Client frame exceeds 1048576 bytes")
+            continue
+        try:
+            request = json.loads(line.decode("utf-8"), parse_constant=invalid_constant)
+        except (ValueError, UnicodeError, RecursionError):
+            reject(-32700, "Invalid JSON frame")
+            continue
+        # The frontend supports single requests/notifications with named params.
+        # Reject containers before trace/handle can access fields or use an ID as a key.
+        if (not isinstance(request, dict) or request.get("jsonrpc") != "2.0"
+                or not isinstance(request.get("method"), str)
+                or not isinstance(request.get("params", {}), dict)
+                or ("id" in request and request["id"] is not None
+                    and type(request["id"]) not in (str, int, float))):
+            reject(-32600, "Invalid request frame")
+            continue
+        if (request["method"] == "notifications/cancelled"
+                and type(request.get("params", {}).get("requestId")) not in (str, int, float)):
+            reject(-32600, "Invalid cancellation frame")
+            continue
+        yield request
 
 
 def responsive_params(method, params):
@@ -573,8 +613,7 @@ def main():
     command = ["dotnet", str(ROOT / "src/Timberborn.McpServer/bin/Release/net10.0/Timberborn.McpServer.dll")]
     supervisor = Supervisor(command, runtime, env)
     try:
-        for line in sys.stdin:
-            request = json.loads(line)
+        for request in client_requests(sys.stdin.buffer, supervisor.send):
             supervisor.trace("client_received", request)
             # Independent lifecycle calls must be able to interrupt a pending game call.
             if "id" in request:

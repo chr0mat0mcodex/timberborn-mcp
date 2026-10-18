@@ -1,5 +1,16 @@
 # Persistenter MCP-Vorschaltprozess
 
+## A09-Eingangspilot (Gate und Lifecycle-Liveabnahme bestanden)
+
+Clientzeilen maximal 1 MiB inklusive Zeilenende. Fehlerhafte oder übergroße
+Nachrichten werden mit kontrolliertem JSON-RPC-Fehler verworfen; keine automatische
+Wiederholung. Inflight-Grenzen und Eingangstimeouts noch nicht umgesetzt.
+Nach vollständigem Codex-Neustart Stop/Status/Start mit gleicher Spielsitzung
+live bestätigt. Python-Skriptänderungen benötigen weiterhin einen vollständigen
+Client-Neustart; Backend-Stop/Start allein lädt den Supervisor-Code nicht neu.
+[Umfang, Fehlergrenzen und Nachweise](supervisor-input-pilot.md).
+
+
 ## Statuswarten und Laufabbruch
 
 Der Supervisor leitet Requests bereits parallel weiter. Die Backend-Sperre wurde

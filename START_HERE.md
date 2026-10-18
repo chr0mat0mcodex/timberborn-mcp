@@ -15,12 +15,12 @@ Laufzeitstand und Session werden beim regulären Wiederanschluss frisch gelesen.
 
 ## Aktueller Auftrag
 
-**A08-Pilot abgenommen: Gate und begrenzter Livepilot bestanden.** Reine
-Abschlussentscheidung des Wegschutz-Adapters ausgelagert; direkte Mod-Aufrufe als
-eigene Nachweisgrenze. Positive Vorschau, echter Verlustfall und Wiederherstellung
-bestanden. [Belege/Bewertung](docs/mod-adapter-evidence-pilot.md).
-Weitere Adapter zurückgestellt; Gesamt-A08 offen. Kein Gate offen.
-A03/A04/A05/A07-Piloten abgenommen; weitere Erweiterungen zurückgestellt.
+**A09-Eingangspilot abgenommen; Gate und Lifecycle-Livefall bestanden.**
+Clientzeilen begrenzt, Parsefehler isoliert. Nach vollständigem Codex-Neustart
+Stop/Status/Start mit gleicher Spielsitzung bestanden. Kein Gate offen.
+Inflight-Grenzen/Timeouts und weitere Erweiterungen bleiben zurückgestellt.
+[Nachweise und Bewertung](docs/supervisor-input-pilot.md).
+A03/A04/A05/A07/A08-Piloten abgenommen; weitere Migrationen zurückgestellt.
 A01/A02/A06 abgeschlossen; offene Aufgaben im [Backlog](BACKLOG.md).
 
 ## Maßgebliche Arbeitsweise
