@@ -10,6 +10,7 @@ namespace Timberborn.AgentBridge;
 
 public sealed partial class LargeProjectService
 {
+    private readonly Dictionary<string, ConstructionProgressWindow[]> progressWindows = new();
     private readonly Dictionary<string, object> guardFailures = new();
     private readonly HashSet<string> releasedProjects = new();
     private readonly Dictionary<string, string> repairParents = new();
@@ -104,7 +105,7 @@ public sealed partial class LargeProjectService
                 builderWorkforce, constructionCenterId = job.Request.DistrictId, constructionCenterWorkingHours = centerWorkingHours,
                 workingHoursSource = "district_center_workplace_component", unfinishedSupportIndices = unfinishedSupports, construction, availableGoods = available };
         }).ToArray();
-        return JObject.FromObject(new { actionId=id, state=State(id), released=releasedProjects.Contains(id), currentSpeed=speed.CurrentSpeed,
+        var report = JObject.FromObject(new { actionId=id, state=State(id), released=releasedProjects.Contains(id), currentSpeed=speed.CurrentSpeed,
             closeEligible=ready && resolved, repairEligible=ready && !releasedProjects.Contains(id) && State(id)!="completed" && repairable && others.Length==0,
             lastGuardFailure=guardFailures.TryGetValue(id, out var guardFailure) ? guardFailure : null,
             lastValidationFailure=validationFailures.TryGetValue(id, out var failure) ? failure : null,
@@ -112,12 +113,41 @@ public sealed partial class LargeProjectService
             foreignSites=others.Take(32).ToArray(), foreignSitesTruncated=others.Length>32,
             unissuedParts=recorded.Count(s=>s is "pending" or "rejected"), parts,
             limitations=new[]{"fresh_observation_not_placement","materials_are_total_cost_and_current_stock_not_remaining_delivery","access_and_materials_not_worker_guarantee","close_abandons_unissued_parts_without_demolition","unknown_placement_effects_block_release","ledger_lost_on_game_reload"} });
+        return report;
+    }
+
+    private void AddProgress(string id,JObject report)
+    {
+        var now=simulation.ObservedGameHours;
+        var samples=((JArray)report["parts"]!).Select(p=> {
+            // JSON null is a JValue, not a null reference. Never index it as an object.
+            var construction=p["construction"] as JObject;
+            var materials=construction?["materials"] as JObject;
+            var workforce=p["builderWorkforce"] as JObject;
+            return new ConstructionProgressSample {
+                Id=(string)p["id"]!, Observed=(string)p["observed"]!, Reason=(string)p["reason"]!, GameHours=now,
+                MaterialProgress=(double?)construction?["materialProgress"],
+                BuildProgress=(double?)construction?["buildTimeProgress"],
+                BuildersAvailable=(bool?)workforce?["workingHours"],
+                SiteStock=(bool?)materials?["inventoryAvailable"]==true
+                    ? (materials?["siteStock"] as JArray)?.ToDictionary(v=>(string)v["id"]!,v=>(int)v["amount"]!) : null
+            };
+        }).ToArray();
+        if(!progressWindows.TryGetValue(id,out var windows))
+            progressWindows[id]=windows=samples.Select(_=>new ConstructionProgressWindow()).ToArray();
+        var serializer=Newtonsoft.Json.JsonSerializer.Create(new Newtonsoft.Json.JsonSerializerSettings {
+            ContractResolver=new Newtonsoft.Json.Serialization.DefaultContractResolver {
+                NamingStrategy=new Newtonsoft.Json.Serialization.CamelCaseNamingStrategy { ProcessDictionaryKeys=false } } });
+        var comparisons=samples.Select((s,i)=>windows[i].Observe(s)).ToArray();
+        report["progressComparison"]=JObject.FromObject(new { source="consecutive_fresh_diagnoses", parts=comparisons,
+            limitations=new[]{"endpoint_evidence_only","site_stock_delta_is_net_not_gross_delivery","no_automatic_budget_extension","no_material_start_gate","baseline_lost_on_game_reload"} },serializer);
+
     }
 
     private object Recover(string id, bool close)
     {
         var report = Diagnose(id);
-        if (!close) return report;
+        if (!close) { AddProgress(id,report); return report; }
         report["closeOutcome"] = releasedProjects.Contains(id) ? "already_released" : "rejected";
         if (releasedProjects.Contains(id)) return report;
         if ((bool?)report["closeEligible"] != true) return report; // Explicit rejection evidence, no mutation.

@@ -30,6 +30,13 @@ public static class ProjectRecoveryAdvice
                 "missing" when reason is "not_ordered" or "previously_observed_object_removed" => "review_unissued_or_removed_parts",
                 _ => "inspect_unknown_access_or_identity"
             };
+            var comparison=(data["progressComparison"]?["parts"] as JsonArray)?.OfType<JsonObject>()
+                .FirstOrDefault(p=>p["after"]?["id"]?.GetValue<string>()==part["id"]?.GetValue<string>() && part["id"] is not null);
+            if(observed=="construction" && reason is ("awaiting_builders_or_work" or "materials_not_ready") &&
+                comparison?["state"]?.GetValue<string>() is ("construction_progress" or "material_progress" or "no_progress_builders_available_at_endpoints")) {
+                next=comparison["nextStep"]!.GetValue<string>();
+                part["nextStepExplanation"]=comparison["explanation"]?.DeepClone();
+            }
             part["nextStep"]=next;
             if(reason=="construction_center_outside_working_hours")
                 part["nextStepExplanation"]="Feierabend am zuständigen Bezirkszentrum: Arbeitszeit ist beendet. Gezielt bis zur nächsten Arbeitsphase beobachten und Baufortschritt erneut prüfen; andere Bauhütten und weitere Ursachen sind damit nicht ausgeschlossen. Kein automatisches Verlängern des Laufbudgets.";
@@ -46,7 +53,8 @@ public static class ProjectRecoveryAdvice
             ? data["repairEligible"]?.GetValue<bool>()==true ? "review_access_repair_plan" : "inspect_access_repair_conditions"
             : uncertain ? "inspect_unknown_access_or_identity"
             : new[] { "review_construction_pause", "wait_for_support_completion", "check_material_supply",
-                "wait_for_construction_working_hours", "check_workers_and_work_progress", "inspect_construction_inactivity", "review_unissued_or_removed_parts" }
+                "wait_for_construction_working_hours", "check_workers_access_and_competing_sites", "check_workers_and_work_progress",
+                "observe_delivery_within_existing_budget", "observe_within_existing_budget", "inspect_construction_inactivity", "review_unissued_or_removed_parts" }
                 .FirstOrDefault(nextSteps.Contains) ?? "inspect_release_conditions";
         if (data["released"]?.GetValue<bool>()==true) nextStep="none_project_released";
         else if (data["currentSpeed"] is { } speed && JsonSerializer.SerializeToElement(speed).GetDouble() > 0) nextStep="inspect_pause_confirmation";

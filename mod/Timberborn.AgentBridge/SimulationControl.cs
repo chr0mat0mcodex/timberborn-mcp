@@ -57,6 +57,7 @@ public sealed class SimulationControl
     public void CancelBatch(string id) => runs.Cancel(id, Hours, speed.CurrentSpeed, wall.Elapsed.TotalSeconds, speedCommand.Request, speedLocked);
     public void ReleaseBatch(string id) { if (batchOwner == id && runs.Inspect(id).Terminal) batchOwner = null; }
     private readonly System.Diagnostics.Stopwatch wall = System.Diagnostics.Stopwatch.StartNew();
+    public double ObservedGameHours => Hours;
     private double Hours => time.DayNumber * 24d + time.HoursPassedToday;
     private int? AvailableLogs() {
         try { return goods.Goods.Contains("Log") ? resources.GetGlobalResourceCount("Log").AvailableStock : null; }

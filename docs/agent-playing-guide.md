@@ -1,5 +1,10 @@
 # Spielanleitung für Agenten
 
+Fortschrittsdiagnose **begrenzt live abgenommen**: frische Baudiagnose vor
+und nach einem begrenzten Zeitfenster vergleichen. Lieferung, Baufortschritt
+und unveränderten Fortschritt anhand belegter Messwerte trennen. Keine automatische
+Budgetverlängerung oder Material-Startsperre. [Ablauf und Grenzen](construction-progress.md).
+
 Bezirksweite Bauarbeitszeit **begrenzt live abgenommen**: Zentrum und
 Bauhütten gemeinsam prüfen. Aktiver Job oder besetzte unpausierte Bauhütte in
 Arbeitszeit verhindert gemeinsamen Feierabend; unbekannte Belege bleiben null.

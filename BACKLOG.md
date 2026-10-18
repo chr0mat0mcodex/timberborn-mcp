@@ -1,5 +1,44 @@
 # Backlog
 
+## Aktuelle Arbeit
+
+Fortschrittsdiagnose im begrenzten Umfang abgeschlossen; kein Gate ausstehend.
+
+## Aktuell offene Folgearbeiten
+
+- Produktionsketten vor Bau gemeinsam planen: Zutaten, Lager/Transport, Personal
+  und Kraft (B07); derzeit noch kein vollständiger Ausbauplan.
+- Recovery: unbekannte Objektidentität deterministisch live nachweisen. Keine
+  ungezielten Zeitrennen oder Save-Manipulation; Testmechanismus noch zu entscheiden.
+- Parameterfehler bei Kartenabfragen um konkrete Kartengrenzen ergänzen.
+- Weitere Zugangsgeometrien, insbesondere unterer Zielweg an gedrehter
+  Bestandstreppe, gezielt live nachweisen.
+- Projektwiederaufnahme nach Spielneuladen (B06) und allgemeine Kraft-/Höhenrouten
+  (B03) bleiben eigenständige größere Arbeitspakete.
+
+## Zuletzt abgeschlossen
+
+- Fortschrittsdiagnose: Ausgangswerte, Materialwarten und Fertigstellung gegen
+  Einzelabfragen live bestätigt. Zwei feste Zeitfenster stoppen ohne Verlängerung;
+  Compact/Full erhalten die Messpunkte. Positive numerische Teildeltas weiterhin
+  Gate-Nachweise. [Belege und Grenzen](docs/construction-progress.md).
+
+- Bezirksweite Arbeitszeitdiagnose vom Nutzer abgenommen: Zentrum und Bauhütten
+  gemeinsam; genaue unterschiedliche Schichten synthetisch geprüft. Keine weitere
+  Live-Schichtprüfung offen. [Belege](docs/operating-readiness.md).
+- Automatische Betriebsdiagnose vor längeren Läufen, Material ohne pauschale
+  Startsperre; Gate und begrenzte Livepiloten bestanden.
+- Notstopp/Statuswarten: eigenes Warten begrenzt, verbleibende Clientserialisierung
+  eingegrenzt; kein offener Auftrag für weitere Transportversuche.
+
+## Historische Nachweise und Entwicklungskatalog
+
+Die folgenden Abschnitte dokumentieren damalige Zwischenstände. Formulierungen
+wie „Gate offen“, „fehlgeschlagen“ oder „nächster Schritt“ gelten für den genannten
+Zeitpunkt und werden durch die aktuelle Übersicht oben ersetzt. Der spätere
+Entwicklungskatalog enthält zusätzliche Ideen, keine bereits beauftragten Arbeiten.
+
+
 Bezirksweite Bauarbeitszeit **begrenzt live abgenommen**: Zentrum und
 Bauhütten gemeinsam prüfen. Aktiver Job oder besetzte unpausierte Bauhütte in
 Arbeitszeit verhindert gemeinsamen Feierabend; unbekannte Belege bleiben null.

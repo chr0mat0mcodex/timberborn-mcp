@@ -1,5 +1,8 @@
 # Gemeinsame Betriebsdiagnose (begrenzt live abgenommen)
 
+Begrenzt live abgenommene Ergänzung: [Fortschrittsvergleich](construction-progress.md)
+für zwei frische Baudiagnosen; Arbeitszeit bleibt ein Endpunktbeleg.
+
 ## Bezirksweite Bauarbeitszeit — begrenzt live abgenommen
 
 Frische Baudiagnosen berücksichtigen das zuständige DistrictCenter und fertige

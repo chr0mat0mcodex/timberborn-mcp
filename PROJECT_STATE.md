@@ -1,5 +1,52 @@
 # Projektstand
 
+
+## Fortschrittspilot 2026-10-18 — begrenzt live bestanden
+
+Menschliches Korrekturgate: 2002 Unit- und 13 Integrationstests bestanden,
+drei optionale Integration-Livetests übersprungen; Release-Build ohne Fehler.
+Kleine Lodge plus Weg nativ geprüft (pilotEligible/restored), einmal beauftragt.
+Erste Diagnose bei 08:28 liefert baseline_recorded, erneute Abfrage bei Pause
+no_game_time_elapsed. Der fertige Weg mit construction=null wird korrekt gelesen.
+Einzelabfrage bestätigt Material- und Baufortschritt 0, Baustellenvorrat leer.
+
+Erstes festes Fenster: eine Spielstunde bis 09:28, 2,99 Echtzeitsekunden,
+30 Sekunden Höchstbudget. Ziel exakt erreicht, overshootHours=0, Pause bestätigt.
+Diagnose waiting_for_materials: beide Fortschrittsdifferenzen 0, Vorrat unverändert.
+Einzelabfrage der Lodge stimmt überein; Zentrum und Bauhütte jeweils vier
+Beschäftigte, Arbeitszeit und laufender Job aktiv. Compact/Full erhalten dieselben
+Messpunkte. Weitere Diagnose verlängert das Fenster nicht; kein aktiver Lauf.
+
+Separat ausdrücklich gestartetes zweites Fenster: drei Spielstunden bis 12:28,
+8,86 Echtzeitsekunden bei weiter 30 Sekunden Höchstbudget. Diagnose
+finished_since_baseline; Einzelabfrage bestätigt fertige Lodge und construction=null.
+Keine erfundenen numerischen Endwerte nach Fertigstellung. Vergleich bleibt
+auch in Compact erhalten, obwohl fertige Teile aus der Aufmerksamkeitsliste entfallen.
+Erneute Diagnose und Laufabfrage: Ziel und Grenzen unverändert, overshootHours=0,
+terminal und Pause bestätigt. Projekt freigegeben, beide Teile fertig/zugänglich,
+keine beobachteten Bestandszugangsverluste; Spiel pausiert, kein Lauf/Tempoauftrag.
+
+Grenzen: Lieferung und Teilbaufortschritt lagen zwischen den Messpunkten.
+Positive numerische Material-/Baudeltas und Stillstand bei materialbereiter
+Baustelle bleiben synthetische Gate-Nachweise. Keine Dauerarbeits-, Liefermengen-
+oder allgemeine Produktionsgarantie. Budgetbeleg gilt für diese getrennten
+Simulationsfenster, nicht als zusätzlicher autonomer Projektlauf-Nachweis.
+
+Historischer Fehler behoben: JSON-null wurde im nativen Adapter als Objekt
+indiziert. Explizite JObject-/JArray-Prüfungen sind nun im Gate und im
+Lodge-/Weg-Livepilot bestätigt.
+
+
+Fortschrittsdiagnose **begrenzt live abgenommen**: frische Baudiagnose vor
+und nach einem begrenzten Zeitfenster vergleichen. Lieferung, Baufortschritt
+und unveränderten Fortschritt anhand belegter Messwerte trennen. Keine automatische
+Budgetverlängerung oder Material-Startsperre. [Ablauf und Grenzen](docs/construction-progress.md).
+
+Implementierung in Core und nativer Baudiagnose; bestehende Werkzeugaufrufe
+bleiben unverändert. Tests im menschlichen Gate bestanden. Anleitung und Toolvertrag
+aktualisiert; keine projektbezogenen Spielskills vorhanden, Hermes bleibt entfernt.
+Backlog trennt aktuelle Arbeit von historischen Gate-/Live-Zwischenständen.
+
 Bezirksweite Bauarbeitszeit **begrenzt live abgenommen**: Zentrum und
 Bauhütten gemeinsam prüfen. Aktiver Job oder besetzte unpausierte Bauhütte in
 Arbeitszeit verhindert gemeinsamen Feierabend; unbekannte Belege bleiben null.
