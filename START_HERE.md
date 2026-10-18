@@ -15,10 +15,10 @@ Laufzeitstand und Session werden beim regulären Wiederanschluss frisch gelesen.
 
 ## Aktueller Auftrag
 
-**A12/N07 begrenzt untersucht; historische Fehler nicht reproduziert.**
-[Livekontrollen und Diagnoseablauf](docs/run-navigation-diagnostic-pilot.md).
-Keine Codeänderung, kein Gate offen; Spiel pausiert, kein aktiver Lauf.
-N01–N06 abgenommen; N07 nur bei neuem Vorfall wieder aufnehmen.
+**A12/N08 geklärt; Umsetzung noch nicht freigegeben.**
+[Begrenzter Entwurf und Abnahmeplan](docs/completion-speed-pilot-design.md).
+Nur reine Zeitläufe mit optionalem Abschlusstempo 1 empfohlen; Standardpause
+und Fehlerpause erhalten. Kein Code geändert, kein Gate offen.
 Weitere Journale und frühere Piloterweiterungen bleiben zurückgestellt.
 A01/A02/A06 abgeschlossen; offene Aufgaben im [Backlog](BACKLOG.md).
 

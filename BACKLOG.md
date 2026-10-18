@@ -2,11 +2,11 @@
 
 ## Aktuelle Arbeit
 
-**A12/N07 begrenzt untersucht; historische Fehler nicht reproduziert.**
-Frühe Tempoablehnung und gültiger Einzellauf korrekt getrennt; native Vorschau
-vor/nach einer Spielstunde ohne Baselinekonflikt. Keine Codeänderung nötig.
-[Nachweise und Diagnose bei Wiederauftreten](docs/run-navigation-diagnostic-pilot.md).
-N01–N06 abgenommen; weitere Pakete zurückgestellt. Spiel pausiert.
+**A12/N08 geklärt; begrenzter Entwurf zur gesonderten Umsetzung bereit.**
+Nur reine Zeitläufe, completionSpeed 0/1; Pause bleibt Standard. Besitzer-,
+Cancel-, Fehler-, Lock- und Antwortverlustregeln dokumentiert.
+[Entwurf und Abnahmeplan](docs/completion-speed-pilot-design.md).
+Keine Laufzeitänderung. N01–N06 abgenommen, N07 begrenzt untersucht.
 A03/A04/A05/A07/A08/A09/A10-Piloten abgenommen; weitere Erweiterungen zurückgestellt.
 A01/A02/A06/A11 abgeschlossen. Weitere A12-Pakete zurückgestellt. [Projektstand](PROJECT_STATE.md).
 
@@ -277,7 +277,7 @@ Abschlussbeleg verworfen wurden. Herkunft: [archivierter Verlauf](BACKLOG_HISTOR
 | N05 — begrenzt abgeschlossen, A12/B10 | [Anzeigekorrektur abgenommen](docs/project-progress-display-pilot.md); weitere Auftragsfamilien unverändert. | Laufende 0/2 bzw. 1/2 und terminale 2/2 korrekt, Spielbild bestätigt; gespeicherte und frische Belege getrennt. |
 | N06 — begrenzt abgeschlossen, A12 | [Zellweise Kollisionsbelege abgenommen](docs/precheck-collision-pilot.md); weitere Diagnosefamilien unverändert. | Gebäude-/Pflanzen-ID und Typ unabhängig bestätigt; Terrain, frei und unbeobachtet getrennt. Identitätslücke/Kürzung synthetisch. |
 | N07 — Pilot abgeschlossen; bei Wiederauftreten | [Begrenzter Diagnosepilot](docs/run-navigation-diagnostic-pilot.md): historische unconfirmed-/Baselinefehler nicht reproduziert. | Konkrete Tempoablehnung vor Laufanlage, gültige Registrierung/Rückabfrage/Pause und Vorschauvergleich bestanden; Vorfallablauf dokumentiert, Ursache weiterhin offen. |
-| N08 — Vorschlag | Optionale ausdrücklich gewünschte Abschlussgeschwindigkeit statt Pflichtpause entwerfen. | Besitzer-/Abbruch-/Fehlerfälle geklärt; bestehende Pause bleibt Standard bis zur gesonderten Freigabe und Abnahme. |
+| N08 — Entwurf geklärt, Umsetzung offen | [Pilotentwurf](docs/completion-speed-pilot-design.md): nur reine Zeitläufe, completionSpeed 0/1. Aufwand mittel. | Gesonderte Freigabe, Umsetzung, menschliches Gate und drei begrenzte Livefälle ausstehend. Pflichtpause bleibt aktueller Standard. |
 | N09 — Vorschlag, B12 | Nutzen paralleler Leser gegenüber sofortiger Ablehnung messen. | Begrenzter Pilot zeigt Nutzen ohne Mutationsqueue, Replay oder blockierten Cancel; sonst zurückstellen. |
 
 ## Offene Entwicklung

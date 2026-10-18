@@ -2,6 +2,18 @@
 
 ## Aktueller Stand — 2026-10-18
 
+**A12/N08 geklärt — begrenzter Entwurf, Umsetzung offen.**
+Optionale Abschlussgeschwindigkeit betrifft Pausebeleg, Besitzerfreigabe und
+verzögerte Tempobefehle. Empfehlung: nur reine run_simulation_for-Zeitläufe,
+completionSpeed 0/1; Standardpause erhalten, Fehler/Cancel ohne Weiterlaufen.
+[Entwurf, Konfliktfälle und Abnahmeplan](docs/completion-speed-pilot-design.md).
+Nutzen plausibel, Aufwand mittel über Controller/Vertrag/Queue/MCP. Keine
+Codeänderung oder Liveabnahme; gesonderte Umsetzungsfreigabe erforderlich.
+Anleitung/Werkzeugübersicht unverändert: noch keine neue Fähigkeit. Keine
+projektbezogenen Spielskills vorhanden. Kein Gate offen.
+
+### Vorheriger Abschluss A12/N07
+
 **A12/N07 begrenzt untersucht — historische Fehler nicht reproduziert.**
 Absichtlicher Tempokonflikt vor Laufanlage konkret abgelehnt, danach erwartetes
 run_not_found. Neuer gültiger Einzellauf in derselben Session registriert,

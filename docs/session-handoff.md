@@ -2,13 +2,11 @@
 
 ## Aktueller Einstieg
 
-**A12/N07 begrenzt untersucht; kein Gate offen.**
-Tempokonflikt vor Registrierung konkret abgelehnt; gültiger Einzellauf mit
-neuer ID registriert, laufend/terminal gelesen, nach einer Spielstunde pausiert.
-Native Vorschau davor/danach ohne Baselinekonflikt, keine Bauaufträge.
-Historische unconfirmed-/Baselinefehler nicht reproduziert; Ursachen offen.
-Keine Codeänderung, N06-Gatestand unverändert. Weitere Fälle nicht ausweiten.
-[Belege und Ablauf bei Wiederauftreten](run-navigation-diagnostic-pilot.md).
+**A12/N08 geklärt; Umsetzung offen, kein Gate offen.**
+[Entwurf](completion-speed-pilot-design.md): optionale completionSpeed 0/1 nur
+für reine run_simulation_for-Zeitläufe. Standard-/Fehlerpause und Besitzerregeln
+explizit; Bau-/Produktionsläufe ausgeschlossen. Aufwand mittel. Keine Codeänderung.
+Nächster Schritt: gesonderte Umsetzungsfreigabe für diesen konkreten Pilot.
 Aktueller Stand und Gatezahlen: [Projektstand](../PROJECT_STATE.md).
 [Offene Arbeit](../BACKLOG.md) · [Lifecycle und Gate](../DEVELOPMENT_WORKFLOW.md).
 Git-Status und Laufzeitstand separat prüfen. Folgende Übergaben sind historisch.
