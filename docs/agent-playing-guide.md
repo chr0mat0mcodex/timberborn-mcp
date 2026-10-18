@@ -217,13 +217,17 @@ Vor längeren Bauzeitfenstern Betriebszustand und Beschäftigungsfähigkeit
 mitlesen: Im verworfenen Teststand fiel die Produktion durch Überflutung aus,
 obwohl alle Wegverbindungen bestanden. Quelle, Netz und aktuelle Kraft sowie
 Lieferung separat prüfen; vorhandene Windkraft garantiert keine Dauerleistung.
-Unterer neuer Zielweg einer gedrehten Bestandstreppe bleibt separater Livefall.
+Unterer neuer Zielweg an Cw270-Folktails-Bestandstreppe inzwischen durch A12/N02
+live abgenommen: automatische Suche, native Vorschau, tatsächlicher Bauzugang
+und 2/2 Teile fertig/zugänglich. Seitlicher Weg bei gültiger Geometrie ohne
+Verbindung. [Beleg und Grenzen](lower-stair-landing-pilot.md).
 
 ## Historisch 0.71 — Treppenabgänge und Umwegplatzierung; Fertigbau damals offen
 
 Bestandstreppen sind keine ebenen Vierwegeknoten. Oberer bestätigter Austritt
 und seitliche Negativkontrolle live bestanden. Unterer gedrehter Nachbar braucht
-native Bestätigung; dessen neuer Zielweg noch nicht separat live geprüft.
+native Bestätigung; dessen neuer Zielweg war damals noch nicht separat live
+geprüft (Cw270-Fall inzwischen durch A12/N02 abgeschlossen, siehe oben).
 `landingPreviewCount` zählt obere/untere Zielwegproben zusammen (maximal acht),
 `heightExits` weiterhin nur Höhenkanten.
 Automatischer Umweg um ein mitgeplantes Lager: 17 Teile, native Eingänge und

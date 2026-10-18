@@ -2,6 +2,21 @@
 
 ## Aktueller Stand — 2026-10-18
 
+**A12/N02 live abgenommen — unterer Zielweg an Cw270-Bestandstreppe.**
+Auf unverändertem N01-Gatestand: automatische Zugangssuche ergänzt genau einen
+unteren Weg für ein kleines Lager. Native Geometrie/Anschlüsse und Vorschau-
+Wiederherstellung bestätigt; seitlicher Weg bei gültiger Geometrie unverbunden.
+Reale Baustelle buildersReachable=true; nach vier Spielstunden 2/2 Teile fertig
+und zugänglich, keine verlorenen Bestandsverbindungen, Journal freigegeben.
+Spiel pausiert; Testaufbau bleibt bestehen. Keine Codeänderung und kein neues Gate.
+Nutzen: fehlende Livegrenze gezielt geschlossen; Aufwand überwiegend isolierter
+Aufbau und Räumung. Kein Anlass für Refactoring aus diesem Fall.
+[Nachweise und Grenzen](docs/lower-stair-landing-pilot.md).
+Spielanleitung und Werkzeugübersicht mit Abnahme aktualisiert; keine
+projektbezogenen Spielskills vorhanden. Weitere A12-Pakete bleiben offen.
+
+### Vorheriger Abschluss A12/N01
+
 **A12/N01-Pilot abgenommen — N01 abgeschlossen, Gesamt-A12 teilweise offen.**
 `inspect_map_region` meldet bei nativer Kartenüberschreitung die erste betroffene
 Achse und den tatsächlichen gültigen Zellbereich. Kontrollierter Fehlertransport,

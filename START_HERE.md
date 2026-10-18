@@ -15,9 +15,9 @@ Laufzeitstand und Session werden beim regulären Wiederanschluss frisch gelesen.
 
 ## Aktueller Auftrag
 
-**A12/N01-Pilot abgenommen; N01 abgeschlossen.**
-Konkrete Kartengrenzen bei `inspect_map_region`; andere A12-Pakete offen.
-[Umfang und Nachweise](docs/map-region-bounds-pilot.md).
+**A12/N02-Pilot live abgenommen; N01/N02 abgeschlossen.**
+Unterer Cw270-Treppenzielweg bis Bau-/Fertigzugang bestätigt; andere A12-Pakete offen.
+[Umfang und Nachweise](docs/lower-stair-landing-pilot.md).
 Weitere Journale und frühere Piloterweiterungen bleiben zurückgestellt.
 A01/A02/A06 abgeschlossen; offene Aufgaben im [Backlog](BACKLOG.md).
 

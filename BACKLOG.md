@@ -2,11 +2,11 @@
 
 ## Aktuelle Arbeit
 
-**A12/N01-Pilot abgenommen — N01 abgeschlossen:** konkrete
-Kartengrenzen bei `inspect_map_region`, begrenzt auf diesen Lesepfad.
-[Umfang und Nachweise](docs/map-region-bounds-pilot.md).
+**A12/N02-Pilot abgenommen — N02 im Cw270-Folktails-Fall abgeschlossen:**
+unterer Zielweg bis Baustellen- und Fertigzugang; seitliche Negativkontrolle bestanden.
+[Umfang und Nachweise](docs/lower-stair-landing-pilot.md). N01 ebenfalls abgeschlossen.
 A03/A04/A05/A07/A08/A09/A10-Piloten abgenommen; weitere Erweiterungen zurückgestellt.
-A01/A02/A06/A11 abgeschlossen. Weitere A12-Pakete noch nicht begonnen. [Projektstand](PROJECT_STATE.md).
+A01/A02/A06/A11 abgeschlossen. Weitere A12-Pakete zurückgestellt. [Projektstand](PROJECT_STATE.md).
 
 ## Projektprüfung 2026-10-18 — abarbeitbare Befunde
 
@@ -14,7 +14,7 @@ Prüfbasis und vollständiger Audit: [Archivstand](BACKLOG_HISTORY.md#archivstan
 Ergebnis: gezieltes Refactoring von Versionsprofilen, Werkzeugdispatch und
 Prüfketten sinnvoll; kein belegter Bedarf für einen Komplettumbau.
 Der ursprüngliche Audit war statisch. A06 ist inzwischen **abgeschlossen**;
-A03 ist **teilweise abgeschlossen**, A04 **teilweise abgeschlossen**; A05 ist **teilweise abgeschlossen**, A07 ist **teilweise abgeschlossen**, A08 ist **teilweise abgeschlossen**, A09 ist **teilweise abgeschlossen**, A10 ist **teilweise abgeschlossen**, A11 ist **abgeschlossen**, A12 ist **teilweise abgeschlossen (N01)**.
+A03 ist **teilweise abgeschlossen**, A04 **teilweise abgeschlossen**; A05 ist **teilweise abgeschlossen**, A07 ist **teilweise abgeschlossen**, A08 ist **teilweise abgeschlossen**, A09 ist **teilweise abgeschlossen**, A10 ist **teilweise abgeschlossen**, A11 ist **abgeschlossen**, A12 ist **teilweise abgeschlossen (N01/N02)**.
 P2 = vor der nächsten betroffenen Erweiterung, P3 = nach Bedarf;
 S/M/L sind relative Aufwandsschätzungen. Codeänderungen benötigen weiterhin
 das [menschliche Gate und den gezielten Livetest](DEVELOPMENT_WORKFLOW.md).
@@ -205,7 +205,14 @@ das [menschliche Gate und den gezielten Livetest](DEVELOPMENT_WORKFLOW.md).
   mit Achse und gültigem Zellbereich; 17 Testfälle sowie Gate bestanden.
   Randzelle und vier gezielte Überschreitungen live bestätigt.
   [Vertrag, Nachweise und Bewertung](docs/map-region-bounds-pilot.md).
-  Alle anderen A12-Pakete bleiben offen und sind vorerst zurückgestellt.
+  Andere Karten-/Bauwerkzeuge bleiben außerhalb des N01-Umfangs.
+
+- [x] **N02-Pilot live abgenommen:** automatische untere Zielwegplanung an
+  Cw270-Bestandstreppe, gültige seitliche Geometrie ohne Verbindung, reale
+  Baustelle erreichbar und anschließend 2/2 Teile fertig/zugänglich.
+  Keine Codeänderung; bestehender N01-Gatestand verwendet. Journal freigegeben.
+  [Belege und Bewertung](docs/lower-stair-landing-pilot.md).
+  Weitere A12-Pakete bleiben offen und vorerst zurückgestellt.
 
 - [ ] **Bestehende Restarbeit, keine neu nachgewiesenen Regressionen:** B06
   (Reload), B03 (allgemeine Kraft-/Höhenrouten), B07 (Produktionsausbauplanung),
@@ -213,7 +220,7 @@ das [menschliche Gate und den gezielten Livetest](DEVELOPMENT_WORKFLOW.md).
   (Geometrien/Fraktionen) bleiben offen. Die aktuelle Bretterdiagnose ersetzt
   keinen erfolgreichen Produktions- oder Liefernachweis.
 - **Kleine Pakete:** (a) konkrete Kartengrenzen bei inspect_map_region abgeschlossen;
-  (b) unterer Zielweg an gedrehter Bestandstreppe; (c) deterministischer Nachweis
+  (b) unterer Zielweg an Cw270-Bestandstreppe abgeschlossen; (c) deterministischer Nachweis
   unbekannter Objektidentität; (d) ein positiver Bretterproduktions-/Abtransportfall.
   Jeweils vorhandenen Fachvertrag und aktuelle Implementierung zuerst abgleichen.
   B06/B03/B07 erst als abgegrenzten Entwurf bewerten, nicht als Sammelrefactoring.
@@ -233,7 +240,7 @@ Abschlussbeleg verworfen wurden. Herkunft: [archivierter Verlauf](BACKLOG_HISTOR
 | ID / Status | Nächster Schritt | Abschlusskriterium |
 | --- | --- | --- |
 | N01 — abgeschlossen, A12 | Kein weiterer Auftrag; auf inspect_map_region begrenzt. | Gate und Live bestanden: gültige Randzelle, x/y/z-Überschreitungen und zu breite Randabfrage korrekt. |
-| N02 — offen, A12/F04 | Unteren Zielweg an gedrehter Bestandstreppe gezielt prüfen. | Native Geometrie sowie Bau- und Fertigzugang positiv, seitliche Fehlverbindung negativ belegt. |
+| N02 — abgeschlossen, A12/F04 | Begrenzter Cw270-Folktails-Fall; keine weiteren Varianten beauftragt. | Automatische untere Zielwegplanung, native Geometrie, Bau- und Fertigzugang positiv; seitliche Verbindung bei gültiger Geometrie negativ. |
 | N03 — offen, A12 | Deterministischen Fall unbekannter Objektidentität entwerfen; Fehler-Injektion ist noch nicht freigegeben. | Native Sperren, repairEligible=false und closeEligible=false belegt; keine Zeitrennen oder Save-/Ledger-Manipulation als Nachweis. |
 | N04 — zu reproduzieren | `project_start_plan_changed` nach Zugangsergänzung mit frischer expliziter Gesamtvorschau vergleichen. | Identische Eingaben nachvollziehbar angenommen oder konkrete Änderung benannt; kein Blindretry. |
 | N05 — zu reproduzieren, B10 | Ingame-Text 0/15 gegenüber strukturiertem 14/15 aus dem Planerpilot prüfen. | Laufende/terminale Anzeige zählt korrekt und unterscheidet Ledger von frischer Diagnose; 0.73-Fertigbaudiagnose allein schließt den UI-Befund nicht. |
@@ -289,7 +296,7 @@ der falsche Uferpumpen-Terrainblocker durch 0.66 begrenzt erledigt; nicht neu er
 | F01 — teiloffen | Vollständigen Bauphasenschutz einschließlich Bestandsbaustellen und freier Rückwege entwerfen. | Bestands-, Bauarbeiter- und Fertigzugang während jeder relevanten Änderung getrennt belegt. |
 | F02 — offen | Ersatzumweg fertigstellen, erst danach abhängige Bestandsänderung ausführen. | Tatsächlich nutzbarer Umweg vor Eingriff und erhaltene Verbindung danach. |
 | F03 — teiloffen | Allgemeine räumliche Suche über B01–B03; explizite 32-Teil-/acht-Höhen-Pläne und autonome Chargen bestehen. | Abschluss des konkret gewählten B-Pakets, keine Doppelimplementierung. |
-| F04 — teiloffen | Besondere Standort-/Distrikt-/Geometriefälle, zunächst N02; mehrere Türen nur bei belegter API. | Je ein gültiger und ungültiger Fall mit getrennten Zugangsbelegen. |
+| F04 — teiloffen | N02 begrenzt abgeschlossen; weitere Standort-/Distrikt-/Geometriefälle erst nach Auswahl, mehrere Türen nur bei belegter API. | Je ein gültiger und ungültiger Fall mit getrennten Zugangsbelegen. |
 | F05 — offen | Eine weitere Fraktion/Karte/Spielversion für repräsentativen Pilot wählen. | Version/Fraktion und konkreter Funktionsumfang belegt; Folktails-Abnahme nicht übertragen. |
 
 ## Zurückgestellte Experimente
