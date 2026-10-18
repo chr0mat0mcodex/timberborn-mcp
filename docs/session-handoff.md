@@ -4,11 +4,11 @@
 
 Aktueller Featurestand, letzte Gatezahlen und Nachweise: [Projektstand](../PROJECT_STATE.md).
 Bridge 0.74.0; jüngster fachlicher Abschluss ist die automatische Bretterketten-
-Vorprüfung. A01/A02/A06 und der A03-Pilot abgeschlossen; weitere A03-Familien
-zurückgestellt. A04-Pilot abgenommen: benannte Optionen, vier Simulationslauf-
-Werkzeuge und einmaliger Katalogindex. Gate und Livetest bestanden; kein Gate offen.
-[Belege und Bewertung](tool-metadata-pilot.md). Weitere Werkzeugfamilien auf
-Nutzerwunsch vorerst zurückgestellt; Gesamt-A04 bleibt offen.
+Vorprüfung. A01/A02/A06 sowie A03/A04-Piloten abgeschlossen; weitere Migrationen
+zurückgestellt. A05-Pilot abgenommen: nur Produktionszielprüfung in benannte
+Abschnitte zerlegt. Gate und Livetest bestanden; kein Gate offen.
+[Belege und Bewertung](production-contract-readability-pilot.md). Weitere
+Fachprüfungen auf Nutzerwunsch vorerst zurückgestellt; Gesamt-A05 bleibt offen.
 [Offene Arbeit](../BACKLOG.md) · [Lifecycle und Gate](../DEVELOPMENT_WORKFLOW.md).
 Git-Status und Laufzeitstand separat prüfen. Die folgenden Übergaben sind
 historisch und enthalten keine heute offenen Gate-Aufträge.

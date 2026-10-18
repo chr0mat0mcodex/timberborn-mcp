@@ -4,6 +4,25 @@
 
 Bridge/Manifest **0.74.0**; letzter neuer Funktionsumfang in `f52750f`:
 automatische Bretterketten-Vorprüfung, begrenzt live abgenommen.
+**A05-Pilot abgenommen — menschliches Gate und gezielter Livetest bestanden.**
+Nur `ProductionRunContract.Validate` in vier benannte private Prüfabschnitte
+zerlegt. Bedingungen, Reihenfolge und Fehlertexte erhalten; Quellvergleich erfolgt.
+Gate: 13 Paket-, 28 Supervisor-, 2197 Unit- und 13 Integrationstests bestanden;
+drei optionale Livefälle übersprungen. Alle 23 neuen Charakterisierungsfälle
+bestanden. Release-Builds ohne Warnungen/Fehler, fünf Paketdateien per SHA-256 bestätigt.
+Live: Ziel 100 Bretter bei frisch gelesenen 33; nach 0,25 Spielstunden korrekt
+`production_time_limit`, Ziel weiter unerreicht. Leichter Status und einmalige
+Diagnoserücklesung akzeptiert; terminale und frische Endpause bestätigt.
+[Belege, Grenzen und Nutzen/Aufwand](docs/production-contract-readability-pilot.md).
+Bewertung positiv: Fachabschnitte und Fehlerreihenfolge leichter prüfbar;
+mehr Zeilen und vier private Methoden als überschaubarer Aufwand. Kein Laufzeitgewinn
+behauptet. Gesamt-A05 offen; weitere Fachprüfungen auf Nutzerwunsch zurückgestellt.
+Keine weitere A03/A04-Migration. Kein Gate offen.
+Agenten-Spielanleitung geprüft: keine fachliche Änderung, öffentliche Verträge
+unverändert. Keine projektbezogenen Spielskills vorhanden.
+
+### Vorheriger Abschluss A04
+
 **A04-Pilot abgenommen — menschliches Gate und gezielter Livetest bestanden.**
 Benannte MCP-Optionen und gemeinsame Metadaten ausschließlich für die vier
 Simulationslauf-Werkzeuge. HTTP-Freigabe unverändert; übrige Familien bleiben
@@ -19,7 +38,8 @@ Endpause bestätigt. Falsche Session mit `stale_session` abgewiesen.
 Bewertung positiv: weniger getrennte Metadatenpflege und kein Katalog-Neuaufbau
 im Aufrufpfad; überschaubarer Modell-/Testaufwand, einmaliger Index als Zusatzkosten.
 Kein Laufzeitgewinn gemessen. Gesamt-A04 bleibt offen; weitere Werkzeugfamilien
-auf Nutzerwunsch vorerst zurückgestellt. Kein Gate offen.
+auf Nutzerwunsch vorerst zurückgestellt. Zum A04-Abschluss kein Gate offen;
+aktueller A05-Auftrag siehe oben.
 Spielanleitung geprüft: keine fachliche Änderung, da öffentliche Verträge und
 Bedienabläufe gleich bleiben. Keine projektbezogenen Spielskills vorhanden.
 

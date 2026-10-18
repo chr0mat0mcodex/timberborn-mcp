@@ -15,11 +15,11 @@ Laufzeitstand und Session werden beim regulären Wiederanschluss frisch gelesen.
 
 ## Aktueller Auftrag
 
-**A04-Pilot abgenommen:** benannte Optionen und Metadaten für vier
-Simulationslauf-Werkzeuge; Gate und Livetest bestanden. Kein Gate offen.
-[Belege und Bewertung](docs/tool-metadata-pilot.md). Weitere Werkzeugfamilien
-vorerst zurückgestellt; Gesamt-A04 bleibt offen.
-A03-Pilot abgenommen, weitere Vertragsfamilien zurückgestellt.
+**A05-Pilot abgenommen:** Produktionszielprüfung lesbar in vier Abschnitte
+zerlegt; Gate und Livetest bestanden. Kein Gate offen.
+[Belege und Bewertung](docs/production-contract-readability-pilot.md).
+Weitere Fachprüfungen vorerst zurückgestellt; Gesamt-A05 bleibt offen.
+A03/A04-Piloten abgenommen, weitere Migrationen zurückgestellt.
 A01/A02/A06 abgeschlossen; offene Aufgaben im [Backlog](BACKLOG.md).
 
 ## Maßgebliche Arbeitsweise

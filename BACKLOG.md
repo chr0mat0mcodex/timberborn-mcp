@@ -2,12 +2,12 @@
 
 ## Aktuelle Arbeit
 
-**A04-Pilot abgenommen — Gate und Livetest bestanden:** benannte MCP-Optionen,
-Metadaten für vier Simulationslauf-Werkzeuge und einmaliger Katalogindex.
-[Belege und Nutzen-/Aufwandsbewertung](docs/tool-metadata-pilot.md).
-Weitere Werkzeugfamilien auf Nutzerwunsch vorerst zurückgestellt; Gesamt-A04 offen.
-A03-Pilot abgenommen, weitere A03-Vertragsfamilien zurückgestellt.
-A01/A02/A06 abgeschlossen. A05 und A07–A12 noch nicht begonnen.
+**A05-Pilot abgenommen — Gate und Livetest bestanden:** Produktionszielprüfung
+in vier benannte Abschnitte zerlegt, 23 neue Testfälle bestanden.
+[Belege und Bewertung](docs/production-contract-readability-pilot.md).
+Weitere Fachprüfungen vorerst zurückgestellt; Gesamt-A05 bleibt offen.
+A03/A04-Piloten abgenommen; weitere Migrationen bleiben zurückgestellt.
+A01/A02/A06 abgeschlossen; A07–A12 noch nicht begonnen.
 Belege und Grenzen im [Projektstand](PROJECT_STATE.md).
 
 ## Projektprüfung 2026-10-18 — abarbeitbare Befunde
@@ -16,7 +16,7 @@ Prüfbasis und vollständiger Audit: [Archivstand](BACKLOG_HISTORY.md#archivstan
 Ergebnis: gezieltes Refactoring von Versionsprofilen, Werkzeugdispatch und
 Prüfketten sinnvoll; kein belegter Bedarf für einen Komplettumbau.
 Der ursprüngliche Audit war statisch. A06 ist inzwischen **abgeschlossen**;
-A03 ist **teilweise abgeschlossen**, A04 **teilweise abgeschlossen**; A05 und A07–A12 sind **offen**.
+A03 ist **teilweise abgeschlossen**, A04 **teilweise abgeschlossen**; A05 ist **teilweise abgeschlossen**, A07–A12 sind **offen**.
 P2 = vor der nächsten betroffenen Erweiterung, P3 = nach Bedarf;
 S/M/L sind relative Aufwandsschätzungen. Codeänderungen benötigen weiterhin
 das [menschliche Gate und den gezielten Livetest](DEVELOPMENT_WORKFLOW.md).
@@ -72,9 +72,15 @@ das [menschliche Gate und den gezielten Livetest](DEVELOPMENT_WORKFLOW.md).
 
 ### A05 — P2 / S–M: dicht geschriebene Fachprüfungen lesbar machen
 
-- [ ] **Befund, bestätigt:** 271 C#-Textzeilen sind länger als 300 Zeichen
+- [x] **Pilot abgenommen (2026-10-18):** nur `ProductionRunContract.Validate`:
+  vier private Prüfabschnitte, unveränderte Bedingungen/Reihenfolge/Fehlertexte.
+  23 Charakterisierungsfälle und Gate bestanden; Zeitstopp mit unerreichtem
+  Güterziel, Diagnosebelege und Pause live bestätigt.
+  [Belege und Bewertung](docs/production-contract-readability-pilot.md).
+  Nutzen/Aufwand positiv; Gesamt-A05 offen, weitere Fachprüfungen zurückgestellt.
+- [ ] **Befund zum Auditzeitpunkt:** 271 C#-Textzeilen waren länger als 300 Zeichen
   (inklusive Beschreibungen und Tests, daher keine reine Komplexitätsmetrik).
-  NativeTools umfasst rund 34.000 Zeichen in nur 299 Zeilen; auch native
+  NativeTools umfasste rund 34.000 Zeichen in nur 299 Zeilen; auch native
   Vertragsprüfungen und Mod-Dispatch bündeln zahlreiche Bedingungen pro Zeile.
 - **Arbeit:** bei A03/A04 betroffene Methoden normal formatieren; Session-,
   Identitäts-, Geometrie- und Ergebnisprüfungen in benannte kleine Prüfungen
