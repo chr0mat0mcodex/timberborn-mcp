@@ -24,6 +24,11 @@ prüft höchstens acht Güter; weitere bleiben in `demands` und `omittedGoods` s
 Ohne Materialvorgabe: aktuelle Produkte der Bezugsgebäude, sonst Log/Plank/Gear
 mit Nullbedarf. Daraus keine erfundene Baukosten-Deckungsquote ableiten.
 
+Bretterketten-Ergänzung begrenzt live abgenommen: Bei Bretterbezug wird
+die zusätzliche Kette unter `operatingPreflight[].plankChain` gelesen, innerhalb
+des bestehenden Fünf-Sekunden-Budgets. Bereits erhobene Betriebsdiagnosen bleiben
+bei Fehlern der Zusatzprüfung erhalten. [Trigger, Status und Grenzen](plank-chain.md#automatische-einbindung-vor-starts).
+
 ## Integration vor Starts
 
 Der MCP-Client setzt einen Beobachter unmittelbar vor den nativen Starttransport.

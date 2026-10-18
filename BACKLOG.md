@@ -2,13 +2,15 @@
 
 ## Aktuelle Arbeit
 
-Bretterketten-Vorprüfung und Fortschrittsdiagnose sind begrenzt live abgeschlossen.
-[Nachweise und Grenzen](docs/plank-chain.md). Kein weiteres Feature begonnen.
+Automatische Bretterketten-Vorprüfung begrenzt live abgeschlossen.
+Simulation und Bau trotz Materialfehlmenge gestartet, Diagnose abgeglichen,
+feste Zeitbudgets und Pause bestätigt. Kein weiteres Feature begonnen.
+[Nachweise und Grenzen](docs/plank-chain.md#liveabnahme-der-automatischen-einbindung-2026-10-18).
 
 ## Aktuell offene Folgearbeiten
 
 - Produktionsketten vor Bau gemeinsam planen: Zutaten, Lager/Transport, Personal
-  und Kraft (B07): erste lesende Bretterketten-Vorprüfung live abgenommen; weiterhin
+  und Kraft (B07): Bretterketten-Reader und automatische Startvorprüfung live abgenommen; weiterhin
   kein vollständiger oder automatischer Ausbauplan.
 - Recovery: unbekannte Objektidentität deterministisch live nachweisen. Keine
   ungezielten Zeitrennen oder Save-Manipulation; Testmechanismus noch zu entscheiden.
@@ -19,6 +21,11 @@ Bretterketten-Vorprüfung und Fortschrittsdiagnose sind begrenzt live abgeschlos
   (B03) bleiben eigenständige größere Arbeitspakete.
 
 ## Zuletzt abgeschlossen
+
+- Automatische Bretterketten-Vorprüfung: Start bei 33/100 Brettern im Simulations-
+  und 33/36 Brettern im Baupilot. Befunde stimmen mit Einzelabfragen überein;
+  sechs bzw. eine Spielstunde, unveränderte 30-Sekunden-Grenze, Pause bestätigt.
+  Sechs Testbaustellen bleiben unfertig; kein automatischer Produktionsausbau.
 
 - Bretterketten-Vorprüfung: sechs Produzenten gegen Einzelabfragen abgeglichen;
   Pause/Personal, Kraftmangel und volle Ausgabe korrekt benannt. Begrenzte Messung

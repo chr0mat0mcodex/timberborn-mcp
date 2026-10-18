@@ -202,12 +202,36 @@ public sealed class OperatingPreflight
     {
         private readonly OperatingPreflight owner;
         private readonly Scope? previous;
-        public List<AutoOperatingReport> Reports { get; } = new();
+        public List<JsonObject> Reports { get; } = new();
+        internal JsonObject Add(AutoOperatingReport report) {
+            var node=JsonSerializer.SerializeToNode(report,NativeJson.Options)!.AsObject();
+            Reports.Add(node); return node;
+        }
         internal Scope(OperatingPreflight owner) { this.owner = owner; previous = owner.current.Value; owner.current.Value = this; }
         public void Dispose() => owner.current.Value = previous;
     }
     public Scope Begin() => new(this);
     public static bool NeedsSimulation(SimulationRunRequest r) => r.Starts && (r.Route == "simulation-run-until" || r.DurationHours >= 6);
+    private async Task<JsonNode> Chain(BridgeEnvelope<AutoOperatingReport> operating,CancellationToken caller,CancellationToken budget)
+    {
+        JsonNode Missing(string state,string next)=>JsonSerializer.SerializeToNode(new {
+            state,report=(PlankChainReport?)null,nextSteps=new[]{next},
+            limitations=new[]{"shared_five_second_preflight_budget","no_material_start_gate","no_automatic_expansion","no_automatic_budget_extension"}
+        },NativeJson.Options)!;
+        if (operating.Data.Selection?.DistrictId is not {} district)
+            return Missing("district_unknown","Bezirk anhand nativer Gebäudezuordnung klären und inspect_plank_chain gezielt lesen; keine Zuständigkeit aus Nähe ableiten.");
+        try {
+            budget.ThrowIfCancellationRequested();
+            var chain=await PlankChainTools.Observe(client,operating.SessionId,district,budget);
+            if(chain.SessionId!=operating.SessionId || chain.BridgeVersion!=operating.BridgeVersion)
+                throw new BridgeRejectionException("state_conflict");
+            return JsonSerializer.SerializeToNode(new { state="observed",report=chain.Data,nextSteps=Array.Empty<string>() },NativeJson.Options)!;
+        } catch(OperationCanceledException) when(!caller.IsCancellationRequested) {
+            return Missing("budget_exhausted","Gemeinsames Vorprüfungsbudget erschöpft; Bretterkette separat lesend prüfen. Startauftrag nicht wiederholen.");
+        } catch(Exception ex) when(ex is HttpRequestException or IOException or InvalidDataException or JsonException) {
+            return Missing("unavailable","Bretterketten-Diagnose nicht verfügbar; inspect_plank_chain oder Einzelabfragen nachholen. Native Startprüfungen bleiben maßgeblich.");
+        }
+    }
     private async Task Before(SimulationRunRequest? simulation, LargeProjectRequest? project, CancellationToken ct)
     {
         if (current.Value is not { } scope) return;
@@ -220,12 +244,14 @@ public sealed class OperatingPreflight
             var e = await AutoOperatingTools.Observe(client, project?.Session ?? simulation!.Session, project?.DistrictId,
                 simulation?.BuildingIds ?? [], demands, project?.Steps ?? [], project is not null ? "full_planned_costs_including_helpers" :
                 demands is not null ? "stock_targets_not_construction_costs" : "operating_supply", budget.Token);
-            scope.Reports.Add(e.Data);
+            var report=scope.Add(e.Data);
+            if (e.Data.Demands.Any(d=>d.Good=="Plank"))
+                report["plankChain"]=await Chain(e,ct,budget.Token);
         } catch (OperationCanceledException) when (!ct.IsCancellationRequested) {
-            scope.Reports.Add(new("budget_exhausted", "unknown", null, [], null,
+            scope.Add(new("budget_exhausted", "unknown", null, [], null,
                 ["Zeitbudget der Betriebsdiagnose erreicht; gezielt lesend nachprüfen. Keine Wiederholung des Startauftrags."], ["five_second_budget", "no_material_start_gate"]));
         } catch (Exception ex) when (ex is HttpRequestException or IOException or InvalidDataException or JsonException) {
-            scope.Reports.Add(new("unavailable", "unknown", null, [], null,
+            scope.Add(new("unavailable", "unknown", null, [], null,
                 ["Betriebsdiagnose nicht verfügbar; Einzelabfragen nachholen. Native Startprüfungen bleiben maßgeblich."], ["no_material_start_gate", "no_retry"]));
         }
     }

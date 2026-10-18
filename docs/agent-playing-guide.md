@@ -1,5 +1,12 @@
 # Spielanleitung für Agenten
 
+Automatische Bretterketten-Vorprüfung **begrenzt live abgenommen**:
+Vor Bauaufträgen mit Bretterkosten und langen Simulationsläufen mit Bretterbezug
+ergänzt `operatingPreflight[].plankChain` Engpässe und konkrete nächste Schritte.
+Gemeinsames Diagnosebudget unverändert fünf Sekunden; keine Materialsperre,
+kein Ausbau und keine Verlängerung des Laufbudgets.
+[Vertrag und Livebelege](plank-chain.md#automatische-einbindung-vor-starts).
+
 Bretterketten-Vorprüfung **begrenzt live abgenommen**: `inspect_plank_chain`
 bündelt Holzversorgung, Sägewerksbetrieb, Kraft und Lager-/Transportbelege im
 gewählten Bezirk. Nur Diagnose und konkrete nächste Schritte; kein automatischer
@@ -248,8 +255,8 @@ kein automatisches Retry. Andere Konflikte/Transportverlust bleiben unbestätigt
 
 ## Automatische Vorprüfung vor längeren Läufen
 
-**Gate und begrenzte Liveabnahme bestanden.** Es gilt dieser
-Ablauf zusätzlich zu den nativen Geometrie-/Zugangsprüfungen:
+**Basisdiagnose und automatische Bretterketten-Ergänzung begrenzt live abgenommen.**
+Es gilt dieser Ablauf zusätzlich zu den nativen Geometrie-/Zugangsprüfungen:
 
 1. Aktuelle Session und geplanten Bezirk bestimmen. Vor einer Bauentscheidung
    vollständige Kosten einschließlich Zugangshilfen berechnen und
@@ -270,7 +277,11 @@ Ablauf zusätzlich zu den nativen Geometrie-/Zugangsprüfungen:
    ersetzt diese Entscheidung nicht: Er wird vor dem nativen Start erhoben,
    aber zusammen mit dessen Antwort zurückgegeben.
 5. Im Startergebnis `operatingPreflight` und den eigentlichen Startbeleg getrennt
-   lesen. Diagnosezustand `observed` bedeutet nicht „betriebsbereit“; bei
+   lesen. Bei Bretterbezug zusätzlich `plankChain.state` und
+   `plankChain.report.findings` mit `nextStep` auswerten. Bei `district_unknown`,
+   `unavailable` oder `budget_exhausted` die genannten Einzelprüfungen nachholen;
+   die normale Betriebsdiagnose bleibt erhalten. Kein automatischer Ausbau.
+   Beide Diagnosen teilen fünf Sekunden; Laufbudgets bleiben unverändert. Diagnosezustand `observed` bedeutet nicht „betriebsbereit“; bei
    `unavailable`/`budget_exhausted` fehlen Belege. Nach einem bereits gesendeten
    Auftrag nur lesend nachprüfen, niemals für bessere Diagnosedetails neu starten.
 

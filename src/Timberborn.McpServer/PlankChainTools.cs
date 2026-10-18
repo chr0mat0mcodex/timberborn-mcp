@@ -42,13 +42,16 @@ public static class PlankChainTools
     public static async Task<JsonObject> Invoke(NativeClient client,JsonElement args,CancellationToken ct)
     {
         var (session,district)=Parse(args);
-        var e=await Observe(session,district,client.ProductionGraph,
-            token=>AutoOperatingTools.Observe(client,session,district,[],[new("Log",0),new("Plank",0)],[],"plank_chain_supply",token),
-            (ids,token)=>client.BuildingOperations(BuildingQueryRequest.Parse("/agent-api/v1/building-operations",
-                new NameValueCollection { ["session"]=session,["ids"]=string.Join(",",ids),["diagnose"]="true" }),token),ct);
+        var e=await Observe(client,session,district,ct);
         return JsonSerializer.SerializeToNode(new NativeResult<PlankChainReport>(1,"ok",e.Data,
             new("native",false,e.SessionId,e.ObservedAtUtc),null),NativeJson.Options)!.AsObject();
     }
+
+    public static Task<BridgeEnvelope<PlankChainReport>> Observe(NativeClient client,string session,string district,CancellationToken ct)
+        =>Observe(session,district,client.ProductionGraph,
+            token=>AutoOperatingTools.Observe(client,session,district,[],[new("Log",0),new("Plank",0)],[],"plank_chain_supply",token),
+            (ids,token)=>client.BuildingOperations(BuildingQueryRequest.Parse("/agent-api/v1/building-operations",
+                new NameValueCollection { ["session"]=session,["ids"]=string.Join(",",ids),["diagnose"]="true" }),token),ct);
 
     public static async Task<BridgeEnvelope<PlankChainReport>> Observe(string session,string district,
         Func<CancellationToken,Task<BridgeEnvelope<NativeProductionGraph>>> graph,

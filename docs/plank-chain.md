@@ -44,6 +44,92 @@ beweisen weder erreichbare Fällmarkierungen noch dauerhaft nachwachsendes Holz.
 Keine transitive Ausbauplanung, keine automatische Handlung, keine Materialsperre,
 keine Budgetverlängerung. productionProven bleibt false bis zu separaten Messungen.
 
+## Automatische Einbindung vor Starts
+
+Menschliches Gate und begrenzte Liveabnahme der Integration bestanden.
+Der separate Reader und die automatische Einbindung haben eigene Nachweise unten.
+
+Der bestehende MCP-Startbeobachter ergänzt `operatingPreflight[].plankChain`,
+wenn die ermittelten Bedarfe `Plank` enthalten. Auch Nullbedarf aus einer
+Produktionsprüfung zählt: Es gibt keinen Mindestbestand als Auslöser.
+
+- Bau: jeder Strukturstart (`start_large_project`, `run_large_project`,
+  `run_large_project_repair`), auch interne Starts von Bauabläufen. Kosten aller
+  tatsächlichen Schritte einschließlich Zugangshilfen bestimmen den Bretterbezug.
+- Simulation: `run_simulation_for` ab sechs Spielstunden und jeder
+  `run_simulation_until`. Güterziele, aktuelle Rezepte der Bezugsgebäude oder
+  die bestehende allgemeine Versorgungsauswahl bestimmen den Bezug.
+- Ohne Bretterbezug kein Zusatzscan. Kurze for-Läufe, Status und Cancel bleiben
+  ohne automatische Vorprüfung. Fehlende Kostendefinitionen bleiben im
+  Betriebsbericht unbekannt; daraus wird kein erfundener Bretterbedarf abgeleitet.
+
+`plankChain.state=observed` enthält unter `report` denselben Diagnosevertrag wie
+der separate Reader, insbesondere priorisierte `findings` mit `nextStep` und
+Zeitmarken. Compact und Full behalten die Zusatzdiagnose. Sie wird vor dem
+Starttransport erhoben und gemeinsam mit dessen Antwort geliefert. Wer vor dem
+Auftrag selbst entscheiden möchte, verwendet weiterhin den separaten Reader.
+
+Unklare Bezirke liefern `district_unknown` und einen konkreten Klärungsschritt;
+keine automatische Bezirkswahl nach Nähe. Transport-/Datenfehler liefern
+`unavailable`, Zeitablauf `budget_exhausted`, jeweils mit `nextSteps`.
+Die bereits erhobene Betriebsdiagnose bleibt dabei erhalten. Beide Diagnosen
+teilen dasselbe Fünf-Sekunden-Budget; kein neues Budget pro Zusatzscan und kein
+Retry. Die Bretterkette nutzt ihre bestehende begrenzte Auswahl und kann diese
+erneut lesen; Beobachtungen sind nicht atomar. Session-/Versionskonflikte und
+Abbruch durch den Aufrufer bleiben Fehler und verhindern den Starttransport.
+
+Materialmangel und Betriebsblockaden sind Hinweise: keine pauschale Startsperre,
+kein automatischer Ausbau oder Eingriff in Rezepte/Personal/Lager. Native
+Startprüfungen bleiben maßgeblich; Laufparameter, Bauplan und Zeitbudgets werden
+unverändert übertragen. Ein Diagnosefehler rechtfertigt keinen zweiten Start.
+
+## Liveabnahme der automatischen Einbindung 2026-10-18
+
+Menschliches Gate: 2025 Unit- und 13 Integrationstests bestanden, drei optionale
+Integration-Livefälle übersprungen; Release-Build ohne Fehler.
+
+Simulationspilot: sechs Spielstunden, Tempo 7, maximal 30 Echtzeitsekunden,
+Ziel 100 Bretter bei 33 verfügbar. Start trotz 33 Prozent Deckung und blockierter
+Produzenten. Automatische Kette state=observed im kompakten Startbericht;
+Auswahl, sämtliche findings und beide Sägewerksberichte identisch zum separaten
+Reader. Vollständige Betriebs-/Inventar-/Kraft-/Engpassbelege beider Werke stimmen
+mit jeweils eigener Einzelabfrage überein. Native Beobachtungen 01:03:23.501 bis
+01:03:24.503 UTC liegen vor dem Startbeleg 01:03:24.579 UTC.
+Abschluss production_time_limit nach exakt sechs Spielstunden, 17,72 Sekunden,
+overshootHours=0, Ziel weiter unerfüllt, Pause bestätigt. Kein automatischer Retry.
+
+Baupilot: sechs Plattformen mit je sechs Brettern, insgesamt 36 bei 33 verfügbar
+(91,7 Prozent Deckung). Erste Fläche wegen Pflanzenbelegung verworfen; Vorschauen
+vollständig zurückgenommen. Freie Fläche separat erhoben, gemeinsame native
+Vorschau aller sechs Teile gültig, pilotEligible/restored. Entwicklungspilot,
+keine allgemeine Bauarbeiter- oder Liefergarantie aus der Vorschau.
+Einmaliger run_large_project mit Tempo 7, einer Spielstunde und 30 Sekunden
+Höchstbudget. Automatische Kette observed im Compact-Startbericht; Auswahl,
+findings und Sägewerksberichte erneut identisch zu frischem separatem Reader und
+Einzelabfragen. Beobachtungen 01:05:27.366 bis 01:05:28.342 UTC vor Startbeleg
+01:05:28.477 UTC. Tatsächliche Kosten im Startbericht: 36 Bretter, kein Restbedarf.
+
+Alle sechs Baustellen bestätigt, keine Ablehnung wegen Fehlmenge. Stopp mit
+game_time_limit nach exakt einer Spielstunde, 2,95 Sekunden, overshootHours=0,
+Pause bestätigt. Frische Diagnose: sechs unfertige Baustellen mit Materialwarten,
+kein beobachteter Zugangsverlust. Einzelabfrage einer Baustelle bestätigt sechs
+Bretter Kosten, leeren Baustellenvorrat und null Bau-/Materialfortschritt.
+Die Baustellen bleiben bestehen, Projektledger blocked/unreleased. Keine
+Fertigstellung behauptet und keine zusätzliche Laufzeit zum Fertigbauen gestartet.
+
+Folgelesung nach Diagnose: Zielzeit, Zeitbudgets und Endzustand unverändert.
+Frische Simulation: Tempo 0, kein aktiver Lauf, kein ausstehender Tempoauftrag.
+Keine automatische Änderung an Personal, Rezept, Lager oder Produktionsanlagen.
+Konkrete Maßnahmen bleiben Pause/Personal prüfen, Kraftversorgung bei 0/50
+herstellen sowie Bretterlager auf Auswahl, Annahmemodus und freien Platz prüfen.
+
+Grenzen: Fehlendes Material relativ zu Bestandsziel und Baukosten live belegt;
+kein erfolgreicher Produktionszyklus oder vollständiger Bauabschluss. Gemeinsame
+Diagnosebeobachtungen in beiden Fällen etwa eine Sekunde, kein Live-Timeout.
+Timeout, Transportfehler, unklarer Bezirk, Sessionkonflikt, until und Reparaturstart
+bleiben synthetische Gate-Nachweise. Der Baupilot belegt die Struktur-Startvorprüfung
+mit kurzem festem Beobachtungsfenster, keinen langen Belastungstest.
+
 ## Abnahme 2026-10-18
 
 Menschliches Korrekturgate 2026-10-18 bestanden: 2013 Unit- und 13

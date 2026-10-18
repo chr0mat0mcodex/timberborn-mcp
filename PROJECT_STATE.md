@@ -1,5 +1,27 @@
 # Projektstand
 
+Automatische Bretterketten-Vorprüfung **begrenzt live abgenommen**:
+Vor Bauaufträgen mit Bretterkosten und langen Simulationsläufen mit Bretterbezug
+ergänzt `operatingPreflight[].plankChain` Engpässe und konkrete nächste Schritte.
+Gemeinsames Diagnosebudget unverändert fünf Sekunden; keine Materialsperre,
+kein Ausbau und keine Verlängerung des Laufbudgets.
+[Vertrag und Livebelege](docs/plank-chain.md#automatische-einbindung-vor-starts).
+
+Umsetzung ausschließlich im MCP-Startbeobachter, bestehende Bridge 0.74.0.
+Menschliches Gate: 2025 Unit- und 13 Integrationstests bestanden, drei optionale
+Livefälle übersprungen; Release-Build ohne Fehler. Simulation mit 33/100 Brettern
+und Baupilot mit 33/36 Brettern trotz Fehlmenge gestartet. Beide automatischen
+Ketten samt Befunden identisch zu separaten Readern und Sägewerks-Einzelabfragen.
+Simulation endet nach sechs Spielstunden (17,72 Sekunden), Bau nach einer
+Spielstunde (2,95 Sekunden); jeweils unverändert 30 Sekunden Höchstbudget,
+kein Überschwingen, Pause bestätigt. Sechs Plattformbaustellen bestätigt,
+noch unfertig; keine Produktionsanlage erweitert. Folgelesungen starten nichts.
+Grenzen: kein Fertigbau-/Produktionsnachweis, until/Reparatur und Fehlerfälle
+in dieser Integration nur synthetisch geprüft. [Details](docs/plank-chain.md#liveabnahme-der-automatischen-einbindung-2026-10-18).
+
+Anleitung, Werkzeugvertrag und Fachverträge aktualisiert; keine projektbezogenen
+Spielskills vorhanden.
+
 Bretterketten-Vorprüfung **begrenzt live abgenommen**: `inspect_plank_chain`
 bündelt Holzversorgung, Sägewerksbetrieb, Kraft und Lager-/Transportbelege im
 gewählten Bezirk. Nur Diagnose und konkrete nächste Schritte; kein automatischer

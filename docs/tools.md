@@ -1,5 +1,12 @@
 # Native MCP-Werkzeuge
 
+Automatische Bretterketten-Vorprüfung **begrenzt live abgenommen**:
+Vor Bauaufträgen mit Bretterkosten und langen Simulationsläufen mit Bretterbezug
+ergänzt `operatingPreflight[].plankChain` Engpässe und konkrete nächste Schritte.
+Gemeinsames Diagnosebudget unverändert fünf Sekunden; keine Materialsperre,
+kein Ausbau und keine Verlängerung des Laufbudgets.
+[Vertrag und Livebelege](plank-chain.md#automatische-einbindung-vor-starts).
+
 Bretterketten-Vorprüfung **begrenzt live abgenommen**: `inspect_plank_chain`
 bündelt Holzversorgung, Sägewerksbetrieb, Kraft und Lager-/Transportbelege im
 gewählten Bezirk. Nur Diagnose und konkrete nächste Schritte; kein automatischer
