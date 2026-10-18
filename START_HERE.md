@@ -15,11 +15,12 @@ Laufzeitstand und Session werden beim regulären Wiederanschluss frisch gelesen.
 
 ## Aktueller Auftrag
 
-**A03-Pilot abgenommen:** zentrale Versionsprofile für Envelope und
-Validierungsbudget; Gate und Livetest bestanden. A01/A02/A06 abgeschlossen.
-Weitere Vertragsfamilien vorerst zurückgestellt; Gesamt-A03 bleibt offen.
-Belege und Nutzen-/Aufwandsbewertung im Projektstand. Weitere Pakete stehen im
-[Backlog](BACKLOG.md); historische Gate-/Kolonieaufträge werden nicht fortgesetzt.
+**A04-Pilot abgenommen:** benannte Optionen und Metadaten für vier
+Simulationslauf-Werkzeuge; Gate und Livetest bestanden. Kein Gate offen.
+[Belege und Bewertung](docs/tool-metadata-pilot.md). Weitere Werkzeugfamilien
+vorerst zurückgestellt; Gesamt-A04 bleibt offen.
+A03-Pilot abgenommen, weitere Vertragsfamilien zurückgestellt.
+A01/A02/A06 abgeschlossen; offene Aufgaben im [Backlog](BACKLOG.md).
 
 ## Maßgebliche Arbeitsweise
 

@@ -2,15 +2,13 @@
 
 ## Aktuelle Arbeit
 
-**A03-Pilot abgenommen — Gate und Livetest bestanden:** Envelope und Validierungsbudget
-nutzen zentrale explizite Versionsprofile. Nutzen/Aufwand positiv bewertet;
-weitere Vertragsfamilien auf Nutzerwunsch vorerst zurückgestellt.
-Gesamt-A03 bleibt offen. A01/A02/A06 bleiben abgeschlossen.
+**A04-Pilot abgenommen — Gate und Livetest bestanden:** benannte MCP-Optionen,
+Metadaten für vier Simulationslauf-Werkzeuge und einmaliger Katalogindex.
+[Belege und Nutzen-/Aufwandsbewertung](docs/tool-metadata-pilot.md).
+Weitere Werkzeugfamilien auf Nutzerwunsch vorerst zurückgestellt; Gesamt-A04 offen.
+A03-Pilot abgenommen, weitere A03-Vertragsfamilien zurückgestellt.
+A01/A02/A06 abgeschlossen. A05 und A07–A12 noch nicht begonnen.
 Belege und Grenzen im [Projektstand](PROJECT_STATE.md).
-
-Weitere A03-Migration nur nach neuem Auftrag; A04/A05 sind noch nicht
-gestartet. A07/A08/A10 bei passenden Featurearbeiten,
-A09/A11 nach Bedarf; A12 nach gewünschter Fähigkeit einzeln auswählen.
 
 ## Projektprüfung 2026-10-18 — abarbeitbare Befunde
 
@@ -18,7 +16,7 @@ Prüfbasis und vollständiger Audit: [Archivstand](BACKLOG_HISTORY.md#archivstan
 Ergebnis: gezieltes Refactoring von Versionsprofilen, Werkzeugdispatch und
 Prüfketten sinnvoll; kein belegter Bedarf für einen Komplettumbau.
 Der ursprüngliche Audit war statisch. A06 ist inzwischen **abgeschlossen**;
-A03 ist **teilweise abgeschlossen**, A04/A05 und A07–A12 sind **offen**.
+A03 ist **teilweise abgeschlossen**, A04 **teilweise abgeschlossen**; A05 und A07–A12 sind **offen**.
 P2 = vor der nächsten betroffenen Erweiterung, P3 = nach Bedarf;
 S/M/L sind relative Aufwandsschätzungen. Codeänderungen benötigen weiterhin
 das [menschliche Gate und den gezielten Livetest](DEVELOPMENT_WORKFLOW.md).
@@ -52,20 +50,25 @@ das [menschliche Gate und den gezielten Livetest](DEVELOPMENT_WORKFLOW.md).
 
 ### A04 — P2 / M: Werkzeugmetadaten und Freigaben gemeinsam modellieren
 
-- [ ] **Befund, bestätigt:** [NativeTools.cs](src/Timberborn.McpServer/NativeTools.cs)
-  verbindet Katalog, Dispatch, elf Positions-Bools, Fehlerübersetzung und Logging.
+- [x] **Pilot abgenommen (2026-10-18):** elf benannte MCP-Optionen; feste
+  Metadaten nur für die vier Simulationslauf-Werkzeuge. Katalogindex einmalig
+  vor Dispatch, HTTP-Freigabe unabhängig und unverändert. 28 neue Fälle im Gate
+  bestanden; beide Startwege, Status, Cancel, Endpause und Sessionkontrolle live
+  bestanden. [Belege und Bewertung](docs/tool-metadata-pilot.md). Nutzen/Aufwand
+  positiv bewertet; Gesamt-A04 offen, weitere Familien vorerst zurückgestellt.
+- [ ] **Restarbeit, vorerst zurückgestellt:** weitere Werkzeugfamilien haben
+  weiterhin getrennte Registrierung und Klassifikation. `NativeTools` bündelt
+  Katalog, Dispatch, Fehlerübersetzung und Logging; die elf Positions-Bools
+  bestehen nur noch als Kompatibilitätsadapter. Der im Audit bemängelte
+  Katalog-Neuaufbau im Aufrufpfad ist durch den Pilot erledigt.
+- **Arbeit nach erneutem Auftrag:** weitere Familien einzeln konsolidieren und
+  verbleibende Bool-Aufrufer bei Bedarf umstellen. Die native HTTP-Freigabe in
   [BridgeHttpServer.MethodAllowed](src/Timberborn.Bridge.Core/BridgeHttpServer.cs)
-  pflegt die HTTP-Freigaben separat als lange bedingte Ausdruckskette.
-  Im aktiven Räumgruppenpfad wird für die Mutationsprüfung sogar der vollständige
-  `Catalog(true,...)` einschließlich Schemagenerierung erneut aufgebaut.
-- **Arbeit:** zunächst benannte Optionsstruktur und feste Klassifikation
-  lesend/mutierend/Status/Cancel einführen; Katalogbau aus dem Aufrufpfad entfernen.
-  Danach familienweise Registrierung konsolidieren. Die native HTTP-Freigabe
-  bleibt eine eigenständige Schutzschicht, ihre Übereinstimmung wird geprüft.
+  bleibt eine eigenständige Schutzschicht; ihre Übereinstimmung weiter prüfen.
 - **Abnahme:** Katalog, Handler und Opt-ins stimmen für ein-/ausgeschaltete
   Aktionsgruppen überein; deaktivierte Mutation erreicht kein HTTP. Status/Cancel
   während belegter Ausführung und Räumgruppenbesitz bleiben korrekt. Vorher/Nachher
-  gleiche Toolnamen, Schemas und Fehlerverträge. A03 kann unabhängig beginnen.
+  gleiche Toolnamen, Schemas und Fehlerverträge. Weitere A03-Migration bleibt zurückgestellt.
 
 ### A05 — P2 / S–M: dicht geschriebene Fachprüfungen lesbar machen
 

@@ -45,11 +45,25 @@ ITimberbornReadBackend? backend = backendName switch
     }),
     _ => throw new InvalidOperationException("Unbekanntes Backend.")
 };
+var nativeOptions = new NativeToolOptions
+{
+    EnableValidation = validationEnabled,
+    EnablePlacement = placementEnabled,
+    EnableLodgePlacement = lodgePlacementEnabled,
+    EnableSpeedControl = speedControlEnabled,
+    EnableStaffing = staffingEnabled,
+    EnablePriorities = prioritiesEnabled,
+    EnableAreas = areasEnabled,
+    EnableRemoval = removalEnabled,
+    EnableBuildingPlacement = buildingPlacementEnabled,
+    EnableBuildingSettings = buildingSettingsEnabled,
+    EnableResearch = researchEnabled,
+};
 using var native = backendName == "native" ? new NativeTools(new NativeClient(NativeConfiguration.Load(
-    Environment.GetEnvironmentVariable("TIMBERBORN_NATIVE_CONFIG") ?? throw new InvalidOperationException("TIMBERBORN_NATIVE_CONFIG fehlt."))), validationEnabled, placementEnabled, lodgePlacementEnabled, speedControlEnabled, staffingEnabled, prioritiesEnabled, areasEnabled, removalEnabled, buildingPlacementEnabled, buildingSettingsEnabled, researchEnabled,fileLog) : null;
+    Environment.GetEnvironmentVariable("TIMBERBORN_NATIVE_CONFIG") ?? throw new InvalidOperationException("TIMBERBORN_NATIVE_CONFIG fehlt."))), nativeOptions,fileLog) : null;
 var service = backend is null ? null : new ObservationService(backend);
 var actions = backend is null ? null : new BuildingActionService(backend, (ITimberbornWriteBackend)backend);
-var tools = native is null ? ToolCatalog.Create(writesEnabled) : NativeTools.Catalog(validationEnabled, placementEnabled, lodgePlacementEnabled, speedControlEnabled, staffingEnabled, prioritiesEnabled, areasEnabled, removalEnabled, buildingPlacementEnabled, buildingSettingsEnabled, researchEnabled).Select(ResponsePresentation.Describe).ToArray();
+var tools = native is null ? ToolCatalog.Create(writesEnabled) : NativeTools.Catalog(nativeOptions).Select(ResponsePresentation.Describe).ToArray();
 var builder = Host.CreateApplicationBuilder(new HostApplicationBuilderSettings { Args = [], DisableDefaults = true });
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole(o => o.LogToStandardErrorThreshold = LogLevel.Trace);

@@ -4,6 +4,27 @@
 
 Bridge/Manifest **0.74.0**; letzter neuer Funktionsumfang in `f52750f`:
 automatische Bretterketten-Vorprüfung, begrenzt live abgenommen.
+**A04-Pilot abgenommen — menschliches Gate und gezielter Livetest bestanden.**
+Benannte MCP-Optionen und gemeinsame Metadaten ausschließlich für die vier
+Simulationslauf-Werkzeuge. HTTP-Freigabe unverändert; übrige Familien bleiben
+bestehen. Einmaliger Katalogindex ersetzt Schemaaufbau im Dispatch-/Fehlerpfad.
+Gate: 13 Paket-, 28 Supervisor-, 2174 Unit- und 13 Integrationstests bestanden;
+drei optionale Livefälle übersprungen, Release-Builds ohne Warnungen/Fehler,
+fünf installierte Paketdateien per SHA-256 bestätigt. 28 neue Testfälle bestanden.
+Live nach verbundenem Supervisor-Start: native Bridge 0.74.0 und Session bestätigt;
+for-Start, laufender Status, einmaliger Cancel bis terminaler Pause bestanden.
+Until-Lauf erreichte sein Ziel nach 0,25 Spielstunden ohne Überschuss; frische
+Endpause bestätigt. Falsche Session mit `stale_session` abgewiesen.
+[Belege, Grenzen und Nutzen/Aufwand](docs/tool-metadata-pilot.md).
+Bewertung positiv: weniger getrennte Metadatenpflege und kein Katalog-Neuaufbau
+im Aufrufpfad; überschaubarer Modell-/Testaufwand, einmaliger Index als Zusatzkosten.
+Kein Laufzeitgewinn gemessen. Gesamt-A04 bleibt offen; weitere Werkzeugfamilien
+auf Nutzerwunsch vorerst zurückgestellt. Kein Gate offen.
+Spielanleitung geprüft: keine fachliche Änderung, da öffentliche Verträge und
+Bedienabläufe gleich bleiben. Keine projektbezogenen Spielskills vorhanden.
+
+### Vorheriger abgenommener Refactoringpilot
+
 **A03-Pilot abgenommen — menschliches Gate und gezielter Livetest bestanden.**
 Zentrale explizite Wire-Vertragsprofile für Envelope und Validierungsbudget;
 102 bekannte Versionen unverändert, davon 58 Legacy-/44 erweiterte Budgetprofile.
@@ -20,7 +41,8 @@ falsche Session mit `stale_session` abgewiesen. Kein Bauauftrag.
 [Belege, Grenzen und Nutzen/Aufwand](docs/compatibility/timberborn.md#a03-pilot--zentrale-wire-vertragsprofile).
 Bewertung: kleine, sinnvolle Zentralisierung zweier bisher getrennter Listen;
 Testmatrix ist der wesentliche Zusatzaufwand. Gesamt-A03 bleibt offen,
-weitere Vertragsfamilien auf Nutzerwunsch vorerst zurückgestellt. Kein Gate offen.
+weitere Vertragsfamilien auf Nutzerwunsch vorerst zurückgestellt. Beim A03-Abschluss
+kein Gate offen; aktueller A04-Auftrag siehe oben.
 Agenten-Spielanleitung geprüft: keine Änderung, weil Werkzeugvertrag und
 Spielverhalten unverändert sind; keine projektbezogenen Spielskills vorhanden.
 

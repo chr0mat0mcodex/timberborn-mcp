@@ -10,15 +10,24 @@ namespace Timberborn.McpServer;
 
 public static class SimulationRunTools
 {
-    public static bool Handles(string name) => name is "run_simulation_for" or "run_simulation_until" or "inspect_simulation_run" or "cancel_simulation_run";
-    public static bool Writes(string name) => Handles(name) && name != "inspect_simulation_run";
-    private static string Route(string name) => name switch { "run_simulation_for" => "simulation-run-for", "run_simulation_until" => "simulation-run-until", "inspect_simulation_run" => "simulation-run", "cancel_simulation_run" => "simulation-run-cancel", _ => throw new ArgumentException() };
+    // Only this family is migrated in A04. Order is the existing catalog order.
+    public static IReadOnlyList<NativeToolDescriptor> Descriptors { get; } = Array.AsReadOnly(new[]
+    {
+        new NativeToolDescriptor("run_simulation_for", "simulation-run-for", NativeToolKind.Mutation),
+        new NativeToolDescriptor("run_simulation_until", "simulation-run-until", NativeToolKind.Mutation),
+        new NativeToolDescriptor("inspect_simulation_run", "simulation-run", NativeToolKind.Status),
+        new NativeToolDescriptor("cancel_simulation_run", "simulation-run-cancel", NativeToolKind.Cancel),
+    });
+    public static NativeToolDescriptor? Find(string name) => Descriptors.FirstOrDefault(d => d.Name == name);
+    public static bool Handles(string name) => Find(name) is not null;
+    public static bool Writes(string name) => Find(name)?.Writes == true;
     public static IEnumerable<Tool> Catalog(bool enabled)
     {
         var options = new JsonSerializerOptions(NativeJson.Options) { TypeInfoResolver = new DefaultJsonTypeInfoResolver() };
-        foreach (string name in new[] { "run_simulation_for", "run_simulation_until", "inspect_simulation_run", "cancel_simulation_run" }) {
-            bool write = Writes(name), start = name.StartsWith("run_");
-            if (write && !enabled) continue;
+        foreach (var descriptor in Descriptors) {
+            string name = descriptor.Name;
+            bool write = descriptor.Writes, start = descriptor.Kind == NativeToolKind.Mutation;
+            if (!descriptor.IsEnabled(enabled)) continue;
             var props = new JsonObject();
             foreach (string key in new[] { "session", "runId" }) props[key] = new JsonObject { ["type"] = "string", ["format"] = "uuid" };
             if (start) {
@@ -52,7 +61,8 @@ public static class SimulationRunTools
     }
     public static async Task<JsonObject> Invoke(NativeClient client, string name, JsonElement args, bool enabled, CancellationToken ct)
     {
-        if (Writes(name) && !enabled) throw new ArgumentException();
+        var descriptor = Find(name) ?? throw new ArgumentException();
+        if (!descriptor.IsEnabled(enabled)) throw new ArgumentException();
         var q = new NameValueCollection();
         foreach (var p in args.EnumerateObject()) {
             if(p.Name=="buildingIds") {
@@ -87,7 +97,7 @@ public static class SimulationRunTools
                 q.Add(p.Name, number.ToString("0.############################", System.Globalization.CultureInfo.InvariantCulture));
             else throw new ArgumentException();
         }
-        var r = SimulationRunRequest.Parse("/agent-api/v1/" + Route(name), q);
+        var r = SimulationRunRequest.Parse("/agent-api/v1/" + descriptor.Route, q);
         var e = await client.SimulationRun(r, q, ct);
         return (JsonObject)JsonSerializer.SerializeToNode(new NativeResult<NativeSimulationRun>(1, "ok", e.Data, new("native", false, e.SessionId, e.ObservedAtUtc), null), NativeJson.Options)!;
     }

@@ -9,22 +9,90 @@ using Timberborn.Bridge.Core;
 
 namespace Timberborn.McpServer;
 
-public sealed class NativeTools(NativeClient client, bool enableValidation = false, bool enablePlacement = false, bool enableLodgePlacement = false, bool enableSpeedControl = false, bool enableStaffing = false, bool enablePriorities = false, bool enableAreas = false, bool enableRemoval = false, bool enableBuildingPlacement = false, bool enableBuildingSettings = false, bool enableResearch = false, DiagnosticFileLog? fileLog=null) : IDisposable
+public sealed class NativeTools(NativeClient client, NativeToolOptions permissions, DiagnosticFileLog? fileLog = null) : IDisposable
 {
+    // Compatibility adapters keep existing callers source-compatible; production uses named options.
+    public NativeTools(
+        NativeClient client,
+        bool enableValidation = false,
+        bool enablePlacement = false,
+        bool enableLodgePlacement = false,
+        bool enableSpeedControl = false,
+        bool enableStaffing = false,
+        bool enablePriorities = false,
+        bool enableAreas = false,
+        bool enableRemoval = false,
+        bool enableBuildingPlacement = false,
+        bool enableBuildingSettings = false,
+        bool enableResearch = false,
+        DiagnosticFileLog? fileLog = null)
+        : this(client, new NativeToolOptions
+        {
+            EnableValidation = enableValidation,
+            EnablePlacement = enablePlacement,
+            EnableLodgePlacement = enableLodgePlacement,
+            EnableSpeedControl = enableSpeedControl,
+            EnableStaffing = enableStaffing,
+            EnablePriorities = enablePriorities,
+            EnableAreas = enableAreas,
+            EnableRemoval = enableRemoval,
+            EnableBuildingPlacement = enableBuildingPlacement,
+            EnableBuildingSettings = enableBuildingSettings,
+            EnableResearch = enableResearch,
+        }, fileLog) { }
+
+    public static IReadOnlyList<Tool> Catalog(
+        bool enableValidation = false,
+        bool enablePlacement = false,
+        bool enableLodgePlacement = false,
+        bool enableSpeedControl = false,
+        bool enableStaffing = false,
+        bool enablePriorities = false,
+        bool enableAreas = false,
+        bool enableRemoval = false,
+        bool enableBuildingPlacement = false,
+        bool enableBuildingSettings = false,
+        bool enableResearch = false) =>
+        Catalog(new NativeToolOptions
+        {
+            EnableValidation = enableValidation,
+            EnablePlacement = enablePlacement,
+            EnableLodgePlacement = enableLodgePlacement,
+            EnableSpeedControl = enableSpeedControl,
+            EnableStaffing = enableStaffing,
+            EnablePriorities = enablePriorities,
+            EnableAreas = enableAreas,
+            EnableRemoval = enableRemoval,
+            EnableBuildingPlacement = enableBuildingPlacement,
+            EnableBuildingSettings = enableBuildingSettings,
+            EnableResearch = enableResearch,
+        });
+
+    // Legacy families still own their schemas. Build their metadata once before dispatch,
+    // never rebuild the complete schema catalog for ownership checks or argument errors.
+    private static readonly IReadOnlyDictionary<string, Tool> AllTools =
+        Catalog(NativeToolOptions.AllEnabled).ToDictionary(tool => tool.Name, StringComparer.Ordinal);
+
+    static NativeTools() { } // Prepare the index before the first instance can dispatch.
+
+    public static bool BlockedByClearedGroup(string name) =>
+        SimulationRunTools.Find(name) is { } descriptor ? descriptor.Writes :
+        AllTools.TryGetValue(name, out var tool) && tool.Annotations?.ReadOnlyHint != true;
+
     private readonly ClearedGroupTools clearedGroups = new(new NativeClearedGroupPort(client), Path.Combine(AppContext.BaseDirectory,".local","cleared-groups"));
     private readonly OperatingPreflight operatingPreflight = new(client);
     private readonly SemaphoreSlim callGate = new(1,1);
     private readonly object admissionLock = new();
     private bool statusWaitInProgress;
     private bool cancelInProgress;
-    public static IReadOnlyList<Tool> Catalog(bool enableValidation = false, bool enablePlacement = false, bool enableLodgePlacement = false, bool enableSpeedControl = false, bool enableStaffing = false, bool enablePriorities = false, bool enableAreas = false, bool enableRemoval = false, bool enableBuildingPlacement = false, bool enableBuildingSettings = false, bool enableResearch = false)
+    public static IReadOnlyList<Tool> Catalog(NativeToolOptions permissions)
     {
         var options = new JsonSerializerOptions(NativeJson.Options) { TypeInfoResolver = new DefaultJsonTypeInfoResolver() };
         var names = new List<string> { "timberborn_status", "inspect_colony", "inspect_map_region", "inspect_build_catalog", "precheck_build_site", "inspect_building", "inspect_simulation", "inspect_workforce" };
-        if (enableStaffing) names.Add("set_workplace_staffing");
-        if (enableSpeedControl) names.Add("set_simulation_speed");
-        if (enableValidation) names.Add("validate_build_site");
-        if (enablePlacement) names.Add("place_path"); if (enableLodgePlacement) names.Add("place_lodge");
+        if (permissions.EnableStaffing) names.Add("set_workplace_staffing");
+        if (permissions.EnableSpeedControl) names.Add("set_simulation_speed");
+        if (permissions.EnableValidation) names.Add("validate_build_site");
+        if (permissions.EnablePlacement) names.Add("place_path"); if (permissions.EnableLodgePlacement) names.Add("place_lodge");
         return names.Select(name =>
         {
             bool map = name == "inspect_map_region";
@@ -85,7 +153,7 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
                     : "Liest Erreichbarkeit, Bridge-Version und aktuelle Spielsitzung der eigenen Mod. Dieser Aufruf ist lesend; der Teststarter aktiviert alle vorhandenen Aktionsgruppen. Die bestehende MCP-Verbindung des Clients verwenden; für Spielaufgaben keine zusätzlichen Startskripte oder dotnet-Prozesse starten. stdio wird vom Client verwaltet und erlaubt keinen nachträglichen Anschluss an einen separat gestarteten Prozess. backend_unavailable ist kein Beleg für einen defekten MCP-Prozess; Spiel, Mod und Ladezustand prüfen. Kein Fallback auf Fremdmods.",
                 InputSchema = JsonSerializer.SerializeToElement(input), OutputSchema = JsonSerializer.SerializeToElement(options.GetJsonSchemaAsNode(result)),
                 Annotations = new() { ReadOnlyHint = !action, DestructiveHint = action, IdempotentHint = !action, OpenWorldHint = false } };
-        }).Concat(BuildingQueryTools.Catalog()).Concat(SimulationRunTools.Catalog(enableSpeedControl)).Concat(BuildingConfigurationTools.Catalog(enableBuildingSettings && enableStaffing && enableSpeedControl)).Concat(ManagementTools.Catalog(enablePriorities, enableAreas)).Concat(PlantingBatchTools.Catalog(enableAreas)).Concat(RemovalTools.Catalog(enableRemoval)).Concat(BuildingTools.Catalog(enableBuildingPlacement)).Concat(BuildingSettingsTools.Catalog(enableBuildingSettings)).Concat(ResearchTools.Catalog(enableResearch)).Concat(EconomyTools.Catalog()).Concat(LogisticsTools.Catalog()).Concat(DiagnosticsTools.Catalog()).Append(RecentActionsTools.Reader()).Append(ActivityTools.Reader()).Append(ProductionGraphTools.Reader()).Append(SelectionTools.Reader()).Append(ScreenshotTools.Reader()).Append(BuildingCapabilityTools.Reader()).Append(ColonyOverviewTools.Reader()).Append(OperatingReadinessTools.Reader()).Append(AutoOperatingTools.Reader()).Append(PlankChainTools.Reader()).Append(RegionSurveyTools.Reader()).Append(StrategicMapTools.Reader()).Concat(RegionBuildPlanning.Catalog(enableBuildingPlacement)).Concat(ForestryTools.Catalog(enableAreas)).Concat(WorkflowTools.Catalog(enableRemoval, enableBuildingPlacement)).Concat(BuildingCompletionTools.Catalog(enableBuildingPlacement && enableSpeedControl)).Concat(BuildBatchTools.Catalog(enableBuildingPlacement && enableSpeedControl)).Concat(LargeProjectTools.Catalog(enableBuildingPlacement, enableSpeedControl)).Concat(ClearedGroupTools.Catalog(enableBuildingPlacement && enableSpeedControl && enableRemoval && enableAreas)).Select(ActivityTools.WithReasoning).ToArray();
+        }).Concat(BuildingQueryTools.Catalog()).Concat(SimulationRunTools.Catalog(permissions.EnableSpeedControl)).Concat(BuildingConfigurationTools.Catalog(permissions.EnableBuildingSettings && permissions.EnableStaffing && permissions.EnableSpeedControl)).Concat(ManagementTools.Catalog(permissions.EnablePriorities, permissions.EnableAreas)).Concat(PlantingBatchTools.Catalog(permissions.EnableAreas)).Concat(RemovalTools.Catalog(permissions.EnableRemoval)).Concat(BuildingTools.Catalog(permissions.EnableBuildingPlacement)).Concat(BuildingSettingsTools.Catalog(permissions.EnableBuildingSettings)).Concat(ResearchTools.Catalog(permissions.EnableResearch)).Concat(EconomyTools.Catalog()).Concat(LogisticsTools.Catalog()).Concat(DiagnosticsTools.Catalog()).Append(RecentActionsTools.Reader()).Append(ActivityTools.Reader()).Append(ProductionGraphTools.Reader()).Append(SelectionTools.Reader()).Append(ScreenshotTools.Reader()).Append(BuildingCapabilityTools.Reader()).Append(ColonyOverviewTools.Reader()).Append(OperatingReadinessTools.Reader()).Append(AutoOperatingTools.Reader()).Append(PlankChainTools.Reader()).Append(RegionSurveyTools.Reader()).Append(StrategicMapTools.Reader()).Concat(RegionBuildPlanning.Catalog(permissions.EnableBuildingPlacement)).Concat(ForestryTools.Catalog(permissions.EnableAreas)).Concat(WorkflowTools.Catalog(permissions.EnableRemoval, permissions.EnableBuildingPlacement)).Concat(BuildingCompletionTools.Catalog(permissions.EnableBuildingPlacement && permissions.EnableSpeedControl)).Concat(BuildBatchTools.Catalog(permissions.EnableBuildingPlacement && permissions.EnableSpeedControl)).Concat(LargeProjectTools.Catalog(permissions.EnableBuildingPlacement, permissions.EnableSpeedControl)).Concat(ClearedGroupTools.Catalog(permissions.EnableBuildingPlacement && permissions.EnableSpeedControl && permissions.EnableRemoval && permissions.EnableAreas)).Select(ActivityTools.WithReasoning).ToArray();
     }
     public async Task<JsonObject> Invoke(string name, JsonElement args, CancellationToken ct)
     {
@@ -111,47 +179,47 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
                 if(!cancelInProgress) {
                     ownsGate=callGate.Wait(0);
                     if(ownsGate)statusWaitInProgress=statusWait;
-                    else if(statusWaitInProgress && name=="cancel_simulation_run") {
+                    else if(statusWaitInProgress && SimulationRunTools.Find(name)?.Kind == NativeToolKind.Cancel) {
                         ownsCancel=true;
                         cancelInProgress=true;
                     }
                 }
             }
             if(!ownsGate && !ownsCancel)throw new ArgumentException("another_call_in_progress_not_queued");
-            if(ClearedGroupTools.Handles(name))return await clearedGroups.Invoke(name,args,enableBuildingPlacement && enableSpeedControl && enableRemoval && enableAreas,ct);
-            if(clearedGroups.Active && Catalog(true,true,true,true,true,true,true,true,true,true,true).Any(t=>t.Name==name && t.Annotations?.ReadOnlyHint!=true))
+            if(ClearedGroupTools.Handles(name))return await clearedGroups.Invoke(name,args,permissions.EnableBuildingPlacement && permissions.EnableSpeedControl && permissions.EnableRemoval && permissions.EnableAreas,ct);
+            if(clearedGroups.Active && BlockedByClearedGroup(name))
                 throw new ArgumentException("cleared_group_owns_dispatch_stop_or_wait");
-            if(PlantingBatchTools.Handles(name))return await PlantingBatchTools.Invoke(client,name,args,enableAreas,ct);
+            if(PlantingBatchTools.Handles(name))return await PlantingBatchTools.Invoke(client,name,args,permissions.EnableAreas,ct);
             if (StatusWaitTools.Handles(name)) return await StatusWaitTools.Invoke(client,name,args,ct);
-            if(LargeProjectTools.Handles(name)) return await LargeProjectTools.Invoke(client,name,args,enableBuildingPlacement,ct,enableSpeedControl);
+            if(LargeProjectTools.Handles(name)) return await LargeProjectTools.Invoke(client,name,args,permissions.EnableBuildingPlacement,ct,permissions.EnableSpeedControl);
             if (name==RecentActionsTools.Name) return await RecentActionsTools.Invoke(client,args,ct);
             if (BuildingQueryTools.Handles(name)) return await BuildingQueryTools.Invoke(client,name,args,ct);
-            if (BuildBatchTools.Handles(name)) return await BuildBatchTools.Invoke(client, name, args, enableBuildingPlacement && enableSpeedControl, enableRemoval, enableBuildingSettings, ct);
-            if (BuildingCompletionTools.Handles(name)) return await BuildingCompletionTools.Invoke(client, name, args, enableBuildingPlacement && enableSpeedControl, ct, enableBuildingSettings);
-            if (WorkflowTools.Handles(name)) return await WorkflowTools.Invoke(client, name, args, enableRemoval, enableBuildingPlacement, enableBuildingSettings, ct);
-            if (ForestryTools.Handles(name)) return await ForestryTools.Invoke(client, name, args, enableAreas, ct);
+            if (BuildBatchTools.Handles(name)) return await BuildBatchTools.Invoke(client, name, args, permissions.EnableBuildingPlacement && permissions.EnableSpeedControl, permissions.EnableRemoval, permissions.EnableBuildingSettings, ct);
+            if (BuildingCompletionTools.Handles(name)) return await BuildingCompletionTools.Invoke(client, name, args, permissions.EnableBuildingPlacement && permissions.EnableSpeedControl, ct, permissions.EnableBuildingSettings);
+            if (WorkflowTools.Handles(name)) return await WorkflowTools.Invoke(client, name, args, permissions.EnableRemoval, permissions.EnableBuildingPlacement, permissions.EnableBuildingSettings, ct);
+            if (ForestryTools.Handles(name)) return await ForestryTools.Invoke(client, name, args, permissions.EnableAreas, ct);
             if (name == ScreenshotTools.Name) return await ScreenshotTools.Invoke(client, args, ct);
-            if (name == RegionBuildPlanning.Name) return await RegionBuildPlanning.Invoke(client,args,enableBuildingPlacement,ct);
+            if (name == RegionBuildPlanning.Name) return await RegionBuildPlanning.Invoke(client,args,permissions.EnableBuildingPlacement,ct);
             if (name == RegionSurveyTools.Name) return await RegionSurveyTools.Invoke(client, args, ct);
             if (name == StrategicMapTools.Name) return await StrategicMapTools.Invoke(client, args, ct);
             if (name == PlankChainTools.Name) return await PlankChainTools.Invoke(client,args,ct);
             if (name == AutoOperatingTools.Name) return await AutoOperatingTools.Invoke(client, args, ct);
             if (name == OperatingReadinessTools.Name) return await OperatingReadinessTools.Invoke(client, args, ct);
             if (name == ColonyOverviewTools.Name) return await ColonyOverviewTools.Invoke(client, args, ct);
-            if (BuildingConfigurationTools.Handles(name)) return await BuildingConfigurationTools.Invoke(client,name,args,enableBuildingSettings && enableStaffing && enableSpeedControl,ct);
-            if (SimulationRunTools.Handles(name)) return await SimulationRunTools.Invoke(client,name,args,enableSpeedControl,ct);
+            if (BuildingConfigurationTools.Handles(name)) return await BuildingConfigurationTools.Invoke(client,name,args,permissions.EnableBuildingSettings && permissions.EnableStaffing && permissions.EnableSpeedControl,ct);
+            if (SimulationRunTools.Handles(name)) return await SimulationRunTools.Invoke(client,name,args,permissions.EnableSpeedControl,ct);
             if(name=="inspect_production_graph") return await ProductionGraphTools.Invoke(client,args,ct);
             if(name=="inspect_agent_log") return await ActivityTools.Read(client,args,ct);
             if (DiagnosticsTools.Handles(name)) return await DiagnosticsTools.Invoke(client,name,args,ct);
             if (name == "inspect_selection") return await SelectionTools.Invoke(client,args,ct);
-            if (name == "inspect_building_capabilities") return await BuildingCapabilityTools.Invoke(client,args,enableBuildingPlacement,ct);
+            if (name == "inspect_building_capabilities") return await BuildingCapabilityTools.Invoke(client,args,permissions.EnableBuildingPlacement,ct);
             if (LogisticsTools.Handles(name)) return await LogisticsTools.Invoke(client,name,args,ct);
             if (EconomyTools.Handles(name)) return await EconomyTools.Invoke(client,name,args,ct);
-            if (ResearchTools.Handles(name)) return await ResearchTools.Invoke(client,name,args,enableResearch,ct);
-            if (BuildingSettingsTools.Handles(name)) return await BuildingSettingsTools.Invoke(client,name,args,enableBuildingSettings,ct);
-            if (BuildingTools.Handles(name)) return await BuildingTools.Invoke(client,name,args,enableBuildingPlacement,ct,enableBuildingSettings);
-            if (RemovalTools.Handles(name)) return await RemovalTools.Invoke(client,name,args,enableRemoval,ct);
-            if (ManagementTools.Handles(name)) return await ManagementTools.Invoke(client,name,args,enablePriorities,enableAreas,ct);
+            if (ResearchTools.Handles(name)) return await ResearchTools.Invoke(client,name,args,permissions.EnableResearch,ct);
+            if (BuildingSettingsTools.Handles(name)) return await BuildingSettingsTools.Invoke(client,name,args,permissions.EnableBuildingSettings,ct);
+            if (BuildingTools.Handles(name)) return await BuildingTools.Invoke(client,name,args,permissions.EnableBuildingPlacement,ct,permissions.EnableBuildingSettings);
+            if (RemovalTools.Handles(name)) return await RemovalTools.Invoke(client,name,args,permissions.EnableRemoval,ct);
+            if (ManagementTools.Handles(name)) return await ManagementTools.Invoke(client,name,args,permissions.EnablePriorities,permissions.EnableAreas,ct);
             if (name == "inspect_building")
             {
                 var query = new NameValueCollection();
@@ -162,13 +230,13 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
                 }
                 return Wrap(await client.Building(BridgeRequest.Parse("/agent-api/v1/building", query), ct));
             }
-            if (name == "validate_build_site" && !enableValidation) throw new ArgumentException();
-            if (name == "place_path" && !enablePlacement) throw new ArgumentException();
-            if (name == "place_lodge" && !enableLodgePlacement) throw new ArgumentException();
+            if (name == "validate_build_site" && !permissions.EnableValidation) throw new ArgumentException();
+            if (name == "place_path" && !permissions.EnablePlacement) throw new ArgumentException();
+            if (name == "place_lodge" && !permissions.EnableLodgePlacement) throw new ArgumentException();
             if (name == "inspect_simulation" && !args.EnumerateObject().Any()) return Wrap(await client.Simulation(ct));
             if (name == "set_workplace_staffing")
             {
-                if (!enableStaffing) throw new ArgumentException();
+                if (!permissions.EnableStaffing) throw new ArgumentException();
                 var query = new NameValueCollection();
                 foreach (var p in args.EnumerateObject()) {
                     if ((p.Name is "id" or "session") && p.Value.ValueKind == JsonValueKind.String) query.Add(p.Name, p.Value.GetString());
@@ -179,7 +247,7 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
             }
             if (name == "set_simulation_speed")
             {
-                if (!enableSpeedControl) throw new ArgumentException();
+                if (!permissions.EnableSpeedControl) throw new ArgumentException();
                 var query = new NameValueCollection();
                 foreach (var p in args.EnumerateObject())
                 {
@@ -212,7 +280,7 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
             if (args.EnumerateObject().Any() || name is not ("inspect_colony" or "timberborn_status")) throw new ArgumentException();
             var snapshot = await client.Snapshot(ct);
             return name == "inspect_colony" ? Wrap(snapshot) : Wrap(new BridgeEnvelope<NativeStatus>(1, snapshot.SessionId,
-                snapshot.ObservedAtUtc, snapshot.BridgeVersion, new("reachable", snapshot.BridgeVersion, enablePlacement || enableLodgePlacement || enableSpeedControl || enableStaffing || enablePriorities || enableAreas || enableRemoval || enableBuildingPlacement || enableBuildingSettings || enableResearch)));
+                snapshot.ObservedAtUtc, snapshot.BridgeVersion, new("reachable", snapshot.BridgeVersion, permissions.EnablePlacement || permissions.EnableLodgePlacement || permissions.EnableSpeedControl || permissions.EnableStaffing || permissions.EnablePriorities || permissions.EnableAreas || permissions.EnableRemoval || permissions.EnableBuildingPlacement || permissions.EnableBuildingSettings || permissions.EnableResearch)));
         }
         catch (Exception ex) when (ex is ArgumentException or HttpRequestException or IOException or InvalidDataException or JsonException or UnauthorizedAccessException or OperationCanceledException)
         {
@@ -242,7 +310,7 @@ public sealed class NativeTools(NativeClient client, bool enableValidation = fal
             if(code=="project_preview_failed")message="Native Bauvorschau fehlgeschlagen; Wiederherstellung unbekannt, Planer gesperrt. Spiel neu laden und Zustand mit neuer Session prüfen; kein automatisches Retry.";
             if(code=="project_not_found")message="Unter dieser Kennung existiert kein natives Großprojekt in der aktuellen Spielsitzung. Chargenstatus und Planungsfehler prüfen; keine automatische Wiederholung.";
             if(ArgumentDiagnostics.Hint(ex) is { } hint)message+=" "+hint;
-            else if (ex is ArgumentException && Catalog(true,true,true,true,true,true,true,true,true,true,true).FirstOrDefault(t=>t.Name==name) is { } tool &&
+            else if (ex is ArgumentException && AllTools.TryGetValue(name, out var tool) &&
                 ArgumentDiagnostics.SchemaHint(args, tool.InputSchema) is { } parameterHint) message+=" "+parameterHint;
             return (JsonObject)JsonSerializer.SerializeToNode(new NativeResult<object>(1, "error", null,
                 new("native", false, null, null), new(code,message,code=="backend_unavailable"&&!action&&dispatch.WriteAttempts==0,execution)), NativeJson.Options)!;
