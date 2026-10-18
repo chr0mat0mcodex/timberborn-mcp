@@ -15,10 +15,11 @@ Laufzeitstand und Session werden beim regulären Wiederanschluss frisch gelesen.
 
 ## Aktueller Auftrag
 
-**B06-Entwurf fertig; Umsetzung ausdrücklich noch offen.**
-[Eine Baucharge nach Reload rein lesend abgleichen](docs/project-reload-reconciliation-design.md).
-Nächster gesondert zu beauftragender Schritt: B06.1, öffentliche Save-Anbindung
-und Objektidentität belegen. Kein Code geändert, kein Gate oder Livetest gestartet.
+**B06.1 begrenzt geprüft; eigentlicher Pilot nicht implementiert.**
+[Öffentliche Save-API und Objekt-IDs nach Reload](docs/project-reload-api-evidence.md)
+belegt. Eigener Beleg-Roundtrip und Ladebereitschaft bleiben erster Stoppunkt einer
+separat zu beauftragenden B06.2-Umsetzung. Kein Gate offen, Spiel pausiert.
+[Entwurf](docs/project-reload-reconciliation-design.md).
 
 **A12/N10-Pilot abgeschlossen; einzelne Quelle-Ziel-Lieferzuordnung bleibt offen.**
 [Nachweise](docs/plank-production-transport-pilot.md): kleiner Kraft-/Lageraufbau fertig,

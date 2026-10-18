@@ -2,13 +2,14 @@
 
 ## Aktueller Einstieg
 
-**B06: Entwurf fertig, noch nicht implementieren.**
-[Vertrag, offene API-Nachweise und Testmatrix](project-reload-reconciliation-design.md).
-Nur terminale Originalchargen von run_large_project, ein Beleg/maximal vier Teile;
-reguläre Save-Persistenz empfohlen, getrennte Lesesicht ohne Controllerrestaurierung.
-B06.1 (öffentliche Save-Schnittstelle, Snapshot-Kohärenz, stabile Entity-IDs) offen;
-B06.2/B06.3 nicht freigegeben. Kein MCP-Spielzugriff, Build/Test oder Regeländerung.
-Keine alte Session, Vorschau oder Quittung als heutige Ausführungsfreigabe verwenden.
+**B06.1-Vorprüfung abgeschlossen; B06.2 noch nicht freigegeben.**
+[API-/Reloadbelege](project-reload-api-evidence.md): öffentliche Save-Anbindung
+konkret geprüft, zwei IDs nach menschlichem Save/Reload erhalten. Neue Session,
+alte Session stale_session, altes Ledger project_not_found. Kein Replay gesendet.
+Eigener Beleg-Roundtrip, Ladebereitschaft und Snapshot-Kohärenz noch unbewiesen;
+bei gesondertem B06.2-Auftrag zuerst diesen Stoppunkt umsetzen/abnehmen.
+Kein Code/Build/Test/Deploy, nur vorhandenes Metadatenwerkzeug und MCP-Leser.
+Spiel pausiert, kein aktiver Lauf. Anleitung braucht noch keine neue Bedienfolge.
 
 **A12/N10 im begrenzten Pilotumfang abgeschlossen.**
 [Belege und Liefergrenze](plank-production-transport-pilot.md): ein Kraftrad,

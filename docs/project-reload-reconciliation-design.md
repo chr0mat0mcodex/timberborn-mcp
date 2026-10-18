@@ -1,6 +1,9 @@
 # B06 — Reload-Abgleich einer Baucharge: Entwurf
 
 Stand 2026-10-18. **Nur Entwurf, nicht implementiert und nicht live abgenommen.**
+B06.1 inzwischen gezielt geprüft: [öffentliche API und zwei erhaltene Objekt-IDs](project-reload-api-evidence.md).
+Eigener Beleg-Roundtrip, Ladebereitschaft und Kohärenz bleiben offene Pilotnachweise.
+
 Auftrag: eine Projektfamilie, minimale Persistenz, rein lesender Abgleich nach
 Spielneuladen. Keine automatische Wiederaufnahme und kein neuer Bauauftrag.
 
@@ -49,9 +52,10 @@ Offizielle [Coding-Grundlagen](https://github.com/mechanistry/timberborn-modding
 verweisen für C#-Mods auf die Spiel-DLLs. Die gelesene offizielle
 [Architekturseite](https://github.com/mechanistry/timberborn-modding/wiki/Timberborn-architecture)
 und die lokal gesicherten Referenzen liefern hier keinen geprüften Save-Vertrag.
-Der lokale Managed-Pfad war bei dieser Recherche nicht lesbar. Daher sind konkrete
-Serializer-Signaturen, Ladezeitpunkt und Snapshot-Kohärenz **offene Nachweise**,
-keine behaupteten vorhandenen Fähigkeiten. Keine private Reflection, Save-Datei-
+Die anfängliche Lesesperre des Managed-Pfads ist durch B06.1 geklärt:
+öffentliche Save-/Load-Signaturen und zwei IDs nach Reload sind nun belegt.
+Snapshot-Kohärenz des eigenen Belegs und genauer Ladezeitpunkt bleiben offen.
+Keine private Reflection, Save-Datei-
 Manipulation oder fremde Persistenzbibliothek als stiller Ersatz.
 
 ## Persistenzort und Alternative
@@ -208,12 +212,13 @@ Keine breite Save-Sammlung, keine weiteren Familien oder Langzeit-Stresstests.
 
 ## Umsetzbare Reihenfolge nach gesonderter Freigabe
 
-- **B06.1 — API-/Identitätsnachweis (offen):** öffentliche Save-Erweiterung,
-  Versionierung, Ladebereitschaft und kohärenten Welt-/Belegsnapshot belegen;
-  Entity-ID-Erhalt über reguläres Save/Load prüfen. Erst lokale öffentliche
-  Signaturen/Herstellerbeispiele lesen, kein Reflection-Eigenbau. Bei fehlendem
-  belastbaren Weg stoppen und Entwurf neu entscheiden. Kein voller Featurebau davor.
-- **B06.2 — enger Pilot (nicht freigegeben):** vier Teile/ein Beleg, Capture und
+- **B06.1 — API-/Identitätsvorprüfung (begrenzt abgeschlossen):** öffentliche
+  Singleton-Save-Anbindung per Metadaten bestätigt; zwei vorhandene Teile behalten
+  ihre IDs nach regulärem Save/Load. Alte Session abgelehnt, altes Ledger fehlt.
+  [Belege und Grenzen](project-reload-api-evidence.md). Eigener Beleg-Roundtrip
+  und Kohärenz werden dadurch noch nicht als abgenommen dargestellt.
+- **B06.2 — enger Pilot (nicht freigegeben):** zuerst minimalen eigenen Save-Roundtrip und Ladebereitschaft beweisen; danach
+  vier Teile/ein Beleg, Capture und
   getrennten Leser samt alter-ID-Sperre implementieren; minimale Policy-/Contracttests,
   Anleitung und Versions-/Fähigkeitsvertrag ergänzen. Keine generische Persistenzmigration.
 - **B06.3 — Gate und Liveabnahme (ausstehend):** menschliches Gate, obige kleine
@@ -222,6 +227,6 @@ Keine breite Save-Sammlung, keine weiteren Familien oder Langzeit-Stresstests.
 
 Nutzen hoch für verständliche Zustandsdiagnose nach Reload. Entwurfsaufwand klein;
 Umsetzung vorläufig mittel (Serializer-Anbindung, klar getrennte Beobachtung,
-Schreibpfadsperre und Reload-Abnahme), mit Unsicherheit bis B06.1. Kein allgemeines
+Schreibpfadsperre und Reload-Abnahme), mit verbleibender Unsicherheit bis zum eigenen Save-Roundtrip. Kein allgemeines
 Recovery-Framework. Erfolg des Entwurfs: reviewbarer Daten-/Lebenszyklusvertrag und
 prüfbarer nächster Schritt; Erfolg der Laufzeit bleibt ausdrücklich offen.

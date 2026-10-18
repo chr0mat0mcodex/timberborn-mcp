@@ -2,16 +2,19 @@
 
 ## Aktueller Stand — 2026-10-18
 
-**B06-Entwurf abgeschlossen, keine Implementierung.**
-[Vertrag und Nachweismatrix](docs/project-reload-reconciliation-design.md): eine
-terminale Originalbaucharge, höchstens vier Teile, ein Beleg im regulären Save;
-Objektidentität und heutigen Zugang rein lesend abgleichen. Keine Wiederaufnahme.
-Öffentliche Save-Schnittstelle, Snapshot-Kohärenz und Entity-ID-Erhalt noch offen;
-B06.1 als vorgeschalteter Nachweis, B06.2/B06.3 nicht freigegeben. Nutzen hoch,
-Umsetzung vorläufig mittel mit API-Unsicherheit. Kein Code/Test/Build und kein
-Spielzugriff; Inhalts-, Diff- und Linkprüfung der Dokumentation.
-Agentenanleitung geprüft: keine neue nutzbare Fähigkeit, daher keine Änderung;
-keine projektbezogenen Spielskills vorhanden. Regeln und Laufzeit unverändert.
+**B06.1-Vorprüfung begrenzt abgeschlossen, keine Implementierung.**
+[API- und Reload-Nachweise](docs/project-reload-api-evidence.md): öffentliche
+ISaveableSingleton-/SingletonSaver-/SingletonLoader-Anbindung in installierten
+Bibliotheken bestätigt. Zwei vorhandene N10-Teile nach einem menschlichen
+Save/Reload mit identischen IDs, Vorlagen, Positionen und Fertigstatus gelesen.
+Neue Session, alte Session korrekt abgelehnt, altes Projektledger nicht vorhanden.
+MCP-Build/Katalog unverändert; Spiel am Ende pausiert, kein aktiver Lauf.
+Eigener Beleg-Roundtrip, Snapshot-Kohärenz und Ladebereitschaft nicht live bewiesen.
+B06.2 weiterhin nicht freigegeben; bei Auftrag zuerst genau diesen Stoppunkt prüfen.
+[Entwurf](docs/project-reload-reconciliation-design.md) und Backlog aktualisiert.
+Nur Metadaten-/Live-Leseprüfung, keine Builds/Tests/Installation oder Codeänderung.
+Nutzen hoch, Aufwand klein. Anleitung geprüft: keine neue nutzbare Fähigkeit,
+keine Änderung nötig; keine projektbezogenen Spielskills. Regeln unverändert.
 
 ### Vorheriger Abschluss A12/N10
 
