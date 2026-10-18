@@ -1,5 +1,232 @@
 # Backlog
 
+## Projektprüfung 2026-10-18 — abarbeitbare Befunde
+
+Prüfbasis: sauberer Arbeitsbaum auf `f52750f`, Branch
+`codex/road-protection-pilot`, lokal ohne Abstand zum vorhandenen Remote-Trackingstand.
+Bridge/Manifest 0.74.0; letzter dokumentierter Featureabschluss: automatische
+Bretterketten-Vorprüfung, 2025 Unit- und 13 Integrationstests, drei optionale
+Livefälle übersprungen. Diese Zahlen stammen aus PROJECT_STATE.md, nicht aus
+einem neuen Testlauf. Der aktuelle Spiel-/Installationszustand wurde nicht abgefragt.
+
+**Kurzurteil:** Die Schichten Mod → Bridge.Core → Native-Client → MCP sind sinnvoll.
+Gezieltes Refactoring lohnt sich bei Versionsprofilen, Werkzeugdispatch und
+lesbaren Prüfketten. Ein Komplettumbau, neuer Planer oder neue Abhängigkeiten sind
+durch diese Prüfung nicht begründet. Die folgenden Einträge sind Arbeitsvorschläge;
+dieser Audit implementiert keine Codeänderungen und erteilt keine Liveabnahme.
+
+**Prüfumfang und Grenzen:** Inventar aller 336 versionierten C#-Dateien
+(34.284 Textzeilen, einschließlich Tests), Projekt-/Paketkonfiguration,
+Start-/Gate-/Supervisor-Skripte und Dokumentationsstruktur. Vertiefte Quellprüfung
+der zentralen Transport-, Dispatch-, Versions-, Journal-, Vorprüfungs- und
+Installationspfade sowie zugehöriger Testquellen. Fachliche Planungs-/Spieladapter
+wurden über Struktur, Verträge und dokumentierte Nachweise eingeordnet; keine
+vollständige Zeilenprüfung jeder Geometrie- oder Produktionsroutine. 112 versionierte
+Markdown-Dateien auf lokale Dateilinkziele geprüft: keine fehlenden Dateien;
+Anker und externe Links dabei nicht geprüft. Keine Builds, Tests, Installation,
+Spielmutation oder externe Paket-/Schwachstellenprüfung ausgeführt. Damit ist dies
+eine breite statische Bestandsaufnahme, kein Fehlerfreiheits- oder Sicherheitszertifikat.
+Die Dateiinventur fand keine versionierten DLLs, Screenshots oder Datenbankdateien;
+das ersetzt keinen vollständigen Secret-Scan.
+
+Prioritäten: **P1** vor weiterer Arbeit mit irreführendem Projektstand beheben;
+**P2** gezielt vor der nächsten betroffenen Erweiterung bearbeiten;
+**P3** nach Bedarf. Aufwand S/M/L ist relativ, keine Zeitschätzung.
+Jeder Punkt bleibt offen, bis sein eigener Abschlussnachweis dokumentiert ist.
+Für Codeänderungen gilt unverändert das menschliche Gate mit gezieltem Livetest.
+
+### A01 — P1 / S: widersprüchliche aktuelle Einstiege bereinigen
+
+- [ ] **Befund, bestätigt:** [START_HERE.md](START_HERE.md) nennt unter
+  „Aktueller Auftrag“ noch den fehlgeschlagenen 0.67-Pilot und unter „Technischer
+  Stand“ Bridge 0.64.0. README und Einstieg nennen 1936 Tests als „Letzte Abnahme“,
+  [Kompatibilität](docs/compatibility/timberborn.md) aktuell 1931,
+  [Übergabe](docs/session-handoff.md) den Abschluss 0.50.0. Das widerspricht
+  [PROJECT_STATE.md](PROJECT_STATE.md) und dem aktuellen Code/Manifest.
+- **Arbeit:** aktuelle Köpfe korrigieren oder auf einen maßgeblichen Projektstand
+  verlinken; historische Belege ausdrücklich datieren. Auch den „aktuellen
+  Releaseabschluss 0.53.0“ im historischen missionsplan eindeutig historisieren.
+- **Abnahme:** Einstieg, README, Übergabe und Kompatibilitätskopf nennen keinen
+  überholten Auftrag als aktuell; Bridge-Version und MCP-Featurestand bleiben
+  getrennt. Inhalts-/Diff-/Linkprüfung genügt, keine Code- oder Regeländerung nötig.
+
+### A02 — P2 / M: aktive Aufgaben aus der Chronik herauslösen
+
+- [ ] **Befund, bestätigt:** Dieses Backlog hatte vor dem Audit rund 840 Zeilen.
+  Aktive Folgearbeiten, abgeschlossene Gates, damalige Fehlschläge und B-/F-Ideen
+  stehen trotz historischer Einordnung in derselben Datei. Ein Archiv existiert
+  bereits, wird für viele neuere Abschlussverläufe aber nicht genutzt.
+- **Arbeit:** abgeschlossene Verlaufsblöcke nach [BACKLOG_HISTORY.md](BACKLOG_HISTORY.md)
+  verschieben; aktive B-/F-Restumfänge, A-IDs, Zurückstellungen und Belegverweise
+  behalten. Vorhandene Ankerverweise erhalten oder alle eingehenden Links anpassen.
+  Keine erledigten Zwischenfehler durch bloßes Verschieben wieder eröffnen.
+- **Abnahme:** jede aktive Aufgabe hat Status, nächsten Schritt und Abschlusskriterium;
+  alte Gate-Aufträge erscheinen ausschließlich als Historie. Keine verlorenen
+  Belege/IDs. Nach A01, gern als gemeinsames reines Dokumentationspaket.
+
+### A03 — P2 / M: Versions- und Fähigkeitsprofile zentralisieren
+
+- [ ] **Befund, bestätigt:** `0.74.0` steht in 41 Dateien unter src/mod/tests.
+  Besonders [NativeClient.cs](src/Timberborn.Backend.Native/NativeClient.cs)
+  wiederholt lange Versionslisten für Envelope, Straßen-/Baunachweise und
+  Laufzeitfelder; [ValidationBudgetContract.cs](src/Timberborn.Backend.Native/ValidationBudgetContract.cs)
+  pflegt eine weitere Liste. Ein Versionsschritt kann dadurch einzelne
+  Pflichtprüfungen vergessen. Die Fundzahl umfasst auch berechtigte Fixtures.
+- **Arbeit:** explizite bekannte Versionsprofile mit benannten Vertragsfähigkeiten
+  einführen; erst Envelope und eine Vertragsfamilie migrieren, dann die übrigen.
+  Historische Unterschiede und unbekannte Versionen strikt erhalten; keine
+  pauschale Freigabe durch `version >= ...` und keine erfundenen Livefähigkeiten.
+- **Abnahme:** Matrix mit historischen Grenzversionen, 0.74.0 und synthetischem
+  unbekanntem Stand; fehlende Pflichtfelder werden weiterhin abgewiesen.
+  Nach Gate ein aktueller Reader-/Start-/Ablehnungspilot. Aufwand/Nutzen nach
+  der ersten migrierten Familie prüfen, bevor weitere Familien folgen.
+
+### A04 — P2 / M: Werkzeugmetadaten und Freigaben gemeinsam modellieren
+
+- [ ] **Befund, bestätigt:** [NativeTools.cs](src/Timberborn.McpServer/NativeTools.cs)
+  verbindet Katalog, Dispatch, elf Positions-Bools, Fehlerübersetzung und Logging.
+  [BridgeHttpServer.MethodAllowed](src/Timberborn.Bridge.Core/BridgeHttpServer.cs)
+  pflegt die HTTP-Freigaben separat als lange bedingte Ausdruckskette.
+  Im aktiven Räumgruppenpfad wird für die Mutationsprüfung sogar der vollständige
+  `Catalog(true,...)` einschließlich Schemagenerierung erneut aufgebaut.
+- **Arbeit:** zunächst benannte Optionsstruktur und feste Klassifikation
+  lesend/mutierend/Status/Cancel einführen; Katalogbau aus dem Aufrufpfad entfernen.
+  Danach familienweise Registrierung konsolidieren. Die native HTTP-Freigabe
+  bleibt eine eigenständige Schutzschicht, ihre Übereinstimmung wird geprüft.
+- **Abnahme:** Katalog, Handler und Opt-ins stimmen für ein-/ausgeschaltete
+  Aktionsgruppen überein; deaktivierte Mutation erreicht kein HTTP. Status/Cancel
+  während belegter Ausführung und Räumgruppenbesitz bleiben korrekt. Vorher/Nachher
+  gleiche Toolnamen, Schemas und Fehlerverträge. A03 kann unabhängig beginnen.
+
+### A05 — P2 / S–M: dicht geschriebene Fachprüfungen lesbar machen
+
+- [ ] **Befund, bestätigt:** 271 C#-Textzeilen sind länger als 300 Zeichen
+  (inklusive Beschreibungen und Tests, daher keine reine Komplexitätsmetrik).
+  NativeTools umfasst rund 34.000 Zeichen in nur 299 Zeilen; auch native
+  Vertragsprüfungen und Mod-Dispatch bündeln zahlreiche Bedingungen pro Zeile.
+- **Arbeit:** bei A03/A04 betroffene Methoden normal formatieren; Session-,
+  Identitäts-, Geometrie- und Ergebnisprüfungen in benannte kleine Prüfungen
+  zerlegen. Kein repoweiter Formatierungsdiff und keine neue Abstraktionsschicht
+  allein wegen Dateigröße. Weitere Planer erst bei konkreter Änderung anfassen.
+- **Abnahme:** vorhandene Positiv-/Negativverträge bleiben gleich; Diff trennt
+  mechanische Umformatierung und fachliche Änderung. Charakterisierung dort
+  ergänzen, wo eine verschobene Bedingung sonst ungeschützt wäre.
+
+### A06 — P2 / S: exakt das gerade gebaute Paket installieren
+
+- [ ] **Befund, bestätigt; Fehlzuordnung nicht praktisch reproduziert:**
+  [prepare-human-live-test.ps1](scripts/prepare-human-live-test.ps1) sucht nach
+  dem Build unter `.local/packages` alle `agent-bridge-*` und nimmt den neuesten
+  `LastWriteTimeUtc`. [build-native-bridge.ps1](scripts/build-native-bridge.ps1)
+  kennt den exakten eindeutigen Ausgabepfad, gibt ihn aber nicht strukturiert zurück.
+  Ein anderes Paket mit neuerem Zeitstempel kann so ausgewählt werden. Die spätere
+  Hashprüfung vergleicht nur gegen dieses bereits ausgewählte Paket.
+- **Arbeit:** konkreten Paketpfad als Rückgabewert/Artefaktmanifest übergeben;
+  Manifestversion, erwartete Dateien und Buildzuordnung vor Installation prüfen.
+  Keine Auswahl durch globale Verzeichnissortierung.
+- **Abnahme:** isolierter Skriptfall mit einem fremden, neuer datierten Paket
+  wählt trotzdem ausschließlich die aktuelle Ausgabe; Fehler vor Austausch bei
+  fehlendem/inkonsistentem Ergebnis. Anschließend menschliches Installationsgate
+  und Status-/Versionsabgleich. Sicherung und Konfigurationserhalt beibehalten.
+
+### A07 — P2 / M: ausgelieferten MCP-Stand eindeutig erkennbar machen
+
+- [ ] **Befund, bestätigt:** mehrere jüngste MCP-Fähigkeiten nutzen dieselbe
+  Bridge 0.74.0; der Supervisor meldet konstant Version `1`. Eine Bridge-Version
+  beweist daher weder aktuellen MCP-Build noch aktuellen Client-Werkzeugkatalog.
+  Das ist auch im bestehenden B12 als Erkennungsproblem vermerkt.
+- **Arbeit:** datensparsame Build-/Katalogkennung im Status/Handshake vorsehen,
+  getrennt von Bridge-API und Liveabnahme. Keine lokalen Pfade oder private
+  Metadaten. Gate-Ausgabe und installierten/betriebenen Stand damit zuordnen.
+- **Abnahme:** zwei MCP-Builds bei gleicher Bridge sind unterscheidbar;
+  veralteter Clientkatalog wird als mögliche Abweichung erkennbar. Kein
+  automatischer Neustart und keine Behauptung einer Liveabnahme aus der Kennung.
+  Mit A06 abstimmen; A03 darf nicht von einer neuen API abhängig gemacht werden.
+
+### A08 — P2 / M: direkte Mod-Adapter als eigene Nachweisgrenze behandeln
+
+- [ ] **Befund, bestätigt:** [TimberbornMcp.slnx](TimberbornMcp.slnx) und die
+  Testprojekte referenzieren die spielabhängige AgentBridge nicht; sie wird im
+  Gate separat gegen Spiel-DLLs gebaut. Die hohe Unit-Testzahl prüft damit nicht
+  unmittelbar die tatsächlichen Spielservice-Aufrufe in den Mod-Adaptern.
+  Das ist eine Architekturgrenze, kein Beleg für fehlerhafte Adapter.
+- **Arbeit:** für den nächsten geänderten Adapter die reine Entscheidung in
+  Bridge.Core halten/verschieben und einen gezielten Adapter-Livefall definieren.
+  Vorrang: Wiederherstellung temporärer Vorschau, Sessionwechsel und tatsächliche
+  Bau-/Fertigzugänge. Bestehende Tests nutzen; keine Spiel-DLLs in Fixtures ablegen.
+- **Abnahme:** dokumentierte Zuordnung „synthetisch geprüfte Policy / gegen Spiel
+  kompiliert / real beobachteter Adapterfall“ für die betroffene Familie. Keine
+  pauschale Behauptung, alle Modpfade seien durch 2025 Unit-Tests abgenommen.
+
+### A09 — P3 / M: Supervisor-Eingang begrenzen und Fehler isolieren
+
+- [ ] **Befund, bestätigt; Lastwirkung ungeprüft:**
+  [codex-mcp-supervisor.py](scripts/codex-mcp-supervisor.py), `main()`, liest
+  beliebig lange Zeilen, ruft `json.loads` ohne lokale Fehlerbehandlung auf und
+  startet für jede Nachricht mit `id` einen neuen Thread. Fehlerhaftes JSON
+  verlässt die Schleife über `finally`; viele Requests können viele Threads
+  erzeugen. Dies betrifft den lokalen stdio-Client, keinen öffentlichen Endpunkt.
+- **Arbeit:** sinnvolle Frame-/Inflightgrenzen und kontrollierte Parsefehler
+  ergänzen; Lifecycle/Cancel darf auch bei belegtem Kontingent erreichbar bleiben.
+  Keine Warteschlange mit später wiederholten Mutationen einführen.
+- **Abnahme:** synthetisch fehlerhafte Zeile, übergroßer Frame und kleine begrenzte
+  Requestserie; kontrollierte Antwort, kein unerwarteter Backendneustart,
+  Stop bleibt nutzbar. Anschließend normaler Supervisor-Lifecycle-Livefall.
+
+### A10 — P2 / S–M: Journallimits eindeutig diagnostizieren
+
+- [ ] **Befund, bestätigt:**
+  [LargeProjectLedger.Start](src/Timberborn.Bridge.Core/LargeProjectLedger.cs)
+  weist ab 128 Einträgen mit demselben `state_conflict` wie bei einem blockierenden
+  Projekt ab. Freigabe entfernt die Historie nicht. Räumgruppen haben dagegen
+  einen expliziten `cleared_group_journal_limit`. Eine lange Session kann damit
+  trotz abgeschlossener Projekte dauerhaft neue Großprojekte ablehnen.
+- **Arbeit:** Limit und verbleibende Kapazität diagnostizierbar machen, eigenen
+  Ablehnungsgrund durch die Schichten tragen. Aufbewahrung/Archivierung nur als
+  gesonderten Entwurf prüfen; alte Aktions-IDs dürfen durch Bereinigung nicht
+  wieder mutieren. Bestehenden B06-Reloadbedarf nicht mit blindem Neustart lösen.
+- **Abnahme:** Grenze 127/128/129 synthetisch, abgeschlossene/freigegebene
+  Einträge sowie identischer und geänderter Wiederaufruf. Aktionsschutz bleibt
+  erhalten; keine 128-Projekte-Liveserie nur zum Erreichen des Limits.
+
+### A11 — P3 / S: Legacy-Standard beim Direktstart klären
+
+- [ ] **Befund, bestätigt:** [Program.cs](src/Timberborn.McpServer/Program.cs)
+  wählt ohne `TIMBERBORN_BACKEND` weiterhin `more-http-api`, obwohl die native
+  Bridge die aktuelle Architektur ist. Der reguläre Supervisor setzt `native`
+  korrekt; deshalb kein Fehler im belegten Standard-Supervisorpfad.
+- **Arbeit:** Direktstart explizit als Legacy kennzeichnen oder bei fehlender
+  Backendwahl mit verständlicher Konfigurationsmeldung abbrechen. Auswahl erst
+  nach Kompatibilitätsentscheidung ändern; Legacy/Fake nicht beiläufig löschen.
+- **Abnahme:** dokumentierter Direktstart, Supervisorstart und explizite
+  Legacy-/Fake-Auswahl liefern den beabsichtigten Backendmodus; kein stiller
+  Fallback auf die Fremdmod nach einem nativen Verbindungsfehler.
+
+### A12 — P2 / M–L: bekannte Funktions- und Livegrenzen gezielt schließen
+
+- [ ] **Bestehende Restarbeit, keine neu nachgewiesenen Regressionen:** B06
+  (Reload), B03 (allgemeine Kraft-/Höhenrouten), B07 (Produktionsausbauplanung),
+  F01/F02 (vollständiger Bauphasenschutz/Umweg vor Bestandsänderung) und F04/F05
+  (Geometrien/Fraktionen) bleiben offen. Die aktuelle Bretterdiagnose ersetzt
+  keinen erfolgreichen Produktions- oder Liefernachweis.
+- **Nächste kleine Pakete:** (a) konkrete Kartengrenzen in Parameterfehlern;
+  (b) unterer Zielweg an gedrehter Bestandstreppe; (c) deterministischer Nachweis
+  unbekannter Objektidentität; (d) ein positiver Bretterproduktions-/Abtransportfall.
+  Jeweils vorhandenen Fachvertrag und aktuelle Implementierung zuerst abgleichen.
+  B06/B03/B07 erst als abgegrenzten Entwurf bewerten, nicht als Sammelrefactoring.
+- **Abnahme:** pro Paket ein Positiv- und nötiger Negativkontrollfall mit
+  vorher benanntem Erfolg/Stoppkriterium. Geometrie, Bauarbeiterzugang,
+  Fertigzugang, Netz und Betrieb getrennt belegen. Bei fehlerhafter Kontrolle
+  stoppen; keine ungezielten Zeitrennen, Save-Manipulation oder Koloniepflege.
+  Bereits akzeptierte synthetische Grenzen und abgeschlossene Cancel-Versuche
+  nicht ohne konkreten Änderungsgrund erneut aufrollen.
+
+**Empfohlene Reihenfolge:** A01/A02 als Dokumentationspaket; A06 als kleines
+Gate-Zuverlässigkeitspaket; A03 als erster Refactoringpilot; anschließend A04
+mit A05. A07/A08/A10 bei passenden Featurearbeiten; A09/A11 nach Bedarf.
+A12 wird nach gewünschter nächster Fähigkeit einzeln ausgewählt. Die laufende
+Architektur bleibt währenddessen nutzbar; kein großer Umbau vor neuen Features.
+
 ## Aktuelle Arbeit
 
 Automatische Bretterketten-Vorprüfung begrenzt live abgeschlossen.
