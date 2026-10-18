@@ -2,13 +2,14 @@
 
 ## Aktuelle Arbeit
 
-**A06 am 2026-10-18 abgeschlossen:** eindeutige Paketübergabe mit Build-ID,
-Manifest- und Datei-Prüfung. Menschliches Gate und lesender Status-Liveabgleich
-bestanden; kein offenes Gate. A01/A02 bleiben abgeschlossen.
+**A03-Pilot abgenommen — Gate und Livetest bestanden:** Envelope und Validierungsbudget
+nutzen zentrale explizite Versionsprofile. Nutzen/Aufwand positiv bewertet;
+weitere Vertragsfamilien auf Nutzerwunsch vorerst zurückgestellt.
+Gesamt-A03 bleibt offen. A01/A02/A06 bleiben abgeschlossen.
 Belege und Grenzen im [Projektstand](PROJECT_STATE.md).
 
-Nach A06 empfohlen: A03 als kleiner Refactoringpilot, anschließend A04/A05.
-Diese Folgepakete sind noch nicht gestartet. A07/A08/A10 bei passenden Featurearbeiten,
+Weitere A03-Migration nur nach neuem Auftrag; A04/A05 sind noch nicht
+gestartet. A07/A08/A10 bei passenden Featurearbeiten,
 A09/A11 nach Bedarf; A12 nach gewünschter Fähigkeit einzeln auswählen.
 
 ## Projektprüfung 2026-10-18 — abarbeitbare Befunde
@@ -17,17 +18,28 @@ Prüfbasis und vollständiger Audit: [Archivstand](BACKLOG_HISTORY.md#archivstan
 Ergebnis: gezieltes Refactoring von Versionsprofilen, Werkzeugdispatch und
 Prüfketten sinnvoll; kein belegter Bedarf für einen Komplettumbau.
 Der ursprüngliche Audit war statisch. A06 ist inzwischen **abgeschlossen**;
-die übrigen A03–A12 sind **offen**. P2 = vor der nächsten betroffenen Erweiterung, P3 = nach Bedarf;
+A03 ist **teilweise abgeschlossen**, A04/A05 und A07–A12 sind **offen**.
+P2 = vor der nächsten betroffenen Erweiterung, P3 = nach Bedarf;
 S/M/L sind relative Aufwandsschätzungen. Codeänderungen benötigen weiterhin
 das [menschliche Gate und den gezielten Livetest](DEVELOPMENT_WORKFLOW.md).
 
 ### A03 — P2 / M: Versions- und Fähigkeitsprofile zentralisieren
 
-- [ ] **Befund, bestätigt:** `0.74.0` steht in 41 Dateien unter src/mod/tests.
+- [x] **Pilot abgenommen (2026-10-18):** `BridgeVersionProfiles` enthält exakt
+  die bisherigen 102 Envelope-Versionen: 58 mit Legacy-, 44 mit erweitertem
+  Validierungsbudget. Nur Envelope und `ValidationBudgetContract` migriert.
+  Unbekannte Versionen bleiben im Envelope gesperrt; der eigenständig aufgerufene
+  Budgethelfer behält seinen bisherigen Legacy-Fallback. 121 neue Matrix-/Negativfälle
+  im menschlichen Gate bestanden; gezielter Reader-/Budget-/Lauf-/Ablehnungspilot
+  live bestanden. [Belege und Bewertung](docs/compatibility/timberborn.md#a03-pilot--zentrale-wire-vertragsprofile).
+  Kleine Zentralisierung sinnvoll; historische Testmatrix als wesentlicher Zusatzaufwand.
+  Gesamt-A03 bleibt offen; weitere Familien auf Nutzerwunsch vorerst zurückgestellt.
+- [ ] **Restarbeit; Befund zum Auditzeitpunkt:** `0.74.0` stand in 41 Dateien unter src/mod/tests.
   Besonders [NativeClient.cs](src/Timberborn.Backend.Native/NativeClient.cs)
-  wiederholt lange Versionslisten für Envelope, Straßen-/Baunachweise und
+  wiederholte lange Versionslisten für Envelope, Straßen-/Baunachweise und
   Laufzeitfelder; [ValidationBudgetContract.cs](src/Timberborn.Backend.Native/ValidationBudgetContract.cs)
-  pflegt eine weitere Liste. Ein Versionsschritt kann dadurch einzelne
+  pflegte eine weitere Liste. Envelope/Budget sind jetzt zentralisiert,
+  Straßen-/Baunachweise und Laufzeitfelder bleiben Restarbeit. Ein Versionsschritt kann dadurch einzelne
   Pflichtprüfungen vergessen. Die Fundzahl umfasst auch berechtigte Fixtures.
 - **Arbeit:** explizite bekannte Versionsprofile mit benannten Vertragsfähigkeiten
   einführen; erst Envelope und eine Vertragsfamilie migrieren, dann die übrigen.

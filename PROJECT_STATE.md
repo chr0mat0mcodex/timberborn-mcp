@@ -2,8 +2,30 @@
 
 ## Aktueller Stand — 2026-10-18
 
-Bridge/Manifest **0.74.0**; jüngste MCP-Implementierung `f52750f`:
+Bridge/Manifest **0.74.0**; letzter neuer Funktionsumfang in `f52750f`:
 automatische Bretterketten-Vorprüfung, begrenzt live abgenommen.
+**A03-Pilot abgenommen — menschliches Gate und gezielter Livetest bestanden.**
+Zentrale explizite Wire-Vertragsprofile für Envelope und Validierungsbudget;
+102 bekannte Versionen unverändert, davon 58 Legacy-/44 erweiterte Budgetprofile.
+Keine neue Bridge-Version oder Abhängigkeit; weitere Vertragsfamilien unverändert.
+Gate: 13 Paket-, 28 Supervisor-, 2146 Unit- und 13 Integrationstests bestanden,
+drei optionale Livefälle übersprungen; Release-Builds ohne Fehler und fünf
+installierte Paketdateien per SHA-256 bestätigt. Die 121 neuen Matrix-/Negativfälle
+sichern historische Versionen, Budgetgrenzen und Envelope-Pflichtfelder ab.
+Live nach Supervisor-Wiederanschluss: native Bridge 0.74.0 erreichbar;
+Karten-/Simulationsreader erfolgreich, Vorschau mit `attemptsRemaining=999999`,
+Restaurierung bestätigt und keine reguläre Baufreigabe aus dem Budget abgeleitet.
+Kurzlauf über 0,25 Spielstunden terminal erfolgreich, frische Pause bestätigt;
+falsche Session mit `stale_session` abgewiesen. Kein Bauauftrag.
+[Belege, Grenzen und Nutzen/Aufwand](docs/compatibility/timberborn.md#a03-pilot--zentrale-wire-vertragsprofile).
+Bewertung: kleine, sinnvolle Zentralisierung zweier bisher getrennter Listen;
+Testmatrix ist der wesentliche Zusatzaufwand. Gesamt-A03 bleibt offen,
+weitere Vertragsfamilien auf Nutzerwunsch vorerst zurückgestellt. Kein Gate offen.
+Agenten-Spielanleitung geprüft: keine Änderung, weil Werkzeugvertrag und
+Spielverhalten unverändert sind; keine projektbezogenen Spielskills vorhanden.
+
+### Letzter abgenommener Infrastrukturabschluss
+
 **A06 abgeschlossen — Gate und Status-Liveabgleich am 2026-10-18 bestanden.**
 Paketbuild liefert Build-ID, konkreten Pfad und fünf SHA-256-Werte separat von
 Diagnoseausgaben. Gate prüft Manifest/Zuordnung vor Installation und die
@@ -21,7 +43,7 @@ Bridge 0.74.0, aktuelle native Session und keine Simulation der Daten.
 Keine Spielmutation und kein erneuter Agent-Build/Test/Deploy erforderlich.
 Grenze: Fehlerfälle synthetisch geprüft; realer Paket-/Installationspfad und
 Wiederanschluss bestätigt, keine zusätzliche Spiel-Funktionsabnahme behauptet.
-Kein offenes Gate; A03 und weitere Folgepakete noch nicht begonnen.
+Zum A06-Abschluss war kein Gate offen; der aktuelle A03-Pilot steht oben.
 
 Dokumentationspaket A01/A02 abgeschlossen:
 aktuelle Einstiege vereinheitlicht, offene Aufgaben im [Backlog](BACKLOG.md),

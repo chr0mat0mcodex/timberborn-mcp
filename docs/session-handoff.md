@@ -4,8 +4,10 @@
 
 Aktueller Featurestand, letzte Gatezahlen und Nachweise: [Projektstand](../PROJECT_STATE.md).
 Bridge 0.74.0; jüngster fachlicher Abschluss ist die automatische Bretterketten-
-Vorprüfung. A01/A02 und A06 (eindeutige Paketübergabe) abgeschlossen; menschliches
-Gate und Status-Liveabgleich bestanden. Kein offenes Gate. Belege im Projektstand.
+Vorprüfung. A01/A02/A06 abgeschlossen; A03-Pilot (Envelope und Validierungsbudget)
+nach menschlichem Gate gezielt live abgenommen. Kein Gate offen; Belege und
+Nutzen-/Aufwandsbewertung im Projektstand. Weitere Vertragsfamilien auf Nutzerwunsch
+vorerst zurückgestellt; Gesamt-A03 bleibt offen.
 [Offene Arbeit](../BACKLOG.md) · [Lifecycle und Gate](../DEVELOPMENT_WORKFLOW.md).
 Git-Status und Laufzeitstand separat prüfen. Die folgenden Übergaben sind
 historisch und enthalten keine heute offenen Gate-Aufträge.

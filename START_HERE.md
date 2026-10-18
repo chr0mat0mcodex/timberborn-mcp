@@ -15,9 +15,10 @@ Laufzeitstand und Session werden beim regulären Wiederanschluss frisch gelesen.
 
 ## Aktueller Auftrag
 
-A01/A02 und **A06 am 2026-10-18 abgeschlossen**: eindeutige Paketauswahl im
-Test-Gate, menschliches Gate und Status-Liveabgleich bestanden. Kein offenes Gate.
-Details und Nachweise im Projektstand. Weitere Pakete stehen im
+**A03-Pilot abgenommen:** zentrale Versionsprofile für Envelope und
+Validierungsbudget; Gate und Livetest bestanden. A01/A02/A06 abgeschlossen.
+Weitere Vertragsfamilien vorerst zurückgestellt; Gesamt-A03 bleibt offen.
+Belege und Nutzen-/Aufwandsbewertung im Projektstand. Weitere Pakete stehen im
 [Backlog](BACKLOG.md); historische Gate-/Kolonieaufträge werden nicht fortgesetzt.
 
 ## Maßgebliche Arbeitsweise

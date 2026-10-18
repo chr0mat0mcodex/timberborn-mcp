@@ -6,6 +6,64 @@ Abnahmegrenzen: [Projektstand](../../PROJECT_STATE.md).
 Die folgenden historischen Einzelpiloten sind keine pauschale Freigabe weiterer
 Fraktionen, Karten oder Spielversionen. Offene Nachweise stehen im [Backlog](../../BACKLOG.md).
 
+## A03-Pilot — zentrale Wire-Vertragsprofile
+
+Stand 2026-10-18: menschliches Gate und gezielter Livetest bestanden. Bridge bleibt 0.74.0. Betroffen sind ausschließlich
+[Envelope-Zulassung](../../src/Timberborn.Backend.Native/NativeClient.cs) und
+[Validierungsbudget](../../src/Timberborn.Backend.Native/ValidationBudgetContract.cs).
+
+[BridgeVersionProfiles](../../src/Timberborn.Backend.Native/BridgeVersionProfiles.cs)
+ordnet jede der bisher zugelassenen 102 Versionszeichenketten genau einem
+unveränderlichen Profil zu: 58 Legacyversionen, 44 mit erweitertem Budget ab
+dem expliziten Eintrag 0.35.1. Keine numerische Bereichsfreigabe: unbekannte
+Patch-/Zukunftsversionen liefern kein Profil und scheitern im Envelope.
+Schema, Session, Zeitstempel und Nutzdaten bleiben unverändert verpflichtend.
+Der eigenständige Budgethelfer behält für unbekannte Versionen seinen bisherigen
+Legacy-Fallback; dieser ist keine Zulassung zum nativen Client.
+Ein Profil beschreibt erwartete Transportverträge, keine Fraktions-, Geometrie-,
+Ausführungs- oder Livefreigabe. Die getrennten spielseitigen Fähigkeitsberichte,
+Straßen-/Bauzugangs- und Laufzeitverträge werden im Pilot nicht migriert.
+
+Bestandener Gate-Nachweis: 102 unabhängig festgehaltene historische Versionen
+über einen synthetischen HTTP-Reader und Budgetgrenzen 7/15/255, dazu unbekannte
+Versionen (einschließlich 99.0.0) und fehlende/ungültige Envelopefelder: insgesamt
+121 neue Fälle. Bestehende Validierungstests prüfen weiterhin, dass ein passender
+Budgetzähler keine reguläre Baufreigabe erzeugt. Kein Agent-Test-/Buildlauf.
+
+Gate insgesamt: 13 Paket-, 28 Supervisor-, 2146 Unit- und 13 Integrationstests
+bestanden; drei optionale Livefälle übersprungen. Release-Builds ohne Fehler;
+fünf installierte Paketdateien per SHA-256 bestätigt.
+
+Gezielter Livepilot am 2026-10-18 nach menschlichem Gate und `live bereit` bestanden:
+
+1. Verbundener Supervisor: `running=true`, `gate=false`; native Bridge 0.74.0
+   erreichbar, aktuelle Session bestätigt. Karten- und Simulationsreader erfolgreich.
+2. Frisch vorgeprüfte Wegvorschau: `gameValidated=true`, `valid=true`,
+   `attemptsRemaining=999999`, `noPersistentChangeObserved=true`, Restaurierung
+   bestätigt, keine verlorene geprüfte Verbindung. Zugangsschutz bleibt `unknown`
+   und `regularExecutionAllowed=false`: Budgetannahme erweitert keine Baufreigabe.
+   Kein Bauauftrag erzeugt.
+3. Einmaliger Lauf über 0,25 Spielstunden bei Tempo 7, maximal 30 Echtzeitsekunden:
+   `completed/target_reached`, kein Zeitüberschuss, `pauseConfirmed=true`.
+   Frische Rücklesung: Tempo 0, kein aktiver Lauf und kein ausstehendes Tempo.
+4. Lesende Laufabfrage mit absichtlich falscher Session: `stale_session`, nicht
+   wiederholbar. Keine Wiederholung des Starts.
+
+Grenze: Live ist der aktuelle Stand 0.74.0 geprüft. Historische Versionen und
+fehlende/ungültige Envelopefelder sind synthetisch geprüft; keine zusätzliche
+Geometrie-, Zugangs-, Fraktions- oder allgemeine Bauabnahme.
+
+**Nutzen/Aufwand:** Der kleine Pilot ist sinnvoll. Zwei getrennte Produktionslisten
+werden durch eine explizite Zuordnung ersetzt; 102 bisherige Versionsentscheidungen
+und beide Budgetprofile bleiben erhalten. Produktionsumfang: eine kleine Profildatei
+und zwei ersetzte Entscheidungsstellen, ohne neue Abhängigkeit oder Bridge-API.
+Der wesentliche Zusatzaufwand liegt in der unabhängigen historischen Testmatrix
+(121 Fälle) sowie einem regulären Gate und dem begrenzten Livepilot. Kein belegter
+Laufzeitgewinn behauptet; der Nutzen ist weniger doppelte Versionspflege und
+bessere Absicherung gegen versehentliche Vertragsänderungen.
+Gesamt-A03 bleibt offen. Weitere Vertragsfamilien auf ausdrücklichen Nutzerwunsch
+vorerst zurückgestellt; dieser Abschluss löst keine weitere Migration aus.
+
 ## Historischer Journalabschluss 0.74.0
 
 Historischer Journalabschluss: **Bridge 0.74.0**, zusätzlich MCP-/Supervisor-Journalkorrekturen in `c09750f`; keine neue Bridge-API. Gate: 23 Supervisor-, 1931 Unit-, 13 Integrationstests bestanden, drei optionale Live-Integrationstests übersprungen.
