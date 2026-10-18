@@ -15,6 +15,10 @@ Laufzeitstand und Session werden beim regulären Wiederanschluss frisch gelesen.
 
 ## Aktueller Auftrag
 
+**B06 auf Nutzerwunsch vorerst zurückgestellt (2026-10-18).**
+Entwurf und B06.1-Nachweise bleiben erhalten. B06.2/B06.3 nicht beginnen;
+Wiederaufnahme nur auf neuen ausdrücklichen Auftrag. Kein Folgepaket gestartet.
+
 **B06.1 begrenzt geprüft; eigentlicher Pilot nicht implementiert.**
 [Öffentliche Save-API und Objekt-IDs nach Reload](docs/project-reload-api-evidence.md)
 belegt. Eigener Beleg-Roundtrip und Ladebereitschaft bleiben erster Stoppunkt einer

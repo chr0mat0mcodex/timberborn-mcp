@@ -1,6 +1,8 @@
 # B06 — Reload-Abgleich einer Baucharge: Entwurf
 
-Stand 2026-10-18. **Nur Entwurf, nicht implementiert und nicht live abgenommen.**
+Stand 2026-10-18. **Auf Nutzerwunsch vorerst zurückgestellt.**
+Nur Entwurf, nicht implementiert und nicht live abgenommen. Wiederaufnahme nur
+auf neuen ausdrücklichen Auftrag; B06.1-Nachweise bleiben erhalten.
 B06.1 inzwischen gezielt geprüft: [öffentliche API und zwei erhaltene Objekt-IDs](project-reload-api-evidence.md).
 Eigener Beleg-Roundtrip, Ladebereitschaft und Kohärenz bleiben offene Pilotnachweise.
 

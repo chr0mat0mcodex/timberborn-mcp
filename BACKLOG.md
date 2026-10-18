@@ -2,6 +2,10 @@
 
 ## Aktuelle Arbeit
 
+**B06 auf Nutzerwunsch vorerst zurückgestellt (2026-10-18).**
+Entwurf und B06.1-Nachweise bleiben erhalten. B06.2/B06.3 nicht beginnen;
+Wiederaufnahme nur auf neuen ausdrücklichen Auftrag. Kein Folgepaket gestartet.
+
 **B06.1-Vorprüfung begrenzt abgeschlossen; B06.2 nicht freigegeben.**
 [Öffentliche Save-API und Reload-Belege](docs/project-reload-api-evidence.md):
 Singleton-Speicherung/-Laden öffentlich vorhanden. Zwei vorhandene Teile behalten
@@ -31,10 +35,9 @@ Implementierungsfreigabe. Kein Sammelauftrag für die gesamten B-/F-Familien.
 
 | Reihenfolge | Paket | Nutzen / Aufwand | Kleinster sinnvoller Umfang | Abschluss / Stopp |
 | --- | --- | --- | --- | --- |
-| 1 | **B06.2 — zuerst minimaler Save-Roundtrip, gesondertes Go nötig** | Hoch / vorläufig M; öffentliche API und zwei stabile IDs bereits belegt. | Eigene minimale Belegdaten regulär speichern/laden, Ladebereitschaft und Kohärenz nachweisen; danach maximal vier Teile/ein Beleg, lesender Abgleich und alte-ID-Sperre gemäß [Entwurf](docs/project-reload-reconciliation-design.md). | Bei Serializer-/Zuordnungsfehler stoppen, kein voller Pilot vor belastbarem Roundtrip. Noch keine Implementierungsfreigabe; Code über menschliches Gate und Liveabnahme. |
-| 2 | **F02 mit engem F01-Anteil — fertiger Ersatzumweg vor Bestandsänderung** | Hoch / M; schließt eine funktionale Lücke beim kontrollierten Umbau. | Ein kurzer ebener Umweg für genau eine Bestandsverbindung. Ersatz bauen, reale Nutzbarkeit bestätigen, erst danach den abhängigen Eingriff prüfen und ausführen. | Positiv: Verbindung vor und nach Eingriff belegt. Negativ: unfertiger/unterbrochener Ersatz erlaubt keinen abhängigen Eingriff. Bauarbeiter-, Bestands- und Fertigzugang getrennt; bei unknown stoppen. Keine allgemeinen Höhen-/Kraftrouten oder globale Reservierungsarchitektur. |
+| 1 | **F02 mit engem F01-Anteil — fertiger Ersatzumweg vor Bestandsänderung** | Hoch / M; schließt eine funktionale Lücke beim kontrollierten Umbau. | Ein kurzer ebener Umweg für genau eine Bestandsverbindung. Ersatz bauen, reale Nutzbarkeit bestätigen, erst danach den abhängigen Eingriff prüfen und ausführen. | Positiv: Verbindung vor und nach Eingriff belegt. Negativ: unfertiger/unterbrochener Ersatz erlaubt keinen abhängigen Eingriff. Bauarbeiter-, Bestands- und Fertigzugang getrennt; bei unknown stoppen. Keine allgemeinen Höhen-/Kraftrouten oder globale Reservierungsarchitektur. |
 
-**Nächster Vorschlag:** B06.2 mit vorgeschaltetem Save-Roundtrip gesondert beauftragen; noch keine Umsetzung.
+**B06 ist aus der nächsten Reihenfolge genommen.** F02 bleibt lediglich ein Vorschlag; kein neuer Auftrag erteilt.
 N10 benötigt keine weitere unveränderte Messserie. Falls eine exakte Lieferaussage
 benötigt wird: schmalen Telemetrieentwurf für eine Warenübergabe mit Quelle, Ziel,
 Gut, Menge und Session erstellen; zunächst öffentliche Spielereignisse prüfen.
@@ -343,7 +346,7 @@ Implementierungsfreigabe; größere Entwürfe zuerst konkret abgrenzen.
 | B03 — teiloffen | Allgemeine Kraft-/Höhenrouten und alternative Versorgungslayouts begrenzen, vorhandene Ports/Netze nutzen. | Geometrie, reale Netzverbindung und Produktion separat an Positiv-/Negativroute belegt. |
 | B04 — teiloffen | Mehrere/größere Räumflächen auf Basis der abgenommenen 8×8-Einzelfläche planen. | Mehrflächenpilot ohne Verlust unbestätigter Aufträge; Rohstoffstapel erhalten. |
 | B05 — teiloffen | Wachstum/Aquakultur getrennt vom abgenommenen Sammelpflanzen nachweisen. | Nativer Pflanzen-/Wachstumszustand im definierten Zeitfenster belegt, Markierung allein zählt nicht. |
-| B06 — Entwurf/B06.1-Vorprüfung fertig, Umsetzung offen | [Ein Beleg für eine terminale Baucharge](docs/project-reload-reconciliation-design.md), maximal vier Teile; savegebunden und rein lesend. | B06.1: [öffentliche API und zwei erhaltene Objekt-IDs belegt](docs/project-reload-api-evidence.md). B06.2: erst eigener Save-Roundtrip, dann separat freigegebener Pilot. B06.3: Gate und kleiner Reload-Livetest einschließlich fehlend/unbekannt und Wiederaufruf ohne Replay. Noch nichts implementiert. |
+| B06 — vorerst zurückgestellt; Entwurf/B06.1 erhalten | [Ein Beleg für eine terminale Baucharge](docs/project-reload-reconciliation-design.md), maximal vier Teile; savegebunden und rein lesend. | B06.1: [öffentliche API und zwei erhaltene Objekt-IDs belegt](docs/project-reload-api-evidence.md). B06.2: erst eigener Save-Roundtrip, dann separat freigegebener Pilot. B06.3: Gate und kleiner Reload-Livetest einschließlich fehlend/unbekannt und Wiederaufruf ohne Replay. Noch nichts implementiert. |
 | B07 — teiloffen | Aus Bretterdiagnose einen begrenzten Ausbauplan für Zutaten, Lager/Transport, Personal und Kraft ableiten; gemeinsame Versorgung mit Pumpe/Sammler/Holzfäller als weiteres Teilpaket. | Vor Bau Kosten inklusive Hilfen; anschließend Förderung/Sammlung/Produktion und Lieferung getrennt belegt. Keine Materialsperre. |
 | B08 — teiloffen | Weitere Produzenten und reale Wirkungszellen etwa des Bienenstocks wählen. | Produktionszyklus bzw. tatsächliches Effektziel belegt; Reichweite allein genügt nicht. |
 | B09 — teiloffen | Forschungsereignisse ins Änderungsjournal aufnehmen. | Forschungswechsel, Wiederlesen und Sessionwechsel geprüft; unbekannte Verursacher bleiben unbekannt. |

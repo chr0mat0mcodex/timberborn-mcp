@@ -2,6 +2,10 @@
 
 ## Aktueller Stand — 2026-10-18
 
+**B06 auf Nutzerwunsch vorerst zurückgestellt (2026-10-18).**
+Entwurf und B06.1-Nachweise bleiben erhalten. B06.2/B06.3 nicht beginnen;
+Wiederaufnahme nur auf neuen ausdrücklichen Auftrag. Kein Folgepaket gestartet.
+
 **B06.1-Vorprüfung begrenzt abgeschlossen, keine Implementierung.**
 [API- und Reload-Nachweise](docs/project-reload-api-evidence.md): öffentliche
 ISaveableSingleton-/SingletonSaver-/SingletonLoader-Anbindung in installierten

@@ -2,6 +2,10 @@
 
 ## Aktueller Einstieg
 
+**B06 auf Nutzerwunsch vorerst zurückgestellt (2026-10-18).**
+Entwurf und B06.1-Nachweise bleiben erhalten. B06.2/B06.3 nicht beginnen;
+Wiederaufnahme nur auf neuen ausdrücklichen Auftrag. Kein Folgepaket gestartet.
+
 **B06.1-Vorprüfung abgeschlossen; B06.2 noch nicht freigegeben.**
 [API-/Reloadbelege](project-reload-api-evidence.md): öffentliche Save-Anbindung
 konkret geprüft, zwei IDs nach menschlichem Save/Reload erhalten. Neue Session,
