@@ -3,6 +3,7 @@ namespace Timberborn.McpServer;
 public static class ProjectStartOutcome
 {
     public static string Describe(string? code) => "Kein neuer Bauauftrag durch diesen Start. " + (code switch {
+        "large_project_journal_limit" => "Manuelles Großprojektjournal voll (128 Einträge). Freigabe schafft keinen Platz; alte Aktions-IDs bleiben geschützt. Kein automatisches Neuladen.",
         "project_start_plan_changed" => "Plan oder Ausgangszustand verändert; frisch prüfen und neu planen.",
         "project_start_ineligible" => "Frische Bauprüfung erlaubt den Plan nicht.",
         "project_start_busy" => "Eine andere Großprojektcharge läuft noch.",

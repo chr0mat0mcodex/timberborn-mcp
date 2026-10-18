@@ -2,6 +2,24 @@
 
 ## Aktueller Stand — 2026-10-18
 
+**A10-Pilot abgenommen — Gate und lesender Livebeleg bestanden.**
+Manuelles Großprojektjournal: eigener Limitcode und additive Kapazitätsdiagnose
+in Plan-/Projektbelegen. Historie, Replay-Schutz und Limit 128 bleiben erhalten.
+Gate: 13 Paket-, 35 Supervisor-, 2239 Unit- und 14 Integrationstests bestanden;
+drei optionale Livefälle übersprungen. Alle 18 neuen Fälle bestanden; Release-
+Builds ohne Warnungen/Fehler, fünf installierte Dateien per SHA-256 bestätigt.
+Live: MCP-Kennung gleich Gate, Full-/Compact-Plan mit identischer manueller
+Kapazität (128/0/128, Freigabe schafft keinen Platz), stabiler planKey und Zähler.
+Vorschau restauriert; kein Bauauftrag. Planzugang blieb getrennt davon gesperrt.
+Grenzfälle/Freigabe/Replay und Limitfehlertransport synthetisch geprüft.
+Nutzen/Aufwand positiv: klare Diagnose bei kleinem, auf ein Journal begrenztem
+Eingriff. [Nachweise und Bewertung](docs/manual-project-journal-pilot.md).
+Bridge/API 0.74.0. Kein Gate offen. Anleitung mit Abnahme aktualisiert;
+keine projektbezogenen Spielskills vorhanden. Andere Journale und Aufbewahrungs-
+änderungen zurückgestellt; Gesamt-A10 teilweise offen.
+
+### Vorheriger Abschluss A09
+
 **A09-Eingangspilot abgenommen — Gate und Lifecycle-Livefall bestanden.**
 Supervisor begrenzt Clientzeilen auf 1 MiB und isoliert Parse-/Formfehler vor
 Dispatch; übergroße Frames werden vollständig verworfen, ohne Replay/Neustart.
@@ -14,7 +32,7 @@ und nativer Status mit gleicher Session und MCP-Kennung bestanden. Kein Spielauf
 Nutzen/Aufwand positiv: Fehlerisolierung und begrenzte rohe Eingabe bei kleinem
 Codeumfang. Inflight-/Threadgrenzen und Eingangstimeouts bleiben offen.
 [Nachweise, Bewertung und Grenzen](docs/supervisor-input-pilot.md).
-Bridge/API unverändert 0.74.0. Kein Gate offen. Supervisor-Doku und Spielanleitung
+Bridge/API unverändert 0.74.0. Zum A09-Abschluss kein Gate offen. Supervisor-Doku und Spielanleitung
 mit tatsächlicher Abnahme aktualisiert; keine projektbezogenen Spielskills vorhanden.
 Gesamt-A09 teilweise offen; weitere Erweiterungen auf Nutzerwunsch zurückgestellt.
 

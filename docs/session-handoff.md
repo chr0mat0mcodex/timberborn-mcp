@@ -3,12 +3,12 @@
 ## Aktueller Einstieg
 
 Aktueller Featurestand, letzte Gatezahlen und Nachweise: [Projektstand](../PROJECT_STATE.md).
-Bridge 0.74.0; **A09-Eingangspilot abgenommen, kein Gate offen**.
-35 Supervisor-Tests einschließlich sieben neuer Eingangstests bestanden.
-Nach vollständigem Codex-Neustart verbundener Stop/Status/Start-Livefall mit
-unveränderter Spielsitzung bestanden. [Belege/Bewertung](supervisor-input-pilot.md).
-Inflight-/Threadlimits und Eingangstimeouts bleiben zurückgestellt.
-A03/A04/A05/A07/A08-Piloten abgenommen; weitere Migrationen zurückgestellt.
+Bridge 0.74.0; **A10-Pilot abgenommen, kein Gate offen**.
+Manuelles Großprojektjournal diagnostiziert Limit und Restkapazität eindeutig;
+keine Bereinigung oder neuen Limits. Gate und Full-/Compact-Planbeleg bestanden;
+Kapazität/planKey stabil, Grenzfälle und Fehlertransport synthetisch geprüft.
+[Umfang und Abnahme](manual-project-journal-pilot.md). Andere Journale unverändert.
+A03/A04/A05/A07/A08/A09-Piloten abgenommen; weitere Erweiterungen zurückgestellt.
 [Offene Arbeit](../BACKLOG.md) · [Lifecycle und Gate](../DEVELOPMENT_WORKFLOW.md).
 Git-Status und Laufzeitstand separat prüfen. Die folgenden Übergaben sind
 historisch und enthalten keine heute offenen Gate-Aufträge.

@@ -2,13 +2,12 @@
 
 ## Aktuelle Arbeit
 
-**A09-Eingangspilot abgenommen — Gate und Lifecycle-Livefall bestanden:**
-1-MiB-Zeilenlimit, kontrollierte Parse-/Formfehler und vollständiges Verwerfen
-übergroßer Frames. [Nachweise und Bewertung](docs/supervisor-input-pilot.md).
-Inflight-Limits/Timeouts bleiben offen; weitere Erweiterungen zurückgestellt.
-A03/A04/A05/A07/A08-Piloten abgenommen; weitere Migrationen zurückgestellt.
-A01/A02/A06 abgeschlossen. A10–A12 noch nicht begonnen.
-[Projektstand](PROJECT_STATE.md).
+**A10-Pilot abgenommen — Gate und lesender Livebeleg bestanden:** eigener
+Limitcode und Kapazitätsdiagnose für das manuelle Großprojektjournal.
+[Nachweise/Bewertung](docs/manual-project-journal-pilot.md). Weitere Journale und
+Aufbewahrungsänderungen zurückgestellt; Gesamt-A10 teilweise offen.
+A03/A04/A05/A07/A08/A09-Piloten abgenommen; weitere Erweiterungen zurückgestellt.
+A01/A02/A06 abgeschlossen. A11/A12 noch nicht begonnen. [Projektstand](PROJECT_STATE.md).
 
 ## Projektprüfung 2026-10-18 — abarbeitbare Befunde
 
@@ -16,7 +15,7 @@ Prüfbasis und vollständiger Audit: [Archivstand](BACKLOG_HISTORY.md#archivstan
 Ergebnis: gezieltes Refactoring von Versionsprofilen, Werkzeugdispatch und
 Prüfketten sinnvoll; kein belegter Bedarf für einen Komplettumbau.
 Der ursprüngliche Audit war statisch. A06 ist inzwischen **abgeschlossen**;
-A03 ist **teilweise abgeschlossen**, A04 **teilweise abgeschlossen**; A05 ist **teilweise abgeschlossen**, A07 ist **teilweise abgeschlossen**, A08 ist **teilweise abgeschlossen**, A09 ist **teilweise abgeschlossen**, A10–A12 sind **offen**.
+A03 ist **teilweise abgeschlossen**, A04 **teilweise abgeschlossen**; A05 ist **teilweise abgeschlossen**, A07 ist **teilweise abgeschlossen**, A08 ist **teilweise abgeschlossen**, A09 ist **teilweise abgeschlossen**, A10 ist **teilweise abgeschlossen**, A11/A12 sind **offen**.
 P2 = vor der nächsten betroffenen Erweiterung, P3 = nach Bedarf;
 S/M/L sind relative Aufwandsschätzungen. Codeänderungen benötigen weiterhin
 das [menschliche Gate und den gezielten Livetest](DEVELOPMENT_WORKFLOW.md).
@@ -159,6 +158,13 @@ das [menschliche Gate und den gezielten Livetest](DEVELOPMENT_WORKFLOW.md).
   Stop bleibt nutzbar. Anschließend normaler Supervisor-Lifecycle-Livefall.
 
 ### A10 — P2 / S–M: Journallimits eindeutig diagnostizieren
+
+- [x] **Pilot abgenommen (2026-10-18):** manuelles Großprojektjournal mit
+  `large_project_journal_limit` und `manualJournal` (128/count/remaining).
+  Replay vor Kapazitätsprüfung, Freigabe ohne Historienlöschung. 18 neue Fälle
+  im Gate bestanden; Full-/Compact-Plan live mit stabiler Kapazität und planKey.
+  Nutzen/Aufwand positiv. [Umfang](docs/manual-project-journal-pilot.md).
+  Andere Journale und Aufbewahrungsänderungen nicht Teil des Piloten.
 
 - [ ] **Befund, bestätigt:**
   [LargeProjectLedger.Start](src/Timberborn.Bridge.Core/LargeProjectLedger.cs)

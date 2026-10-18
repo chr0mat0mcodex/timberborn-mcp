@@ -3,6 +3,9 @@ namespace Timberborn.Bridge.Core;
 // The first dispatch submits every part; subsequent ticks only observe. No observation dispatches.
 public sealed class LargeProjectLedger
 {
+    public const int Capacity = 128;
+    public int Count => entries.Count;
+    public int Remaining => Capacity - Count;
     public sealed class Receipt
     {
         public string ActionId { get; set; } = "";
@@ -36,7 +39,8 @@ public sealed class LargeProjectLedger
     public Receipt Start(string id, string key, string fingerprint, int[] order, string[] entityIds)
     {
         var old = Existing(id, fingerprint); if (old is not null) return old;
-        if (entries.Count >= 128 || entries.Values.Any(e =>
+        if (entries.Count >= Capacity) throw new BridgeRejectionException("large_project_journal_limit");
+        if (entries.Values.Any(e =>
             !e.Result.Released && e.Result.State != "completed" &&
             !(e.Result.State == "stopped" && e.Result.Reason == "stop_requested_objects_retained" && !e.PlacementAttempted)))
             throw new BridgeRejectionException("state_conflict");

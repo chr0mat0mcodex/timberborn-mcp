@@ -1,5 +1,17 @@
 # Spielanleitung für Agenten
 
+## A10: manuelles Projektjournal (Gate und lesender Livebeleg bestanden)
+
+`manualJournal` in Plan-/manuellen Projektbelegen zeigt ausschließlich das manuelle
+Großprojektjournal: Limit 128, Belegung und Restkapazität. Freigabe schafft keinen
+Platz; alte Aktions-IDs bleiben geschützt. Fehlendes Feld bedeutet unbekannt.
+`large_project_journal_limit` beim manuellen Start bedeutet keinen neuen Auftrag;
+kein automatisches Retry oder Neuladen. Kapazität ist keine Baufreigabe.
+Full-/Compact-Plan live mit stabilen Zählern geprüft. Volles Journal und ID-Schutz
+sind synthetisch geprüft; keine vollständige Live-Grenzserie.
+[Vertrag und Nachweise](manual-project-journal-pilot.md).
+
+
 ## A09-Eingangspilot (Gate und Lifecycle-Liveabnahme bestanden)
 
 Clientzeilen maximal 1 MiB inklusive Zeilenende. Fehlerhafte oder übergroße

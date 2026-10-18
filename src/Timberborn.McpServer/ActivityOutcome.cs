@@ -32,6 +32,9 @@ public static class ActivityOutcome
             Text(result["error"],"execution")=="not_executed" &&
             Timberborn.Bridge.Core.LargeProjectStartPolicy.IsPreDispatchCode(Text(result["error"],"code")))
             return ProjectStartOutcome.Describe(Text(result["error"],"code"));
+        if(name == "start_large_project" && Text(result,"status")=="error" &&
+            Text(result["error"],"execution")=="not_executed" && Text(result["error"],"code")=="large_project_journal_limit")
+            return ProjectStartOutcome.Describe("large_project_journal_limit");
         if(Text(result,"status")=="error")return Text(result["error"],"execution") switch {
             "not_executed"=>"Nicht ausgeführt. Voraussetzung oder Anfrage prüfen.",
             "unconfirmed"=>"Ausführung unbestätigt. Zustand lesend prüfen; nicht erneut ausführen.",

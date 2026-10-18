@@ -15,12 +15,11 @@ Laufzeitstand und Session werden beim regulären Wiederanschluss frisch gelesen.
 
 ## Aktueller Auftrag
 
-**A09-Eingangspilot abgenommen; Gate und Lifecycle-Livefall bestanden.**
-Clientzeilen begrenzt, Parsefehler isoliert. Nach vollständigem Codex-Neustart
-Stop/Status/Start mit gleicher Spielsitzung bestanden. Kein Gate offen.
-Inflight-Grenzen/Timeouts und weitere Erweiterungen bleiben zurückgestellt.
-[Nachweise und Bewertung](docs/supervisor-input-pilot.md).
-A03/A04/A05/A07/A08-Piloten abgenommen; weitere Migrationen zurückgestellt.
+**A10-Pilot abgenommen; Gate und lesender Livebeleg bestanden.**
+Manuelles Großprojektjournal: eindeutiger Limitfehler und Kapazitätsdiagnose.
+Full-/Compact-Beleg stabil, kein Bauauftrag. Kein Gate offen.
+[Umfang und Übergabe](docs/manual-project-journal-pilot.md).
+Andere Journale und weitere A03–A09-Migrationen bleiben zurückgestellt.
 A01/A02/A06 abgeschlossen; offene Aufgaben im [Backlog](BACKLOG.md).
 
 ## Maßgebliche Arbeitsweise

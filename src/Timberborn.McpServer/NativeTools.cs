@@ -294,8 +294,9 @@ public sealed class NativeTools(NativeClient client, NativeToolOptions permissio
             // Never infer non-execution from arbitrary HTTP conflicts or transport failures.
             bool plantingRejected=name==PlantingBatchTools.Apply && dispatch.WriteAttempts==1 &&
                 ex is BridgeRejectionException { Code: "planting_preview_changed" };
-            bool projectStartRejected = name is ("run_large_project" or "run_large_project_repair" or "execute_vertical_stair_pilot") &&
-                dispatch.WriteAttempts == 1 && ex is BridgeRejectionException && LargeProjectStartPolicy.IsPreDispatchCode(code);
+            bool projectStartRejected = dispatch.WriteAttempts == 1 && ex is BridgeRejectionException &&
+                ((name is ("run_large_project" or "run_large_project_repair" or "execute_vertical_stair_pilot") && LargeProjectStartPolicy.IsPreDispatchCode(code)) ||
+                 (name == "start_large_project" && code == "large_project_journal_limit"));
             bool projectPlanningRejected = ProjectPlanningOutcome.Handles(name) && dispatch.WriteAttempts == 1 &&
                 ex is BridgeRejectionException && LargeProjectPlanningPolicy.IsPreDispatchCode(code);
             bool simulationStartRejected = SimulationStartOutcome.Handles(name) && dispatch.WriteAttempts == 1 &&
