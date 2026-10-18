@@ -1143,6 +1143,18 @@ DomedGarden samt automatischem Zugang live fertig; Hex-Platzierung, eingangslose
 Großgebäude und Sonderstandorte ausdrücklich zurückgestellt. Keine pauschale
 Abnahme aus dem Katalog ableiten. [Nachweis und Grenzen](large-building-geometry.md).
 
+## A12/N09: begrenzte Lesepaare gemessen
+
+Im bestehenden Codex-Anschluss wurden drei Paare aus inspect_colony und
+inspect_workforce(offset=0, limit=20) gleichzeitig angefordert: alle Antworten
+erfolgreich, mittlere Paarlaufzeit rund 25 % kürzer als seriell. Kleine Stichprobe
+mit deutlicher Streuung; kein gemeinsamer Snapshot und keine allgemeine
+Parallelitätsgarantie. Die Backend-Fachsperre bleibt unverändert: echte Konkurrenz
+kann weiterhin sofort abgelehnt werden. Abhängige Beobachtungen seriell anfordern;
+keine automatische Wiederholung, Mutationsqueue oder Ausweitung auf weitere Familien.
+Cancel unter Leserlast ist hier nicht neu live belegt.
+[Messung und Grenzen](parallel-read-pilot.md).
+
 ## A12/N08: Abschlussgeschwindigkeit — begrenzt live abgenommen
 
 Nur reine `run_simulation_for`-Zeitläufe erhalten optional `completionSpeed=0|1`.

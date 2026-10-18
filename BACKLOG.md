@@ -2,11 +2,11 @@
 
 ## Aktuelle Arbeit
 
-**A12/N08 begrenzt abgenommen.**
-Reine Zeitläufe mit completionSpeed 0/1: Standardpause, bestätigte Tempo-1-Übergabe
-und Cancel-Pause live bestanden. Nutzen bestätigt, Aufwand mittel.
-[Vertrag, Nachweisgrenzen und Bewertung](docs/completion-speed-pilot-design.md).
-N01–N06 und N08 abgenommen, N07 begrenzt untersucht. Keine Erweiterung auf Bau-/Produktionsläufe.
+**A12/N09 Messpilot abgeschlossen; Backend-Parallelfreigabe zurückgestellt.**
+Zwölf erfolgreiche Leser; gleichzeitige Paaranforderung im bestehenden Anschluss
+im Mittel 24,9 % schneller, ohne Busy-Ablehnung. Zusätzlicher Nutzen einer gelockerten
+Fachsperre nicht belegt. [Messung und Wiedervorlage](docs/parallel-read-pilot.md).
+N01–N06 und N08 abgenommen, N07/N09 begrenzt untersucht. Weitere Familien unverändert.
 A03/A04/A05/A07/A08/A09/A10-Piloten abgenommen; weitere Erweiterungen zurückgestellt.
 A01/A02/A06/A11 abgeschlossen. Weitere A12-Pakete zurückgestellt. [Projektstand](PROJECT_STATE.md).
 
@@ -278,7 +278,7 @@ Abschlussbeleg verworfen wurden. Herkunft: [archivierter Verlauf](BACKLOG_HISTOR
 | N06 — begrenzt abgeschlossen, A12 | [Zellweise Kollisionsbelege abgenommen](docs/precheck-collision-pilot.md); weitere Diagnosefamilien unverändert. | Gebäude-/Pflanzen-ID und Typ unabhängig bestätigt; Terrain, frei und unbeobachtet getrennt. Identitätslücke/Kürzung synthetisch. |
 | N07 — Pilot abgeschlossen; bei Wiederauftreten | [Begrenzter Diagnosepilot](docs/run-navigation-diagnostic-pilot.md): historische unconfirmed-/Baselinefehler nicht reproduziert. | Konkrete Tempoablehnung vor Laufanlage, gültige Registrierung/Rückabfrage/Pause und Vorschauvergleich bestanden; Vorfallablauf dokumentiert, Ursache weiterhin offen. |
 | N08 — begrenzt abgenommen | [Pilotvertrag und Livebelege](docs/completion-speed-pilot-design.md): Standardpause, Tempo-1-Übergabe und Cancel-Pause bestanden. Nutzen bestätigt, Aufwand mittel. | Nur reine for-Zeitläufe. Abschlussrennen/Lock/Unload/Budget synthetisch geprüft; Bau-/Produktionsfamilien und until nicht erweitert. |
-| N09 — Vorschlag, B12 | Nutzen paralleler Leser gegenüber sofortiger Ablehnung messen. | Begrenzter Pilot zeigt Nutzen ohne Mutationsqueue, Replay oder blockierten Cancel; sonst zurückstellen. |
+| N09 — Messpilot abgeschlossen, Erweiterung zurückgestellt | [Drei Lesepaare](docs/parallel-read-pilot.md): bestehender Anschluss im Mittel 24,9 % schneller bei gleichzeitiger Anforderung; alle zwölf Antworten erfolgreich. | Keine Busy-Ablehnung, daher Zusatznutzen gelockerter Fachsperre nicht belegt. Erst bei konkretem Engpass wieder aufnehmen; dann Cancel unter Last separat beweisen. |
 
 ## Offene Entwicklung
 
@@ -299,7 +299,7 @@ Implementierungsfreigabe; größere Entwürfe zuerst konkret abgrenzen.
 | B09 — teiloffen | Forschungsereignisse ins Änderungsjournal aufnehmen. | Forschungswechsel, Wiederlesen und Sessionwechsel geprüft; unbekannte Verursacher bleiben unbekannt. |
 | B10 — teiloffen | N05 abgeschlossen; Zeitlimit-/Stopgründe in Kurztexten präzisieren und weitere Auftragsfamilien einzeln erschließen. | Ergebniszeile stimmt mit strukturiertem Beleg überein und ist im Spiel lesbar. |
 | B11 — Vorschlag | „Zeigen“-Button mit Aufnahme beim Klick, begrenzter Aufbewahrung und Abhol-/Fehlerstatus entwerfen. | Aufnahmezeitpunkt und Fehlerfall belegt; aktive Benachrichtigung bleibt eigener Umfang. |
-| B12 — teiloffen | Große Antworten/Beschreibungen und redundante Reads messen; Katalogerkennung über A07, Parallelität über N09. | Messbarer Nutzen bei unverändertem Compact/Full-Belegumfang und sichtbarer Abdeckung. |
+| B12 — teiloffen | Große Antworten/Beschreibungen und redundante Reads messen; Katalogerkennung über A07; N09-Paarmessung abgeschlossen, zusätzliche Backend-Parallelität zurückgestellt. | Messbarer Nutzen bei unverändertem Compact/Full-Belegumfang und sichtbarer Abdeckung. |
 | B13 — Vorschlag | Eine optionale Bevölkerungs-/Wohlbefindensbeobachtung auswählen: Geburten/Todesfälle, Alter, Personalprognose, Familienwohnungen oder Bauregister. | Beobachtetes Intervall, Datenherkunft und Prognoseunsicherheit getrennt; kein autonomes Kolonieziel. |
 | B14 — teiloffen | Wasserbau-, Ereignis- und Gefahrenrestumfang gemäß Abschnitt unten einzeln angehen. | Geometrie, beobachteter Zustand und erwartete Wirkung getrennt nachgewiesen. |
 | B15 — abgeschlossen | Gesamtstruktur mit gemeinsamer Platzierung ist im 0.63-Umfang abgenommen. | Kein neuer Auftrag; [Vertrag](docs/construction-structures-0.63.md), weitere Höhen-/Schutzgrenzen unter B03/F01–F05. |

@@ -15,12 +15,11 @@ Laufzeitstand und Session werden beim regulären Wiederanschluss frisch gelesen.
 
 ## Aktueller Auftrag
 
-**A12/N08 geklärt; Umsetzung noch nicht freigegeben.**
-[Begrenzter Entwurf und Abnahmeplan](docs/completion-speed-pilot-design.md).
-Nur reine Zeitläufe mit optionalem Abschlusstempo 1 empfohlen; Standardpause
-und Fehlerpause erhalten. Kein Code geändert, kein Gate offen.
-Weitere Journale und frühere Piloterweiterungen bleiben zurückgestellt.
-A01/A02/A06 abgeschlossen; offene Aufgaben im [Backlog](BACKLOG.md).
+**A12/N09 Messpilot abgeschlossen; kein Gate offen.**
+[Messung und Bewertung](docs/parallel-read-pilot.md): begrenzte gleichzeitige
+Lesepaare sind im bestehenden Anschluss nützlich. Kein belegter Zusatznutzen
+einer gelockerten Backend-Sperre; Erweiterung zurückgestellt. N08 bereits abgenommen.
+Weitere Piloterweiterungen bleiben zurückgestellt; offene Aufgaben im [Backlog](BACKLOG.md).
 
 ## Maßgebliche Arbeitsweise
 

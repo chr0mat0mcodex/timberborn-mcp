@@ -2,6 +2,20 @@
 
 ## Aktueller Stand — 2026-10-18
 
+**A12/N09 Messpilot abgeschlossen — Backend-Erweiterung zurückgestellt.**
+Drei serielle und drei gleichzeitig angeforderte Paare aus Kolonieübersicht und
+erster Arbeitsplatzseite: zwölf erfolgreiche Leser, keine Busy-Ablehnung.
+Mittlere Paarlaufzeit 377,3 gegenüber 283,3 ms (24,9 % kürzer); Supervisor-Zeitmarken
+belegen überlappende Requests. Keine Aussage über parallele Fachhandler oder
+atomare Snapshots. Zusatznutzen einer Lockerung der Backend-Sperre nicht belegt.
+[Messung, Bewertung und Wiedervorlage](docs/parallel-read-pilot.md).
+Nutzen begrenzter Paaranforderung im bestehenden Anschluss bestätigt, Aufwand klein.
+Kein Code-/Test-/Konfigurationswechsel, keine Mutationsqueue oder neue Cancel-Regel.
+N08-Gatestand unverändert; kein neues Gate nötig. Keine weitere Messserie geplant.
+Anleitung/Werkzeugübersicht und Einstieg aktualisiert; keine projektbezogenen Spielskills.
+
+### Vorheriger Abschluss A12/N08
+
 **A12/N08 begrenzt abgenommen — optionale Abschlussgeschwindigkeit.**
 2353 Unit-, 19 Integrations-, 13 Paket- und 35 Supervisor-Prüfungen bestanden;
 drei optionale Livefälle übersprungen, beide Builds ohne Warnungen/Fehler,
