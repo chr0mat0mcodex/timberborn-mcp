@@ -622,6 +622,11 @@ Abhängigkeiten, danach gemeinsame native Vorschau. Antwort: `candidateFound`,
 `cleanupCandidateIndices`. Kein Bauauftrag, keine allgemeine Baustellenfreigabe.
 [Grenzen, Ausführungsübergabe und Testfälle](automatic-access-planning.md).
 
+N04-Livevergleich: identischer Gesamtplan behält seinen Schlüssel und startet;
+geänderte Wegrotation mit altem Schlüssel wird vor Auftrag als
+`project_start_plan_changed/not_executed` abgelehnt. Historischer Fehler nicht
+reproduziert. [Belege und Diagnosegrenze](access-plan-key-pilot.md).
+
 ## Projektwiederherstellung (begrenzter Livetest bestanden)
 
 | Werkzeug | Art | Zweck |

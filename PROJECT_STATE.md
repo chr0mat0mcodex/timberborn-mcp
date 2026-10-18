@@ -2,6 +2,21 @@
 
 ## Aktueller Stand — 2026-10-18
 
+**A12/N04 begrenzt live abgeschlossen — historischer Fehler nicht reproduziert.**
+Automatische Zugangsergänzung und explizite Gesamtvorschau ergeben identische
+Planschlüssel. Bewusst geänderte Wegrotation mit altem Schlüssel korrekt als
+project_start_plan_changed/not_executed abgelehnt; keine Baustellen oder
+Änderung des Journalzählers. Originalplan mit ursprünglichem automatischem Schlüssel
+angenommen. Nach Vierstundenbudget und separatem Zwölfstundenfenster über
+die Ruhezeit hinweg: 2/2 Teile fertig/zugänglich, keine Bestandsverluste,
+Journal freigegeben, Spiel pausiert. Kein Beleg für die historische Ursache.
+Keine Codeänderung oder Refactoring nötig; Nutzen hoch für kleinen Liveaufwand.
+[Belege, Vergleich und Grenzen](docs/access-plan-key-pilot.md).
+Unveränderter N03-Gatestand, kein neues Gate nötig. Anleitung/Werkzeugübersicht
+aktualisiert; keine projektbezogenen Spielskills vorhanden. Weitere Pakete offen.
+
+### Vorheriger Abschluss A12/N03
+
 **A12/N03 im begrenzten Injektionspiloten abgenommen.**
 2284 Unit-, 19 Integrations-, 13 Paket- und 35 Supervisor-Tests bestanden;
 drei optionale Livefälle übersprungen, beide Builds ohne Warnungen/Fehler,

@@ -2,12 +2,14 @@
 
 ## Aktueller Einstieg
 
-**A12/N03 im begrenzten Injektionspiloten abgenommen; kein Gate offen.**
-Native Diagnose-, Close- und Repair-Sperren bestanden. Objekt und Journal
-während Injektion exakt unverändert; anschließend deaktiviert und Projekt
-regulär freigegeben. Spiel pausiert, Backend läuft. Neues Werkzeug nach
-Codex-Neustart verfügbar. Weitere Fehlerfälle nicht erweitern.
-[Vertrag und Nachweise](unknown-object-identity-pilot.md).
+**A12/N04 begrenzt live abgeschlossen; kein Gate offen.**
+Automatische und explizite Gesamtvorschau mit identischen Schritten liefern
+identische Schlüssel; Originalschlüssel beim Start angenommen. Geänderte
+Wegrotation mit altem Schlüssel vor Auftrag korrekt abgelehnt. Historischer
+Fehler nicht reproduziert, keine rückwirkende Ursachenbehauptung.
+2/2 Teile fertig/zugänglich, Journal freigegeben, Spiel pausiert, Backend läuft.
+Keine Codeänderung; N03-Gatestand unverändert. Weitere Pakete nicht erweitern.
+[Vergleich, Nachweise und Bewertung](access-plan-key-pilot.md).
 Aktueller Stand und Gatezahlen: [Projektstand](../PROJECT_STATE.md).
 [Offene Arbeit](../BACKLOG.md) · [Lifecycle und Gate](../DEVELOPMENT_WORKFLOW.md).
 Git-Status und Laufzeitstand separat prüfen. Folgende Übergaben sind historisch.

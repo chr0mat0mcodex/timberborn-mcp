@@ -1168,6 +1168,13 @@ Unbebaubarkeit. Arbeitszelle ist vorgeschlagen, echter Baustellenzugang ungeprü
 `cleanupCandidateIndices` nach Fertigstellung erneut auf Bestandszugänge prüfen;
 Rohstoffstapel bleiben erhalten. [Umfang und Dreifall-Pilot](automatic-access-planning.md).
 
+N04: automatische und explizite Vorschau mit identischen Gesamtschritten
+lieferten live denselben Schlüssel; Start mit dem automatischen Originalschlüssel
+bestanden. Bei `project_start_plan_changed` Schritte einschließlich Rotation und
+Abhängigkeiten sowie Ausgangszustand vergleichen; nicht blind mit neuem Schlüssel
+wiederholen. Historischer Fehler damit nicht rückwirkend erklärt.
+[Positiv-/Negativbelege](access-plan-key-pilot.md).
+
 ## Projektabschluss und Reparatur — begrenzter Livetest bestanden
 
 Fünfteilige Zugangsreparatur samt Originalbau, Abschluss und Folgeprojekt in
