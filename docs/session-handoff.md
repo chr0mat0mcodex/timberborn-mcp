@@ -2,6 +2,14 @@
 
 ## Aktueller Einstieg
 
+**B06: Entwurf fertig, noch nicht implementieren.**
+[Vertrag, offene API-Nachweise und Testmatrix](project-reload-reconciliation-design.md).
+Nur terminale Originalchargen von run_large_project, ein Beleg/maximal vier Teile;
+reguläre Save-Persistenz empfohlen, getrennte Lesesicht ohne Controllerrestaurierung.
+B06.1 (öffentliche Save-Schnittstelle, Snapshot-Kohärenz, stabile Entity-IDs) offen;
+B06.2/B06.3 nicht freigegeben. Kein MCP-Spielzugriff, Build/Test oder Regeländerung.
+Keine alte Session, Vorschau oder Quittung als heutige Ausführungsfreigabe verwenden.
+
 **A12/N10 im begrenzten Pilotumfang abgeschlossen.**
 [Belege und Liefergrenze](plank-production-transport-pilot.md): ein Kraftrad,
 ein Bretterlager und zwei Wege fertig und zugänglich. Drei native Zyklen in fünf
@@ -10,7 +18,7 @@ Ausgang 13→1, neues Lager 0→14, altes Lager 20→20 Bretter. Ausgabeentlastu
 Lagerzufluss beobachtet; einzelne Quelle-Ziel-Lieferungen bleiben uninstrumentiert.
 Windrad wieder aktiviert, Spiel pausiert, kein aktiver Lauf, Bauledger freigegeben.
 Kein Code geändert, kein Gate offen. Keine automatische Telemetrieerweiterung;
-B06-Entwurf ist der nächste eigenständige Vorschlag.
+Die genaue Lieferzuordnung bleibt ein separates, nicht beauftragtes Paket.
 
 **A12/N09 Messpilot abgeschlossen; keine Laufzeitänderung, kein Gate offen.**
 [Messung, Bewertung und Wiedervorlage](parallel-read-pilot.md): zwölf erfolgreiche

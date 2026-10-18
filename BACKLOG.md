@@ -2,6 +2,14 @@
 
 ## Aktuelle Arbeit
 
+**B06-Entwurf fertig, Umsetzung nicht freigegeben.**
+[Reload-Abgleich einer Baucharge](docs/project-reload-reconciliation-design.md):
+ein ausgewählter terminaler `run_large_project`-Auftrag, höchstens vier Teile,
+ein im Spiel-Save enthaltener Beleg und rein lesender Abgleich. Kein Replay.
+Nächster enger Schritt B06.1: öffentliche Save-Anbindung, Snapshot-Kohärenz und
+Entity-ID-Erhalt nachweisen. B06.2 (Pilotcode) und B06.3 (Gate/Live) bleiben offen.
+Keine Laufzeit-, Konfigurations- oder Regeländerung; bestehende Abnahmen unverändert.
+
 **A12/N10-Pilot abgeschlossen — Produktion belegt, einzelne Lieferzuordnung offen.**
 Kleiner Kraft-/Lageraufbau fertig; drei native Zyklen in fünf Spielstunden.
 Ausgang 13→1, neues Lager 0→14, altes Lager 20→20 Bretter. Ausgabeentlastung und
@@ -22,10 +30,10 @@ Implementierungsfreigabe. Kein Sammelauftrag für die gesamten B-/F-Familien.
 
 | Reihenfolge | Paket | Nutzen / Aufwand | Kleinster sinnvoller Umfang | Abschluss / Stopp |
 | --- | --- | --- | --- | --- |
-| 1 | **B06 — Reload-Abgleich zunächst entwerfen** | Hoch / S für Entwurf, Umsetzung erst danach schätzen; verhindert, dass verlorene Sitzungseinträge mit unerledigten Spielobjekten verwechselt werden. | Eine Projektfamilie und ein kleines Projekt; minimale Absichtsdaten, Save-/Session-Zuordnung, vorhandene/fehlende/unbekannte Identität und rein lesenden Wiederabgleich definieren. Keine automatische Wiederaufnahme. | Reviewbarer Vertrag samt Persistenzort, Lebenszyklus, Datenminimierung und Testmatrix; neue Session und identischer Wiederaufruf dürfen kein Replay auslösen. Ohne verlässliche Spielstand-/Objektzuordnung kein Implementierungsstart. Entwurf gesondert freigeben lassen. |
+| 1 | **B06.1 — Save-/Identitätsnachweis nach Entwurf** | Hoch / S–M für Vorprüfung; Pilotumsetzung vorläufig M, abhängig vom API-Nachweis. | Öffentliche Save-Anbindung, kohärenten Beleg/Welt-Snapshot, Ladebereitschaft und Entity-ID-Erhalt für den [fertigen Entwurf](docs/project-reload-reconciliation-design.md) prüfen. Ein terminaler Zweiteiler, kein Featurebau vor belastbarem Nachweis. | Belastbare öffentliche Schnittstelle und Save-/Objektzuordnung belegt; andernfalls Stopp und Entwurf neu entscheiden. B06.1 gesondert beauftragen; B06.2/B06.3 noch nicht freigegeben. |
 | 2 | **F02 mit engem F01-Anteil — fertiger Ersatzumweg vor Bestandsänderung** | Hoch / M; schließt eine funktionale Lücke beim kontrollierten Umbau. | Ein kurzer ebener Umweg für genau eine Bestandsverbindung. Ersatz bauen, reale Nutzbarkeit bestätigen, erst danach den abhängigen Eingriff prüfen und ausführen. | Positiv: Verbindung vor und nach Eingriff belegt. Negativ: unfertiger/unterbrochener Ersatz erlaubt keinen abhängigen Eingriff. Bauarbeiter-, Bestands- und Fertigzugang getrennt; bei unknown stoppen. Keine allgemeinen Höhen-/Kraftrouten oder globale Reservierungsarchitektur. |
 
-**Nächster Vorschlag:** B06-Reload-Abgleich zunächst entwerfen, gesondert beauftragen.
+**Nächster Vorschlag:** B06.1 aus dem fertigen Entwurf gesondert beauftragen; noch keine Umsetzung.
 N10 benötigt keine weitere unveränderte Messserie. Falls eine exakte Lieferaussage
 benötigt wird: schmalen Telemetrieentwurf für eine Warenübergabe mit Quelle, Ziel,
 Gut, Menge und Session erstellen; zunächst öffentliche Spielereignisse prüfen.
@@ -334,7 +342,7 @@ Implementierungsfreigabe; größere Entwürfe zuerst konkret abgrenzen.
 | B03 — teiloffen | Allgemeine Kraft-/Höhenrouten und alternative Versorgungslayouts begrenzen, vorhandene Ports/Netze nutzen. | Geometrie, reale Netzverbindung und Produktion separat an Positiv-/Negativroute belegt. |
 | B04 — teiloffen | Mehrere/größere Räumflächen auf Basis der abgenommenen 8×8-Einzelfläche planen. | Mehrflächenpilot ohne Verlust unbestätigter Aufträge; Rohstoffstapel erhalten. |
 | B05 — teiloffen | Wachstum/Aquakultur getrennt vom abgenommenen Sammelpflanzen nachweisen. | Nativer Pflanzen-/Wachstumszustand im definierten Zeitfenster belegt, Markierung allein zählt nicht. |
-| B06 — offen | Projektabsichten nach Spielneuladen mit realen Objekten abgleichen; Persistenzumfang entwerfen. | Neue Session, vorhandene/fehlende/unbekannte Objekte und identischer Wiederaufruf ohne Replay geprüft. |
+| B06 — Entwurf fertig, Nachweise/Umsetzung offen | [Ein Beleg für eine terminale Baucharge](docs/project-reload-reconciliation-design.md), maximal vier Teile; savegebunden und rein lesend. | B06.1: öffentliche Persistenz und stabile Zuordnung belegen. B06.2: separat freigegebener Pilot. B06.3: Gate und kleiner Reload-Livetest einschließlich fehlend/unbekannt und Wiederaufruf ohne Replay. Noch nichts implementiert. |
 | B07 — teiloffen | Aus Bretterdiagnose einen begrenzten Ausbauplan für Zutaten, Lager/Transport, Personal und Kraft ableiten; gemeinsame Versorgung mit Pumpe/Sammler/Holzfäller als weiteres Teilpaket. | Vor Bau Kosten inklusive Hilfen; anschließend Förderung/Sammlung/Produktion und Lieferung getrennt belegt. Keine Materialsperre. |
 | B08 — teiloffen | Weitere Produzenten und reale Wirkungszellen etwa des Bienenstocks wählen. | Produktionszyklus bzw. tatsächliches Effektziel belegt; Reichweite allein genügt nicht. |
 | B09 — teiloffen | Forschungsereignisse ins Änderungsjournal aufnehmen. | Forschungswechsel, Wiederlesen und Sessionwechsel geprüft; unbekannte Verursacher bleiben unbekannt. |

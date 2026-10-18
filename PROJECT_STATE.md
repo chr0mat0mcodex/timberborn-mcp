@@ -2,6 +2,19 @@
 
 ## Aktueller Stand — 2026-10-18
 
+**B06-Entwurf abgeschlossen, keine Implementierung.**
+[Vertrag und Nachweismatrix](docs/project-reload-reconciliation-design.md): eine
+terminale Originalbaucharge, höchstens vier Teile, ein Beleg im regulären Save;
+Objektidentität und heutigen Zugang rein lesend abgleichen. Keine Wiederaufnahme.
+Öffentliche Save-Schnittstelle, Snapshot-Kohärenz und Entity-ID-Erhalt noch offen;
+B06.1 als vorgeschalteter Nachweis, B06.2/B06.3 nicht freigegeben. Nutzen hoch,
+Umsetzung vorläufig mittel mit API-Unsicherheit. Kein Code/Test/Build und kein
+Spielzugriff; Inhalts-, Diff- und Linkprüfung der Dokumentation.
+Agentenanleitung geprüft: keine neue nutzbare Fähigkeit, daher keine Änderung;
+keine projektbezogenen Spielskills vorhanden. Regeln und Laufzeit unverändert.
+
+### Vorheriger Abschluss A12/N10
+
 **A12/N10 im begrenzten Pilotumfang abgeschlossen; einzelne Lieferzuordnung offen.**
 Nach erneuter Freigabe ein Stapellager, ein Kraftrad und zwei Wege regulär gebaut;
 alle vier Teile fertig und zugänglich, keine beobachteten Bestandsverluste.
@@ -15,7 +28,7 @@ Vorherige Negativkontrolle mit null Zyklen bleibt gültig. Windrad wieder aktivi
 Spiel pausiert, kein aktiver Lauf/Tempoauftrag. Keine Codeänderung und kein Gate offen.
 [Aufbau, Messung, Nutzen und Grenzen](docs/plank-production-transport-pilot.md).
 Anleitung, Werkzeugübersicht und Brettervertrag aktualisiert; keine projektbezogenen
-Spielskills vorhanden. Keine weiteren Erweiterungen. B06 bleibt nächster Vorschlag.
+Spielskills vorhanden. Keine weiteren N10-Erweiterungen.
 
 ### Vorheriger Abschluss A12/N09
 
