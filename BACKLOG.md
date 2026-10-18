@@ -2,12 +2,11 @@
 
 ## Aktuelle Arbeit
 
-**A10-Pilot abgenommen — Gate und lesender Livebeleg bestanden:** eigener
-Limitcode und Kapazitätsdiagnose für das manuelle Großprojektjournal.
-[Nachweise/Bewertung](docs/manual-project-journal-pilot.md). Weitere Journale und
-Aufbewahrungsänderungen zurückgestellt; Gesamt-A10 teilweise offen.
-A03/A04/A05/A07/A08/A09-Piloten abgenommen; weitere Erweiterungen zurückgestellt.
-A01/A02/A06 abgeschlossen. A11/A12 noch nicht begonnen. [Projektstand](PROJECT_STATE.md).
+**A11-Pilot abgenommen — A11 abgeschlossen:** verpflichtende
+Backendwahl beim DLL-Direktstart; keine stille Legacy-Auswahl.
+[Entscheidung und Nachweise](docs/backend-selection-pilot.md).
+A03/A04/A05/A07/A08/A09/A10-Piloten abgenommen; weitere Erweiterungen zurückgestellt.
+A01/A02/A06 abgeschlossen. A12 noch nicht begonnen. [Projektstand](PROJECT_STATE.md).
 
 ## Projektprüfung 2026-10-18 — abarbeitbare Befunde
 
@@ -15,7 +14,7 @@ Prüfbasis und vollständiger Audit: [Archivstand](BACKLOG_HISTORY.md#archivstan
 Ergebnis: gezieltes Refactoring von Versionsprofilen, Werkzeugdispatch und
 Prüfketten sinnvoll; kein belegter Bedarf für einen Komplettumbau.
 Der ursprüngliche Audit war statisch. A06 ist inzwischen **abgeschlossen**;
-A03 ist **teilweise abgeschlossen**, A04 **teilweise abgeschlossen**; A05 ist **teilweise abgeschlossen**, A07 ist **teilweise abgeschlossen**, A08 ist **teilweise abgeschlossen**, A09 ist **teilweise abgeschlossen**, A10 ist **teilweise abgeschlossen**, A11/A12 sind **offen**.
+A03 ist **teilweise abgeschlossen**, A04 **teilweise abgeschlossen**; A05 ist **teilweise abgeschlossen**, A07 ist **teilweise abgeschlossen**, A08 ist **teilweise abgeschlossen**, A09 ist **teilweise abgeschlossen**, A10 ist **teilweise abgeschlossen**, A11 ist **abgeschlossen**, A12 ist **offen**.
 P2 = vor der nächsten betroffenen Erweiterung, P3 = nach Bedarf;
 S/M/L sind relative Aufwandsschätzungen. Codeänderungen benötigen weiterhin
 das [menschliche Gate und den gezielten Livetest](DEVELOPMENT_WORKFLOW.md).
@@ -182,8 +181,15 @@ das [menschliche Gate und den gezielten Livetest](DEVELOPMENT_WORKFLOW.md).
 
 ### A11 — P3 / S: Legacy-Standard beim Direktstart klären
 
-- [ ] **Befund, bestätigt:** [Program.cs](src/Timberborn.McpServer/Program.cs)
-  wählt ohne `TIMBERBORN_BACKEND` weiterhin `more-http-api`, obwohl die native
+- [x] **Pilot abgenommen:** fehlende/leere Backendwahl bricht vor
+  Hoststart mit Exitcode 2 und stderr-Meldung ab. Explizite Modi bleiben erhalten.
+  Fünf Prozessregressionen bestanden. Frühe stderr-Meldung nach erstem Gate auf
+  ASCII korrigiert; anschließendes Gate und nativer Supervisor-Livefall bestanden.
+  Kleiner Eingriff mit klarem Nutzen; keine weiteren Erweiterungen beauftragt.
+  [Entscheidung und Nachweise](docs/backend-selection-pilot.md).
+
+- [x] **Ursprünglicher Befund behoben:** [Program.cs](src/Timberborn.McpServer/Program.cs)
+  wählte ohne `TIMBERBORN_BACKEND` automatisch `more-http-api`, obwohl die native
   Bridge die aktuelle Architektur ist. Der reguläre Supervisor setzt `native`
   korrekt; deshalb kein Fehler im belegten Standard-Supervisorpfad.
 - **Arbeit:** Direktstart explizit als Legacy kennzeichnen oder bei fehlender

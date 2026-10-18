@@ -85,8 +85,10 @@ TIMBERBORN_NATIVE_CONFIG=<absoluter Pfad zur privaten bridge.local.json>
 ```
 
 Der Server lädt `config/server.example.json` nicht automatisch; diese Datei beschreibt
-nur Beispiel-Prozessvariablen. Direkter DLL-Start **ohne** Backendvariable verwendet aus
-Legacy-Kompatibilität noch `more-http-api`. Deshalb die native Auswahl nicht weglassen.
+nur Beispiel-Prozessvariablen. Seit dem abgenommenen A11-Piloten: Direkter DLL-Start
+**ohne** oder mit leerer Backendvariable bricht mit Exitcode 2 und Konfigurationsmeldung
+auf stderr ab. `native`, `more-http-api` (Legacy) oder `fake` ausdrücklich wählen.
+Kein automatischer Legacy-Fallback. [Nachweise](backend-selection-pilot.md).
 Keine Tokens als Argument oder in öffentliche Client-Beispiele schreiben.
 
 ## Aktionsfreigaben

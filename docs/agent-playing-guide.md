@@ -1,5 +1,13 @@
 # Spielanleitung für Agenten
 
+## A11: Backendwahl (Gate und Livebeleg bestanden)
+
+Der DLL-Direktstart benötigt `TIMBERBORN_BACKEND` ausdrücklich: `native`,
+`more-http-api` (Legacy) oder `fake`. Fehlend/leer: Exitcode 2 und stderr-Meldung.
+Regulären Supervisor verwenden; dieser setzt native bereits. Kein Wechsel auf
+Legacy bei nativen Fehlern. [Entscheidung und Nachweise](backend-selection-pilot.md).
+
+
 ## A10: manuelles Projektjournal (Gate und lesender Livebeleg bestanden)
 
 `manualJournal` in Plan-/manuellen Projektbelegen zeigt ausschließlich das manuelle

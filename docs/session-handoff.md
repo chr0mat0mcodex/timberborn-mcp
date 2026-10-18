@@ -3,12 +3,11 @@
 ## Aktueller Einstieg
 
 Aktueller Featurestand, letzte Gatezahlen und Nachweise: [Projektstand](../PROJECT_STATE.md).
-Bridge 0.74.0; **A10-Pilot abgenommen, kein Gate offen**.
-Manuelles Großprojektjournal diagnostiziert Limit und Restkapazität eindeutig;
-keine Bereinigung oder neuen Limits. Gate und Full-/Compact-Planbeleg bestanden;
-Kapazität/planKey stabil, Grenzfälle und Fehlertransport synthetisch geprüft.
-[Umfang und Abnahme](manual-project-journal-pilot.md). Andere Journale unverändert.
-A03/A04/A05/A07/A08/A09-Piloten abgenommen; weitere Erweiterungen zurückgestellt.
+Bridge 0.74.0; **A11-Pilot abgenommen, A11 abgeschlossen**.
+DLL-Direktstart verlangt Backendwahl; fünf Prozessregressionen bestanden.
+Gate, verbundener nativer Status und lesende Simulation bestätigt.
+[Entscheidung und Grenzen](backend-selection-pilot.md). Supervisor unverändert;
+kein zusätzlicher Codex-Neustart nötig. Weitere Piloterweiterungen zurückgestellt.
 [Offene Arbeit](../BACKLOG.md) · [Lifecycle und Gate](../DEVELOPMENT_WORKFLOW.md).
 Git-Status und Laufzeitstand separat prüfen. Die folgenden Übergaben sind
 historisch und enthalten keine heute offenen Gate-Aufträge.

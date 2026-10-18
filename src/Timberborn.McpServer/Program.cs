@@ -20,12 +20,19 @@ if (args is ["--print-native-identity"])
     return;
 }
 
+var backendName = Environment.GetEnvironmentVariable("TIMBERBORN_BACKEND");
+if (string.IsNullOrWhiteSpace(backendName))
+{
+    Console.Error.WriteLine("TIMBERBORN_BACKEND fehlt: explizit native, more-http-api (Legacy) oder fake setzen. Kein automatischer Fallback.");
+    Environment.ExitCode = 2;
+    return;
+}
+
 var fileLog=new DiagnosticFileLog(DiagnosticFileLog.DefaultDirectory("mcp"),"mcp",value=>JsonSerializer.Serialize(value),
     ()=>Console.Error.WriteLine("MCP file diagnostics unavailable; records may be missing."));
 fileLog.Write("server_starting");
 try {
 
-var backendName = Environment.GetEnvironmentVariable("TIMBERBORN_BACKEND") ?? "more-http-api";
 var scenario = Environment.GetEnvironmentVariable("TIMBERBORN_FAKE_SCENARIO") ?? "healthy";
 var writesEnabled = Environment.GetEnvironmentVariable("TIMBERBORN_ENABLE_WRITES") == "1";
 var validationEnabled = Environment.GetEnvironmentVariable("TIMBERBORN_ENABLE_VALIDATION") == "1";

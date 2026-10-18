@@ -15,11 +15,10 @@ Laufzeitstand und Session werden beim regulären Wiederanschluss frisch gelesen.
 
 ## Aktueller Auftrag
 
-**A10-Pilot abgenommen; Gate und lesender Livebeleg bestanden.**
-Manuelles Großprojektjournal: eindeutiger Limitfehler und Kapazitätsdiagnose.
-Full-/Compact-Beleg stabil, kein Bauauftrag. Kein Gate offen.
-[Umfang und Übergabe](docs/manual-project-journal-pilot.md).
-Andere Journale und weitere A03–A09-Migrationen bleiben zurückgestellt.
+**A11-Pilot abgenommen; A11 abgeschlossen.**
+DLL-Direktstart verlangt explizite Backendwahl; Supervisor unverändert native.
+[Umfang und Nachweise](docs/backend-selection-pilot.md).
+Weitere Journale und frühere Piloterweiterungen bleiben zurückgestellt.
 A01/A02/A06 abgeschlossen; offene Aufgaben im [Backlog](BACKLOG.md).
 
 ## Maßgebliche Arbeitsweise

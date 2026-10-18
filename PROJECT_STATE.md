@@ -2,6 +2,24 @@
 
 ## Aktueller Stand — 2026-10-18
 
+**A11-Pilot abgenommen — A11 abgeschlossen.**
+Roher DLL-Direktstart verlangt explizite Backendwahl; fehlend/leer führt vor
+Hoststart zu Exitcode 2 und verständlicher stderr-Meldung, stdout bleibt leer.
+Explizite Native-/Legacy-/Fake-Auswahl und Offline-Kennungsbericht bleiben erhalten.
+Nach ASCII-Korrektur der frühen stderr-Meldung: 13 Paket-, 35 Supervisor-,
+2239 Unit- und 19 Integrationstests bestanden, drei optionale Livefälle übersprungen.
+Alle fünf neuen Prozessfälle grün; Release-Builds ohne Warnungen/Fehler und fünf
+installierte Dateien per SHA-256 bestätigt. Live: Supervisorstart, nativer Status
+und lesende Simulation mit derselben Sitzung; MCP-Kennungen entsprechen dem Gate.
+Nutzen/Aufwand positiv: eindeutige Backendwahl durch kleinen lokalen Eingriff.
+Bisher implizite Legacy-Direktstarts müssen die Backendvariable ausdrücklich setzen.
+[Kompatibilitätsentscheidung und Nachweise](docs/backend-selection-pilot.md).
+Bridge/API 0.74.0. Kein Gate offen. Native-/Legacy-Anleitung und
+Spielanleitung aktualisiert; keine projektbezogenen Spielskills vorhanden.
+Weitere Journale und sonstige Erweiterungen bleiben zurückgestellt.
+
+### Vorheriger Abschluss A10
+
 **A10-Pilot abgenommen — Gate und lesender Livebeleg bestanden.**
 Manuelles Großprojektjournal: eigener Limitcode und additive Kapazitätsdiagnose
 in Plan-/Projektbelegen. Historie, Replay-Schutz und Limit 128 bleiben erhalten.
@@ -14,7 +32,7 @@ Vorschau restauriert; kein Bauauftrag. Planzugang blieb getrennt davon gesperrt.
 Grenzfälle/Freigabe/Replay und Limitfehlertransport synthetisch geprüft.
 Nutzen/Aufwand positiv: klare Diagnose bei kleinem, auf ein Journal begrenztem
 Eingriff. [Nachweise und Bewertung](docs/manual-project-journal-pilot.md).
-Bridge/API 0.74.0. Kein Gate offen. Anleitung mit Abnahme aktualisiert;
+Bridge/API 0.74.0. Zum A10-Abschluss kein Gate offen. Anleitung mit Abnahme aktualisiert;
 keine projektbezogenen Spielskills vorhanden. Andere Journale und Aufbewahrungs-
 änderungen zurückgestellt; Gesamt-A10 teilweise offen.
 
