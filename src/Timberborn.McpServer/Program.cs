@@ -12,6 +12,14 @@ using Timberborn.Backend.Native;
 using Timberborn.McpServer;
 using Timberborn.Bridge.Core;
 
+// Explicit offline gate report: no host, game connection, config read or diagnostic file.
+if (args is ["--print-native-identity"])
+{
+    var catalog = NativeTools.Catalog(NativeToolOptions.AllEnabled).Select(ResponsePresentation.Describe);
+    Console.WriteLine(JsonSerializer.Serialize(McpRuntimeIdentity.Create(catalog), NativeJson.Options));
+    return;
+}
+
 var fileLog=new DiagnosticFileLog(DiagnosticFileLog.DefaultDirectory("mcp"),"mcp",value=>JsonSerializer.Serialize(value),
     ()=>Console.Error.WriteLine("MCP file diagnostics unavailable; records may be missing."));
 fileLog.Write("server_starting");

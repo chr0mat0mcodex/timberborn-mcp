@@ -2,12 +2,12 @@
 
 ## Aktuelle Arbeit
 
-**A05-Pilot abgenommen — Gate und Livetest bestanden:** Produktionszielprüfung
-in vier benannte Abschnitte zerlegt, 23 neue Testfälle bestanden.
-[Belege und Bewertung](docs/production-contract-readability-pilot.md).
-Weitere Fachprüfungen vorerst zurückgestellt; Gesamt-A05 bleibt offen.
-A03/A04-Piloten abgenommen; weitere Migrationen bleiben zurückgestellt.
-A01/A02/A06 abgeschlossen; A07–A12 noch nicht begonnen.
+**A07-Pilot abgenommen — Gate und Liveabgleich bestanden:** MCP-Modul-/Backend-
+Katalogkennung im Status und Offline-Kennungsbericht im menschlichen Gate.
+[Belege und Nutzen-/Aufwandsbewertung](docs/mcp-runtime-identity-pilot.md).
+Weitere Erweiterungen vorerst zurückgestellt; Gesamt-A07 bleibt offen.
+A03/A04/A05-Piloten abgenommen; weitere Refactorings zurückgestellt.
+A01/A02/A06 abgeschlossen; A08–A12 noch nicht begonnen.
 Belege und Grenzen im [Projektstand](PROJECT_STATE.md).
 
 ## Projektprüfung 2026-10-18 — abarbeitbare Befunde
@@ -16,7 +16,7 @@ Prüfbasis und vollständiger Audit: [Archivstand](BACKLOG_HISTORY.md#archivstan
 Ergebnis: gezieltes Refactoring von Versionsprofilen, Werkzeugdispatch und
 Prüfketten sinnvoll; kein belegter Bedarf für einen Komplettumbau.
 Der ursprüngliche Audit war statisch. A06 ist inzwischen **abgeschlossen**;
-A03 ist **teilweise abgeschlossen**, A04 **teilweise abgeschlossen**; A05 ist **teilweise abgeschlossen**, A07–A12 sind **offen**.
+A03 ist **teilweise abgeschlossen**, A04 **teilweise abgeschlossen**; A05 ist **teilweise abgeschlossen**, A07 ist **teilweise abgeschlossen**, A08–A12 sind **offen**.
 P2 = vor der nächsten betroffenen Erweiterung, P3 = nach Bedarf;
 S/M/L sind relative Aufwandsschätzungen. Codeänderungen benötigen weiterhin
 das [menschliche Gate und den gezielten Livetest](DEVELOPMENT_WORKFLOW.md).
@@ -92,6 +92,13 @@ das [menschliche Gate und den gezielten Livetest](DEVELOPMENT_WORKFLOW.md).
 
 ### A07 — P2 / M: ausgelieferten MCP-Stand eindeutig erkennbar machen
 
+- [x] **Pilot abgenommen (2026-10-18):** `data.mcp` benennt geladenes
+  Modulprofil und wirksamen Backend-Katalog; Offline-Gatebericht als Vergleich.
+  11 Unit-Fälle und ein Integrationstest bestanden. Beide Kennungen live exakt
+  gleich Gate und stabil in compact/full sowie nach lesender Abfrage.
+  [Belege/Bewertung](docs/mcp-runtime-identity-pilot.md). Nutzen/Aufwand positiv.
+  Clientcache bleibt `not_observed`, Supervisor unverändert; Gesamt-A07 offen,
+  weitere Erweiterungen vorerst zurückgestellt.
 - [ ] **Befund, bestätigt:** mehrere jüngste MCP-Fähigkeiten nutzen dieselbe
   Bridge 0.74.0; der Supervisor meldet konstant Version `1`. Eine Bridge-Version
   beweist daher weder aktuellen MCP-Build noch aktuellen Client-Werkzeugkatalog.

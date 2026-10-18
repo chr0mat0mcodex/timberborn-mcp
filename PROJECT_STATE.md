@@ -4,6 +4,27 @@
 
 Bridge/Manifest **0.74.0**; letzter neuer Funktionsumfang in `f52750f`:
 automatische Bretterketten-Vorprüfung, begrenzt live abgenommen.
+**A07-Pilot abgenommen — menschliches Gate und lesender Liveabgleich bestanden.**
+Natives Statusfeld `data.mcp`: geladene MCP-Modulkennung und wirksamer
+Backend-Kataloghash, getrennt von Bridge-Version und Liveabnahme. Clientcache
+explizit `not_observed`; Supervisor-Handshake und Spielmod unverändert.
+Gate: 13 Paket-, 28 Supervisor-, 2208 Unit- und 14 Integrationstests bestanden;
+drei optionale Livefälle übersprungen. Release-Builds ohne Warnungen/Fehler,
+fünf installierte Paketdateien per SHA-256 bestätigt. Elf neue Unit-Fälle und
+Offline-Integrationstest bestanden; ungültige Testfixture aus erstem Gate korrigiert.
+Live nach Supervisor-Wiederanschluss: beide Kennungen stimmen exakt mit Gate,
+compact und full überein und bleiben nach lesender Simulationsabfrage stabil.
+Native Bridge 0.74.0, aktuelle Session, Spiel pausiert; keine Spielmutation.
+[Belege, Grenzen und Nutzen/Aufwand](docs/mcp-runtime-identity-pilot.md).
+Bewertung positiv: MCP-only-Stand dem Gate zuordenbar bei überschaubarem Zusatz-
+aufwand. Clientcache, Supervisor und vollständige Installation nicht attestiert.
+Gesamt-A07 offen; weitere Erweiterungen auf Nutzerwunsch vorerst zurückgestellt.
+Kein Gate offen. Spielanleitung mit Abgleich und tatsächlichen Nachweisgrenzen
+aktualisiert; keine projektbezogenen Spielskills vorhanden.
+Weitere A03/A04/A05-Migrationen bleiben zurückgestellt.
+
+### Vorheriger Abschluss A05
+
 **A05-Pilot abgenommen — menschliches Gate und gezielter Livetest bestanden.**
 Nur `ProductionRunContract.Validate` in vier benannte private Prüfabschnitte
 zerlegt. Bedingungen, Reihenfolge und Fehlertexte erhalten; Quellvergleich erfolgt.
@@ -17,7 +38,8 @@ Diagnoserücklesung akzeptiert; terminale und frische Endpause bestätigt.
 Bewertung positiv: Fachabschnitte und Fehlerreihenfolge leichter prüfbar;
 mehr Zeilen und vier private Methoden als überschaubarer Aufwand. Kein Laufzeitgewinn
 behauptet. Gesamt-A05 offen; weitere Fachprüfungen auf Nutzerwunsch zurückgestellt.
-Keine weitere A03/A04-Migration. Kein Gate offen.
+Keine weitere A03/A04-Migration. Zum A05-Abschluss kein Gate offen;
+aktueller A07-Auftrag siehe oben.
 Agenten-Spielanleitung geprüft: keine fachliche Änderung, öffentliche Verträge
 unverändert. Keine projektbezogenen Spielskills vorhanden.
 

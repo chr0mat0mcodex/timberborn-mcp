@@ -38,6 +38,17 @@ try {
         & dotnet build TimberbornMcp.slnx -c Release --no-restore --verbosity quiet --nologo
         if ($LASTEXITCODE -ne 0) { throw 'Build fehlgeschlagen.' }
     }
+    Invoke-TimberbornStep 'MCP-Kennung für den Supervisor-Start ausgeben' {
+        # Offline report from the just-built Release backend, all native opt-ins as in the supervisor.
+        # No second build, game request, config read or alternate MCP server process.
+        $identityOutput = @(& dotnet "$taskRoot/src/Timberborn.McpServer/bin/Release/net10.0/Timberborn.McpServer.dll" --print-native-identity)
+        if ($LASTEXITCODE -ne 0 -or $identityOutput.Count -ne 1) { throw 'MCP-Kennungsbericht fehlgeschlagen.' }
+        $identity = $identityOutput[0] | ConvertFrom-Json
+        if ($identity.buildId -cnotmatch '^sha256:[0-9a-f]{64}$' -or $identity.catalogId -cnotmatch '^sha256:[0-9a-f]{64}$') {
+            throw 'Ungültige MCP-Kennung.'
+        }
+        Write-TimberbornStatus 'MCP' ("Build {0}; Katalog {1}; Profil native/all-enabled" -f $identity.buildId, $identity.catalogId) Green
+    }
     $oldLive = $env:TIMBERBORN_LIVE_TEST
     $oldWriteTest = $env:TIMBERBORN_LIVE_WRITE_TEST
     $oldWrites = $env:TIMBERBORN_ENABLE_WRITES

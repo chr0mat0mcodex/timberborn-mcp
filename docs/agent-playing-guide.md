@@ -1243,6 +1243,13 @@ Live-Abnahme und keine allgemeine Freigabe hoher Grenzwerte. Ein Serverneustart
 setzt spielseitige Budgets nicht zurück; Legacy- und Gruppenmodi getrennt behandeln.
 1. `timberborn_status` für Bridge-Version und frische Sitzungskennung lesen;
    anschließend `inspect_simulation` für Geschwindigkeit und Spielzeit.
+   A07-Pilot (Gate und begrenzter Liveabgleich bestanden): `data.mcp.buildId` und `catalogId`
+   mit dem aktuellen MCP-Gatebeleg vergleichen. `buildScope` benennt die geladenen
+   Module, `catalogScope` den Backend-Katalog einschließlich Opt-ins, ohne
+   Supervisor-Zusätze. `clientCatalogState=not_observed` bedeutet: Clientcache
+   unbekannt. Abweichung oder fehlende Kennung klären, keine automatische
+   Neustart-/Wiederholungsaktion; Kennung beweist keine Liveabnahme.
+   [Kennungsvertrag und Grenzen](mcp-runtime-identity-pilot.md).
 2. `inspect_building_capabilities(session, reasoning)` für Projektmodi,
    technische Grenzen und historische Nachweise lesen. Bei unbekanntem Profil
    die Fähigkeiten nicht aus einer ähnlichen Version ableiten.

@@ -38,7 +38,11 @@ public sealed record NativeSnapshot(string Scope, NativeResource[] Resources, Ho
 public sealed record MapCell(int X, int Y, int Z, bool Underground, bool OnGround, int TerrainHeight,
     float WaterDepth, float Contamination, bool Underwater, bool? SoilIsMoist = null);
 public sealed record NativeMap(Position Origin, int Width, int Height, int Depth, MapCell[] Cells, string[] Limitations);
-public sealed record NativeStatus(string Connection, string BridgeVersion, bool WritesEnabled);
+// MCP-owned identity, never a claim made by the game bridge or a live acceptance marker.
+public sealed record NativeMcpIdentity(string BuildId, string CatalogId, string BuildScope,
+    string CatalogScope, string ClientCatalogState);
+public sealed record NativeStatus(string Connection, string BridgeVersion, bool WritesEnabled,
+    NativeMcpIdentity? Mcp = null);
 public sealed record BuildingPosition(Guid Id, string Template, Position Position, string Orientation, bool Finished,
     Position? Entrance, Position[] OccupiedCells, bool CellsTruncated);
 public sealed record NativeObjects(string Scope, int Offset, int Limit, int Total, BuildingPosition[] Items, bool HasMore, string[] Limitations);
