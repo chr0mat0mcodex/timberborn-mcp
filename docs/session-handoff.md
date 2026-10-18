@@ -2,6 +2,11 @@
 
 ## Aktueller Einstieg
 
+Planung aktualisiert: [N10 → B06-Entwurf → F02-Pilot](../BACKLOG.md#empfohlene-nächste-schritte--planung-2026-10-18).
+Nächster Vorschlag ist ein einzelner positiver Bretterproduktions-/Abtransportfall;
+keine Umsetzung gestartet. Weitere Migrationen und Backend-Parallelität bleiben
+zurückgestellt. Der nächste Auftrag bestimmt den freigegebenen Umfang.
+
 **A12/N09 Messpilot abgeschlossen; keine Laufzeitänderung, kein Gate offen.**
 [Messung, Bewertung und Wiedervorlage](parallel-read-pilot.md): zwölf erfolgreiche
 Leser, gleichzeitige Paaranforderung im Mittel 24,9 % schneller. Requests überlappten

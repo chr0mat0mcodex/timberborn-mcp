@@ -2,6 +2,13 @@
 
 ## Aktueller Stand — 2026-10-18
 
+**Nächste Schritte priorisiert, noch nicht gestartet.**
+[Backlog-Plan](BACKLOG.md#empfohlene-nächste-schritte--planung-2026-10-18):
+zuerst A12/N10 als begrenzter positiver Bretterproduktions-/Abtransportnachweis,
+danach B06-Reload-Vertrag entwerfen und F02-Ersatzumweg separat pilotieren.
+Keine allgemeine Refactoringfortsetzung oder neue Backend-Parallelität.
+Nur Planungs-/Statuspflege; Code, Spielzustand und Abnahmestand unverändert.
+
 **A12/N09 Messpilot abgeschlossen — Backend-Erweiterung zurückgestellt.**
 Drei serielle und drei gleichzeitig angeforderte Paare aus Kolonieübersicht und
 erster Arbeitsplatzseite: zwölf erfolgreiche Leser, keine Busy-Ablehnung.

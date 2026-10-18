@@ -15,7 +15,9 @@ Laufzeitstand und Session werden beim regulären Wiederanschluss frisch gelesen.
 
 ## Aktueller Auftrag
 
-**A12/N09 Messpilot abgeschlossen; kein Gate offen.**
+**Backlog priorisiert; nächster vorgeschlagener Pilot A12/N10, noch nicht gestartet.**
+[Reihenfolge und Abschlusskriterien](BACKLOG.md#empfohlene-nächste-schritte--planung-2026-10-18).
+A12/N09 Messpilot abgeschlossen; kein Gate offen.
 [Messung und Bewertung](docs/parallel-read-pilot.md): begrenzte gleichzeitige
 Lesepaare sind im bestehenden Anschluss nützlich. Kein belegter Zusatznutzen
 einer gelockerten Backend-Sperre; Erweiterung zurückgestellt. N08 bereits abgenommen.
