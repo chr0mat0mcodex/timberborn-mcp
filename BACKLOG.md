@@ -2,9 +2,10 @@
 
 ## Aktuelle Arbeit
 
-**A12/N02-Pilot abgenommen — N02 im Cw270-Folktails-Fall abgeschlossen:**
-unterer Zielweg bis Baustellen- und Fertigzugang; seitliche Negativkontrolle bestanden.
-[Umfang und Nachweise](docs/lower-stair-landing-pilot.md). N01 ebenfalls abgeschlossen.
+**A12/N03 im begrenzten Injektionspiloten abgenommen; N01/N02 ebenfalls abgeschlossen.**
+Native Sperren sowie unverändertes Objekt/Journal und Deaktivierung live belegt.
+[Vertrag und Nachweise](docs/unknown-object-identity-pilot.md).
+Keine Abnahme natürlich entstandener Identitätsfehler oder weiterer Fehlerfälle.
 A03/A04/A05/A07/A08/A09/A10-Piloten abgenommen; weitere Erweiterungen zurückgestellt.
 A01/A02/A06/A11 abgeschlossen. Weitere A12-Pakete zurückgestellt. [Projektstand](PROJECT_STATE.md).
 
@@ -14,7 +15,7 @@ Prüfbasis und vollständiger Audit: [Archivstand](BACKLOG_HISTORY.md#archivstan
 Ergebnis: gezieltes Refactoring von Versionsprofilen, Werkzeugdispatch und
 Prüfketten sinnvoll; kein belegter Bedarf für einen Komplettumbau.
 Der ursprüngliche Audit war statisch. A06 ist inzwischen **abgeschlossen**;
-A03 ist **teilweise abgeschlossen**, A04 **teilweise abgeschlossen**; A05 ist **teilweise abgeschlossen**, A07 ist **teilweise abgeschlossen**, A08 ist **teilweise abgeschlossen**, A09 ist **teilweise abgeschlossen**, A10 ist **teilweise abgeschlossen**, A11 ist **abgeschlossen**, A12 ist **teilweise abgeschlossen (N01/N02)**.
+A03 ist **teilweise abgeschlossen**, A04 **teilweise abgeschlossen**; A05 ist **teilweise abgeschlossen**, A07 ist **teilweise abgeschlossen**, A08 ist **teilweise abgeschlossen**, A09 ist **teilweise abgeschlossen**, A10 ist **teilweise abgeschlossen**, A11 ist **abgeschlossen**, A12 ist **teilweise abgeschlossen (N01/N02/N03)**.
 P2 = vor der nächsten betroffenen Erweiterung, P3 = nach Bedarf;
 S/M/L sind relative Aufwandsschätzungen. Codeänderungen benötigen weiterhin
 das [menschliche Gate und den gezielten Livetest](DEVELOPMENT_WORKFLOW.md).
@@ -212,7 +213,13 @@ das [menschliche Gate und den gezielten Livetest](DEVELOPMENT_WORKFLOW.md).
   Baustelle erreichbar und anschließend 2/2 Teile fertig/zugänglich.
   Keine Codeänderung; bestehender N01-Gatestand verwendet. Journal freigegeben.
   [Belege und Bewertung](docs/lower-stair-landing-pilot.md).
-  Weitere A12-Pakete bleiben offen und vorerst zurückgestellt.
+
+- [x] **N03-Injektionspilot abgenommen:** ein gebundener identity_mismatch-Fall;
+  Diagnose sperrt beide Freigaben, Close und Reparaturplanung tatsächlich
+  abgelehnt. Objekt und Journal exakt unverändert; nach Deaktivierung echte
+  Freigaben wiederhergestellt und regulär abgeschlossen. Gate und Live bestanden.
+  [Belege und Bewertung](docs/unknown-object-identity-pilot.md).
+  Weitere Fehlerfälle und A12-Pakete bleiben offen und zurückgestellt.
 
 - [ ] **Bestehende Restarbeit, keine neu nachgewiesenen Regressionen:** B06
   (Reload), B03 (allgemeine Kraft-/Höhenrouten), B07 (Produktionsausbauplanung),
@@ -220,8 +227,9 @@ das [menschliche Gate und den gezielten Livetest](DEVELOPMENT_WORKFLOW.md).
   (Geometrien/Fraktionen) bleiben offen. Die aktuelle Bretterdiagnose ersetzt
   keinen erfolgreichen Produktions- oder Liefernachweis.
 - **Kleine Pakete:** (a) konkrete Kartengrenzen bei inspect_map_region abgeschlossen;
-  (b) unterer Zielweg an Cw270-Bestandstreppe abgeschlossen; (c) deterministischer Nachweis
-  unbekannter Objektidentität; (d) ein positiver Bretterproduktions-/Abtransportfall.
+  (b) unterer Zielweg an Cw270-Bestandstreppe abgeschlossen;
+  (c) deterministischer injizierter Identitäts-Sperrnachweis abgeschlossen;
+  (d) ein positiver Bretterproduktions-/Abtransportfall.
   Jeweils vorhandenen Fachvertrag und aktuelle Implementierung zuerst abgleichen.
   B06/B03/B07 erst als abgegrenzten Entwurf bewerten, nicht als Sammelrefactoring.
 - **Abnahme:** pro Paket ein Positiv- und nötiger Negativkontrollfall mit
@@ -241,7 +249,7 @@ Abschlussbeleg verworfen wurden. Herkunft: [archivierter Verlauf](BACKLOG_HISTOR
 | --- | --- | --- |
 | N01 — abgeschlossen, A12 | Kein weiterer Auftrag; auf inspect_map_region begrenzt. | Gate und Live bestanden: gültige Randzelle, x/y/z-Überschreitungen und zu breite Randabfrage korrekt. |
 | N02 — abgeschlossen, A12/F04 | Begrenzter Cw270-Folktails-Fall; keine weiteren Varianten beauftragt. | Automatische untere Zielwegplanung, native Geometrie, Bau- und Fertigzugang positiv; seitliche Verbindung bei gültiger Geometrie negativ. |
-| N03 — offen, A12 | Deterministischen Fall unbekannter Objektidentität entwerfen; Fehler-Injektion ist noch nicht freigegeben. | Native Sperren, repairEligible=false und closeEligible=false belegt; keine Zeitrennen oder Save-/Ledger-Manipulation als Nachweis. |
+| N03 — begrenzt abgeschlossen, A12 | [Einzelinjektionspilot abgenommen](docs/unknown-object-identity-pilot.md); weitere Fehlerfälle zurückgestellt. | Injektion klar markiert, repairEligible=false und closeEligible=false, Close/Repair tatsächlich abgelehnt; Objekt und Journal unverändert, nach Deaktivierung echte Freigaben wiederhergestellt. |
 | N04 — zu reproduzieren | `project_start_plan_changed` nach Zugangsergänzung mit frischer expliziter Gesamtvorschau vergleichen. | Identische Eingaben nachvollziehbar angenommen oder konkrete Änderung benannt; kein Blindretry. |
 | N05 — zu reproduzieren, B10 | Ingame-Text 0/15 gegenüber strukturiertem 14/15 aus dem Planerpilot prüfen. | Laufende/terminale Anzeige zählt korrekt und unterscheidet Ledger von frischer Diagnose; 0.73-Fertigbaudiagnose allein schließt den UI-Befund nicht. |
 | N06 — offen | Kollisionsdiagnose von precheck_building um verursachende Objekt-ID/-typ ergänzen. | Terrain-, Objekt- und unbekannte Belegung getrennt und gegen native Zellen belegt. |

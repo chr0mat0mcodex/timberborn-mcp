@@ -58,8 +58,9 @@ public sealed partial class LargeProjectService(BuildingCatalog catalog, Preview
         if(!unlocks.Unlocked(template.GetSpec<BuildingSpec>())) throw new BridgeRejectionException("template_locked");
         return template;
     }
-    public object Handle(LargeProjectRequest r)
+    private object HandleCore(LargeProjectRequest r)
     {
+        if(r.Operation=="identity-pilot") return SetIdentityPilot(r);
         if(r.Operation=="plan-access") return PlanAccess(r);
         if(r.Operation is "diagnose" or "close") return Recover(r.ActionId, r.Operation == "close");
         if(r.Operation=="plan-repair") return PlanRepair(r);

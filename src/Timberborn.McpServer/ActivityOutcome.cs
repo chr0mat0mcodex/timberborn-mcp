@@ -20,6 +20,11 @@ public static class ActivityOutcome
     private static string DescribeCore(string name,JsonObject result)
     {
         if(!Handles(name))return "";
+        if(result["data"]?["identityInjection"] is JsonObject injection)
+            return Flag(injection,"active")==true
+                ? "INJIZIERT: identity_mismatch im Recovery-Pilot; realer Befund: "+Text(injection,"realObserved")+
+                    (Text(result,"status")=="error" ? ". Native Reparatursperre, kein Auftrag ausgeführt." : ". Spielobjekt und Projektjournal unverändert; kein natürlicher Identitätsfehler.")
+                : "Identitätsinjektion deaktiviert; realer Befund: "+Text(injection,"realObserved")+".";
         if(BuildBatchTools.Handles(name) && Text(result,"status")=="error" && result["data"]?["failure"] is JsonObject failure)
             return "Baucharge: "+Text(failure,"code")+"; Phase "+Text(failure,"stage")+"; nächster Schritt "+Text(failure,"recoveryAction")+".";
         if(Text(result,"status")=="error" && Text(result["error"],"code") is "project_preview_failed" or "project_not_found")

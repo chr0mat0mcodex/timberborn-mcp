@@ -2,15 +2,15 @@
 
 ## Aktueller Einstieg
 
-Aktueller Featurestand, letzte Gatezahlen und Nachweise: [Projektstand](../PROJECT_STATE.md).
-Bridge 0.74.0; **A12/N02 live abgenommen, kein Gate offen**.
-Unterer Cw270-Treppenzielweg automatisch geplant; Seitenkontrolle, tatsächlicher
-Bauzugang und Fertigzugang bestanden. Keine Codeänderung seit N01-Gate.
-[Nachweise und Testaufbau](lower-stair-landing-pilot.md). Supervisor unverändert;
-kein zusätzlicher Codex-Neustart nötig. Weitere Piloterweiterungen zurückgestellt.
+**A12/N03 im begrenzten Injektionspiloten abgenommen; kein Gate offen.**
+Native Diagnose-, Close- und Repair-Sperren bestanden. Objekt und Journal
+während Injektion exakt unverändert; anschließend deaktiviert und Projekt
+regulär freigegeben. Spiel pausiert, Backend läuft. Neues Werkzeug nach
+Codex-Neustart verfügbar. Weitere Fehlerfälle nicht erweitern.
+[Vertrag und Nachweise](unknown-object-identity-pilot.md).
+Aktueller Stand und Gatezahlen: [Projektstand](../PROJECT_STATE.md).
 [Offene Arbeit](../BACKLOG.md) · [Lifecycle und Gate](../DEVELOPMENT_WORKFLOW.md).
-Git-Status und Laufzeitstand separat prüfen. Die folgenden Übergaben sind
-historisch und enthalten keine heute offenen Gate-Aufträge.
+Git-Status und Laufzeitstand separat prüfen. Folgende Übergaben sind historisch.
 
 ## Historischer Stand bis Phase E
 

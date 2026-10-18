@@ -1,5 +1,14 @@
 # Native MCP-Werkzeuge
 
+N03-Entwicklungspilot **begrenzt abgenommen**:
+`set_large_project_identity_pilot(session, actionId, partIndex, pilotAction, mode)`.
+`pilotAction=enable|disable`, `mode=development_pilot`; vorhandene
+Bauaktionsschalter erforderlich. Eine sessionlokale Identitätsbeobachtung
+wird ausdrücklich als injiziert markiert, keine Spielobjekt-/Journaländerung.
+`identityInjection.realObserved` bleibt neben `identity_mismatch` sichtbar;
+Close-/Repair-Sperren nativ prüfen, danach deaktivieren.
+[Vertrag und Abnahmeplan](unknown-object-identity-pilot.md).
+
 Automatische Bretterketten-Vorprüfung **begrenzt live abgenommen**:
 Vor Bauaufträgen mit Bretterkosten und langen Simulationsläufen mit Bretterbezug
 ergänzt `operatingPreflight[].plankChain` Engpässe und konkrete nächste Schritte.

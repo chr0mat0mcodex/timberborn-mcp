@@ -2,6 +2,26 @@
 
 ## Aktueller Stand — 2026-10-18
 
+**A12/N03 im begrenzten Injektionspiloten abgenommen.**
+2284 Unit-, 19 Integrations-, 13 Paket- und 35 Supervisor-Tests bestanden;
+drei optionale Livefälle übersprungen, beide Builds ohne Warnungen/Fehler,
+fünf installierte Paketdateien per SHA-256 bestätigt. Nach Codex-Neustart
+neues Werkzeug verfügbar; Session und MCP-Kennungen entsprechen dem Gate.
+Live: beide Ausgangsfreigaben true; unter Einzelinjektion identity_mismatch,
+closeEligible=false und repairEligible=false. Tatsächlicher Close abgelehnt,
+Reparaturplanung mit repair_parent_ineligible/not_executed abgelehnt.
+Vollständige Objekt- und Journalantworten während Injektion exakt unverändert.
+Nach disable wieder echte Identität und beide Freigaben; regulärer Abschluss
+released=true. Keine Bestandsverluste, Injektion inaktiv, Spiel pausiert.
+Nutzen: deterministischer nativer Recovery-Sperrnachweis; mittlerer Aufwand
+über Mod, Vertrag, MCP und Tests. Kein Nachweis eines natürlich entstandenen
+Identitätsfehlers; keine weiteren Fehlerfälle erweitert.
+[Vertrag, Belege und Bewertung](docs/unknown-object-identity-pilot.md).
+Bridge/API weiterhin 0.74.0. Anleitung und Werkzeugübersicht aktualisiert;
+keine projektbezogenen Spielskills vorhanden. Kein Gate offen.
+
+### Vorheriger Abschluss A12/N02
+
 **A12/N02 live abgenommen — unterer Zielweg an Cw270-Bestandstreppe.**
 Auf unverändertem N01-Gatestand: automatische Zugangssuche ergänzt genau einen
 unteren Weg für ein kleines Lager. Native Geometrie/Anschlüsse und Vorschau-

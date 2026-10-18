@@ -21,6 +21,9 @@ public sealed partial class LargeProjectService
 
     // Identity and access are separate: an unreachable site is still a confirmed placement.
     private string IdentityObservation(string id, int index)
+        => identityPilot.Observe(jobs[id].Request.Session, id, index, RealIdentityObservation(id, index));
+
+    private string RealIdentityObservation(string id, int index)
     {
         var step = jobs[id].Request.Steps[index];
         var entityId = Ids(id)[index];
@@ -52,7 +55,8 @@ public sealed partial class LargeProjectService
     private JObject Diagnose(string id)
     {
         if (!jobs.TryGetValue(id, out var job)) throw new BridgeRejectionException("project_not_found");
-        var recorded = Recorded(id); var ids = Ids(id);
+        // An injected diagnosis must not write confirmation evidence back to the journal.
+        var recorded = IdentityPilotApplies(id) ? Recorded(id).ToArray() : Recorded(id); var ids = Ids(id);
         var observations = Enumerable.Range(0, ids.Length).Select(i => IdentityObservation(id, i)).ToArray();
         // Preserve matching identity evidence independently of access and terminal
         // job state. Later absence can then mean removal, never permission to replay.
@@ -113,6 +117,7 @@ public sealed partial class LargeProjectService
             foreignSites=others.Take(32).ToArray(), foreignSitesTruncated=others.Length>32,
             unissuedParts=recorded.Count(s=>s is "pending" or "rejected"), parts,
             limitations=new[]{"fresh_observation_not_placement","materials_are_total_cost_and_current_stock_not_remaining_delivery","access_and_materials_not_worker_guarantee","close_abandons_unissued_parts_without_demolition","unknown_placement_effects_block_release","ledger_lost_on_game_reload"} });
+        if (IdentityPilotApplies(id)) report["identityInjection"] = IdentityPilotEvidence(id, identityPilot.PartIndex, true);
         return report;
     }
 
@@ -147,7 +152,7 @@ public sealed partial class LargeProjectService
     private object Recover(string id, bool close)
     {
         var report = Diagnose(id);
-        if (!close) { AddProgress(id,report); return report; }
+        if (!close) { if (!IdentityPilotApplies(id)) AddProgress(id,report); return report; }
         report["closeOutcome"] = releasedProjects.Contains(id) ? "already_released" : "rejected";
         if (releasedProjects.Contains(id)) return report;
         if ((bool?)report["closeEligible"] != true) return report; // Explicit rejection evidence, no mutation.

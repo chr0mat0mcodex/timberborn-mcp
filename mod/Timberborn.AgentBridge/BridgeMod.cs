@@ -83,7 +83,7 @@ public sealed class BridgeMod(Timberborn.CameraSystem.CameraService cameraServic
         finally {journal.EndMcp(false);}
         queue.PumpAsync(ObserveAsync);
     }
-    public void Unload() { fileLog.Write("bridge_unloading",session:sessionId); if(screenshots is not null) { screenshots.Cancel(); UnityEngine.Object.Destroy(screenshots.gameObject); } journal.Unload(); simulation.Unload(); server?.Dispose(); queue.Dispose(); }
+    public void Unload() { largeProjects.ClearIdentityPilot(); fileLog.Write("bridge_unloading",session:sessionId); if(screenshots is not null) { screenshots.Cancel(); UnityEngine.Object.Destroy(screenshots.gameObject); } journal.Unload(); simulation.Unload(); server?.Dispose(); queue.Dispose(); }
     private async System.Threading.Tasks.Task<string> ObserveAsync(BridgeRequest request) {
         var callId=request.Activity?.Id??Guid.NewGuid().ToString("D");
         fileLog.Write("request_started",request.Route,"running",callId:callId,session:sessionId,correlations:request.Activity?.Correlations);

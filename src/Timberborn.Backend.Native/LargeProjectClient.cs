@@ -16,6 +16,7 @@ public sealed partial class NativeClient
             if(r.Operation is "run" or "run-repair")query+="&speed="+r.Speed+"&maxGameHours="+r.MaxGameHours+"&maxRealSeconds="+r.MaxRealSeconds;
         }
         else query+="&actionId="+r.ActionId;
+        if(r.Operation=="identity-pilot")query+="&pilotAction="+r.PilotAction+"&partIndex="+r.PartIndex+"&mode=development_pilot";
         if(r.ReservedAreas.Length>0)query+="&reservedAreas="+Uri.EscapeDataString(ReservedArea.Encode(r.ReservedAreas));
         if(r.Operation is "plan-repair" or "run-repair")query+="&parentActionId="+r.ParentActionId;
         if (r.Operation is ("start" or "run" or "run-repair") && BeforeOperatingRun is { } preflight)
@@ -33,6 +34,23 @@ public sealed partial class NativeClient
             ManualProjectJournalContract.Validate(d);
             var limits=d.GetProperty("limitations");
             if(limits.ValueKind!=JsonValueKind.Array||limits.GetArrayLength()>16||limits.EnumerateArray().Any(v=>v.ValueKind!=JsonValueKind.String||v.GetString() is not {Length:>0 and <=160}))throw new InvalidDataException();
+            if(r.Operation=="identity-pilot")
+            {
+                if(d.GetProperty("actionId").GetString()!=r.ActionId || d.GetProperty("pilotAction").GetString()!=r.PilotAction ||
+                    ProjectIdentityPilotContract.Validate(d.GetProperty("identityInjection"),r.Session,r.ActionId,r.PilotAction=="enable")!=r.PartIndex)
+                    throw new InvalidDataException();
+                if(r.PilotAction=="enable" && !ProjectIdentityPilot.MatchingIdentity(d.GetProperty("identityInjection").GetProperty("realObserved").GetString()!))
+                    throw new InvalidDataException();
+                return;
+            }
+            if(d.TryGetProperty("rejectionCode",out var rejection))
+            {
+                if(d.EnumerateObject().Count()!=6 || r.Operation is not ("plan-repair" or "run-repair") || rejection.GetString()!="repair_parent_ineligible" ||
+                    d.GetProperty("parentActionId").GetString()!=r.ParentActionId || d.GetProperty("outcome").GetString()!="rejected" ||
+                    d.GetProperty("execution").GetString()!="not_executed") throw new InvalidDataException();
+                ProjectIdentityPilotContract.Validate(d.GetProperty("identityInjection"),r.Session,r.ParentActionId,true);
+                return;
+            }
             if(r.Operation=="plan-access") { ValidateAccessPlan(e,r); return; }
             if(r.Operation is "plan-repair" or "run-repair") { if(d.GetProperty("parentActionId").GetString()!=r.ParentActionId)throw new InvalidDataException(); }
             if(r.Operation=="power-network")
@@ -144,6 +162,12 @@ public sealed partial class NativeClient
         if(!double.IsFinite(speed)||speed<0 || (close||repair)&&(speed!=0||busy||faulted||state is "ready" or "waiting" or "running" or "pausing") || released&&repair)throw new InvalidDataException();
         var parts=d.GetProperty("parts").EnumerateArray().ToArray();
         if(parts.Length is <1 or >32)throw new InvalidDataException();
+        if(d.TryGetProperty("identityInjection",out var injection))
+        {
+            int index=ProjectIdentityPilotContract.Validate(injection,r.Session,r.ActionId,true);
+            if(index>=parts.Length || close || repair || released || parts[index].GetProperty("observed").GetString()!="identity_mismatch")
+                throw new InvalidDataException();
+        }
         var ids=new HashSet<string>();
         for(int i=0;i<parts.Length;i++)
         {

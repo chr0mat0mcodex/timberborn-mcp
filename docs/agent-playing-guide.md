@@ -1,5 +1,19 @@
 # Spielanleitung für Agenten
 
+## A12/N03: Identitätsinjektion (begrenzter Pilot abgenommen)
+
+Nur für den ausdrücklich beauftragten Entwicklungspilot:
+`set_large_project_identity_pilot` mit `pilotAction=enable`,
+`mode=development_pilot`, aktueller Session, Projekt und Teilindex. Genau ein
+terminales, nicht freigegebenes Projekt mit bestätigtem realem Objekt; Pause
+ohne laufende Projekte/Simulation erforderlich. Keine reguläre Spielaktion.
+`identityInjection` kennzeichnet den künstlichen Befund samt `realObserved`.
+Close und Repair müssen sperren; unbekannte Identität niemals als Abriss deuten.
+Anschließend mit derselben Bindung `pilotAction=disable`, echten Zustand frisch
+lesen und regulär abschließen. Spielobjekt und Journal werden nicht gepatcht.
+MCP-Neustart entfernt die Injektion nicht, Spielneuladen schon.
+[Parameter, Nachweisfolge und Grenzen](unknown-object-identity-pilot.md).
+
 ## A11: Backendwahl (Gate und Livebeleg bestanden)
 
 Der DLL-Direktstart benötigt `TIMBERBORN_BACKEND` ausdrücklich: `native`,
